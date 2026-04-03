@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>自己紹介図解　いおり</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f7f6f3;
+      --text: #1a1a1a;
+      --muted: #888;
+      --line: rgba(0,0,0,0.09);
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 300;
+      line-height: 1.9;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 560px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/mountain1.png');
+      background-size: cover;
+      background-position: center 40%;
+      transform: scale(1.04);
+      animation: heroZoom 12s ease forwards;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.05) 0%,
+        rgba(0,0,0,0.08) 40%,
+        rgba(0,0,0,0.52) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 56px 72px;
+      max-width: 860px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1.1s ease 0.6s forwards;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 16px;
+    }
+
+    .hero-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 400;
+      color: #fff;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 48px 120px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--line);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.85s ease, transform 0.85s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .section-num {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      min-width: 28px;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 19px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── GREETING ── */
+    .greeting-text {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(14px, 2vw, 17px);
+      font-weight: 300;
+      line-height: 2.2;
+      color: #2c2c2c;
+    }
+
+    /* ── PHOTO GRID ── */
+    .photo-grid {
+      display: grid;
+      gap: 3px;
+    }
+
+    .photo-grid-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .photo-grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .photo-item {
+      position: relative;
+      overflow: hidden;
+      background: #e0ddd8;
+      cursor: pointer;
+    }
+
+    .photo-item::after {
+      content: '';
+      display: block;
+      padding-bottom: 70%;
+    }
+
+    .photo-item.tall::after {
+      padding-bottom: 120%;
+    }
+
+    .photo-item img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s ease, filter 0.4s ease;
+      filter: brightness(0.96);
+    }
+
+    .photo-item:hover img {
+      transform: scale(1.04);
+      filter: brightness(1.02);
+    }
+
+    .photo-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.5));
+      color: rgba(255,255,255,0.9);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      padding: 24px 14px 12px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 1;
+    }
+
+    .photo-item:hover .photo-caption {
+      opacity: 1;
+    }
+
+    /* ── HOBBY LABELS ── */
+    .hobby-labels {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .hobby-tag {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--white);
+    }
+
+    /* ── AI SECTION ── */
+    .ai-block {
+      background: var(--white);
+      padding: 44px 40px;
+    }
+
+    .ai-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .ai-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(16px, 2.8vw, 22px);
+      font-weight: 400;
+      line-height: 1.7;
+      letter-spacing: 0.05em;
+      margin-bottom: 28px;
+    }
+
+    .ai-title em {
+      font-style: normal;
+      border-bottom: 1px solid var(--text);
+      padding-bottom: 2px;
+    }
+
+    .ai-body {
+      font-size: 13px;
+      color: #555;
+      line-height: 2;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    /* ── CLOSING ── */
+    .closing {
+      padding: 80px 0 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+    }
+
+    .closing.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .closing-text {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 15px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes heroZoom {
+      to { transform: scale(1); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero-content { padding: 0 28px 56px; }
+      main { padding: 0 24px 80px; }
+      .photo-grid-3 { grid-template-columns: 1fr 1fr; }
+      .ai-block { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-label">Self Introduction</p>
+      <h1 class="hero-name">自己紹介図解　いおり</h1>
+      <p class="hero-sub">精神科医 &nbsp;/&nbsp; AI Driven School</p>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- 01 あいさつ -->
+    <section class="section">
+      <div class="section-meta">
+        <span class="section-num">01</span>
+        <h2 class="section-title">はじめまして</h2>
+      </div>
+      <p class="greeting-text">
+        はじめまして、いおりと申します。<br>
+        本業は精神科医です。<br>
+        日々の診察と学びを通じて、患者さんに寄り添う医療を目指しています。
+      </p>
+    </section>
+
+    <!-- 02 ハイキング・登山 -->
+    <section class="section">
+      <div class="section-meta">
+        <span class="section-num">02</span>
+        <h2 class="section-title">ハイキング・登山</h2>
+      </div>
+      <div class="photo-grid photo-grid-3">
+        <div class="photo-item tall">
+          <img src="images/hiking.png" alt="山頂からの眺め" loading="lazy" />
+          <span class="photo-caption">山頂からの眺め</span>
+        </div>
+        <div class="photo-item">
+          <img src="images/mountain2.png" alt="夕焼けの稜線" loading="lazy" />
+          <span class="photo-caption">夕焼けの稜線</span>
+        </div>
+        <div class="photo-item">
+          <img src="images/mountain3.png" alt="雪山の稜線" loading="lazy" />
+          <span class="photo-caption">雪山の稜線</span>
+        </div>
+      </div>
+      <div class="hobby-labels">
+        <span class="hobby-tag">水泳</span>
+        <span class="hobby-tag">ハイキング</span>
+        <span class="hobby-tag">合気道 10年</span>
+      </div>
+    </section>
+
+    <!-- 03 音楽・演劇鑑賞 -->
+    <section class="section">
+      <div class="section-meta">
+        <span class="section-num">03</span>
+        <h2 class="section-title">音楽・演劇</h2>
+      </div>
+      <div class="photo-grid photo-grid-2">
+        <div class="photo-item">
+          <img src="images/piano.png" alt="ピアノ" loading="lazy" />
+          <span class="photo-caption">ピアノ</span>
+        </div>
+        <div class="photo-item">
+          <img src="images/theater1.png" alt="演劇鑑賞" loading="lazy" />
+          <span class="photo-caption">演劇鑑賞</span>
+        </div>
+        <div class="photo-item" style="grid-column: 1 / -1;">
+          <img src="images/theater2.png" alt="舞台の人間ドラマ" loading="lazy" />
+          <span class="photo-caption">舞台の人間ドラマ</span>
+        </div>
+      </div>
+      <div class="hobby-labels">
+        <span class="hobby-tag">ピアノ</span>
+        <span class="hobby-tag">歌う・聴く</span>
+        <span class="hobby-tag">演劇鑑賞</span>
+      </div>
+    </section>
+
+    <!-- 04 AI Driven School -->
+    <section class="section">
+      <div class="section-meta">
+        <span class="section-num">04</span>
+        <h2 class="section-title">AI Driven School への意気込み</h2>
+      </div>
+      <div class="ai-block">
+        <p class="ai-eyebrow">Goal</p>
+        <p class="ai-title">
+          診察の場で、<em>医学的根拠に基づいた<br>
+          臨床推論を補助するAIアシスタント</em>を実現したい。
+        </p>
+        <p class="ai-body">
+          「AI Driven School」に参加した理由は明確です。<br>
+          患者さん一人ひとりに、より的確な判断を届けるために、AIをどう活用できるかを本気で学んでいきたいと思っています。<br>
+          どうぞよろしくお願いします。
+        </p>
+      </div>
+    </section>
+
+    <div class="closing">
+      <p class="closing-text">よろしくお願いします。</p>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; Mental Doctor Iori — AI Driven School
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.08 }
+    );
+
+    document.querySelectorAll('.section, .closing').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
