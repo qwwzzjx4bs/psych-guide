@@ -171,6 +171,10 @@
       border-bottom: 1px solid #e2e8f0;
       box-shadow: 0 2px 4px rgba(0,0,0,0.06);
     }
+    /* ジャンプバー分のオフセット補正 */
+    .section-card {
+      scroll-margin-top: 56px;
+    }
     .nav-btn {
       display: inline-flex;
       align-items: center;
@@ -311,7 +315,39 @@
     .toggle-panel.open.panel-codes   { border-left-color: #1e293b; }
     .toggle-panel.open.panel-criteria{ border-left-color: #1d4ed8; }
     .toggle-panel.open.panel-diff    { border-left-color: #6d28d9; }
+    .toggle-panel.open.panel-scales  { border-left-color: #0891b2; }
     .toggle-panel.open.panel-notes   { border-left-color: #d97706; }
+    /* 評価スケール ON状態 */
+    .toggle-btn[data-panel*="scales"].on {
+      background: #0891b2;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(8,145,178,0.4);
+      transform: translateY(-2px);
+    }
+    /* エビデンスレベルバッジ */
+    .ev-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.58rem;
+      font-weight: 800;
+      padding: 0.05rem 0.28rem;
+      border-radius: 0.3rem;
+      margin: 0 0.25rem 0 0.1rem;
+      vertical-align: middle;
+      letter-spacing: 0.02em;
+      cursor: default;
+    }
+    .ev-a { background: #1d4ed8; color: #fff; }
+    .ev-b { background: #059669; color: #fff; }
+    .ev-c { background: #d97706; color: #fff; }
+    /* 評価スケールボックス */
+    .scale-box {
+      background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+      border-left: 4px solid #0891b2;
+      padding: 0.9rem 1.1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.65rem;
+    }
 
     /* 診断基準ボックス（追加分） */
     .criteria-box {
@@ -504,7 +540,7 @@
         <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f0-body-chevron"></i>
       </div>
     </div>
-    <div class="cat-body open" id="f0-body">
+    <div class="cat-body" id="f0-body">
       <div class="diff-box mb-3">
         <div class="flex items-start gap-2">
           <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-700"></i>
@@ -520,6 +556,7 @@
       <div class="toggle-nav" id="tabs-f0">
         <button class="toggle-btn on" data-panel="criteria-f0" onclick="togglePanel('criteria-f0', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f0" onclick="togglePanel('diff-f0', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f0" onclick="togglePanel('scales-f0', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f0" onclick="togglePanel('notes-f0', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f0" onclick="togglePanel('codes-f0', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -583,6 +620,51 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F0 -->
+      <div class="toggle-panel open panel-scales" id="scales-f0">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="brain" class="w-4 h-4"></i>認知機能スクリーニング</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">MMSE</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>30点満点・23点以下で認知症疑い（感度79%・特異度88%）
+            <span class="tool-tag">MoCA</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>軽度認知障害に高感度・25点以下で注意（所要10〜15分）
+            <span class="tool-tag">HDS-R</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>改訂長谷川式・30点満点・20点以下で認知症疑い（日本標準）
+            <span class="tool-tag">Mini-Cog</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>3単語再生＋時計描画・外来での超短時間スクリーニング（2〜4分）
+            <span class="tool-tag">ADAS-Cog</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>11項目・70点満点・臨床試験の国際標準尺度（所要30〜45分）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4"></i>重症度・生活機能評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">CDR</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Clinical Dementia Rating（0〜3）：全般的重症度・介護計画の基本指標
+            <span class="tool-tag">FAST</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Functional Assessment Staging（アルツハイマー病の機能段階・1〜7）
+            <span class="tool-tag">DAD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Disability Assessment for Dementia（IADL・ADL 40項目）
+            <span class="tool-tag">DBD</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Dementia Behavior Disturbance Scale（問題行動評価・28項目）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i>前頭葉・神経心理検査</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">FAB</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>前頭葉機能バッテリー・18点満点（前頭側頭型認知症に有用）
+            <span class="tool-tag">Trail Making Test</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>A（視覚探索）・B（認知的柔軟性）で注意・実行機能評価
+            <span class="tool-tag">Verbal Fluency</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>語想起課題（カテゴリ流暢性・文字流暢性）
+            <span class="tool-tag">WMS-R</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Wechsler記憶検査（記憶の総合的評価）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i>せん妄・行動心理症状（BPSD）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">CAM</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Confusion Assessment Method・4項目・感度94%・特異度89%
+            <span class="tool-tag">DRS-R-98</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Delirium Rating Scale・重症度16項目（ICU・入院での標準）
+            <span class="tool-tag">NPI</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Neuropsychiatric Inventory・BPSD 12領域を介護者情報で評価
+            <span class="tool-tag">BEHAVE-AD</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>アルツハイマー病行動・心理症状評価（25項目）
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F0 -->
       <div class="toggle-panel open panel-notes" id="notes-f0">
         <div class="danger-box">
@@ -606,12 +688,12 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール・ツール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">MMSE</span>認知症スクリーニング（30点満点、23点以下で認知症疑い）
-            <span class="tool-tag">MoCA</span>軽度認知障害の検出に優れる（25点以下で注意）
-            <span class="tool-tag">CAM</span>せん妄評価（Confusion Assessment Method）
-            <span class="tool-tag">HDS-R</span>改訂長谷川式認知症スケール（日本で広く使用）
-            <span class="tool-tag">FAB</span>前頭葉機能評価バッテリー（FTD・前頭葉機能評価）
-            <span class="tool-tag">NPI</span>Neuropsychiatric Inventory（行動・心理症状評価）
+            <span class="tool-tag">MMSE</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>認知症スクリーニング（30点満点、23点以下で認知症疑い）
+            <span class="tool-tag">MoCA</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>軽度認知障害の検出に優れる（25点以下で注意）
+            <span class="tool-tag">CAM</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>せん妄評価（Confusion Assessment Method）
+            <span class="tool-tag">HDS-R</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>改訂長谷川式認知症スケール（日本で広く使用）
+            <span class="tool-tag">FAB</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>前頭葉機能評価バッテリー（FTD・前頭葉機能評価）
+            <span class="tool-tag">NPI</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Neuropsychiatric Inventory（行動・心理症状評価）
           </div>
         </div>
       </div>
@@ -712,6 +794,7 @@
       <div class="toggle-nav" id="tabs-f1">
         <button class="toggle-btn on" data-panel="criteria-f1" onclick="togglePanel('criteria-f1', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f1" onclick="togglePanel('diff-f1', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f1" onclick="togglePanel('scales-f1', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f1" onclick="togglePanel('notes-f1', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f1" onclick="togglePanel('codes-f1', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -784,6 +867,48 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F1 -->
+      <div class="toggle-panel open panel-scales" id="scales-f1">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="wine" class="w-4 h-4"></i>アルコールスクリーニング・依存評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">AUDIT</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Alcohol Use Disorders Identification Test・10項目・8点以上で危険飲酒（WHO標準）
+            <span class="tool-tag">AUDIT-C</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>AUDIT短縮版3項目・外来でのスクリーニングに有用
+            <span class="tool-tag">CAGE</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>4項目・2項目以上陽性でアルコール問題を疑う（感度74%）
+            <span class="tool-tag">SADQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Severity of Alcohol Dependence Questionnaire・重症度評価（30点以上＝重度）
+            <span class="tool-tag">MAST</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Michigan Alcoholism Screening Test・25項目の詳細スクリーニング
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="thermometer" class="w-4 h-4"></i>離脱症状評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">CIWA-Ar</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>アルコール離脱症状評価・10項目・15点以上で薬物療法必要
+            <span class="tool-tag">COWS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Clinical Opiate Withdrawal Scale・オピオイド離脱重症度評価（13項目）
+            <span class="tool-tag">SOWS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Subjective Opiate Withdrawal Scale・主観的離脱症状（16項目）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>薬物・多物質スクリーニング</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">DAST-10</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Drug Abuse Screening Test・10項目・物質乱用スクリーニング
+            <span class="tool-tag">ASSIST</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>WHO開発・多物質スクリーニング（アルコール〜注射薬まで）
+            <span class="tool-tag">DUDIT</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Drug Use Disorders Identification Test・11項目（AUDIT薬物版）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4"></i>動機づけ・回復評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">URICA</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>変化のステージ評価（前熟考〜維持）・動機づけ面接の基盤
+            <span class="tool-tag">SOCRATES</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Steps of Change and Treatment Eagerness Scale・変容動機測定
+            <span class="tool-tag">ADS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Alcohol Dependence Scale・25項目・治療計画立案に有用
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F1 -->
       <div class="toggle-panel open panel-notes" id="notes-f1">
         <div class="danger-box">
@@ -807,11 +932,11 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">AUDIT</span>アルコール使用障害同定テスト（8点以上：危険飲酒）
-            <span class="tool-tag">CAGE</span>4項目スクリーニング（2項目以上陽性で要精査）
-            <span class="tool-tag">DAST-10</span>薬物乱用スクリーニングテスト
-            <span class="tool-tag">CIWA-Ar</span>アルコール離脱症状評価（離脱重症度・治療量の指標）
-            <span class="tool-tag">SADQ</span>アルコール依存重症度質問紙
+            <span class="tool-tag">AUDIT</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>アルコール使用障害同定テスト（8点以上：危険飲酒）
+            <span class="tool-tag">CAGE</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>4項目スクリーニング（2項目以上陽性で要精査）
+            <span class="tool-tag">DAST-10</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>薬物乱用スクリーニングテスト
+            <span class="tool-tag">CIWA-Ar</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>アルコール離脱症状評価（離脱重症度・治療量の指標）
+            <span class="tool-tag">SADQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>アルコール依存重症度質問紙
           </div>
         </div>
       </div>
@@ -887,6 +1012,7 @@
       <div class="toggle-nav" id="tabs-f2">
         <button class="toggle-btn on" data-panel="criteria-f2" onclick="togglePanel('criteria-f2', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f2" onclick="togglePanel('diff-f2', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f2" onclick="togglePanel('scales-f2', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f2" onclick="togglePanel('notes-f2', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f2" onclick="togglePanel('codes-f2', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -966,6 +1092,51 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F2 -->
+      <div class="toggle-panel open panel-scales" id="scales-f2">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="brain" class="w-4 h-4"></i>精神病症状・重症度評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PANSS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>陽性・陰性症状評価尺度・30項目（7段階）・国際臨床試験標準
+            <span class="tool-tag">BPRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Brief Psychiatric Rating Scale・18項目・外来での簡易重症度評価
+            <span class="tool-tag">SAPS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>陽性症状評価尺度・34項目（幻覚・妄想・思考障害・奇異行動）
+            <span class="tool-tag">SANS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>陰性症状評価尺度・25項目（感情平板化・無為・失語・注意障害）
+            <span class="tool-tag">BNSS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Brief Negative Symptom Scale・陰性症状の新世代評価（13項目）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="gauge" class="w-4 h-4"></i>全般機能・社会機能評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">CGI-SCH</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>統合失調症全般臨床印象度・陽性/陰性/認知/全般/抑うつの5軸
+            <span class="tool-tag">GAF</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Global Assessment of Functioning・1〜100点（DSM軸V）
+            <span class="tool-tag">PSP</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Personal and Social Performance Scale・社会機能100点尺度
+            <span class="tool-tag">SFS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Social Functioning Scale・社会機能の7領域評価
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i>薬物副作用・錐体外路症状</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">SAS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Simpson-Angus Scale・10項目・薬剤性パーキンソニズム評価
+            <span class="tool-tag">AIMS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Abnormal Involuntary Movement Scale・遅発性ジスキネジア評価（12項目）
+            <span class="tool-tag">BARS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Barnes Akathisia Rating Scale・アカシジア重症度評価（4項目）
+            <span class="tool-tag">UKU</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>UKU副作用評価尺度・精神科薬物副作用の包括的評価（48項目）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="cpu" class="w-4 h-4"></i>認知機能評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">BACS-J</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>統合失調症認知機能評価（日本語版・6領域）
+            <span class="tool-tag">MCCB</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>MATRICS Consensus Cognitive Battery・認知機能の標準的測定
+            <span class="tool-tag">WCST</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Wisconsin Card Sorting Test・前頭葉・実行機能評価
+            <span class="tool-tag">RBANS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Repeatable Battery for Assessment of Neuropsychological Status
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F2 -->
       <div class="toggle-panel open panel-notes" id="notes-f2">
         <div class="danger-box">
@@ -989,11 +1160,11 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">PANSS</span>陽性・陰性症状評価尺度（30項目）
-            <span class="tool-tag">BPRS</span>簡易精神症状評価尺度（18項目）
+            <span class="tool-tag">PANSS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>陽性・陰性症状評価尺度（30項目）
+            <span class="tool-tag">BPRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>簡易精神症状評価尺度（18項目）
             <span class="tool-tag">SAPS/SANS</span>陽性症状評価尺度 / 陰性症状評価尺度
-            <span class="tool-tag">CGI-SCH</span>統合失調症全般臨床印象度
-            <span class="tool-tag">SAS</span>錐体外路症状評価（薬物副作用モニタリング）
+            <span class="tool-tag">CGI-SCH</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>統合失調症全般臨床印象度
+            <span class="tool-tag">SAS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>錐体外路症状評価（薬物副作用モニタリング）
           </div>
         </div>
       </div>
@@ -1081,6 +1252,7 @@
       <div class="toggle-nav" id="tabs-f3">
         <button class="toggle-btn on" data-panel="criteria-f3" onclick="togglePanel('criteria-f3', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f3" onclick="togglePanel('diff-f3', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f3" onclick="togglePanel('scales-f3', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f3" onclick="togglePanel('notes-f3', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f3" onclick="togglePanel('codes-f3', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -1155,6 +1327,44 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F3 -->
+      <div class="toggle-panel open panel-scales" id="scales-f3">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4"></i>うつ病重症度評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PHQ-9</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Patient Health Questionnaire・9項目・10点以上で中等度（感度88%）
+            <span class="tool-tag">QIDS-J</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Quick Inventory of Depressive Symptomatology・16項目・日本語版
+            <span class="tool-tag">HAM-D</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Hamilton Depression Rating Scale・17〜21項目・医師評価の金標準
+            <span class="tool-tag">MADRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Montgomery-Åsberg Depression Rating Scale・10項目・変化に敏感
+            <span class="tool-tag">BDI-II</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Beck Depression Inventory-II・21項目・自記式うつ評価
+            <span class="tool-tag">SDS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Zung Self-Rating Depression Scale・20項目・日本での使用多い
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4"></i>躁・軽躁・双極性評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">YMRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Young Mania Rating Scale・11項目・躁症状の標準評価
+            <span class="tool-tag">MRS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Mania Rating Scale・躁エピソードの重症度
+            <span class="tool-tag">HCL-32</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Hypomania Checklist・32項目・14点以上で双極性を疑う
+            <span class="tool-tag">MDQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Mood Disorder Questionnaire・双極性スクリーニング・7点以上で陽性
+            <span class="tool-tag">BSDS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Bipolar Spectrum Diagnostic Scale・双極スペクトラムの自記式評価
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i>自殺リスク評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">C-SSRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Columbia Suicide Severity Rating Scale・自殺念慮〜企図の段階的評価（標準）
+            <span class="tool-tag">SBQ-R</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Suicide Behaviors Questionnaire-Revised・4項目・自記式スクリーニング
+            <span class="tool-tag">SSI</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Scale for Suicide Ideation・自殺念慮の強度・詳細評価（21項目）
+            <span class="tool-tag">BS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Beck Hopelessness Scale・20項目・将来への絶望感（自殺リスクと相関）
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F3 -->
       <div class="toggle-panel open panel-notes" id="notes-f3">
         <div class="danger-box">
@@ -1178,12 +1388,12 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">PHQ-9</span>うつ病重症度評価（9項目、10点以上で中等度）
-            <span class="tool-tag">QIDS-J</span>抑うつ症状簡易評価（16項目）
-            <span class="tool-tag">HCL-32</span>軽躁状態スクリーニング（14点以上で双極性を疑う）
-            <span class="tool-tag">MDQ</span>気分障害質問票（双極性スクリーニング）
-            <span class="tool-tag">YMRS</span>Young躁症評価尺度
-            <span class="tool-tag">C-SSRS</span>コロンビア自殺重症度評価尺度
+            <span class="tool-tag">PHQ-9</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>うつ病重症度評価（9項目、10点以上で中等度）
+            <span class="tool-tag">QIDS-J</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>抑うつ症状簡易評価（16項目）
+            <span class="tool-tag">HCL-32</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>軽躁状態スクリーニング（14点以上で双極性を疑う）
+            <span class="tool-tag">MDQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>気分障害質問票（双極性スクリーニング）
+            <span class="tool-tag">YMRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Young躁症評価尺度
+            <span class="tool-tag">C-SSRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>コロンビア自殺重症度評価尺度
           </div>
         </div>
       </div>
@@ -1273,6 +1483,7 @@
       <div class="toggle-nav" id="tabs-f4">
         <button class="toggle-btn on" data-panel="criteria-f4" onclick="togglePanel('criteria-f4', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f4" onclick="togglePanel('diff-f4', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f4" onclick="togglePanel('scales-f4', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f4" onclick="togglePanel('notes-f4', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f4" onclick="togglePanel('codes-f4', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -1351,6 +1562,52 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F4 -->
+      <div class="toggle-panel open panel-scales" id="scales-f4">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i>全般不安・不安全般評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">GAD-7</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Generalized Anxiety Disorder Scale・7項目・10点以上で中等度
+            <span class="tool-tag">HAM-A</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Hamilton Anxiety Rating Scale・14項目・医師評価の標準尺度
+            <span class="tool-tag">BAI</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Beck Anxiety Inventory・21項目・自記式・身体症状と認知症状を評価
+            <span class="tool-tag">STAI</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>State-Trait Anxiety Inventory・状態不安と特性不安を分離評価
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="heart" class="w-4 h-4"></i>パニック症・広場恐怖症</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PDSS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Panic Disorder Severity Scale・7項目・治療反応性の評価に有用
+            <span class="tool-tag">ACQ</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Agoraphobic Cognitions Questionnaire・広場恐怖の認知評価
+            <span class="tool-tag">BSQ</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Body Sensations Questionnaire・身体感覚への恐怖評価
+            <span class="tool-tag">MI</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Mobility Inventory・回避行動の範囲を測定
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i>社交不安症・OCD</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">LSAS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Liebowitz Social Anxiety Scale・24項目・恐怖と回避を各4段階評価
+            <span class="tool-tag">SPIN</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Social Phobia Inventory・17項目・自記式（19点以上が境界）
+            <span class="tool-tag">Y-BOCS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Yale-Brown Obsessive Compulsive Scale・10項目・16点以上で中等度
+            <span class="tool-tag">OCI-R</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>OCD Inventory-Revised・18項目・OCD症状の自記式評価
+            <span class="tool-tag">PI-R</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Padua Inventory-Revised・60項目・強迫観念・行為の詳細評価
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i>PTSD・トラウマ評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PCL-5</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>PTSD Checklist for DSM-5・20項目・31〜33点以上でPTSD疑い
+            <span class="tool-tag">IES-R</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Impact of Event Scale-Revised・22項目・侵入・回避・過覚醒評価
+            <span class="tool-tag">CAPS-5</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>PTSD Clinician-Administered PTSD Scale・30項目・診断面接の金標準
+            <span class="tool-tag">DES</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Dissociative Experiences Scale・解離症状スクリーニング（28項目）
+            <span class="tool-tag">CTQ</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Childhood Trauma Questionnaire・小児期虐待・ネグレクト歴の評価
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F4 -->
       <div class="toggle-panel open panel-notes" id="notes-f4">
         <div class="danger-box">
@@ -1374,12 +1631,12 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">GAD-7</span>全般不安症評価（7項目、10点以上で中等度）
-            <span class="tool-tag">PDSS</span>パニック障害重症度評価尺度
-            <span class="tool-tag">LSAS</span>ライブォウィッツ社交不安尺度
-            <span class="tool-tag">Y-BOCS</span>Yale-Brown強迫観念・強迫行為尺度
-            <span class="tool-tag">PCL-5</span>PTSD症状チェックリスト（DSM-5版）
-            <span class="tool-tag">IES-R</span>改訂出来事インパクト尺度（PTSD）
+            <span class="tool-tag">GAD-7</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>全般不安症評価（7項目、10点以上で中等度）
+            <span class="tool-tag">PDSS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>パニック障害重症度評価尺度
+            <span class="tool-tag">LSAS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>ライブォウィッツ社交不安尺度
+            <span class="tool-tag">Y-BOCS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Yale-Brown強迫観念・強迫行為尺度
+            <span class="tool-tag">PCL-5</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>PTSD症状チェックリスト（DSM-5版）
+            <span class="tool-tag">IES-R</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>改訂出来事インパクト尺度（PTSD）
           </div>
         </div>
       </div>
@@ -1469,6 +1726,7 @@
       <div class="toggle-nav" id="tabs-f5">
         <button class="toggle-btn on" data-panel="criteria-f5" onclick="togglePanel('criteria-f5', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f5" onclick="togglePanel('diff-f5', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f5" onclick="togglePanel('scales-f5', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f5" onclick="togglePanel('notes-f5', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f5" onclick="togglePanel('codes-f5', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -1532,6 +1790,45 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F5 -->
+      <div class="toggle-panel open panel-scales" id="scales-f5">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="utensils" class="w-4 h-4"></i>摂食障害評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">EDE-Q</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Eating Disorder Examination Questionnaire・28項目・4サブスケール
+            <span class="tool-tag">EAT-26</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Eating Attitudes Test・26項目・20点以上でスクリーニング陽性
+            <span class="tool-tag">SCOFF</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>5項目・2項目以上陽性で摂食障害疑い（プライマリケア向け）
+            <span class="tool-tag">BITE</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Bulimic Investigatory Test Edinburgh・過食症スクリーニング（33項目）
+            <span class="tool-tag">EBI</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Eating Beliefs Inventory・摂食障害の認知的側面評価
+            <span class="tool-tag">BSQ</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Body Shape Questionnaire・体型への不満・ボディイメージ評価
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="moon" class="w-4 h-4"></i>睡眠障害評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PSQI</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Pittsburgh Sleep Quality Index・7領域・5点以上で睡眠の質低下
+            <span class="tool-tag">AIS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Athens Insomnia Scale・8項目・6点以上で不眠症（ICD-10準拠）
+            <span class="tool-tag">ISI</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Insomnia Severity Index・7項目・15点以上で中等度不眠
+            <span class="tool-tag">ESS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Epworth Sleepiness Scale・8項目・日中過眠の自記式評価
+            <span class="tool-tag">STOP-Bang</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>閉塞性睡眠時無呼吸のスクリーニング（8項目・3点以上で高リスク）
+            <span class="tool-tag">RBD-SQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>REM睡眠行動障害スクリーニング質問票（13項目）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>客観的睡眠評価ツール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PSG</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>ポリソムノグラフィ・睡眠構造の客観的評価（睡眠時無呼吸・RBD診断の金標準）
+            <span class="tool-tag">MSLT</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Multiple Sleep Latency Test・ナルコレプシーの確定診断（平均入眠潜時）
+            <span class="tool-tag">アクチグラフィ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>活動量計による7〜14日間の睡眠・覚醒リズム客観評価
+            <span class="tool-tag">睡眠日誌</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>2週間以上の自記式記録・CBTiの基盤・睡眠効率算出
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F5 -->
       <div class="toggle-panel open panel-notes" id="notes-f5">
         <div class="danger-box">
@@ -1555,11 +1852,11 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">EDE-Q</span>摂食障害評価質問票
-            <span class="tool-tag">EAT-26</span>摂食態度検査（スクリーニング）
-            <span class="tool-tag">PSQI</span>ピッツバーグ睡眠質問票
-            <span class="tool-tag">AIS</span>アテネ不眠尺度（8項目）
-            <span class="tool-tag">ESS</span>エプワース眠気尺度（日中眠気評価）
+            <span class="tool-tag">EDE-Q</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>摂食障害評価質問票
+            <span class="tool-tag">EAT-26</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>摂食態度検査（スクリーニング）
+            <span class="tool-tag">PSQI</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>ピッツバーグ睡眠質問票
+            <span class="tool-tag">AIS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>アテネ不眠尺度（8項目）
+            <span class="tool-tag">ESS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>エプワース眠気尺度（日中眠気評価）
           </div>
         </div>
       </div>
@@ -1643,6 +1940,7 @@
       <div class="toggle-nav" id="tabs-f6">
         <button class="toggle-btn on" data-panel="criteria-f6" onclick="togglePanel('criteria-f6', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f6" onclick="togglePanel('diff-f6', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f6" onclick="togglePanel('scales-f6', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f6" onclick="togglePanel('notes-f6', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f6" onclick="togglePanel('codes-f6', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -1714,6 +2012,50 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F6 -->
+      <div class="toggle-panel open panel-scales" id="scales-f6">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i>パーソナリティ障害全般評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">SCID-5-PD</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>構造化臨床面接（DSM-5-TR版）・PDのゴールドスタンダード診断ツール
+            <span class="tool-tag">IPDE</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>International Personality Disorder Examination・ICD-10/DSM両対応
+            <span class="tool-tag">PDQ-4+</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Personality Diagnostic Questionnaire・自記式スクリーニング（99項目）
+            <span class="tool-tag">MCMI-III</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Millon Clinical Multiaxial Inventory・パーソナリティ・臨床症状の包括評価
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i>境界性PD（BPD）評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ZAN-BPD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Zanarini Rating Scale for BPD・9項目・医師評価・重症度と治療変化に敏感
+            <span class="tool-tag">MSI-BPD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>McLean Screening Instrument for BPD・10項目・7点以上でBPD疑い
+            <span class="tool-tag">BSL-23</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Borderline Symptom List・23項目・自記式・BPD症状の詳細評価
+            <span class="tool-tag">PAI-BOR</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Personality Assessment Inventory BPD下位尺度
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4"></i>反社会性PD・衝動性評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PCL-R</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Psychopathy Checklist-Revised・20項目・精神病質の評価（法医学標準）
+            <span class="tool-tag">PCL:SV</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>PCL Screening Version・12項目・臨床スクリーニング版
+            <span class="tool-tag">HCR-20</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Historical-Clinical-Risk Management・暴力リスク評価ガイド（20項目）
+            <span class="tool-tag">BIS-11</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Barratt Impulsiveness Scale・衝動性の3因子評価（30項目）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4"></i>心理検査（投映法・質問紙）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">MMPI-2</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Minnesota Multiphasic Personality Inventory・567項目・包括的人格評価
+            <span class="tool-tag">NEO-PI-R</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Big Five性格評価・240項目・5因子モデル
+            <span class="tool-tag">ロールシャッハ</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>投映法・無意識的人格構造・思考過程の評価
+            <span class="tool-tag">TAT</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>主題統覚検査・対人関係パターン・防衛機制の評価
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F6 -->
       <div class="toggle-panel open panel-notes" id="notes-f6">
         <div class="danger-box">
@@ -1737,10 +2079,10 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">SCID-5-PD</span>構造化臨床面接（パーソナリティ障害）
-            <span class="tool-tag">ZAN-BPD</span>Zanarini BPD評価スケール
-            <span class="tool-tag">MSI-BPD</span>BPDスクリーニング質問票（10項目）
-            <span class="tool-tag">PCL-R</span>精神病質チェックリスト（ASPD評価）
+            <span class="tool-tag">SCID-5-PD</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>構造化臨床面接（パーソナリティ障害）
+            <span class="tool-tag">ZAN-BPD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Zanarini BPD評価スケール
+            <span class="tool-tag">MSI-BPD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>BPDスクリーニング質問票（10項目）
+            <span class="tool-tag">PCL-R</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>精神病質チェックリスト（ASPD評価）
           </div>
         </div>
       </div>
@@ -1833,6 +2175,7 @@
       <div class="toggle-nav" id="tabs-f7">
         <button class="toggle-btn on" data-panel="criteria-f7" onclick="togglePanel('criteria-f7', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f7" onclick="togglePanel('diff-f7', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f7" onclick="togglePanel('scales-f7', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f7" onclick="togglePanel('notes-f7', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f7" onclick="togglePanel('codes-f7', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -1883,6 +2226,42 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F7 -->
+      <div class="toggle-panel open panel-scales" id="scales-f7">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="cpu" class="w-4 h-4"></i>知能検査</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">WISC-V</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Wechsler Intelligence Scale for Children（5〜16歳）・5指標・15下位検査
+            <span class="tool-tag">WAIS-IV</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Wechsler Adult Intelligence Scale（16歳〜）・4指標・15下位検査
+            <span class="tool-tag">田中ビネーV</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>全年齢対応・精神年齢・IQ算出（幼児〜成人）
+            <span class="tool-tag">KABC-II</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>K-ABC第2版・認知処理能力と習得度の分離評価（2歳6ヶ月〜18歳11ヶ月）
+            <span class="tool-tag">DN-CAS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>PASS理論に基づく認知評価（5〜17歳）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="check-square" class="w-4 h-4"></i>適応機能評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">Vineland-3</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>適応行動尺度・概念/社会/実用の3ドメイン・DSM-5-TR診断の必須評価
+            <span class="tool-tag">ABAS-3</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Adaptive Behavior Assessment System・概念/社会/実用ドメイン
+            <span class="tool-tag">S-M社会生活能力検査</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>日本標準・6領域・乳児〜成人まで
+            <span class="tool-tag">ASA-B</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>成人期向け適応行動評価尺度
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4"></i>学力・発達評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">K-ABC II 習得尺度</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>読み・書き・算数・語彙の習得度評価
+            <span class="tool-tag">TTAP</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>TEACCH Transition Assessment Profile・青年〜成人期の発達・職業評価
+            <span class="tool-tag">新版K式発達検査</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>姿勢-運動/認知-適応/言語-社会の3領域（0〜成人）
+            <span class="tool-tag">遠城寺式乳幼児分析的発達検査</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>0〜4歳11ヶ月の発達スクリーニング
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F7 -->
       <div class="toggle-panel open panel-notes" id="notes-f7">
         <div class="danger-box">
@@ -1906,9 +2285,9 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価ツール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">WISC-V</span>ウェクスラー知能検査（児童）
-            <span class="tool-tag">WAIS-IV</span>ウェクスラー知能検査（成人）
-            <span class="tool-tag">Vineland-3</span>適応行動尺度（3ドメイン評価）
+            <span class="tool-tag">WISC-V</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>ウェクスラー知能検査（児童）
+            <span class="tool-tag">WAIS-IV</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>ウェクスラー知能検査（成人）
+            <span class="tool-tag">Vineland-3</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>適応行動尺度（3ドメイン評価）
             <span class="tool-tag">田中ビネー</span>田中ビネー知能検査V（全年齢）
           </div>
         </div>
@@ -1980,6 +2359,7 @@
       <div class="toggle-nav" id="tabs-f8">
         <button class="toggle-btn on" data-panel="criteria-f8" onclick="togglePanel('criteria-f8', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f8" onclick="togglePanel('diff-f8', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f8" onclick="togglePanel('scales-f8', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f8" onclick="togglePanel('notes-f8', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f8" onclick="togglePanel('codes-f8', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -2033,6 +2413,50 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F8 -->
+      <div class="toggle-panel open panel-scales" id="scales-f8">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="search" class="w-4 h-4"></i>ASD診断ツール（ゴールドスタンダード）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ADOS-2</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Autism Diagnostic Observation Schedule・モジュール1〜4・直接観察の標準診断
+            <span class="tool-tag">ADI-R</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Autism Diagnostic Interview-Revised・親への半構造化面接・幼少期発達歴収集
+            <span class="tool-tag">ADIR-SB</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>ADI-Rの短縮版・外来でのスクリーニング面接
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>ASDスクリーニング・重症度評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">AQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Autism Spectrum Quotient・50項目・33点以上でASD疑い（成人自記式）
+            <span class="tool-tag">AQ-J-10</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>AQ短縮版10項目・外来での簡易スクリーニング
+            <span class="tool-tag">CARS-2</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Childhood Autism Rating Scale・15項目（2歳〜成人）
+            <span class="tool-tag">SRS-2</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Social Responsiveness Scale・65項目・社会的応答性の定量化
+            <span class="tool-tag">M-CHAT</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Modified Checklist for Autism in Toddlers・16〜30ヶ月の早期スクリーニング
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="message-circle" class="w-4 h-4"></i>言語・コミュニケーション評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">PVT-R</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>絵画語彙発達検査・受容語彙力（3歳〜成人）
+            <span class="tool-tag">LCSA</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>学齢期言語コミュニケーション発達スケール（6〜12歳）
+            <span class="tool-tag">S-S法</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>言語発達遅滞検査・記号形式〜伝達機能の評価
+            <span class="tool-tag">TLPA</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>標準失語症検査（成人言語評価）
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="move" class="w-4 h-4"></i>学習・運動発達評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">Movement ABC-2</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>発達性協調運動症（DCD）の評価（3〜16歳）
+            <span class="tool-tag">DCDQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>DCD Questionnaire・親記入式DCD スクリーニング
+            <span class="tool-tag">読み書きスクリーニング</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>特異的読字障害（ディスレクシア）評価（STRAW-R等）
+            <span class="tool-tag">K-ABC II</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>学習障害の認知処理プロフィール評価
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F8 -->
       <div class="toggle-panel open panel-notes" id="notes-f8">
         <div class="danger-box">
@@ -2056,11 +2480,11 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価ツール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">ADOS-2</span>自閉症診断観察スケジュール（直接観察）
-            <span class="tool-tag">ADI-R</span>自閉症診断面接（親・養育者への面接）
-            <span class="tool-tag">AQ</span>自閉症スペクトラム指数（成人自記式）
-            <span class="tool-tag">CARS-2</span>小児自閉症評価尺度
-            <span class="tool-tag">M-CHAT</span>16〜30ヶ月児の早期スクリーニング
+            <span class="tool-tag">ADOS-2</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>自閉症診断観察スケジュール（直接観察）
+            <span class="tool-tag">ADI-R</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>自閉症診断面接（親・養育者への面接）
+            <span class="tool-tag">AQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>自閉症スペクトラム指数（成人自記式）
+            <span class="tool-tag">CARS-2</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>小児自閉症評価尺度
+            <span class="tool-tag">M-CHAT</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>16〜30ヶ月児の早期スクリーニング
           </div>
         </div>
       </div>
@@ -2148,6 +2572,7 @@
       <div class="toggle-nav" id="tabs-f9">
         <button class="toggle-btn on" data-panel="criteria-f9" onclick="togglePanel('criteria-f9', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
         <button class="toggle-btn on" data-panel="diff-f9" onclick="togglePanel('diff-f9', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="toggle-btn on" data-panel="scales-f9" onclick="togglePanel('scales-f9', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f9" onclick="togglePanel('notes-f9', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
         <button class="toggle-btn on" data-panel="codes-f9" onclick="togglePanel('codes-f9', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
@@ -2244,6 +2669,50 @@
         </div>
       </div>
 
+      <!-- Tab5: 評価スケール F9 -->
+      <div class="toggle-panel open panel-scales" id="scales-f9">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4"></i>ADHD評価（成人）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">CAARS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Conners Adult ADHD Rating Scales・自己/他者記入66項目・3版
+            <span class="tool-tag">DIVA 2.0</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Diagnostic Interview for ADHD in Adults・現在＋小児期症状の半構造化面接
+            <span class="tool-tag">ASRS v1.1</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Adult ADHD Self-Report Scale・WHO開発・6項目スクリーニング版
+            <span class="tool-tag">WRAADDS</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Wender-Reimherr Adult Attention Deficit Disorder Scale
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i>ADHD評価（小児）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ADHD-RS-IV</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>ADHD評価尺度・18項目（DSM準拠）・親/教師記入
+            <span class="tool-tag">Conners 3</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Conners Third Edition・99項目・多面的ADHD評価
+            <span class="tool-tag">SNAP-IV</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Swanson, Nolan and Pelham・26項目・症状モニタリング向き
+            <span class="tool-tag">CAT</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Continuous Attention Test・注意の持続性・反応抑制の客観評価
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i>チック症・トゥレット評価</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">YGTSS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Yale Global Tic Severity Scale・運動/音声チックの重症度（50点満点）
+            <span class="tool-tag">PUTS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Premonitory Urge for Tics Scale・チック前兆感覚の自記式評価
+            <span class="tool-tag">TSSL</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Tourette Syndrome Severity Scale・包括的重症度評価
+            <span class="tool-tag">MOVES</span><span class="ev-badge ev-c" title="専門家合意・補助的使用（症例研究/専門家意見）">Lv.C</span>Motor tic, Obsessions/compulsions, Vocal tic Evaluation Survey
+          </div>
+        </div>
+        <div class="scale-box">
+          <div class="font-bold text-cyan-800 mb-2 flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4"></i>小児行動・情緒の広範スクリーニング</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">CBCL</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Child Behavior Checklist・親記入・内向化/外向化問題の包括評価
+            <span class="tool-tag">SDQ</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Strengths and Difficulties Questionnaire・25項目・5領域（WHO推奨）
+            <span class="tool-tag">RCADS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Revised Children's Anxiety and Depression Scale・不安/抑うつ評価
+            <span class="tool-tag">MASC-2</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Multidimensional Anxiety Scale for Children・不安の多次元評価
+          </div>
+        </div>
+      </div>
       <!-- Tab4: 注意点 F9 -->
       <div class="toggle-panel open panel-notes" id="notes-f9">
         <div class="danger-box">
@@ -2267,10 +2736,10 @@
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
           <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
-            <span class="tool-tag">CAARS</span>Conners成人ADHD評価尺度（ADHD成人）
-            <span class="tool-tag">DIVA 2.0</span>ADHD成人診断半構造化面接
-            <span class="tool-tag">ADHD-RS</span>ADHD評価尺度（小児・教師/親記入）
-            <span class="tool-tag">CBCL</span>子どもの行動チェックリスト（広範スクリーニング）
+            <span class="tool-tag">CAARS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Conners成人ADHD評価尺度（ADHD成人）
+            <span class="tool-tag">DIVA 2.0</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>ADHD成人診断半構造化面接
+            <span class="tool-tag">ADHD-RS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>ADHD評価尺度（小児・教師/親記入）
+            <span class="tool-tag">CBCL</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>子どもの行動チェックリスト（広範スクリーニング）
             <span class="tool-tag">YALE-TICS</span>Yaleチック重症度評価尺度
           </div>
         </div>
@@ -2398,32 +2867,72 @@
     btn.classList.toggle('on', isOpen);
   }
 
-  // アコーディオン制御（開く時に全パネルON、閉じる時にOFF）
+  // アコーディオン制御（常に1つのみアクティブ・アクティブをクリックで閉じる）
   function toggleSection(bodyId, header) {
     const body = document.getElementById(bodyId);
-    const chevronId = bodyId + '-chevron';
-    const chevron = document.getElementById(chevronId);
     const isOpening = !body.classList.contains('open');
-    body.classList.toggle('open');
-    if (chevron) chevron.classList.toggle('open');
+
+    // 全セクションを閉じる
+    document.querySelectorAll('.cat-body').forEach(b => {
+      b.classList.remove('open');
+      b.querySelectorAll('.toggle-panel').forEach(p => p.classList.remove('open'));
+      b.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.remove('on'));
+    });
+    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+
+    // クリックしたセクションを開く（既に開いていた場合は閉じたまま）
     if (isOpening) {
+      body.classList.add('open');
+      const chevron = document.getElementById(bodyId + '-chevron');
+      if (chevron) chevron.classList.add('open');
       body.querySelectorAll('.toggle-panel').forEach(p => p.classList.add('open'));
-      body.querySelectorAll('.toggle-btn').forEach(b => b.classList.add('on'));
-    } else {
-      body.querySelectorAll('.toggle-panel').forEach(p => p.classList.remove('open'));
-      body.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('on'));
+      body.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.add('on'));
     }
   }
 
   function expandAll() {
-    document.querySelectorAll('.cat-body').forEach(b => b.classList.add('open'));
+    document.querySelectorAll('.cat-body').forEach(b => {
+      b.classList.add('open');
+      b.querySelectorAll('.toggle-panel').forEach(p => p.classList.add('open'));
+      b.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.add('on'));
+    });
     document.querySelectorAll('.chevron').forEach(c => c.classList.add('open'));
   }
 
   function collapseAll() {
-    document.querySelectorAll('.cat-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.cat-body').forEach(b => {
+      b.classList.remove('open');
+      b.querySelectorAll('.toggle-panel').forEach(p => p.classList.remove('open'));
+      b.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.remove('on'));
+    });
     document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
   }
+
+  // ジャンプバーのオフセット補正（sticky-nav の高さ分を引く）
+  document.querySelectorAll('.nav-btn').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').slice(1);
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      const navEl = document.querySelector('.sticky-nav');
+      const navH  = navEl ? navEl.offsetHeight : 56;
+      const top   = target.getBoundingClientRect().top + window.pageYOffset - navH - 4;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  // ページ読み込み時: スクロールトップ固定・全F分類を閉じる
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  (function initPage() {
+    window.scrollTo(0, 0);
+    document.querySelectorAll('.cat-body').forEach(b => {
+      b.classList.remove('open');
+      b.querySelectorAll('.toggle-panel').forEach(p => p.classList.remove('open'));
+      b.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.remove('on'));
+    });
+    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+  })();
 
   // 検索・フィルタリング
   const searchInput = document.getElementById('searchInput');
