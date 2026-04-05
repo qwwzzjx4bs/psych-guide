@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICD-10 精神科疾患分類 全体像 F0〜F9 | 精神科臨床ガイド</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+
+    /* カテゴリ色 */
+    .f0-grad { background: linear-gradient(135deg, #92400e, #d97706); }
+    .f1-grad { background: linear-gradient(135deg, #991b1b, #ef4444); }
+    .f2-grad { background: linear-gradient(135deg, #5b21b6, #8b5cf6); }
+    .f3-grad { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+    .f4-grad { background: linear-gradient(135deg, #134e4a, #14b8a6); }
+    .f5-grad { background: linear-gradient(135deg, #9a3412, #f97316); }
+    .f6-grad { background: linear-gradient(135deg, #1e293b, #64748b); }
+    .f7-grad { background: linear-gradient(135deg, #374151, #9ca3af); }
+    .f8-grad { background: linear-gradient(135deg, #14532d, #22c55e); }
+    .f9-grad { background: linear-gradient(135deg, #9d174d, #ec4899); }
+
+    .f0-bg { background: #fef3c7; }
+    .f1-bg { background: #fee2e2; }
+    .f2-bg { background: #ede9fe; }
+    .f3-bg { background: #dbeafe; }
+    .f4-bg { background: #ccfbf1; }
+    .f5-bg { background: #ffedd5; }
+    .f6-bg { background: #f1f5f9; }
+    .f7-bg { background: #f3f4f6; }
+    .f8-bg { background: #dcfce7; }
+    .f9-bg { background: #fce7f3; }
+
+    .f0-text { color: #92400e; }
+    .f1-text { color: #991b1b; }
+    .f2-text { color: #5b21b6; }
+    .f3-text { color: #1e40af; }
+    .f4-text { color: #134e4a; }
+    .f5-text { color: #9a3412; }
+    .f6-text { color: #1e293b; }
+    .f7-text { color: #374151; }
+    .f8-text { color: #14532d; }
+    .f9-text { color: #9d174d; }
+
+    .f0-border { border-left: 4px solid #d97706; }
+    .f1-border { border-left: 4px solid #ef4444; }
+    .f2-border { border-left: 4px solid #8b5cf6; }
+    .f3-border { border-left: 4px solid #3b82f6; }
+    .f4-border { border-left: 4px solid #14b8a6; }
+    .f5-border { border-left: 4px solid #f97316; }
+    .f6-border { border-left: 4px solid #64748b; }
+    .f7-border { border-left: 4px solid #9ca3af; }
+    .f8-border { border-left: 4px solid #22c55e; }
+    .f9-border { border-left: 4px solid #ec4899; }
+
+    .f0-accent { background: #fef3c7; border: 1px solid #d97706; }
+    .f1-accent { background: #fee2e2; border: 1px solid #ef4444; }
+    .f2-accent { background: #ede9fe; border: 1px solid #8b5cf6; }
+    .f3-accent { background: #dbeafe; border: 1px solid #3b82f6; }
+    .f4-accent { background: #ccfbf1; border: 1px solid #14b8a6; }
+    .f5-accent { background: #ffedd5; border: 1px solid #f97316; }
+    .f6-accent { background: #f1f5f9; border: 1px solid #64748b; }
+    .f7-accent { background: #f3f4f6; border: 1px solid #9ca3af; }
+    .f8-accent { background: #dcfce7; border: 1px solid #22c55e; }
+    .f9-accent { background: #fce7f3; border: 1px solid #ec4899; }
+
+    /* セクション */
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .cat-header {
+      cursor: pointer;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: opacity 0.15s;
+      user-select: none;
+    }
+    .cat-header:hover { opacity: 0.92; }
+    .cat-body {
+      display: none;
+      border-top: 1px solid #e5e7eb;
+      padding: 1.25rem 1.5rem;
+    }
+    .cat-body.open { display: block; }
+    .chevron { transition: transform 0.25s; }
+    .chevron.open { transform: rotate(180deg); }
+
+    /* コード表 */
+    .code-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .code-table thead tr { background: #f8fafc; }
+    .code-table th {
+      padding: 0.55rem 0.85rem;
+      text-align: left;
+      font-weight: 700;
+      color: #374151;
+      border-bottom: 2px solid #e2e8f0;
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+    .code-table td {
+      padding: 0.5rem 0.85rem;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .code-table tr:last-child td { border-bottom: none; }
+    .code-table tr:hover td { background: #f9fafb; }
+    .code-table tr.main-row td { font-weight: 600; }
+    .code-table tr.sub-row td { padding-left: 1.5rem; color: #374151; }
+
+    /* コードバッジ */
+    .icd-code {
+      font-family: 'Inter', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+    .dsm-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 9999px;
+      background: #ede9fe;
+      color: #5b21b6;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .dsm-na {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .note-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* スティッキーナビ */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { opacity: 0.85; }
+
+    /* 検索 */
+    .search-box {
+      border: 2px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 0.6rem 1rem;
+      width: 100%;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .search-box:focus { border-color: #3b82f6; }
+    .search-hl { background: #fef08a; border-radius: 2px; }
+    .hidden-row { display: none !important; }
+
+    /* 全展開ボタン */
+    .expand-btn {
+      padding: 0.4rem 0.9rem;
+      border-radius: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #e2e8f0;
+      background: white;
+      color: #374151;
+      transition: all 0.15s;
+    }
+    .expand-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    /* 差異注記ボックス */
+    .diff-box {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-left: 4px solid #3b82f6;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+      margin-top: 0.75rem;
+      color: #1e3a5f;
+    }
+    .warn-box {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border-left: 4px solid #f59e0b;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: #78350f;
+    }
+
+    /* 統計バー */
+    .stat-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+    }
+
+    /* タブナビゲーション */
+    .tab-nav {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      padding: 0.6rem 0.7rem;
+      background: #f1f5f9;
+      border-radius: 0.875rem;
+      border: 1px solid #e2e8f0;
+    }
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.6rem;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #e2e8f0;
+      border: none;
+      color: #64748b;
+      transition: all 0.18s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+      box-shadow: none;
+    }
+    .tab-btn:hover {
+      background: #cbd5e1;
+      color: #1e293b;
+      transform: translateY(-1px);
+    }
+    /* コード一覧 アクティブ */
+    .tab-btn[data-tab*="codes"].active {
+      background: #1e293b;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(30,41,59,0.35);
+      transform: translateY(-2px);
+    }
+    /* 診断基準 アクティブ */
+    .tab-btn[data-tab*="criteria"].active {
+      background: #1d4ed8;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(29,78,216,0.4);
+      transform: translateY(-2px);
+    }
+    /* 鑑別 アクティブ */
+    .tab-btn[data-tab*="diff"].active {
+      background: #6d28d9;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(109,40,217,0.4);
+      transform: translateY(-2px);
+    }
+    /* 注意点 アクティブ */
+    .tab-btn[data-tab*="notes"].active {
+      background: #d97706;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(217,119,6,0.4);
+      transform: translateY(-2px);
+    }
+    /* コンテンツエリア：アクティブタブ色に連動した左ボーダー */
+    .tab-panel { display: none; }
+    .tab-panel.active {
+      display: block;
+      border-left: 4px solid #e2e8f0;
+      padding-left: 1rem;
+      transition: border-color 0.18s;
+    }
+    .tab-panel.active.panel-codes   { border-left-color: #1e293b; }
+    .tab-panel.active.panel-criteria{ border-left-color: #1d4ed8; }
+    .tab-panel.active.panel-diff    { border-left-color: #6d28d9; }
+    .tab-panel.active.panel-notes   { border-left-color: #d97706; }
+
+    /* 診断基準ボックス（追加分） */
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .diff-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .diff-table th {
+      background: #f1f5f9;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      font-weight: 700;
+      color: #374151;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .diff-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .diff-table tr:last-child td { border-bottom: none; }
+    .diff-table tr:hover td { background: #f9fafb; }
+    .tool-tag {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      margin: 0.1rem;
+    }
+
+    /* 印刷 */
+    @media print {
+      .sticky-nav, .no-print { display: none !important; }
+      .cat-body { display: block !important; }
+      .tab-panel { display: block !important; }
+      .tab-nav { display: none !important; }
+      .section-card { box-shadow: none; border: 1px solid #e2e8f0; }
+    }
+    @media (max-width: 768px) {
+      .code-table .en-col { display: none; }
+      .diff-table .diff-en { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- ヘッダー -->
+<header class="header-gradient text-white py-8 md:py-10">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="brain" class="w-7 h-7 opacity-75"></i>
+      <span class="text-xs font-semibold uppercase tracking-widest opacity-70">精神科臨床ガイド</span>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold leading-tight">ICD-10 精神科疾患分類</h1>
+    <p class="mt-1.5 text-lg opacity-85 font-medium">F0〜F9 全分類 + DSM-5-TR 対応コード</p>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-medium">ICD-10（WHO）</span>
+      <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-medium">DSM-5-TR 対応</span>
+      <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-medium">F0〜F9 全10カテゴリ</span>
+    </div>
+    <!-- 統計バー -->
+    <div class="flex flex-wrap gap-3 mt-5">
+      <div class="stat-card">
+        <div class="text-2xl font-bold">10</div>
+        <div class="text-xs opacity-75 mt-0.5">F大分類</div>
+      </div>
+      <div class="stat-card">
+        <div class="text-2xl font-bold">110+</div>
+        <div class="text-xs opacity-75 mt-0.5">下位分類コード</div>
+      </div>
+      <div class="stat-card">
+        <div class="text-2xl font-bold">20</div>
+        <div class="text-xs opacity-75 mt-0.5">DSM-5-TR 章</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- スティッキーナビ -->
+<nav class="sticky-nav no-print">
+  <div class="max-w-6xl mx-auto px-4 py-2.5 overflow-x-auto">
+    <div class="flex items-center gap-2 min-w-max">
+      <span class="text-xs text-gray-500 font-medium mr-1 flex-shrink-0">ジャンプ:</span>
+      <a href="#f0" class="nav-btn f0-grad">F0 器質性</a>
+      <a href="#f1" class="nav-btn f1-grad">F1 物質</a>
+      <a href="#f2" class="nav-btn f2-grad">F2 統合失調症</a>
+      <a href="#f3" class="nav-btn f3-grad">F3 気分</a>
+      <a href="#f4" class="nav-btn f4-grad">F4 神経症</a>
+      <a href="#f5" class="nav-btn f5-grad">F5 生理的</a>
+      <a href="#f6" class="nav-btn f6-grad">F6 人格</a>
+      <a href="#f7" class="nav-btn f7-grad">F7 知的</a>
+      <a href="#f8" class="nav-btn f8-grad">F8 発達</a>
+      <a href="#f9" class="nav-btn f9-grad">F9 小児期</a>
+    </div>
+  </div>
+</nav>
+
+<!-- メインコンテンツ -->
+<main class="max-w-6xl mx-auto px-4 py-6">
+
+  <!-- 検索・ツールバー -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-5 no-print">
+    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+      <div class="flex-1 relative">
+        <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+        <input type="text" id="searchInput" class="search-box pl-9" placeholder="ICD-10コード・疾患名・DSM診断名で検索…">
+      </div>
+      <div class="flex gap-2 flex-shrink-0">
+        <button class="expand-btn" onclick="expandAll()">
+          <i data-lucide="chevrons-down" class="w-3.5 h-3.5 inline mr-1"></i>全展開
+        </button>
+        <button class="expand-btn" onclick="collapseAll()">
+          <i data-lucide="chevrons-up" class="w-3.5 h-3.5 inline mr-1"></i>全折畳
+        </button>
+      </div>
+    </div>
+    <div id="searchResultCount" class="text-xs text-gray-500 mt-2 hidden"></div>
+  </div>
+
+  <!-- 凡例 -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-5">
+    <div class="flex items-center gap-2 mb-3">
+      <i data-lucide="info" class="w-4 h-4 text-blue-600"></i>
+      <span class="font-bold text-gray-700 text-sm">表の見方・凡例</span>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+      <div class="flex items-start gap-2">
+        <span class="icd-code flex-shrink-0">F20</span>
+        <span class="text-gray-600">ICD-10コード（太字＝主分類）</span>
+      </div>
+      <div class="flex items-start gap-2">
+        <span class="dsm-badge flex-shrink-0">DSM</span>
+        <span class="text-gray-600">DSM-5-TR相当診断名</span>
+      </div>
+      <div class="flex items-start gap-2">
+        <span class="dsm-na flex-shrink-0">—</span>
+        <span class="text-gray-600">DSM-5-TRに直接対応なし</span>
+      </div>
+      <div class="flex items-start gap-2">
+        <span class="note-badge flex-shrink-0">注</span>
+        <span class="text-gray-600">概念的差異・注意点あり</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ F0 ============ -->
+  <div class="section-card" id="f0">
+    <div class="cat-header f0-grad text-white" onclick="toggleSection('f0-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="brain" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F00–F09</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">器質性・症状性精神障害</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">症状性を含む器質性精神障害</p>
+        <p class="text-xs opacity-65 mt-0.5">Organic, including symptomatic, mental disorders</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 神経認知症群</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f0-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body open" id="f0-body">
+      <div class="diff-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-700"></i>
+          <div>
+            <span class="font-bold text-blue-800">DSM-5-TR との概念的差異：</span>
+            ICD-10の「認知症」はDSM-5-TRでは<strong>「主要神経認知障害 (Major NCD)」</strong>と改称。軽度認知障害 (F06.7) は<strong>「軽度神経認知障害 (Mild NCD)」</strong>に対応。
+            病因（アルツハイマー・血管性・レビー小体等）を必ずICD-10側コードと組み合わせて記録。
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab1: コード一覧 -->
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f0-rows">
+            <tr class="main-row"><td><span class="icd-code">F00</span></td><td>アルツハイマー病の認知症</td><td class="en-col text-gray-500">Dementia in Alzheimer's disease</td><td><span class="dsm-badge">アルツハイマー病による主要 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F00.0</span></td><td>早発型（65歳未満）</td><td class="en-col text-gray-500">Early onset</td><td><span class="dsm-na">同上（早発型 specifier）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F00.1</span></td><td>晩発型（65歳以上）</td><td class="en-col text-gray-500">Late onset</td><td><span class="dsm-na">同上（晩発型 specifier）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F00.2</span></td><td>非定型型または混合型</td><td class="en-col text-gray-500">Atypical or mixed type</td><td><span class="dsm-na">同上</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F00.9</span></td><td>特定不能</td><td class="en-col text-gray-500">Unspecified</td><td><span class="dsm-na">同上</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F01</span></td><td>血管性認知症</td><td class="en-col text-gray-500">Vascular dementia</td><td><span class="dsm-badge">血管疾患による主要 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F01.0</span></td><td>急性発症の血管性認知症</td><td class="en-col text-gray-500">Vascular dementia, acute onset</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F01.1</span></td><td>多発梗塞性認知症</td><td class="en-col text-gray-500">Multi-infarct dementia</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F01.2</span></td><td>皮質下血管性認知症</td><td class="en-col text-gray-500">Subcortical vascular dementia</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F01.3</span></td><td>混合型皮質性・皮質下性</td><td class="en-col text-gray-500">Mixed cortical and subcortical</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F02</span></td><td>他疾患における認知症</td><td class="en-col text-gray-500">Dementia in other diseases</td><td><span class="dsm-badge">病因別 主要 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F02.0</span></td><td>ピック病の認知症</td><td class="en-col text-gray-500">Dementia in Pick's disease</td><td><span class="dsm-badge">前頭側頭型 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F02.1</span></td><td>クロイツフェルト・ヤコブ病</td><td class="en-col text-gray-500">Dementia in Creutzfeldt-Jakob disease</td><td><span class="dsm-badge">プリオン病による主要 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F02.2</span></td><td>ハンチントン病の認知症</td><td class="en-col text-gray-500">Dementia in Huntington's disease</td><td><span class="dsm-badge">ハンチントン病による主要 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F02.3</span></td><td>パーキンソン病の認知症</td><td class="en-col text-gray-500">Dementia in Parkinson's disease</td><td><span class="dsm-badge">パーキンソン病による主要 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F02.4</span></td><td>HIV疾患における認知症</td><td class="en-col text-gray-500">Dementia in HIV disease</td><td><span class="dsm-badge">HIV感染による主要 NCD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F02.8</span></td><td>他の特定疾患の認知症</td><td class="en-col text-gray-500">Dementia in other specified diseases</td><td><span class="dsm-badge">他の医学的疾患による主要 NCD</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F03</span></td><td>特定不能の認知症</td><td class="en-col text-gray-500">Unspecified dementia</td><td><span class="dsm-badge">特定不能の主要 NCD</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F04</span></td><td>器質性健忘症候群（非アルコール性）</td><td class="en-col text-gray-500">Organic amnesic syndrome</td><td><span class="dsm-na">— (Disease-specific NCD with memory domain)</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F05</span></td><td>せん妄（非物質誘発性）</td><td class="en-col text-gray-500">Delirium, not alcohol/drug-induced</td><td><span class="dsm-badge">せん妄 (Delirium) F05</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F05.0</span></td><td>認知症を伴わないせん妄</td><td class="en-col text-gray-500">Delirium not superimposed on dementia</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F05.1</span></td><td>認知症を重ねたせん妄</td><td class="en-col text-gray-500">Delirium superimposed on dementia</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F06</span></td><td>脳損傷・機能不全による他の精神障害</td><td class="en-col text-gray-500">Other mental disorders due to brain damage/dysfunction</td><td><span class="dsm-badge">他の医学的疾患による各種障害</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.0</span></td><td>器質性幻覚症</td><td class="en-col text-gray-500">Organic hallucinosis</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.1</span></td><td>器質性緊張病性障害</td><td class="en-col text-gray-500">Organic catatonic disorder</td><td><span class="dsm-badge">他の医学的疾患による緊張病</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.2</span></td><td>器質性妄想性〔統合失調症様〕障害</td><td class="en-col text-gray-500">Organic delusional disorder</td><td><span class="dsm-badge">他の医学的疾患による精神病性障害</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.3</span></td><td>器質性気分障害</td><td class="en-col text-gray-500">Organic mood disorder</td><td><span class="dsm-badge">他の医学的疾患による抑うつ/双極性障害</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.4</span></td><td>器質性不安障害</td><td class="en-col text-gray-500">Organic anxiety disorder</td><td><span class="dsm-badge">他の医学的疾患による不安症</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.5</span></td><td>器質性解離性障害</td><td class="en-col text-gray-500">Organic dissociative disorder</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.6</span></td><td>器質性情動易変性障害</td><td class="en-col text-gray-500">Organic emotionally labile disorder</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F06.7</span></td><td>軽度認知障害</td><td class="en-col text-gray-500">Mild cognitive disorder</td><td><span class="dsm-badge">軽度神経認知障害 (Mild NCD)</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F07</span></td><td>脳疾患・損傷による人格・行動障害</td><td class="en-col text-gray-500">Personality/behavioural disorders due to brain disease</td><td><span class="dsm-badge">他の医学的疾患による人格変化</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F07.0</span></td><td>器質性人格障害</td><td class="en-col text-gray-500">Organic personality disorder</td><td><span class="dsm-na">他の医学的疾患による人格変化 310.1/F07.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F07.1</span></td><td>脳炎後症候群</td><td class="en-col text-gray-500">Post-encephalitic syndrome</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F07.2</span></td><td>脳振盪後症候群</td><td class="en-col text-gray-500">Post-concussional syndrome</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F09</span></td><td>特定不能の器質性精神障害</td><td class="en-col text-gray-500">Unspecified organic or symptomatic mental disorder</td><td><span class="dsm-na">—</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F1 ============ -->
+  <div class="section-card" id="f1">
+    <div class="cat-header f1-grad text-white" onclick="toggleSection('f1-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="flask-conical" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F10–F19</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">精神作用物質関連障害</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">精神作用物質使用による精神及び行動の障害</p>
+        <p class="text-xs opacity-65 mt-0.5">Mental and behavioural disorders due to psychoactive substance use</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 物質関連・嗜癖性障害群</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f1-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f1-body">
+      <div class="diff-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-700"></i>
+          <div>
+            <span class="font-bold text-blue-800">第4桁の臨床状態分類（共通）：</span>
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.0</span>急性中毒　
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.1</span>有害な使用　
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.2</span>依存症候群　
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.3</span>離脱状態　
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.4</span>せん妄を伴う離脱　
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.5</span>精神病性障害　
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.6</span>健忘症候群　
+            <span class="font-mono text-xs bg-white/60 px-1 rounded">.7</span>残遺性・遅発性障害　— DSM-5-TRでは「有害な使用」を Use Disorder に統合。
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">物質（英語）</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f1-rows">
+            <tr class="main-row"><td><span class="icd-code">F10</span></td><td>アルコール使用による精神・行動障害</td><td class="en-col text-gray-500">Alcohol</td><td><span class="dsm-badge">アルコール使用障害群 F10.1x–F10.2x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F10.0</span></td><td>急性中毒</td><td class="en-col text-gray-500">Acute intoxication</td><td><span class="dsm-badge">アルコール中毒</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F10.1</span></td><td>有害な使用</td><td class="en-col text-gray-500">Harmful use</td><td><span class="dsm-na">Use Disorder (軽度) に統合</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F10.2</span></td><td>依存症候群</td><td class="en-col text-gray-500">Dependence syndrome</td><td><span class="dsm-badge">アルコール使用障害（中等度〜重度）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F10.3</span></td><td>離脱状態</td><td class="en-col text-gray-500">Withdrawal state</td><td><span class="dsm-badge">アルコール離脱</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F10.4</span></td><td>せん妄を伴う離脱状態</td><td class="en-col text-gray-500">Withdrawal state with delirium</td><td><span class="dsm-badge">アルコール離脱せん妄</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F10.5</span></td><td>精神病性障害</td><td class="en-col text-gray-500">Psychotic disorder</td><td><span class="dsm-badge">アルコール誘発性精神病性障害</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F10.6</span></td><td>健忘症候群（コルサコフ）</td><td class="en-col text-gray-500">Amnesic syndrome</td><td><span class="dsm-badge">アルコール誘発性神経認知障害（コルサコフ）</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F11</span></td><td>オピオイド使用による障害</td><td class="en-col text-gray-500">Opioids</td><td><span class="dsm-badge">オピオイド使用障害群 F11.1x–F11.2x</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F12</span></td><td>カンナビノイド使用による障害</td><td class="en-col text-gray-500">Cannabinoids</td><td><span class="dsm-badge">大麻使用障害群 F12.1x–F12.2x</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F13</span></td><td>鎮静薬・睡眠薬使用による障害</td><td class="en-col text-gray-500">Sedatives or hypnotics</td><td><span class="dsm-badge">鎮静薬・睡眠薬・抗不安薬使用障害群</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F14</span></td><td>コカイン使用による障害</td><td class="en-col text-gray-500">Cocaine</td><td><span class="dsm-badge">興奮薬使用障害群（コカイン）F14.1x–F14.2x</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F15</span></td><td>カフェイン・その他興奮薬による障害</td><td class="en-col text-gray-500">Other stimulants including caffeine</td><td><span class="dsm-badge">興奮薬使用障害群 / カフェイン中毒・離脱</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F16</span></td><td>幻覚薬使用による障害</td><td class="en-col text-gray-500">Hallucinogens</td><td><span class="dsm-badge">フェンシクリジン/幻覚薬使用障害群</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F17</span></td><td>タバコ使用による障害</td><td class="en-col text-gray-500">Tobacco</td><td><span class="dsm-badge">タバコ使用障害 F17.2xx</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F18</span></td><td>揮発性溶剤使用による障害</td><td class="en-col text-gray-500">Volatile solvents</td><td><span class="dsm-badge">吸入剤使用障害群 F18.1x–F18.2x</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F19</span></td><td>複数薬物・その他精神作用物質使用による障害</td><td class="en-col text-gray-500">Multiple drug use and other psychoactive substances</td><td><span class="dsm-badge">他の物質/不明物質使用障害群 F19.1x–F19.2x</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F2 ============ -->
+  <div class="section-card" id="f2">
+    <div class="cat-header f2-grad text-white" onclick="toggleSection('f2-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="eye" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F20–F29</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">統合失調症スペクトラム</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">統合失調症，統合失調症型障害及び妄想性障害</p>
+        <p class="text-xs opacity-65 mt-0.5">Schizophrenia, schizotypal and delusional disorders</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 統合失調症スペクトラム障害群</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f2-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f2-body">
+      <div class="warn-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-700"></i>
+          <div>
+            <span class="font-bold text-amber-800">重要な概念的差異：</span>
+            ICD-10には妄想型・破瓜型・緊張型等のサブタイプ（F20.0–F20.6）が存在するが、
+            <strong>DSM-5-TRではサブタイプを廃止</strong>し、次元的評価（陽性・陰性・認知・興奮・抑うつ）と
+            経過特定用語 (specifier) で記述する。緊張病は<strong>独立した緊張病 specifier</strong> として別途記録。
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f2-rows">
+            <tr class="main-row"><td><span class="icd-code">F20</span></td><td>統合失調症</td><td class="en-col text-gray-500">Schizophrenia</td><td><span class="dsm-badge">統合失調症 295.90/F20.9</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.0</span></td><td>妄想型統合失調症</td><td class="en-col text-gray-500">Paranoid schizophrenia</td><td><span class="dsm-na">統合失調症（サブタイプ廃止）<span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.1</span></td><td>破瓜型（解体型）統合失調症</td><td class="en-col text-gray-500">Hebephrenic schizophrenia</td><td><span class="dsm-na">統合失調症（サブタイプ廃止）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.2</span></td><td>緊張型統合失調症</td><td class="en-col text-gray-500">Catatonic schizophrenia</td><td><span class="dsm-badge">統合失調症 + 緊張病 specifier</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.3</span></td><td>未分化型統合失調症</td><td class="en-col text-gray-500">Undifferentiated schizophrenia</td><td><span class="dsm-na">統合失調症 F20.9</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.4</span></td><td>統合失調症後抑うつ</td><td class="en-col text-gray-500">Post-schizophrenic depression</td><td><span class="dsm-na">大うつ病性障害 + 統合失調症既往で記録</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.5</span></td><td>残遺型統合失調症</td><td class="en-col text-gray-500">Residual schizophrenia</td><td><span class="dsm-na">統合失調症（経過 specifier で記述）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.6</span></td><td>単純型統合失調症</td><td class="en-col text-gray-500">Simple schizophrenia</td><td><span class="dsm-na">DSM-5-TR Section III（さらなる研究が必要な病態）に掲載のみ。実務上は<strong>他の特定される統合失調症スペクトラム障害</strong>として記録</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.8</span></td><td>その他の統合失調症</td><td class="en-col text-gray-500">Other schizophrenia</td><td><span class="dsm-badge">他の特定される統合失調症スペクトラム障害</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F20.9</span></td><td>特定不能の統合失調症</td><td class="en-col text-gray-500">Schizophrenia, unspecified</td><td><span class="dsm-badge">統合失調症 295.90/F20.9</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F21</span></td><td>統合失調症型障害</td><td class="en-col text-gray-500">Schizotypal disorder</td><td><span class="dsm-badge">統合失調型パーソナリティ障害 301.22/F21 <span class="note-badge">注</span></span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F22</span></td><td>持続性妄想性障害</td><td class="en-col text-gray-500">Persistent delusional disorders</td><td><span class="dsm-badge">妄想症 (Delusional Disorder) 297.1/F22</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F22.0</span></td><td>妄想性障害</td><td class="en-col text-gray-500">Delusional disorder</td><td><span class="dsm-badge">妄想症 297.1/F22</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F22.8</span></td><td>その他の持続性妄想性障害</td><td class="en-col text-gray-500">Other persistent delusional disorders</td><td><span class="dsm-badge">他の特定される精神病性障害</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F23</span></td><td>急性一過性精神病性障害</td><td class="en-col text-gray-500">Acute and transient psychotic disorders</td><td><span class="dsm-badge">短期精神病性障害 298.8/F23</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F23.0</span></td><td>統合失調症症状を伴わない急性多形性精神病性障害</td><td class="en-col text-gray-500">Acute polymorphic without schizophrenia</td><td><span class="dsm-badge">短期精神病性障害</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F23.1</span></td><td>統合失調症症状を伴う急性多形性精神病性障害</td><td class="en-col text-gray-500">Acute polymorphic with schizophrenia</td><td><span class="dsm-badge">統合失調症様障害 295.40/F20.81</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F23.2</span></td><td>急性統合失調症様精神病性障害</td><td class="en-col text-gray-500">Acute schizophrenia-like psychotic disorder</td><td><span class="dsm-badge">統合失調症様障害 295.40/F20.81</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F24</span></td><td>誘発性妄想性障害（Folie à deux）</td><td class="en-col text-gray-500">Induced delusional disorder</td><td><span class="dsm-na">妄想基準を満たす場合：<strong>妄想症 F22</strong>。満たさない場合：<strong>他の特定される統合失調症スペクトラム障害</strong>として記録 <span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F25</span></td><td>統合失調感情障害</td><td class="en-col text-gray-500">Schizoaffective disorders</td><td><span class="dsm-badge">統合失調感情障害 295.70/F25.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F25.0</span></td><td>躁型統合失調感情障害</td><td class="en-col text-gray-500">Schizoaffective disorder, manic type</td><td><span class="dsm-badge">統合失調感情障害，双極型 295.70/F25.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F25.1</span></td><td>うつ型統合失調感情障害</td><td class="en-col text-gray-500">Schizoaffective disorder, depressive type</td><td><span class="dsm-badge">統合失調感情障害，抑うつ型 295.70/F25.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F25.2</span></td><td>混合型統合失調感情障害</td><td class="en-col text-gray-500">Schizoaffective disorder, mixed type</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F28</span></td><td>その他の非器質性精神病性障害</td><td class="en-col text-gray-500">Other nonorganic psychotic disorders</td><td><span class="dsm-badge">他の特定される統合失調症スペクトラム障害</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F29</span></td><td>特定不能の非器質性精神病</td><td class="en-col text-gray-500">Unspecified nonorganic psychosis</td><td><span class="dsm-badge">特定不能の統合失調症スペクトラム障害 298.9</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-3 text-xs text-gray-500 bg-purple-50 rounded-lg p-3">
+        <strong class="text-purple-700">F21の位置づけ：</strong>ICD-10では精神病性障害の章（F20-F29）に分類されるが、DSM-5-TRでは<strong>パーソナリティ障害の章</strong>（Cluster A）に配置されている点に注意。
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F3 ============ -->
+  <div class="section-card" id="f3">
+    <div class="cat-header f3-grad text-white" onclick="toggleSection('f3-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="activity" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F30–F39</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">気分（感情）障害</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">気分〔感情〕障害</p>
+        <p class="text-xs opacity-65 mt-0.5">Mood [affective] disorders</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 双極性障害群 / 抑うつ障害群</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f3-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f3-body">
+      <div class="diff-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-700"></i>
+          <div>
+            <span class="font-bold text-blue-800">DSM-5-TRの分類再編：</span>
+            ICD-10の「気分障害」1章はDSM-5-TRでは<strong>「双極性障害および関連障害」「抑うつ障害」の2章</strong>に分割。
+            F32（単一エピソード）とF33（反復性）はどちらも<strong>大うつ病性障害 (MDD)</strong> に対応。
+            また、DSM-5-TRで新設された<strong>重篤気分調節症（DMDD: Disruptive Mood Dysregulation Disorder）296.99/F34.81</strong>はICD-10には対応コードがなく、小児のうつ病・双極性障害との鑑別上重要な診断（6〜18歳が対象）。
+            さらに<strong>月経前不快気分症（PMDD）N94.3</strong>はICD-10ではN分類（婦人科）に属するが、DSM-5-TRでは抑うつ障害群の正式な独立診断。
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f3-rows">
+            <tr class="main-row"><td><span class="icd-code">F30</span></td><td>躁病エピソード</td><td class="en-col text-gray-500">Manic episode</td><td><span class="dsm-badge">双極I型障害の躁病エピソード 296.4x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F30.0</span></td><td>軽躁病</td><td class="en-col text-gray-500">Hypomania</td><td><span class="dsm-badge">軽躁病エピソード（双極II型の構成要素）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F30.1</span></td><td>精神病症状を伴わない躁病</td><td class="en-col text-gray-500">Mania without psychotic symptoms</td><td><span class="dsm-badge">躁病エピソード 296.4x/F30.1x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F30.2</span></td><td>精神病症状を伴う躁病</td><td class="en-col text-gray-500">Mania with psychotic symptoms</td><td><span class="dsm-badge">精神病性の特徴を伴う躁病エピソード</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F30.8</span></td><td>その他の躁病エピソード</td><td class="en-col text-gray-500">Other manic episodes</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F31</span></td><td>双極性感情障害</td><td class="en-col text-gray-500">Bipolar affective disorder</td><td><span class="dsm-badge">双極I型/II型障害 296.4x–296.89/F31.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.0</span></td><td>現在，軽躁病エピソード</td><td class="en-col text-gray-500">Current episode hypomanic</td><td><span class="dsm-badge">双極I型，現在軽躁病エピソード</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.1</span></td><td>現在，精神病症状なし躁病エピソード</td><td class="en-col text-gray-500">Current episode manic without psychotic symptoms</td><td><span class="dsm-badge">双極I型，現在躁病エピソード</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.2</span></td><td>現在，精神病症状あり躁病エピソード</td><td class="en-col text-gray-500">Current episode manic with psychotic symptoms</td><td><span class="dsm-badge">双極I型，精神病性の特徴を伴う</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.3</span></td><td>現在，軽症・中等症うつ病エピソード</td><td class="en-col text-gray-500">Current episode mild or moderate depression</td><td><span class="dsm-badge">双極I/II型，現在うつ病エピソード</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.4</span></td><td>現在，重症うつ病エピソード（精神病症状なし）</td><td class="en-col text-gray-500">Current episode severe depression without psychotic symptoms</td><td><span class="dsm-badge">双極I型，現在うつ病エピソード，重症</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.5</span></td><td>現在，重症うつ病エピソード（精神病症状あり）</td><td class="en-col text-gray-500">Current episode severe depression with psychotic symptoms</td><td><span class="dsm-badge">双極I型，精神病性の特徴を伴ううつ病エピソード</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.6</span></td><td>現在，混合性エピソード</td><td class="en-col text-gray-500">Current episode mixed</td><td><span class="dsm-badge">双極I型，混合性の特徴を伴う specifier</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F31.7</span></td><td>現在，寛解状態</td><td class="en-col text-gray-500">Currently in remission</td><td><span class="dsm-na">寛解 specifier</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F32</span></td><td>うつ病エピソード</td><td class="en-col text-gray-500">Depressive episode</td><td><span class="dsm-badge">大うつ病性障害，単一エピソード 296.2x/F32.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F32.0</span></td><td>軽症うつ病エピソード</td><td class="en-col text-gray-500">Mild depressive episode</td><td><span class="dsm-badge">大うつ病性障害，軽症 296.21/F32.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F32.1</span></td><td>中等症うつ病エピソード</td><td class="en-col text-gray-500">Moderate depressive episode</td><td><span class="dsm-badge">大うつ病性障害，中等症 296.22/F32.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F32.2</span></td><td>重症うつ病エピソード（精神病症状なし）</td><td class="en-col text-gray-500">Severe depressive episode without psychotic symptoms</td><td><span class="dsm-badge">大うつ病性障害，重症 296.23/F32.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F32.3</span></td><td>重症うつ病エピソード（精神病症状あり）</td><td class="en-col text-gray-500">Severe depressive episode with psychotic symptoms</td><td><span class="dsm-badge">精神病性の特徴を伴う MDD 296.24/F32.3</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F32.8</span></td><td>その他のうつ病エピソード</td><td class="en-col text-gray-500">Other depressive episodes</td><td><span class="dsm-badge">他の特定される抑うつ障害</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F33</span></td><td>反復性うつ病性障害</td><td class="en-col text-gray-500">Recurrent depressive disorder</td><td><span class="dsm-badge">大うつ病性障害，反復性 296.3x/F33.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F33.0</span></td><td>反復性うつ病性障害，現在軽症エピソード</td><td class="en-col text-gray-500">Recurrent depressive disorder, current episode mild</td><td><span class="dsm-badge">MDD 反復性，軽症 296.31/F33.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F33.1</span></td><td>反復性うつ病性障害，現在中等症エピソード</td><td class="en-col text-gray-500">Recurrent depressive disorder, current episode moderate</td><td><span class="dsm-badge">MDD 反復性，中等症 296.32/F33.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F33.2</span></td><td>反復性うつ病性障害，現在重症（精神病症状なし）</td><td class="en-col text-gray-500">Recurrent depressive disorder, current episode severe, without psychotic symptoms</td><td><span class="dsm-badge">MDD 反復性，重症 296.33/F33.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F33.3</span></td><td>反復性うつ病性障害，現在重症（精神病症状あり）</td><td class="en-col text-gray-500">Recurrent depressive disorder, current episode severe, with psychotic symptoms</td><td><span class="dsm-badge">精神病性の特徴を伴う MDD 反復性 296.34</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F33.4</span></td><td>反復性うつ病性障害，現在寛解状態</td><td class="en-col text-gray-500">Recurrent depressive disorder, currently in remission</td><td><span class="dsm-na">完全寛解 specifier</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F34</span></td><td>持続性気分障害</td><td class="en-col text-gray-500">Persistent mood disorders</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F34.0</span></td><td>気分循環症</td><td class="en-col text-gray-500">Cyclothymia</td><td><span class="dsm-badge">気分循環症 301.13/F34.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F34.1</span></td><td>気分変調症〔ディスチミア〕</td><td class="en-col text-gray-500">Dysthymia</td><td><span class="dsm-badge">持続性抑うつ障害 (Dysthymia) 300.4/F34.1</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F38</span></td><td>その他の気分障害</td><td class="en-col text-gray-500">Other mood disorders</td><td><span class="dsm-badge">他の特定される抑うつ障害 311/F32.A</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F39</span></td><td>特定不能の気分障害</td><td class="en-col text-gray-500">Unspecified mood disorder</td><td><span class="dsm-badge">特定不能の抑うつ障害 311/F32.9</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F4 ============ -->
+  <div class="section-card" id="f4">
+    <div class="cat-header f4-grad text-white" onclick="toggleSection('f4-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="alert-circle" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F40–F48</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">神経症性・ストレス関連・身体表現性障害</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">神経症性障害，ストレス関連障害及び身体表現性障害</p>
+        <p class="text-xs opacity-65 mt-0.5">Neurotic, stress-related and somatoform disorders</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 不安症群・OCD群・トラウマ群・解離・身体症状群</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f4-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f4-body">
+      <div class="warn-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-700"></i>
+          <div>
+            <span class="font-bold text-amber-800">大きな分類再編：</span>
+            ICD-10のF4「神経症性障害」1章が、DSM-5-TRでは
+            <strong>不安症群・強迫症群・心的外傷/ストレス関連障害群・解離症群・身体症状症群の5章</strong>に分割。
+            F45「身体表現性障害」は<strong>「身体症状症および関連障害」に概念再編</strong>（医学的説明不可能性の基準を廃止）。
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f4-rows">
+            <tr class="main-row"><td><span class="icd-code">F40</span></td><td>恐怖症性不安障害</td><td class="en-col text-gray-500">Phobic anxiety disorders</td><td><span class="dsm-na">—（不安症群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F40.0</span></td><td>広場恐怖症</td><td class="en-col text-gray-500">Agoraphobia</td><td><span class="dsm-badge">広場恐怖症 300.22/F40.00–01</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F40.00</span></td><td>パニック障害を伴わない広場恐怖</td><td class="en-col text-gray-500">Without panic disorder</td><td><span class="dsm-badge">広場恐怖症（単独） 300.22/F40.00</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F40.01</span></td><td>パニック障害を伴う広場恐怖</td><td class="en-col text-gray-500">With panic disorder</td><td><span class="dsm-badge">パニック症 + 広場恐怖症</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F40.1</span></td><td>社会恐怖症</td><td class="en-col text-gray-500">Social phobias</td><td><span class="dsm-badge">社交不安症 300.23/F40.10</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F40.2</span></td><td>特定（孤立した）恐怖症</td><td class="en-col text-gray-500">Specific (isolated) phobias</td><td><span class="dsm-badge">限局性恐怖症 300.29/F40.2xx</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F41</span></td><td>その他の不安障害</td><td class="en-col text-gray-500">Other anxiety disorders</td><td><span class="dsm-na">—（不安症群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F41.0</span></td><td>パニック障害〔エピソード性発作性不安〕</td><td class="en-col text-gray-500">Panic disorder</td><td><span class="dsm-badge">パニック症 300.01/F41.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F41.1</span></td><td>全般性不安障害</td><td class="en-col text-gray-500">Generalized anxiety disorder</td><td><span class="dsm-badge">全般不安症 (GAD) 300.02/F41.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F41.2</span></td><td>混合性不安抑うつ障害</td><td class="en-col text-gray-500">Mixed anxiety and depressive disorder</td><td><span class="dsm-na">DSM-5-TRに直接対応なし <span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F41.3</span></td><td>不安障害混合型</td><td class="en-col text-gray-500">Other mixed anxiety disorders</td><td><span class="dsm-badge">他の特定される不安症 300.09</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F42</span></td><td>強迫性障害</td><td class="en-col text-gray-500">Obsessive-compulsive disorder</td><td><span class="dsm-badge">強迫症 (OCD) 300.3/F42.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F42.0</span></td><td>強迫思考（観念）が主のもの</td><td class="en-col text-gray-500">Predominantly obsessional thoughts</td><td><span class="dsm-badge">強迫症，思考主体</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F42.1</span></td><td>強迫行為（強迫的儀式）が主のもの</td><td class="en-col text-gray-500">Predominantly compulsive acts</td><td><span class="dsm-badge">強迫症，行為主体</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F42.2</span></td><td>混合型強迫思考・行為</td><td class="en-col text-gray-500">Mixed obsessional thoughts and acts</td><td><span class="dsm-badge">強迫症 300.3/F42.2</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F43</span></td><td>重篤なストレス反応および適応障害</td><td class="en-col text-gray-500">Reaction to severe stress and adjustment disorders</td><td><span class="dsm-na">—（外傷・ストレス関連障害群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F43.0</span></td><td>急性ストレス反応</td><td class="en-col text-gray-500">Acute stress reaction</td><td><span class="dsm-badge">急性ストレス障害 308.3/F43.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F43.1</span></td><td>心的外傷後ストレス障害〔PTSD〕</td><td class="en-col text-gray-500">Post-traumatic stress disorder</td><td><span class="dsm-badge">心的外傷後ストレス障害 309.81/F43.10</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F43.2</span></td><td>適応障害</td><td class="en-col text-gray-500">Adjustment disorders</td><td><span class="dsm-badge">適応反応症 309.xx/F43.2x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F43.20</span></td><td>適応障害－抑うつ反応</td><td class="en-col text-gray-500">With depressed mood</td><td><span class="dsm-badge">適応反応症，抑うつ気分 309.0/F43.21</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F43.21</span></td><td>適応障害－不安反応</td><td class="en-col text-gray-500">With anxiety</td><td><span class="dsm-badge">適応反応症，不安 309.24/F43.22</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F43.22</span></td><td>適応障害－混合性不安抑うつ反応</td><td class="en-col text-gray-500">With mixed anxiety and depressed mood</td><td><span class="dsm-badge">適応反応症，混合型 309.28/F43.23</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F43.24</span></td><td>適応障害－行動障害優勢反応</td><td class="en-col text-gray-500">With predominant disturbance of conduct</td><td><span class="dsm-badge">適応反応症，行動障害 309.3/F43.24</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F44</span></td><td>解離性障害〔転換性障害〕</td><td class="en-col text-gray-500">Dissociative [conversion] disorders</td><td><span class="dsm-na">—（解離症群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F44.0</span></td><td>解離性健忘</td><td class="en-col text-gray-500">Dissociative amnesia</td><td><span class="dsm-badge">解離性健忘 300.12/F44.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F44.1</span></td><td>解離性遁走</td><td class="en-col text-gray-500">Dissociative fugue</td><td><span class="dsm-badge">解離性遁走（解離性健忘に包含） F44.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F44.2</span></td><td>解離性昏迷</td><td class="en-col text-gray-500">Dissociative stupor</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F44.3</span></td><td>トランスおよび憑依障害</td><td class="en-col text-gray-500">Trance and possession disorders</td><td><span class="dsm-na">—（文化的文脈で検討）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F44.4–F44.7</span></td><td>解離性運動・感覚障害</td><td class="en-col text-gray-500">Dissociative motor/sensory disorders</td><td><span class="dsm-badge">変換症/機能性神経症状症 (FND) 300.11/F44.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F44.81</span></td><td>多重人格障害</td><td class="en-col text-gray-500">Multiple personality disorder</td><td><span class="dsm-badge">解離性同一症 (DID) 300.14/F44.81</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F45</span></td><td>身体表現性障害</td><td class="en-col text-gray-500">Somatoform disorders</td><td><span class="dsm-badge">身体症状症および関連障害群 <span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F45.0</span></td><td>身体化障害</td><td class="en-col text-gray-500">Somatization disorder</td><td><span class="dsm-badge">身体症状症 300.82/F45.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F45.1</span></td><td>鑑別不能性身体表現性障害</td><td class="en-col text-gray-500">Undifferentiated somatoform disorder</td><td><span class="dsm-badge">身体症状症 300.82/F45.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F45.2</span></td><td>心気障害（健康不安）</td><td class="en-col text-gray-500">Hypochondriacal disorder</td><td><span class="dsm-na"><span class="note-badge mr-1">注</span>身体症状あり：<strong>身体症状症 300.82/F45.1</strong>｜身体症状ほぼなし：<strong>病気不安症 300.7/F45.22</strong>（2つに分割）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F45.3</span></td><td>身体表現性自律神経機能不全</td><td class="en-col text-gray-500">Somatoform autonomic dysfunction</td><td><span class="dsm-na">他の特定される身体症状症 300.89</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F45.4</span></td><td>持続性身体表現性疼痛障害</td><td class="en-col text-gray-500">Persistent somatoform pain disorder</td><td><span class="dsm-badge">身体症状症（疼痛優位） 300.82/F45.42</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F48</span></td><td>その他の神経症性障害</td><td class="en-col text-gray-500">Other neurotic disorders</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F48.0</span></td><td>神経衰弱</td><td class="en-col text-gray-500">Neurasthenia</td><td><span class="dsm-na">DSM-5-TRに対応診断なし（文化的概念）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F48.1</span></td><td>離人症・現実感消失症候群</td><td class="en-col text-gray-500">Depersonalization-derealization syndrome</td><td><span class="dsm-badge">離人感・現実感消失症 300.6/F48.1</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-3 text-xs text-gray-500 bg-teal-50 rounded-lg p-3">
+        <strong class="text-teal-700">F45の概念的転換：</strong>
+        ICD-10では「医学的に説明できない症状」が診断要件だったが、DSM-5-TRの身体症状症では<strong>この要件を廃止</strong>し、症状への過度な思考・感情・行動が診断基準の中心となった。これにより心気症は「病気不安症 (Illness Anxiety Disorder)」として独立した。
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F5 ============ -->
+  <div class="section-card" id="f5">
+    <div class="cat-header f5-grad text-white" onclick="toggleSection('f5-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F50–F59</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">生理的障害関連行動症候群</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">生理的障害及び身体的要因に関連した行動症候群</p>
+        <p class="text-xs opacity-65 mt-0.5">Behavioural syndromes associated with physiological disturbances and physical factors</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 摂食・睡眠・性機能・身体</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f5-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f5-body">
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f5-rows">
+            <tr class="main-row"><td><span class="icd-code">F50</span></td><td>摂食障害</td><td class="en-col text-gray-500">Eating disorders</td><td><span class="dsm-na">—（摂食障害群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F50.0</span></td><td>神経性無食欲症〔神経性やせ症〕</td><td class="en-col text-gray-500">Anorexia nervosa</td><td><span class="dsm-badge">神経性やせ症/神経性無食欲症 307.1/F50.0x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F50.1</span></td><td>非定型神経性無食欲症</td><td class="en-col text-gray-500">Atypical anorexia nervosa</td><td><span class="dsm-badge">他の特定される摂食障害</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F50.2</span></td><td>神経性過食症〔神経性大食症〕</td><td class="en-col text-gray-500">Bulimia nervosa</td><td><span class="dsm-badge">神経性過食症 307.51/F50.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F50.3</span></td><td>非定型神経性過食症</td><td class="en-col text-gray-500">Atypical bulimia nervosa</td><td><span class="dsm-badge">他の特定される食行動障害（OSFED）300.89/F50.89 <span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F50.81</span></td><td>（ICD-10-CM）過食性障害</td><td class="en-col text-gray-500">Binge-eating disorder</td><td><span class="dsm-badge">過食性障害 (BED) 307.51/F50.81 ※代償行動なし</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F50.4</span></td><td>他の心理的障害に伴う過食症</td><td class="en-col text-gray-500">Overeating associated with other psychological disturbances</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F50.8</span></td><td>その他の摂食障害</td><td class="en-col text-gray-500">Other eating disorders</td><td><span class="dsm-badge">回避・制限性食物摂取症 (ARFID) / 異食症 / 反芻症</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F51</span></td><td>非器質性睡眠障害</td><td class="en-col text-gray-500">Nonorganic sleep disorders</td><td><span class="dsm-na">—（睡眠・覚醒障害群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F51.0</span></td><td>非器質性不眠症</td><td class="en-col text-gray-500">Nonorganic insomnia</td><td><span class="dsm-badge">不眠障害 307.42/F51.01</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F51.1</span></td><td>非器質性過眠症</td><td class="en-col text-gray-500">Nonorganic hypersomnia</td><td><span class="dsm-badge">過眠障害 307.44/F51.11</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F51.2</span></td><td>非器質性睡眠・覚醒スケジュール障害</td><td class="en-col text-gray-500">Nonorganic disorder of the sleep-wake schedule</td><td><span class="dsm-badge">概日リズム睡眠・覚醒障害 307.45</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F51.3</span></td><td>夢中遊行症〔夢遊病〕</td><td class="en-col text-gray-500">Sleepwalking [somnambulism]</td><td><span class="dsm-badge">睡眠時遊行症 307.46/F51.3</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F51.4</span></td><td>夜驚症</td><td class="en-col text-gray-500">Sleep terrors [night terrors]</td><td><span class="dsm-badge">睡眠時驚愕症 307.46/F51.4</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F51.5</span></td><td>悪夢</td><td class="en-col text-gray-500">Nightmares</td><td><span class="dsm-badge">悪夢障害 307.47/F51.5</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F52</span></td><td>器質的障害によらない性機能不全</td><td class="en-col text-gray-500">Sexual dysfunction, not caused by organic disorder or disease</td><td><span class="dsm-badge">性機能不全群 302.7x/F52.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F52.0</span></td><td>性欲低下障害</td><td class="en-col text-gray-500">Lack or loss of sexual desire</td><td><span class="dsm-badge">男性性欲低下障害 302.71 / 女性性的関心・興奮障害 302.72</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F52.1</span></td><td>性嫌悪障害</td><td class="en-col text-gray-500">Sexual aversion</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F52.2</span></td><td>性的興奮障害</td><td class="en-col text-gray-500">Failure of genital response</td><td><span class="dsm-badge">勃起障害 302.72/F52.21 / 女性性的関心・興奮障害 302.72/F52.22</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F52.3</span></td><td>性的絶頂障害</td><td class="en-col text-gray-500">Orgasmic dysfunction</td><td><span class="dsm-badge">遅漏症 302.74/F52.32（男性）/ 女性オルガスム障害 302.73/F52.31（女性）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F52.4</span></td><td>早漏</td><td class="en-col text-gray-500">Premature ejaculation</td><td><span class="dsm-badge">早漏 302.75/F52.4</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F52.5</span></td><td>非器質性腟痙</td><td class="en-col text-gray-500">Nonorganic vaginismus</td><td><span class="dsm-badge">性器骨盤痛・挿入障害 306.51/F52.6</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F53</span></td><td>産褥に関連した精神・行動障害</td><td class="en-col text-gray-500">Mental and behavioural disorders associated with the puerperium</td><td><span class="dsm-na">産後うつ：<strong>大うつ病性障害（周産期発症specifier）</strong>｜産後精神病：<strong>短期精神病性障害または双極I型障害（周産期発症specifier）</strong>で記録</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F54</span></td><td>他に分類される疾患・障害に関連する心理・行動要因</td><td class="en-col text-gray-500">Psychological and behavioural factors associated with disorders classified elsewhere</td><td><span class="dsm-badge">他の医学的疾患に影響を与える心理的要因 316/F54</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F55</span></td><td>依存を生じない物質の乱用</td><td class="en-col text-gray-500">Abuse of non-dependence-producing substances</td><td><span class="dsm-na">DSM-5-TRに直接対応なし</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F59</span></td><td>特定不能の生理的障害関連行動症候群</td><td class="en-col text-gray-500">Unspecified behavioural syndromes</td><td><span class="dsm-na">—</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F6 ============ -->
+  <div class="section-card" id="f6">
+    <div class="cat-header f6-grad text-white" onclick="toggleSection('f6-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="user" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F60–F69</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">成人の人格・行動障害</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">成人の人格及び行動の障害</p>
+        <p class="text-xs opacity-65 mt-0.5">Disorders of adult personality and behaviour</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: パーソナリティ障害群・性別違和・パラフィリア群</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f6-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f6-body">
+      <div class="warn-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-700"></i>
+          <div>
+            <span class="font-bold text-amber-800">性別違和（F64）に関する注意：</span>
+            ICD-10の「性同一性障害 (F64)」はDSM-5-TRでは<strong>「性別違和 (Gender Dysphoria)」</strong>に改称。
+            DSM-5-TRはトランスジェンダーそのものを障害とみなさず、<strong>性別不一致による苦痛や機能障害</strong>を診断要件とする。
+          </div>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f6-rows">
+            <tr class="main-row"><td><span class="icd-code">F60</span></td><td>特定のパーソナリティ障害</td><td class="en-col text-gray-500">Specific personality disorders</td><td><span class="dsm-na">—（パーソナリティ障害群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.0</span></td><td>妄想性パーソナリティ障害</td><td class="en-col text-gray-500">Paranoid personality disorder</td><td><span class="dsm-badge">妄想性パーソナリティ障害 301.0/F60.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.1</span></td><td>統合失調質パーソナリティ障害</td><td class="en-col text-gray-500">Schizoid personality disorder</td><td><span class="dsm-badge">統合失調質パーソナリティ障害 301.20/F60.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.2</span></td><td>非社会性パーソナリティ障害</td><td class="en-col text-gray-500">Dissocial personality disorder</td><td><span class="dsm-badge">反社会性パーソナリティ障害 301.7/F60.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.3</span></td><td>情緒不安定性パーソナリティ障害</td><td class="en-col text-gray-500">Emotionally unstable personality disorder</td><td><span class="dsm-na">—（衝動型・境界型で分かれる）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.30</span></td><td>衝動型</td><td class="en-col text-gray-500">Impulsive type</td><td><span class="dsm-na">DSM-5-TR に直接対応なし</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.31</span></td><td>境界型</td><td class="en-col text-gray-500">Borderline type</td><td><span class="dsm-badge">境界性パーソナリティ障害 301.83/F60.3</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.4</span></td><td>演技性パーソナリティ障害</td><td class="en-col text-gray-500">Histrionic personality disorder</td><td><span class="dsm-badge">演技性パーソナリティ障害 301.50/F60.4</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.5</span></td><td>強迫性パーソナリティ障害</td><td class="en-col text-gray-500">Anankastic personality disorder</td><td><span class="dsm-badge">強迫性パーソナリティ障害 301.4/F60.5</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.6</span></td><td>不安性〔回避性〕パーソナリティ障害</td><td class="en-col text-gray-500">Anxious [avoidant] personality disorder</td><td><span class="dsm-badge">回避性パーソナリティ障害 301.82/F60.6</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.7</span></td><td>依存性パーソナリティ障害</td><td class="en-col text-gray-500">Dependent personality disorder</td><td><span class="dsm-badge">依存性パーソナリティ障害 301.6/F60.7</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.8</span></td><td>その他の特定のパーソナリティ障害</td><td class="en-col text-gray-500">Other specific personality disorders</td><td><span class="dsm-badge">自己愛性 PD 301.81/F60.81 / ほか</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F60.9</span></td><td>特定不能のパーソナリティ障害</td><td class="en-col text-gray-500">Personality disorder, unspecified</td><td><span class="dsm-badge">特定不能のパーソナリティ障害 301.9/F61</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F61</span></td><td>混合型その他のパーソナリティ障害</td><td class="en-col text-gray-500">Mixed and other personality disorders</td><td><span class="dsm-badge">他の特定されるパーソナリティ障害 301.89</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F62</span></td><td>パーソナリティの恒久的変化（脳疾患・精神疾患後）</td><td class="en-col text-gray-500">Enduring personality changes</td><td><span class="dsm-na">—（PTSD・長期ストレス後の持続的変化として記録）</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F63</span></td><td>習慣・衝動の障害</td><td class="en-col text-gray-500">Habit and impulse disorders</td><td><span class="dsm-na">—（破壊的・衝動制御・素行症群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F63.0</span></td><td>病的賭博</td><td class="en-col text-gray-500">Pathological gambling</td><td><span class="dsm-badge">ギャンブル障害 312.31/F63.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F63.1</span></td><td>病的放火（放火狂）</td><td class="en-col text-gray-500">Pathological fire-setting [pyromania]</td><td><span class="dsm-badge">放火癖 312.33/F63.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F63.2</span></td><td>病的窃盗（窃盗狂）</td><td class="en-col text-gray-500">Pathological stealing [kleptomania]</td><td><span class="dsm-badge">窃盗癖 312.32/F63.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F63.3</span></td><td>抜毛癖</td><td class="en-col text-gray-500">Trichotillomania</td><td><span class="dsm-badge">抜毛症 312.39/F63.3 ※OCD関連章</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F64</span></td><td>性同一性障害</td><td class="en-col text-gray-500">Gender identity disorders</td><td><span class="dsm-badge">性別違和 302.85–302.6/F64.x <span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F64.0</span></td><td>性転換症</td><td class="en-col text-gray-500">Transsexualism</td><td><span class="dsm-badge">青年・成人の性別違和 302.85/F64.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F64.1</span></td><td>二重役割服装倒錯症</td><td class="en-col text-gray-500">Dual-role transvestism</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F64.2</span></td><td>小児期の性同一性障害</td><td class="en-col text-gray-500">Gender identity disorder of childhood</td><td><span class="dsm-badge">小児の性別違和 302.6/F64.2</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F65</span></td><td>性嗜好の障害</td><td class="en-col text-gray-500">Disorders of sexual preference</td><td><span class="dsm-badge">パラフィリア障害群 302.8x/F65.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F65.0</span></td><td>フェティシズム</td><td class="en-col text-gray-500">Fetishism</td><td><span class="dsm-badge">フェティシズム障害 302.81/F65.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F65.1</span></td><td>フェティシスティック服装倒錯</td><td class="en-col text-gray-500">Fetishistic transvestism</td><td><span class="dsm-badge">トランスベスティック障害 302.3/F65.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F65.2</span></td><td>露出症</td><td class="en-col text-gray-500">Exhibitionism</td><td><span class="dsm-badge">露出障害 302.4/F65.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F65.3</span></td><td>窃視症</td><td class="en-col text-gray-500">Voyeurism</td><td><span class="dsm-badge">窃視障害 302.82/F65.3</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F65.4</span></td><td>小児性愛</td><td class="en-col text-gray-500">Paedophilia</td><td><span class="dsm-badge">小児性愛障害 302.2/F65.4</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F65.5</span></td><td>サドマゾヒズム</td><td class="en-col text-gray-500">Sadomasochism</td><td><span class="dsm-badge">性的サディズム/マゾヒズム障害 302.83–302.84</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F68</span></td><td>その他の成人の人格・行動障害</td><td class="en-col text-gray-500">Other disorders of adult personality and behaviour</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F68.1</span></td><td>身体症状の意図的産出または偽装〔作為症〕</td><td class="en-col text-gray-500">Intentional production or feigning of symptoms (factitious disorder)</td><td><span class="dsm-badge">作為症 300.19/F68.10–12</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F68.2</span></td><td>詐病</td><td class="en-col text-gray-500">Malingering</td><td><span class="dsm-na">DSM-5-TRでは障害診断でなくZコード記録 Z76.5</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F7 ============ -->
+  <div class="section-card" id="f7">
+    <div class="cat-header f7-grad text-white" onclick="toggleSection('f7-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="book-open" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F70–F79</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">知的障害（精神遅滞）</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">知的障害〈精神遅滞〉</p>
+        <p class="text-xs opacity-65 mt-0.5">Mental retardation / Intellectual disabilities</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 知的発達症（神経発達症群）</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f7-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f7-body">
+      <div class="diff-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-700"></i>
+          <div>
+            <span class="font-bold text-blue-800">用語の改称：</span>
+            ICD-10の「精神遅滞 (mental retardation)」はDSM-5-TRでは
+            <strong>「知的発達症〔知的能力障害〕(Intellectual Developmental Disorder)」</strong>に改称。
+            重症度は適応機能（概念・社会・実用の3領域）で評価するよう変更された。
+          </div>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名（IQ目安）</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f7-rows">
+            <tr class="main-row"><td><span class="icd-code">F70</span></td><td>軽度知的障害（精神遅滞）</td><td class="en-col text-gray-500">Mild mental retardation (IQ 50–69)</td><td><span class="dsm-badge">知的発達症，軽度 317/F70</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F70.0</span></td><td>行動障害なし</td><td class="en-col text-gray-500">No, or minimal, impairment of behaviour</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F70.1</span></td><td>著明な行動障害あり（注意・治療が必要）</td><td class="en-col text-gray-500">Significant impairment of behaviour requiring attention</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F71</span></td><td>中等度知的障害（精神遅滞）</td><td class="en-col text-gray-500">Moderate mental retardation (IQ 35–49)</td><td><span class="dsm-badge">知的発達症，中等度 318.0/F71</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F72</span></td><td>重度知的障害（精神遅滞）</td><td class="en-col text-gray-500">Severe mental retardation (IQ 20–34)</td><td><span class="dsm-badge">知的発達症，重度 318.1/F72</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F73</span></td><td>最重度知的障害（精神遅滞）</td><td class="en-col text-gray-500">Profound mental retardation (IQ &lt;20)</td><td><span class="dsm-badge">知的発達症，最重度 318.2/F73</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F78</span></td><td>その他の知的障害</td><td class="en-col text-gray-500">Other mental retardation</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F79</span></td><td>特定不能の知的障害</td><td class="en-col text-gray-500">Unspecified mental retardation</td><td><span class="dsm-badge">全般的発達遅滞 315.8/F88（5歳未満）/ 特定不能 319/F79</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-3 text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
+        <strong class="text-gray-700">第4桁の行動障害コード：</strong>F7x の第4桁（.0〜.9）は行動障害の有無・重症度を示す。
+        ICD-10-CMの Intellectual disabilities ブロックにそのまま対応し、DSM-5-TRでは適応機能の3ドメイン評価に相当。
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F8 ============ -->
+  <div class="section-card" id="f8">
+    <div class="cat-header f8-grad text-white" onclick="toggleSection('f8-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="puzzle" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F80–F89</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">心理的発達の障害</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">心理的発達の障害（特定的・広汎性）</p>
+        <p class="text-xs opacity-65 mt-0.5">Pervasive and specific developmental disorders</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: 神経発達症群（言語・学習・ASD等）</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f8-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f8-body">
+      <div class="warn-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-700"></i>
+          <div>
+            <span class="font-bold text-amber-800">ASDへの統合（F84）：</span>
+            ICD-10の広汎性発達障害（F84）は小児自閉症・アスペルガー症候群・レット症候群等を個別診断として持つが、
+            <strong>DSM-5-TRではこれらをすべて「自閉スペクトラム症 (ASD)」に統合</strong>し、
+            重症度レベル（1〜3）と関連する特定用語で記述する。アスペルガーはASDに包含。
+          </div>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f8-rows">
+            <tr class="main-row"><td><span class="icd-code">F80</span></td><td>会話・言語の特異的発達障害</td><td class="en-col text-gray-500">Specific developmental disorders of speech and language</td><td><span class="dsm-na">—（コミュニケーション症群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F80.0</span></td><td>特異的構音障害</td><td class="en-col text-gray-500">Specific speech articulation disorder</td><td><span class="dsm-badge">語音症 315.39/F80.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F80.1</span></td><td>受容性言語障害を伴わない表出性言語障害</td><td class="en-col text-gray-500">Expressive language disorder</td><td><span class="dsm-badge">言語症（表出性） 315.32/F80.9</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F80.2</span></td><td>受容性言語障害</td><td class="en-col text-gray-500">Receptive language disorder</td><td><span class="dsm-badge">言語症（混合受容-表出性） 315.32/F80.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F80.3</span></td><td>てんかんを伴う後天性失語症（ランドウ・クレフナー）</td><td class="en-col text-gray-500">Acquired aphasia with epilepsy (Landau-Kleffner)</td><td><span class="dsm-na">ASD specifier / 神経学的評価で記録</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F80.8</span></td><td>その他の言語発達障害</td><td class="en-col text-gray-500">Other developmental disorders of speech and language</td><td><span class="dsm-badge">社会的（語用論的）コミュニケーション症 315.39/F80.89</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F81</span></td><td>学力の特異的発達障害</td><td class="en-col text-gray-500">Specific developmental disorders of scholastic skills</td><td><span class="dsm-badge">限局性学習症 (SLD)</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F81.0</span></td><td>特異的読書障害</td><td class="en-col text-gray-500">Specific reading disorder (dyslexia)</td><td><span class="dsm-badge">限局性学習症，読字 315.00/F81.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F81.1</span></td><td>特異的綴り字障害</td><td class="en-col text-gray-500">Specific spelling disorder</td><td><span class="dsm-badge">限局性学習症，書字 315.2/F81.81</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F81.2</span></td><td>特異的算術障害</td><td class="en-col text-gray-500">Specific disorder of arithmetical skills (dyscalculia)</td><td><span class="dsm-badge">限局性学習症，算数 315.1/F81.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F81.3</span></td><td>混合型学力障害</td><td class="en-col text-gray-500">Mixed disorder of scholastic skills</td><td><span class="dsm-badge">限局性学習症（複合領域）</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F82</span></td><td>運動機能の特異的発達障害</td><td class="en-col text-gray-500">Specific developmental disorder of motor function</td><td><span class="dsm-badge">発達性協調運動症 (DCD) 315.4/F82</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F83</span></td><td>特異的発達障害の混合</td><td class="en-col text-gray-500">Mixed specific developmental disorders</td><td><span class="dsm-badge">他の神経発達症 315.8/F88</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F84</span></td><td>広汎性発達障害</td><td class="en-col text-gray-500">Pervasive developmental disorders</td><td><span class="dsm-badge">自閉スペクトラム症 (ASD) 299.00/F84.0 <span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.0</span></td><td>小児自閉症〔カナー自閉症〕</td><td class="en-col text-gray-500">Childhood autism</td><td><span class="dsm-badge">自閉スペクトラム症 299.00/F84.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.1</span></td><td>非定型自閉症</td><td class="en-col text-gray-500">Atypical autism</td><td><span class="dsm-badge">自閉スペクトラム症 299.00/F84.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.2</span></td><td>レット症候群</td><td class="en-col text-gray-500">Rett's syndrome</td><td><span class="dsm-badge">ASD + 神経遺伝学的疾患（MECP2変異）コード併記</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.3</span></td><td>小児期崩壊性障害（ヘラー症候群）</td><td class="en-col text-gray-500">Other childhood disintegrative disorder</td><td><span class="dsm-badge">自閉スペクトラム症 299.00/F84.3</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.4</span></td><td>精神遅滞と常同運動を伴う多動性障害</td><td class="en-col text-gray-500">Overactive disorder associated with MR and stereotyped movements</td><td><span class="dsm-na">DSM-5-TR に直接対応なし</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.5</span></td><td>アスペルガー症候群</td><td class="en-col text-gray-500">Asperger's syndrome</td><td><span class="dsm-badge">自閉スペクトラム症 (ASD に統合) 299.00/F84.0 <span class="note-badge ml-1">注</span></span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.8</span></td><td>その他の広汎性発達障害</td><td class="en-col text-gray-500">Other pervasive developmental disorders</td><td><span class="dsm-badge">他の特定される ASD</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F84.9</span></td><td>特定不能の広汎性発達障害（PDD-NOS）</td><td class="en-col text-gray-500">PDD, unspecified</td><td><span class="dsm-badge">特定不能の ASD 299.00/F84.9</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F88</span></td><td>その他の心理的発達障害</td><td class="en-col text-gray-500">Other disorders of psychological development</td><td><span class="dsm-badge">他の神経発達症 315.8/F88</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F89</span></td><td>特定不能の心理発達障害</td><td class="en-col text-gray-500">Unspecified disorder of psychological development</td><td><span class="dsm-badge">特定不能の神経発達症 315.9/F89</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-3 text-xs text-gray-500 bg-green-50 rounded-lg p-3">
+        <strong class="text-green-700">アスペルガーの扱い（F84.5）：</strong>
+        ICD-10では独立診断として存在するが、DSM-5-TRではASDの診断カテゴリに統合。
+        日本では保険請求・診断書記載でF84.5を使い続ける場合も多い（ICD-10準拠の診療報酬上の慣習）。
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ F9 ============ -->
+  <div class="section-card" id="f9">
+    <div class="cat-header f9-grad text-white" onclick="toggleSection('f9-body', this)">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="smile" class="w-6 h-6"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xl font-bold">F90–F98</span>
+          <span class="bg-white/25 text-xs font-semibold px-2 py-0.5 rounded-full">小児期・青年期発症の行動・情緒障害</span>
+        </div>
+        <p class="text-sm opacity-85 mt-0.5">通常は児童期・青年期に発症する行動及び情緒の障害</p>
+        <p class="text-xs opacity-65 mt-0.5">Behavioural and emotional disorders with onset usually occurring in childhood and adolescence</p>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full">DSM: ADHD・素行症・チック・分離不安等</span>
+        <i data-lucide="chevron-down" class="w-5 h-5 chevron" id="f9-body-chevron"></i>
+      </div>
+    </div>
+    <div class="cat-body" id="f9-body">
+      <div class="diff-box mb-3">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5 text-blue-700"></i>
+          <div>
+            <span class="font-bold text-blue-800">成人ADHD：</span>
+            DSM-5-TRではADHDを成人でも診断可能とした（発症時期基準を「12歳以前」と緩和）。
+            ICD-10の「多動性障害 (F90)」は<strong>「多動・衝動性優勢型」のみを基本</strong>とし、不注意優勢型は別コードだが、
+            DSM-5-TRでは3サブタイプ（混合型・不注意優勢型・多動・衝動性優勢型）を一つの診断で扱う。
+          </div>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="code-table">
+          <thead>
+            <tr>
+              <th class="w-24">ICD-10</th>
+              <th>日本語疾患名</th>
+              <th class="en-col">英語疾患名</th>
+              <th class="w-56">DSM-5-TR 相当診断</th>
+            </tr>
+          </thead>
+          <tbody id="f9-rows">
+            <tr class="main-row"><td><span class="icd-code">F90</span></td><td>多動性障害</td><td class="en-col text-gray-500">Hyperkinetic disorders</td><td><span class="dsm-badge">注意欠如・多動症 (ADHD)</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F90.0</span></td><td>活動性・注意力の障害（不注意優勢型）</td><td class="en-col text-gray-500">Disturbance of activity and attention</td><td><span class="dsm-badge">ADHD，不注意優勢型 314.00/F90.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F90.1</span></td><td>多動性行為障害（多動・衝動性優勢型）</td><td class="en-col text-gray-500">Hyperkinetic conduct disorder</td><td><span class="dsm-badge">ADHD，多動・衝動性優勢型 314.01/F90.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F90.8</span></td><td>その他の多動性障害</td><td class="en-col text-gray-500">Other hyperkinetic disorders</td><td><span class="dsm-badge">ADHD，混合型 314.01/F90.2</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F91</span></td><td>行為障害</td><td class="en-col text-gray-500">Conduct disorders</td><td><span class="dsm-badge">素行症 312.xx/F91.x</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F91.0</span></td><td>家庭に限局した行為障害</td><td class="en-col text-gray-500">Conduct disorder confined to the family context</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F91.1</span></td><td>非社会化行為障害</td><td class="en-col text-gray-500">Unsocialized conduct disorder</td><td><span class="dsm-badge">素行症 312.81–312.89/F91.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F91.2</span></td><td>社会化行為障害</td><td class="en-col text-gray-500">Socialized conduct disorder</td><td><span class="dsm-badge">素行症（青年期発症型）312.82/F91.2</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F91.3</span></td><td>反抗挑戦性障害</td><td class="en-col text-gray-500">Oppositional defiant disorder</td><td><span class="dsm-badge">反抗挑発症 313.81/F91.3</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F92</span></td><td>行為と情緒の混合性障害</td><td class="en-col text-gray-500">Mixed disorders of conduct and emotions</td><td><span class="dsm-badge">他の特定される破壊的衝動制御・素行症</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F92.0</span></td><td>抑うつ性行為障害</td><td class="en-col text-gray-500">Depressive conduct disorder</td><td><span class="dsm-na">—（素行症 + 大うつ病性障害の併存で記録）</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F93</span></td><td>小児期に特異的な情緒障害</td><td class="en-col text-gray-500">Emotional disorders with onset specific to childhood</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F93.0</span></td><td>小児期の分離不安障害</td><td class="en-col text-gray-500">Separation anxiety disorder of childhood</td><td><span class="dsm-badge">分離不安症 309.21/F93.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F93.1</span></td><td>小児期の恐怖症性不安障害</td><td class="en-col text-gray-500">Phobic anxiety disorder of childhood</td><td><span class="dsm-na">限局性恐怖症（小児）として記録</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F93.2</span></td><td>小児期の社会不安障害</td><td class="en-col text-gray-500">Social anxiety disorder of childhood</td><td><span class="dsm-badge">社交不安症（小児）300.23/F40.10</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F93.3</span></td><td>同胞葛藤障害</td><td class="en-col text-gray-500">Sibling rivalry disorder</td><td><span class="dsm-na">—（適応反応症で記録することが多い）</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F94</span></td><td>小児期・青年期に特異的な社会機能障害</td><td class="en-col text-gray-500">Disorders of social functioning with onset specific to childhood and adolescence</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F94.0</span></td><td>選択性緘黙</td><td class="en-col text-gray-500">Elective mutism</td><td><span class="dsm-badge">選択性緘黙 312.23/F94.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F94.1</span></td><td>小児期の反応性愛着障害</td><td class="en-col text-gray-500">Reactive attachment disorder of childhood</td><td><span class="dsm-badge">反応性愛着障害 313.89/F94.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F94.2</span></td><td>小児期の脱抑制型愛着障害</td><td class="en-col text-gray-500">Disinhibited attachment disorder of childhood</td><td><span class="dsm-badge">脱抑制型対人交流障害 313.89/F94.2</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F95</span></td><td>チック障害</td><td class="en-col text-gray-500">Tic disorders</td><td><span class="dsm-na">—（チック症群）</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F95.0</span></td><td>一過性チック障害</td><td class="en-col text-gray-500">Transient tic disorder</td><td><span class="dsm-badge">暫定的チック症 307.21/F95.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F95.1</span></td><td>慢性運動性または音声チック障害</td><td class="en-col text-gray-500">Chronic motor or vocal tic disorder</td><td><span class="dsm-badge">持続性（慢性）チック症 307.22/F95.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F95.2</span></td><td>ド・ラ・トゥレット症候群</td><td class="en-col text-gray-500">Combined vocal and multiple motor tic disorder (Tourette)</td><td><span class="dsm-badge">トゥレット症 307.23/F95.2</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F98</span></td><td>小児期・青年期のその他の行動・情緒障害</td><td class="en-col text-gray-500">Other behavioural and emotional disorders</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F98.0</span></td><td>非器質性遺尿症</td><td class="en-col text-gray-500">Nonorganic enuresis</td><td><span class="dsm-badge">遺尿症 307.6/F98.0</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F98.1</span></td><td>非器質性遺糞症</td><td class="en-col text-gray-500">Nonorganic encopresis</td><td><span class="dsm-badge">遺糞症 307.7/F98.1</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F98.2</span></td><td>乳幼児の哺育障害</td><td class="en-col text-gray-500">Feeding disorder of infancy and childhood</td><td><span class="dsm-badge">回避・制限性食物摂取症 (ARFID) 307.59/F50.82</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F98.3</span></td><td>乳幼児・小児期の異食症</td><td class="en-col text-gray-500">Pica of infancy and childhood</td><td><span class="dsm-badge">異食症 307.52/F98.3</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F98.4</span></td><td>常同性運動障害</td><td class="en-col text-gray-500">Stereotyped movement disorders</td><td><span class="dsm-badge">常同運動症 307.3/F98.4</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F98.5</span></td><td>吃音（どもり）</td><td class="en-col text-gray-500">Stuttering [stammering]</td><td><span class="dsm-badge">小児期発症流暢症（吃音）307.0/F80.81</span></td></tr>
+            <tr class="sub-row"><td><span class="icd-code">F98.6</span></td><td>早口言語</td><td class="en-col text-gray-500">Cluttering</td><td><span class="dsm-na">—</span></td></tr>
+            <tr class="main-row"><td><span class="icd-code">F99</span></td><td>詳細不明の精神障害</td><td class="en-col text-gray-500">Mental disorder, not otherwise specified</td><td><span class="dsm-badge">特定不能の精神障害 300.9/F99</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DSM-5-TR 章対照表 -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mt-4">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="git-branch" class="w-5 h-5 text-indigo-700"></i>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-gray-800">ICD-10 F分類 → DSM-5-TR 章 対照表</h2>
+        <p class="text-xs text-gray-500">分類体系の違いを一覧で確認</p>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs border-collapse">
+        <thead>
+          <tr class="bg-gray-50">
+            <th class="p-2.5 text-left font-bold text-gray-700 border-b-2 border-gray-200 w-32">ICD-10 ブロック</th>
+            <th class="p-2.5 text-left font-bold text-gray-700 border-b-2 border-gray-200">ICD-10 日本語名</th>
+            <th class="p-2.5 text-left font-bold text-gray-700 border-b-2 border-gray-200">DSM-5-TR 対応章</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f0-text">F00–F09</td><td class="p-2.5">症状性を含む器質性精神障害</td><td class="p-2.5 text-indigo-700">神経認知症群 (Neurocognitive Disorders)</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f1-text">F10–F19</td><td class="p-2.5">精神作用物質使用による障害</td><td class="p-2.5 text-indigo-700">物質関連・嗜癖性障害群 (Substance-Related and Addictive Disorders)</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f2-text">F20–F29</td><td class="p-2.5">統合失調症・統合失調症型・妄想性障害</td><td class="p-2.5 text-indigo-700">統合失調症スペクトラムおよびその他の精神病性障害群</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f3-text">F30–F39</td><td class="p-2.5">気分〔感情〕障害</td><td class="p-2.5 text-indigo-700">双極性障害および関連障害群 / 抑うつ障害群（2章に分割）</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f4-text">F40–F48</td><td class="p-2.5">神経症性・ストレス関連・身体表現性障害</td><td class="p-2.5 text-indigo-700">不安症群 / 強迫症群 / 心的外傷・ストレス関連障害群 / 解離症群 / 身体症状症群（5章に分割）</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f5-text">F50–F59</td><td class="p-2.5">生理的障害関連行動症候群</td><td class="p-2.5 text-indigo-700">食行動障害群 / 睡眠・覚醒障害群 / 性機能不全群（複数章）</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f6-text">F60–F69</td><td class="p-2.5">成人の人格・行動障害</td><td class="p-2.5 text-indigo-700">パーソナリティ障害群 / 性別違和 / パラフィリア障害群（複数章）</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f7-text">F70–F79</td><td class="p-2.5">知的障害〈精神遅滞〉</td><td class="p-2.5 text-indigo-700">神経発達症群：知的発達症 (Intellectual Developmental Disorder)</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f8-text">F80–F89</td><td class="p-2.5">心理的発達の障害</td><td class="p-2.5 text-indigo-700">神経発達症群（コミュニケーション症・学習症・DCD・ASD等）</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2.5 font-mono font-bold f9-text">F90–F98</td><td class="p-2.5">小児期・青年期発症の行動・情緒障害</td><td class="p-2.5 text-indigo-700">神経発達症群 (ADHD) / 破壊的衝動制御・素行症群 / 不安症群（小児）/ チック症群</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 免責・参照 -->
+  <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 mt-4 text-xs text-gray-500">
+    <div class="flex items-start gap-2">
+      <i data-lucide="book-open" class="w-4 h-4 flex-shrink-0 mt-0.5 text-gray-400"></i>
+      <div>
+        <span class="font-bold text-gray-600">参照：</span>
+        WHO ICD-10 第5章（F00–F99）、DSM-5-TR（American Psychiatric Association, 2022）、ICD-10-CM 2024。
+        本資料は外来での即時参照を目的としており、保険請求・法的書類には必ず原典を確認すること。
+        DSM-5-TRのICD-10-CMコードは年度改訂により変更される場合がある。
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  });
+
+  // タブ切り替え
+  function switchTab(navId, tabId) {
+    const nav = document.getElementById(navId);
+    nav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    nav.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    const btn = nav.querySelector(`[data-tab="${tabId}"]`);
+    const panel = document.getElementById(tabId);
+    if (btn) btn.classList.add('active');
+    if (panel) panel.classList.add('active');
+  }
+
+  // アコーディオン制御
+  function toggleSection(bodyId, header) {
+    const body = document.getElementById(bodyId);
+    const chevronId = bodyId + '-chevron';
+    const chevron = document.getElementById(chevronId);
+    body.classList.toggle('open');
+    if (chevron) chevron.classList.toggle('open');
+  }
+
+  function expandAll() {
+    document.querySelectorAll('.cat-body').forEach(b => b.classList.add('open'));
+    document.querySelectorAll('.chevron').forEach(c => c.classList.add('open'));
+  }
+
+  function collapseAll() {
+    document.querySelectorAll('.cat-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+  }
+
+  // 検索・フィルタリング
+  const searchInput = document.getElementById('searchInput');
+  const resultCount = document.getElementById('searchResultCount');
+
+  searchInput.addEventListener('input', function() {
+    const query = this.value.trim().toLowerCase();
+    if (!query) {
+      // 検索クリア
+      document.querySelectorAll('.code-table tbody tr').forEach(row => {
+        row.classList.remove('hidden-row');
+        row.querySelectorAll('td').forEach(td => {
+          td.innerHTML = td.innerHTML.replace(/<mark class="search-hl">(.*?)<\/mark>/gi, '$1');
+        });
+      });
+      resultCount.classList.add('hidden');
+      return;
+    }
+
+    let matchCount = 0;
+    const sections = {};
+
+    document.querySelectorAll('.code-table tbody tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      if (text.includes(query)) {
+        row.classList.remove('hidden-row');
+        matchCount++;
+        // 所属セクションを開く
+        const body = row.closest('.cat-body');
+        if (body) {
+          body.classList.add('open');
+          const chevronId = body.id + '-chevron';
+          const chevron = document.getElementById(chevronId);
+          if (chevron) chevron.classList.add('open');
+        }
+      } else {
+        row.classList.add('hidden-row');
+      }
+    });
+
+    resultCount.textContent = `${matchCount} 件ヒット`;
+    resultCount.classList.remove('hidden');
+  });
+
+  // Lucide icons 初期化
+  lucide.createIcons();
+</script>
+</body>
+</html>
