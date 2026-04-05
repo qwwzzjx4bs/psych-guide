@@ -2397,37 +2397,17 @@
 </main>
 
 <script>
-  // ページロード時：初期アクティブパネルに panel-codes クラスを付与
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.tab-panel.active').forEach(p => {
-      const id = p.id || '';
-      if (id.startsWith('codes'))         p.classList.add('panel-codes');
-      else if (id.startsWith('criteria')) p.classList.add('panel-criteria');
-      else if (id.startsWith('diff'))     p.classList.add('panel-diff');
-      else if (id.startsWith('notes'))    p.classList.add('panel-notes');
-    });
   });
 
   // タブ切り替え
   function switchTab(navId, tabId) {
     const nav = document.getElementById(navId);
-    // 全ボタンの active を外す
     nav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    // 全パネルの active・色クラスを外す
-    nav.querySelectorAll('.tab-panel').forEach(p => {
-      p.classList.remove('active', 'panel-codes', 'panel-criteria', 'panel-diff', 'panel-notes');
-    });
+    nav.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     const btn = nav.querySelector(`[data-tab="${tabId}"]`);
     const panel = document.getElementById(tabId);
     if (btn) btn.classList.add('active');
-    if (panel) {
-      panel.classList.add('active');
-      // タブIDからパネル色クラスを付与
-      if (tabId.startsWith('codes'))    panel.classList.add('panel-codes');
-      else if (tabId.startsWith('criteria')) panel.classList.add('panel-criteria');
-      else if (tabId.startsWith('diff'))     panel.classList.add('panel-diff');
-      else if (tabId.startsWith('notes'))    panel.classList.add('panel-notes');
-    }
+    if (panel) panel.classList.add('active');
   }
 
   // アコーディオン制御
