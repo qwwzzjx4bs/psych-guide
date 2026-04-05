@@ -519,7 +519,16 @@
         </div>
       </div>
 
+      <!-- タブナビ F0 -->
+      <div class="tab-nav" id="tabs-f0">
+        <button class="tab-btn active" data-tab="codes-f0" onclick="switchTab('tabs-f0','codes-f0')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f0" onclick="switchTab('tabs-f0','criteria-f0')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f0" onclick="switchTab('tabs-f0','diff-f0')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f0" onclick="switchTab('tabs-f0','notes-f0')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+
       <!-- Tab1: コード一覧 -->
+      <div class="tab-panel active" id="codes-f0">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -570,7 +579,100 @@
           </tbody>
         </table>
       </div>
+      </div><!-- /codes-f0 -->
 
+      <!-- Tab2: 診断基準 F0 -->
+      <div class="tab-panel" id="criteria-f0">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F05 せん妄 — 診断基準</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <div class="font-bold text-gray-700 mb-2">ICD-10 必須基準（全て満たす）</div>
+              <ul class="space-y-1.5 text-gray-700">
+                <li>① <strong>意識の混濁</strong>：注意の向け・集中・移動・維持の困難</li>
+                <li>② <strong>認知の障害</strong>：見当識・記憶障害、または知覚の障害（錯覚・幻覚）</li>
+                <li>③ <strong>急性発症・変動性経過</strong>：時間〜日単位、1日内に症状が変動</li>
+                <li>④ <strong>器質的原因の証拠</strong>：身体疾患・物質の証拠</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-gray-700 mb-2">DSM-5-TR 基準（A〜E全て）</div>
+              <ul class="space-y-1.5 text-gray-700">
+                <li>A. <strong>注意の障害</strong>（直接・集中・維持・転換の困難）</li>
+                <li>B. <strong>急性発症・変動性</strong>：時間〜日単位で発症、1日中変動</li>
+                <li>C. <strong>認知の障害</strong>（記憶・見当識・言語・知覚等）</li>
+                <li>D. A・Cは他の神経認知障害では説明できない</li>
+                <li>E. <strong>器質的原因</strong>の証拠あり</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F00–F03 認知症（主要 NCD）— 診断基準</span>
+          </div>
+          <div class="text-sm text-gray-700 space-y-2">
+            <div><strong>ICD-10 共通基準：</strong>①記憶障害 ②他の高次脳機能障害（失語・失行・失認・実行機能） ③6ヶ月以上の経過 ④意識の混濁なし ⑤日常生活機能の低下</div>
+            <div><strong>DSM-5-TR 主要 NCD：</strong>①1つ以上の認知ドメインの有意な認知機能低下（以前の水準より） ②認知障害が日常生活の自立を妨げる ③意識の混濁・せん妄でない ④他の精神疾患で説明不可</div>
+            <div class="mt-2"><strong>認知ドメイン（6領域）：</strong>複雑性注意 / 実行機能 / 学習・記憶 / 言語 / 知覚・運動 / 社会的認知</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F0 -->
+      <div class="tab-panel" id="diff-f0">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>発症様式</th><th>意識水準</th><th>記憶</th><th>変動性</th><th>鑑別の決め手</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">アルツハイマー型認知症</td><td>緩徐・潜行性</td><td>清明</td><td>近時記憶↓↓</td><td>なし</td><td>海馬萎縮（MRI）、ApoE4</td></tr>
+              <tr><td class="font-bold">血管性認知症</td><td>段階的・急性</td><td>清明</td><td>まだら</td><td>なし</td><td>局所神経症状、MRIの梗塞巣</td></tr>
+              <tr><td class="font-bold">レビー小体型認知症</td><td>緩徐</td><td>変動あり</td><td>比較的保持</td><td>著明</td><td>リアルな幻視、パーキンソン症状、REM睡眠行動障害</td></tr>
+              <tr><td class="font-bold">前頭側頭型認知症</td><td>緩徐</td><td>清明</td><td>比較的保持</td><td>なし</td><td>人格変化・脱抑制・前頭葉優位の萎縮</td></tr>
+              <tr><td class="font-bold">せん妄（F05）</td><td>急性（時間〜日）</td><td>混濁</td><td>急性障害</td><td>著明（夜間悪化）</td><td>CAMで評価、可逆性、原因疾患の検索</td></tr>
+              <tr><td class="font-bold">うつ病性仮性認知症</td><td>亜急性（週〜月）</td><td>清明</td><td>主観的不満が主</td><td>なし</td><td>抑うつ気分・希死念慮、抗うつ薬で改善</td></tr>
+              <tr><td class="font-bold">正常圧水頭症</td><td>緩徐</td><td>清明〜軽度混濁</td><td>障害</td><td>なし</td><td>三徴候（歩行障害・尿失禁・認知障害）、タップテスト</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F0 -->
+      <div class="tab-panel" id="notes-f0">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>低活動型せん妄</strong>：静かに横たわり、「おとなしい」と見なされ見逃されやすい。うつ病・認知症と誤診される危険性が高い</li>
+            <li>• <strong>治療可能な認知症の見落とし</strong>：甲状腺機能低下症（TSH）・ビタミンB12欠乏・葉酸欠乏・梅毒（TPHA）・正常圧水頭症は治療で改善可能</li>
+            <li>• <strong>認知症+せん妄の重複</strong>：F05.1。既存認知症患者のせん妄は見逃されやすく、予後悪化につながる</li>
+            <li>• <strong>薬剤性認知症様症状</strong>：抗コリン薬・BZD・抗精神病薬は認知機能低下を引き起こす。ポリファーマシーを必ず確認</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• 認知症の鑑別に<strong>神経心理検査バッテリー</strong>（MMSE + MoCA + ADAS-Cog + FAB）を組み合わせる</li>
+            <li>• <strong>病歴聴取は家族から</strong>：患者本人は記憶障害のため信頼性が低い。ADL変化の経過・発症様式を聴取</li>
+            <li>• <strong>DLBの特徴的所見</strong>：ドパミントランスポーターSPECT（ダットスキャン）の低下が確認的診断に有用</li>
+            <li>• 若年発症認知症（65歳未満）では代謝・遺伝・プリオン疾患を積極的に除外</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール・ツール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">MMSE</span>認知症スクリーニング（30点満点、23点以下で認知症疑い）
+            <span class="tool-tag">MoCA</span>軽度認知障害の検出に優れる（25点以下で注意）
+            <span class="tool-tag">CAM</span>せん妄評価（Confusion Assessment Method）
+            <span class="tool-tag">HDS-R</span>改訂長谷川式認知症スケール（日本で広く使用）
+            <span class="tool-tag">FAB</span>前頭葉機能評価バッテリー（FTD・前頭葉機能評価）
+            <span class="tool-tag">NPI</span>Neuropsychiatric Inventory（行動・心理症状評価）
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -611,6 +713,15 @@
         </div>
       </div>
 
+      <!-- タブナビ F1 -->
+      <div class="tab-nav" id="tabs-f1">
+        <button class="tab-btn active" data-tab="codes-f1" onclick="switchTab('tabs-f1','codes-f1')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f1" onclick="switchTab('tabs-f1','criteria-f1')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f1" onclick="switchTab('tabs-f1','diff-f1')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f1" onclick="switchTab('tabs-f1','notes-f1')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+
+      <div class="tab-panel active" id="codes-f1">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -642,7 +753,108 @@
           </tbody>
         </table>
       </div>
+      </div><!-- /codes-f1 -->
 
+      <!-- Tab2: 診断基準 F1 -->
+      <div class="tab-panel" id="criteria-f1">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F1x.2 依存症候群 — ICD-10 診断基準</span>
+            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">6項目中3項目以上／過去1年間に</span>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>① <strong>渇望（Craving）</strong>：物質使用への強い欲求または強迫的衝動</li>
+            <li>② <strong>コントロール困難</strong>：使用の開始・終了・使用量のコントロール困難</li>
+            <li>③ <strong>生理的離脱</strong>：使用中止・減量時の離脱症状、または離脱回避のための継続使用</li>
+            <li>④ <strong>耐性（Tolerance）</strong>：同じ効果を得るために量を増やす必要がある</li>
+            <li>⑤ <strong>代替活動の放棄</strong>：物質使用のために他の喜び・活動を放棄または減少</li>
+            <li>⑥ <strong>有害使用の継続</strong>：明らかな有害結果（身体的・心理的・社会的）があるにもかかわらず使用継続</li>
+          </ul>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">アルコール使用障害 — DSM-5-TR 基準</span>
+            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">11項目中 軽度2–3 / 中等度4–5 / 重度6+</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+            <ul class="space-y-1">
+              <li>① 予定より多量・長期間の使用</li>
+              <li>② 減量・中止の持続的欲求・失敗した努力</li>
+              <li>③ 使用・回復・入手に多くの時間を費やす</li>
+              <li>④ 渇望（Craving）</li>
+              <li>⑤ 職業・社会的役割の不履行</li>
+              <li>⑥ 人間関係問題にもかかわらず継続</li>
+            </ul>
+            <ul class="space-y-1">
+              <li>⑦ 社会的・職業的活動の放棄</li>
+              <li>⑧ 身体的危険のある状況での使用</li>
+              <li>⑨ 身体的・心理的問題を知りつつ継続</li>
+              <li>⑩ <strong>耐性</strong>（量の増加 / 効果の減少）</li>
+              <li>⑪ <strong>離脱</strong>症状または回避のための使用</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F1 -->
+      <div class="tab-panel" id="diff-f1">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>比較項目</th><th>F1x.1 有害な使用</th><th>F1x.2 依存症候群</th><th>F1x.0 急性中毒</th></tr></thead>
+            <tbody>
+              <tr><td>身体・心理的依存</td><td>なし</td><td><strong>あり（核心）</strong></td><td>一時的</td></tr>
+              <tr><td>渇望</td><td>弱い〜なし</td><td><strong>強い（コントロール不可）</strong></td><td>なし</td></tr>
+              <tr><td>耐性・離脱</td><td>なし</td><td><strong>あり</strong></td><td>なし</td></tr>
+              <tr><td>機能障害</td><td>あり（使用による直接的害）</td><td>あり（使用パターン全体）</td><td>一時的</td></tr>
+              <tr><td>DSM-5-TR</td><td>Use Disorder（軽度）に統合</td><td>Use Disorder（中等度〜重度）</td><td>Intoxication</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-3 overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>物質使用との関係</th><th>鑑別ポイント</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">物質誘発性精神病（F1x.5）</td><td>使用中または離脱中に発症</td><td>物質中止後2〜4週以内に著明改善 → 改善なければ原発性を考える</td></tr>
+              <tr><td class="font-bold">原発性統合失調症（F20）</td><td>薬物使用は引き金にすぎない</td><td>物質中止後も精神病症状が持続（6ヶ月以上）</td></tr>
+              <tr><td class="font-bold">アルコール性認知症</td><td>長期大量飲酒後</td><td>コルサコフ症候群（前向性健忘＋作話）、ウェルニッケ脳症との連続</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F1 -->
+      <div class="tab-panel" id="notes-f1">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>否認（Denial）</strong>：患者は飲酒量・薬物使用量を著しく過小申告する。家族情報・肝機能・γGTP・MCV（平均赤血球容積）などの客観的指標を必ず確認</li>
+            <li>• <strong>アルコール離脱の致死性</strong>：離脱せん妄（振戦せん妄）は未治療で死亡率5〜15%。最終飲酒から12〜24時間後に症状開始、48〜72時間でピーク → 入院・BZD投与が必要</li>
+            <li>• <strong>ウェルニッケ脳症の見落とし</strong>：アルコール依存患者の意識障害・眼球運動障害・失調に気づいたらチアミン（VB1）投与を先行する（グルコース投与前に！）</li>
+            <li>• <strong>物質使用と精神症状の因果関係</strong>：「物質をやめれば治る」と決めつけず、物質中止後も症状を継続観察（4週以上）</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>FRAMES アプローチ</strong>（動機づけ面接の基礎）：Feedback・Responsibility・Advice・Menu・Empathy・Self-efficacy — 否認が強い患者への初回介入に有効</li>
+            <li>• <strong>CAGE 質問</strong>（アルコールスクリーニング）：①Cutdown②Annoyed③Guilty④Eye-opener — 2項目以上陽性でアルコール問題を疑う</li>
+            <li>• 依存症患者の自傷・自殺リスクは一般人口の6〜10倍 → 毎診察でリスク評価</li>
+            <li>• 薬物依存：尿中薬物スクリーニング（半定量）を補助診断として活用</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">AUDIT</span>アルコール使用障害同定テスト（8点以上：危険飲酒）
+            <span class="tool-tag">CAGE</span>4項目スクリーニング（2項目以上陽性で要精査）
+            <span class="tool-tag">DAST-10</span>薬物乱用スクリーニングテスト
+            <span class="tool-tag">CIWA-Ar</span>アルコール離脱症状評価（離脱重症度・治療量の指標）
+            <span class="tool-tag">SADQ</span>アルコール依存重症度質問紙
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -678,6 +890,15 @@
         </div>
       </div>
 
+      <!-- タブナビ F2 -->
+      <div class="tab-nav" id="tabs-f2">
+        <button class="tab-btn active" data-tab="codes-f2" onclick="switchTab('tabs-f2','codes-f2')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f2" onclick="switchTab('tabs-f2','criteria-f2')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f2" onclick="switchTab('tabs-f2','diff-f2')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f2" onclick="switchTab('tabs-f2','notes-f2')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+
+      <div class="tab-panel active" id="codes-f2">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -720,7 +941,115 @@
       <div class="mt-3 text-xs text-gray-500 bg-purple-50 rounded-lg p-3">
         <strong class="text-purple-700">F21の位置づけ：</strong>ICD-10では精神病性障害の章（F20-F29）に分類されるが、DSM-5-TRでは<strong>パーソナリティ障害の章</strong>（Cluster A）に配置されている点に注意。
       </div>
+      </div><!-- /codes-f2 -->
 
+      <!-- Tab2: 診断基準 F2 -->
+      <div class="tab-panel" id="criteria-f2">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F20 統合失調症 — ICD-10 vs DSM-5-TR 診断基準比較</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <div class="font-bold text-gray-700 mb-2">ICD-10（1ヶ月以上）</div>
+              <div class="text-xs text-gray-500 mb-2">以下のうち1項目以上（1〜4）、または2項目以上（5〜8）：</div>
+              <ul class="space-y-1 text-gray-700">
+                <li>① 思考反響・思考吹入・思考奪取・思考伝播</li>
+                <li>② 支配観念・憑依体験・身体への作為体験</li>
+                <li>③ 患者の行動を実況する幻声、または複数の声が患者について話す</li>
+                <li>④ 荒唐無稽な妄想（文化的に不適切）</li>
+                <li>⑤ 持続的幻覚（気分に合致せず、1ヶ月以上）</li>
+                <li>⑥ 思考形式障害（滅裂・連想弛緩）</li>
+                <li>⑦ 緊張病性行動</li>
+                <li>⑧ 陰性症状（感情平板化・意欲欠如・会話の貧困）</li>
+              </ul>
+              <div class="mt-2 text-xs text-red-600 font-bold">期間：1ヶ月以上</div>
+            </div>
+            <div>
+              <div class="font-bold text-gray-700 mb-2">DSM-5-TR（6ヶ月以上）</div>
+              <div class="text-xs text-gray-500 mb-2">A基準：以下の2項目以上（うち1項目は①〜③）：</div>
+              <ul class="space-y-1 text-gray-700">
+                <li>① <strong>妄想</strong></li>
+                <li>② <strong>幻覚</strong></li>
+                <li>③ <strong>まとまりのない発語</strong>（脱線・滅裂等）</li>
+                <li>④ ひどくまとまりのない行動または緊張病性行動</li>
+                <li>⑤ <strong>陰性症状</strong>（感情の平板化・意欲欠如・社会的引きこもり等）</li>
+              </ul>
+              <div class="mt-2 text-xs space-y-1">
+                <div class="text-red-600 font-bold">B：社会・職業機能の著しい低下</div>
+                <div class="text-red-600 font-bold">C：期間6ヶ月以上（活動期最低1ヶ月）</div>
+                <div class="text-orange-600">D：気分障害・統合失調感情障害の除外</div>
+                <div class="text-orange-600">E：物質・器質性原因の除外</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 bg-amber-50 rounded-lg p-3 text-sm">
+            <strong class="text-amber-800">重要な差異：</strong>ICD-10は1ヶ月・DSM-5-TRは6ヶ月（前駆期含む）。ICD-10は Schneider の一級症状を重視し、DSM-5-TRは陰性症状・機能障害を重視する。
+          </div>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F25 統合失調感情障害 — 診断基準のポイント</span>
+          </div>
+          <div class="text-sm text-gray-700 space-y-2">
+            <div>① 同一の疾患エピソード内で統合失調症症状と著明な気分症状（躁または抑うつ）が<strong>同時に</strong>存在</div>
+            <div>② 気分症状は疾患経過の<strong>実質的な部分</strong>を占める（短期間のみではない）</div>
+            <div>③ <strong>統合失調症との鑑別</strong>：統合失調症では気分症状は活動期に比べて短期間のみ</div>
+            <div>④ <strong>気分障害との鑑別</strong>：気分エピソードのない時期にも精神病症状が2週間以上持続する</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F2 -->
+      <div class="tab-panel" id="diff-f2">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>精神病症状</th><th>気分症状</th><th>期間基準</th><th>鑑別の決め手</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F20 統合失調症</td><td>+++ (主体)</td><td>軽微〜なし</td><td>6ヶ月以上(DSM)</td><td>気分症状は活動期の少割合のみ</td></tr>
+              <tr><td class="font-bold">F23 急性一過性精神病性障害</td><td>++ 急性</td><td>なし〜軽微</td><td>1ヶ月未満</td><td>短期間で完全回復、誘因あり</td></tr>
+              <tr><td class="font-bold">F25 統合失調感情障害</td><td>++</td><td>++ 実質的</td><td>統合失調症基準+気分</td><td>精神病症状と気分症状が同時に顕著</td></tr>
+              <tr><td class="font-bold">F22 妄想症</td><td>妄想のみ</td><td>なし</td><td>1ヶ月以上</td><td>行動・機能は比較的保持、奇妙でない妄想</td></tr>
+              <tr><td class="font-bold">F31.2/F32.3 精神病症状伴う気分障害</td><td>+ (気分に合致)</td><td>+++ (主体)</td><td>気分エピソード中のみ</td><td>気分症状が主体で精神病症状は二次的</td></tr>
+              <tr><td class="font-bold">器質性精神病（F06.2）</td><td>+</td><td>+/-</td><td>様々</td><td>頭部MRI・血液検査・薬物スクリーニング</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F2 -->
+      <div class="tab-panel" id="notes-f2">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>初回精神病エピソード (FEP) での器質性疾患の未除外</strong>：必ず頭部MRI・血算・生化学・甲状腺・薬物スクリーニングを施行</li>
+            <li>• <strong>自己免疫性脳炎の見落とし</strong>：抗NMDA受容体抗体脳炎など → 若年女性の急性精神病では特に疑う（CSF・抗体検査）</li>
+            <li>• <strong>陰性症状とうつ病の混同</strong>：意欲欠如・感情平板化はうつ病でも起こる。陰性症状は「感情反応の欠如」が特徴（内面的苦痛の訴えが少ない）</li>
+            <li>• <strong>F20サブタイプコードの誤用</strong>：DSM-5-TRでサブタイプは廃止。ICD-10コードを使う際も現在エピソードの症状に基づいて選択</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>DUP（未治療精神病期間）の短縮</strong>：DUP 1年以内の治療開始で予後が大きく改善。早期介入チーム（EIS）への紹介を積極的に</li>
+            <li>• <strong>縦断的評価の重要性</strong>：初回エピソードでは統合失調症と即断せず、6〜12ヶ月の経過観察を経て診断を確定</li>
+            <li>• <strong>次元的症状評価</strong>：陽性症状・陰性症状・認知症状・抑うつ・興奮の5次元でモニタリング</li>
+            <li>• 家族からの病前機能・発症経過・発達歴の聴取は診断精度を大きく向上させる</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">PANSS</span>陽性・陰性症状評価尺度（30項目）
+            <span class="tool-tag">BPRS</span>簡易精神症状評価尺度（18項目）
+            <span class="tool-tag">SAPS/SANS</span>陽性症状評価尺度 / 陰性症状評価尺度
+            <span class="tool-tag">CGI-SCH</span>統合失調症全般臨床印象度
+            <span class="tool-tag">SAS</span>錐体外路症状評価（薬物副作用モニタリング）
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -757,6 +1086,15 @@
         </div>
       </div>
 
+      <!-- タブナビ F3 -->
+      <div class="tab-nav" id="tabs-f3">
+        <button class="tab-btn active" data-tab="codes-f3" onclick="switchTab('tabs-f3','codes-f3')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f3" onclick="switchTab('tabs-f3','criteria-f3')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f3" onclick="switchTab('tabs-f3','diff-f3')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f3" onclick="switchTab('tabs-f3','notes-f3')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+
+      <div class="tab-panel active" id="codes-f3">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -802,7 +1140,111 @@
           </tbody>
         </table>
       </div>
+      </div><!-- /codes-f3 -->
 
+      <!-- Tab2: 診断基準 F3 -->
+      <div class="tab-panel" id="criteria-f3">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F32 うつ病エピソード — ICD-10 診断基準</span>
+          </div>
+          <div class="text-sm text-gray-700 space-y-2">
+            <div><strong>一般症状（コア症状）：</strong></div>
+            <ul class="space-y-1 ml-3">
+              <li>① <strong>抑うつ気分</strong>（本人自覚または他者観察）</li>
+              <li>② <strong>興味・喜びの喪失</strong>（以前は楽しめた活動への関心低下）</li>
+              <li>③ <strong>気力低下・易疲労感</strong></li>
+            </ul>
+            <div class="mt-2"><strong>付加症状：</strong></div>
+            <ul class="space-y-1 ml-3 grid grid-cols-2 gap-1">
+              <li>④ 集中力・注意力の低下</li>
+              <li>⑤ 自己評価・自己信頼の低下</li>
+              <li>⑥ 罪責感・無価値感</li>
+              <li>⑦ 将来への絶望感</li>
+              <li>⑧ 自傷・希死念慮</li>
+              <li>⑨ 睡眠障害（不眠または過眠）</li>
+              <li>⑩ 食欲変化（減少または増加）</li>
+            </ul>
+            <div class="mt-2 grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="bg-green-50 border border-green-200 rounded-lg p-2"><strong>軽症 (F32.0)</strong><br>一般症状2+付加症状2</div>
+              <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-2"><strong>中等症 (F32.1)</strong><br>一般症状2+付加症状3〜4</div>
+              <div class="bg-red-50 border border-red-200 rounded-lg p-2"><strong>重症 (F32.2/3)</strong><br>一般症状3+付加症状4以上</div>
+            </div>
+          </div>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F31 双極性感情障害 — 躁病エピソード診断基準</span>
+          </div>
+          <div class="text-sm text-gray-700 space-y-2">
+            <div><strong>A：高揚した・開放的・易怒的な気分が少なくとも1週間持続</strong></div>
+            <div><strong>B：以下の症状のうち3項目以上（気分が易怒的のみの場合は4項目以上）：</strong></div>
+            <ul class="space-y-1 ml-3 grid grid-cols-2 gap-1">
+              <li>① 誇大性・自己評価の向上</li>
+              <li>② 睡眠欲求の減少</li>
+              <li>③ 多弁・早口</li>
+              <li>④ 観念奔逸・思考促迫</li>
+              <li>⑤ 注意散漫</li>
+              <li>⑥ 活動量増加・焦燥</li>
+              <li>⑦ 危険な快楽的活動への没頭</li>
+            </ul>
+            <div class="mt-2 text-xs bg-amber-50 p-2 rounded"><strong>軽躁病（F30.0）との違い：</strong>期間が4日以上（躁は7日以上）、入院不要、機能障害が軽微、精神病症状なし</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F3 -->
+      <div class="tab-panel" id="diff-f3">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>主要症状</th><th>経過</th><th>躁/軽躁の既往</th><th>鑑別の決め手</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F32/F33 大うつ病性障害</td><td>抑うつ気分・興味喪失</td><td>エピソード性</td><td>なし</td><td>躁/軽躁歴の詳細な確認</td></tr>
+              <tr><td class="font-bold">F31 双極I型障害</td><td>うつ+躁エピソード</td><td>エピソード性（再発多）</td><td>あり（入院要レベル）</td><td>過去の躁エピソード（誇大性・行動化・睡眠不要感）</td></tr>
+              <tr><td class="font-bold">F31 双極II型障害</td><td>うつ+軽躁エピソード</td><td>エピソード性</td><td>あり（機能維持レベル）</td><td>本人未認識の軽躁期（家族情報が重要）</td></tr>
+              <tr><td class="font-bold">F34.1 気分変調症</td><td>慢性抑うつ気分</td><td>慢性（2年以上）</td><td>なし</td><td>「いつもこんな感じ」症状の慢性低強度化</td></tr>
+              <tr><td class="font-bold">F43.2 適応障害</td><td>抑うつ・不安</td><td>ストレス因子後3ヶ月以内</td><td>なし</td><td>明確なストレス因子の存在、除去で改善</td></tr>
+              <tr><td class="font-bold">F34.0 気分循環症</td><td>軽度の躁/うつ交替</td><td>慢性（2年以上）</td><td>軽微</td><td>躁/うつが基準に達しない慢性変動</td></tr>
+              <tr><td class="font-bold">甲状腺機能低下症</td><td>抑うつ様症状</td><td>器質性</td><td>なし</td><td>TSH高値、Free T4低値、身体症状（寒がり・浮腫等）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F3 -->
+      <div class="tab-panel" id="notes-f3">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>最重要の落とし穴：双極性障害の見落とし</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>うつ病患者の15〜40%が後に双極性障害と診断</strong>される。SSRI単剤投与で躁転・急速交代化・混合状態を引き起こす危険がある</li>
+            <li>• <strong>双極性うつの特徴的サイン</strong>：過眠・過食・鉛様疲労感・気分の日内変動（午前悪化）・精神病症状・若年発症・家族歴 → これらがあれば双極性を疑う</li>
+            <li>• <strong>軽躁期は本人が快適</strong>：「調子がよかった時期」として記憶され報告されにくい。創造性・生産性の高い時期として語られることが多い</li>
+            <li>• <strong>自殺リスクの過小評価</strong>：気分の改善初期（抑制が解除された時期）に自殺企図のリスクが最も高い → 毎診察でC-SSRS等による評価必須</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>3世代の家族歴を聴取</strong>：双極性障害の家族歴は診断確率を大幅に上げる</li>
+            <li>• <strong>病前エピソードの詳細聴取</strong>：「今まで一番元気だった時期」を尋ね、睡眠量の変化・散財・性的行動変化を確認</li>
+            <li>• <strong>抗うつ薬歴を確認</strong>：過去の抗うつ薬で躁転・混合状態・急速交代化の経験があれば双極性を強く疑う</li>
+            <li>• 重症うつ病への mECT（修正型電気けいれん療法）：自殺リスク高・緊急性がある場合は早期に適応を検討（迅速効果）</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">PHQ-9</span>うつ病重症度評価（9項目、10点以上で中等度）
+            <span class="tool-tag">QIDS-J</span>抑うつ症状簡易評価（16項目）
+            <span class="tool-tag">HCL-32</span>軽躁状態スクリーニング（14点以上で双極性を疑う）
+            <span class="tool-tag">MDQ</span>気分障害質問票（双極性スクリーニング）
+            <span class="tool-tag">YMRS</span>Young躁症評価尺度
+            <span class="tool-tag">C-SSRS</span>コロンビア自殺重症度評価尺度
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -838,6 +1280,15 @@
         </div>
       </div>
 
+      <!-- タブナビ F4 -->
+      <div class="tab-nav" id="tabs-f4">
+        <button class="tab-btn active" data-tab="codes-f4" onclick="switchTab('tabs-f4','codes-f4')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f4" onclick="switchTab('tabs-f4','criteria-f4')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f4" onclick="switchTab('tabs-f4','diff-f4')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f4" onclick="switchTab('tabs-f4','notes-f4')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+
+      <div class="tab-panel active" id="codes-f4">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -895,7 +1346,115 @@
         <strong class="text-teal-700">F45の概念的転換：</strong>
         ICD-10では「医学的に説明できない症状」が診断要件だったが、DSM-5-TRの身体症状症では<strong>この要件を廃止</strong>し、症状への過度な思考・感情・行動が診断基準の中心となった。これにより心気症は「病気不安症 (Illness Anxiety Disorder)」として独立した。
       </div>
+      </div><!-- /codes-f4 -->
 
+      <!-- Tab2: 診断基準 F4 -->
+      <div class="tab-panel" id="criteria-f4">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F41.0 パニック障害 / F41.1 全般性不安障害（GAD）— 診断基準</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <div class="font-bold mb-2">F41.0 パニック障害（DSM-5-TR）</div>
+              <ul class="space-y-1">
+                <li>A. <strong>予期しないパニック発作</strong>の反復：突然の強烈な恐怖が10分以内に頂点、以下の13症状のうち4項目以上</li>
+                <li class="ml-3 text-xs">動悸・頻脈 / 発汗 / 振戦 / 息切れ感 / 窒息感 / 胸痛 / 悪心 / めまい / 冷感・ほてり / 感覚麻痺 / 現実感消失 / コントロール喪失への恐怖 / 死の恐怖</li>
+                <li>B. 発作後1ヶ月以上：<strong>予期不安</strong>または<strong>回避行動</strong></li>
+                <li>C. 物質・他の身体疾患によるものではない</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold mb-2">F41.1 GAD（DSM-5-TR）</div>
+              <ul class="space-y-1">
+                <li>A. 多くの出来事・活動への<strong>過剰な不安・心配</strong>が6ヶ月以上</li>
+                <li>B. 心配のコントロール困難</li>
+                <li>C. 以下の6症状のうち3項目以上（小児は1項目）：<span class="text-xs">①落ち着きのなさ ②易疲労感 ③集中困難 ④易刺激性 ⑤筋肉の緊張 ⑥睡眠障害</span></li>
+                <li>D. 社会的・職業的機能障害</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F43.1 PTSD / F42 強迫症（OCD）— 診断基準</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <div class="font-bold mb-2">F43.1 PTSD（DSM-5-TR）</div>
+              <ul class="space-y-1">
+                <li>A. <strong>外傷的出来事</strong>への暴露（直接体験・目撃・他者から聞かされる等）</li>
+                <li>B. <strong>侵入症状</strong>（フラッシュバック・夢・心理的苦痛）</li>
+                <li>C. <strong>回避</strong>（外傷関連の思考・外部刺激の回避）</li>
+                <li>D. <strong>認知・気分の変化</strong>（否定的信念・外傷の想起困難・罪責感・疎遠感等）</li>
+                <li>E. <strong>覚醒亢進</strong>（過剰驚愕反応・睡眠障害・易刺激性・集中困難・過覚醒）</li>
+                <li>期間：1ヶ月以上</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold mb-2">F42 OCD（DSM-5-TR）</div>
+              <ul class="space-y-1">
+                <li>A. <strong>強迫観念</strong>（苦痛を引き起こす反復的・侵入的思考/衝動/心像）および/または<strong>強迫行為</strong>（反復的行動または心的行為）</li>
+                <li>B. 時間がかかる（1日1時間以上）または苦痛・機能障害</li>
+                <li>C. 物質・他の身体疾患によるものではない</li>
+                <li>D. 他の精神障害で説明できない</li>
+                <li class="text-xs text-purple-700">Insight Specifier：病識良好 / 不良 / 欠如（妄想性の特徴）</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F4 -->
+      <div class="tab-panel" id="diff-f4">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>中核症状</th><th>誘因・状況</th><th>鑑別ポイント</th><th>除外検査</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F41.0 パニック障害</td><td>予期しない発作的恐怖</td><td>状況によらない（予期しない）</td><td>予期不安・回避行動が続く</td><td>ECG・甲状腺・血糖・褐色細胞腫</td></tr>
+              <tr><td class="font-bold">F40.0 広場恐怖症</td><td>逃げられない状況への恐怖</td><td>特定状況（電車・人混み等）</td><td>パニック発作が二次的に生じる場合も</td><td>—</td></tr>
+              <tr><td class="font-bold">F40.1 社交不安症</td><td>他者からの評価への恐怖</td><td>社交・パフォーマンス状況</td><td>状況が「他者に見られる」ことに限定</td><td>—</td></tr>
+              <tr><td class="font-bold">F41.1 GAD</td><td>多領域にわたる慢性心配</td><td>特定の刺激なく全般的</td><td>「心配のコントロール困難」が核心</td><td>甲状腺・貧血・カフェイン摂取量</td></tr>
+              <tr><td class="font-bold">F42 OCD</td><td>強迫観念（自我違和性）</td><td>内発的</td><td>思考が「自分のもの」だが不快 → GAD・妄想との鑑別</td><td>—</td></tr>
+              <tr><td class="font-bold">F43.1 PTSD</td><td>外傷体験の再体験</td><td>外傷関連刺激</td><td>外傷歴が必須。侵入症状と回避の両方</td><td>解離症状スクリーニング</td></tr>
+              <tr><td class="font-bold">F43.0 急性ストレス障害</td><td>同上</td><td>外傷後3日〜4週</td><td>PTSDとの違いは期間（1ヶ月前後）</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F4 -->
+      <div class="tab-panel" id="notes-f4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>パニック障害の器質性除外漏れ</strong>：初診時は必ずECG・甲状腺・血糖・褐色細胞腫を除外。「若い人だから心臓は大丈夫」は禁物</li>
+            <li>• <strong>PTSDの外傷歴の未聴取</strong>：患者は自ら語らないことが多い。「最近困っていることはあるか」ではなく、直接「怖い体験や辛い体験はあるか」と尋ねる</li>
+            <li>• <strong>OCDを「慎重な性格」と誤解</strong>：「几帳面で完璧主義」と解釈し診断が遅れる。「やめたくてもやめられない」「やらないと不安」という強迫性を確認する</li>
+            <li>• <strong>複雑性PTSD（CPTSD）の概念</strong>：ICD-11で新設。長期反復的外傷（虐待・DV等）後の感情調節困難・自己否定・対人関係障害。DSM-5-TRでは別コードなし</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>不安障害のファーストライン</strong>はSSRI。BZD系は即効性があるが依存形成リスク、長期使用回避</li>
+            <li>• <strong>OCD</strong>：Y-BOCSで重症度評価（16点以上で中等症、治療変更の閾値）。ERP（曝露反応妨害法）がファーストラインCBT</li>
+            <li>• <strong>PTSD</strong>：トラウマ焦点化CBT（PE法・CPT・EMDR）が最もエビデンスが高い。まずSafetyの確立が先決</li>
+            <li>• <strong>GAD</strong>：「心配している内容」の記録（心配日記）が診断補助と治療介入の両方に有用</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">GAD-7</span>全般不安症評価（7項目、10点以上で中等度）
+            <span class="tool-tag">PDSS</span>パニック障害重症度評価尺度
+            <span class="tool-tag">LSAS</span>ライブォウィッツ社交不安尺度
+            <span class="tool-tag">Y-BOCS</span>Yale-Brown強迫観念・強迫行為尺度
+            <span class="tool-tag">PCL-5</span>PTSD症状チェックリスト（DSM-5版）
+            <span class="tool-tag">IES-R</span>改訂出来事インパクト尺度（PTSD）
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -919,6 +1478,14 @@
       </div>
     </div>
     <div class="cat-body" id="f5-body">
+      <!-- タブナビ F5 -->
+      <div class="tab-nav" id="tabs-f5">
+        <button class="tab-btn active" data-tab="codes-f5" onclick="switchTab('tabs-f5','codes-f5')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f5" onclick="switchTab('tabs-f5','criteria-f5')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f5" onclick="switchTab('tabs-f5','diff-f5')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f5" onclick="switchTab('tabs-f5','notes-f5')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+      <div class="tab-panel active" id="codes-f5">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -959,7 +1526,99 @@
           </tbody>
         </table>
       </div>
+      </div><!-- /codes-f5 -->
 
+      <!-- Tab2: 診断基準 F5 -->
+      <div class="tab-panel" id="criteria-f5">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F50.0 神経性やせ症（AN）/ F50.2 神経性過食症（BN）— 診断基準</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <div class="font-bold mb-2">F50.0 神経性やせ症（DSM-5-TR）</div>
+              <ul class="space-y-1">
+                <li>A. <strong>エネルギー摂取制限</strong>による有意な低体重（年齢・身長・発達・身体的健康の文脈）</li>
+                <li>B. 低体重に対する<strong>強烈な恐怖</strong>、または体重増加を妨げる持続的行動</li>
+                <li>C. <strong>身体イメージの歪み</strong>（体重・体型に過度な影響を受ける自己評価、または低体重への深刻さへの欠如）</li>
+                <li class="mt-2 text-xs"><strong>サブタイプ：</strong>摂食制限型 / 過食・排出型</li>
+                <li class="text-xs"><strong>重症度：</strong>BMI ≥17→軽度、16〜17→中等度、15〜16→重度、&lt;15→最重度</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold mb-2">F50.2 神経性過食症（DSM-5-TR）</div>
+              <ul class="space-y-1">
+                <li>A. 反復する<strong>過食エピソード</strong>：①一定時間内に明らかに大量の食事 ②食べることのコントロール感の欠如</li>
+                <li>B. 体重増加を防ぐ反復する<strong>不適切な代償行動</strong>（自己誘発嘔吐・下剤・絶食・過剰運動）</li>
+                <li>C. 週1回以上、3ヶ月以上</li>
+                <li>D. 自己評価が体重・体型によって過度に影響</li>
+                <li>E. ANの活動期には起こらない</li>
+                <li class="text-xs mt-1"><strong>重症度：</strong>週1〜3→軽度、週4〜7→中等度、週8〜13→重度</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F51.0 不眠障害 — 診断基準（DSM-5-TR）</span>
+          </div>
+          <div class="text-sm text-gray-700 space-y-1">
+            <div>A. <strong>入眠困難・睡眠維持困難・早朝覚醒</strong>のいずれか（適切な就寝機会があるにもかかわらず）</div>
+            <div>B. 日中の機能障害（疲労感・集中困難・気力低下・眠気・行動上の問題・仕事・社交機能障害・イライラ等）</div>
+            <div>C. 週3夜以上</div>
+            <div>D. 3ヶ月以上</div>
+            <div>E. 他の睡眠障害・物質・他の精神障害・身体疾患で説明不可</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F5 -->
+      <div class="tab-panel" id="diff-f5">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>過食の有無</th><th>代償行動</th><th>体重</th><th>鑑別ポイント</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F50.0 神経性やせ症（制限型）</td><td>なし</td><td>なし</td><td>低体重</td><td>BMI &lt;17.5 が典型的、過食なし</td></tr>
+              <tr><td class="font-bold">F50.0 神経性やせ症（過食排出型）</td><td>あり</td><td>あり（嘔吐等）</td><td>低体重</td><td>ANの診断基準を満たす低体重が必須</td></tr>
+              <tr><td class="font-bold">F50.2 神経性過食症</td><td>あり（大量）</td><td>あり（嘔吐等）</td><td>正常〜軽度過体重</td><td>体重が正常範囲内、過食エピソードが核心</td></tr>
+              <tr><td class="font-bold">過食性障害（BED）</td><td>あり（大量）</td><td>なし</td><td>正常〜肥満</td><td>代償行動が全くない過食。苦痛・後悔あり</td></tr>
+              <tr><td class="font-bold">ARFID（回避制限性食物摂取症）</td><td>なし</td><td>なし</td><td>低体重/正常</td><td>体重・体型への不安なし。食品の外見・食感・感覚への回避</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F5 -->
+      <div class="tab-panel" id="notes-f5">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>ANの身体合併症の見落とし</strong>：電解質異常（低K→QTc延長・致死性不整脈）、骨粗鬆症、無月経（ホルモン異常）は必ず評価。BMI 14以下は入院の適応を検討</li>
+            <li>• <strong>BNの外見からの誤解</strong>：「普通体型」なので見落とされやすい。耳下腺腫脹・歯のエナメル質侵食・手背のタコ（Russell徴候）が手がかり</li>
+            <li>• <strong>不眠へのBZD長期処方</strong>：CBTi（不眠症への認知行動療法）がファーストライン（Level A）。BZDは短期間のみで離脱時の反跳性不眠に注意</li>
+            <li>• <strong>ANへの誤った強制的摂食</strong>：信頼関係なしの体重増加強制は治療関係を破壊する。動機づけ面接的アプローチが重要</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• 摂食障害の評価：<strong>EDE-Q（食行動障害質問票）</strong>または<strong>EAT-26</strong>でスクリーニング</li>
+            <li>• <strong>ARFID</strong>との鑑別：体重・体型への歪んだ信念がなければARFIDを考える（発達歴・食経験・感覚過敏の確認）</li>
+            <li>• 不眠の評価：<strong>睡眠日誌2週間記録</strong>が睡眠パターンの把握に最も有用。PSG（ポリソムノグラフィ）は睡眠時無呼吸症候群の鑑別に</li>
+            <li>• 摂食障害の多職種チーム対応：精神科医・内科医・管理栄養士・心理士・看護師の連携が予後を改善</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">EDE-Q</span>摂食障害評価質問票
+            <span class="tool-tag">EAT-26</span>摂食態度検査（スクリーニング）
+            <span class="tool-tag">PSQI</span>ピッツバーグ睡眠質問票
+            <span class="tool-tag">AIS</span>アテネ不眠尺度（8項目）
+            <span class="tool-tag">ESS</span>エプワース眠気尺度（日中眠気評価）
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -993,6 +1652,15 @@
           </div>
         </div>
       </div>
+
+      <!-- タブナビ F6 -->
+      <div class="tab-nav" id="tabs-f6">
+        <button class="tab-btn active" data-tab="codes-f6" onclick="switchTab('tabs-f6','codes-f6')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f6" onclick="switchTab('tabs-f6','criteria-f6')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f6" onclick="switchTab('tabs-f6','diff-f6')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f6" onclick="switchTab('tabs-f6','notes-f6')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+      <div class="tab-panel active" id="codes-f6">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -1041,7 +1709,106 @@
           </tbody>
         </table>
       </div>
+      </div><!-- /codes-f6 -->
 
+      <!-- Tab2: 診断基準 F6 -->
+      <div class="tab-panel" id="criteria-f6">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F60.31 境界性パーソナリティ障害（BPD）— DSM-5-TR 診断基準</span>
+            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">9項目中5項目以上</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+            <ul class="space-y-1">
+              <li>① 見捨てられることへの激しい恐怖（現実または想像上）</li>
+              <li>② 不安定で激しい対人関係（理想化とこき下ろしの交替）</li>
+              <li>③ 同一性の障害（自己イメージ・自己感覚の著しい不安定性）</li>
+              <li>④ 自己破壊的な衝動性（2領域以上：浪費・性行動・物質乱用・無謀運転・過食）</li>
+              <li>⑤ 反復的な自殺行動・自傷行為</li>
+            </ul>
+            <ul class="space-y-1">
+              <li>⑥ 著しい感情不安定性（数時間〜数日単位の気分変動）</li>
+              <li>⑦ 慢性的な空虚感</li>
+              <li>⑧ 不適切で激しい怒り</li>
+              <li>⑨ ストレスに関連した一過性の妄想観念または解離症状</li>
+            </ul>
+          </div>
+          <div class="mt-3 text-xs bg-amber-50 p-2 rounded"><strong>開始基準：</strong>青年期または成人初期から始まり、様々な状況で認められ、苦痛または機能障害を引き起こす</div>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F60.2 反社会性PD / F60.0 妄想性PD — 診断ポイント</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <div class="font-bold mb-1">反社会性PD（DSM-5-TR）</div>
+              <ul class="space-y-1 text-xs">
+                <li>• 15歳以降からの他者の権利侵害パターン（3項目以上）：法律違反・欺き・衝動性・攻撃性・無謀性・無責任・後悔の欠如</li>
+                <li>• 18歳以上でのみ診断可能</li>
+                <li>• <strong>素行症の既往（18歳未満）が必須</strong></li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold mb-1">妄想性PD（DSM-5-TR）</div>
+              <ul class="space-y-1 text-xs">
+                <li>• 根拠なく他者が自分を傷つけると疑う</li>
+                <li>• 友人の誠実さを不当に疑う</li>
+                <li>• 情報を自分に不利に使われると恐れて秘密にする</li>
+                <li>• 侮辱に過剰反応・執念深い</li>
+                <li>• <strong>統合失調症・気分障害の活動期以外に起こる</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F6 -->
+      <div class="tab-panel" id="diff-f6">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>中核特徴</th><th>感情変動の特徴</th><th>対人関係</th><th>鑑別ポイント</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F60.31 BPD</td><td>見捨てられ恐怖・同一性障害</td><td>数時間〜数日（刺激反応性）</td><td>理想化←→こき下ろし</td><td>特性（エピソードなし）・自傷・衝動性</td></tr>
+              <tr><td class="font-bold">F31 双極II型</td><td>軽躁・うつエピソード</td><td>数日〜数週（エピソード性）</td>比較的安定<td>経過観察・エピソード性・睡眠量変化</td></tr>
+              <tr><td class="font-bold">F43.1 PTSD</td><td>外傷体験の再体験</td><td>フラッシュバック誘発</td><td>回避・信頼困難</td><td>外傷歴の存在、侵入症状・回避</td></tr>
+              <tr><td class="font-bold">F60.4 演技性PD</td><td>注目希求・表面的感情</td><td>演技的・迅速に変化</td><td>表面的・求心的</td><td>BPDは見捨てられ恐怖、演技性は注目希求が核心</td></tr>
+              <tr><td class="font-bold">F60.8 自己愛性PD</td><td>誇大性・特権意識</td><td>批判への過敏（傷つき）</td><td>搾取的・共感欠如</td><td>BPDとの共存も多い。誇大性の有無</td></tr>
+              <tr><td class="font-bold">F20 統合失調症</td><td>精神病症状</td><td>感情平板化</td><td>引きこもり・疑惑</td><td>PD診断はエピソード外でも持続するパターンか確認</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F6 -->
+      <div class="tab-panel" id="notes-f6">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>急性エピソード中のPD診断</strong>：うつ病・双極性障害・PTSD の急性増悪中はPDに見えることがある。<strong>エピソード外（安定期）でも持続するパターンかどうか</strong>を確認してから診断</li>
+            <li>• <strong>BPDのSSRI過信</strong>：BPDへのSSRIは感情調節に部分的効果があるが、根本的治療は弁証法的行動療法（DBT）。薬物療法単独では不十分</li>
+            <li>• <strong>PD患者への逆転移</strong>：治療者の強い感情反応（怒り・疲弊・特別扱い欲求）がPD診断の手がかりになる一方、診断を歪める可能性もある</li>
+            <li>• <strong>反社会性PDの素行症既往確認漏れ</strong>：18歳未満の非行・問題行動歴を必ず確認（保護観察・少年院歴等）</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>PD診断は18歳以上が原則</strong>：未成年では「パーソナリティ障害の特徴」として記録し、成人期まで診断を保留するのが慎重な対応</li>
+            <li>• <strong>半構造化面接</strong>：SCID-5-PD（構造化臨床面接）がゴールドスタンダード。日常診療では症状ごとに「いつからか」「どの状況でも起きるか」を確認</li>
+            <li>• BPDの<strong>DBT（弁証法的行動療法）</strong>：自傷・自殺リスク高い患者への最もエビデンスの高い治療（Level A）</li>
+            <li>• ASPDの薬物療法：根拠ある薬物療法は限られている。怒り・衝動性にSSRI・気分安定薬が使われることがある（Level C）</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">SCID-5-PD</span>構造化臨床面接（パーソナリティ障害）
+            <span class="tool-tag">ZAN-BPD</span>Zanarini BPD評価スケール
+            <span class="tool-tag">MSI-BPD</span>BPDスクリーニング質問票（10項目）
+            <span class="tool-tag">PCL-R</span>精神病質チェックリスト（ASPD評価）
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1076,6 +1843,15 @@
           </div>
         </div>
       </div>
+
+      <!-- タブナビ F7 -->
+      <div class="tab-nav" id="tabs-f7">
+        <button class="tab-btn active" data-tab="codes-f7" onclick="switchTab('tabs-f7','codes-f7')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f7" onclick="switchTab('tabs-f7','criteria-f7')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f7" onclick="switchTab('tabs-f7','diff-f7')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f7" onclick="switchTab('tabs-f7','notes-f7')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+      <div class="tab-panel active" id="codes-f7">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -1102,7 +1878,85 @@
         <strong class="text-gray-700">第4桁の行動障害コード：</strong>F7x の第4桁（.0〜.9）は行動障害の有無・重症度を示す。
         ICD-10-CMの Intellectual disabilities ブロックにそのまま対応し、DSM-5-TRでは適応機能の3ドメイン評価に相当。
       </div>
+      </div><!-- /codes-f7 -->
 
+      <!-- Tab2: 診断基準 F7 -->
+      <div class="tab-panel" id="criteria-f7">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F70–F79 知的発達症 — 診断基準（DSM-5-TR）</span>
+          </div>
+          <div class="text-sm text-gray-700 space-y-3">
+            <div><strong>A. 知的機能の障害</strong>：推論・問題解決・計画・抽象的思考・判断・学習・経験からの学習。<strong>標準化された知能検査（IQ）</strong>でおよそ2SD以下（IQ≒70以下）</div>
+            <div><strong>B. 適応機能の障害</strong>：以下の3ドメインのうち1つ以上で、文化的・コミュニティ基準を下回り、個人的自立と社会的責任のために必要な発達・社会文化的基準を満たすのに継続的なサポートが必要：
+              <div class="grid md:grid-cols-3 gap-2 mt-2 text-xs">
+                <div class="bg-white border rounded p-2"><strong>概念的ドメイン：</strong>言語・読み書き・数・推論・記憶・問題解決</div>
+                <div class="bg-white border rounded p-2"><strong>社会的ドメイン：</strong>共感・社会的判断・対人コミュニケーション・友人関係・社会的規範</div>
+                <div class="bg-white border rounded p-2"><strong>実用的ドメイン：</strong>セルフケア・職業・金銭管理・安全・学校・社会的責任</div>
+              </div>
+            </div>
+            <div><strong>C. 発症は発達段階中（小児期・青年期）</strong></div>
+          </div>
+          <div class="mt-3 overflow-x-auto">
+            <table class="diff-table text-xs">
+              <thead><tr><th>重症度</th><th>IQ目安</th><th>概念的ドメイン</th><th>社会的ドメイン</th><th>実用的ドメイン</th></tr></thead>
+              <tbody>
+                <tr><td>軽度 (F70)</td><td>50–69</td><td>学力は小学校レベル、抽象思考困難</td><td>社会的判断のサポート必要</td><td>サポートで自立生活可能</td></tr>
+                <tr><td>中等度 (F71)</td><td>35–49</td><td>就学前レベル、読み書き限定的</td><td>社会的・コミュニケーション著明に単純化</td><td>継続的サポートで日常生活可能</td></tr>
+                <tr><td>重度 (F72)</td><td>20–34</td><td>書字困難、数概念乏しい</td><td>単純な会話、家族・慣れた人との関係</td><td>すべての日常活動でサポート必要</td></tr>
+                <tr><td>最重度 (F73)</td><td>&lt;20</td><td>象徴的使用は物や身振りのみ</td><td>象徴的コミュニケーション乏しい</td><td>すべての活動で全介助</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F7 -->
+      <div class="tab-panel" id="diff-f7">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>知能</th><th>発症時期</th><th>社会的機能</th><th>鑑別ポイント</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F70 知的発達症（軽度）</td><td>全般的低下</td><td>発達期から</td><td>全領域に影響</td><td>全般的IQ低下 + 適応機能低下が必須</td></tr>
+              <tr><td class="font-bold">F81 限局性学習症</td><td>正常範囲内</td><td>就学後に顕在化</td><td>特定領域のみ</td><td>全体IQは正常、特定学習能力のみ困難</td></tr>
+              <tr><td class="font-bold">F84 自閉スペクトラム症</td><td>様々（30–40%で知的障害を共存）</td><td>発達期から</td><td>社会的相互作用に特異的困難</td><td>コミュニケーションの質的障害・常同行動が核心</td></tr>
+              <tr><td class="font-bold">F0x 認知症</td><td>後天性低下</td><td>成人期以降</td><td>以前の水準からの低下</td><td>発症時期（生来性 vs 後天性）</td></tr>
+              <tr><td class="font-bold">F32 うつ病</td><td>急性認知機能低下</td><td>どの年齢でも</td><td>エピソード性低下</td><td>うつ病治療で回復するか確認</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F7 -->
+      <div class="tab-panel" id="notes-f7">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>精神疾患の合併見落とし（二重診断）</strong>：知的障害のある患者の精神症状は非典型的に現れる（言語化困難・行動での表現）。うつ病・統合失調症の合併を見落としやすい</li>
+            <li>• <strong>Flynn効果</strong>：知能検査の規準化年度が古いほどスコアが高くなる傾向 → 最新版の検査使用を確認</li>
+            <li>• <strong>IQのみで判断する誤り</strong>：DSM-5-TRはIQより適応機能を重視。「IQ 71でも適応機能が著明に低下」なら診断の対象</li>
+            <li>• <strong>行動上の問題を知的障害のせいにする</strong>：問題行動の背後に虐待・PTSD・精神症状が隠れていることがある</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>知能検査+適応機能評価の組み合わせ</strong>：WISC-V（知能）+Vineland適応行動尺度（適応機能）の組み合わせが標準</li>
+            <li>• 軽度知的障害は<strong>就学まで判明しないことも多い</strong>：「頭の回転が遅い」「勉強が苦手」という主訴から積極的に鑑別</li>
+            <li>• 重度・最重度では<strong>染色体検査・遺伝子検査</strong>（ダウン症・フラジャイルX症候群等）を早期に施行</li>
+            <li>• 知的障害患者への薬物療法は<strong>一般成人より低用量から開始</strong>し、副作用に注意</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価ツール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">WISC-V</span>ウェクスラー知能検査（児童）
+            <span class="tool-tag">WAIS-IV</span>ウェクスラー知能検査（成人）
+            <span class="tool-tag">Vineland-3</span>適応行動尺度（3ドメイン評価）
+            <span class="tool-tag">田中ビネー</span>田中ビネー知能検査V（全年齢）
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1137,6 +1991,15 @@
           </div>
         </div>
       </div>
+
+      <!-- タブナビ F8 -->
+      <div class="tab-nav" id="tabs-f8">
+        <button class="tab-btn active" data-tab="codes-f8" onclick="switchTab('tabs-f8','codes-f8')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f8" onclick="switchTab('tabs-f8','criteria-f8')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f8" onclick="switchTab('tabs-f8','diff-f8')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f8" onclick="switchTab('tabs-f8','notes-f8')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+      <div class="tab-panel active" id="codes-f8">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -1180,7 +2043,89 @@
         ICD-10では独立診断として存在するが、DSM-5-TRではASDの診断カテゴリに統合。
         日本では保険請求・診断書記載でF84.5を使い続ける場合も多い（ICD-10準拠の診療報酬上の慣習）。
       </div>
+      </div><!-- /codes-f8 -->
 
+      <!-- Tab2: 診断基準 F8 -->
+      <div class="tab-panel" id="criteria-f8">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F84 自閉スペクトラム症（ASD）— DSM-5-TR 診断基準</span>
+          </div>
+          <div class="text-sm text-gray-700 space-y-3">
+            <div>
+              <div class="font-bold mb-2 text-red-700">A基準：社会的コミュニケーション・相互作用の障害（3つ全て）</div>
+              <ul class="space-y-1 ml-3">
+                <li>① <strong>社会的・感情的相互性の欠陥</strong>：会話の始め・続けが困難、関心・感情・感情の共有が少ない、社会的交流の開始・応答困難</li>
+                <li>② <strong>非言語的コミュニケーション行動の欠陥</strong>：アイコンタクト・身体言語の統合困難、ジェスチャーの理解・使用困難、表情・非言語的コミュニケーションの欠如</li>
+                <li>③ <strong>関係の発達・維持・理解の欠陥</strong>：社会的状況への適応困難、仮想遊び・友人関係形成の困難、同世代への関心の欠如</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold mb-2 text-orange-700">B基準：限定的・反復的な行動・興味・活動（2つ以上）</div>
+              <ul class="space-y-1 ml-3">
+                <li>① 常同的・反復的な運動動作・物の使用・言語（常同的な動き・反響言語・独特な言語使用）</li>
+                <li>② <strong>同一性への固執・変化への抵抗</strong>（ルーティンへの固執、移行困難、儀式的行動）</li>
+                <li>③ 高度に限定・固定した興味（強度・焦点の異常さ）</li>
+                <li>④ 感覚刺激への過剰反応または過少反応（痛みへの無関心、音・光・匂いへの過敏）</li>
+              </ul>
+            </div>
+            <div class="grid md:grid-cols-3 gap-2 mt-2 text-xs">
+              <div class="bg-green-50 border border-green-200 rounded-lg p-2"><strong>Level 1（支援が必要）</strong><br>サポートなしでは目立つ欠陥、しかし独立した機能は可能</div>
+              <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-2"><strong>Level 2（強い支援が必要）</strong><br>社会的コミュニケーションの著明な欠陥</div>
+              <div class="bg-red-50 border border-red-200 rounded-lg p-2"><strong>Level 3（非常に強い支援が必要）</strong><br>社会的コミュニケーションの重篤な欠陥</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F8 -->
+      <div class="tab-panel" id="diff-f8">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>社会的相互性</th><th>コミュニケーション</th><th>常同行動・興味</th><th>鑑別ポイント</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F84.0 ASD</td><td>質的障害（相互的でない）</td><td>会話の開始・維持が困難</td><td>あり（核心症状）</td><td>発達早期からの質的な社会的相互性の障害</td></tr>
+              <tr><td class="font-bold">F90 ADHD</td><td>衝動的・不注意で困難</td><td>話を遮る・話が飛ぶ</td><td>なし（ただしASDと50–70%共存）</td><td>社会的意欲はある（不注意・衝動性が主）</td></tr>
+              <tr><td class="font-bold">F40.1 社交不安症</td><td>不安による回避</td><td>できるが怖い</td><td>なし</td><td>ASDは「できない」、社交不安は「怖い」の違い</td></tr>
+              <tr><td class="font-bold">F21 統合失調型PD</td><td>奇妙な社会的行動</td><td>奇妙な言語・思考</td><td>なし（魔術的思考が特徴）</td><td>発達歴確認、ASDには幼少期からの特徴的歴史</td></tr>
+              <tr><td class="font-bold">F70 知的発達症</td><td>知的水準相応</td><td>知的水準相応</td><td>なし（ASDとの共存30–40%）</td><td>知的障害のみなら社会的相互性の質的障害はない</td></tr>
+              <tr><td class="font-bold">F84.5 アスペルガー症候群（ICD-10）</td><td>障害あり</td><td>言語発達は正常</td><td>あり</td><td>DSM-5-TRではASDに統合。言語発達遅延なし・IQ正常</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F8 -->
+      <div class="tab-panel" id="notes-f8">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>女性ASDのマスキング（カモフラージュ）</strong>：女性は社会的模倣能力が高く症状が見えにくい。「一見普通に見えるが内側で消耗している」パターン。成人女性の遅診断・誤診の最大の原因</li>
+            <li>• <strong>ADHDとの共存を見落とす</strong>：ASDとADHDは50〜70%が共存。「ASDだからADHDの診断は不要」は誤り（DSM-5-TRでは共存診断が可能）</li>
+            <li>• <strong>成人ASDの幼少期情報不足</strong>：成人後に初めて受診する場合、幼少期の発達歴（母子手帳・学校通知表・家族証言）が必要。回顧的な自己評価のみでは不十分</li>
+            <li>• <strong>ASDの感覚過敏を見落とす</strong>：「音が苦手」「服の感触が辛い」などが日常生活に大きく影響。適切な環境調整の手掛かりになる</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>ADI-R（自閉症診断面接）</strong>：親への半構造化面接。幼少期の発達・行動の詳細な歴史を体系的に収集</li>
+            <li>• <strong>ADOS-2（自閉症診断観察スケジュール）</strong>：本人との直接観察。ゴールドスタンダードの診断ツール（モジュール1〜4）</li>
+            <li>• <strong>「見立て」の重要性</strong>：診断ラベルより「この人はどう困っているか・どんな支援が必要か」の機能的アセスメントが実用的</li>
+            <li>• ASD診断後の支援：特別支援教育・就労移行支援・障害者手帳・障害年金等の社会資源への橋渡しが重要</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価ツール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">ADOS-2</span>自閉症診断観察スケジュール（直接観察）
+            <span class="tool-tag">ADI-R</span>自閉症診断面接（親・養育者への面接）
+            <span class="tool-tag">AQ</span>自閉症スペクトラム指数（成人自記式）
+            <span class="tool-tag">CARS-2</span>小児自閉症評価尺度
+            <span class="tool-tag">M-CHAT</span>16〜30ヶ月児の早期スクリーニング
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1215,6 +2160,15 @@
           </div>
         </div>
       </div>
+
+      <!-- タブナビ F9 -->
+      <div class="tab-nav" id="tabs-f9">
+        <button class="tab-btn active" data-tab="codes-f9" onclick="switchTab('tabs-f9','codes-f9')"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        <button class="tab-btn" data-tab="criteria-f9" onclick="switchTab('tabs-f9','criteria-f9')"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        <button class="tab-btn" data-tab="diff-f9" onclick="switchTab('tabs-f9','diff-f9')"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        <button class="tab-btn" data-tab="notes-f9" onclick="switchTab('tabs-f9','notes-f9')"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+      </div>
+      <div class="tab-panel active" id="codes-f9">
       <div class="overflow-x-auto">
         <table class="code-table">
           <thead>
@@ -1262,7 +2216,132 @@
           </tbody>
         </table>
       </div>
+      </div><!-- /codes-f9 -->
 
+      <!-- Tab2: 診断基準 F9 -->
+      <div class="tab-panel" id="criteria-f9">
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F90 ADHD — DSM-5-TR 診断基準</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <div class="font-bold mb-2">不注意症状（17歳未満：6項目以上 / 17歳以上：5項目以上）</div>
+              <ul class="space-y-0.5 text-xs">
+                <li>① 細部に注意できない / ケアレスミスが多い</li>
+                <li>② 課題・遊びへの持続的注意が困難</li>
+                <li>③ 話しかけても聞いていないようにみえる</li>
+                <li>④ 指示に従えない / 課題を最後まで完遂できない</li>
+                <li>⑤ 課題・活動を順序立てることが困難</li>
+                <li>⑥ 精神的努力が必要な課題を嫌う・避ける</li>
+                <li>⑦ 課題に必要なものをなくす</li>
+                <li>⑧ 外部刺激で容易に気が散る</li>
+                <li>⑨ 日常活動での物忘れが多い</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold mb-2">多動・衝動性症状（17歳未満：6項目以上 / 17歳以上：5項目以上）</div>
+              <ul class="space-y-0.5 text-xs">
+                <li>① 手足をそわそわ動かす・もじもじする</li>
+                <li>② 着席が求められる状況で席を離れる</li>
+                <li>③ 不適切な状況で走り回る・よじ登る</li>
+                <li>④ 静かに遊べない・余暇活動に取り組めない</li>
+                <li>⑤ 「動き回る」「エンジンで動いている」ように行動</li>
+                <li>⑥ しゃべりすぎる</li>
+                <li>⑦ 質問が終わる前に答えてしまう</li>
+                <li>⑧ 順番を待てない</li>
+                <li>⑨ 他者の会話・ゲーム・活動に割り込む</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-3 grid grid-cols-3 gap-2 text-xs text-center">
+            <div class="bg-blue-50 border border-blue-200 rounded p-2"><strong>混合型</strong><br>不注意+多動衝動性両方</div>
+            <div class="bg-teal-50 border border-teal-200 rounded p-2"><strong>不注意優勢型</strong><br>不注意のみ6/5項目以上</div>
+            <div class="bg-orange-50 border border-orange-200 rounded p-2"><strong>多動・衝動性優勢型</strong><br>多動衝動性のみ6/5項目以上</div>
+          </div>
+          <div class="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded">
+            <strong>その他の必須基準：</strong>①12歳以前から症状あり ②2つ以上の状況（家庭・学校・職場等）で存在 ③機能障害が明らかに存在 ④他の精神障害で説明不可
+          </div>
+        </div>
+        <div class="criteria-box">
+          <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
+            <span class="font-bold text-blue-800">F91.3 反抗挑発症（ODD）/ F95.2 トゥレット症 — 診断ポイント</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div>
+              <div class="font-bold mb-1">反抗挑発症（ODD）</div>
+              <ul class="space-y-1 text-xs">
+                <li>• 怒りやすく・易刺激性・かんしゃく（頻繁に）</li>
+                <li>• 大人・権威への言い争い・反抗・拒否</li>
+                <li>• 意図的に他者を怒らせる</li>
+                <li>• 自分のミスを他者のせいにする</li>
+                <li>• 6ヶ月以上、週1回以上（5〜12歳）または週2回以上（>12歳）</li>
+                <li class="text-red-600">• 素行症との違い：他者の権利侵害なし</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold mb-1">トゥレット症（F95.2）</div>
+              <ul class="space-y-1 text-xs">
+                <li>• <strong>複数の運動チック + 少なくとも1つの音声チック</strong></li>
+                <li>• 同時に存在する必要はないが、1年以上の経過中に認められる</li>
+                <li>• 18歳以前に発症</li>
+                <li>• 物質・他の疾患によるものではない</li>
+                <li class="text-purple-600">• OCD・ADHDとの高い共存率（40–60%）</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab3: 鑑別 F9 -->
+      <div class="tab-panel" id="diff-f9">
+        <div class="overflow-x-auto">
+          <table class="diff-table">
+            <thead><tr><th>疾患</th><th>不注意</th><th>多動・衝動性</th><th>社会的相互性</th><th>経過・発症</th><th>鑑別ポイント</th></tr></thead>
+            <tbody>
+              <tr><td class="font-bold">F90 ADHD</td><td>+++ (全般)</td><td>+++</td><td>意欲はある</td><td>生来性（12歳以前）</td><td>注意の持続困難・衝動性が核心</td></tr>
+              <tr><td class="font-bold">F84 ASD</td><td>+ (限局)</td><td>あり（常同的）</td><td>質的障害</td><td>生来性（出生〜3歳）</td><td>社会的相互性の質的障害・常同行動が核心</td></tr>
+              <tr><td class="font-bold">F32 うつ病（小児）</td><td>++ (急性)</td><td>焦燥</td><td>引きこもり</td><td>エピソード性</td><td>ADHDは生来性・エピソードなし</td></tr>
+              <tr><td class="font-bold">F41.1 GAD（小児）</td><td>++ (心配による)</td><td>なし〜軽度</td><td>回避的</td><td>エピソード性</td><td>不安の内容が特定できる・GAD-7で評価</td></tr>
+              <tr><td class="font-bold">F43.1 PTSD</td><td>++ (過覚醒)</td><td>過覚醒・驚愕</td><td>回避</td><td>外傷後</td><td>外傷歴・侵入症状・回避</td></tr>
+              <tr><td class="font-bold">F91.3 ODD</td><td>あり（ADHD共存多）</td><td>あり（ADHD共存）</td><td>権威への反抗</td><td>生来性</td><td>ADHDの40〜70%にODDを共存</td></tr>
+              <tr><td class="font-bold">F91 素行症</td><td>あり（ADHD共存多）</td><td>あり</td><td>他者権利侵害</td><td>生来性（通常青年期）</td><td>ODDより重症（権利侵害・攻撃・詐欺等）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab4: 注意点 F9 -->
+      <div class="tab-panel" id="notes-f9">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>成人ADHDの見落とし</strong>：「子どもの病気」と思われ、成人後に初めて診断される例が増加。成人では多動が目立たなくなり、不注意症状・内的焦燥感が主体になる</li>
+            <li>• <strong>女性ADHDの不注意優勢型の見落とし</strong>：「おとなしい・ぼんやりしている」として見過ごされやすい。女性は不注意優勢型が多く、多動が目立たない</li>
+            <li>• <strong>ADHDとうつ病・不安症の共存</strong>：ADHD成人の60〜70%が少なくとも1つの精神疾患を共存。「うつ病だから集中できない」と判断する前にADHDの可能性を評価</li>
+            <li>• <strong>素行症の早期介入の遅れ</strong>：「悪い子・しつけの問題」と家族が考え、精神科受診が遅れる。早期の多職種介入が予後を改善</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i>専門的診断技術</div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li>• <strong>成人ADHDの診断</strong>：DIVA 2.0（半構造化面接）が有用。現在の症状+12歳以前からの症状を評価。親・配偶者等の情報も重要</li>
+            <li>• <strong>ADHD薬物療法のモニタリング</strong>：身長・体重（毎月）・血圧・脈拍（毎月）・食欲・睡眠・チック症状の確認</li>
+            <li>• トゥレット症候群は<strong>OCD・ADHDとの共存が高い</strong>（40〜60%）→ これらを見落とさずに治療</li>
+            <li>• <strong>素行症の環境評価</strong>：虐待・ネグレクト・貧困・ギャング関与などの環境因子を評価。環境介入なしに精神科治療だけでは効果限定的</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-600">
+            <span class="tool-tag">CAARS</span>Conners成人ADHD評価尺度（ADHD成人）
+            <span class="tool-tag">DIVA 2.0</span>ADHD成人診断半構造化面接
+            <span class="tool-tag">ADHD-RS</span>ADHD評価尺度（小児・教師/親記入）
+            <span class="tool-tag">CBCL</span>子どもの行動チェックリスト（広範スクリーニング）
+            <span class="tool-tag">YALE-TICS</span>Yaleチック重症度評価尺度
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1318,17 +2397,37 @@
 </main>
 
 <script>
+  // ページロード時：初期アクティブパネルに panel-codes クラスを付与
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tab-panel.active').forEach(p => {
+      const id = p.id || '';
+      if (id.startsWith('codes'))         p.classList.add('panel-codes');
+      else if (id.startsWith('criteria')) p.classList.add('panel-criteria');
+      else if (id.startsWith('diff'))     p.classList.add('panel-diff');
+      else if (id.startsWith('notes'))    p.classList.add('panel-notes');
+    });
   });
 
   // タブ切り替え
   function switchTab(navId, tabId) {
     const nav = document.getElementById(navId);
+    // 全ボタンの active を外す
     nav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    nav.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    // 全パネルの active・色クラスを外す
+    nav.querySelectorAll('.tab-panel').forEach(p => {
+      p.classList.remove('active', 'panel-codes', 'panel-criteria', 'panel-diff', 'panel-notes');
+    });
     const btn = nav.querySelector(`[data-tab="${tabId}"]`);
     const panel = document.getElementById(tabId);
     if (btn) btn.classList.add('active');
-    if (panel) panel.classList.add('active');
+    if (panel) {
+      panel.classList.add('active');
+      // タブIDからパネル色クラスを付与
+      if (tabId.startsWith('codes'))    panel.classList.add('panel-codes');
+      else if (tabId.startsWith('criteria')) panel.classList.add('panel-criteria');
+      else if (tabId.startsWith('diff'))     panel.classList.add('panel-diff');
+      else if (tabId.startsWith('notes'))    panel.classList.add('panel-notes');
+    }
   }
 
   // アコーディオン制御
