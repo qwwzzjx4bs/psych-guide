@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>不安症群 — 診断ツリー &amp; 治療アルゴリズム</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f 0%, #0f766e 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+
+    .header-gradient { background: var(--psych-gradient); }
+
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* エビデンスバッジ */
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white; padding: 0.18rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white; padding: 0.18rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white; padding: 0.18rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+
+    /* 治療ラインバッジ */
+    .badge-first {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white; padding: 0.18rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white; padding: 0.18rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700;
+    }
+    .badge-augment {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white; padding: 0.18rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700;
+    }
+
+    /* 診断ツリーのノード */
+    .node-start {
+      background: var(--psych-gradient);
+      color: white; border-radius: 1rem;
+      padding: 0.75rem 1.5rem; text-align: center; font-weight: 700; font-size: 0.95rem;
+    }
+    .node-exclude {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+      border: 2px solid #dc2626;
+      color: #7f1d1d; border-radius: 0.75rem;
+      padding: 0.6rem 1rem; text-align: center; font-weight: 600; font-size: 0.82rem;
+    }
+    .node-question {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 2px solid #d97706;
+      color: #78350f; border-radius: 0.75rem;
+      padding: 0.6rem 1rem; text-align: center; font-weight: 600; font-size: 0.82rem;
+    }
+    .node-dx {
+      border-radius: 0.75rem;
+      padding: 0.6rem 1rem; text-align: center; font-weight: 700; font-size: 0.82rem;
+    }
+    .node-dx-panic  { background: #fee2e2; border: 2px solid #dc2626; color: #7f1d1d; }
+    .node-dx-agora  { background: #fce7f3; border: 2px solid #db2777; color: #831843; }
+    .node-dx-social { background: #ede9fe; border: 2px solid #7c3aed; color: #4c1d95; }
+    .node-dx-specific { background: #dbeafe; border: 2px solid #1d4ed8; color: #1e3a8a; }
+    .node-dx-sep    { background: #fef9c3; border: 2px solid #ca8a04; color: #713f12; }
+    .node-dx-gad    { background: #dcfce7; border: 2px solid #15803d; color: #14532d; }
+    .node-dx-mixed  { background: #f3f4f6; border: 2px solid #6b7280; color: #374151; }
+
+    /* ボックス */
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+      border-left: 4px solid #dc2626;
+      padding: 1.1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border-left: 4px solid #d97706;
+      padding: 1.1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border-left: 4px solid #15803d;
+      padding: 1.1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .purple-box {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+      border-left: 4px solid #7c3aed;
+      padding: 1.1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+
+    /* 疾患カラーヘッダー */
+    .dx-header-panic  { background: #fee2e2; border-left: 5px solid #dc2626; }
+    .dx-header-agora  { background: #fce7f3; border-left: 5px solid #db2777; }
+    .dx-header-social { background: #ede9fe; border-left: 5px solid #7c3aed; }
+    .dx-header-specific { background: #dbeafe; border-left: 5px solid #1d4ed8; }
+    .dx-header-sep    { background: #fef9c3; border-left: 5px solid #ca8a04; }
+    .dx-header-gad    { background: #dcfce7; border-left: 5px solid #15803d; }
+
+    /* 目次 */
+    .toc {
+      position: fixed; right: 1.25rem; top: 50%;
+      transform: translateY(-50%);
+      background: white; padding: 0.875rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh; overflow-y: auto;
+      z-index: 50; min-width: 140px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+
+    /* 矢印 */
+    .arrow-down { display: flex; justify-content: center; margin: 2px 0; }
+    .connector { width: 2px; height: 20px; background: #9ca3af; margin: 0 auto; }
+    .branch-line { border-top: 2px dashed #d1d5db; margin: 4px 0; }
+
+    /* ═══ SCALE PRINT CARDS (Screen) ═══ */
+    .sf-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .sf-card {
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 11px 12px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .sf-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.09); border-color: #c7d2fe; }
+    .sf-card-name { font-size: 0.875rem; font-weight: 800; }
+    .sf-card-en   { font-size: 0.68rem; color: #9ca3af; margin-top: -3px; }
+    .sf-card-info { font-size: 0.71rem; color: #6b7280; line-height: 1.45; }
+    .sf-card-cutoff { font-size: 0.71rem; font-weight: 700; }
+    .sf-print-btn {
+      margin-top: auto;
+      background: var(--psych-primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .sf-print-btn:hover { background: var(--psych-secondary); }
+
+    /* ═══ SCALE FORMS CONTAINER (hidden on screen) ═══ */
+    .sf-container { display: none; }
+    .sf-page { page-break-after: always; }
+    .sf-page:last-child { page-break-after: auto; }
+
+    /* Scoped reset for form elements */
+    .sf-wrap { font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif; font-size: 9pt; color: #111827; line-height: 1.4; }
+    .sf-wrap * { box-sizing: border-box; }
+    .sf-hd { display: flex; align-items: flex-start; justify-content: space-between; padding-bottom: 5px; margin-bottom: 6px; }
+    .sf-hd-name { font-size: 13.5pt; font-weight: 800; line-height: 1.2; }
+    .sf-hd-en   { font-size: 8pt; color: #6b7280; margin-top: 2px; }
+    .sf-hd-r    { text-align: right; font-size: 7.5pt; color: #9ca3af; line-height: 1.6; white-space: nowrap; }
+    .sf-t-gad .sf-hd { border-bottom: 3px solid #16a34a; } .sf-t-gad .sf-hd-name { color: #14532d; }
+    .sf-t-pd  .sf-hd { border-bottom: 3px solid #dc2626; } .sf-t-pd  .sf-hd-name { color: #7f1d1d; }
+    .sf-t-sad .sf-hd { border-bottom: 3px solid #7c3aed; } .sf-t-sad .sf-hd-name { color: #4c1d95; }
+    .sf-t-ago .sf-hd { border-bottom: 3px solid #db2777; } .sf-t-ago .sf-hd-name { color: #831843; }
+    .sf-t-sp  .sf-hd { border-bottom: 3px solid #1d4ed8; } .sf-t-sp  .sf-hd-name { color: #1e3a8a; }
+    .sf-t-sea .sf-hd { border-bottom: 3px solid #ca8a04; } .sf-t-sea .sf-hd-name { color: #713f12; }
+    .sf-t-mix .sf-hd { border-bottom: 3px solid #6b7280; } .sf-t-mix .sf-hd-name { color: #374151; }
+    .sf-pt { display: grid; grid-template-columns: 2.2fr 1fr 1.1fr 0.9fr; gap: 6px; border: 1px solid #d1d5db; border-radius: 5px; padding: 4px 9px; margin-bottom: 6px; background: #f9fafb; }
+    .sf-pt-f label { display: block; font-size: 6.5pt; color: #9ca3af; margin-bottom: 1px; }
+    .sf-pt-f .sf-ul { border-bottom: 1px solid #9ca3af; height: 16px; display: block; }
+    .sf-instr { padding: 5px 9px; font-size: 8.5pt; margin-bottom: 6px; border-radius: 0 4px 4px 0; }
+    .sf-i-gad { background: #f0fdf4; border-left: 3px solid #16a34a; }
+    .sf-i-pd  { background: #fef2f2; border-left: 3px solid #dc2626; }
+    .sf-i-sad { background: #f5f3ff; border-left: 3px solid #7c3aed; }
+    .sf-i-ago { background: #fdf2f8; border-left: 3px solid #db2777; }
+    .sf-i-sp  { background: #eff6ff; border-left: 3px solid #1d4ed8; }
+    .sf-i-sea { background: #fefce8; border-left: 3px solid #ca8a04; }
+    .sf-i-mix { background: #f3f4f6; border-left: 3px solid #6b7280; }
+    .sf-wrap table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 5px; }
+    .sf-wrap thead th { padding: 3.5px 4px; text-align: center; border: 1px solid #d1d5db; font-size: 7.5pt; font-weight: 700; background: #f8fafc; }
+    .sf-wrap thead th.sf-tl { text-align: left; }
+    .sf-wrap td { padding: 3px 5px; border: 1px solid #e2e8f0; vertical-align: middle; }
+    .sf-wrap tr:nth-child(even) td { background: #fafafa; }
+    .sf-n  { text-align: center; color: #9ca3af; font-size: 7.5pt; width: 17px; }
+    .sf-ck { text-align: center; width: 26px; }
+    .sf-sc { text-align: center; width: 29px; border: 1px solid #9ca3af !important; }
+    .sf-total td { background: #f0f9ff !important; font-weight: 700; }
+    .sf-lsas .sf-ck { width: 21px; } .sf-lsas .sf-sc { width: 21px; }
+    .sf-lsas table th, .sf-lsas table td { padding: 2.5px 3px; font-size: 7.5pt; }
+    .sf-mi table th, .sf-mi table td { padding: 2.5px 3px; font-size: 7.5pt; } .sf-mi .sf-ck { width: 18px; }
+    .sf-scoring { border: 1px solid #e5e7eb; border-radius: 5px; padding: 5px 9px; background: #f9fafb; font-size: 8pt; }
+    .sf-sbar { display: flex; border-radius: 3px; overflow: hidden; height: 17px; margin: 3px 0; }
+    .sf-sbar-s { display: flex; align-items: center; justify-content: center; font-size: 7pt; font-weight: 700; color: white; padding: 0 3px; white-space: nowrap; }
+    .sf-divider { border-top: 2px dashed #d1d5db; margin: 10px 0; padding-top: 10px; }
+    .sf-ft { display: flex; justify-content: space-between; align-items: center; font-size: 6pt; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 3px; margin-top: 6px; }
+
+    /* ═══ PRINT MEDIA ═══ */
+    @media print {
+      @page { size: A4 portrait; margin: 11mm 13mm; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- ヘッダー -->
+<header class="header-gradient text-white py-8">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="brain" class="w-7 h-7 opacity-75"></i>
+      <span class="text-xs font-semibold opacity-65 uppercase tracking-widest">精神科臨床図解</span>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold">不安症群 診断ツリー</h1>
+    <p class="mt-2 text-base opacity-85">ICD-10: F40–F41 ／ DSM-5-TR: Anxiety Disorders</p>
+    <div class="flex flex-wrap gap-2 mt-3">
+      <span class="bg-white/20 text-sm px-3 py-1 rounded-full">診断ツリー</span>
+      <span class="bg-white/20 text-sm px-3 py-1 rounded-full">各疾患の診断基準</span>
+      <span class="bg-white/20 text-sm px-3 py-1 rounded-full">薬物・非薬物治療</span>
+      <span class="bg-white/20 text-sm px-3 py-1 rounded-full">鑑別・除外診断</span>
+    </div>
+  </div>
+</header>
+
+<!-- 目次 -->
+<nav class="toc">
+  <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">目次</div>
+  <ul class="space-y-1.5">
+    <li><a href="#quick" class="text-xs text-gray-600 hover:text-blue-700 block">クイックRef</a></li>
+    <li><a href="#tree" class="text-xs text-gray-600 hover:text-blue-700 block">診断ツリー</a></li>
+    <li><a href="#exclude" class="text-xs text-gray-600 hover:text-blue-700 block">鑑別・除外</a></li>
+    <li><a href="#panic" class="text-xs text-gray-600 hover:text-blue-700 block">パニック症</a></li>
+    <li><a href="#agora" class="text-xs text-gray-600 hover:text-blue-700 block">広場恐怖症</a></li>
+    <li><a href="#social" class="text-xs text-gray-600 hover:text-blue-700 block">社交不安症</a></li>
+    <li><a href="#specific" class="text-xs text-gray-600 hover:text-blue-700 block">限局性恐怖症</a></li>
+    <li><a href="#sep" class="text-xs text-gray-600 hover:text-blue-700 block">分離不安症</a></li>
+    <li><a href="#gad" class="text-xs text-gray-600 hover:text-blue-700 block">全般不安症</a></li>
+    <li><a href="#pharma" class="text-xs text-gray-600 hover:text-blue-700 block">薬物治療</a></li>
+    <li><a href="#nonpharma" class="text-xs text-gray-600 hover:text-blue-700 block">非薬物治療</a></li>
+    <li><a href="#monitor" class="text-xs text-gray-600 hover:text-blue-700 block">禁忌・監視</a></li>
+    <li><a href="#scales" class="text-xs text-gray-600 hover:text-blue-700 block">評価スケール</a></li>
+  </ul>
+</nav>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- ===== クイックリファレンス ===== -->
+  <div class="section-card" id="quick">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-gradient-to-br from-teal-500 to-blue-700 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">外来クイックリファレンス</h2>
+        <p class="text-gray-500 text-xs">診察中に即確認すべき3点</p>
+      </div>
+    </div>
+    <div class="grid gap-3">
+      <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
+        <div class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+        <div>
+          <div class="font-bold text-gray-800 text-sm">器質性・薬剤性・物質性を最初に除外</div>
+          <p class="text-gray-600 text-xs mt-0.5">甲状腺機能亢進症（TSH）・不整脈（ECG）・カフェイン/アルコール離脱・ステロイドなどを確認。見逃しリスク最大。</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl border-l-4 border-amber-600">
+        <div class="w-8 h-8 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+        <div>
+          <div class="font-bold text-gray-800 text-sm">BZD系抗不安薬は初期短期限定。長期単独NG</div>
+          <p class="text-gray-600 text-xs mt-0.5">依存・耐性・認知障害・曝露療法の学習阻害。SSRI/SNRIへの橋渡しとして最小期間のみ。不安症のファーストラインはSSRI/SNRI+CBT。</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl border-l-4 border-teal-600">
+        <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+        <div>
+          <div class="font-bold text-gray-800 text-sm">CBT（曝露療法）は薬物と同等以上のエビデンス</div>
+          <p class="text-gray-600 text-xs mt-0.5">特に限局性恐怖症はCBT単独がファーストライン。パニック症・社交不安症もCBT＋SSRIが最強の組み合わせ。非薬物治療を必ず提案する。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 診断ツリー ===== -->
+  <div class="section-card" id="tree">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="git-branch" class="w-5 h-5 text-blue-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">不安症群 診断ツリー</h2>
+        <p class="text-gray-500 text-xs">DSM-5-TR / ICD-10 対応</p>
+      </div>
+    </div>
+
+    <!-- ツリー本体 -->
+    <div class="overflow-x-auto pb-2">
+      <div class="min-w-[640px]">
+
+        <!-- START -->
+        <div class="flex justify-center mb-1">
+          <div class="node-start w-80">
+            不安・恐怖・回避・過剰心配の症状<br>
+            <span class="text-xs font-normal opacity-85">+ 機能障害 ／ 期間は疾患による：PD発作後≥1か月、恐怖症・GAD等は≥6か月</span>
+          </div>
+        </div>
+        <div class="connector"></div>
+
+        <!-- 除外 -->
+        <div class="flex justify-center mb-1">
+          <div class="node-exclude w-80">
+            <div class="flex items-center justify-center gap-1.5 mb-1">
+              <i data-lucide="x-circle" class="w-4 h-4"></i>
+              <span>Step 1: 器質性・薬剤性・物質性を除外</span>
+            </div>
+            <div class="text-xs font-normal opacity-80">甲状腺機能亢進／褐色細胞腫／不整脈／カフェイン・アルコール離脱／薬剤性</div>
+          </div>
+        </div>
+        <div class="connector"></div>
+
+        <!-- OCD/PTSD除外 -->
+        <div class="flex justify-center mb-1">
+          <div class="node-question w-80">
+            <div class="flex items-center justify-center gap-1.5 mb-1">
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+              <span>Step 2: OCD・PTSD・うつ病で説明できないか確認</span>
+            </div>
+            <div class="text-xs font-normal opacity-80">強迫・フラッシュバック・回避が主なら各章で診断</div>
+          </div>
+        </div>
+        <div class="connector"></div>
+
+        <!-- 主分岐 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+          <!-- 左2: パニック発作系 -->
+          <div class="col-span-2 md:col-span-2 space-y-2">
+            <div class="node-question">
+              <div class="flex items-center justify-center gap-1 mb-0.5">
+                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                <span class="text-xs font-bold">反復する予期しないパニック発作？</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="space-y-2">
+                <div class="text-center text-xs font-bold text-green-700">YES（発作あり）</div>
+                <div class="node-dx node-dx-panic">
+                  <div class="font-bold">パニック症</div>
+                  <div class="text-xs font-normal mt-0.5">F41.0 / PD</div>
+                </div>
+                <div class="node-question text-xs">
+                  逃げられない状況を回避？
+                </div>
+                <div class="node-dx node-dx-agora">
+                  <div class="font-bold">広場恐怖症を併記</div>
+                  <div class="text-xs font-normal mt-0.5">F40.0 / AGO</div>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="text-center text-xs font-bold text-red-600">NO（予期しない発作なし）</div>
+                <div class="node-question text-xs">
+                  特定の社交場面のみ？<br>評価・恥への恐怖？
+                </div>
+                <div class="node-dx node-dx-social">
+                  <div class="font-bold">社交不安症</div>
+                  <div class="text-xs font-normal mt-0.5">F40.1 / SAD</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右2: 非パニック系 -->
+          <div class="col-span-2 md:col-span-2 space-y-2">
+            <div class="node-question">
+              <div class="flex items-center justify-center gap-1 mb-0.5">
+                <i data-lucide="target" class="w-3.5 h-3.5"></i>
+                <span class="text-xs font-bold">特定の対象・状況への恐怖？ or 分離への恐怖？</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="space-y-2">
+                <div class="text-center text-xs font-bold text-blue-700">対象・状況限定</div>
+                <div class="node-dx node-dx-specific">
+                  <div class="font-bold">限局性恐怖症</div>
+                  <div class="text-xs font-normal mt-0.5">F40.2 / SP</div>
+                  <div class="text-xs font-normal">動物/自然/血液注射/<br>状況/その他</div>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="text-center text-xs font-bold text-yellow-700">分離への恐怖</div>
+                <div class="node-dx node-dx-sep">
+                  <div class="font-bold">分離不安症</div>
+                  <div class="text-xs font-normal mt-0.5">F93.0 / SeAD</div>
+                  <div class="text-xs font-normal">成人は6か月以上</div>
+                </div>
+              </div>
+            </div>
+            <!-- GAD -->
+            <div class="node-question text-xs">
+              複数の事柄についての過剰心配 ≥6か月 ＆ コントロール困難？
+            </div>
+            <div class="node-dx node-dx-gad">
+              <div class="font-bold">全般不安症（GAD）</div>
+              <div class="text-xs font-normal mt-0.5">F41.1 / GAD</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- F41.2 -->
+        <div class="mt-2 flex justify-center">
+          <div class="node-dx node-dx-mixed w-80">
+            <div class="text-xs font-normal mb-0.5 text-gray-500">不安＋抑うつが混在・閾値未満の場合</div>
+            <div class="font-bold">F41.2 混合性不安抑うつ障害</div>
+            <div class="text-xs font-normal text-gray-500 mt-0.5">DSM-5-TR直接対応なし → GAD+MDD の併存診断を検討、または適応障害</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ICD-10 / DSM-5-TR 対応表 -->
+    <div class="mt-5 overflow-x-auto">
+      <table class="w-full text-xs border-collapse min-w-[480px]">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">ICD-10</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">DSM-5-TR 疾患名</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">期間基準</th>
+            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">重症度スケール</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-red-50">
+            <td class="p-2.5 font-medium text-red-800">F41.0</td>
+            <td class="p-2.5 font-bold text-red-700">パニック症（Panic Disorder）</td>
+            <td class="p-2.5 text-gray-600">再発後 ≥1か月の持続的心配/行動変化</td>
+            <td class="p-2.5 text-gray-600">PDSS（寛解 ≤5）</td>
+          </tr>
+          <tr class="hover:bg-pink-50">
+            <td class="p-2.5 font-medium text-pink-800">F40.0</td>
+            <td class="p-2.5 font-bold text-pink-700">広場恐怖症（Agoraphobia）</td>
+            <td class="p-2.5 text-gray-600">≥6か月</td>
+            <td class="p-2.5 text-gray-600">MI（Mobility Inventory）</td>
+          </tr>
+          <tr class="hover:bg-purple-50">
+            <td class="p-2.5 font-medium text-purple-800">F40.1</td>
+            <td class="p-2.5 font-bold text-purple-700">社交不安症（SAD）</td>
+            <td class="p-2.5 text-gray-600">≥6か月</td>
+            <td class="p-2.5 text-gray-600">LSAS（≥30でSADスクリーン）</td>
+          </tr>
+          <tr class="hover:bg-blue-50">
+            <td class="p-2.5 font-medium text-blue-800">F40.2</td>
+            <td class="p-2.5 font-bold text-blue-700">限局性恐怖症（Specific Phobia）</td>
+            <td class="p-2.5 text-gray-600">≥6か月</td>
+            <td class="p-2.5 text-gray-600">SBQ / SUDs</td>
+          </tr>
+          <tr class="hover:bg-yellow-50">
+            <td class="p-2.5 font-medium text-yellow-800">F93.0</td>
+            <td class="p-2.5 font-bold text-yellow-700">分離不安症（SeAD）</td>
+            <td class="p-2.5 text-gray-600">児童≥4週 / 成人≥6か月</td>
+            <td class="p-2.5 text-gray-600">ASA-27（成人版）</td>
+          </tr>
+          <tr class="hover:bg-green-50">
+            <td class="p-2.5 font-medium text-green-800">F41.1</td>
+            <td class="p-2.5 font-bold text-green-700">全般不安症（GAD）</td>
+            <td class="p-2.5 text-gray-600">≥6か月（多数の日）</td>
+            <td class="p-2.5 text-gray-600">GAD-7（≥10でGAD疑い）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-2.5 font-medium text-gray-600">F41.2</td>
+            <td class="p-2.5 text-gray-500">混合性不安抑うつ → DSM対応なし（GAD+MDD or 適応障害）</td>
+            <td class="p-2.5 text-gray-500">—</td>
+            <td class="p-2.5 text-gray-500">PHQ-4など</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== 鑑別・除外 ===== -->
+  <div class="section-card" id="exclude">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="alert-circle" class="w-5 h-5 text-red-600"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">鑑別診断・必須除外</h2>
+        <p class="text-gray-500 text-xs">見逃し危険度の高い順</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2 text-sm">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>必須除外（器質性・薬剤性）
+        </div>
+        <ul class="text-xs space-y-1.5 text-gray-700">
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>甲状腺機能亢進症</strong> — TSH測定（必須）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>褐色細胞腫</strong> — 高血圧発作・頭痛・発汗の三徴</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>不整脈・心疾患</strong> — ECG（パニック発作との鑑別）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>カフェイン・アルコール離脱</strong> — 詳細な物質使用歴</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>薬剤誘発性</strong> — β刺激薬・ステロイド・フルオロキノロン</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>前庭障害</strong> — めまい・ふらつき主体のパニック様発作</span></li>
+        </ul>
+      </div>
+      <div class="warning-box">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2 text-sm">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>鑑別すべき精神疾患
+        </div>
+        <ul class="text-xs space-y-1.5 text-gray-700">
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>双極性障害</strong> — 不安は混合状態・軽躁の一部のことがある</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>うつ病</strong> — 不安はMDEの伴随症状。GADとの先行・後行を確認</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>OCD</strong> — 強迫思考＋儀式的行為が中心か否か</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>PTSD</strong> — 特定のトラウマ体験後、回避・再体験・過覚醒</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>回避性パーソナリティ障害</strong> — SAD vs APD（重症SADと連続体）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>ASD</strong> — 社会的場面の困難はASD特性か社交不安か</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 各疾患 診断基準 ===== -->
+
+  <!-- パニック症 -->
+  <div class="section-card" id="panic">
+    <div class="dx-header-panic rounded-xl p-4 mb-4">
+      <div class="flex items-center gap-3">
+        <i data-lucide="zap" class="w-6 h-6 text-red-700"></i>
+        <div>
+          <div class="font-bold text-red-900 text-lg">パニック症（Panic Disorder）</div>
+          <div class="text-red-700 text-xs">ICD-10: F41.0 ／ DSM-5-TR</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <div class="criteria-box">
+          <div class="font-bold text-blue-800 mb-2 text-sm flex items-center gap-1.5">
+            <i data-lucide="clipboard-list" class="w-4 h-4"></i>診断基準要点
+          </div>
+          <ul class="text-xs space-y-1.5 text-gray-700">
+            <li><span class="font-bold text-red-700">A.</span> 反復（複数回）する<strong>予期しない</strong>パニック発作（急激な強烈な恐怖/不快感、数分でピーク、13症状から≥4）</li>
+            <li><span class="font-bold">B.</span> ≥1回の発作の後、≥1か月間：①再発への持続的懸念 or ②回避などの不適応な行動変化</li>
+            <li><span class="font-bold">C.</span> 物質・身体疾患によらない</li>
+            <li><span class="font-bold">D.</span> 他の精神障害で説明されない</li>
+          </ul>
+          <div class="mt-2 bg-white rounded-lg p-2 text-xs">
+            <div class="font-bold text-gray-700 mb-1">発作の13症状（≥4が必要）</div>
+            <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-gray-600">
+              <span>動悸・心拍亢進</span><span>発汗</span>
+              <span>震え・戦慄</span><span>息切れ感</span>
+              <span>窒息感</span><span>胸痛・不快感</span>
+              <span>嘔気・腹部不快</span><span>めまい・ふらつき</span>
+              <span>寒気・ほてり</span><span>感覚異常</span>
+              <span>現実感消失・離人感</span><span>コントロール喪失恐怖</span>
+              <span>死の恐怖</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 text-sm flex items-center gap-1.5">
+            <i data-lucide="pill" class="w-4 h-4"></i>治療
+          </div>
+          <div class="space-y-2 text-xs text-gray-700">
+            <div class="flex items-start gap-2">
+              <span class="badge-first flex-shrink-0">1st</span>
+              <span><strong>SSRI</strong>（エスシタロプラム5→10mg、セルトラリン25→100mg、パロキセチン10→40mg）＋ CBT <span class="badge-level-a ml-1">Level A</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-first flex-shrink-0">1st</span>
+              <span><strong>認知行動療法（CBT）</strong>：呼吸コントロール・認知再構成・内受容感覚曝露 <span class="badge-level-a ml-1">Level A</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-second flex-shrink-0">2nd</span>
+              <span>SNRI（ベンラファキシン75→225mg）/ TCA（イミプラミン）<span class="badge-level-b ml-1">Level B</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-augment flex-shrink-0">注意</span>
+              <span>BZD：急性期の短期橋渡しのみ。長期単独NG（依存・学習阻害）</span>
+            </div>
+          </div>
+        </div>
+        <div class="warning-box mt-2">
+          <div class="font-bold text-yellow-800 text-xs mb-1">SSRI開始時の注意</div>
+          <p class="text-xs text-gray-700">開始初期（1〜2週）に賦活症候群（不安亢進・焦燥感）が出現しやすい。低用量から開始し、初回受診で必ず説明する。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 広場恐怖症 -->
+  <div class="section-card" id="agora">
+    <div class="dx-header-agora rounded-xl p-4 mb-4">
+      <div class="flex items-center gap-3">
+        <i data-lucide="map-pin-off" class="w-6 h-6 text-pink-700"></i>
+        <div>
+          <div class="font-bold text-pink-900 text-lg">広場恐怖症（Agoraphobia）</div>
+          <div class="text-pink-700 text-xs">ICD-10: F40.0 ／ DSM-5-TR（PD との独立コーディング可）</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="criteria-box">
+        <div class="font-bold text-blue-800 mb-2 text-sm">診断基準要点</div>
+        <ul class="text-xs space-y-1.5 text-gray-700">
+          <li><span class="font-bold text-red-700">A.</span> 以下の≥2状況への著しい恐怖・不安：①公共交通機関 ②広い空間 ③閉所 ④列・人込み ⑤一人での外出</li>
+          <li><span class="font-bold">B.</span> パニック様症状・恥ずかしい症状が起きたとき逃げられない・助けが得られないと恐れる</li>
+          <li><span class="font-bold">C.</span> 状況を回避するか、強い恐怖で耐えるか、同伴者を必要とする</li>
+          <li><span class="font-bold">D.</span> ≥6か月</li>
+          <li><span class="font-bold">E.</span> 他の精神障害で説明されない（Specific Phobiaとの区別：2状況以上に限定）</li>
+        </ul>
+        <div class="mt-2 bg-amber-50 rounded p-2 text-xs text-amber-800">
+          <strong>コーディング注意：</strong>パニック症の有無に関わらず独立して診断可能（DSM-5-TR）。パニック症があれば両方コーディング。
+        </div>
+      </div>
+      <div class="recommend-box">
+        <div class="font-bold text-green-800 mb-2 text-sm">治療</div>
+        <div class="space-y-2 text-xs text-gray-700">
+          <div class="flex items-start gap-2">
+            <span class="badge-first flex-shrink-0">1st</span>
+            <span><strong>段階的曝露療法</strong>（回避状況への系統的直面）＋ SSRI <span class="badge-level-a ml-1">Level A</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-first flex-shrink-0">1st</span>
+            <span>パニック症合併時：パニック症の治療に準じる <span class="badge-level-a ml-1">Level A</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-second flex-shrink-0">2nd</span>
+            <span>同伴者依存・回避が強固な場合：集中的曝露プログラム <span class="badge-level-b ml-1">Level B</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 社交不安症 -->
+  <div class="section-card" id="social">
+    <div class="dx-header-social rounded-xl p-4 mb-4">
+      <div class="flex items-center gap-3">
+        <i data-lucide="users" class="w-6 h-6 text-purple-700"></i>
+        <div>
+          <div class="font-bold text-purple-900 text-lg">社交不安症（Social Anxiety Disorder）</div>
+          <div class="text-purple-700 text-xs">ICD-10: F40.1 ／ DSM-5-TR</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <div class="criteria-box">
+          <div class="font-bold text-blue-800 mb-2 text-sm">診断基準要点</div>
+          <ul class="text-xs space-y-1.5 text-gray-700">
+            <li><span class="font-bold text-red-700">A.</span> ≥1つの社交場面での著しい恐怖・不安（他者による否定的評価の恐れ）</li>
+            <li><span class="font-bold">B.</span> ほぼ必ず<strong>恐怖または不安</strong>を誘発（パニック様症状を伴うこともあるが必須ではない）</li>
+            <li><span class="font-bold">C.</span> 回避するか強い苦痛で耐える</li>
+            <li><span class="font-bold">D.</span> 恐怖が実際の危険と不釣り合いと認識</li>
+            <li><span class="font-bold">E.</span> ≥6か月</li>
+          </ul>
+        </div>
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 mt-2">
+          <div class="font-bold text-purple-800 text-xs mb-1">Specifier: パフォーマンス限局型</div>
+          <p class="text-xs text-gray-700">スピーチ・演奏など「人前でのパフォーマンス場面」のみに限局する型。それ以外の社交場面では不安なし。</p>
+        </div>
+      </div>
+      <div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 text-sm">治療</div>
+          <div class="space-y-2 text-xs text-gray-700">
+            <div class="flex items-start gap-2">
+              <span class="badge-first flex-shrink-0">1st</span>
+              <span><strong>SSRI</strong>（エスシタロプラム、パロキセチン、セルトラリン）＋ CBT/曝露 <span class="badge-level-a ml-1">Level A</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-first flex-shrink-0">1st</span>
+              <span><strong>CBT</strong>（認知再構成・社交場面への段階的曝露・SST） <span class="badge-level-a ml-1">Level A</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-second flex-shrink-0">2nd</span>
+              <span>SNRI（ベンラファキシン75→225mg）/ ミルタザピン <span class="badge-level-b ml-1">Level B</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-augment flex-shrink-0">限定</span>
+              <span>パフォーマンス限局型：プロプラノロール単回（当日のみ）<span class="badge-level-c ml-1">Level C</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="warning-box mt-2">
+          <div class="text-xs text-yellow-800"><strong>SAD vs 回避性PD：</strong>重症SADと回避性パーソナリティ障害は連続体とされる。治療は同様だが回避性PDは機能改善に時間がかかる。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 限局性恐怖症 -->
+  <div class="section-card" id="specific">
+    <div class="dx-header-specific rounded-xl p-4 mb-4">
+      <div class="flex items-center gap-3">
+        <i data-lucide="target" class="w-6 h-6 text-blue-700"></i>
+        <div>
+          <div class="font-bold text-blue-900 text-lg">限局性恐怖症（Specific Phobia）</div>
+          <div class="text-blue-700 text-xs">ICD-10: F40.2 ／ DSM-5-TR</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <div class="criteria-box">
+          <div class="font-bold text-blue-800 mb-2 text-sm">診断基準要点</div>
+          <ul class="text-xs space-y-1.5 text-gray-700">
+            <li><span class="font-bold text-red-700">A.</span> 特定の対象・状況への著しい恐怖・不安</li>
+            <li><span class="font-bold">B.</span> ほぼ必ず即時の恐怖反応を誘発</li>
+            <li><span class="font-bold">C.</span> 回避するか強い苦痛で耐える</li>
+            <li><span class="font-bold">D.</span> ≥6か月</li>
+          </ul>
+          <div class="mt-2 bg-white rounded-lg p-2">
+            <div class="font-bold text-xs text-gray-700 mb-1">Specifier（5タイプ）</div>
+            <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-gray-600">
+              <span>動物型（動物・昆虫）</span>
+              <span>自然環境型（高所・雷・水）</span>
+              <span>血液・注射・損傷型</span>
+              <span>情景型（飛行・閉所・運転）</span>
+              <span class="col-span-2">その他型（嘔吐・窒息・疾患恐怖など）</span>
+            </div>
+          </div>
+          <div class="mt-2 bg-red-50 rounded p-2 text-xs">
+            <strong>血液・注射・損傷型の特異性：</strong>血管迷走神経性失神（bradycardia/hypotension）を呈する。曝露中の応用的緊張（applied tension）が有効。
+          </div>
+        </div>
+      </div>
+      <div class="recommend-box">
+        <div class="font-bold text-green-800 mb-2 text-sm">治療</div>
+        <div class="space-y-2 text-xs text-gray-700">
+          <div class="flex items-start gap-2">
+            <span class="badge-first flex-shrink-0">1st</span>
+            <span><strong>段階的曝露療法（CBT）が第一選択</strong>。薬物療法の証拠は限定的 <span class="badge-level-a ml-1">Level A</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-first flex-shrink-0">1st</span>
+            <span>単回集中曝露セッション（1日3〜4時間）も有効（特に情景型） <span class="badge-level-a ml-1">Level A</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-second flex-shrink-0">補助</span>
+            <span>重症・回避困難例：SSRI（補助的） <span class="badge-level-b ml-1">Level B</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-augment flex-shrink-0">注意</span>
+            <span>BZD単回を曝露前に使用すると条件学習を阻害。原則使用しない</span>
+          </div>
+        </div>
+        <div class="mt-2 bg-blue-50 rounded p-2 text-xs text-blue-800">
+          <strong>Applied Tension（血液・注射型）：</strong>腕・脚を15秒交互に緊張→弛緩を繰り返し血圧維持。失神予防として曝露前に指導。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分離不安症 -->
+  <div class="section-card" id="sep">
+    <div class="dx-header-sep rounded-xl p-4 mb-4">
+      <div class="flex items-center gap-3">
+        <i data-lucide="heart" class="w-6 h-6 text-yellow-700"></i>
+        <div>
+          <div class="font-bold text-yellow-900 text-lg">分離不安症（Separation Anxiety Disorder）</div>
+          <div class="text-yellow-700 text-xs">ICD-10: F93.0（小児） ／ DSM-5-TR（全年齢）</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="criteria-box">
+        <div class="font-bold text-blue-800 mb-2 text-sm">診断基準要点</div>
+        <ul class="text-xs space-y-1.5 text-gray-700">
+          <li><span class="font-bold text-red-700">A.</span> 愛着対象からの分離に対する過剰な恐怖（以下から≥3項目）：</li>
+        </ul>
+        <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-gray-600 ml-3 mt-1">
+          <span>①分離・喪失の反復的苦痛</span><span>②愛着対象の害についての持続的心配</span>
+          <span>③愛着対象を失う出来事の心配</span><span>④分離への恐れによる外出拒否</span>
+          <span>⑤一人でいることへの恐れ</span><span>⑥一人での就寝拒否</span>
+          <span>⑦分離テーマの反復悪夢</span><span>⑧分離予期・分離時の身体症状</span>
+        </div>
+        <ul class="text-xs space-y-1 text-gray-700 mt-2">
+          <li><span class="font-bold">B.</span> 期間：<strong>小児・青年≥4週 ／ 成人≥6か月</strong></li>
+          <li><span class="font-bold">C.</span> 機能障害あり</li>
+        </ul>
+      </div>
+      <div class="recommend-box">
+        <div class="font-bold text-green-800 mb-2 text-sm">治療</div>
+        <div class="space-y-2 text-xs text-gray-700">
+          <div class="flex items-start gap-2">
+            <span class="badge-first flex-shrink-0">1st</span>
+            <span><strong>CBT（曝露＋親ガイダンス）</strong>が中核 <span class="badge-level-a ml-1">Level A</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-second flex-shrink-0">2nd</span>
+            <span>重症・CBT無効例：SSRI（フルボキサミン、セルトラリン）<span class="badge-level-b ml-1">Level B</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-augment flex-shrink-0">成人</span>
+            <span>成人SADのエビデンスは小児より限定的。機能回復・段階的自立が目標</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAD -->
+  <div class="section-card" id="gad">
+    <div class="dx-header-gad rounded-xl p-4 mb-4">
+      <div class="flex items-center gap-3">
+        <i data-lucide="cloud" class="w-6 h-6 text-green-700"></i>
+        <div>
+          <div class="font-bold text-green-900 text-lg">全般不安症（Generalized Anxiety Disorder: GAD）</div>
+          <div class="text-green-700 text-xs">ICD-10: F41.1 ／ DSM-5-TR</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <div class="criteria-box">
+          <div class="font-bold text-blue-800 mb-2 text-sm">診断基準要点</div>
+          <ul class="text-xs space-y-1.5 text-gray-700">
+            <li><span class="font-bold text-red-700">A.</span> 多数の活動・事柄についての<strong>過剰な不安・心配</strong>（≥6か月の多数の日）</li>
+            <li><span class="font-bold">B.</span> 心配の<strong>コントロール困難</strong></li>
+            <li><span class="font-bold">C.</span> 以下から<strong>≥3項目</strong>（成人）/ <strong>≥1項目</strong>（児童）：</li>
+          </ul>
+          <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-gray-600 ml-3 mt-1">
+            <span>①落ち着きのなさ・緊張感</span><span>②疲労しやすさ</span>
+            <span>③集中困難・頭が空白になる</span><span>④易怒性</span>
+            <span>⑤筋緊張</span><span>⑥睡眠障害（入眠/熟眠/不穏な睡眠）</span>
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700 mt-2">
+            <li><span class="font-bold">D.</span> 機能障害あり</li>
+            <li><span class="font-bold">E.</span> 物質・身体疾患によらない</li>
+            <li><span class="font-bold">F.</span> 他の精神障害で説明されない</li>
+          </ul>
+        </div>
+        <div class="warning-box mt-2">
+          <div class="text-xs text-yellow-800"><strong>GAD vs MDD：</strong>心配が抑うつエピソード中のみに限定される場合はGADを診断しない。GAD+MDDの高い共存率に注意。</div>
+        </div>
+      </div>
+      <div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 mb-2 text-sm">治療</div>
+          <div class="space-y-2 text-xs text-gray-700">
+            <div class="flex items-start gap-2">
+              <span class="badge-first flex-shrink-0">1st</span>
+              <span><strong>SSRI/SNRI</strong>（エスシタロプラム10→20mg、デュロキセチン30→120mg、ベンラファキシン75→225mg）<span class="badge-level-a ml-1">Level A</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-first flex-shrink-0">1st</span>
+              <span><strong>CBT</strong>（心配のコントロール技法・認知再構成・リラクセーション）<span class="badge-level-a ml-1">Level A</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-second flex-shrink-0">2nd</span>
+              <span>プレガバリン（150→600mg）※本邦では神経障害性疼痛適応。GADへは適応外処方の確認 <span class="badge-level-b ml-1">Level B</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-second flex-shrink-0">2nd</span>
+              <span>ミルタザピン・ブスピロン（本邦未発売） <span class="badge-level-b ml-1">Level B</span></span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-augment flex-shrink-0">補助</span>
+              <span>MBCT（再発予防・慢性化例）<span class="badge-level-b ml-1">Level B</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 薬物治療総括 ===== -->
+  <div class="section-card" id="pharma">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-teal-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="pill" class="w-5 h-5 text-teal-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">薬物治療 総括テーブル</h2>
+        <p class="text-gray-500 text-xs">不安症群共通 / 疾患別適応</p>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs border-collapse min-w-[560px]">
+        <thead>
+          <tr class="bg-teal-50">
+            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">薬剤</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">開始用量</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">目標用量</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">主な適応</th>
+            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">ライン</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="bg-green-50/40 hover:bg-green-50">
+            <td class="p-2.5 font-semibold">エスシタロプラム</td>
+            <td class="p-2.5">5–10mg</td><td class="p-2.5">10–20mg</td>
+            <td class="p-2.5 text-gray-600">GAD・SAD・PD・広場恐怖</td>
+            <td class="p-2.5"><span class="badge-first">1st</span><span class="badge-level-a ml-1">A</span></td>
+          </tr>
+          <tr class="hover:bg-green-50">
+            <td class="p-2.5 font-semibold">セルトラリン</td>
+            <td class="p-2.5">25mg</td><td class="p-2.5">100–200mg</td>
+            <td class="p-2.5 text-gray-600">PD・SAD・OCD合併</td>
+            <td class="p-2.5"><span class="badge-first">1st</span><span class="badge-level-a ml-1">A</span></td>
+          </tr>
+          <tr class="hover:bg-green-50">
+            <td class="p-2.5 font-semibold">パロキセチン</td>
+            <td class="p-2.5">5–10mg</td><td class="p-2.5">20–40mg</td>
+            <td class="p-2.5 text-gray-600">PD・SAD・PTSD合併</td>
+            <td class="p-2.5"><span class="badge-first">1st</span><span class="badge-level-a ml-1">A</span></td>
+          </tr>
+          <tr class="bg-blue-50/30 hover:bg-blue-50">
+            <td class="p-2.5 font-semibold">デュロキセチン</td>
+            <td class="p-2.5">20–30mg</td><td class="p-2.5">60–120mg</td>
+            <td class="p-2.5 text-gray-600">GAD・慢性疼痛合併<br><span class="text-amber-600 font-semibold">※本邦GAD適応は添付文書確認要</span></td>
+            <td class="p-2.5"><span class="badge-first">1st</span><span class="badge-level-a ml-1">A</span></td>
+          </tr>
+          <tr class="hover:bg-blue-50">
+            <td class="p-2.5 font-semibold">ベンラファキシン</td>
+            <td class="p-2.5">37.5–75mg</td><td class="p-2.5">75–225mg</td>
+            <td class="p-2.5 text-gray-600">GAD・SAD・PD・うつ合併</td>
+            <td class="p-2.5"><span class="badge-first">1st</span><span class="badge-level-a ml-1">A</span></td>
+          </tr>
+          <tr class="bg-yellow-50/30 hover:bg-yellow-50">
+            <td class="p-2.5 font-semibold">ミルタザピン</td>
+            <td class="p-2.5">15mg</td><td class="p-2.5">15–45mg</td>
+            <td class="p-2.5 text-gray-600">GAD・不眠合併・SSRI不耐</td>
+            <td class="p-2.5"><span class="badge-second">2nd</span><span class="badge-level-b ml-1">B</span></td>
+          </tr>
+          <tr class="hover:bg-yellow-50">
+            <td class="p-2.5 font-semibold">プレガバリン</td>
+            <td class="p-2.5">75–150mg</td><td class="p-2.5">150–600mg</td>
+            <td class="p-2.5 text-gray-600">GAD（本邦：適応外確認要）</td>
+            <td class="p-2.5"><span class="badge-second">2nd</span><span class="badge-level-b ml-1">B</span></td>
+          </tr>
+          <tr class="bg-red-50/30 hover:bg-red-50">
+            <td class="p-2.5 font-semibold text-red-700">BZD系（ロラゼパム等）</td>
+            <td class="p-2.5 text-red-700">最小有効量</td><td class="p-2.5 text-red-700">短期のみ</td>
+            <td class="p-2.5 text-red-600">SSRI導入初期の橋渡しのみ</td>
+            <td class="p-2.5"><span class="badge-augment">短期限定</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-2.5 font-semibold">プロプラノロール</td>
+            <td class="p-2.5">10–20mg</td><td class="p-2.5">当日単回</td>
+            <td class="p-2.5 text-gray-600">SAD-パフォーマンス型（動悸・振戦の対症）</td>
+            <td class="p-2.5"><span class="badge-level-c">C</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== 非薬物治療 ===== -->
+  <div class="section-card" id="nonpharma">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-rose-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="heart-handshake" class="w-5 h-5 text-rose-600"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">非薬物治療・心理療法</h2>
+        <p class="text-gray-500 text-xs">不安症では薬物と同等以上のエビデンス</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="space-y-3">
+        <div class="recommend-box">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-green-800 text-sm">認知行動療法（CBT）</div>
+            <span class="badge-level-a">Level A</span>
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li><span class="font-bold">認知再構成：</span>自動思考・破局的解釈の修正</li>
+            <li><span class="font-bold">段階的曝露：</span>回避状況への系統的直面。最重要技法</li>
+            <li><span class="font-bold">内受容感覚曝露（PD）：</span>身体感覚への意図的曝露</li>
+            <li><span class="font-bold">Applied Tension（血液注射型）：</span>迷走神経性失神防止</li>
+            <li><span class="font-bold">社会技能訓練（SAD）：</span>社交場面での行動リハ</li>
+          </ul>
+        </div>
+        <div class="purple-box">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-purple-800 text-sm">ACT（アクセプタンス＆コミットメント療法）</div>
+            <span class="badge-level-b">Level B</span>
+          </div>
+          <p class="text-xs text-gray-700">不安の「受容」と価値に基づく行動変容。CBTと相補的。GAD・慢性不安に特に親和性あり。</p>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-xl p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-blue-800 text-sm">MBCT（マインドフルネス認知療法）</div>
+            <span class="badge-level-b">Level B</span>
+          </div>
+          <p class="text-xs text-gray-700">GAD・慢性不安の再発予防。心配の「脱中心化」を促進。MDD再発予防と同様の枠組みで実施可能。</p>
+        </div>
+        <div class="bg-gray-50 border-l-4 border-gray-400 rounded-r-xl p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-gray-700 text-sm">支持的精神療法（SPT）</div>
+            <span class="badge-level-b">Level B</span>
+          </div>
+          <p class="text-xs text-gray-700">外来毎回実施。傾聴・共感・心理教育・問題解決。CBT単独より弱いエビデンスだが、軽症・導入期・維持期に有用。</p>
+        </div>
+        <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-3">
+          <div class="font-bold text-amber-800 text-sm mb-1">心理教育（全疾患）</div>
+          <p class="text-xs text-gray-700">不安の「戦闘・逃走反応」の生理的メカニズムの説明。恐怖の正常化→回避行動を維持しない動機づけ。初診から必ず実施。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 禁忌・注意・モニタリング ===== -->
+  <div class="section-card" id="monitor">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="shield-alert" class="w-5 h-5 text-red-600"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">禁忌・注意事項・モニタリング</h2>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-2 text-sm flex items-center gap-2">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>禁忌・要注意
+        </div>
+        <ul class="text-xs space-y-1.5 text-gray-700">
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>MAOI + SSRI/SNRI：</strong>セロトニン症候群（絶対禁忌）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>BZD + オピオイド：</strong>重篤な呼吸抑制（各国黒枠警告）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>パロキセチン妊娠初期：</strong>心奇形リスク（相対禁忌、妊孕性確認）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>BZD長期単独：</strong>依存・認知障害・転倒（高齢者で特に注意）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="chevron-right" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>プロプラノロール（非選択的β遮断薬）：</strong>気管支喘息・重度徐脈・高度房室ブロックで禁忌。他β遮断薬との併用は相加的に注意</span></li>
+        </ul>
+      </div>
+      <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-700 mb-2 text-sm flex items-center gap-2">
+          <i data-lucide="activity" class="w-4 h-4 text-gray-600"></i>定期モニタリング
+        </div>
+        <ul class="text-xs space-y-1.5 text-gray-600">
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5"></i><span><strong>SSRI賦活症候群：</strong>開始1〜2週（特に若年者）に不安亢進・焦燥。初回に説明し2週後に必ず確認</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5"></i><span><strong>若年者（24歳以下）への抗うつ薬：</strong>FDA黒枠警告「自殺念慮・行動リスク増加」。開始・増量後の緊密なフォロー（初期は週1〜2週ごと）が必須</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5"></i><span><strong>効果判定：</strong>4〜6週後に評価スケールで再評価。8週で十分な改善なければ変更検討</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5"></i><span><strong>維持期間：</strong>寛解後12か月以上継続が推奨（再発防止）</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5"></i><span><strong>BZD減薬：</strong>急激な中止でrebound anxietyや離脱発作。10〜25%/2週ペースの漸減</span></li>
+          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-500 flex-shrink-0 mt-0.5"></i><span><strong>プレガバリン：</strong>眠気・めまい・体重増加を確認。BZD依存患者での置換依存に注意</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 評価スケール ===== -->
+  <div class="section-card" id="scales">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="clipboard-list" class="w-5 h-5 text-indigo-600"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">重症度評価スケール</h2>
+        <p class="text-gray-500 text-xs">外来経過評価・印刷用様式一体型</p>
+      </div>
+    </div>
+
+    <!-- Quick reference table -->
+    <div class="overflow-x-auto mb-5">
+      <table class="w-full text-xs border-collapse min-w-[520px]">
+        <thead>
+          <tr class="bg-indigo-50">
+            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">スケール</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">対象疾患</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">スコア・カットオフの目安</th>
+            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">主な用途</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-green-50">
+            <td class="p-2.5 font-semibold text-green-800">GAD-7</td>
+            <td class="p-2.5">全般不安症（GAD）</td>
+            <td class="p-2.5 text-gray-600">0–4なし / 5–9軽 / 10–14中 / 15–21重<br><span class="text-green-700 font-semibold">≥10でGADスクリーン陽性（感度89%）</span></td>
+            <td class="p-2.5 text-gray-600">スクリーニング・経過追跡</td>
+          </tr>
+          <tr class="hover:bg-red-50">
+            <td class="p-2.5 font-semibold text-red-800">PDSS</td>
+            <td class="p-2.5">パニック症（PD）</td>
+            <td class="p-2.5 text-gray-600"><span class="text-green-700 font-semibold">≤5で寛解</span> / 治療応答：≥40%改善</td>
+            <td class="p-2.5 text-gray-600">重症度・治療反応評価</td>
+          </tr>
+          <tr class="hover:bg-purple-50">
+            <td class="p-2.5 font-semibold text-purple-800">LSAS</td>
+            <td class="p-2.5">社交不安症（SAD）</td>
+            <td class="p-2.5 text-gray-600">≥30でSADスクリーン / ≥60で全般化型傾向<br>寛解：≤29点</td>
+            <td class="p-2.5 text-gray-600">重症度・治療反応評価</td>
+          </tr>
+          <tr class="hover:bg-blue-50">
+            <td class="p-2.5 font-semibold text-blue-800">ACQ</td>
+            <td class="p-2.5">パニック症認知</td>
+            <td class="p-2.5 text-gray-600">固定カットオフなし。平均値の縦断変化で使用</td>
+            <td class="p-2.5 text-gray-600">CBTにおける認知変容評価</td>
+          </tr>
+          <tr class="hover:bg-pink-50">
+            <td class="p-2.5 font-semibold text-pink-800">MI（Mobility Inventory）</td>
+            <td class="p-2.5">広場恐怖症（AGO）</td>
+            <td class="p-2.5 text-gray-600">回避を一人 / 同伴別にスコア化（各1〜5点）</td>
+            <td class="p-2.5 text-gray-600">回避パターン評価・曝露標的選定</td>
+          </tr>
+          <tr class="hover:bg-blue-50">
+            <td class="p-2.5 font-semibold text-blue-800">SUDs / 恐怖階層表</td>
+            <td class="p-2.5">限局性恐怖症（SP）</td>
+            <td class="p-2.5 text-gray-600">主観的苦痛度0〜100点スケール</td>
+            <td class="p-2.5 text-gray-600">曝露療法の恐怖階層表作成</td>
+          </tr>
+          <tr class="hover:bg-yellow-50">
+            <td class="p-2.5 font-semibold text-yellow-800">ASA-27</td>
+            <td class="p-2.5">分離不安症（SeAD）</td>
+            <td class="p-2.5 text-gray-600">0–81点 / <span class="text-yellow-700 font-semibold">≥22点で陽性傾向</span></td>
+            <td class="p-2.5 text-gray-600">成人版分離不安重症度評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-2.5 font-semibold text-gray-600">PHQ-4</td>
+            <td class="p-2.5">混合性不安抑うつ</td>
+            <td class="p-2.5 text-gray-600">不安／うつ 各0〜6点。各≥3で陽性（詳細評価へ）</td>
+            <td class="p-2.5 text-gray-600">初回スクリーニング（2分以内）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Print forms section -->
+    <div class="bg-gradient-to-r from-indigo-50 to-slate-50 rounded-xl p-4 border border-indigo-100">
+      <div class="flex items-center justify-between mb-3">
+        <div class="font-bold text-indigo-800 text-sm flex items-center gap-2">
+          <i data-lucide="printer" class="w-4 h-4"></i>外来印刷用様式（A4）
+        </div>
+        <button onclick="sfPrint('all')" class="flex items-center gap-1.5 bg-gradient-to-r from-teal-600 to-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer border-none font-inherit hover:from-teal-700 hover:to-teal-800 transition-all">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i>全スケール一括印刷
+        </button>
+      </div>
+      <div class="sf-card-grid">
+        <!-- GAD-7 -->
+        <div class="sf-card" style="border-left:3px solid #16a34a">
+          <div class="sf-card-name" style="color:#14532d">GAD-7</div>
+          <div class="sf-card-en">全般不安症スケール</div>
+          <div class="sf-card-info">7項目 / 0–21点<br>対象：GAD / F41.1</div>
+          <div class="sf-card-cutoff" style="color:#16a34a">≥10 でGAD疑い</div>
+          <button class="sf-print-btn" onclick="sfPrint('sf-gad7')">
+            <i data-lucide="printer" class="w-3 h-3"></i>印刷
+          </button>
+        </div>
+        <!-- PDSS -->
+        <div class="sf-card" style="border-left:3px solid #dc2626">
+          <div class="sf-card-name" style="color:#7f1d1d">PDSS</div>
+          <div class="sf-card-en">パニック症重症度スケール</div>
+          <div class="sf-card-info">7項目 / 0–28点<br>対象：PD / F41.0</div>
+          <div class="sf-card-cutoff" style="color:#16a34a">≤5 で寛解</div>
+          <button class="sf-print-btn" onclick="sfPrint('sf-pdss')">
+            <i data-lucide="printer" class="w-3 h-3"></i>印刷
+          </button>
+        </div>
+        <!-- LSAS -->
+        <div class="sf-card" style="border-left:3px solid #7c3aed">
+          <div class="sf-card-name" style="color:#4c1d95">LSAS</div>
+          <div class="sf-card-en">リーボビッツ社交不安スケール</div>
+          <div class="sf-card-info">24項目 / 0–144点（2ページ）<br>対象：SAD / F40.1</div>
+          <div class="sf-card-cutoff" style="color:#7c3aed">≥30 でSADスクリーン</div>
+          <button class="sf-print-btn" onclick="sfPrint('sf-lsas')">
+            <i data-lucide="printer" class="w-3 h-3"></i>印刷
+          </button>
+        </div>
+        <!-- ACQ -->
+        <div class="sf-card" style="border-left:3px solid #db2777">
+          <div class="sf-card-name" style="color:#831843">ACQ</div>
+          <div class="sf-card-en">広場恐怖認知質問票</div>
+          <div class="sf-card-info">14項目 / 1〜5点<br>対象：PD・AGO</div>
+          <div class="sf-card-cutoff" style="color:#6b7280">縦断評価・認知変容追跡</div>
+          <button class="sf-print-btn" onclick="sfPrint('sf-acq')">
+            <i data-lucide="printer" class="w-3 h-3"></i>印刷
+          </button>
+        </div>
+        <!-- MI -->
+        <div class="sf-card" style="border-left:3px solid #db2777">
+          <div class="sf-card-name" style="color:#831843">MI</div>
+          <div class="sf-card-en">移動能力インベントリー</div>
+          <div class="sf-card-info">18状況 / 一人・同伴 別評価<br>対象：AGO / F40.0</div>
+          <div class="sf-card-cutoff" style="color:#6b7280">回避パターン・曝露標的選定</div>
+          <button class="sf-print-btn" onclick="sfPrint('sf-mi')">
+            <i data-lucide="printer" class="w-3 h-3"></i>印刷
+          </button>
+        </div>
+        <!-- PHQ-4 + SUDs -->
+        <div class="sf-card" style="border-left:3px solid #6b7280">
+          <div class="sf-card-name" style="color:#374151">PHQ-4 &amp; SUDs</div>
+          <div class="sf-card-en">混合スクリーン ＋ 恐怖階層表</div>
+          <div class="sf-card-info">PHQ-4（4項目）＋ SUDs恐怖階層表<br>混合性不安抑うつ / 限局性恐怖症</div>
+          <div class="sf-card-cutoff" style="color:#6b7280">初回スクリーン ＋ 曝露準備</div>
+          <button class="sf-print-btn" onclick="sfPrint('sf-phq4suds')">
+            <i data-lucide="printer" class="w-3 h-3"></i>印刷
+          </button>
+        </div>
+        <!-- ASA-27 -->
+        <div class="sf-card" style="border-left:3px solid #ca8a04">
+          <div class="sf-card-name" style="color:#713f12">ASA-27</div>
+          <div class="sf-card-en">成人版分離不安質問票</div>
+          <div class="sf-card-info">27項目 / 0–81点<br>対象：SeAD / F93.0</div>
+          <div class="sf-card-cutoff" style="color:#ca8a04">≥22 で陽性傾向</div>
+          <button class="sf-print-btn" onclick="sfPrint('sf-asa27')">
+            <i data-lucide="printer" class="w-3 h-3"></i>印刷
+          </button>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mt-3">※ 印刷ダイアログでA4・余白「なし」または「最小」を選択してください。各スケールは1〜2ページに収まります。</p>
+    </div>
+  </div>
+
+  <!-- 参照ガイドライン -->
+  <div class="bg-gray-100 rounded-xl p-4 text-xs text-gray-500">
+    <div class="flex items-center gap-2 mb-1">
+      <i data-lucide="book-open" class="w-4 h-4 text-gray-400"></i>
+      <span class="font-bold text-gray-600">参照ガイドライン</span>
+    </div>
+    <p>NICE CG113（GAD・パニック症管理）／ APA Practice Guideline for Panic Disorder ／ RANZCP Clinical Practice Guidelines for Anxiety ／ DSM-5-TR（APA, 2022）／ ICD-10（WHO）</p>
+    <p class="mt-1 text-gray-400">本邦処方については薬剤ごとの添付文書・インタビューフォームで適応を確認すること</p>
+  </div>
+
+</main>
+
+<!-- ═══════════════ SCALE FORMS (hidden on screen / A4 print) ═══════════════ -->
+<div class="sf-container">
+
+  <!-- PAGE: GAD-7 -->
+  <div class="sf-page sf-wrap sf-t-gad" id="sf-gad7">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">GAD-7　全般不安症スケール</div><div class="sf-hd-en">Generalized Anxiety Disorder 7-item Scale</div></div>
+      <div class="sf-hd-r">対象：全般不安症（GAD / F41.1）<br>スコア：0–21点 ｜ ≥10 でGAD疑い</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-gad">この<strong>2週間</strong>、次の問題にどのくらいの頻度で悩まされましたか。当てはまる数字を○で囲み、「得点」欄に記入してください。<br><strong>0 ＝ 全くない　　1 ＝ 数日　　2 ＝ 半分以上の日　　3 ＝ ほとんど毎日</strong></div>
+    <table>
+      <thead><tr><th style="width:17px">#</th><th class="sf-tl">この2週間、次のことでどのくらい悩まされましたか</th><th style="width:33px">全くない<br>0</th><th style="width:33px">数日<br>1</th><th style="width:38px">半分以上<br>の日　2</th><th style="width:38px">ほとんど<br>毎日　3</th><th style="width:29px">得点</th></tr></thead>
+      <tbody>
+        <tr><td class="sf-n">1</td><td>神経過敏になったり、不安を感じたり、または感情の高ぶりを感じた</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">2</td><td>心配することをやめられなかったり、心配事をコントロールできなかった</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">3</td><td>様々なことについて心配し過ぎた</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">4</td><td>リラックスすることが難しかった</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">5</td><td>落ち着かない状態であった（じっとしていることが難しかった）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">6</td><td>イライラしたり、神経が過敏になりやすかった</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">7</td><td>怖い気持ちがしたり、最悪の事態が起こりそうな気がした</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr class="sf-total"><td colspan="2" style="text-align:right;padding-right:10px;font-size:8.5pt">合計得点（0〜21点）</td><td colspan="4"></td><td class="sf-sc" style="border:2px solid #16a34a !important;font-size:11pt"></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-bottom:6px;font-size:8pt;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:4px 9px;"><strong>機能障害の確認（診断基準D）：</strong>これらの問題により、仕事・家事・対人関係にどのくらい支障がありましたか？　□ 全く支障なし　□ やや難しかった　□ 非常に難しかった　□ 極めて難しかった</div>
+    <div class="sf-scoring"><b>採点・重症度判定</b><div class="sf-sbar"><div class="sf-sbar-s" style="background:#22c55e;flex:4">0–4 / なし</div><div class="sf-sbar-s" style="background:#eab308;flex:5">5–9 / 軽症</div><div class="sf-sbar-s" style="background:#f97316;flex:5">10–14 / 中等症</div><div class="sf-sbar-s" style="background:#ef4444;flex:7">15–21 / 重症</div></div><div style="margin-top:3px;line-height:1.65;color:#374151">◆ <strong>≥10点</strong>：GADスクリーニング陽性（感度89%, 特異度82%）。DSM-5-TR基準（心配コントロール困難・≥6か月・機能障害）で確定診断を行う。<br>◆ 治療反応：前回比<strong>5点以上改善</strong>が臨床的有意差。<strong>寛解目安：≤4点</strong>。4週ごとの定期評価を推奨。</div></div>
+    <div class="sf-ft"><span>GAD-7 ｜ Spitzer RL et al., Arch Intern Med. 2006;166:1092–1097 ｜ 日本語版：村松公美子ほか</span><span>不安症群 評価スケール集　1 / 7</span></div>
+  </div>
+
+  <!-- PAGE: PDSS -->
+  <div class="sf-page sf-wrap sf-t-pd" id="sf-pdss">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">PDSS　パニック症重症度スケール</div><div class="sf-hd-en">Panic Disorder Severity Scale</div></div>
+      <div class="sf-hd-r">対象：パニック症（PD / F41.0）<br>スコア：0–28点 ｜ ≤5 で寛解</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-pd">過去<strong>1週間</strong>のあなたの状態について、各質問の最もよく当てはまる数字（0〜4）を「得点」欄に記入してください。</div>
+    <table>
+      <thead><tr><th style="width:17px">#</th><th class="sf-tl">評価項目と各得点の基準</th><th style="width:26px">0</th><th style="width:26px">1</th><th style="width:26px">2</th><th style="width:26px">3</th><th style="width:26px">4</th><th style="width:29px">得点</th></tr></thead>
+      <tbody>
+        <tr><td class="sf-n">1</td><td><strong>パニック発作の頻度</strong><br><span style="font-size:7.5pt;color:#6b7280">0=なし　1=1回/週　2=2〜3回/週　3=4〜7回/週　4=週8回以上または毎日複数回</span></td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">2</td><td><strong>発作中の苦痛</strong><br><span style="font-size:7.5pt;color:#6b7280">0=なし　1=軽度　2=中等度（不快だが耐えられる）　3=重度　4=極度（耐えられない）</span></td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">3</td><td><strong>予期不安</strong>（次の発作への心配・おびえ）<br><span style="font-size:7.5pt;color:#6b7280">0=なし　1=軽度・稀　2=中等度・頻繁　3=重度・非常に頻繁　4=ほぼ常に</span></td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">4</td><td><strong>状況回避</strong>（発作が起きやすい場所・状況を避ける）<br><span style="font-size:7.5pt;color:#6b7280">0=回避なし　1=稀に回避　2=いくつかを回避　3=多くを回避　4=ほぼ全状況を回避</span></td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">5</td><td><strong>身体感覚の回避</strong>（動悸・息切れなど発作様感覚を誘発する活動を避ける）<br><span style="font-size:7.5pt;color:#6b7280">0=回避なし　1=稀に　2=中等度　3=重度　4=極度（ほぼ全ての感覚誘発活動を回避）</span></td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">6</td><td><strong>仕事・家事機能の支障</strong><br><span style="font-size:7.5pt;color:#6b7280">0=支障なし　1=軽度　2=中等度（著明だが機能は維持）　3=重度　4=ほとんど機能できない</span></td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">7</td><td><strong>社会的活動・余暇の支障</strong>（友人・家族との交流、趣味など）<br><span style="font-size:7.5pt;color:#6b7280">0=支障なし　1=軽度　2=中等度　3=重度　4=ほとんど機能できない</span></td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr class="sf-total"><td colspan="2" style="text-align:right;padding-right:10px;font-size:8.5pt">合計得点（0〜28点）</td><td colspan="5"></td><td class="sf-sc" style="border:2px solid #dc2626 !important;font-size:11pt"></td></tr>
+      </tbody>
+    </table>
+    <div class="sf-scoring"><b>採点・重症度判定</b><div class="sf-sbar"><div class="sf-sbar-s" style="background:#22c55e;flex:5">0–5 / 寛解</div><div class="sf-sbar-s" style="background:#eab308;flex:4">6–9 / 軽症</div><div class="sf-sbar-s" style="background:#f97316;flex:6">10–15 / 中等症</div><div class="sf-sbar-s" style="background:#ef4444;flex:13">16–28 / 重症</div></div><div style="margin-top:3px;line-height:1.65;color:#374151">◆ <strong>≤5点</strong>：寛解の目安。治療応答：ベースラインから<strong>≥40%改善</strong>。<br>◆ 発作の定義：DSM-5-TRのパニック発作（13症状のうち≥4、急激な発症、数分でピーク）に限定。4〜6週ごとの定期評価を推奨。</div></div>
+    <div class="sf-ft"><span>PDSS ｜ Shear MK et al., Am J Psychiatry. 1997;154:1571–1575 ｜ 日本語版：貝谷久宣ほか</span><span>不安症群 評価スケール集　2 / 7</span></div>
+  </div>
+
+  <!-- PAGE: LSAS Part 1 + Part 2 (同一グループ) -->
+  <div class="sf-page sf-wrap sf-t-sad sf-lsas" id="sf-lsas">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">LSAS　リーボビッツ社交不安スケール（1/2）</div><div class="sf-hd-en">Liebowitz Social Anxiety Scale ─ Part 1：パフォーマンス状況 13項目</div></div>
+      <div class="sf-hd-r">対象：社交不安症（SAD / F40.1）<br>合計：0–144点 ｜ ≥30 でSADスクリーン</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-sad">各状況について、<strong>①恐怖・不安の程度</strong>と<strong>②回避の頻度</strong>をそれぞれ別々に評価し、該当数字を○で囲んでください。<br><strong>恐怖・不安（F）：0=なし　1=軽度　2=中等度　3=重度　　　回避（A）：0=なし（0%）　1=まれに（1–33%）　2=ときどき（33–67%）　3=しばしば（67–100%）</strong></div>
+    <table>
+      <thead>
+        <tr><th style="width:17px">#</th><th class="sf-tl">状況</th><th colspan="4" style="background:#fef2f2;color:#7f1d1d">恐怖・不安 (F)</th><th colspan="4" style="background:#eff6ff;color:#1e3a8a">回避 (A)</th><th style="width:21px;background:#fef2f2;color:#7f1d1d">F</th><th style="width:21px;background:#eff6ff;color:#1e3a8a">A</th></tr>
+        <tr><th></th><th></th><th style="width:21px;background:#fef2f2">0</th><th style="width:21px;background:#fef2f2">1</th><th style="width:21px;background:#fef2f2">2</th><th style="width:21px;background:#fef2f2">3</th><th style="width:21px;background:#eff6ff">0</th><th style="width:21px;background:#eff6ff">1</th><th style="width:21px;background:#eff6ff">2</th><th style="width:21px;background:#eff6ff">3</th><th style="background:#fef2f2">得点</th><th style="background:#eff6ff">得点</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="sf-n">1</td><td>公の場での電話（人が見ている・聞こえる場所での通話）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">2</td><td>少人数のグループでの活動への参加</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">3</td><td>公の場での飲食</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">4</td><td>人と一緒に公の場で飲み物を飲む</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">5</td><td>権威のある立場の人と話す</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">6</td><td>聴衆の前での演技・演奏・スピーチ・講演</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">7</td><td>パーティへの参加</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">8</td><td>人が見ている中での作業・仕事</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">9</td><td>人が見ている中での書字</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">10</td><td>あまりよく知らない人に電話をかける</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">11</td><td>あまりよく知らない人と会話する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">12</td><td>見知らぬ人たちと会う・交流する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">13</td><td>公共トイレを使用する（他の人がいる状況で）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr class="sf-total"><td colspan="2" style="text-align:right;padding-right:8px">Part 1 小計</td><td colspan="8"></td><td class="sf-sc" style="border:2px solid #7c3aed !important;"></td><td class="sf-sc" style="border:2px solid #1d4ed8 !important;"></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:7.5pt;color:#6b7280;background:#f9fafb;border-radius:4px;padding:4px 9px;"><strong>Part 1：F小計 ____　＋　A小計 ____　＝　Part 1 合計 ____　（次ページに続く）</strong></div>
+    <div class="sf-ft"><span>LSAS ｜ Liebowitz MR. Mod Probl Pharmacopsychiatry. 1987;22:141–173 ｜ 日本語版：朝倉聡ほか</span><span>3 / 7（続く）</span></div>
+  </div>
+
+  <!-- PAGE: LSAS Part 2 -->
+  <div class="sf-page sf-wrap sf-t-sad sf-lsas" id="sf-lsas-p2">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">LSAS　リーボビッツ社交不安スケール（2/2）</div><div class="sf-hd-en">Liebowitz Social Anxiety Scale ─ Part 2：社会的相互作用状況 11項目</div></div>
+      <div class="sf-hd-r">対象：社交不安症（SAD / F40.1）</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-sad">各状況について、<strong>①恐怖・不安（F）</strong>と<strong>②回避（A）</strong>をそれぞれ評価してください。<br><strong>恐怖（F）：0=なし　1=軽度　2=中等度　3=重度　　　回避（A）：0=なし　1=まれに　2=ときどき　3=しばしば</strong></div>
+    <table>
+      <thead>
+        <tr><th style="width:17px">#</th><th class="sf-tl">状況</th><th colspan="4" style="background:#fef2f2;color:#7f1d1d">恐怖・不安 (F)</th><th colspan="4" style="background:#eff6ff;color:#1e3a8a">回避 (A)</th><th style="width:21px;background:#fef2f2;color:#7f1d1d">F</th><th style="width:21px;background:#eff6ff;color:#1e3a8a">A</th></tr>
+        <tr><th></th><th></th><th style="width:21px;background:#fef2f2">0</th><th style="width:21px;background:#fef2f2">1</th><th style="width:21px;background:#fef2f2">2</th><th style="width:21px;background:#fef2f2">3</th><th style="width:21px;background:#eff6ff">0</th><th style="width:21px;background:#eff6ff">1</th><th style="width:21px;background:#eff6ff">2</th><th style="width:21px;background:#eff6ff">3</th><th style="background:#fef2f2">得点</th><th style="background:#eff6ff">得点</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="sf-n">14</td><td>すでに人が座っている部屋に後から入る</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">15</td><td>注目の的になる・みんなの視線が自分に集まる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">16</td><td>会議・集会・グループ討議での発言</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">17</td><td>筆記試験・テストを受ける</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">18</td><td>あまり知らない人への不同意・異議の表明</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">19</td><td>あまりよく知らない人の目を見て話す</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">20</td><td>グループ・クラス・会議でのプレゼン・発表</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">21</td><td>意中の人への積極的なアプローチ・誘い</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">22</td><td>購入した商品の返品・交換を申し出る</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">23</td><td>パーティや行事を自分で主催・企画する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">24</td><td>しつこいセールスマン・勧誘を断る</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td><td class="sf-sc"></td></tr>
+        <tr class="sf-total"><td colspan="2" style="text-align:right;padding-right:8px">Part 2 小計</td><td colspan="8"></td><td class="sf-sc" style="border:2px solid #7c3aed !important;"></td><td class="sf-sc" style="border:2px solid #1d4ed8 !important;"></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:8pt;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:5px;padding:6px 10px;margin-bottom:5px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div><strong>F（恐怖）合計</strong><br>Part 1 F：___　Part 2 F：___<br><u>F 合計：___ / 72</u></div><div><strong>A（回避）合計</strong><br>Part 1 A：___　Part 2 A：___<br><u>A 合計：___ / 72</u></div><div><strong style="font-size:9pt">LSAS 総合計</strong><br><span style="font-size:14pt;font-weight:800;color:#4c1d95">___</span><span style="font-size:8pt"> / 144</span></div></div>
+    </div>
+    <div class="sf-scoring"><b>採点・重症度判定</b><div class="sf-sbar"><div class="sf-sbar-s" style="background:#22c55e;flex:29">0–29 なし〜境界</div><div class="sf-sbar-s" style="background:#eab308;flex:20">30–49 軽症</div><div class="sf-sbar-s" style="background:#f97316;flex:15">50–64 中等症</div><div class="sf-sbar-s" style="background:#ef4444;flex:15">65–79 重症</div><div class="sf-sbar-s" style="background:#7f1d1d;flex:65">≥80 最重症</div></div><div style="margin-top:3px;line-height:1.65;color:#374151">◆ <strong>≥30点</strong>：SADスクリーニング陽性。◆ <strong>≥60点</strong>：全般化型SAD。治療応答：前回比<strong>≥30%改善</strong>。寛解：<strong>≤29点</strong>。</div></div>
+    <div class="sf-ft"><span>LSAS ｜ Liebowitz MR. Mod Probl Pharmacopsychiatry. 1987;22:141–173 ｜ 日本語版：朝倉聡ほか</span><span>不安症群 評価スケール集　3 / 7</span></div>
+  </div>
+
+  <!-- PAGE: ACQ -->
+  <div class="sf-page sf-wrap sf-t-pd" id="sf-acq">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">ACQ　広場恐怖認知質問票</div><div class="sf-hd-en">Agoraphobic Cognitions Questionnaire</div></div>
+      <div class="sf-hd-r">対象：パニック症・広場恐怖症（F41.0 / F40.0）<br>各項目 1〜5点（14項目）</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-pd">不安や緊張を感じているとき、以下のような考えがどのくらいの頻度で頭に浮かびますか。<br><strong>1 ＝ 全くない　　2 ＝ まれに思う　　3 ＝ ときどき思う　　4 ＝ 頻繁に思う　　5 ＝ 常に思う</strong></div>
+    <table>
+      <thead><tr><th style="width:17px">#</th><th class="sf-tl">不安を感じているとき、次のような考えが頭に浮かびますか</th><th style="width:29px">全くない<br>1</th><th style="width:29px">まれ<br>2</th><th style="width:29px">ときどき<br>3</th><th style="width:29px">頻繁<br>4</th><th style="width:29px">常に<br>5</th><th style="width:29px">得点</th></tr></thead>
+      <tbody>
+        <tr><td colspan="8" style="background:#fff1f2;font-size:7.5pt;font-weight:700;color:#7f1d1d;padding:3px 6px">▶ 身体的コントロール喪失に関する考え</td></tr>
+        <tr><td class="sf-n">1</td><td>嘔吐・吐き気がひどくなりそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">2</td><td>気を失ってしまいそうだ（失神しそうだ）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">3</td><td>脳腫瘍か何か深刻な病気があるのではないか</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">4</td><td>心臓発作を起こしてしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">5</td><td>みっともない・愚かな行動をしてしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">6</td><td>失明してしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">7</td><td>自分自身をコントロールできなくなりそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td colspan="8" style="background:#fff1f2;font-size:7.5pt;font-weight:700;color:#7f1d1d;padding:3px 6px">▶ 精神的コントロール喪失・社会的恐怖に関する考え</td></tr>
+        <tr><td class="sf-n">8</td><td>他の人を傷つけてしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">9</td><td>脳卒中を起こしてしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">10</td><td>頭がおかしくなってしまいそうだ（精神が崩壊しそうだ）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">11</td><td>叫び出してしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">12</td><td>ろれつが回らなくなる・おかしなことを話してしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">13</td><td>麻痺してしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">14</td><td>発作（けいれん）を起こしてしまいそうだ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr class="sf-total"><td colspan="2" style="text-align:right;padding-right:10px;font-size:8.5pt">合計得点（14〜70点）</td><td colspan="5"></td><td class="sf-sc" style="border:2px solid #dc2626 !important;font-size:11pt"></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-bottom:5px;font-size:8pt;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px;padding:4px 9px;display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div><strong>身体的コントロール喪失スコア</strong>（1〜7の合計）：_____ / 35</div><div><strong>精神的コントロール喪失スコア</strong>（8〜14の合計）：_____ / 35</div></div>
+    <div class="sf-scoring"><b>採点・使用方法</b><div style="margin-top:3px;line-height:1.65;color:#374151">◆ <strong>固定カットオフなし</strong>。ベースラインからの変化（縦断評価）として使用。各項目合計の平均値（合計 ÷ 14）で経過比較を推奨。<br>◆ <strong>CBTにおける認知変容の評価</strong>に有用。内受容感覚曝露前後・セッションごとの変化を追う。</div></div>
+    <div class="sf-ft"><span>ACQ ｜ Chambless DL et al., Behav Res Ther. 1984;22:113–125 ｜ 日本語版：久保木富房ほか</span><span>不安症群 評価スケール集　4 / 7</span></div>
+  </div>
+
+  <!-- PAGE: MI -->
+  <div class="sf-page sf-wrap sf-t-ago sf-mi" id="sf-mi">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">MI　移動能力インベントリー（広場恐怖版）</div><div class="sf-hd-en">Mobility Inventory for Agoraphobia</div></div>
+      <div class="sf-hd-r">対象：広場恐怖症（AGO / F40.0）<br>各状況 1〜5点（一人 / 同伴 別評価）</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-ago">以下の各状況に対する<strong>回避の程度</strong>を、①一人の場合と②誰かと同伴の場合に分けてそれぞれ評価してください。<br><strong>1 ＝ 決して避けない　2 ＝ まれに避ける　3 ＝ ときどき避ける　4 ＝ よく避ける　5 ＝ 常に避ける（行かない）</strong></div>
+    <table>
+      <thead>
+        <tr><th style="width:17px">#</th><th class="sf-tl">状況・場所</th><th colspan="5" style="background:#fdf2f8;color:#831843">一人の場合</th><th colspan="5" style="background:#f0fdf4;color:#14532d">同伴者ありの場合</th></tr>
+        <tr><th></th><th></th><th style="width:18px;background:#fdf2f8">1</th><th style="width:18px;background:#fdf2f8">2</th><th style="width:18px;background:#fdf2f8">3</th><th style="width:18px;background:#fdf2f8">4</th><th style="width:18px;background:#fdf2f8">5</th><th style="width:18px;background:#f0fdf4">1</th><th style="width:18px;background:#f0fdf4">2</th><th style="width:18px;background:#f0fdf4">3</th><th style="width:18px;background:#f0fdf4">4</th><th style="width:18px;background:#f0fdf4">5</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="sf-n">1</td><td>ショッピングモール・大型商業施設</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">2</td><td>スーパーマーケット</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">3</td><td>映画館・劇場・コンサートホール</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">4</td><td>レストラン・カフェ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">5</td><td>飛行機での旅行</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">6</td><td>バス・路線バス</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">7</td><td>電車・地下鉄</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">8</td><td>自動車（同乗者として）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">9</td><td>自動車（自分で運転）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">10</td><td>橋の上</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">11</td><td>エレベーター</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">12</td><td>トンネル</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">13</td><td>広い開けた場所（広場・駐車場・公園など）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">14</td><td>混んだ場所・人込み（駅・祭り・行事など）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">15</td><td>列に並ぶ（スーパー・銀行・窓口など）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">16</td><td>待合室（病院・役所・美容院など）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">17</td><td>スポーツ競技場・大型ホール</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td><td class="sf-ck" style="background:#f0fdf4">○</td></tr>
+        <tr><td class="sf-n">18</td><td>自宅に一人でいること（長時間）</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck" style="background:#f0fdf4;color:#9ca3af;font-size:7pt" colspan="5">N/A</td></tr>
+        <tr class="sf-total"><td colspan="2" style="text-align:right;padding-right:10px">平均回避スコア（合計 ÷ 項目数）</td><td colspan="5" style="text-align:center;font-size:9pt">_____ / 5<br><span style="font-size:7pt;font-weight:400">（合計 ÷ 18）</span></td><td colspan="5" style="text-align:center;font-size:9pt;background:#f0fdf4 !important">_____ / 5<br><span style="font-size:7pt;font-weight:400">（合計 ÷ 17）</span></td></tr>
+      </tbody>
+    </table>
+    <div class="sf-scoring"><b>採点方法・臨床的活用</b><div style="margin-top:3px;line-height:1.65;color:#374151">◆ <strong>一人スコア平均</strong>と<strong>同伴スコア平均</strong>をそれぞれ算出。<strong>差（一人 − 同伴）が大きい</strong>ほど依存傾向・安全行動が強い。<br>◆ 固定カットオフなし。縦断比較（CBT前後）および曝露療法の<strong>恐怖階層表作成</strong>の補助ツールとして使用。</div></div>
+    <div class="sf-ft"><span>MI ｜ Chambless DL et al., Behav Res Ther. 1985;23:35–44 ｜ 日本語版：貝谷久宣ほか</span><span>不安症群 評価スケール集　5 / 7</span></div>
+  </div>
+
+  <!-- PAGE: PHQ-4 + SUDs -->
+  <div class="sf-page sf-wrap sf-t-mix" id="sf-phq4suds">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">PHQ-4　患者健康質問票 4項目版</div><div class="sf-hd-en">Patient Health Questionnaire-4 ─ 混合性不安抑うつスクリーニング（F41.2 相当）</div></div>
+      <div class="sf-hd-r">スコア：0–12点<br>不安 / うつ 各 0–6点</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-mix">この<strong>2週間</strong>、次の問題にどのくらいの頻度で悩まされましたか。<br><strong>0 ＝ 全くない　　1 ＝ 数日　　2 ＝ 半分以上の日　　3 ＝ ほとんど毎日</strong></div>
+    <table>
+      <thead><tr><th style="width:17px">#</th><th class="sf-tl">項目</th><th style="width:40px;background:#f3f4f6">分類</th><th style="width:33px">全くない<br>0</th><th style="width:33px">数日<br>1</th><th style="width:38px">半分以上<br>の日 2</th><th style="width:38px">ほとんど<br>毎日 3</th><th style="width:29px">得点</th></tr></thead>
+      <tbody>
+        <tr><td class="sf-n">1</td><td>神経過敏になったり、不安を感じたり、感情の高ぶりを感じた</td><td class="sf-ck" style="font-size:7pt;color:#7c3aed;font-weight:700">不安</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">2</td><td>心配することをやめられなかったり、心配事をコントロールできなかった</td><td class="sf-ck" style="font-size:7pt;color:#7c3aed;font-weight:700">不安</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">3</td><td>物事への関心が薄れたり、楽しめなくなったりした</td><td class="sf-ck" style="font-size:7pt;color:#1d4ed8;font-weight:700">うつ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">4</td><td>気分が落ち込んだり、憂鬱になったり、絶望的な気持ちになった</td><td class="sf-ck" style="font-size:7pt;color:#1d4ed8;font-weight:700">うつ</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr class="sf-total"><td colspan="3" style="text-align:right;padding-right:8px;font-size:8pt">不安スコア (1+2)：___/6　　うつスコア (3+4)：___/6　　合計：___/12</td><td colspan="4"></td><td class="sf-sc" style="border:2px solid #6b7280 !important;font-size:11pt"></td></tr>
+      </tbody>
+    </table>
+    <div class="sf-scoring" style="margin-bottom:8px"><b>採点・解釈</b><div style="margin-top:3px;line-height:1.65;color:#374151">◆ <strong>不安スコア（1+2）≥3</strong>：GAD-2陽性 → GAD-7での詳細評価を推奨。◆ <strong>うつスコア（3+4）≥3</strong>：PHQ-2陽性 → PHQ-9での詳細評価を推奨。</div></div>
+    <div class="sf-divider">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:5px;margin-bottom:6px;border-bottom:2.5px solid #1d4ed8;">
+        <div><div style="font-size:12.5pt;font-weight:800;color:#1e3a8a">SUDs　恐怖階層表（限局性恐怖症用）</div><div style="font-size:8pt;color:#6b7280;margin-top:2px">Subjective Units of Distress Scale ─ Phobia Hierarchy Worksheet / F40.2</div></div>
+        <div style="text-align:right;font-size:8pt;color:#9ca3af">タイプ：□ 動物型　□ 自然環境型　□ 血液・注射・損傷型　□ 情景型　□ その他型</div>
+      </div>
+      <div class="sf-instr sf-i-sp">恐怖対象・状況ごとの<strong>主観的苦痛度（SUDs: 0〜100）</strong>を記入し、曝露療法の恐怖階層表を作成してください。<br><strong>0=全く苦痛なし　25=軽度　50=中等度（不安あるが耐えられる）　75=重度　100=最大限の苦痛・パニック</strong></div>
+      <table>
+        <thead><tr><th style="width:22px">順</th><th class="sf-tl">曝露状況・対象の詳細な記述（具体的に書く）</th><th style="width:58px">SUDs<br>事前（0–100）</th><th style="width:58px">SUDs<br>曝露後</th><th style="width:52px">実施日</th></tr></thead>
+        <tbody>
+          <tr><td class="sf-n">1</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+          <tr><td class="sf-n">2</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+          <tr><td class="sf-n">3</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+          <tr><td class="sf-n">4</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+          <tr><td class="sf-n">5</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+          <tr><td class="sf-n">6</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+          <tr><td class="sf-n">7</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+          <tr><td class="sf-n">8</td><td style="height:17px"></td><td class="sf-sc"></td><td class="sf-sc"></td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="sf-scoring" style="margin-top:5px"><b>使用方法</b><div style="margin-top:2px;line-height:1.65;color:#374151">◆ SUDs低い順（20〜40程度）から曝露を開始し、SUDs ≤10に低下したら次のステップへ進む。◆ <strong>血液・注射・損傷型</strong>：Applied Tension（腕・脚を15秒交互に緊張→弛緩）を曝露前に指導し迷走神経性失神を予防。</div></div>
+    </div>
+    <div class="sf-ft"><span>PHQ-4 ｜ Kroenke K et al., Psychosomatics. 2009;50:613–621 ｜ SUDs ｜ Wolpe J. (1969)</span><span>不安症群 評価スケール集　6 / 7</span></div>
+  </div>
+
+  <!-- PAGE: ASA-27 -->
+  <div class="sf-page sf-wrap sf-t-sea" id="sf-asa27">
+    <div class="sf-hd">
+      <div><div class="sf-hd-name">ASA-27　成人版分離不安質問票</div><div class="sf-hd-en">Adult Separation Anxiety Questionnaire (ASA-27)</div></div>
+      <div class="sf-hd-r">対象：分離不安症（SeAD / F93.0）<br>スコア：0–81点 ｜ ≥22 で陽性傾向</div>
+    </div>
+    <div class="sf-pt">
+      <div class="sf-pt-f"><label>患者氏名</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>カルテ番号</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>記入日</label><div class="sf-ul"></div></div>
+      <div class="sf-pt-f"><label>担当医</label><div class="sf-ul"></div></div>
+    </div>
+    <div class="sf-instr sf-i-sea">あなたにとって最も大切な人（配偶者・パートナー・親など）と離れることについて、以下の質問に正直にお答えください。<br><strong>0 ＝ 全くそうではない　　1 ＝ やや当てはまる　　2 ＝ かなり当てはまる　　3 ＝ 非常にそうである</strong></div>
+    <table style="font-size:8pt">
+      <thead><tr><th style="width:17px">#</th><th class="sf-tl">質問項目</th><th style="width:30px">全くない<br>0</th><th style="width:30px">やや<br>1</th><th style="width:30px">かなり<br>2</th><th style="width:30px">非常に<br>3</th><th style="width:29px">得点</th></tr></thead>
+      <tbody>
+        <tr><td class="sf-n">1</td><td>大切な人と離れることを必要以上に心配する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">2</td><td>大切な人と離れているとき、その人のことが心配で何も手につかなくなる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">3</td><td>大切な人が事故・病気などで自分のもとから去ってしまうのではないかと心配する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">4</td><td>大切な人が引越しや転勤などで遠くに行ってしまうことを心配する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">5</td><td>大切な人に何か悪いことが起こるのではないかと心配する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">6</td><td>大切な人と離れることを予期したとき、ひどく不安・動揺する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">7</td><td>大切な人と離れると動悸・息切れ・発汗などの身体症状が出る</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">8</td><td>大切な人のそばにいないと安心できない</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">9</td><td>大切な人から離れることになる状況を避けようとする</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">10</td><td>一人でいることが苦手で、できるだけ大切な人のそばにいたいと思う</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">11</td><td>家の外に一人で出かけることを避けたり、強く嫌がる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">12</td><td>一人で家にいることを避けたり、強く嫌がる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">13</td><td>大切な人と離れて（別の場所で）眠ることができない、またはひどく嫌がる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">14</td><td>大切な人と離れる夢（悪夢）を繰り返し見る</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">15</td><td>大切な人と離れることを思うと、気分が悪くなる・吐き気がする</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">16</td><td>仕事・学校・旅行など、大切な人なしで遠くに出かけることが難しい</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">17</td><td>大切な人と離れているとき、連絡が取れないと極度に不安になる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">18</td><td>大切な人に何かあった場合、自分はやっていけないと思う</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">19</td><td>大切な人がいなければ、重要な決断ができない</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">20</td><td>大切な人の動向・居場所を常に把握していないと落ち着かない</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">21</td><td>大切な人が自分のことを見捨てるのではないかと恐れる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">22</td><td>大切な人に依存しすぎていると感じることがある</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">23</td><td>大切な人なしでは日常生活を送ることが難しい</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">24</td><td>大切な人が一時的に不在のとき（仕事中・外出中など）でも安心できない</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">25</td><td>大切な人と離れることを想像しただけで、非常に動揺する</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">26</td><td>大切な人がいなくなったら自分はどうなるかわからないと感じる</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr><td class="sf-n">27</td><td>大切な人のことが頭から離れず、日常の活動（仕事・勉強など）に集中できない</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-ck">○</td><td class="sf-sc"></td></tr>
+        <tr class="sf-total"><td colspan="2" style="text-align:right;padding-right:10px;font-size:8.5pt">合計得点（0〜81点）</td><td colspan="4"></td><td class="sf-sc" style="border:2px solid #ca8a04 !important;font-size:11pt"></td></tr>
+      </tbody>
+    </table>
+    <div class="sf-scoring"><b>採点・解釈</b><div style="margin-top:3px;line-height:1.65;color:#374151">◆ 各項目0〜3点、合計0〜81点。<strong>≥22点</strong>：成人分離不安症の可能性（DSM-5-TR基準で確定診断すること）。<br>◆ <strong>期間基準確認（必須）</strong>：成人は症状<strong>≥6か月</strong>、小児・青年は<strong>≥4週</strong>。治療評価：CBT（段階的曝露＋段階的自立訓練）前後の変化指標として使用。</div></div>
+    <div class="sf-ft"><span>ASA-27 ｜ Manicavasagar V et al., Compr Psychiatry. 2003;44:97–106 ｜ 日本語版参照：朝倉聡ほか</span><span>不安症群 評価スケール集　7 / 7</span></div>
+  </div>
+
+</div><!-- /.sf-container -->
+
+<script>
+  lucide.createIcons();
+
+  function sfPrint(targetId) {
+    const container = document.querySelector('.sf-container');
+    const allPages  = container.querySelectorAll('.sf-page');
+
+    const pagesToPrint = [];
+    if (targetId === 'all') {
+      allPages.forEach(p => pagesToPrint.push(p.outerHTML));
+    } else if (targetId === 'sf-lsas') {
+      ['sf-lsas', 'sf-lsas-p2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) pagesToPrint.push(el.outerHTML);
+      });
+    } else {
+      const el = document.getElementById(targetId);
+      if (el) pagesToPrint.push(el.outerHTML);
+    }
+    if (!pagesToPrint.length) return;
+
+    const css = [...document.querySelectorAll('style')]
+      .map(s => s.textContent).join('\n');
+
+    const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    ${css}
+    body { margin: 0; padding: 0; background: white; }
+    .sf-page { display: block !important; page-break-after: always; }
+    .sf-page:last-child { page-break-after: auto; }
+    @page { size: A4 portrait; margin: 11mm 13mm; }
+  </style>
+</head>
+<body>
+  ${pagesToPrint.join('\n')}
+</body>
+</html>`;
+
+    const win = window.open('', '_blank');
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+    win.addEventListener('load', function () {
+      setTimeout(function () {
+        win.print();
+        win.close();
+      }, 400);
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神科疾患 全体像 ICD-11 / DSM-5-TR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white; border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg,#15803d,#16a34a); color:white;
+      padding:0.15rem 0.55rem; border-radius:9999px; font-size:0.7rem; font-weight:700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg,#1d4ed8,#2563eb); color:white;
+      padding:0.15rem 0.55rem; border-radius:9999px; font-size:0.7rem; font-weight:700;
+    }
+    .badge-new {
+      background: linear-gradient(135deg,#7c3aed,#8b5cf6); color:white;
+      padding:0.15rem 0.55rem; border-radius:9999px; font-size:0.7rem; font-weight:700;
+    }
+    .badge-changed {
+      background: linear-gradient(135deg,#b45309,#d97706); color:white;
+      padding:0.15rem 0.55rem; border-radius:9999px; font-size:0.7rem; font-weight:700;
+    }
+    .badge-removed {
+      background: linear-gradient(135deg,#6b7280,#9ca3af); color:white;
+      padding:0.15rem 0.55rem; border-radius:9999px; font-size:0.7rem; font-weight:700;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg,#eff6ff,#dbeafe);
+      border-left: 4px solid #1d4ed8;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg,#fef2f2,#fee2e2);
+      border-left: 4px solid #dc2626;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg,#fffbeb,#fef3c7);
+      border-left: 4px solid #d97706;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg,#f0fdf4,#dcfce7);
+      border-left: 4px solid #15803d;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .icd11-code {
+      font-family: 'Inter', monospace; font-size: 0.75rem; font-weight: 700;
+      background: #1e3a5f; color: white;
+      padding: 0.1rem 0.5rem; border-radius: 0.3rem; letter-spacing: 0.05em;
+    }
+    .icd10-code {
+      font-family: 'Inter', monospace; font-size: 0.75rem; font-weight: 700;
+      background: #64748b; color: white;
+      padding: 0.1rem 0.5rem; border-radius: 0.3rem; letter-spacing: 0.05em;
+    }
+    .dsm-code {
+      font-family: 'Inter', monospace; font-size: 0.75rem; font-weight: 600;
+      background: #0f766e; color: white;
+      padding: 0.1rem 0.5rem; border-radius: 0.3rem;
+    }
+
+    /* 分類マップ グリッドカード */
+    .cat-card {
+      border-radius: 0.875rem; padding: 1rem;
+      border: 2px solid transparent; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .cat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+    /* タブ */
+    .tab-btn {
+      padding: 0.5rem 0.9rem; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; border: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab-btn.active { background: #1e3a5f; color: white; }
+    .tab-btn:not(.active) { background: #f1f5f9; color: #475569; }
+    .tab-btn:not(.active):hover { background: #e2e8f0; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* フローティング目次 */
+    .toc {
+      position: fixed; right: 1.25rem; top: 50%; transform: translateY(-50%);
+      background: white; padding: 0.875rem; border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12); max-height: 80vh;
+      overflow-y: auto; z-index: 50; min-width: 150px;
+    }
+    @media(max-width:1440px){ .toc { display: none; } }
+
+    /* 変更点カード */
+    .change-card {
+      border-radius: 0.75rem; padding: 0.875rem 1rem;
+      border: 1.5px solid; flex-shrink: 0; width: 280px;
+    }
+
+    /* 矢印 */
+    .arrow-icd { color: #6b7280; font-weight: 700; font-size: 0.9rem; }
+
+    /* トレイトドメイン */
+    .trait-domain {
+      border-radius: 0.625rem; padding: 0.75rem;
+      border: 1.5px solid;
+    }
+
+    /* スクロール可能横並び */
+    .h-scroll { overflow-x: auto; padding-bottom: 0.5rem; }
+    .h-scroll::-webkit-scrollbar { height: 4px; }
+    .h-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 2px; }
+    .h-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 2px; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- フローティング目次 -->
+<nav class="toc">
+  <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+  <ul class="space-y-1 text-xs">
+    <li><a href="#changes" class="text-gray-600 hover:text-blue-700 block">ICD-10→ICD-11変更点</a></li>
+    <li><a href="#mapview" class="text-gray-600 hover:text-blue-700 block">分類全体マップ</a></li>
+    <li><a href="#details" class="text-gray-600 hover:text-blue-700 block">各大分類の詳細</a></li>
+    <li><a href="#pd-model" class="text-gray-600 hover:text-blue-700 block">PD次元モデル詳細</a></li>
+    <li><a href="#comparison" class="text-gray-600 hover:text-blue-700 block">ICD-11 vs DSM-5-TR</a></li>
+    <li><a href="#codes" class="text-gray-600 hover:text-blue-700 block">注意コード一覧</a></li>
+  </ul>
+</nav>
+
+<!-- ヘッダー -->
+<header class="header-gradient text-white py-8">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="brain" class="w-8 h-8 opacity-80"></i>
+      <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科疾患分類 完全ガイド</span>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold">精神科疾患 全体像</h1>
+    <p class="mt-2 text-lg opacity-85">ICD-11（第6章 6A00–6E8Z）準拠 ／ DSM-5-TR（2022）対照 ／ ICD-10からの変更点</p>
+    <div class="flex gap-2 mt-3 flex-wrap">
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">ICD-11 MMS 2026-01版</span>
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">DSM-5-TR 2022</span>
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">ICD-10 F章対照</span>
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">外来即時参照</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- ======================================================
+       ICD-10 → ICD-11 重要変更点
+  ======================================================= -->
+  <div class="section-card" id="changes">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="git-compare" class="w-6 h-6 text-amber-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">ICD-10 → ICD-11 主要変更点</h2>
+        <p class="text-gray-500 text-sm">臨床で特に重要な構造的・概念的変更 12選</p>
+      </div>
+    </div>
+
+    <div class="h-scroll">
+      <div class="flex gap-4" style="min-width:max-content">
+
+        <!-- 1 PD次元化 -->
+        <div class="change-card border-purple-300 bg-purple-50" style="width:270px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-changed">大改訂</span>
+            <span class="font-bold text-purple-800 text-sm">パーソナリティ障害</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">F60</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6D10+6D11</span>
+            </div>
+            <p class="text-gray-700">10カテゴリ型 → <strong>重症度（軽・中・重）＋特性ドメイン</strong>の次元モデルへ全面刷新。境界性は「パターン」修飾子(6D11.5)として位置づけ</p>
+          </div>
+        </div>
+
+        <!-- 2 統合失調症サブタイプ廃止 -->
+        <div class="change-card border-blue-300 bg-blue-50" style="width:260px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-removed">廃止</span>
+            <span class="font-bold text-blue-800 text-sm">統合失調症サブタイプ</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1 flex-wrap">
+              <span class="icd10-code">F20.0-F20.5</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6A20</span>
+            </div>
+            <p class="text-gray-700">妄想型・解体型・緊張型・未分化型・残遺型のサブタイプ廃止。症状プロファイルは<strong>6A25付加コード</strong>（陽性/陰性/認知等）で表現</p>
+          </div>
+        </div>
+
+        <!-- 3 緊張病の独立 -->
+        <div class="change-card border-teal-300 bg-teal-50" style="width:255px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-new">新設章</span>
+            <span class="font-bold text-teal-800 text-sm">緊張病の独立ブロック</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1 flex-wrap">
+              <span class="icd10-code">F20.2/F30.2等</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6A40-6A41</span>
+            </div>
+            <p class="text-gray-700">各疾患に散在していた緊張病が<strong>独立ブロック6A40-6A4Z</strong>へ。精神障害関連・物質誘発・身体疾患由来(6E69)で分類</p>
+          </div>
+        </div>
+
+        <!-- 4 複雑性PTSD -->
+        <div class="change-card border-red-300 bg-red-50" style="width:255px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-new">新設</span>
+            <span class="font-bold text-red-800 text-sm">複雑性PTSD</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">（なし）</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6B41</span>
+            </div>
+            <p class="text-gray-700">PTSDの要件＋<strong>感情調節障害・否定的自己概念・対人関係障害</strong>の3要素。DSM-5-TRには対応する独立診断なし</p>
+          </div>
+        </div>
+
+        <!-- 5 ゲーム症 -->
+        <div class="change-card border-indigo-300 bg-indigo-50" style="width:255px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-new">新設</span>
+            <span class="font-bold text-indigo-800 text-sm">ゲーム症</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">（なし）</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6C51</span>
+            </div>
+            <p class="text-gray-700">嗜癖行動ブロック内に新設。<strong>コントロール障害・ゲーム優先・有害継続</strong>の3要素、通常12か月。オンライン6C51.0/オフライン6C51.1</p>
+          </div>
+        </div>
+
+        <!-- 6 性別不合の移動 -->
+        <div class="change-card border-green-300 bg-green-50" style="width:265px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-changed">脱病理化</span>
+            <span class="font-bold text-green-800 text-sm">性別不合の移動</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">F64</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">HA60-HA61</span>
+            </div>
+            <p class="text-gray-700">精神障害章（第6章）から<strong>第17章「性に関する保健」</strong>へ移動。精神障害としての位置づけを解消</p>
+          </div>
+        </div>
+
+        <!-- 7 気分障害の分割 -->
+        <div class="change-card border-sky-300 bg-sky-50" style="width:260px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-changed">分割</span>
+            <span class="font-bold text-sky-800 text-sm">気分障害の再編</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1 flex-wrap">
+              <span class="icd10-code">F30-F39</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6A60+6A70</span>
+            </div>
+            <p class="text-gray-700">ICD-10の一括F章が<strong>双極性障害群(6A60)と抑うつ障害群(6A70)</strong>に明確分割。DSM-5と整合</p>
+          </div>
+        </div>
+
+        <!-- 8 身体表現性→身体的苦痛症 -->
+        <div class="change-card border-orange-300 bg-orange-50" style="width:275px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-changed">概念変更</span>
+            <span class="font-bold text-orange-800 text-sm">身体表現性 → 身体的苦痛症</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">F45</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6C20</span>
+            </div>
+            <p class="text-gray-700">「医学的に説明不能」の必須化を撤廃。<strong>苦痛と症状への過度な注目</strong>を中核概念に。身体疾患との併存も可</p>
+          </div>
+        </div>
+
+        <!-- 9 OCD独立章 -->
+        <div class="change-card border-rose-300 bg-rose-50" style="width:250px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-new">独立章</span>
+            <span class="font-bold text-rose-800 text-sm">OCD・関連障害の独立</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">F42</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6B20-6B2Z</span>
+            </div>
+            <p class="text-gray-700">OCD・BDD・健康不安症・ホーディング・BFRB等が<strong>独立ブロック</strong>に集約。健康不安症はF45（身体表現性障害章）からここへ移動</p>
+          </div>
+        </div>
+
+        <!-- 10 遷延性悲嘆 -->
+        <div class="change-card border-violet-300 bg-violet-50" style="width:260px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-new">新設</span>
+            <span class="font-bold text-violet-800 text-sm">遷延性悲嘆障害</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">（なし）</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6B42</span>
+            </div>
+            <p class="text-gray-700">ストレス関連ブロック内に新設。死別後の<strong>持続的・障害的な悲嘆反応</strong>。DSM-5-TRにも同名で追加（ただし診断基準は異なる）</p>
+          </div>
+        </div>
+
+        <!-- 11 ARFID追加 -->
+        <div class="change-card border-lime-300 bg-lime-50" style="width:255px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-new">追加</span>
+            <span class="font-bold text-lime-800 text-sm">ARFID正式収録</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">（記載なし）</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6B83</span>
+            </div>
+            <p class="text-gray-700">回避・制限性食物摂取症を正式収録（DSM-5 2013での先行収録を受け、ICD-11が採用）。体重・体型への懸念なしで食物回避・制限が持続</p>
+          </div>
+        </div>
+
+        <!-- 12 強迫的性行動症 -->
+        <div class="change-card border-pink-300 bg-pink-50" style="width:255px">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="badge-new">新設</span>
+            <span class="font-bold text-pink-800 text-sm">強迫的性行動症</span>
+          </div>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div class="flex items-center gap-1">
+              <span class="icd10-code">（なし）</span>
+              <span class="arrow-icd">→</span>
+              <span class="icd11-code">6C72</span>
+            </div>
+            <p class="text-gray-700">衝動制御障害ブロック内。繰り返す性的行動への<strong>コントロール障害</strong>が中核。パラフィリア障害(6D30)とは区別</p>
+          </div>
+        </div>
+
+      </div><!-- flex -->
+    </div><!-- h-scroll -->
+  </div>
+
+
+  <!-- ======================================================
+       分類全体マップ
+  ======================================================= -->
+  <div class="section-card" id="mapview">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="map" class="w-6 h-6 text-indigo-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">精神科疾患 分類全体マップ</h2>
+        <p class="text-gray-500 text-sm">ICD-11 第6章（6A00–6E8Z）の全ブロック構成</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+
+      <!-- 神経発達症 -->
+      <div class="cat-card bg-blue-50 border-blue-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="baby" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6A00–6A0Z</span>
+        </div>
+        <div class="font-bold text-blue-900 text-sm mb-1">神経発達症群</div>
+        <div class="text-xs text-blue-700">知的障害・ASD・ADHD・学習障害・DCD</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F70–F89</div>
+      </div>
+
+      <!-- 統合失調症スペクトラム -->
+      <div class="cat-card bg-indigo-50 border-indigo-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="brain" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6A20–6A2Z</span>
+        </div>
+        <div class="font-bold text-indigo-900 text-sm mb-1">統合失調症スペクトラム</div>
+        <div class="text-xs text-indigo-700">統合失調症・統合失調感情障害・妄想性障害</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F20–F29</div>
+      </div>
+
+      <!-- 緊張病 -->
+      <div class="cat-card bg-cyan-50 border-cyan-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-cyan-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="zap-off" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6A40–6A4Z</span>
+        </div>
+        <div class="font-bold text-cyan-900 text-sm mb-1">緊張病（カタトニア）</div>
+        <div class="text-xs text-cyan-700">精神障害関連・物質誘発（二次性は6E69）</div>
+        <div class="mt-1.5"><span class="badge-new">独立</span></div>
+      </div>
+
+      <!-- 双極性障害 -->
+      <div class="cat-card bg-amber-50 border-amber-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="repeat" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6A60–6A6Z</span>
+        </div>
+        <div class="font-bold text-amber-900 text-sm mb-1">双極性・関連障害</div>
+        <div class="text-xs text-amber-700">双極Ⅰ型・Ⅱ型・気分循環性障害</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F30–F31</div>
+      </div>
+
+      <!-- 抑うつ障害 -->
+      <div class="cat-card bg-slate-50 border-slate-300">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-slate-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="cloud-rain" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6A70–6A7Z</span>
+        </div>
+        <div class="font-bold text-slate-900 text-sm mb-1">抑うつ障害群</div>
+        <div class="text-xs text-slate-700">単相性・再発性・気分変調症・混合性不安抑うつ</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F32–F39</div>
+      </div>
+
+      <!-- 不安症 -->
+      <div class="cat-card bg-yellow-50 border-yellow-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+            <i data-lucide="alert-circle" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6B00–6B0Z</span>
+        </div>
+        <div class="font-bold text-yellow-900 text-sm mb-1">不安症・恐怖関連障害</div>
+        <div class="text-xs text-yellow-700">GAD・パニック症・広場恐怖・社交不安症・特定恐怖症</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F40–F41</div>
+      </div>
+
+      <!-- 強迫症 -->
+      <div class="cat-card bg-rose-50 border-rose-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-rose-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="rotate-cw" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6B20–6B2Z</span>
+        </div>
+        <div class="font-bold text-rose-900 text-sm mb-1">強迫症・関連障害群</div>
+        <div class="text-xs text-rose-700">OCD・BDD・健康不安症・ホーディング・BFRB</div>
+        <div class="mt-1.5"><span class="badge-new">独立章</span></div>
+      </div>
+
+      <!-- ストレス関連 -->
+      <div class="cat-card bg-red-50 border-red-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="shield-off" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6B40–6B4Z</span>
+        </div>
+        <div class="font-bold text-red-900 text-sm mb-1">ストレス関連障害群</div>
+        <div class="text-xs text-red-700">PTSD・<strong>複雑性PTSD・遷延性悲嘆障害</strong>・適応障害</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F43</div>
+      </div>
+
+      <!-- 解離性障害 -->
+      <div class="cat-card bg-purple-50 border-purple-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="layers" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6B60–6B6Z</span>
+        </div>
+        <div class="font-bold text-purple-900 text-sm mb-1">解離性障害群</div>
+        <div class="text-xs text-purple-700">解離性神経症状症（転換）・解離性健忘・DID・離人症</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F44</div>
+      </div>
+
+      <!-- 摂食障害 -->
+      <div class="cat-card bg-pink-50 border-pink-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="utensils" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6B80–6B8Z</span>
+        </div>
+        <div class="font-bold text-pink-900 text-sm mb-1">摂食障害群</div>
+        <div class="text-xs text-pink-700">神経性食欲不振症・神経性大食症・BED・<strong>ARFID</strong></div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F50</div>
+      </div>
+
+      <!-- 身体的苦痛症 -->
+      <div class="cat-card bg-orange-50 border-orange-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+            <i data-lucide="activity" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6C20–6C2Z</span>
+        </div>
+        <div class="font-bold text-orange-900 text-sm mb-1">身体的苦痛・身体経験の障害</div>
+        <div class="text-xs text-orange-700">身体的苦痛症・身体統合性ジスフォリア</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F45（概念変更）</div>
+      </div>
+
+      <!-- 物質使用・嗜癖 -->
+      <div class="cat-card bg-teal-50 border-teal-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="pill" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6C40–6C5Z</span>
+        </div>
+        <div class="font-bold text-teal-900 text-sm mb-1">物質使用・嗜癖行動</div>
+        <div class="text-xs text-teal-700">各種物質依存・ギャンブル症・<strong>ゲーム症</strong></div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F10–F19</div>
+      </div>
+
+      <!-- 衝動制御・素行症 -->
+      <div class="cat-card bg-gray-50 border-gray-300">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="flame" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6C70–6C9Z</span>
+        </div>
+        <div class="font-bold text-gray-900 text-sm mb-1">衝動制御・破壊的行動</div>
+        <div class="text-xs text-gray-600">IED・放火症・窃盗症・<strong>強迫的性行動症</strong>・ODD・素行症</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F60.3/F63/F91</div>
+      </div>
+
+      <!-- パーソナリティ障害 -->
+      <div class="cat-card bg-violet-50 border-violet-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-violet-700 rounded-lg flex items-center justify-center">
+            <i data-lucide="user-cog" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6D10–6D11</span>
+        </div>
+        <div class="font-bold text-violet-900 text-sm mb-1">パーソナリティ障害</div>
+        <div class="text-xs text-violet-700">次元モデル：重症度＋5特性ドメイン＋境界性パターン</div>
+        <div class="mt-1.5"><span class="badge-changed">全面刷新</span></div>
+      </div>
+
+      <!-- パラフィリア -->
+      <div class="cat-card bg-neutral-50 border-neutral-300">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-neutral-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="eye" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6D30–6D3Z</span>
+        </div>
+        <div class="font-bold text-neutral-900 text-sm mb-1">パラフィリア関連障害</div>
+        <div class="text-xs text-neutral-600">露出症・窃視症・小児性愛症・性的サディズム症等</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F65</div>
+      </div>
+
+      <!-- 神経認知障害 -->
+      <div class="cat-card bg-emerald-50 border-emerald-200">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="cpu" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="icd11-code">6D70–6E0Z</span>
+        </div>
+        <div class="font-bold text-emerald-900 text-sm mb-1">神経認知障害群</div>
+        <div class="text-xs text-emerald-700">せん妄・軽度NCD・認知症（Alz・Lewy・FTD・VaD等）</div>
+        <div class="mt-1.5 text-xs text-gray-500">≒ ICD-10 F00–F09</div>
+      </div>
+
+    </div><!-- grid -->
+
+    <!-- 章外ブロック -->
+    <div class="mt-4 p-4 bg-gray-100 rounded-xl border border-gray-200">
+      <div class="flex items-center gap-2 mb-2">
+        <i data-lucide="external-link" class="w-4 h-4 text-gray-500"></i>
+        <span class="font-bold text-gray-700 text-sm">精神科関連・第6章外のコード（重要）</span>
+      </div>
+      <div class="flex flex-wrap gap-3 text-xs">
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">睡眠・覚醒障害</span>
+          <span class="text-gray-500 ml-1">→ 第7章 7A00–</span>
+        </div>
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">性別不合</span>
+          <span class="text-gray-500 ml-1">→ HA60-HA61（第17章）</span>
+        </div>
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">性機能障害</span>
+          <span class="text-gray-500 ml-1">→ HA00– （第17章）</span>
+        </div>
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">産褥精神疾患</span>
+          <span class="text-gray-500 ml-1">→ 6E20–6E2Z</span>
+        </div>
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">二次精神症候群</span>
+          <span class="text-gray-500 ml-1">→ 6E60–6E6Z</span>
+        </div>
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">月経前不快気分障害</span>
+          <span class="text-gray-500 ml-1">→ GA34.41</span>
+        </div>
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">チック症・Tourette</span>
+          <span class="text-gray-500 ml-1">→ 8A05.0（第8章）</span>
+        </div>
+        <div class="bg-white rounded-lg px-3 py-2 border">
+          <span class="font-bold text-gray-700">人格困難（診断閾下）</span>
+          <span class="text-gray-500 ml-1">→ QE50.7</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================
+       各大分類の詳細（タブ）
+  ======================================================= -->
+  <div class="section-card" id="details">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="list-tree" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">各大分類の詳細</h2>
+        <p class="text-gray-500 text-sm">主要診断・DSM-5-TR対応・ICD-10からの変更点</p>
+      </div>
+    </div>
+
+    <!-- タブボタン -->
+    <div class="h-scroll mb-4">
+      <div class="flex gap-2" style="min-width:max-content">
+        <button class="tab-btn active" onclick="switchTab('neurodevel')">神経発達症</button>
+        <button class="tab-btn" onclick="switchTab('schizo')">統合失調症</button>
+        <button class="tab-btn" onclick="switchTab('bipolar')">双極性障害</button>
+        <button class="tab-btn" onclick="switchTab('depressive')">抑うつ障害</button>
+        <button class="tab-btn" onclick="switchTab('anxiety')">不安症</button>
+        <button class="tab-btn" onclick="switchTab('ocd')">強迫症・関連</button>
+        <button class="tab-btn" onclick="switchTab('stress')">ストレス関連</button>
+        <button class="tab-btn" onclick="switchTab('dissoc')">解離性障害</button>
+        <button class="tab-btn" onclick="switchTab('eating')">摂食障害</button>
+        <button class="tab-btn" onclick="switchTab('somatic')">身体的苦痛症</button>
+        <button class="tab-btn" onclick="switchTab('substance')">物質・嗜癖</button>
+        <button class="tab-btn" onclick="switchTab('neurocog')">神経認知障害</button>
+      </div>
+    </div>
+
+    <!-- ======= 神経発達症 ======= -->
+    <div id="tab-neurodevel" class="tab-content active">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A00</span>
+                <span>知的発達障害（Intellectual developmental disorders）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A01</span>
+                <span>発達性音声・言語障害（DLD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A02</span>
+                <span>自閉スペクトラム症（ASD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A03</span>
+                <span>発達性学習障害（LD：読字・書字・算数）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A04</span>
+                <span>発達性協調運動障害（DCD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A05</span>
+                <span>注意欠如多動症（ADHD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A06</span>
+                <span>常同運動障害</span>
+              </div>
+            </div>
+          </div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 mb-2 text-sm">チック症・Tourette症候群</div>
+            <p class="text-xs text-gray-600">神経発達症群には含まれず、第8章（神経疾患）<span class="icd11-code">8A05.0</span>に配置</p>
+          </div>
+        </div>
+        <div>
+          <div class="recommend-box">
+            <div class="font-bold text-green-800 mb-3 text-sm flex items-center gap-2">
+              <i data-lucide="git-compare" class="w-4 h-4"></i>
+              DSM-5-TR 対応
+            </div>
+            <p class="text-sm text-gray-700 mb-2">「Neurodevelopmental disorders」として同等カテゴリが存在。<span class="dsm-code">DSM-5-TR</span>はここにチック症を含む点がICD-11と異なる。</p>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・ASD：両系統とも連続スペクトラム概念採用</li>
+              <li>・ADHD：DSM-5-TRは3サブタイプ（不注意優位/多動衝動優位/混合）</li>
+              <li>・LDをDSM-5-TRは「Specific Learning Disorder」と呼称</li>
+            </ul>
+          </div>
+          <div class="mt-3 p-3 bg-blue-50 rounded-xl border border-blue-200 text-xs">
+            <div class="font-bold text-blue-800 mb-1">ICD-10からの主な変更</div>
+            <ul class="text-gray-700 space-y-1">
+              <li>・ICD-10 F80–F89の「広汎性発達障害」名称廃止 → ASD(6A02)へ統一</li>
+              <li>・アスペルガー症候群の独立カテゴリ廃止（ASDスペクトラムに統合）</li>
+              <li>・ADHDコード：F90 → 6A05</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 統合失調症 ======= -->
+    <div id="tab-schizo" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A20</span>
+                <span>統合失調症</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A21</span>
+                <span>統合失調感情障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A22</span>
+                <span>統合失調型障害（Schizotypal disorder）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A23</span>
+                <span>急性・一過性精神病性障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A24</span>
+                <span>妄想性障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A25</span>
+                <span class="text-gray-500">症状表現修飾子（付加コード）：陽性/陰性/抑うつ/躁/精神運動/認知</span>
+              </div>
+            </div>
+          </div>
+          <!-- 緊張病 -->
+          <div class="mt-3 p-3 bg-cyan-50 rounded-xl border border-cyan-200">
+            <div class="font-bold text-cyan-800 text-sm mb-2 flex items-center gap-2">
+              <span class="icd11-code">6A40-6A41</span> 緊張病（独立ブロック）
+            </div>
+            <div class="space-y-1 text-xs text-gray-700">
+              <div><span class="icd11-code text-xs">6A40</span> 他の精神障害に関連する緊張病</div>
+              <div><span class="icd11-code text-xs">6A41</span> 物質・薬剤誘発性緊張病</div>
+              <div><span class="icd11-code text-xs">6E69</span> 身体疾患に続発する二次性緊張病</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="danger-box">
+            <div class="font-bold text-red-800 mb-2 text-sm flex items-center gap-2">
+              <i data-lucide="x-circle" class="w-4 h-4"></i>
+              ICD-10 → ICD-11 最重要変更
+            </div>
+            <ul class="text-sm text-gray-700 space-y-2">
+              <li><strong>サブタイプ廃止</strong>：妄想型(F20.0)・解体型(F20.1)・緊張型(F20.2)・未分化型(F20.3)・残遺型(F20.5)・<strong>統合失調症後うつ病(F20.4)・単純型(F20.6)</strong> → 全て<span class="icd11-code">6A20</span>統一（単純型は陰性症状主体の日本でも重要な概念）</li>
+              <li><strong>症状修飾子(6A25)</strong>：陽性・陰性・抑うつ・躁・精神運動・認知の6ドメインで表現</li>
+              <li><strong>緊張病の独立</strong>：F20.2など各疾患の付属から独立ブロックへ</li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">DSM-5-TR 対応</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・「Schizophrenia spectrum and other psychotic disorders」として対応</li>
+              <li>・DSM-5-TRも2013年改訂でサブタイプ廃止（ICD-11と方向性一致）</li>
+              <li>・緊張病はDSM-5-TRでは「specifier」または別コードとして扱う</li>
+              <li>・統合失調型：DSM-5-TRでは「パーソナリティ障害」章に分類</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 双極性障害 ======= -->
+    <div id="tab-bipolar" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6A60–6A6Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A60</span>
+                <span>双極Ⅰ型障害（躁エピソード：通常数日〜数週間持続）<br><span class="text-xs text-gray-500">※≥7日はDSM-5-TRの基準。ICD-11は期間カットオフを厳密に規定しない</span></span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A61</span>
+                <span>双極Ⅱ型障害（軽躁＋大うつが必要）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A62</span>
+                <span>気分循環性障害（軽躁・軽うつの持続サイクル ≥2年）</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs">
+            <div class="font-bold text-amber-800 mb-2">気分エピソードの修飾（6A80）</div>
+            <p class="text-gray-700">気分エピソード自体は独立コードを持たず、各障害定義に組み込み。症状・経過の特定子は<span class="icd11-code">6A80</span>付加コード群で表現（現在の重症度・精神病性・混合性・急速交代型など）</p>
+          </div>
+        </div>
+        <div>
+          <div class="danger-box">
+            <div class="font-bold text-red-800 mb-2 text-sm">臨床上の重要注意点</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・SSRI単剤→躁転・急速交代化のリスク（双極性うつへの誤処方）</li>
+              <li>・ICD-11で双極性とうつ病が明確分離 → 双極性の見落とし防止</li>
+              <li>・抑うつエピソードのみ呈した場合でも<strong>生涯に躁/軽躁があれば双極</strong></li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">DSM-5-TR 対応・相違</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・「Bipolar and Related Disorders」として独立 → ICD-11と方向性一致</li>
+              <li>・DSM-5-TRは双極Ⅰ型・Ⅱ型・Cyclothymic disorder＋「他の特定される/されない」</li>
+              <li>・ICD-11の6A80修飾子群 ≒ DSM-5-TRのspecifier</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 抑うつ障害 ======= -->
+    <div id="tab-depressive" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6A70–6A7Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A70</span>
+                <span>単相性抑うつ障害（Single episode depressive disorder）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A71</span>
+                <span>再発性抑うつ障害（≥2回のエピソード）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A72</span>
+                <span>気分変調症（ジスチミア；≥2年の慢性抑うつ）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6A73</span>
+                <span>混合性抑うつ不安障害 <span class="text-xs text-gray-400">（≒ ICD-10 F41.2）</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+            <div class="font-bold text-slate-700 mb-1">月経前不快気分障害（PMDD）</div>
+            <p class="text-gray-600">抑うつ章には含まれず <span class="icd11-code">GA34.41</span>（生殖関連）</p>
+          </div>
+        </div>
+        <div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 mb-2 text-sm">ICD-10からの変更点</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・F30-F39の「気分（感情）障害」一括章から分離 → 双極(6A60)と明確に分割</li>
+              <li>・「単相性」という新概念で初発エピソードを明確化</li>
+              <li>・重症度分類（軽・中・重）の細分化 → 6A70.x / 6A71.x</li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">DSM-5-TR 対応</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・「Depressive Disorders」として独立 → 大うつ病性障害(MDD)が中核</li>
+              <li>・DSM-5-TRのMDD = ICD-11の6A70/6A71に相当</li>
+              <li>・DSM-5-TRはPMDD・持続性抑うつ障害も含む</li>
+              <li>・Specifier（精神病性・緊張病性・混合性・季節性等）はICD-11の6A80修飾子と対応</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 不安症 ======= -->
+    <div id="tab-anxiety" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6B00–6B0Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B00</span>
+                <span>全般性不安障害（GAD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B01</span>
+                <span>パニック障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B02</span>
+                <span>広場恐怖症</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B03</span>
+                <span>特定恐怖症</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B04</span>
+                <span>社交不安障害（社交恐怖）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B05</span>
+                <span>分離不安障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B06</span>
+                <span>選択性かんもつ症</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 mb-2 text-sm">ICD-10からの変更点</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・健康不安症（心気症）をF45→強迫関連ブロック(<span class="icd11-code">6B23</span>)へ移動</li>
+              <li>・分離不安・選択性かんもつを成人にも適用可能に（小児限定廃止）</li>
+              <li>・広場恐怖がパニック障害の従属分類から独立（ICD-10 F40.0→6B02独立）</li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">治療の要点</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・SSRI/SNRIが全ての不安症のファーストライン <span class="badge-level-a">Level A</span></li>
+              <li>・CBT（曝露療法含む）が薬物療法と同等以上 <span class="badge-level-a">Level A</span></li>
+              <li>・BZD系の長期使用回避（依存・認知機能低下）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 強迫症 ======= -->
+    <div id="tab-ocd" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6B20–6B2Z）<span class="badge-new ml-1">独立章</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B20</span>
+                <span>強迫性障害（OCD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B21</span>
+                <span>身体醜形障害（BDD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B22</span>
+                <span>嗅覚参照症（Olfactory reference disorder）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B23</span>
+                <span>健康不安症（Hypochondriasis）※ICD-10 F45→ここへ移動</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B24</span>
+                <span>ホーディング障害（ため込み症）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B25</span>
+                <span>身体中心反復行為障害（BFRB）：抜毛症(6B25.0)・皮膚むしり症(6B25.1)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="danger-box">
+            <div class="font-bold text-red-800 mb-2 text-sm">ICD-10からの変更（重要）</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・F42（強迫性障害）→独立ブロック6B20へ</li>
+              <li>・健康不安症（F45.2：心気症）→身体表現性障害章（F45）から強迫関連章(6B23)へ移動</li>
+              <li>・BDDがOCDと同一章に（ICD-10では整理が不明確だった）</li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">治療の要点</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・ERP（曝露反応妨害法）＋SSRIが標準治療 <span class="badge-level-a">Level A</span></li>
+              <li>・SSRI用量は通常より高用量が必要（フルボキサミン200mg等）</li>
+              <li>・治療抵抗性OCD：抗精神病薬増強（リスペリドン等）<span class="badge-level-b">Level B</span></li>
+              <li>・ホーディングはCBT反応不良率が高い</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= ストレス関連 ======= -->
+    <div id="tab-stress" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6B40–6B4Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B40</span>
+                <span><strong>PTSD</strong>：トラウマ後の再体験・回避・脅威知覚亢進</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B41</span>
+                <span><strong>複雑性PTSD（CPTSD）</strong>：PTSD要件＋情動調節障害・否定的自己概念・対人関係障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B42</span>
+                <span><strong>遷延性悲嘆障害</strong>：死別後の持続的・障害的悲嘆（通常≥6か月）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B43</span>
+                <span>適応障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B44</span>
+                <span>反応性愛着障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B45</span>
+                <span>脱抑制型対人交流障害（DSED）</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="danger-box">
+            <div class="font-bold text-red-800 mb-2 text-sm">PTSD vs 複雑性PTSD（鑑別要点）</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs border-collapse">
+                <thead>
+                  <tr class="bg-red-100">
+                    <th class="p-2 text-left">項目</th>
+                    <th class="p-2 text-left">PTSD (6B40)</th>
+                    <th class="p-2 text-left">CPTSD (6B41)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-red-100">
+                  <tr>
+                    <td class="p-2">トラウマ</td>
+                    <td class="p-2">単一・複数可</td>
+                    <td class="p-2">慢性・反復（虐待・監禁等）が多いが、<strong>診断はDSO症状の有無で判断</strong>（トラウマ種別は必須要件ではない）</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">コア症状</td>
+                    <td class="p-2">再体験・回避・脅威</td>
+                    <td class="p-2">＋情動調節障害＋否定的自己概念＋対人障害</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">DSM-5-TR</td>
+                    <td class="p-2">あり</td>
+                    <td class="p-2"><strong>なし（独立診断なし）</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">治療の要点</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・PTSD：EMDR・長期曝露療法(PE)・CPT <span class="badge-level-a">Level A</span></li>
+              <li>・薬物療法：SSRI（セルトラリン・パロキセチン）<span class="badge-level-a">Level A</span></li>
+              <li>・CPTSD：段階的アプローチ（安定化→トラウマ処理）が推奨</li>
+              <li>・遷延性悲嘆：悲嘆特異的CBT <span class="badge-level-b">Level B</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 解離性障害 ======= -->
+    <div id="tab-dissoc" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6B60–6B6Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B60</span>
+                <span><strong>解離性神経症状症</strong>（旧：転換性障害F44）：神経学的症状様の解離</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B61</span>
+                <span>解離性健忘</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B62</span>
+                <span>トランス障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B63</span>
+                <span>憑依トランス障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B64</span>
+                <span>解離性同一性障害（DID）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B65</span>
+                <span>部分解離性同一性障害</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B66</span>
+                <span>離人症・現実感消失障害</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 mb-2 text-sm">ICD-10からの変更</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・転換性障害(F44) → 解離性神経症状症(6B60)へ名称変更・概念拡張</li>
+              <li>・「神経症状様」という表現で器質性除外の否定的診断を脱却</li>
+              <li>・トランス障害・憑依トランス障害を文化的文脈を考慮した別コードに</li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">DSM-5-TR 対応</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・「Dissociative Disorders」として同等カテゴリ</li>
+              <li>・DSM-5-TRでは転換性障害が「機能性神経症状症」と呼称（ICD-11の6B60に近い）</li>
+              <li>・治療：トラウマ焦点化療法・安定化技法が中心</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 摂食障害 ======= -->
+    <div id="tab-eating" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6B80–6B8Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B80</span>
+                <span>神経性食欲不振症（AN）：制限型/過食排出型</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B81</span>
+                <span>神経性大食症（BN）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B82</span>
+                <span>暴食障害（BED：Binge eating disorder）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B83</span>
+                <span><strong>回避・制限性食物摂取症（ARFID）</strong> <span class="badge-new">追加</span></span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B84</span>
+                <span>異食症（Pica）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6B85</span>
+                <span>反芻・嘔吐再噴出障害</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 mb-2 text-sm">ARFIDの要点（6B83）</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・体重・体型への懸念なしで食物を回避・制限</li>
+              <li>・DSM-5（2013）に先行収録、ICD-11で正式採用</li>
+              <li>・感覚過敏（ASDとの合併多）・食物の恐怖・食への興味欠如が動機</li>
+              <li>・栄養障害・体重低下・社会機能障害のいずれかが必要</li>
+            </ul>
+          </div>
+          <div class="danger-box mt-3">
+            <div class="font-bold text-red-800 mb-2 text-sm">ANの致死性（最高の精神科的死亡率）</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li>・再栄養症候群（低P・低K・低Mg → 不整脈）に注意</li>
+              <li>・BMI&lt;15：入院治療の強い適応</li>
+              <li>・精神科的緊急例：意思能力評価と非自発的治療の検討</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 身体的苦痛症 ======= -->
+    <div id="tab-somatic" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6C20–6C2Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6C20</span>
+                <div>
+                  <span><strong>身体的苦痛症（Bodily distress disorder）</strong></span>
+                  <p class="text-xs text-gray-500 mt-0.5">軽度(6C20.0)・中等度(6C20.1)・重度(6C20.2)</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6C21</span>
+                <span>身体統合性ジスフォリア（Body integrity dysphoria）</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 p-3 bg-orange-50 rounded-xl border border-orange-200 text-sm">
+            <div class="font-bold text-orange-800 mb-2">ICD-11の身体的苦痛症（6C20）中核概念</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li>①身体症状の存在（複数臓器・慢性経過）</li>
+              <li>②症状への過度な注目・関連した医療への過剰従事</li>
+              <li>③苦痛または機能障害</li>
+              <li>④「医学的に説明不能」の必須要件なし（←ICD-10との大きな違い）</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="danger-box">
+            <div class="font-bold text-red-800 mb-2 text-sm">ICD-10との概念変更（F45→6C20）</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs border-collapse">
+                <thead>
+                  <tr class="bg-red-100">
+                    <th class="p-2 text-left">ICD-10 F45系</th>
+                    <th class="p-2 text-left">ICD-11 6C20</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-red-100 text-gray-700">
+                  <tr>
+                    <td class="p-2">身体化障害・未分化型・機能性等の細分類多数</td>
+                    <td class="p-2">単一カテゴリ（重症度で分類）</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">「医学的説明不能」必須</td>
+                    <td class="p-2"><strong>不要</strong>（身体疾患との併存可）</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">心気症→F45.2</td>
+                    <td class="p-2">健康不安症→<span class="icd11-code">6B23</span>（強迫関連）</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">治療の要点</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・認知行動療法（CBT）が有効 <span class="badge-level-a">Level A</span></li>
+              <li>・身体症状に焦点化した精神療法（Pain management等）</li>
+              <li>・多科連携・「説明不能」の議論を避けた患者教育が重要</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 物質・嗜癖 ======= -->
+    <div id="tab-substance" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6C40–6C5Z）
+            </div>
+            <div class="text-sm mb-3">
+              <div class="font-bold text-gray-700 mb-1">物質使用障害（6C40–6C4Z）主要物質</div>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">アルコール</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">大麻</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">オピオイド</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">鎮静薬</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">コカイン</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">覚醒剤</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">MDMA</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">幻覚剤</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">ニコチン</span>
+                <span class="bg-teal-100 text-teal-800 text-xs px-2 py-0.5 rounded">カフェイン</span>
+              </div>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="font-bold text-gray-700">嗜癖行動（6C50–6C5Z）</div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6C50</span>
+                <span>ギャンブル症</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6C51</span>
+                <span><strong>ゲーム症</strong> <span class="badge-new">新設</span>：オンライン(6C51.0)/オフライン(6C51.1)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 mb-2 text-sm">ゲーム症（6C51）診断の3要件</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>①ゲーム行動への<strong>コントロール障害</strong>（開始・頻度・強度・終了）</li>
+              <li>②他の生活活動よりゲームを<strong>優先</strong></li>
+              <li>③有害結果があっても<strong>継続または増悪</strong></li>
+              <li class="text-gray-500 text-xs">通常12か月（重症例は短縮可）。有害ゲーム（QE22）とは別</li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">物質使用障害の用語整理</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs border-collapse">
+                <thead>
+                  <tr class="bg-green-100">
+                    <th class="p-2 text-left">ICD-11</th>
+                    <th class="p-2 text-left">DSM-5-TR</th>
+                    <th class="p-2 text-left">ICD-10</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-green-100 text-gray-700">
+                  <tr>
+                    <td class="p-2">有害な使用パターン</td>
+                    <td class="p-2">Mild SUD</td>
+                    <td class="p-2">有害な使用</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">依存症</td>
+                    <td class="p-2">Moderate/Severe SUD</td>
+                    <td class="p-2">依存症候群</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= 神経認知障害 ======= -->
+    <div id="tab-neurocog" class="tab-content">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <div class="criteria-box">
+            <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+              <i data-lucide="list" class="w-4 h-4"></i>
+              主要診断（ICD-11 6D70–6E0Z）
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6D70</span>
+                <span>せん妄（Delirium）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6D71</span>
+                <span>軽度神経認知障害（Mild NCD）</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="icd11-code flex-shrink-0">6D72</span>
+                <span>健忘障害</span>
+              </div>
+              <div class="flex items-start gap-2 flex-col">
+                <div class="text-xs font-bold text-gray-700">認知症（6D80–6D8Z）：病因別に分類</div>
+                <div class="ml-2 space-y-1 text-xs text-gray-600">
+                  <div><span class="icd11-code">6D80</span> Alzheimer型認知症（早発/晩発等サブコードあり）</div>
+                  <div><span class="icd11-code">6D81</span> 脳血管性認知症</div>
+                  <div><span class="icd11-code">6D82</span> Lewy小体型認知症</div>
+                  <div><span class="icd11-code">6D83</span> 前頭側頭型認知症</div>
+                  <div><span class="icd11-code">6D84</span> Parkinson病に伴う認知症</div>
+                  <div><span class="icd11-code">6D8Z</span> 詳細不明の認知症</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 mb-2 text-sm">ICD-10からの変更</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・F00–F09（器質性精神障害）→ 6D70–6E0Z へ再編</li>
+              <li>・「認知症」と「Major NCD」（DSM-5-TR）の概念がより近接</li>
+              <li>・「軽度認知障害（MCI）」= 軽度NCD (6D71)として整理</li>
+            </ul>
+          </div>
+          <div class="recommend-box mt-3">
+            <div class="font-bold text-green-800 mb-2 text-sm">DSM-5-TR 対応</div>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>・「Neurocognitive Disorders」として同等：Major NCD・Mild NCD・Delirium</li>
+              <li>・ICD-11 6D80 ≒ DSM-5-TR Major NCD</li>
+              <li>・ICD-11 6D71 ≒ DSM-5-TR Mild NCD（MCI）</li>
+              <li>・両者とも病因別特定子で分類（Alzheimer型、Lewy小体型等）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- section-card details -->
+
+
+  <!-- ======================================================
+       パーソナリティ障害 次元モデル 詳細
+  ======================================================= -->
+  <div class="section-card" id="pd-model">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="user-cog" class="w-6 h-6 text-violet-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">パーソナリティ障害（PD）次元モデル詳細</h2>
+        <p class="text-gray-500 text-sm">ICD-11の全面刷新 — 6D10重症度 ＋ 6D11特性ドメイン</p>
+        <div class="flex gap-2 mt-1">
+          <span class="icd11-code">6D10–6D11</span>
+          <span class="icd10-code">旧：F60–F62</span>
+          <span class="badge-changed">全面刷新</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-5">
+
+      <!-- 重症度分類 -->
+      <div>
+        <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+          <i data-lucide="bar-chart-2" class="w-5 h-5 text-violet-600"></i>
+          STEP 1：重症度を判定（6D10）
+        </h3>
+        <div class="space-y-3">
+          <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-xs font-bold">軽</div>
+              <span class="font-bold text-yellow-800 text-sm">軽度パーソナリティ障害 <span class="icd11-code">6D10.0</span></span>
+            </div>
+            <p class="text-xs text-gray-600">一部の関係・状況で自己/対人機能障害。社会職業的機能は比較的保持</p>
+          </div>
+          <div class="p-3 bg-orange-50 border border-orange-200 rounded-xl">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">中</div>
+              <span class="font-bold text-orange-800 text-sm">中等度パーソナリティ障害 <span class="icd11-code">6D10.1</span></span>
+            </div>
+            <p class="text-xs text-gray-600">多くの関係・状況で障害。社会職業的機能に著明な影響</p>
+          </div>
+          <div class="p-3 bg-red-50 border border-red-200 rounded-xl">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">重</div>
+              <span class="font-bold text-red-800 text-sm">重度パーソナリティ障害 <span class="icd11-code">6D10.2</span></span>
+            </div>
+            <p class="text-xs text-gray-600">ほぼ全ての関係・状況で重篤な障害。生活機能が著しく損なわれる</p>
+          </div>
+          <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-6 h-6 bg-gray-400 text-white rounded-full flex items-center justify-center text-xs font-bold">困</div>
+              <span class="font-bold text-gray-600 text-sm">人格困難（閾値下） <span class="font-mono text-xs bg-gray-300 px-1 rounded">QE50.7</span></span>
+            </div>
+            <p class="text-xs text-gray-500">PD基準を満たさないが、パターン的な人格の問題が臨床的に考慮される状態</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 特性ドメイン -->
+      <div>
+        <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+          <i data-lucide="git-branch" class="w-5 h-5 text-violet-600"></i>
+          STEP 2：特性ドメインを特定（6D11）
+        </h3>
+        <div class="space-y-2">
+          <div class="trait-domain border-blue-200 bg-blue-50">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="icd11-code text-xs">6D11.0</span>
+              <span class="font-bold text-blue-800 text-sm">Negative affectivity（否定的感情）</span>
+            </div>
+            <p class="text-xs text-gray-600">不安・抑うつ・感情的不安定・怒り・罪責感などの<strong>負の感情の頻度と強度が高い</strong></p>
+          </div>
+          <div class="trait-domain border-slate-200 bg-slate-50">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="icd11-code text-xs">6D11.1</span>
+              <span class="font-bold text-slate-800 text-sm">Detachment（離隔性）</span>
+            </div>
+            <p class="text-xs text-gray-600">他者との親密さの回避・感情表出の制限・社会的引きこもり・楽しみの欠如</p>
+          </div>
+          <div class="trait-domain border-red-200 bg-red-50">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="icd11-code text-xs">6D11.2</span>
+              <span class="font-bold text-red-800 text-sm">Dissociality（反社会性）</span>
+            </div>
+            <p class="text-xs text-gray-600">他者の権利・感情への無関心・冷淡さ・操作的行動・欺瞞・攻撃性</p>
+          </div>
+          <div class="trait-domain border-amber-200 bg-amber-50">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="icd11-code text-xs">6D11.3</span>
+              <span class="font-bold text-amber-800 text-sm">Disinhibition（脱抑制性）</span>
+            </div>
+            <p class="text-xs text-gray-600">衝動性・軽率さ・計画性の欠如・即時報酬優先・リスク回避の困難</p>
+          </div>
+          <div class="trait-domain border-teal-200 bg-teal-50">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="icd11-code text-xs">6D11.4</span>
+              <span class="font-bold text-teal-800 text-sm">Anankastia（強迫性）</span>
+            </div>
+            <p class="text-xs text-gray-600">厳格な完璧主義・規則への固着・秩序への固執・柔軟性の欠如・感情制御の硬直</p>
+          </div>
+          <div class="trait-domain border-purple-200 bg-purple-50">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="icd11-code text-xs">6D11.5</span>
+              <span class="font-bold text-purple-800 text-sm">Borderline pattern（境界性パターン）</span>
+              <span class="badge-changed text-xs">特殊</span>
+            </div>
+            <p class="text-xs text-gray-600">対人関係・自己像の不安定、見捨てられ恐怖、衝動性、自傷・自殺行動、慢性的空虚感。<br><strong>6D10（重症度）との組み合わせで使用</strong>。5ドメインと並ぶ「第6の修飾子」</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ICD-10との比較 -->
+    <div class="mt-5 overflow-x-auto">
+      <div class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <i data-lucide="arrows-left-right" class="w-5 h-5 text-gray-500"></i>
+        ICD-10（カテゴリ型）→ ICD-11（次元型）対応マッピング
+      </div>
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">ICD-10 F60系 (カテゴリ)</th>
+            <th class="text-left p-3 font-bold text-gray-700">DSM-5-TR Section II (カテゴリ)</th>
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">ICD-11 次元モデルでの対応（概略）</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.0</span> 妄想性PD</td>
+            <td class="p-3">Paranoid PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10（軽〜重）＋6D11.0（否定的感情）＋6D11.2（反社会性）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.1</span> 統合失調質PD</td>
+            <td class="p-3">Schizoid PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10＋6D11.1（離隔性）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.2</span> 反社会性PD</td>
+            <td class="p-3">Antisocial PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10（中〜重）＋6D11.2（反社会性）＋6D11.3（脱抑制性）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.3</span> 情緒不安定PD</td>
+            <td class="p-3">Borderline PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10＋<strong>6D11.5（境界性パターン）</strong>＋6D11.0</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.4</span> 演技性PD</td>
+            <td class="p-3">Histrionic PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10＋6D11.3（脱抑制性）＋6D11.0</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.5</span> 強迫性PD</td>
+            <td class="p-3">OC PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10＋6D11.4（強迫性）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.6</span> 不安性PD</td>
+            <td class="p-3">Avoidant PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10＋6D11.1（離隔性）＋6D11.0</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3"><span class="icd10-code">F60.7</span> 依存性PD</td>
+            <td class="p-3">Dependent PD</td>
+            <td class="p-3 text-sm text-gray-600">6D10＋6D11.0（否定的感情）＋6D11.3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ======================================================
+       ICD-11 vs DSM-5-TR 対照表
+  ======================================================= -->
+  <div class="section-card" id="comparison">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="columns-2" class="w-6 h-6 text-teal-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">ICD-11 vs DSM-5-TR 主要相違点</h2>
+        <p class="text-gray-500 text-sm">臨床実践で特に問題となる差異</p>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-gradient-to-r from-slate-700 to-teal-700 text-white">
+            <th class="text-left p-3 rounded-tl-lg font-bold w-1/4">領域</th>
+            <th class="text-left p-3 font-bold w-1/3">ICD-11</th>
+            <th class="text-left p-3 font-bold w-1/3">DSM-5-TR (2022)</th>
+            <th class="text-left p-3 rounded-tr-lg font-bold">臨床的含意</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-purple-700">複雑性PTSD</td>
+            <td class="p-3"><span class="icd11-code">6B41</span>として独立診断</td>
+            <td class="p-3 text-gray-500">独立した診断カテゴリなし<br>（PTSD基準内で部分的に対応）</td>
+            <td class="p-3 text-xs text-gray-600">慢性トラウマ（DV・虐待）の評価・治療計画に影響</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-violet-700">パーソナリティ障害</td>
+            <td class="p-3"><span class="icd11-code">6D10+6D11</span><br>次元モデル（重症度＋特性ドメイン）</td>
+            <td class="p-3">Section II：10カテゴリ型（主流）<br>Section III：代替次元モデル（研究用）</td>
+            <td class="p-3 text-xs text-gray-600">DSM-5-TRの臨床運用はまだカテゴリ型が主流。ICD-11先行</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-cyan-700">緊張病</td>
+            <td class="p-3"><span class="icd11-code">6A40-6A41</span><br>独立ブロック（文脈で分類）</td>
+            <td class="p-3">Specifierまたは別コード<br>（独立した大分類ではない）</td>
+            <td class="p-3 text-xs text-gray-600">コーディングの違いに注意（特に電子カルテ実装時）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-green-700">性別不合</td>
+            <td class="p-3"><span class="icd11-code">HA60</span>（第17章・非精神障害）</td>
+            <td class="p-3">「性別違和」（Gender Dysphoria）として第6章内に残存</td>
+            <td class="p-3 text-xs text-gray-600">ICD-11の脱病理化に対し、DSM-5-TRはまだ精神障害として分類</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-amber-700">遷延性悲嘆障害</td>
+            <td class="p-3"><span class="icd11-code">6B42</span>（6か月以上の悲嘆）</td>
+            <td class="p-3">2022年追加（12か月以上）<br>期間・基準が一致しない</td>
+            <td class="p-3 text-xs text-gray-600">有病率の研究比較に注意。診断閾値が異なる</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-blue-700">統合失調症サブタイプ</td>
+            <td class="p-3">廃止 → <span class="icd11-code">6A25</span>症状修飾子</td>
+            <td class="p-3">DSM-5（2013）ですでに廃止</td>
+            <td class="p-3 text-xs text-gray-600">この点は両者が一致（ICD-11はDSM-5より後に廃止）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-teal-700">身体症状障害</td>
+            <td class="p-3"><span class="icd11-code">6C20</span>身体的苦痛症<br>「医学的説明不能」不要</td>
+            <td class="p-3">「身体症状症」<br>苦痛・障害の程度が中心</td>
+            <td class="p-3 text-xs text-gray-600">両者とも説明可能性の議論から離脱。概念的に接近</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-slate-700">統合失調型</td>
+            <td class="p-3"><span class="icd11-code">6A22</span>（精神病スペクトラム）</td>
+            <td class="p-3">Schizotypal PD（パーソナリティ障害章）</td>
+            <td class="p-3 text-xs text-gray-600">DSM-5-TRとICD-11で章が異なる点に注意</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ======================================================
+       コード取り違い注意一覧
+  ======================================================= -->
+  <div class="section-card" id="codes">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="triangle-alert" class="w-6 h-6 text-red-600"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">コード取り違え注意事項</h2>
+        <p class="text-gray-500 text-sm">よくある誤りと重要な確認ポイント</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>
+          混同しやすいコード対
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2 p-2 bg-white rounded-lg">
+            <span class="icd11-code">6B40</span>
+            <span class="text-gray-500">PTSD</span>
+            <span class="text-gray-400 mx-1">≠</span>
+            <span class="icd11-code">6B41</span>
+            <span class="text-gray-500">複雑性PTSD</span>
+          </div>
+          <div class="flex items-center gap-2 p-2 bg-white rounded-lg">
+            <span class="icd11-code">6B83</span>
+            <span class="text-gray-500">ARFID</span>
+            <span class="text-gray-400 mx-1">≠</span>
+            <span class="icd11-code">6B84</span>
+            <span class="text-gray-500">異食症(Pica)</span>
+          </div>
+          <div class="flex items-center gap-2 p-2 bg-white rounded-lg flex-wrap">
+            <span class="icd11-code">6C51.0</span>
+            <span class="text-gray-500">オンラインゲーム症</span>
+            <span class="text-gray-400 mx-1">≠</span>
+            <span class="font-mono text-xs bg-red-100 text-red-700 px-1 rounded">6C51.2</span>
+            <span class="text-gray-500 text-xs">（このコードは存在しない）</span>
+          </div>
+          <div class="flex items-center gap-2 p-2 bg-white rounded-lg">
+            <span class="icd11-code">6C72</span>
+            <span class="text-gray-500">強迫的性行動症</span>
+            <span class="text-gray-400 mx-1">≠</span>
+            <span class="icd11-code">6D30+</span>
+            <span class="text-gray-500">パラフィリア障害</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <div class="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          章外・特殊配置コード
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-start gap-2 p-2 bg-white rounded-lg">
+            <span class="icd11-code flex-shrink-0">HA60</span>
+            <span class="text-gray-600">性別不合 → <strong>第17章</strong>（精神科章外）</span>
+          </div>
+          <div class="flex items-start gap-2 p-2 bg-white rounded-lg">
+            <span class="font-mono text-xs bg-emerald-700 text-white px-1 py-0.5 rounded flex-shrink-0">GA34.41</span>
+            <span class="text-gray-600">PMDD → <strong>生殖保健</strong>（精神科章外）</span>
+          </div>
+          <div class="flex items-start gap-2 p-2 bg-white rounded-lg">
+            <span class="font-mono text-xs bg-slate-700 text-white px-1 py-0.5 rounded flex-shrink-0">8A05.0</span>
+            <span class="text-gray-600">チック症・Tourette → <strong>第8章神経系疾患</strong></span>
+          </div>
+          <div class="flex items-start gap-2 p-2 bg-white rounded-lg">
+            <span class="icd11-code flex-shrink-0">6E69</span>
+            <span class="text-gray-600">身体疾患由来の緊張病 → <strong>二次症候群ブロック</strong></span>
+          </div>
+          <div class="flex items-start gap-2 p-2 bg-white rounded-lg">
+            <span class="font-mono text-xs bg-gray-500 text-white px-1 py-0.5 rounded flex-shrink-0">QE50.7</span>
+            <span class="text-gray-600">人格困難（閾値下） → <strong>健康状態に影響する因子</strong>ブロック</span>
+          </div>
+          <div class="flex items-start gap-2 p-2 bg-white rounded-lg">
+            <span class="icd11-code flex-shrink-0">6A25</span>
+            <span class="text-gray-600">統合失調症の症状プロファイル → <strong>主診断コードとしては使用不可（付加コードのみ）</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 参照ガイドライン -->
+    <div class="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+      <div class="flex items-center gap-2 mb-3">
+        <i data-lucide="book-open" class="w-5 h-5 text-gray-600"></i>
+        <span class="font-bold text-gray-700">主要参照ガイドライン・資料</span>
+      </div>
+      <div class="grid md:grid-cols-3 gap-3 text-xs text-gray-600">
+        <div class="bg-white rounded-lg p-3 border">
+          <div class="font-bold text-gray-700 mb-1">ICD-11 MMS</div>
+          <p>WHO ICD-11 for Mortality and Morbidity Statistics（v2026-01）</p>
+        </div>
+        <div class="bg-white rounded-lg p-3 border">
+          <div class="font-bold text-gray-700 mb-1">DSM-5-TR</div>
+          <p>Diagnostic and Statistical Manual of Mental Disorders, 5th Ed, Text Revision (APA, 2022)</p>
+        </div>
+        <div class="bg-white rounded-lg p-3 border">
+          <div class="font-bold text-gray-700 mb-1">ICD-11臨床記述・診断ガイドライン</div>
+          <p>WHO Clinical Descriptions and Diagnostic Guidelines for Mental and Behavioural Disorders</p>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mt-3">※日本でのICD-11本格運用は2028年の疾病分類改訂での導入予定。現行の保険請求・電子カルテはICD-10運用継続中。</p>
+    </div>
+  </div>
+
+</main>
+
+<footer class="bg-gray-800 text-white py-6 mt-8">
+  <div class="max-w-5xl mx-auto px-4 text-center">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <i data-lucide="brain" class="w-5 h-5 opacity-60"></i>
+      <span class="text-sm opacity-70">精神科疾患 全体像 — ICD-11 / DSM-5-TR 臨床参照ガイド</span>
+    </div>
+    <p class="text-xs text-gray-400">ICD-11 MMS v2026-01 準拠 ／ DSM-5-TR 2022 参照 ／ 外来診察用クイックリファレンス</p>
+    <p class="text-xs text-gray-500 mt-1">臨床使用に際しては最新のWHO公式ICD-11および国内ガイドラインを照合のこと</p>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  function switchTab(tabName) {
+    // すべてのタブコンテンツを非表示
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    // すべてのタブボタンのアクティブを解除
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+    // 対象を表示
+    const content = document.getElementById('tab-' + tabName);
+    if (content) content.classList.add('active');
+
+    // クリックされたボタンをアクティブに
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>
