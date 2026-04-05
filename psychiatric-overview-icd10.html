@@ -340,6 +340,31 @@
     .ev-a { background: #1d4ed8; color: #fff; }
     .ev-b { background: #059669; color: #fff; }
     .ev-c { background: #d97706; color: #fff; }
+    /* 関連治療薬 ON状態 */
+    .toggle-btn[data-panel*="meds"].on {
+      background: #16a34a;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(22,163,74,0.4);
+      transform: translateY(-2px);
+    }
+    .toggle-panel.open.panel-meds { border-left-color: #16a34a; }
+    /* 関連治療薬ボックス */
+    .meds-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #16a34a;
+      padding: 0.9rem 1.1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.65rem;
+    }
+    .meds-warn-box {
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      border-left: 4px solid #ea580c;
+      padding: 0.7rem 1rem;
+      border-radius: 0.6rem;
+      margin-bottom: 0.65rem;
+      font-size: 0.78rem;
+      color: #7c2d12;
+    }
     /* 評価スケールボックス */
     .scale-box {
       background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
@@ -558,6 +583,7 @@
         <button class="toggle-btn on" data-panel="diff-f0" onclick="togglePanel('diff-f0', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f0" onclick="togglePanel('scales-f0', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f0" onclick="togglePanel('notes-f0', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f0" onclick="togglePanel('meds-f0', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f0" onclick="togglePanel('codes-f0', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F0 -->
@@ -698,6 +724,49 @@
         </div>
       </div>
       <!-- Tab1: コード一覧 -->
+      <!-- Tab6: 関連治療薬 F0 -->
+      <div class="toggle-panel open panel-meds" id="meds-f0">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>認知症（ChEI・NMDA拮抗薬）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ドネペジル</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> ChEI・軽〜重度認知症・1日1回・5〜10mg
+            <span class="tool-tag">リバスチグミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> ChEI・パッチ製剤あり・レビー小体型認知症にも有効
+            <span class="tool-tag">ガランタミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> ChEI＋ニコチン性ACh受容体増感・8〜24mg/日
+            <span class="tool-tag">メマンチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> NMDA受容体拮抗・中等度〜重度認知症・単独またはChEI併用
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i>BPSD（行動・心理症状）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">クエチアピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 低用量（12.5〜100mg）・幻覚・興奮・不眠
+            <span class="tool-tag">リスペリドン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 攻撃性・興奮に有効・0.5〜1mg・EPS・脳血管イベントリスク
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 代謝副作用少ない・BPSD全般
+            <span class="tool-tag">トラゾドン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 不眠・興奮・非定型抗精神病薬が使えない場合
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i>せん妄</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ハロペリドール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 少量（0.5〜2mg）・静注可・過鎮静を避ける・QT延長注意
+            <span class="tool-tag">クエチアピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 低活動型せん妄・高齢者・過鎮静・低血圧に注意
+            <span class="tool-tag">スボレキサント</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 予防的不眠対応・BZD依存リスク回避
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• 抗精神病薬の認知症患者への使用は死亡リスク増加（FDA黒枠警告）・短期・最小量で</li>
+            <li>• BZD系は認知症・せん妄を悪化させるため原則禁忌</li>
+            <li>• ChEIの消化器症状（悪心・下痢）に注意・パッチ製剤で軽減可能</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f0">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -796,6 +865,7 @@
         <button class="toggle-btn on" data-panel="diff-f1" onclick="togglePanel('diff-f1', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f1" onclick="togglePanel('scales-f1', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f1" onclick="togglePanel('notes-f1', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f1" onclick="togglePanel('meds-f1', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f1" onclick="togglePanel('codes-f1', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F1 -->
@@ -940,6 +1010,55 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F1 -->
+      <div class="toggle-panel open panel-meds" id="meds-f1">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>アルコール依存 — 離脱治療</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ジアゼパム</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> BZD・離脱けいれん・振戦せん妄予防・5〜10mg漸減
+            <span class="tool-tag">ロラゼパム</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 肝機能低下時優先（直接抱合）・0.5〜2mg
+            <span class="tool-tag">チアミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> ウェルニッケ脳症予防・100〜300mg/日（必須）
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="heart-handshake" class="w-4 h-4"></i>アルコール依存 — 断酒維持</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">アカンプロセート</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> GABA/NMDA系・飲酒欲求軽減・666mg×3回
+            <span class="tool-tag">ナルトレキソン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> オピオイド受容体遮断・飲酒量軽減・25〜50mg/日
+            <span class="tool-tag">ジスルフィラム</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 嫌悪療法・アルデヒド脱水素酵素阻害・服薬管理要
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>オピオイド依存</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ブプレノルフィン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> μ受容体部分アゴニスト・維持療法・舌下錠
+            <span class="tool-tag">メサドン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 完全アゴニスト・維持療法・QT延長・専門施設で使用
+            <span class="tool-tag">ナルトレキソン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 遮断療法・離脱完了後に使用
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="wind" class="w-4 h-4"></i>ニコチン依存</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">バレニクリン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> α4β2受容体部分アゴニスト・禁煙成功率最高・悪心注意
+            <span class="tool-tag">ニコチン補充療法</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> NRT（パッチ・ガム・ロゼンジ）・禁煙外来の基本
+            <span class="tool-tag">ブプロピオン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> NDRI・精神科合併時に考慮・てんかん閾値低下注意
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• アルコール離脱BZD減量はCIWA-Arでモニタリングしながら漸減</li>
+            <li>• チアミン投与はブドウ糖液より先に（ウェルニッケ脳症予防）</li>
+            <li>• ブプレノルフィン導入前に十分な離脱徴候を確認（早期導入で急性離脱誘発リスク）</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f1">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1014,6 +1133,7 @@
         <button class="toggle-btn on" data-panel="diff-f2" onclick="togglePanel('diff-f2', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f2" onclick="togglePanel('scales-f2', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f2" onclick="togglePanel('notes-f2', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f2" onclick="togglePanel('meds-f2', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f2" onclick="togglePanel('codes-f2', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F2 -->
@@ -1168,6 +1288,57 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F2 -->
+      <div class="toggle-panel open panel-meds" id="meds-f2">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>第二世代（非定型）抗精神病薬 — ファーストライン</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">リスペリドン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> D2/5-HT2A・2〜6mg/日・バランスよい・LAIあり
+            <span class="tool-tag">オランザピン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 陽性・陰性症状・鎮静効果・体重増加・代謝症候群に注意
+            <span class="tool-tag">クエチアピン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 鎮静・不安・不眠合併時・眠気・代謝副作用
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> D2部分アゴニスト・代謝副作用少・アカシジア注意
+            <span class="tool-tag">パリペリドン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> リスペリドン活性代謝物・LAI（月1回・3ヶ月1回）
+            <span class="tool-tag">ブロナンセリン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> D2/D3/5-HT2A拮抗・日本で広く使用
+            <span class="tool-tag">ルラシドン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 代謝影響少・食後投与必須
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>第一世代（定型）抗精神病薬</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ハロペリドール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> D2遮断・陽性症状・急性期・静注可・EPS多い
+            <span class="tool-tag">クロルプロマジン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 鎮静効果大・低血圧・光線過敏
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i>治療抵抗性統合失調症</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">クロザピン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 2剤以上無効時・最強の抗精神病効果・無顆粒球症リスク（REMS必須・週1回血液検査）
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="plus-circle" class="w-4 h-4"></i>EPS対処・増強療法</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">ビペリデン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 抗パーキンソン薬・EPS対処・認知機能への影響に注意
+            <span class="tool-tag">バルプロ酸</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 興奮・攻撃性・気分安定目的の増強療法
+            <span class="tool-tag">ラモトリギン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> クロザピン増強療法・陰性症状・認知
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• 多剤大量療法は避け単剤最適化を優先（CPZ換算600mg以下目標）</li>
+            <li>• クロザピン：無顆粒球症（0.8%）・心筋炎（0.2%）・過鎮静・唾液過多</li>
+            <li>• 代謝症候群モニタリング：体重・血糖・脂質を定期的に</li>
+            <li>• NMS（悪性症候群）：高熱・筋強剛・意識障害 → 即座に中止・ICU管理</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f2">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1254,6 +1425,7 @@
         <button class="toggle-btn on" data-panel="diff-f3" onclick="togglePanel('diff-f3', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f3" onclick="togglePanel('scales-f3', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f3" onclick="togglePanel('notes-f3', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f3" onclick="togglePanel('meds-f3', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f3" onclick="togglePanel('codes-f3', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F3 -->
@@ -1397,6 +1569,60 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F3 -->
+      <div class="toggle-panel open panel-meds" id="meds-f3">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>うつ病 — SSRI（ファーストライン）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">エスシタロプラム</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 最も選択性高い・副作用少・10〜20mg/日
+            <span class="tool-tag">セルトラリン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 相互作用少・50〜200mg/日
+            <span class="tool-tag">パロキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 不安合併時・中断症候群に注意・20〜50mg/日
+            <span class="tool-tag">フルボキサミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> OCD合併・50〜200mg/日
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>うつ病 — SNRI・NaSSA・その他</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">デュロキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> SNRI・疼痛合併うつ・20〜60mg/日
+            <span class="tool-tag">ベンラファキシン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> SNRI・75〜225mg/日・高用量で血圧上昇注意
+            <span class="tool-tag">ミルナシプラン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> SNRI・25〜100mg/日
+            <span class="tool-tag">ミルタザピン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> NaSSA・鎮静・体重増加・不眠合併うつに有用
+            <span class="tool-tag">ボルチオキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> マルチモーダル・認知機能改善・10〜20mg/日
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>双極性障害 — 気分安定薬</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">炭酸リチウム</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 躁・維持・自殺予防効果・血中濃度管理（0.6〜1.2mEq/L）
+            <span class="tool-tag">バルプロ酸</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 躁・混合状態・急速交代型・400〜1200mg/日
+            <span class="tool-tag">カルバマゼピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 躁・混合状態・薬物相互作用多い
+            <span class="tool-tag">ラモトリギン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 双極性うつ予防・維持療法・超低用量から開始
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>双極性障害 — 抗精神病薬</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">オランザピン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 急性躁・混合状態・5〜20mg/日
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 躁・維持療法・代謝副作用少ない
+            <span class="tool-tag">クエチアピン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 双極性うつ・躁・維持に適応
+            <span class="tool-tag">ルラシドン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 双極性うつ（FDA承認）
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• 双極性障害へのSSRI単剤使用は躁転リスク → 気分安定薬と必ず併用</li>
+            <li>• リチウム：腎機能・甲状腺・中毒域（>1.5mEq/L）に注意・妊娠中は奇形リスク</li>
+            <li>• バルプロ酸：妊娠中は禁忌（神経管欠損・胎児バルプロ酸症候群）</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f3">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1485,6 +1711,7 @@
         <button class="toggle-btn on" data-panel="diff-f4" onclick="togglePanel('diff-f4', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f4" onclick="togglePanel('scales-f4', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f4" onclick="togglePanel('notes-f4', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f4" onclick="togglePanel('meds-f4', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f4" onclick="togglePanel('codes-f4', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F4 -->
@@ -1640,6 +1867,57 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F4 -->
+      <div class="toggle-panel open panel-meds" id="meds-f4">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>不安障害全般 — SSRI/SNRI（ファーストライン）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">パロキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> パニック・社交不安・PTSD・GADに日本承認
+            <span class="tool-tag">エスシタロプラム</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> GAD・社交不安障害
+            <span class="tool-tag">フルボキサミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> OCD・社交不安障害
+            <span class="tool-tag">セルトラリン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> PTSD・パニック障害・OCD
+            <span class="tool-tag">ベンラファキシン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> GAD・社交不安障害・パニック障害
+            <span class="tool-tag">デュロキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> GAD
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="plus-circle" class="w-4 h-4"></i>OCD（強迫症）追加薬</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">クロミプラミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> TCA・OCD第一選択の一つ・25〜250mg/日・心毒性注意
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> SSRI増強療法・部分奏効例に
+            <span class="tool-tag">リスペリドン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> SSRI増強・チック合併OCDに有効
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i>PTSD特異的薬物</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">プラゾシン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> α1遮断・悪夢・過覚醒症状に有効・1〜15mg就寝前
+            <span class="tool-tag">ミルタザピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 睡眠障害・悪夢合併PTSD
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i>BZD（補助的・短期使用のみ）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">クロナゼパム</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> パニック障害・GAD・長時間型
+            <span class="tool-tag">ロラゼパム</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 急性不安時・短時間型
+            <span class="tool-tag">アルプラゾラム</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> パニック障害・依存リスクに注意
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• SSRIは不安障害に対して開始初期（1〜2週）に不安増悪することがある → 超低用量から開始</li>
+            <li>• BZDは2〜4週以内の短期使用に限定・長期使用は依存・認知機能低下のリスク</li>
+            <li>• PTSDへのBZD投与は原則避ける（解離・フラッシュバック悪化の報告あり）</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f4">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1728,6 +2006,7 @@
         <button class="toggle-btn on" data-panel="diff-f5" onclick="togglePanel('diff-f5', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f5" onclick="togglePanel('scales-f5', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f5" onclick="togglePanel('notes-f5', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f5" onclick="togglePanel('meds-f5', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f5" onclick="togglePanel('codes-f5', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F5 -->
@@ -1860,6 +2139,52 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F5 -->
+      <div class="toggle-panel open panel-meds" id="meds-f5">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="moon" class="w-4 h-4"></i>不眠症（慢性不眠障害）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">スボレキサント</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> オレキシン受容体拮抗・依存性低・15〜20mg
+            <span class="tool-tag">レンボレキサント</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> オレキシン受容体拮抗・2.5〜10mg
+            <span class="tool-tag">ラメルテオン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> メラトニン受容体作動・依存性なし・睡眠相の調整
+            <span class="tool-tag">ゾルピデム</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 非BZD・入眠困難・短期（4週以内）
+            <span class="tool-tag">エスゾピクロン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 非BZD・入眠＋中途覚醒・1〜3mg
+            <span class="tool-tag">トラゾドン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 低用量（25〜100mg）・不眠合併うつ
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="sun" class="w-4 h-4"></i>ナルコレプシー・過眠症</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">モダフィニル</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 覚醒促進薬・ナルコレプシー・OSAHS残存眠気・200mg
+            <span class="tool-tag">ナトリウムオキシベート</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 夜間睡眠強化・カタプレキシー・日本未承認
+            <span class="tool-tag">クロミプラミン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> カタプレキシーに有効
+            <span class="tool-tag">ベンラファキシン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> カタプレキシー・REM抑制
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="utensils" class="w-4 h-4"></i>摂食障害</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">フルオキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 神経性過食症FDA承認・60mg/日・過食嘔吐衝動抑制
+            <span class="tool-tag">オランザピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 神経性無食欲症・体重増加・認知的固執の改善
+            <span class="tool-tag">トピラマート</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 過食嘔吐（神経性過食症・過食性障害）
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• 不眠症の薬物療法はCBT-I（認知行動療法）が第一選択・薬物は補助的に</li>
+            <li>• BZD系睡眠薬は長期使用で依存・翌朝の残遺効果・高齢者の転倒リスク</li>
+            <li>• 神経性無食欲症へのSSRIの有効性は体重回復後に限定的</li>
+            <li>• 過食嘔吐患者での低カリウム血症はQT延長に直結 → 定期的電解質チェック</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f5">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1942,6 +2267,7 @@
         <button class="toggle-btn on" data-panel="diff-f6" onclick="togglePanel('diff-f6', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f6" onclick="togglePanel('scales-f6', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f6" onclick="togglePanel('notes-f6', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f6" onclick="togglePanel('meds-f6', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f6" onclick="togglePanel('codes-f6', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F6 -->
@@ -2086,6 +2412,42 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F6 -->
+      <div class="toggle-panel open panel-meds" id="meds-f6">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>境界性人格障害（BPD）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">フルオキセチン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> SSRI・衝動性・感情不安定・自傷行為の軽減
+            <span class="tool-tag">バルプロ酸</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 気分安定・衝動性・怒りの爆発・自傷に有効
+            <span class="tool-tag">ラモトリギン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 感情不安定・衝動性・過食への補助
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 低用量・解離・微小精神病的症状・怒り
+            <span class="tool-tag">オランザピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 低用量・急性解離・衝動的自傷・短期使用
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i>その他の人格障害（補助的）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">SSRI一般</span><span class="ev-badge ev-c" title="専門家合意・補助的使用">Lv.C</span> 強迫性・回避性人格障害の不安・強迫症状に補助的
+            <span class="tool-tag">炭酸リチウム</span><span class="ev-badge ev-c" title="専門家合意・補助的使用">Lv.C</span> 反社会性・攻撃性（限定的なエビデンス）
+            <span class="tool-tag">バルプロ酸</span><span class="ev-badge ev-c" title="専門家合意・補助的使用">Lv.C</span> 反社会性・衝動的攻撃性
+            <span class="tool-tag">低用量抗精神病薬</span><span class="ev-badge ev-c" title="専門家合意・補助的使用">Lv.C</span> 猜疑性・統合失調型の認知的歪み
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• 人格障害への薬物療法は症状標的（symptom-targeted）が原則・人格構造の変容は心理療法が主体</li>
+            <li>• BPDへのBZDは衝動性・解離悪化・過量服薬リスクから原則避ける</li>
+            <li>• DBT（弁証法的行動療法）と薬物療法の併用が最も有効</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f6">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -2177,6 +2539,7 @@
         <button class="toggle-btn on" data-panel="diff-f7" onclick="togglePanel('diff-f7', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f7" onclick="togglePanel('scales-f7', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f7" onclick="togglePanel('notes-f7', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f7" onclick="togglePanel('meds-f7', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f7" onclick="togglePanel('codes-f7', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F7 -->
@@ -2292,6 +2655,46 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F7 -->
+      <div class="toggle-panel open panel-meds" id="meds-f7">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>行動問題・易刺激性・自傷・攻撃性</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">リスペリドン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> FDA承認（5〜16歳・易刺激性）・0.5〜3mg/日
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> FDA承認（6〜17歳）・易刺激性・2〜15mg/日
+            <span class="tool-tag">オランザピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 重篤な攻撃性・代謝副作用に注意
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="brain" class="w-4 h-4"></i>ADHD合併</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">メチルフェニデート</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 知的障害合併ADHDに有効（健常ADHDより効果は低い傾向）
+            <span class="tool-tag">アトモキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 非刺激薬・ADHD・自傷行為軽減の報告
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4"></i>てんかん合併・気分障害合併</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">バルプロ酸</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> てんかん・気分安定・攻撃性
+            <span class="tool-tag">ラモトリギン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> てんかん・双極性障害合併
+            <span class="tool-tag">SSRI一般</span><span class="ev-badge ev-c" title="専門家合意・補助的使用">Lv.C</span> 抑うつ・強迫症状合併時の補助
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• 知的障害患者は薬物感受性が高く副作用が出やすい → 低用量から開始</li>
+            <li>• 行動問題への薬物療法は行動分析（ABA）・環境調整を先行させる</li>
+            <li>• ポリファーマシーは認知・行動をさらに悪化させる可能性</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f7">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -2361,6 +2764,7 @@
         <button class="toggle-btn on" data-panel="diff-f8" onclick="togglePanel('diff-f8', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f8" onclick="togglePanel('scales-f8', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f8" onclick="togglePanel('notes-f8', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f8" onclick="togglePanel('meds-f8', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f8" onclick="togglePanel('codes-f8', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F8 -->
@@ -2488,6 +2892,46 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F8 -->
+      <div class="toggle-panel open panel-meds" id="meds-f8">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>ASD — 易刺激性・攻撃性・自傷行為</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">リスペリドン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> FDA/PMDA承認（5〜16歳）・0.5〜3mg/日
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> FDA承認（6〜17歳）・2〜15mg/日
+            <span class="tool-tag">オランザピン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 重度の攻撃性・代謝副作用に注意
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="moon" class="w-4 h-4"></i>ASD合併症状（不安・OCD・睡眠）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">フルボキサミン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> ASD合併強迫・反復行動・不安
+            <span class="tool-tag">セルトラリン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> ASD合併不安・変化への抵抗
+            <span class="tool-tag">メラトニン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 入眠困難・睡眠相後退・0.5〜5mg就寝前
+            <span class="tool-tag">ラメルテオン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> メラトニン受容体作動・依存性なし
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i>DCD・学習症（補助的）</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">メチルフェニデート</span><span class="ev-badge ev-c" title="専門家合意・補助的使用">Lv.C</span> DCD合併ADHD への対症療法（DCD自体への直接効果は限定的）
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• ASDの核心症状（社会的コミュニケーション障害・常同行動）への直接的な薬物療法はない</li>
+            <li>• SSRIはASD患者で活性化症候群（脱抑制・多動増悪）が起こりやすい → 超低用量から</li>
+            <li>• 感覚過敏・食事制限が薬物の吸収・副作用プロファイルに影響することがある</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f8">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -2574,6 +3018,7 @@
         <button class="toggle-btn on" data-panel="diff-f9" onclick="togglePanel('diff-f9', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
         <button class="toggle-btn on" data-panel="scales-f9" onclick="togglePanel('scales-f9', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
         <button class="toggle-btn on" data-panel="notes-f9" onclick="togglePanel('notes-f9', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        <button class="toggle-btn on" data-panel="meds-f9" onclick="togglePanel('meds-f9', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
         <button class="toggle-btn on" data-panel="codes-f9" onclick="togglePanel('codes-f9', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
       </div>
       <!-- Tab2: 診断基準 F9 -->
@@ -2744,6 +3189,55 @@
           </div>
         </div>
       </div>
+      <!-- Tab6: 関連治療薬 F9 -->
+      <div class="toggle-panel open panel-meds" id="meds-f9">
+        <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
+          <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
+          <span><span class="ev-badge ev-b">Lv.B</span>良好なエビデンス</span>
+          <span><span class="ev-badge ev-c">Lv.C</span>専門家合意</span>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>ADHD — 中枢刺激薬</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">メチルフェニデート</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> コンサータ（CR）・リタリン・DAT/NET阻害・日本第一選択
+            <span class="tool-tag">リスデキサンフェタミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> ビバンセ・プロドラッグ・乱用リスク低・30〜70mg/日
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>ADHD — 非刺激薬</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">アトモキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> ストラテラ・NET選択的阻害・依存リスクなし・効果発現2〜4週
+            <span class="tool-tag">グアンファシン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> インチュニブ・α2Aアゴニスト・衝動性・感情調節
+            <span class="tool-tag">クロニジン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> α2アゴニスト・ADHD合併チック・睡眠障害
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i>チック症・トゥレット症</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">アリピプラゾール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 日本第一選択・D2部分アゴニスト・1〜30mg/日
+            <span class="tool-tag">ハロペリドール</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 重症チック・低用量（0.5〜4mg）・EPSに注意
+            <span class="tool-tag">クロニジン</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> 軽〜中等度チック・ADHD合併に有用
+            <span class="tool-tag">トピラマート</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span> チック・体重減少副作用に注意
+          </div>
+        </div>
+        <div class="meds-box">
+          <div class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><i data-lucide="heart" class="w-4 h-4"></i>小児の強迫症・不安障害</div>
+          <div class="flex flex-wrap gap-2 text-sm text-gray-700">
+            <span class="tool-tag">フルボキサミン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 小児OCD・不安障害に承認・50〜200mg/日
+            <span class="tool-tag">セルトラリン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 小児OCD・強迫症・25〜200mg/日
+            <span class="tool-tag">フルオキセチン</span><span class="ev-badge ev-a" title="金標準・国際標準（承認・メタ解析/複数RCT）">Lv.A</span> 小児うつ・FDA承認（8歳以上）
+          </div>
+        </div>
+        <div class="meds-warn-box">
+          <div class="font-bold mb-1">⚠️ 主要な注意点</div>
+          <ul class="space-y-0.5">
+            <li>• メチルフェニデートは食欲抑制・身長発育遅延のリスク → 定期的に体重・身長モニタリング</li>
+            <li>• 18歳未満へのSSRI：抗うつ薬の自殺念慮増加リスク（FDA黒枠警告）→ 開始後1〜2週は密接に観察</li>
+            <li>• 中枢刺激薬は乱用リスクがある環境では管理方法を確認</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="toggle-panel open panel-codes" id="codes-f9">
       <div class="overflow-x-auto">
         <table class="code-table">
