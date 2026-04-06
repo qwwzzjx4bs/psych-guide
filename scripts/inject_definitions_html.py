@@ -22,12 +22,11 @@ INJECT_SCRIPT = """
     function expandDefRowStackLayout(tr) {
       if (tr.dataset.defStackLayout === '1') return;
       var tds = Array.prototype.slice.call(tr.querySelectorAll(':scope > td'));
-      if (tds.length !== 5) return;
+      if (tds.length !== 4) return;
       var icdTd = tds[0];
       var jaTd = tds[1];
       var enTd = tds[2];
       var defTd = tds[3];
-      var dsmTd = tds[4];
       if (!enTd.classList.contains('en-col') || !defTd.classList.contains('def-col')) return;
       tr._layoutStackCells = tds;
       tds.forEach(function (td) {
@@ -35,7 +34,7 @@ INJECT_SCRIPT = """
       });
       var table = tr.closest('table');
       var headRow = table && table.querySelector('thead tr');
-      var nCol = headRow ? headRow.cells.length : 5;
+      var nCol = headRow ? headRow.cells.length : 4;
       var wrap = document.createElement('td');
       wrap.className = 'def-expanded-stack-cell';
       wrap.colSpan = nCol;
@@ -55,8 +54,22 @@ INJECT_SCRIPT = """
         block.appendChild(body);
         stack.appendChild(block);
       }
-      addBlock('ICDコード', '', icdTd.innerHTML, false, 'row-def-stack__block--inline');
-      addBlock('日本語名', 'row-def-stack__body--ja', jaTd.innerHTML, false, 'row-def-stack__block--inline');
+      var icdHtml = icdTd.innerHTML;
+      var dsmLabelHtml = '';
+      var jaPrimaryHtml = jaTd.innerHTML;
+      var merged = icdTd.querySelector('.code-col-icd-dsm');
+      if (merged) {
+        var codePart = merged.querySelector('.code-col-icd-dsm__code');
+        var dsmPart = merged.querySelector('.code-col-icd-dsm__dsm');
+        if (codePart) icdHtml = codePart.innerHTML;
+        if (dsmPart) dsmLabelHtml = dsmPart.innerHTML;
+      }
+      addBlock('ICDコード', '', icdHtml, false, 'row-def-stack__block--inline');
+      if (dsmLabelHtml) {
+        addBlock('DSM-5-TR', 'row-def-stack__body--dsm text-gray-700', dsmLabelHtml, false, 'row-def-stack__block--inline');
+      }
+      addBlock('日本語名', 'row-def-stack__body--ja', jaPrimaryHtml, false, 'row-def-stack__block--inline');
+      addBlock('英語名', 'row-def-stack__body--en text-gray-500', enTd.innerHTML, false, 'row-def-stack__block--inline');
       addBlock('定義', 'row-def-stack__body--def text-gray-700', defTd.textContent, true);
       wrap.appendChild(stack);
       tr.appendChild(wrap);
@@ -67,7 +80,7 @@ INJECT_SCRIPT = """
       var wrap = tr.querySelector('td.def-expanded-stack-cell');
       if (wrap) wrap.remove();
       var saved = tr._layoutStackCells;
-      if (saved && saved.length === 5) {
+      if (saved && saved.length === 4) {
         saved.forEach(function (cell) {
           tr.appendChild(cell);
         });
