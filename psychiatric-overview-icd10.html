@@ -185,10 +185,21 @@
       font-weight: 700;
       color: white;
       text-decoration: none;
-      transition: opacity 0.15s;
+      transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
       white-space: nowrap;
     }
     .nav-btn:hover { opacity: 0.85; }
+    .sticky-nav a.nav-btn.nav-btn--active {
+      opacity: 1 !important;
+      transform: scale(1.07);
+      box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.95),
+        0 0 0 4px #0f172a,
+        0 6px 18px rgba(15, 23, 42, 0.28);
+      filter: brightness(1.14) saturate(1.08);
+      position: relative;
+      z-index: 2;
+    }
 
     /* 検索 */
     .search-box {
@@ -258,6 +269,23 @@
       border-radius: 0.875rem;
       border: 1px solid #e2e8f0;
     }
+    .toggle-nav--per-panel {
+      margin-bottom: 0.75rem;
+      padding: 0.45rem 0.55rem;
+    }
+    /* 各F：表示切替ボタン1本を横幅いっぱいにし、ラベルを中央へ */
+    .toggle-nav--per-panel .toggle-btn {
+      width: 100%;
+      box-sizing: border-box;
+      justify-content: center;
+      text-align: center;
+      padding: 0.5rem 0.65rem;
+      gap: 0.28rem;
+    }
+    /* ボタンは常に表示し、本文だけ .toggle-panel で開閉 */
+    .f-panel-shell {
+      margin-bottom: 0.35rem;
+    }
     .toggle-btn {
       padding: 0.5rem 1rem;
       border-radius: 0.6rem;
@@ -317,7 +345,7 @@
     .toggle-panel.open.panel-diff    { border-left-color: #6d28d9; }
     .toggle-panel.open.panel-scales  { border-left-color: #0891b2; }
     .toggle-panel.open.panel-notes   { border-left-color: #d97706; }
-    /* 評価スケール ON状態 */
+    /* 評価尺度 ON状態 */
     .toggle-btn[data-panel*="scales"].on {
       background: #0891b2;
       color: #ffffff;
@@ -365,7 +393,7 @@
       font-size: 0.78rem;
       color: #7c2d12;
     }
-    /* 評価スケールボックス */
+    /* 評価尺度ボックス */
     .scale-box {
       background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
       border-left: 4px solid #0891b2;
@@ -577,16 +605,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F0 -->
-      <div class="toggle-nav" id="tabs-f0">
-        <button class="toggle-btn on" data-panel="criteria-f0" onclick="togglePanel('criteria-f0', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f0" onclick="togglePanel('diff-f0', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f0" onclick="togglePanel('scales-f0', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f0" onclick="togglePanel('notes-f0', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f0" onclick="togglePanel('meds-f0', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f0" onclick="togglePanel('codes-f0', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F0 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f0" onclick="togglePanel('criteria-f0', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f0">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3">
@@ -627,8 +650,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F0 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f0" onclick="togglePanel('diff-f0', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f0">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -645,8 +674,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F0 -->
+
+      <!-- Tab5: 評価尺度 F0 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f0" onclick="togglePanel('scales-f0', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f0">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -691,7 +726,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F0 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f0" onclick="togglePanel('notes-f0', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f0">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -712,7 +753,7 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール・ツール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度・ツール</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">MMSE</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>認知症スクリーニング（30点満点、23点以下で認知症疑い）
             <span class="tool-tag">MoCA</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>軽度認知障害の検出に優れる（25点以下で注意）
@@ -723,8 +764,14 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab1: コード一覧 -->
       <!-- Tab6: 関連治療薬 F0 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f0" onclick="togglePanel('meds-f0', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f0">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -766,7 +813,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f0" onclick="togglePanel('codes-f0', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f0">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -818,7 +871,9 @@
           </tbody>
         </table>
       </div>
-      </div><!-- /codes-f0 -->
+      </div>
+      </div>
+<!-- /codes-f0 -->
     </div>
   </div>
 
@@ -859,16 +914,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F1 -->
-      <div class="toggle-nav" id="tabs-f1">
-        <button class="toggle-btn on" data-panel="criteria-f1" onclick="togglePanel('criteria-f1', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f1" onclick="togglePanel('diff-f1', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f1" onclick="togglePanel('scales-f1', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f1" onclick="togglePanel('notes-f1', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f1" onclick="togglePanel('meds-f1', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f1" onclick="togglePanel('codes-f1', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F1 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f1" onclick="togglePanel('criteria-f1', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f1">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3">
@@ -910,8 +960,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F1 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f1" onclick="togglePanel('diff-f1', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f1">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -936,8 +992,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F1 -->
+
+      <!-- Tab5: 評価尺度 F1 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f1" onclick="togglePanel('scales-f1', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f1">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -979,7 +1041,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F1 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f1" onclick="togglePanel('notes-f1', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f1">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -1000,7 +1068,7 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">AUDIT</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>アルコール使用障害同定テスト（8点以上：危険飲酒）
             <span class="tool-tag">CAGE</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>4項目スクリーニング（2項目以上陽性で要精査）
@@ -1010,7 +1078,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F1 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f1" onclick="togglePanel('meds-f1', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f1">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -1058,7 +1132,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f1" onclick="togglePanel('codes-f1', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f1">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1091,7 +1171,9 @@
           </tbody>
         </table>
       </div>
-      </div><!-- /codes-f1 -->
+      </div>
+      </div>
+<!-- /codes-f1 -->
     </div>
   </div>
 
@@ -1127,16 +1209,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F2 -->
-      <div class="toggle-nav" id="tabs-f2">
-        <button class="toggle-btn on" data-panel="criteria-f2" onclick="togglePanel('criteria-f2', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f2" onclick="togglePanel('diff-f2', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f2" onclick="togglePanel('scales-f2', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f2" onclick="togglePanel('notes-f2', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f2" onclick="togglePanel('meds-f2', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f2" onclick="togglePanel('codes-f2', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F2 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f2" onclick="togglePanel('criteria-f2', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f2">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3">
@@ -1194,8 +1271,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F2 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f2" onclick="togglePanel('diff-f2', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f2">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -1211,8 +1294,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F2 -->
+
+      <!-- Tab5: 評価尺度 F2 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f2" onclick="togglePanel('scales-f2', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f2">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -1257,7 +1346,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F2 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f2" onclick="togglePanel('notes-f2', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f2">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -1278,7 +1373,7 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">PANSS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>陽性・陰性症状評価尺度（30項目）
             <span class="tool-tag">BPRS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>簡易精神症状評価尺度（18項目）
@@ -1288,7 +1383,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F2 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f2" onclick="togglePanel('meds-f2', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f2">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -1338,7 +1439,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f2" onclick="togglePanel('codes-f2', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f2">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1382,7 +1489,9 @@
       <div class="mt-3 text-xs text-gray-500 bg-purple-50 rounded-lg p-3">
         <strong class="text-purple-700">F21の位置づけ：</strong>ICD-10では精神病性障害の章（F20-F29）に分類されるが、DSM-5-TRでは<strong>パーソナリティ障害の章</strong>（Cluster A）に配置されている点に注意。
       </div>
-      </div><!-- /codes-f2 -->
+      </div>
+      </div>
+<!-- /codes-f2 -->
     </div>
   </div>
 
@@ -1419,16 +1528,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F3 -->
-      <div class="toggle-nav" id="tabs-f3">
-        <button class="toggle-btn on" data-panel="criteria-f3" onclick="togglePanel('criteria-f3', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f3" onclick="togglePanel('diff-f3', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f3" onclick="togglePanel('scales-f3', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f3" onclick="togglePanel('notes-f3', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f3" onclick="togglePanel('meds-f3', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f3" onclick="togglePanel('codes-f3', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F3 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f3" onclick="togglePanel('criteria-f3', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f3">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3">
@@ -1480,8 +1584,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F3 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f3" onclick="togglePanel('diff-f3', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f3">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -1498,8 +1608,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F3 -->
+
+      <!-- Tab5: 評価尺度 F3 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f3" onclick="togglePanel('scales-f3', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f3">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -1537,7 +1653,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F3 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f3" onclick="togglePanel('notes-f3', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f3">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>最重要の落とし穴：双極性障害の見落とし</div>
@@ -1558,7 +1680,7 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">PHQ-9</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>うつ病重症度評価（9項目、10点以上で中等度）
             <span class="tool-tag">QIDS-J</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>抑うつ症状簡易評価（16項目）
@@ -1569,7 +1691,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F3 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f3" onclick="togglePanel('meds-f3', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f3">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -1622,7 +1750,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f3" onclick="togglePanel('codes-f3', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f3">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1669,7 +1803,9 @@
           </tbody>
         </table>
       </div>
-      </div><!-- /codes-f3 -->
+      </div>
+      </div>
+<!-- /codes-f3 -->
     </div>
   </div>
 
@@ -1705,16 +1841,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F4 -->
-      <div class="toggle-nav" id="tabs-f4">
-        <button class="toggle-btn on" data-panel="criteria-f4" onclick="togglePanel('criteria-f4', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f4" onclick="togglePanel('diff-f4', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f4" onclick="togglePanel('scales-f4', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f4" onclick="togglePanel('notes-f4', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f4" onclick="togglePanel('meds-f4', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f4" onclick="togglePanel('codes-f4', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F4 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f4" onclick="togglePanel('criteria-f4', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f4">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
@@ -1770,8 +1901,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F4 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f4" onclick="togglePanel('diff-f4', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f4">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -1788,8 +1925,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F4 -->
+
+      <!-- Tab5: 評価尺度 F4 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f4" onclick="togglePanel('scales-f4', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f4">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -1835,7 +1978,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F4 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f4" onclick="togglePanel('notes-f4', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f4">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -1856,7 +2005,7 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">GAD-7</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>全般不安症評価（7項目、10点以上で中等度）
             <span class="tool-tag">PDSS</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>パニック障害重症度評価尺度
@@ -1867,7 +2016,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F4 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f4" onclick="togglePanel('meds-f4', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f4">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -1917,7 +2072,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f4" onclick="togglePanel('codes-f4', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f4">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -1976,7 +2137,9 @@
         <strong class="text-teal-700">F45の概念的転換：</strong>
         ICD-10では「医学的に説明できない症状」が診断要件だったが、DSM-5-TRの身体症状症では<strong>この要件を廃止</strong>し、症状への過度な思考・感情・行動が診断基準の中心となった。これにより心気症は「病気不安症 (Illness Anxiety Disorder)」として独立した。
       </div>
-      </div><!-- /codes-f4 -->
+      </div>
+      </div>
+<!-- /codes-f4 -->
     </div>
   </div>
 
@@ -2000,16 +2163,11 @@
       </div>
     </div>
     <div class="cat-body" id="f5-body">
-      <!-- タブナビ F5 -->
-      <div class="toggle-nav" id="tabs-f5">
-        <button class="toggle-btn on" data-panel="criteria-f5" onclick="togglePanel('criteria-f5', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f5" onclick="togglePanel('diff-f5', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f5" onclick="togglePanel('scales-f5', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f5" onclick="togglePanel('notes-f5', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f5" onclick="togglePanel('meds-f5', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f5" onclick="togglePanel('codes-f5', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F5 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f5" onclick="togglePanel('criteria-f5', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f5">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
@@ -2052,8 +2210,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F5 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f5" onclick="togglePanel('diff-f5', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f5">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -2068,8 +2232,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F5 -->
+
+      <!-- Tab5: 評価尺度 F5 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f5" onclick="togglePanel('scales-f5', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f5">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -2108,7 +2278,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F5 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f5" onclick="togglePanel('notes-f5', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f5">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -2129,7 +2305,7 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">EDE-Q</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>摂食障害評価質問票
             <span class="tool-tag">EAT-26</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>摂食態度検査（スクリーニング）
@@ -2139,7 +2315,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F5 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f5" onclick="togglePanel('meds-f5', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f5">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -2184,7 +2366,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f5" onclick="togglePanel('codes-f5', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f5">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -2226,7 +2414,9 @@
           </tbody>
         </table>
       </div>
-      </div><!-- /codes-f5 -->
+      </div>
+      </div>
+<!-- /codes-f5 -->
     </div>
   </div>
 
@@ -2261,16 +2451,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F6 -->
-      <div class="toggle-nav" id="tabs-f6">
-        <button class="toggle-btn on" data-panel="criteria-f6" onclick="togglePanel('criteria-f6', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f6" onclick="togglePanel('diff-f6', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f6" onclick="togglePanel('scales-f6', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f6" onclick="togglePanel('notes-f6', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f6" onclick="togglePanel('meds-f6', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f6" onclick="togglePanel('codes-f6', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F6 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f6" onclick="togglePanel('criteria-f6', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f6">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
@@ -2320,8 +2505,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F6 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f6" onclick="togglePanel('diff-f6', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f6">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -2337,8 +2528,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F6 -->
+
+      <!-- Tab5: 評価尺度 F6 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f6" onclick="togglePanel('scales-f6', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f6">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -2382,7 +2579,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F6 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f6" onclick="togglePanel('notes-f6', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f6">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -2403,16 +2606,22 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">SCID-5-PD</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>構造化臨床面接（パーソナリティ障害）
-            <span class="tool-tag">ZAN-BPD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Zanarini BPD評価スケール
+            <span class="tool-tag">ZAN-BPD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>Zanarini BPD評価尺度
             <span class="tool-tag">MSI-BPD</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>BPDスクリーニング質問票（10項目）
             <span class="tool-tag">PCL-R</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>精神病質チェックリスト（ASPD評価）
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F6 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f6" onclick="togglePanel('meds-f6', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f6">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -2447,7 +2656,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f6" onclick="togglePanel('codes-f6', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f6">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -2497,7 +2712,9 @@
           </tbody>
         </table>
       </div>
-      </div><!-- /codes-f6 -->
+      </div>
+      </div>
+<!-- /codes-f6 -->
     </div>
   </div>
 
@@ -2533,16 +2750,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F7 -->
-      <div class="toggle-nav" id="tabs-f7">
-        <button class="toggle-btn on" data-panel="criteria-f7" onclick="togglePanel('criteria-f7', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f7" onclick="togglePanel('diff-f7', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f7" onclick="togglePanel('scales-f7', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f7" onclick="togglePanel('notes-f7', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f7" onclick="togglePanel('meds-f7', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f7" onclick="togglePanel('codes-f7', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F7 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f7" onclick="togglePanel('criteria-f7', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f7">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
@@ -2572,8 +2784,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F7 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f7" onclick="togglePanel('diff-f7', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f7">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -2588,8 +2806,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F7 -->
+
+      <!-- Tab5: 評価尺度 F7 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f7" onclick="togglePanel('scales-f7', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f7">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -2625,7 +2849,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F7 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f7" onclick="togglePanel('notes-f7', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f7">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -2655,7 +2885,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F7 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f7" onclick="togglePanel('meds-f7', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f7">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -2694,7 +2930,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f7" onclick="togglePanel('codes-f7', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f7">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -2722,7 +2964,9 @@
         <strong class="text-gray-700">第4桁の行動障害コード：</strong>F7x の第4桁（.0〜.9）は行動障害の有無・重症度を示す。
         ICD-10-CMの Intellectual disabilities ブロックにそのまま対応し、DSM-5-TRでは適応機能の3ドメイン評価に相当。
       </div>
-      </div><!-- /codes-f7 -->
+      </div>
+      </div>
+<!-- /codes-f7 -->
     </div>
   </div>
 
@@ -2758,16 +3002,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F8 -->
-      <div class="toggle-nav" id="tabs-f8">
-        <button class="toggle-btn on" data-panel="criteria-f8" onclick="togglePanel('criteria-f8', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f8" onclick="togglePanel('diff-f8', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f8" onclick="togglePanel('scales-f8', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f8" onclick="togglePanel('notes-f8', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f8" onclick="togglePanel('meds-f8', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f8" onclick="togglePanel('codes-f8', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F8 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f8" onclick="togglePanel('criteria-f8', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f8">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
@@ -2799,8 +3038,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F8 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f8" onclick="togglePanel('diff-f8', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f8">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -2816,8 +3061,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F8 -->
+
+      <!-- Tab5: 評価尺度 F8 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f8" onclick="togglePanel('scales-f8', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f8">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -2861,7 +3112,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F8 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f8" onclick="togglePanel('notes-f8', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f8">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -2892,7 +3149,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F8 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f8" onclick="togglePanel('meds-f8', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f8">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -2931,7 +3194,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f8" onclick="togglePanel('codes-f8', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f8">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -2976,7 +3245,9 @@
         ICD-10では独立診断として存在するが、DSM-5-TRではASDの診断カテゴリに統合。
         日本では保険請求・診断書記載でF84.5を使い続ける場合も多い（ICD-10準拠の診療報酬上の慣習）。
       </div>
-      </div><!-- /codes-f8 -->
+      </div>
+      </div>
+<!-- /codes-f8 -->
     </div>
   </div>
 
@@ -3012,16 +3283,11 @@
         </div>
       </div>
 
-      <!-- タブナビ F9 -->
-      <div class="toggle-nav" id="tabs-f9">
-        <button class="toggle-btn on" data-panel="criteria-f9" onclick="togglePanel('criteria-f9', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
-        <button class="toggle-btn on" data-panel="diff-f9" onclick="togglePanel('diff-f9', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
-        <button class="toggle-btn on" data-panel="scales-f9" onclick="togglePanel('scales-f9', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価スケール</button>
-        <button class="toggle-btn on" data-panel="notes-f9" onclick="togglePanel('notes-f9', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
-        <button class="toggle-btn on" data-panel="meds-f9" onclick="togglePanel('meds-f9', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
-        <button class="toggle-btn on" data-panel="codes-f9" onclick="togglePanel('codes-f9', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
-      </div>
       <!-- Tab2: 診断基準 F9 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="criteria-f9" onclick="togglePanel('criteria-f9', this)"><i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>診断基準</button>
+        </div>
       <div class="toggle-panel open panel-criteria" id="criteria-f9">
         <div class="criteria-box">
           <div class="flex items-center gap-2 mb-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-blue-700"></i>
@@ -3095,8 +3361,14 @@
           </div>
         </div>
       </div>
+      </div>
+
 
       <!-- Tab3: 鑑別 F9 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="diff-f9" onclick="togglePanel('diff-f9', this)"><i data-lucide="git-branch" class="w-3.5 h-3.5"></i>類似分類との鑑別</button>
+        </div>
       <div class="toggle-panel open panel-diff" id="diff-f9">
         <div class="overflow-x-auto">
           <table class="diff-table">
@@ -3113,8 +3385,14 @@
           </table>
         </div>
       </div>
+      </div>
 
-      <!-- Tab5: 評価スケール F9 -->
+
+      <!-- Tab5: 評価尺度 F9 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="scales-f9" onclick="togglePanel('scales-f9', this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i>評価尺度</button>
+        </div>
       <div class="toggle-panel open panel-scales" id="scales-f9">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>金標準・国際標準</span>
@@ -3158,7 +3436,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab4: 注意点 F9 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="notes-f9" onclick="togglePanel('notes-f9', this)"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>診断の注意点</button>
+        </div>
       <div class="toggle-panel open panel-notes" id="notes-f9">
         <div class="danger-box">
           <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="x-circle" class="w-4 h-4"></i>見逃しやすい落とし穴</div>
@@ -3179,7 +3463,7 @@
           </ul>
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価スケール</div>
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>主要評価尺度</div>
           <div class="flex flex-wrap gap-2 text-sm text-gray-600">
             <span class="tool-tag">CAARS</span><span class="ev-badge ev-a" title="金標準・国際標準（メタ解析/複数RCTで検証）">Lv.A</span>Conners成人ADHD評価尺度（ADHD成人）
             <span class="tool-tag">DIVA 2.0</span><span class="ev-badge ev-b" title="良好なエビデンス（コホート/前向き研究）">Lv.B</span>ADHD成人診断半構造化面接
@@ -3189,7 +3473,13 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- Tab6: 関連治療薬 F9 -->
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="meds-f9" onclick="togglePanel('meds-f9', this)"><i data-lucide="pill" class="w-3.5 h-3.5"></i>関連治療薬</button>
+        </div>
       <div class="toggle-panel open panel-meds" id="meds-f9">
         <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3 px-1">
           <span><span class="ev-badge ev-a">Lv.A</span>承認・RCT複数</span>
@@ -3237,7 +3527,13 @@
           </ul>
         </div>
       </div>
+      </div>
+
       
+      <div class="f-panel-shell">
+        <div class="toggle-nav toggle-nav--per-panel">
+        <button class="toggle-btn on" data-panel="codes-f9" onclick="togglePanel('codes-f9', this)"><i data-lucide="list" class="w-3.5 h-3.5"></i>コード一覧</button>
+        </div>
       <div class="toggle-panel open panel-codes" id="codes-f9">
       <div class="overflow-x-auto">
         <table class="code-table">
@@ -3286,7 +3582,9 @@
           </tbody>
         </table>
       </div>
-      </div><!-- /codes-f9 -->
+      </div>
+      </div>
+<!-- /codes-f9 -->
     </div>
   </div>
 
@@ -3351,7 +3649,20 @@
       else if (id.startsWith('diff'))     p.classList.add('panel-diff');
       else if (id.startsWith('notes'))    p.classList.add('panel-notes');
     });
+    syncJumpNavHighlight();
   });
+
+  function syncJumpNavHighlight() {
+    const nav = document.querySelector('.sticky-nav');
+    if (!nav) return;
+    nav.querySelectorAll('a.nav-btn.nav-btn--active').forEach((a) => a.classList.remove('nav-btn--active'));
+    const openBodies = document.querySelectorAll('.cat-body.open');
+    if (openBodies.length !== 1) return;
+    const m = openBodies[0].id.match(/^(f\d+)-body$/);
+    if (!m) return;
+    const link = nav.querySelector('a.nav-btn[href="#' + m[1] + '"]');
+    if (link) link.classList.add('nav-btn--active');
+  }
 
   // トグル切り替え（各パネルを独立して開閉）
   function togglePanel(panelId, btn) {
@@ -3382,6 +3693,7 @@
       body.querySelectorAll('.toggle-panel').forEach(p => p.classList.add('open'));
       body.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.add('on'));
     }
+    syncJumpNavHighlight();
   }
 
   function expandAll() {
@@ -3391,6 +3703,7 @@
       b.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.add('on'));
     });
     document.querySelectorAll('.chevron').forEach(c => c.classList.add('open'));
+    syncJumpNavHighlight();
   }
 
   function collapseAll() {
@@ -3400,6 +3713,7 @@
       b.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.remove('on'));
     });
     document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+    syncJumpNavHighlight();
   }
 
   // ジャンプバーのオフセット補正（sticky-nav の高さ分を引く）
@@ -3426,6 +3740,7 @@
       b.querySelectorAll('.toggle-btn').forEach(b2 => b2.classList.remove('on'));
     });
     document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+    syncJumpNavHighlight();
   })();
 
   // 検索・フィルタリング
@@ -3469,6 +3784,7 @@
 
     resultCount.textContent = `${matchCount} 件ヒット`;
     resultCount.classList.remove('hidden');
+    syncJumpNavHighlight();
   });
 
   // Lucide icons 初期化

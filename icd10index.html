@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="app-version" content="1.5.0">
   <title>ICD-10 精神科疾患分類 全体像 F0〜F9 | 精神科臨床ガイド</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,12 +15,6 @@
       --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
     }
     body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
-    /* ページ内リンク（ジャンプ #f0 など）をスムーズスクロール */
-    @media (prefers-reduced-motion: no-preference) {
-      html {
-        scroll-behavior: smooth;
-      }
-    }
     .header-gradient { background: var(--psych-gradient); }
 
     /* カテゴリ色 */
@@ -178,28 +171,9 @@
       border-bottom: 1px solid #e2e8f0;
       box-shadow: 0 2px 4px rgba(0,0,0,0.06);
     }
-    /* ジャンプバー分のオフセット補正（2段ジャンプ＋表示バーを想定） */
+    /* ジャンプバー分のオフセット補正 */
     .section-card {
-      scroll-margin-top: 184px;
-    }
-    /* ジャンプ：横スクロールなし・10個を常に2段（5列×2行）、幅に応じて文字サイズのみ調整 */
-    .jump-nav-grid {
-      display: grid;
-      gap: clamp(0.35rem, 1.35vw, 0.55rem);
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-    .jump-nav-grid .nav-btn {
-      justify-content: center;
-      text-align: center;
-      white-space: normal;
-      line-height: 1.2;
-      min-height: clamp(2.2rem, 7vw, 2.85rem);
-      padding: clamp(0.32rem, 1.05vw, 0.48rem) clamp(0.28rem, 1.35vw, 0.6rem);
-      /* 5列×2行を維持しつつ、はみ出さない範囲で最大級に（狭い幅は下限で抑える） */
-      font-size: clamp(0.74rem, 2.85vw, 0.98rem);
-      font-weight: 700;
-      word-break: keep-all;
-      overflow-wrap: break-word;
+      scroll-margin-top: 140px;
     }
     .nav-btn {
       display: inline-flex;
@@ -471,7 +445,7 @@
     }
     
     
-    /* 表示バー（グローバル切替）ボタンのベーススタイル */
+    /* 表示切替バー（グローバル）ボタンのベーススタイル */
 .global-toggle-btn {
   display: inline-flex;
   align-items: center;
@@ -498,9 +472,9 @@
 .global-toggle-btn.btn-diff.on     { background-color: #9333ea; } /* 鑑別 */
 .global-toggle-btn.btn-scales.on   { background-color: #0891b2; } /* 尺度 */
 .global-toggle-btn.btn-notes.on    { background-color: #d97706; } /* 注意 */
-.global-toggle-btn.btn-meds.on     { background-color: #16a34a; } /* 薬 */
+.global-toggle-btn.btn-meds.on     { background-color: #16a34a; } /* 治療薬 */
 .global-toggle-btn.btn-codes.on    { background-color: #334155; } /* コード */
-.global-toggle-btn.btn-nonpharm.on  { background-color: #7c3aed; } /* 非薬 */
+.global-toggle-btn.btn-nonpharm.on  { background-color: #7c3aed; } /* 非薬物療法 */
     
 
 
@@ -559,9 +533,10 @@
 
 <!-- スティッキーナビ（修正版：ジャンプバーと切替ボタンを統合） -->
 <nav class="sticky-nav no-print">
-  <!-- 上段：ジャンプ（ラベルなし・折り返しで全ボタン常時表示） -->
-  <div class="max-w-6xl mx-auto px-4 py-2 border-b border-gray-100">
-    <div class="jump-nav-grid">
+  <!-- 上段：ジャンプバー -->
+  <div class="max-w-6xl mx-auto px-4 py-2 border-b border-gray-100 overflow-x-auto">
+    <div class="flex items-center gap-2 min-w-max">
+      <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider mr-1">ジャンプ:</span>
       <a href="#f0" class="nav-btn f0-grad">F0 器質性</a>
       <a href="#f1" class="nav-btn f1-grad">F1 物質</a>
       <a href="#f2" class="nav-btn f2-grad">F2 統合失調症</a>
@@ -575,10 +550,10 @@
     </div>
   </div>
   
-<!-- 下段：表示（グローバル切替） -->
+<!-- 下段：表示切替（ラベル位置は上段「ジャンプ:」と同一トラック） -->
 <div class="max-w-6xl mx-auto px-4 py-2 overflow-x-auto">
-  <div class="flex items-center gap-1 min-w-max">
-    <span class="text-[10px] text-gray-700 font-bold uppercase tracking-tight border-r border-gray-200 pr-1 flex-shrink-0 leading-none">表示</span>
+  <div class="flex items-center gap-2 min-w-max">
+    <span class="text-[10px] text-gray-700 font-bold uppercase tracking-wider mr-1 border-r border-gray-200 pr-3 flex-shrink-0">表示切替</span>
     <div class="flex gap-1.5 items-center">
       <!-- すべての globalTogglePanel に 'this' を追加します -->
       <button type="button" onclick="globalTogglePanel('overview', this)" class="global-toggle-btn btn-overview on">概要</button>
@@ -586,8 +561,8 @@
       <button type="button" onclick="globalTogglePanel('diff', this)" class="global-toggle-btn btn-diff on">鑑別</button>
       <button type="button" onclick="globalTogglePanel('scales', this)" class="global-toggle-btn btn-scales on">尺度</button>
       <button type="button" onclick="globalTogglePanel('notes', this)" class="global-toggle-btn btn-notes on">注意</button>
-      <button type="button" onclick="globalTogglePanel('meds', this)" class="global-toggle-btn btn-meds on">薬</button>
-      <button type="button" onclick="globalTogglePanel('nonpharm', this)" class="global-toggle-btn btn-nonpharm on">非薬</button>
+      <button type="button" onclick="globalTogglePanel('meds', this)" class="global-toggle-btn btn-meds on">治療薬</button>
+      <button type="button" onclick="globalTogglePanel('nonpharm', this)" class="global-toggle-btn btn-nonpharm on">非薬物療法</button>
       <button type="button" onclick="globalTogglePanel('codes', this)" class="global-toggle-btn btn-codes on">コード</button>
     </div>
   </div>
@@ -4985,154 +4960,30 @@
         DSM-5-TRのICD-10-CMコードは年度改訂により変更される場合がある。
       </div>
     </div>
-    <p class="mt-3 pt-3 border-t border-gray-200 text-[10px] text-gray-400 text-center sm:text-left">
-      バージョン <span class="font-mono font-semibold text-gray-500">1.5.0</span>
-      <span class="text-gray-300 mx-1.5">·</span>
-      <span class="text-gray-400">リリースは Git タグ <code class="text-gray-500 font-mono">v1.5.0</code> と対応</span>
-    </p>
   </div>
 
 </main>
 
 <script>
-  // -------------------------------------------------------
-  // 状態管理：グローバルボタンの ON/OFF は displayStates が
-  // 唯一の真実の源。DOM の open クラスには依存しない。
-  // -------------------------------------------------------
-  const displayStates = {
-    overview:  true,
-    criteria:  true,
-    diff:      true,
-    scales:    true,
-    notes:     true,
-    meds:      true,
-    nonpharm:  true,
-    codes:     true
-  };
-
-  const GLOBAL_BTN_CLASS = {
-    overview:  'btn-overview',
-    criteria:  'btn-criteria',
-    diff:      'btn-diff',
-    scales:    'btn-scales',
-    notes:     'btn-notes',
-    meds:      'btn-meds',
-    nonpharm:  'btn-nonpharm',
-    codes:     'btn-codes'
-  };
-
-  // パネルIDの先頭トークンを type として取得
-  // 例: "overview-f0" -> "overview", "nonpharm-f1" -> "nonpharm"
-  function typeFromPanelId(panelId) {
-    // nonpharm のようにハイフンを含む type があるので
-    // 登録済み type と前方一致で判定する
-    for (const t of Object.keys(displayStates)) {
-      if (panelId.startsWith(t + '-')) return t;
-    }
-    return panelId.split('-')[0]; // フォールバック
-  }
-
-  // -------------------------------------------------------
-  // グローバルボタンの見た目を displayStates に合わせる
-  // -------------------------------------------------------
-  function syncGlobalBtn(type) {
-    const gClass = GLOBAL_BTN_CLASS[type];
-    if (!gClass) return;
-    const btn = document.querySelector('.global-toggle-btn.' + gClass);
-    if (btn) btn.classList.toggle('on', displayStates[type]);
-  }
-
-  // -------------------------------------------------------
-  // 個別パネルボタン（F内のボタン）を押したとき
-  // -------------------------------------------------------
-  function togglePanel(panelId, btn) {
-    const panel = document.getElementById(panelId);
-    if (!panel) return;
-
-    const type = typeFromPanelId(panelId);
-    const isOpen = panel.classList.toggle('open');
-    btn.classList.toggle('on', isOpen);
-
-    // displayStates を更新（個別でOFFにしたら false）
-    // 「現在開いているセクション内」の同 type パネルが
-    // すべて ON のときだけ true とする
-    const openBody = document.querySelector('.cat-body.open');
-    if (openBody) {
-      const sibling = openBody.querySelectorAll(`.panel-${type}`);
-      const allOn = [...sibling].every(p => p.classList.contains('open'));
-      displayStates[type] = allOn;
-    } else {
-      displayStates[type] = isOpen;
-    }
-
-    syncGlobalBtn(type);
-  }
-
-  // -------------------------------------------------------
-  // F項目ヘッダーをクリックしたとき（アコーディオン）
-  // -------------------------------------------------------
-  function toggleSection(bodyId, header) {
-    const body = document.getElementById(bodyId);
-    if (!body) return;
-
-    const isOpening = !body.classList.contains('open');
-    const chevron = document.getElementById(bodyId + '-chevron');
-
-    // 全セクションを閉じる
-    document.querySelectorAll('.cat-body').forEach(b => b.classList.remove('open'));
-    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
-
-    if (isOpening) {
-      body.classList.add('open');
-      if (chevron) chevron.classList.add('open');
-
-      // displayStates に従って、開いたセクション内のパネル・ボタンを設定
-      Object.keys(displayStates).forEach(type => {
-        const visible = displayStates[type];
-        body.querySelectorAll(`.panel-${type}`)
-            .forEach(p => p.classList.toggle('open', visible));
-        body.querySelectorAll(`.toggle-btn[data-panel^="${type}-"]`)
-            .forEach(b => b.classList.toggle('on', visible));
-      });
-
-      // グローバルボタンを displayStates に同期（DOM状態ではなく）
-      Object.keys(displayStates).forEach(syncGlobalBtn);
-
-      // ジャンプリンクで #fN に飛んだときと同様、カード先頭（scroll-margin 考慮）へスクロール
-      const section = body.closest('.section-card');
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-
+  // ページロード時：初期アクティブパネルに panel-codes クラスを付与
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tab-panel.active').forEach(p => {
+      const id = p.id || '';
+      if (id.startsWith('overview'))       p.classList.add('panel-overview');
+      else if (id.startsWith('codes'))         p.classList.add('panel-codes');
+      else if (id.startsWith('criteria')) p.classList.add('panel-criteria');
+      else if (id.startsWith('diff'))     p.classList.add('panel-diff');
+      else if (id.startsWith('notes'))    p.classList.add('panel-notes');
+      else if (id.startsWith('nonpharm'))  p.classList.add('panel-nonpharm');
+    });
     syncJumpNavHighlight();
-  }
+  });
 
-  // -------------------------------------------------------
-  // 表示バー（グローバル切替）ボタンを押したとき
-  // -------------------------------------------------------
-  function globalTogglePanel(type, clickedBtn) {
-    clickedBtn.classList.toggle('on');
-    const isNowOn = clickedBtn.classList.contains('on');
-
-    // 状態を記憶
-    displayStates[type] = isNowOn;
-
-    // 全パネル・全ローカルボタンに反映（DOM上の全要素）
-    document.querySelectorAll(`.panel-${type}`)
-            .forEach(p => p.classList.toggle('open', isNowOn));
-    document.querySelectorAll(`.toggle-btn[data-panel^="${type}-"]`)
-            .forEach(b => b.classList.toggle('on', isNowOn));
-  }
-
-  // -------------------------------------------------------
-  // ジャンプバーのアクティブ強調
-  // -------------------------------------------------------
+  /** 開いている .cat-body が1つだけのとき、ジャンプバーの該当Fを強調 */
   function syncJumpNavHighlight() {
     const nav = document.querySelector('.sticky-nav');
     if (!nav) return;
-    nav.querySelectorAll('a.nav-btn.nav-btn--active')
-       .forEach(a => a.classList.remove('nav-btn--active'));
+    nav.querySelectorAll('a.nav-btn.nav-btn--active').forEach((a) => a.classList.remove('nav-btn--active'));
     const openBodies = document.querySelectorAll('.cat-body.open');
     if (openBodies.length !== 1) return;
     const m = openBodies[0].id.match(/^(f\d+)-body$/);
@@ -5141,14 +4992,105 @@
     if (link) link.classList.add('nav-btn--active');
   }
 
-  // -------------------------------------------------------
-  // 初期化
-  // -------------------------------------------------------
-  document.addEventListener('DOMContentLoaded', () => {
-    // グローバルボタンを初期 displayStates に合わせる
-    Object.keys(displayStates).forEach(syncGlobalBtn);
+// --- 状態保持のための変数 ---
+  // どの項目がオン（true）かオフ（false）かを記憶します
+  const displayStates = {
+    overview: true,
+    criteria: true,
+    diff: true,
+    scales: true,
+    notes: true,
+    meds: true,
+    nonpharm: true,
+    codes: true
+  };
+
+  const GLOBAL_BTN_CLASS = {
+    overview: 'btn-overview',
+    criteria: 'btn-criteria',
+    diff: 'btn-diff',
+    scales: 'btn-scales',
+    notes: 'btn-notes',
+    meds: 'btn-meds',
+    nonpharm: 'btn-nonpharm',
+    codes: 'btn-codes'
+  };
+
+  /** 全Fの該当パネルがすべて開いているときだけ一括バーを ON にする */
+  function syncGlobalToggleFromPanels(type) {
+    const panels = document.querySelectorAll('.panel-' + type);
+    if (!panels.length) return;
+    const allOpen = [...panels].every((p) => p.classList.contains('open'));
+    displayStates[type] = allOpen;
+    const gClass = GLOBAL_BTN_CLASS[type];
+    if (!gClass) return;
+    const globalBtn = document.querySelector('.global-toggle-btn.' + gClass);
+    if (globalBtn) globalBtn.classList.toggle('on', allOpen);
+  }
+
+  // 各パネルの個別ボタン（セクション内にあるボタン）を押した時の処理
+  function togglePanel(panelId, btn) {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    const isOpen = panel.classList.toggle('open');
+    btn.classList.toggle('on', isOpen);
+    const type = panelId.split('-')[0];
+    syncGlobalToggleFromPanels(type);
+  }
+  
+  // F項目のヘッダー（F0, F1など）をクリックした時の処理
+  function toggleSection(bodyId, header) {
+    const body = document.getElementById(bodyId);
+    if (!body) return;
+
+    const isOpening = !body.classList.contains('open');
+    const chevron = document.getElementById(bodyId + '-chevron');
+
+    // 他のセクションを閉じる（アコーディオン動作）
+    document.querySelectorAll('.cat-body').forEach(b => {
+      b.classList.remove('open');
+    });
+    document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+
+    // クリックしたセクションを開く
+    if (isOpening) {
+      body.classList.add('open');
+      if (chevron) chevron.classList.add('open');
+      
+      // 【重要】開いた瞬間に、記憶しているオンオフ状態を反映させる
+      Object.keys(displayStates).forEach(type => {
+        const isVisible = displayStates[type];
+        const panels = body.querySelectorAll(`.panel-${type}`);
+        const buttons = body.querySelectorAll(`.toggle-btn[data-panel^="${type}-"]`);
+        
+        panels.forEach(p => isVisible ? p.classList.add('open') : p.classList.remove('open'));
+        buttons.forEach(b => isVisible ? b.classList.add('on') : b.classList.remove('on'));
+      });
+    }
     syncJumpNavHighlight();
-  });
+  }
+
+  // 上部の「表示切替」バーにあるボタンを押した時の処理
+  function globalTogglePanel(type, clickedBtn) {
+    // ボタンの見た目を切り替え
+    clickedBtn.classList.toggle('on');
+    const isNowOn = clickedBtn.classList.contains('on');
+    
+    // グローバルな状態を更新（記憶する）
+    displayStates[type] = isNowOn;
+
+    // 現在画面に表示されている（開いている）全ての該当パネルに即座に反映
+    const targetPanels = document.querySelectorAll(`.panel-${type}`);
+    const targetButtons = document.querySelectorAll(`.toggle-btn[data-panel^="${type}-"]`);
+
+    targetPanels.forEach(panel => {
+      isNowOn ? panel.classList.add('open') : panel.classList.remove('open');
+    });
+    targetButtons.forEach(btn => {
+      isNowOn ? btn.classList.add('on') : btn.classList.remove('on');
+    });
+  }
+
 </script>
 </body>
 </html>
