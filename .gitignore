@@ -1,2 +1,3 @@
 .DS_Store
-.claude/
+# .claude/ 配下のプロジェクト同梱スキルはファイル単位で追跡する。
+# ローカル専用の設定のみ除外する例: .claude/settings.local.json
