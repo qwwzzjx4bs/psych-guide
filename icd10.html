@@ -5268,34 +5268,32 @@
     const isOpening = !body.classList.contains('open');
     const chevron = document.getElementById(bodyId + '-chevron');
 
-    // 全セクションを閉じる
     document.querySelectorAll('.cat-body').forEach(b => b.classList.remove('open'));
     document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
 
-    if (isOpening) {
-      body.classList.add('open');
-      if (chevron) chevron.classList.add('open');
-
-      // displayStates に従って、開いたセクション内のパネル・ボタンを設定
-      Object.keys(displayStates).forEach(type => {
-        const visible = displayStates[type];
-        body.querySelectorAll(`.panel-${type}`)
-            .forEach(p => p.classList.toggle('open', visible));
-        body.querySelectorAll(`.toggle-btn[data-panel^="${type}-"]`)
-            .forEach(b => b.classList.toggle('on', visible));
-      });
-
-      // グローバルボタンを displayStates に同期（DOM状態ではなく）
-      Object.keys(displayStates).forEach(syncGlobalBtn);
-
-      // ジャンプリンクで #fN に飛んだときと同様、カード先頭（scroll-margin 考慮）へスクロール
-      const section = body.closest('.section-card');
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+    if (!isOpening) {
+      syncJumpNavHighlight();
+      return;
     }
 
+    body.classList.add('open');
+    if (chevron) chevron.classList.add('open');
+
+    Object.keys(displayStates).forEach(type => {
+      const visible = displayStates[type];
+      body.querySelectorAll(`.panel-${type}`)
+          .forEach(p => p.classList.toggle('open', visible));
+      body.querySelectorAll(`.toggle-btn[data-panel^="${type}-"]`)
+          .forEach(b => b.classList.toggle('on', visible));
+    });
+
+    Object.keys(displayStates).forEach(syncGlobalBtn);
     syncJumpNavHighlight();
+
+    const section = body.closest('.section-card');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    }
   }
 
   // -------------------------------------------------------

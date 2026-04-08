@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="1.5.0" name="app-version"/>
-<title>ICD-10 第5章 ミニ版（概要・コード一覧）F0〜F9 | 精神科臨床ガイド</title>
+<title>ICD-10 精神科疾患分類 ミニ版（概要・コード一覧）F0〜F9 | 精神科臨床ガイド</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -108,8 +108,14 @@
     .chevron { transition: transform 0.25s; }
     .chevron.open { transform: rotate(180deg); }
 
-    /* コード表 */
-    .code-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    /* コード表（table-layout: fixed で列幅を安定） */
+    .code-table {
+      width: 100%;
+      max-width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
     .code-table thead tr { background: #f8fafc; }
     .code-table th {
       padding: 0.55rem 0.85rem;
@@ -120,11 +126,17 @@
       font-size: 0.75rem;
       white-space: nowrap;
     }
+    /* 定義列は JS で挿入されるため 4 列目まで明示（未挿入時は 1〜3 のみに適用） */
+    .code-table thead th:nth-child(1) { width: 23%; }
+    .code-table thead th:nth-child(2) { width: 27%; }
+    .code-table thead th:nth-child(3) { width: 22%; }
+    .code-table thead th:nth-child(4) { width: 28%; }
     .code-table td {
       padding: 0.5rem 0.85rem;
       border-bottom: 1px solid #f1f5f9;
       vertical-align: top;
       line-height: 1.5;
+      min-width: 0;
     }
     .code-table tr:last-child td { border-bottom: none; }
     .code-table tr:hover td { background: #f9fafb; }
@@ -141,98 +153,6 @@
       font-weight: 400;
     }
     .code-table tr.main-row td.def-col { font-weight: 400; }
-    /* 定義列：通常は高さを抑え、行クリックで広げて読みやすく */
-    .code-table td.def-col {
-      max-height: 4.6em;
-      overflow: hidden;
-      transition: max-height 0.28s ease, line-height 0.2s ease, font-size 0.2s ease, padding 0.2s ease;
-    }
-    .code-table tbody tr.code-row-expandable {
-      cursor: pointer;
-    }
-    .code-table tbody tr.code-row-expandable:not(.row-def-expanded):hover td {
-      background: rgba(59, 130, 246, 0.08);
-    }
-    .code-table tbody tr.code-row-expandable:focus-visible {
-      outline: 2px solid #3b82f6;
-      outline-offset: -2px;
-    }
-    /* 展開行：1セル内で縦並び（元のセルは JS で退避）。テーブル幅は親と同じまま */
-    .code-table tr.row-def-expanded td.def-expanded-stack-cell {
-      padding: 0 !important;
-      vertical-align: top;
-      background: transparent;
-      box-shadow: none;
-    }
-    .code-table tr.sub-row.row-def-expanded td.def-expanded-stack-cell {
-      padding-left: 0 !important;
-    }
-    .code-table tr.row-def-expanded .row-def-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 100%;
-      margin-left: 0;
-      padding: 0.85rem;
-      background: #f8fafc;
-      box-shadow: inset 0 0 0 1px #e2e8f0;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-    .code-table tr.sub-row.row-def-expanded .row-def-stack {
-      padding-left: max(1.5rem, 1rem, env(safe-area-inset-left, 0px));
-    }
-    .code-table tr.row-def-expanded .row-def-stack__label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #64748b;
-      margin-bottom: 0.3rem;
-    }
-    /* ICDコード・日本語名：ラベルと本文を同一行（定義ブロックは下記の通常スタックのまま） */
-    .code-table tr.row-def-expanded .row-def-stack__block--inline {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0.5rem;
-    }
-    .code-table tr.row-def-expanded .row-def-stack__block--inline .row-def-stack__label {
-      flex-shrink: 0;
-      margin-bottom: 0;
-    }
-    .code-table tr.row-def-expanded .row-def-stack__block--inline .row-def-stack__body {
-      flex: 1;
-      min-width: 0;
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-    .code-table tr.row-def-expanded .row-def-stack__body--ja {
-      font-size: 0.82rem;
-      line-height: 1.55;
-      color: #1e293b;
-    }
-    .code-table tr.main-row.row-def-expanded .row-def-stack__body--ja {
-      font-weight: 600;
-    }
-    .code-table tr.row-def-expanded .row-def-stack__body--en {
-      font-size: 0.82rem;
-      line-height: 1.55;
-      font-weight: 400;
-    }
-    .code-table tr.row-def-expanded .row-def-stack__body--def {
-      font-size: 0.88rem;
-      line-height: 1.85;
-      color: #334155;
-      font-weight: 400;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-    .code-table tr.row-def-expanded:hover .row-def-stack {
-      background: #f1f5f9;
-    }
 
     /* コードバッジ */
     .icd-code {
@@ -279,10 +199,6 @@
     }
     .code-table tr.main-row .code-col-icd-dsm__dsm {
       font-weight: 400;
-    }
-    .code-table tr.row-def-expanded .row-def-stack__body--dsm {
-      font-size: 0.8rem;
-      line-height: 1.55;
     }
     .note-badge {
       display: inline-block;
@@ -465,6 +381,40 @@
       transition: border-color 0.18s;
     }
     .toggle-panel.open.panel-codes   { border-left-color: #1e293b; }
+    /* コード一覧：親幅にロック */
+    .panel-codes {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .panel-codes .overflow-x-auto {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-x: clip;
+    }
+    .panel-codes .code-table th.icd-dsm-th {
+      min-width: 0;
+    }
+    .panel-codes .code-table .code-col-icd-dsm {
+      min-width: 0;
+      max-width: 100%;
+    }
+    /* 定義列：4 列目の幅を明示 */
+    .panel-codes .code-table thead th.def-col {
+      width: 28%;
+      min-width: 11rem;
+      max-width: none;
+      box-sizing: border-box;
+    }
+    .panel-codes .code-table tbody td.def-col {
+      min-width: 0;
+      max-width: none;
+      box-sizing: border-box;
+    }
     .toggle-panel.open.panel-criteria{ border-left-color: #1d4ed8; }
     .toggle-panel.open.panel-diff    { border-left-color: #6d28d9; }
     .toggle-panel.open.panel-scales  { border-left-color: #0891b2; }
@@ -595,10 +545,7 @@
       .code-table .en-col { display: none; }
       .diff-table .diff-en { display: none; }
 
-      /* コード一覧：ICD 列を最小化し、定義列が viewport 内に収まるよう配分（横スクロール回避） */
-      .panel-codes .overflow-x-auto {
-        overflow-x: visible;
-      }
+      /* コード一覧：ICD 列を最小化し、定義列が viewport 内に収まるよう配分（横方向は clip で幅固定） */
       .panel-codes .code-table {
         table-layout: fixed;
         width: 100%;
@@ -617,23 +564,25 @@
         word-break: break-word;
         overflow-wrap: break-word;
       }
-      .panel-codes .code-table th.icd-dsm-th,
-      .panel-codes .code-table td:first-child {
+      .panel-codes .code-table thead th.icd-dsm-th,
+      .panel-codes .code-table tbody td:first-child {
         width: 4.35rem;
         min-width: 0;
         max-width: 4.85rem;
         box-sizing: border-box;
       }
       .panel-codes .code-table th:nth-child(2),
-      .panel-codes .code-table td:nth-child(2) {
+      .panel-codes .code-table tbody td:nth-child(2) {
         width: 30%;
         min-width: 0;
       }
-      .panel-codes .code-table th.def-col,
-      .panel-codes .code-table td.def-col {
-        min-width: 0;
+      /* 英語列非表示時も 4 列目は DOM 上 4 番目 */
+      .panel-codes .code-table thead th:nth-child(4),
+      .panel-codes .code-table tbody td:nth-child(4) {
+        width: calc(70% - 5rem);
+        min-width: 10rem;
         max-width: none;
-        width: auto;
+        box-sizing: border-box;
       }
       .panel-codes .code-table .code-col-icd-dsm {
         min-width: 0;
@@ -728,7 +677,7 @@
 <i class="w-7 h-7 opacity-75" data-lucide="brain"></i>
 <span class="text-xs font-semibold uppercase tracking-widest opacity-70">精神科臨床ガイド</span>
 </div>
-<h1 class="text-3xl md:text-4xl font-bold leading-tight">ICD-10 第5章 ミニ版</h1>
+<h1 class="text-3xl md:text-4xl font-bold leading-tight">ICD-10 精神科疾患分類 ミニ版</h1>
 <p class="mt-1.5 text-lg opacity-85 font-medium">F0〜F9 概要とコード一覧（シンプル表示）</p>
 <div class="flex flex-wrap gap-2 mt-4">
 <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-medium">WHO ICD-10 趣旨</span>
@@ -770,7 +719,7 @@
 <i class="w-4 h-4 text-slate-600" data-lucide="table"></i>
 <span class="font-bold text-gray-700 text-sm">コード一覧の見方</span>
 </div>
-<p class="text-xs text-gray-600 leading-relaxed">表の各行は、WHO の ICD-10 コードとその下の DSM-5-TR 側の対応表記、日本語疾患名、英語名を並べています。<strong>定義</strong>列は JSON データから挿入され、セルをクリックすると展開して読みやすく表示できます。請求・法医学・研究では原典を必ず確認してください。</p>
+<p class="text-xs text-gray-600 leading-relaxed">表の各行は、WHO の ICD-10 コードとその下の DSM-5-TR 側の対応表記、日本語疾患名、英語名、<strong>定義</strong>（JSON データから挿入）を並べています。請求・法医学・研究では原典を必ず確認してください。</p>
 </div>
 <!-- ============ F0 ============ -->
 <div class="section-card" id="f0">
@@ -1482,75 +1431,6 @@
     if (!el) return;
     var defs = {};
     try { defs = JSON.parse(el.textContent); } catch (e) { return; }
-    function expandDefRowStackLayout(tr) {
-      if (tr.dataset.defStackLayout === '1') return;
-      var tds = Array.prototype.slice.call(tr.querySelectorAll(':scope > td'));
-      if (tds.length !== 4) return;
-      var icdTd = tds[0];
-      var jaTd = tds[1];
-      var enTd = tds[2];
-      var defTd = tds[3];
-      if (!enTd.classList.contains('en-col') || !defTd.classList.contains('def-col')) return;
-      tr._layoutStackCells = tds;
-      tds.forEach(function (td) {
-        td.remove();
-      });
-      var table = tr.closest('table');
-      var headRow = table && table.querySelector('thead tr');
-      var nCol = headRow ? headRow.cells.length : 4;
-      var wrap = document.createElement('td');
-      wrap.className = 'def-expanded-stack-cell';
-      wrap.colSpan = nCol;
-      var stack = document.createElement('div');
-      stack.className = 'row-def-stack';
-      function addBlock(labelText, bodyClass, innerHtmlOrText, asText, blockExtraClass) {
-        var block = document.createElement('div');
-        block.className = 'row-def-stack__block' + (blockExtraClass ? ' ' + blockExtraClass : '');
-        var lab = document.createElement('div');
-        lab.className = 'row-def-stack__label';
-        lab.textContent = labelText;
-        block.appendChild(lab);
-        var body = document.createElement('div');
-        body.className = 'row-def-stack__body ' + bodyClass;
-        if (asText) body.textContent = innerHtmlOrText;
-        else body.innerHTML = innerHtmlOrText;
-        block.appendChild(body);
-        stack.appendChild(block);
-      }
-      var icdHtml = icdTd.innerHTML;
-      var dsmLabelHtml = '';
-      var jaPrimaryHtml = jaTd.innerHTML;
-      var merged = icdTd.querySelector('.code-col-icd-dsm');
-      if (merged) {
-        var codePart = merged.querySelector('.code-col-icd-dsm__code');
-        var dsmPart = merged.querySelector('.code-col-icd-dsm__dsm');
-        if (codePart) icdHtml = codePart.innerHTML;
-        if (dsmPart) dsmLabelHtml = dsmPart.innerHTML;
-      }
-      addBlock('ICDコード', '', icdHtml, false, 'row-def-stack__block--inline');
-      if (dsmLabelHtml) {
-        addBlock('DSM-5-TR', 'row-def-stack__body--dsm text-gray-700', dsmLabelHtml, false, 'row-def-stack__block--inline');
-      }
-      addBlock('日本語名', 'row-def-stack__body--ja', jaPrimaryHtml, false, 'row-def-stack__block--inline');
-      addBlock('英語名', 'row-def-stack__body--en text-gray-500', enTd.innerHTML, false, 'row-def-stack__block--inline');
-      addBlock('定義', 'row-def-stack__body--def text-gray-700', defTd.textContent, true);
-      wrap.appendChild(stack);
-      tr.appendChild(wrap);
-      tr.dataset.defStackLayout = '1';
-    }
-    function collapseDefRowStackLayout(tr) {
-      if (tr.dataset.defStackLayout !== '1') return;
-      var wrap = tr.querySelector('td.def-expanded-stack-cell');
-      if (wrap) wrap.remove();
-      var saved = tr._layoutStackCells;
-      if (saved && saved.length === 4) {
-        saved.forEach(function (cell) {
-          tr.appendChild(cell);
-        });
-      }
-      tr._layoutStackCells = null;
-      delete tr.dataset.defStackLayout;
-    }
     document.querySelectorAll('table.code-table').forEach(function (table) {
       var thRow = table.querySelector('thead tr');
       var enTh = thRow && thRow.querySelector('th.en-col');
@@ -1568,37 +1448,6 @@
         td.className = 'def-col text-gray-700';
         td.textContent = defs[code] || '—';
         enTd.insertAdjacentElement('afterend', td);
-        tr.classList.add('code-row-expandable');
-        tr.setAttribute('tabindex', '0');
-        tr.setAttribute('title', '行をクリックで定義を読みやすく展開／折りたたみ');
-        tr.setAttribute('aria-expanded', 'false');
-      });
-      table.addEventListener('click', function (ev) {
-        var tr = ev.target.closest && ev.target.closest('tbody tr.code-row-expandable');
-        if (!tr || !table.contains(tr)) return;
-        var interactive = ev.target.closest && ev.target.closest('a[href], button, input, select, textarea');
-        if (interactive && tr.contains(interactive)) return;
-        ev.preventDefault();
-        var wasOpen = tr.classList.contains('row-def-expanded');
-        table.querySelectorAll('tbody tr.row-def-expanded').forEach(function (r) {
-          collapseDefRowStackLayout(r);
-          r.classList.remove('row-def-expanded');
-          r.setAttribute('aria-expanded', 'false');
-        });
-        if (!wasOpen) {
-          expandDefRowStackLayout(tr);
-          if (tr.dataset.defStackLayout === '1') {
-            tr.classList.add('row-def-expanded');
-            tr.setAttribute('aria-expanded', 'true');
-          }
-        }
-      });
-      table.addEventListener('keydown', function (ev) {
-        if (ev.key !== 'Enter' && ev.key !== ' ') return;
-        var tr = ev.target.closest && ev.target.closest('tr.code-row-expandable');
-        if (!tr || !table.contains(tr)) return;
-        ev.preventDefault();
-        tr.click();
       });
     });
   }
@@ -1641,20 +1490,24 @@
     const chevron = document.getElementById(bodyId + '-chevron');
     document.querySelectorAll('.cat-body').forEach(b => b.classList.remove('open'));
     document.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
-    if (isOpening) {
-      body.classList.add('open');
-      if (chevron) chevron.classList.add('open');
-      Object.keys(displayStates).forEach(type => {
-        const visible = displayStates[type];
-        body.querySelectorAll('.panel-' + type)
-            .forEach(p => p.classList.toggle('open', visible));
-        body.querySelectorAll('.toggle-btn[data-panel^="' + type + '-"]')
-            .forEach(b => b.classList.toggle('on', visible));
-      });
-      const section = body.closest('.section-card');
-      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!isOpening) {
+      syncJumpNavHighlight();
+      return;
     }
+    body.classList.add('open');
+    if (chevron) chevron.classList.add('open');
+    Object.keys(displayStates).forEach(type => {
+      const visible = displayStates[type];
+      body.querySelectorAll('.panel-' + type)
+          .forEach(p => p.classList.toggle('open', visible));
+      body.querySelectorAll('.toggle-btn[data-panel^="' + type + '-"]')
+          .forEach(b => b.classList.toggle('on', visible));
+    });
     syncJumpNavHighlight();
+    const section = body.closest('.section-card');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    }
   }
 
   function syncJumpNavHighlight() {

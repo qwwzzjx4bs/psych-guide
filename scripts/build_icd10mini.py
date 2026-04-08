@@ -243,7 +243,7 @@ def main() -> None:
     # Trim title
     head = re.sub(
         r"<title>.*?</title>",
-        "<title>ICD-10 第5章 ミニ版（概要・コード一覧）F0〜F9 | 精神科臨床ガイド</title>",
+        "<title>ICD-10 精神科疾患分類 ミニ版（概要・コード一覧）F0〜F9 | 精神科臨床ガイド</title>",
         head,
         count=1,
     )
@@ -261,7 +261,7 @@ def main() -> None:
 <i class="w-7 h-7 opacity-75" data-lucide="brain"></i>
 <span class="text-xs font-semibold uppercase tracking-widest opacity-70">精神科臨床ガイド</span>
 </div>
-<h1 class="text-3xl md:text-4xl font-bold leading-tight">ICD-10 第5章 ミニ版</h1>
+<h1 class="text-3xl md:text-4xl font-bold leading-tight">ICD-10 精神科疾患分類 ミニ版</h1>
 <p class="mt-1.5 text-lg opacity-85 font-medium">F0〜F9 概要とコード一覧（シンプル表示）</p>
 <div class="flex flex-wrap gap-2 mt-4">
 <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-medium">WHO ICD-10 趣旨</span>
