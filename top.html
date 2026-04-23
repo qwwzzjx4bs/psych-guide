@@ -41,24 +41,54 @@
 </head>
 <body class="min-h-screen">
 
-  <header class="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center shadow-sm">
-          <span class="text-white text-sm font-bold">Ψ</span>
-        </div>
-        <div>
-          <span class="font-bold text-gray-900 text-sm tracking-tight">精神科臨床ガイド</span>
-          <span class="ml-2 text-xs text-gray-400 hidden sm:inline">外来参照ポータル</span>
+  <header class="bg-white sticky top-0 z-10 shadow-sm">
+    <!-- タイトルバー -->
+    <div class="border-b border-gray-200">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center shadow-sm">
+            <span class="text-white text-sm font-bold">Ψ</span>
+          </div>
+          <div>
+            <span class="font-bold text-gray-900 text-sm tracking-tight">精神科臨床ガイド</span>
+            <span class="ml-2 text-xs text-gray-400 hidden sm:inline">外来参照ポータル</span>
+          </div>
         </div>
       </div>
-      <nav class="flex items-center gap-1 text-xs">
-        <a href="#updates"  class="px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors hidden sm:inline-block">更新情報</a>
-        <a href="#icd"      class="px-3 py-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors font-medium hidden sm:inline-block">ICD分類</a>
-        <a href="#diseases" class="px-3 py-1.5 rounded-lg text-violet-600 hover:bg-violet-50 transition-colors font-medium hidden sm:inline-block">疾患別</a>
-        <a href="#scales"   class="px-3 py-1.5 rounded-lg text-teal-600 hover:bg-teal-50 transition-colors font-medium hidden sm:inline-block">評価</a>
-        <a href="#education" class="px-3 py-1.5 rounded-lg text-amber-600 hover:bg-amber-50 transition-colors font-medium hidden sm:inline-block">教育・資格</a>
-      </nav>
+    </div>
+    <!-- ジャンプバー -->
+    <div class="border-b border-gray-100 bg-white">
+      <div class="flex gap-2 overflow-x-auto px-4 sm:px-6 py-2" style="-webkit-overflow-scrolling:touch; scrollbar-width:none;">
+        <a href="#updates"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-xs font-medium text-gray-700 whitespace-nowrap">
+          📋 更新情報
+        </a>
+        <a href="#icd"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-100 hover:bg-blue-200 transition-colors text-xs font-medium text-blue-800 whitespace-nowrap">
+          🗂 ICD分類・診断
+          <span class="bg-blue-200 text-blue-700 px-1.5 py-0.5 rounded-full text-xs leading-none">6</span>
+        </a>
+        <a href="#diseases"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors text-xs font-medium text-violet-800 whitespace-nowrap">
+          🧠 疾患別診断・治療
+          <span class="bg-violet-200 text-violet-700 px-1.5 py-0.5 rounded-full text-xs leading-none">4</span>
+        </a>
+        <a href="#scales"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 transition-colors text-xs font-medium text-teal-800 whitespace-nowrap">
+          📊 評価スケール
+          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">3</span>
+        </a>
+        <a href="#education"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-800 whitespace-nowrap">
+          📚 教育・用語・資格
+          <span class="bg-amber-200 text-amber-700 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+        </a>
+        <a href="#others"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
+          💡 その他
+          <span class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+        </a>
+      </div>
     </div>
   </header>
 
@@ -78,50 +108,6 @@
         </div>
       </div>
     </section>
-
-    <!-- ジャンプバー（横スクロール対応） -->
-    <nav class="mb-10 -mx-4 sm:mx-0">
-      <div class="flex gap-2 overflow-x-auto px-4 sm:px-0 pb-1"
-           style="-webkit-overflow-scrolling: touch; scrollbar-width: none;"
-           onmouseenter="this.style.scrollbarWidth='auto'"
-           onmouseleave="this.style.scrollbarWidth='none'">
-        <a href="#updates"
-           class="flex-shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-gray-200 bg-white hover:border-gray-400 hover:shadow-sm transition-all text-sm font-medium text-gray-700 whitespace-nowrap">
-          <span class="w-6 h-6 rounded-md bg-slate-700 flex items-center justify-center text-white text-xs">📋</span>
-          更新情報
-        </a>
-        <a href="#icd"
-           class="flex-shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 hover:border-blue-400 hover:shadow-sm transition-all text-sm font-medium text-blue-800 whitespace-nowrap">
-          <span class="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center text-white text-xs">🗂</span>
-          ICD分類・診断ツール
-          <span class="text-xs font-normal text-blue-500 bg-blue-100 px-1.5 py-0.5 rounded-full">6</span>
-        </a>
-        <a href="#diseases"
-           class="flex-shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-violet-200 bg-violet-50 hover:bg-violet-100 hover:border-violet-400 hover:shadow-sm transition-all text-sm font-medium text-violet-800 whitespace-nowrap">
-          <span class="w-6 h-6 rounded-md bg-violet-600 flex items-center justify-center text-white text-xs">🧠</span>
-          疾患別 診断・治療
-          <span class="text-xs font-normal text-violet-500 bg-violet-100 px-1.5 py-0.5 rounded-full">4</span>
-        </a>
-        <a href="#scales"
-           class="flex-shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 hover:border-teal-400 hover:shadow-sm transition-all text-sm font-medium text-teal-800 whitespace-nowrap">
-          <span class="w-6 h-6 rounded-md bg-teal-600 flex items-center justify-center text-white text-xs">📊</span>
-          評価スケール
-          <span class="text-xs font-normal text-teal-500 bg-teal-100 px-1.5 py-0.5 rounded-full">3</span>
-        </a>
-        <a href="#education"
-           class="flex-shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 hover:border-amber-400 hover:shadow-sm transition-all text-sm font-medium text-amber-800 whitespace-nowrap">
-          <span class="w-6 h-6 rounded-md bg-amber-600 flex items-center justify-center text-white text-xs">📚</span>
-          教育・用語・資格
-          <span class="text-xs font-normal text-amber-500 bg-amber-100 px-1.5 py-0.5 rounded-full">2</span>
-        </a>
-        <a href="#others"
-           class="flex-shrink-0 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-400 hover:shadow-sm transition-all text-sm font-medium text-slate-700 whitespace-nowrap">
-          <span class="w-6 h-6 rounded-md bg-slate-500 flex items-center justify-center text-white text-xs">💡</span>
-          その他
-          <span class="text-xs font-normal text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-full">2</span>
-        </a>
-      </div>
-    </nav>
 
     <!-- 最新更新情報 -->
     <section id="updates" class="mb-12">
