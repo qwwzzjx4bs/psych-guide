@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
-"""icd10-definitions.json を minify して icd10.html の </main> 直後に埋め込む。"""
+"""マージ済み定義（icd10-definitions.json + overrides）を minify して icd10.html に埋め込む。"""
+from __future__ import annotations
+
 import json
+import sys
 from pathlib import Path
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from icd10_definitions_merge import load_merged
+
 ROOT = Path(__file__).resolve().parents[1]
-HTML_PATH = ROOT / "icd10.html"
-JSON_PATH = ROOT / "icd10-definitions.json"
+HTML_PATHS = [ROOT / "icd10.html", ROOT / "index.html"]
 
 MARKER_START = "<!-- ICD10_DEFINITIONS_EMBED_START -->"
 MARKER_END = "<!-- ICD10_DEFINITIONS_EMBED_END -->"
@@ -22,11 +30,12 @@ INJECT_SCRIPT = """
     function expandDefRowStackLayout(tr) {
       if (tr.dataset.defStackLayout === '1') return;
       var tds = Array.prototype.slice.call(tr.querySelectorAll(':scope > td'));
-      if (tds.length !== 4) return;
+      if (tds.length !== 5) return;
       var icdTd = tds[0];
       var jaTd = tds[1];
       var enTd = tds[2];
       var defTd = tds[3];
+      var dsmTd = tds[4];
       if (!enTd.classList.contains('en-col') || !defTd.classList.contains('def-col')) return;
       tr._layoutStackCells = tds;
       tds.forEach(function (td) {
@@ -34,7 +43,7 @@ INJECT_SCRIPT = """
       });
       var table = tr.closest('table');
       var headRow = table && table.querySelector('thead tr');
-      var nCol = headRow ? headRow.cells.length : 4;
+      var nCol = headRow ? headRow.cells.length : 5;
       var wrap = document.createElement('td');
       wrap.className = 'def-expanded-stack-cell';
       wrap.colSpan = nCol;
@@ -70,6 +79,7 @@ INJECT_SCRIPT = """
       }
       addBlock('日本語名', 'row-def-stack__body--ja', jaPrimaryHtml, false, 'row-def-stack__block--inline');
       addBlock('英語名', 'row-def-stack__body--en text-gray-500', enTd.innerHTML, false, 'row-def-stack__block--inline');
+      addBlock('DSM-5-TR 相当診断', 'row-def-stack__body--dsm text-gray-700', dsmTd.innerHTML, false, 'row-def-stack__block--inline');
       addBlock('定義', 'row-def-stack__body--def text-gray-700', defTd.textContent, true);
       wrap.appendChild(stack);
       tr.appendChild(wrap);
@@ -80,7 +90,7 @@ INJECT_SCRIPT = """
       var wrap = tr.querySelector('td.def-expanded-stack-cell');
       if (wrap) wrap.remove();
       var saved = tr._layoutStackCells;
-      if (saved && saved.length === 4) {
+      if (saved && saved.length === 5) {
         saved.forEach(function (cell) {
           tr.appendChild(cell);
         });
@@ -147,24 +157,33 @@ INJECT_SCRIPT = """
 """.strip()
 
 
-def main():
-    html = HTML_PATH.read_text(encoding="utf-8")
-    defs = json.loads(JSON_PATH.read_text(encoding="utf-8"))
-    payload = json.dumps(defs, ensure_ascii=False, separators=(",", ":"))
-    block = MARKER_START + "\n" + INJECT_SCRIPT.replace("__JSON__", payload) + "\n" + MARKER_END
-
+def inject_into_html(html: str, block: str) -> str | None:
     if MARKER_START in html and MARKER_END in html:
         pre, rest = html.split(MARKER_START, 1)
         _, post = rest.split(MARKER_END, 1)
-        html = pre + block + post
-    else:
-        needle = "</main>\n\n<script>"
-        if needle not in html:
-            raise SystemExit("insert point not found")
-        html = html.replace(needle, "</main>\n\n" + block + "\n\n<script>", 1)
+        return pre + block + post
+    needle = "</main>\n\n<script>"
+    if needle not in html:
+        return None
+    return html.replace(needle, "</main>\n\n" + block + "\n\n<script>", 1)
 
-    HTML_PATH.write_text(html, encoding="utf-8")
-    print("injected definitions into", HTML_PATH)
+
+def main():
+    defs = load_merged()
+    payload = json.dumps(defs, ensure_ascii=False, separators=(",", ":"))
+    block = MARKER_START + "\n" + INJECT_SCRIPT.replace("__JSON__", payload) + "\n" + MARKER_END
+
+    for path in HTML_PATHS:
+        if not path.exists():
+            continue
+        html = path.read_text(encoding="utf-8")
+        out = inject_into_html(html, block)
+        if out is None:
+            if path.name == "icd10.html":
+                raise SystemExit(f"insert point not found: {path}")
+            continue
+        path.write_text(out, encoding="utf-8")
+        print("injected definitions into", path)
 
 
 if __name__ == "__main__":

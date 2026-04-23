@@ -1656,6 +1656,13 @@
               <span class="flex-shrink-0 font-bold text-indigo-700 text-xs mt-0.5 w-28">治療方針</span>
               <p class="text-xs text-gray-700 leading-relaxed">抗精神病薬による薬物療法が基盤（第二世代を優先）。CBTp・家族心理教育・SST・IPS就労支援・ACTを組み合わせた包括的リハビリテーション。アドヒアランス維持が長期予後の鍵。</p>
             </div>
+            <div class="flex items-start gap-2 py-2">
+              <span class="flex-shrink-0 font-bold text-indigo-700 text-xs mt-0.5 w-28">図解ガイドライン</span>
+              <a href="schizophrenia-algorithm.html" target="_blank" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-purple-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                薬物治療ガイドライン2022 図解版
+              </a>
+            </div>
             <div class="flex items-start gap-2 py-2 border-b border-indigo-100 last:border-0">
               <span class="flex-shrink-0 font-bold text-indigo-700 text-xs mt-0.5 w-28">疫学・予後</span>
               <p class="text-xs text-gray-700 leading-relaxed">生涯有病率は約1%（全世界共通）。発症ピークは男性10〜25歳・女性25〜35歳。約20%は単一エピソードで回復、約35%は繰り返すが機能回復、約45%は慢性経過。早期介入（EIS）が予後を改善。</p>
@@ -5148,8 +5155,23 @@
         block.appendChild(body);
         stack.appendChild(block);
       }
-      addBlock('ICDコード', '', icdTd.innerHTML, false, 'row-def-stack__block--inline');
-      addBlock('日本語名', 'row-def-stack__body--ja', jaTd.innerHTML, false, 'row-def-stack__block--inline');
+      var icdHtml = icdTd.innerHTML;
+      var dsmLabelHtml = '';
+      var jaPrimaryHtml = jaTd.innerHTML;
+      var merged = icdTd.querySelector('.code-col-icd-dsm');
+      if (merged) {
+        var codePart = merged.querySelector('.code-col-icd-dsm__code');
+        var dsmPart = merged.querySelector('.code-col-icd-dsm__dsm');
+        if (codePart) icdHtml = codePart.innerHTML;
+        if (dsmPart) dsmLabelHtml = dsmPart.innerHTML;
+      }
+      addBlock('ICDコード', '', icdHtml, false, 'row-def-stack__block--inline');
+      if (dsmLabelHtml) {
+        addBlock('DSM-5-TR', 'row-def-stack__body--dsm text-gray-700', dsmLabelHtml, false, 'row-def-stack__block--inline');
+      }
+      addBlock('日本語名', 'row-def-stack__body--ja', jaPrimaryHtml, false, 'row-def-stack__block--inline');
+      addBlock('英語名', 'row-def-stack__body--en text-gray-500', enTd.innerHTML, false, 'row-def-stack__block--inline');
+      addBlock('DSM-5-TR 相当診断', 'row-def-stack__body--dsm text-gray-700', dsmTd.innerHTML, false, 'row-def-stack__block--inline');
       addBlock('定義', 'row-def-stack__body--def text-gray-700', defTd.textContent, true);
       wrap.appendChild(stack);
       tr.appendChild(wrap);
@@ -5380,5 +5402,21 @@
     syncJumpNavHighlight();
   });
 </script>
+
+<!-- 関連リンク -->
+<div class="max-w-6xl mx-auto px-4 py-6 no-print">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <div class="flex items-center gap-2 mb-3">
+      <i data-lucide="link" class="w-4 h-4 text-indigo-600"></i>
+      <span class="font-bold text-gray-700 text-sm">関連ページ</span>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="cursor-ai-agents.html" target="_blank" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-slate-700 to-purple-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity">
+        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+        Cursor AIエージェント比較ガイド
+      </a>
+    </div>
+  </div>
+</div>
 </body>
 </html>

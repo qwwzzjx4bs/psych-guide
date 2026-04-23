@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""icd10.html のコード一覧行から ICD10_DEFINITIONS 用 JSON を生成する。"""
+"""icd10.html のコード一覧行から ICD10_DEFINITIONS 用 JSON を生成する。
+
+出力は icd10-definitions.json のみ。手動の文案修正は
+icd10-definitions-overrides.json と scripts/edit_icd10_definition.py を使う。
+"""
 import json
 import re
 from pathlib import Path

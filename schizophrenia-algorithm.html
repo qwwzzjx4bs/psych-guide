@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>統合失調症 治療アルゴリズム</title>
+  <title>統合失調症薬物治療ガイドライン2022 図解版</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,13 +26,17 @@
     }
 
     /* エビデンスバッジ */
+    .badge-1a  { background: linear-gradient(135deg,#15803d,#16a34a); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
+    .badge-1b  { background: linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
+    .badge-2a  { background: linear-gradient(135deg,#059669,#10b981); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
+    .badge-2c  { background: linear-gradient(135deg,#4b5563,#6b7280); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
+    .badge-qr  { background: linear-gradient(135deg,#7c3aed,#8b5cf6); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
     .badge-level-a { background: linear-gradient(135deg,#15803d,#16a34a); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
     .badge-level-b { background: linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
     .badge-level-c { background: linear-gradient(135deg,#4b5563,#6b7280); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; white-space:nowrap; }
     .badge-first  { background: linear-gradient(135deg,#dc2626,#ef4444); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; }
     .badge-second { background: linear-gradient(135deg,#d97706,#f59e0b); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; }
     .badge-trs    { background: linear-gradient(135deg,#7c3aed,#8b5cf6); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; }
-    .badge-urgent { background: linear-gradient(135deg,#b91c1c,#dc2626); color:white; padding:.18rem .6rem; border-radius:9999px; font-size:.7rem; font-weight:700; }
 
     /* ボックス */
     .criteria-box { background:linear-gradient(135deg,#eff6ff,#dbeafe); border-left:4px solid #1d4ed8; padding:1.1rem 1.25rem; border-radius:.75rem; margin:.75rem 0; }
@@ -42,22 +46,14 @@
     .purple-box   { background:linear-gradient(135deg,#f5f3ff,#ede9fe); border-left:4px solid #7c3aed; padding:1.1rem 1.25rem; border-radius:.75rem; margin:.75rem 0; }
 
     /* 治療ステップフロー */
-    .step-box {
-      border-radius:.75rem; padding:1rem 1.25rem;
-      position:relative;
-    }
+    .step-box { border-radius:.75rem; padding:1rem 1.25rem; position:relative; }
     .step-acute    { background:#fff1f2; border:2px solid #fb7185; }
     .step-stable   { background:#eff6ff; border:2px solid #60a5fa; }
     .step-maintain { background:#f0fdf4; border:2px solid #4ade80; }
     .step-trs      { background:#faf5ff; border:2px solid #a78bfa; }
 
     /* 薬剤カード */
-    .drug-card {
-      background:white;
-      border:1px solid #e5e7eb;
-      border-radius:.75rem;
-      padding:.875rem 1rem;
-    }
+    .drug-card { background:white; border:1px solid #e5e7eb; border-radius:.75rem; padding:.875rem 1rem; }
     .drug-card-sga { border-left:4px solid #2563eb; }
     .drug-card-fga { border-left:4px solid #9ca3af; }
     .drug-card-clz { border-left:4px solid #7c3aed; }
@@ -75,6 +71,11 @@
 
     .connector { width:2px; height:18px; background:#9ca3af; margin:2px auto; }
     .arrow-label { display:flex; align-items:center; justify-content:center; gap:4px; font-size:.7rem; color:#6b7280; margin:2px 0; }
+
+    /* CQ推奨テーブル */
+    .cq-strong { background:#f0fdf4; }
+    .cq-weak   { background:#f8fafc; }
+    .cq-quasi  { background:#faf5ff; }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -86,13 +87,15 @@
       <i data-lucide="brain" class="w-7 h-7 opacity-75"></i>
       <span class="text-xs font-semibold opacity-65 uppercase tracking-widest">精神科臨床図解</span>
     </div>
-    <h1 class="text-3xl md:text-4xl font-bold">統合失調症 治療アルゴリズム</h1>
-    <p class="mt-2 text-base opacity-85">ICD-10: F20 ／ DSM-5-TR: Schizophrenia</p>
+    <h1 class="text-3xl md:text-4xl font-bold">統合失調症薬物治療ガイドライン2022</h1>
+    <p class="mt-1 text-sm opacity-75">日本神経精神薬理学会 / 日本臨床精神神経薬理学会　2022年5月公開・2023年8月改訂</p>
+    <p class="mt-1 text-base opacity-85">ICD-10: F20 ／ DSM-5-TR: Schizophrenia</p>
     <div class="flex flex-wrap gap-2 mt-3 text-sm">
       <span class="bg-white/20 px-3 py-1 rounded-full">急性期〜維持期</span>
       <span class="bg-white/20 px-3 py-1 rounded-full">治療抵抗性・クロザピン</span>
       <span class="bg-white/20 px-3 py-1 rounded-full">副作用管理</span>
-      <span class="bg-white/20 px-3 py-1 rounded-full">心理社会的介入</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">心理社会的治療</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">特殊臨床状況</span>
     </div>
   </div>
 </header>
@@ -101,18 +104,20 @@
 <nav class="toc">
   <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">目次</div>
   <ul class="space-y-1.5">
-    <li><a href="#quick"    class="text-xs text-gray-600 hover:text-blue-700 block">クイックRef</a></li>
-    <li><a href="#dx"       class="text-xs text-gray-600 hover:text-blue-700 block">診断基準</a></li>
-    <li><a href="#symptoms" class="text-xs text-gray-600 hover:text-blue-700 block">症状分類</a></li>
-    <li><a href="#algo"     class="text-xs text-blue-700 font-bold block">治療アルゴリズム</a></li>
-    <li><a href="#acute"    class="text-xs text-gray-600 hover:text-blue-700 block ml-2">急性期</a></li>
-    <li><a href="#maintain" class="text-xs text-gray-600 hover:text-blue-700 block ml-2">維持期</a></li>
-    <li><a href="#trs"      class="text-xs text-gray-600 hover:text-blue-700 block ml-2">治療抵抗性</a></li>
-    <li><a href="#drugs"    class="text-xs text-gray-600 hover:text-blue-700 block">薬剤選択</a></li>
-    <li><a href="#lai"      class="text-xs text-gray-600 hover:text-blue-700 block">LAI</a></li>
-    <li><a href="#nonpharma"class="text-xs text-gray-600 hover:text-blue-700 block">非薬物治療</a></li>
-    <li><a href="#se"       class="text-xs text-gray-600 hover:text-blue-700 block">副作用管理</a></li>
-    <li><a href="#monitor"  class="text-xs text-gray-600 hover:text-blue-700 block">モニタリング</a></li>
+    <li><a href="#quick"     class="text-xs text-gray-600 hover:text-blue-700 block">クイックRef</a></li>
+    <li><a href="#dx"        class="text-xs text-gray-600 hover:text-blue-700 block">診断・鑑別</a></li>
+    <li><a href="#symptoms"  class="text-xs text-gray-600 hover:text-blue-700 block">症状分類</a></li>
+    <li><a href="#cq-list"   class="text-xs text-blue-700 font-bold block">CQ推奨一覧</a></li>
+    <li><a href="#algo"      class="text-xs text-gray-600 hover:text-blue-700 block">治療フロー</a></li>
+    <li><a href="#acute"     class="text-xs text-gray-600 hover:text-blue-700 block ml-2">急性期(CQ1)</a></li>
+    <li><a href="#maintain"  class="text-xs text-gray-600 hover:text-blue-700 block ml-2">維持期(CQ2)</a></li>
+    <li><a href="#trs"       class="text-xs text-gray-600 hover:text-blue-700 block ml-2">TRS(CQ5)</a></li>
+    <li><a href="#drugs"     class="text-xs text-gray-600 hover:text-blue-700 block">薬剤選択</a></li>
+    <li><a href="#lai"       class="text-xs text-gray-600 hover:text-blue-700 block">LAI</a></li>
+    <li><a href="#se"        class="text-xs text-gray-600 hover:text-blue-700 block">副作用(CQ3/4)</a></li>
+    <li><a href="#special"   class="text-xs text-gray-600 hover:text-blue-700 block">特殊状況(CQ6/7)</a></li>
+    <li><a href="#nonpharma" class="text-xs text-gray-600 hover:text-blue-700 block">非薬物治療</a></li>
+    <li><a href="#monitor"   class="text-xs text-gray-600 hover:text-blue-700 block">モニタリング</a></li>
   </ul>
 </nav>
 
@@ -126,36 +131,50 @@
       </div>
       <div>
         <h2 class="text-xl font-bold text-gray-800">外来クイックリファレンス</h2>
-        <p class="text-gray-500 text-xs">診察中に即確認すべき4点</p>
+        <p class="text-gray-500 text-xs">診察中に即確認すべき5点</p>
       </div>
     </div>
-    <div class="grid md:grid-cols-2 gap-3">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
       <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
         <div class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
         <div>
-          <div class="font-bold text-gray-800 text-sm">SGAをまず選ぶ。FGAは個別正当化が必要</div>
-          <p class="text-gray-600 text-xs mt-0.5">EPS・遅発性ジスキネジアリスクからSGAが国際的に優先。ハロペリドール等FGAは急性興奮のIM・コスト・既往適応などの場合に。</p>
+          <div class="font-bold text-gray-800 text-sm">SGA単剤を第一選択。まず十分量まで試す</div>
+          <p class="text-gray-600 text-xs mt-0.5">抗精神病薬治療は急性期に強く推奨（1A）。効果不十分なら十分量（CPZeq 600mg/日相当）まで増量またはSGA変更。</p>
         </div>
       </div>
       <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-700">
         <div class="w-8 h-8 bg-purple-700 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
         <div>
           <div class="font-bold text-gray-800 text-sm">2剤失敗→クロザピンを躊躇わない</div>
-          <p class="text-gray-600 text-xs mt-0.5">TRSの定義は「十分量・十分期間（各≥6週目安）の異なる2剤で改善なし」。クロザピン遅延は転帰悪化と関連。無顆粒球症モニタリング体制を整えて導入。</p>
-        </div>
-      </div>
-      <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-600">
-        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
-        <div>
-          <div class="font-bold text-gray-800 text-sm">陰性症状・認知症状は非薬物治療が主役</div>
-          <p class="text-gray-600 text-xs mt-0.5">薬物の陰性症状への特異的効果は限定的。二次性（EPS・抑うつ・環境）を先に除外。認知リハビリ・SST・就労支援を積極的に導入。</p>
+          <p class="text-gray-600 text-xs mt-0.5">TRS定義：異なる2剤×十分量・十分期間（各≥6週）で改善なし。クロザピン遅延は転帰悪化と関連。</p>
         </div>
       </div>
       <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border-l-4 border-green-600">
-        <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
+        <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
         <div>
-          <div class="font-bold text-gray-800 text-sm">家族心理教育（FPE）は再発を有意に減らす</div>
-          <p class="text-gray-600 text-xs mt-0.5">薬物療法と並ぶLevel Aエビデンス。疾病理解・EE低減・問題解決。アドヒアランス不良には共同意思決定＋LAI検討。</p>
+          <div class="font-bold text-gray-800 text-sm">維持期は継続投与。中止・減量・間欠は再発↑</div>
+          <p class="text-gray-600 text-xs mt-0.5">抗精神病薬継続が強く推奨（1A）。CPZeq 200mg/超維持なら減量も選択肢（2A）。</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-600">
+        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
+        <div>
+          <div class="font-bold text-gray-800 text-sm">アドヒアランス不良にはLAI＋SDM</div>
+          <p class="text-gray-600 text-xs mt-0.5">実臨床データではLAIが再入院・死亡を有意に低減。患者希望の場合も積極的に検討。</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl border-l-4 border-amber-500">
+        <div class="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">5</div>
+        <div>
+          <div class="font-bold text-gray-800 text-sm">陰性症状・認知障害は非薬物治療が主役</div>
+          <p class="text-gray-600 text-xs mt-0.5">薬物の特異的効果は限定的。CBTp・SST・CRT・就労支援（IPS）を積極的に併用。家族心理教育で再発予防。</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl border-l-4 border-teal-600">
+        <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">6</div>
+        <div>
+          <div class="font-bold text-gray-800 text-sm">多剤併用・高用量は益なし有害あり</div>
+          <p class="text-gray-600 text-xs mt-0.5">抗精神病薬の多剤併用（2C）・他向精神薬（Li/VPA/BZD）の追加（2C）は有益性を示すRCTエビデンスなし。</p>
         </div>
       </div>
     </div>
@@ -168,31 +187,31 @@
         <i data-lucide="stethoscope" class="w-5 h-5 text-blue-700"></i>
       </div>
       <div>
-        <h2 class="text-xl font-bold text-gray-800">診断基準</h2>
+        <h2 class="text-xl font-bold text-gray-800">診断基準と鑑別診断</h2>
         <p class="text-gray-500 text-xs">DSM-5-TR（サブタイプ廃止）/ ICD-10: F20（サブタイプ残存）</p>
       </div>
     </div>
     <div class="grid md:grid-cols-2 gap-4">
       <div class="criteria-box">
         <div class="font-bold text-blue-800 mb-3 text-sm flex items-center gap-1.5">
-          <i data-lucide="clipboard-list" class="w-4 h-4"></i>DSM-5-TR 診断基準（A〜E）
+          <i data-lucide="clipboard-list" class="w-4 h-4"></i>DSM-5-TR 診断基準（A〜F）
         </div>
         <ul class="text-xs space-y-2 text-gray-700">
           <li>
-            <span class="font-bold text-red-700">A.</span> 以下のうち<strong>≥2項目</strong>が1か月以上のある程度の期間に存在（<span class="text-red-600 font-bold">①②③のうち少なくとも1つを含む</span>）：
+            <span class="font-bold text-red-700">A.</span> 以下のうち<strong>≥2項目</strong>が1か月の大部分（<span class="text-red-600 font-bold">①②③のうち少なくとも1つを含む</span>）：
             <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 ml-2 mt-1 text-gray-600">
               <span class="text-red-600 font-semibold">①妄想</span>
               <span class="text-red-600 font-semibold">②幻覚</span>
-              <span class="text-red-600 font-semibold">③著しく乱れた発語</span>
+              <span class="text-red-600 font-semibold">③解体した言語</span>
               <span>④ひどく乱れた・緊張病的行動</span>
-              <span>⑤陰性症状（感情平坦・意欲低下等）</span>
+              <span>⑤陰性症状（感情平坦・意欲喪失等）</span>
             </div>
           </li>
-          <li><span class="font-bold">B.</span> 仕事・対人関係・自己管理などの<strong>機能水準が発症前を著しく下回る</strong>（児童・青年期発症では「期待される発達水準に達しない」）</li>
-          <li><span class="font-bold">C.</span> 障害の徴候が<strong>≥6か月間</strong>持続（基準Aの1か月＋前駆・残遺期を含む）</li>
-          <li><span class="font-bold">D.</span> <strong>統合失調感情障害・抑うつ障害・双極性障害を除外</strong></li>
+          <li><span class="font-bold">B.</span> 仕事・対人関係・自己管理などの<strong>機能水準が著しく低下</strong></li>
+          <li><span class="font-bold">C.</span> 障害の徴候が<strong>≥6か月間</strong>持続</li>
+          <li><span class="font-bold">D.</span> 統合失調感情障害・抑うつ障害・双極性障害を除外</li>
           <li><span class="font-bold">E.</span> 物質・他の医学的状態によらない</li>
-          <li class="bg-blue-50 rounded p-1.5"><span class="font-bold text-blue-700">注記（ASD既往例）</span> ASDの既往がある場合、妄想/幻覚が<strong>1か月以上</strong>顕著に存在するときに付加診断（基準A〜Eは同様に適用）</li>
+          <li><span class="font-bold">F.</span> ASD既往例：顕著な幻覚/妄想が≥1か月存在する場合のみ追加診断</li>
         </ul>
       </div>
       <div>
@@ -208,17 +227,28 @@
             <span><span class="font-bold">F20.6</span> 単純型</span>
             <span><span class="font-bold">F20.9</span> 詳細不明</span>
           </div>
-          <p class="text-xs text-indigo-700 mt-2 font-medium">DSM-5-TRはサブタイプを廃止し、緊張症は別に独立コーディング</p>
         </div>
-        <div class="warning-box">
-          <div class="font-bold text-yellow-800 text-xs mb-1">重要な鑑別</div>
+        <div class="warning-box !mt-0">
+          <div class="font-bold text-yellow-800 text-xs mb-2 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>必須除外鑑別</div>
           <ul class="text-xs space-y-1 text-gray-700">
-            <li>・<strong>統合失調感情障害</strong>：気分エピソードが精神病期の大部分を占める</li>
-            <li>・<strong>気分障害の精神病性特徴</strong>：気分エピソードが先行し優位</li>
-            <li>・<strong>物質誘発性精神病</strong>：覚醒剤・大麻・アルコールの使用歴確認</li>
-            <li>・<strong>器質性</strong>：てんかん（側頭葉）・自己免疫脳炎（NMDAR抗体等）・脳腫瘍</li>
+            <li>・<strong>器質性</strong>：抗NMDA受容体脳炎（特に若年女性）・てんかん・脳腫瘍・甲状腺疾患</li>
+            <li>・<strong>物質誘発性</strong>：覚醒剤・大麻・コカイン・ステロイド投与</li>
+            <li>・<strong>統合失調感情障害</strong>：気分エピソードが活動期の大部分を占める</li>
+            <li>・<strong>双極性障害</strong>：躁状態→陽性症状様、うつ→陰性症状様（思考の障害か気分の障害かで鑑別）</li>
+            <li>・<strong>妄想性障害</strong>：妄想のみ持続、その他の統合失調症症状乏しい</li>
+            <li>・<strong>短期精神病性障害</strong>：1日〜1か月以内に消退</li>
+            <li>・<strong>統合失調型PD</strong>：閾値以下の症状、機能障害は軽度</li>
           </ul>
         </div>
+      </div>
+    </div>
+    <!-- 診断上のポイント -->
+    <div class="mt-3 bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-700">
+      <div class="font-bold text-gray-700 mb-1.5 flex items-center gap-1.5"><i data-lucide="info" class="w-3.5 h-3.5 text-blue-500"></i>本ガイドラインの前提：診断は確定しているものとして薬物治療推奨を策定</div>
+      <div class="grid md:grid-cols-3 gap-2">
+        <div><span class="font-bold">問診のポイント：</span>①症状の内容 ②発症時期 ③経過 ④社会・生活機能への支障</div>
+        <div><span class="font-bold">検査：</span>血液・尿・ECG（ルーチン）+ 症状に応じて血液（甲状腺・梅毒）・脳波・MRI/CT・髄液</div>
+        <div><span class="font-bold">評価スケール：</span>PANSS（30-210点）が標準。治療反応：≥20%改善が一般的基準</div>
       </div>
     </div>
   </div>
@@ -245,10 +275,10 @@
         <ul class="text-xs text-gray-700 space-y-0.5">
           <li>妄想（被害・関係・誇大等）</li>
           <li>幻覚（幻聴が最多）</li>
-          <li>思考障害・発語の乱れ</li>
-          <li>行動の混乱・奇異行動</li>
+          <li>思考障害・解体した言語</li>
+          <li>緊張病的行動</li>
         </ul>
-        <div class="mt-2 bg-red-100 rounded p-1.5 text-xs text-red-700 font-medium">抗精神病薬が最も有効</div>
+        <div class="mt-2 bg-red-100 rounded p-1.5 text-xs text-red-700 font-medium">抗精神病薬が最も有効（Level A）</div>
       </div>
       <div class="bg-blue-50 border border-blue-200 rounded-xl p-3">
         <div class="flex items-center gap-2 mb-2">
@@ -260,11 +290,11 @@
         <ul class="text-xs text-gray-700 space-y-0.5">
           <li>感情の平坦化・鈍麻</li>
           <li>思考貧困・発語減少</li>
-          <li>意欲・自発性の低下</li>
-          <li>快感消失（アンヘドニア）</li>
+          <li>意欲・自発性の低下（意欲喪失）</li>
           <li>社会的引きこもり</li>
+          <li>快感消失（アンヘドニア）</li>
         </ul>
-        <div class="mt-2 bg-blue-100 rounded p-1.5 text-xs text-blue-700 font-medium">薬効限定＋リハビリが主軸</div>
+        <div class="mt-2 bg-blue-100 rounded p-1.5 text-xs text-blue-700 font-medium">薬効限定。二次性除外後にリハビリ主軸</div>
       </div>
       <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
         <div class="flex items-center gap-2 mb-2">
@@ -279,33 +309,250 @@
           <li>実行機能の障害</li>
           <li>社会的認知の障害</li>
         </ul>
-        <div class="mt-2 bg-amber-100 rounded p-1.5 text-xs text-amber-700 font-medium">認知リハビリが有効</div>
+        <div class="mt-2 bg-amber-100 rounded p-1.5 text-xs text-amber-700 font-medium">CRT・SST・就労支援。薬物の効果は乏しい</div>
       </div>
       <div class="bg-gray-50 border border-gray-200 rounded-xl p-3">
         <div class="flex items-center gap-2 mb-2">
           <div class="w-7 h-7 bg-gray-500 rounded-lg flex items-center justify-center flex-shrink-0">
             <i data-lucide="shuffle" class="w-3.5 h-3.5 text-white"></i>
           </div>
-          <div class="font-bold text-gray-700 text-sm">解体症状</div>
+          <div class="font-bold text-gray-700 text-sm">解体・緊張病症状</div>
         </div>
         <ul class="text-xs text-gray-700 space-y-0.5">
           <li>支離滅裂な思考・発語</li>
           <li>奇異・逸脱した行動</li>
           <li>不適切な感情表出</li>
-          <li>緊張病症状</li>
+          <li>緊張病症状（昏迷・興奮・常同）</li>
         </ul>
-        <div class="mt-2 bg-gray-100 rounded p-1.5 text-xs text-gray-600 font-medium">抗精神病薬＋緊張病はBZD</div>
+        <div class="mt-2 bg-gray-100 rounded p-1.5 text-xs text-gray-600 font-medium">抗精神病薬＋緊張病にはBZD/ECT</div>
       </div>
     </div>
-    <!-- PANSSスケール -->
-    <div class="mt-4 bg-indigo-50 border border-indigo-200 rounded-xl p-3">
-      <div class="font-bold text-indigo-800 text-xs mb-2 flex items-center gap-2">
-        <i data-lucide="clipboard-list" class="w-4 h-4"></i>PANSS（Positive and Negative Syndrome Scale）
+    <div class="mt-3 bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-xs">
+      <div class="font-bold text-indigo-800 mb-2 flex items-center gap-2"><i data-lucide="clipboard-list" class="w-4 h-4"></i>PANSS（陽性・陰性症状評価尺度）</div>
+      <div class="grid md:grid-cols-3 gap-3">
+        <div><span class="font-bold text-red-700">陽性下位尺度 P1-P7</span><br>各1-7点、計7-49点<br>P1妄想 P2概念混乱 P3幻覚 P4興奮 P5誇大 P6猜疑 P7敵意</div>
+        <div><span class="font-bold text-blue-700">陰性下位尺度 N1-N7</span><br>各1-7点、計7-49点<br>N1感情鈍麻 N2思考貧困 N3会話受動性 N4社会的引きこもり N5抽象思考 N6会話自発性 N7常同思考</div>
+        <div><span class="font-bold text-gray-700">一般精神病理 G1-G16</span><br>各1-7点、計16-112点<br>総合PANSS: 30-210点<br><span class="text-green-700 font-semibold">治療反応: ≥20%改善が一般的基準</span></div>
       </div>
-      <div class="grid md:grid-cols-3 gap-3 text-xs">
-        <div><span class="font-bold text-red-700">陽性下位尺度（P1-P7）</span><br>各1-7点、計7-49点<br>P1妄想 P2概念の混乱 P3幻覚 P4興奮 P5誇大 P6猜疑 P7敵意</div>
-        <div><span class="font-bold text-blue-700">陰性下位尺度（N1-N7）</span><br>各1-7点、計7-49点<br>N1感情鈍麻 N2思考貧困 N3会話の受動性 N4社会的引きこもり N5抽象思考困難 N6会話の自発性 N7常同思考</div>
-        <div><span class="font-bold text-gray-700">一般精神病理尺度（G1-G16）</span><br>各1-7点、計16-112点<br>総合PANSS：30-210点<br><span class="text-green-700 font-semibold">治療反応：≥20%改善が一般的基準</span></div>
+    </div>
+  </div>
+
+  <!-- ===== CQ推奨一覧 ===== -->
+  <div class="section-card" id="cq-list">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="book-open" class="w-5 h-5 text-indigo-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">CQ推奨一覧（2022年版）</h2>
+        <p class="text-gray-500 text-xs">推奨の強さ：1=強く推奨、2=弱く推奨　エビデンスの強さ：A=強・B=中等度・C=弱・D=とても弱い　準推奨=RCTエビデンスなし</p>
+      </div>
+    </div>
+
+    <!-- 推奨の強さ凡例 -->
+    <div class="flex flex-wrap gap-2 mb-4 text-xs">
+      <span class="badge-1a">1A 強く推奨・強いエビデンス</span>
+      <span class="badge-1b">1B 強く推奨・中等度エビデンス</span>
+      <span class="badge-2a">2A 弱く推奨・強いエビデンス</span>
+      <span class="badge-2c">2C 弱く推奨・弱いエビデンス</span>
+      <span class="badge-qr">準推奨 RCTエビデンス不十分</span>
+    </div>
+
+    <!-- 第1章 急性期 -->
+    <div class="mb-4">
+      <div class="font-bold text-sm text-red-700 mb-2 flex items-center gap-2 bg-red-50 rounded-lg px-3 py-2">
+        <i data-lucide="zap" class="w-4 h-4"></i>第1章 急性期の統合失調症治療
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse min-w-[600px]">
+          <thead>
+            <tr class="bg-red-50">
+              <th class="p-2 text-left font-bold text-gray-700 w-16">CQ</th>
+              <th class="p-2 text-left font-bold text-gray-700">臨床疑問</th>
+              <th class="p-2 text-left font-bold text-gray-700 w-36">推奨</th>
+              <th class="p-2 text-left font-bold text-gray-700 w-20">強さ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="cq-strong hover:bg-green-50/50">
+              <td class="p-2 font-bold text-red-700">CQ1-1</td>
+              <td class="p-2">急性期に抗精神病薬治療は有用か？</td>
+              <td class="p-2 text-gray-700"><strong>強く推奨</strong>。精神症状全般・陽性・陰性・QOL改善（A）。体重増加・プロラクチン↑・QTc延長など有害事象増加も（A）</td>
+              <td class="p-2"><span class="badge-1a">1A</span></td>
+            </tr>
+            <tr class="cq-quasi hover:bg-purple-50/50">
+              <td class="p-2 font-bold text-red-700">CQ1-2</td>
+              <td class="p-2">効果不十分な場合、切り替え vs 増量どちらが適切か？</td>
+              <td class="p-2 text-gray-700"><strong>十分量まで増量</strong>（CPZeq 600mg/日目安）、または別SGAへの切り替えを検討することが望ましい（準推奨）</td>
+              <td class="p-2"><span class="badge-qr">準推奨</span></td>
+            </tr>
+            <tr class="cq-weak hover:bg-gray-50">
+              <td class="p-2 font-bold text-red-700">CQ1-3</td>
+              <td class="p-2">効果不十分な場合、単剤 vs 抗精神病薬の併用？</td>
+              <td class="p-2 text-gray-700"><strong>単剤継続を弱く推奨</strong>。本邦の治療環境では並列するエビデンスなし。多剤が益を示すRCTは乏しい</td>
+              <td class="p-2"><span class="badge-2c">2C</span></td>
+            </tr>
+            <tr class="cq-weak hover:bg-gray-50">
+              <td class="p-2 font-bold text-red-700">CQ1-4</td>
+              <td class="p-2">効果不十分な場合、単剤 vs 他向精神薬（Li/VPA/LTG/BZD）の併用？</td>
+              <td class="p-2 text-gray-700"><strong>単剤治療を弱く推奨</strong>。いずれの薬剤も本邦では適応外。精神症状改善効果を示すエビデンスなし</td>
+              <td class="p-2"><span class="badge-2c">2C</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 第2章 維持期 -->
+    <div class="mb-4">
+      <div class="font-bold text-sm text-green-700 mb-2 flex items-center gap-2 bg-green-50 rounded-lg px-3 py-2">
+        <i data-lucide="shield" class="w-4 h-4"></i>第2章 安定・維持期の統合失調症治療
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse min-w-[600px]">
+          <thead>
+            <tr class="bg-green-50">
+              <th class="p-2 text-left font-bold text-gray-700 w-16">CQ</th>
+              <th class="p-2 text-left font-bold text-gray-700">臨床疑問</th>
+              <th class="p-2 text-left font-bold text-gray-700">推奨</th>
+              <th class="p-2 text-left font-bold text-gray-700 w-20">強さ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="cq-strong hover:bg-green-50/50">
+              <td class="p-2 font-bold text-green-700">CQ2-1</td>
+              <td class="p-2">安定した統合失調症に抗精神病薬の中止は推奨されるか？</td>
+              <td class="p-2 text-gray-700"><strong>中止せず継続を強く推奨</strong>。中止により再発（A）・再入院（A）・QOL悪化（B）・ジスキネジア増加（A）</td>
+              <td class="p-2"><span class="badge-1a">1A</span></td>
+            </tr>
+            <tr class="cq-weak hover:bg-gray-50">
+              <td class="p-2 font-bold text-green-700">CQ2-2</td>
+              <td class="p-2">安定した統合失調症に抗精神病薬の減量は推奨されるか？</td>
+              <td class="p-2 text-gray-700"><strong>用量維持を弱く推奨</strong>（2A）。減量で再発増加（A）。ただし<span class="text-green-700 font-semibold">減量後CPZeq 200mg/日超を維持できるなら減量の余地あり</span></td>
+              <td class="p-2"><span class="badge-2a">2A</span></td>
+            </tr>
+            <tr class="cq-weak hover:bg-gray-50">
+              <td class="p-2 font-bold text-green-700">CQ2-3</td>
+              <td class="p-2">安定した統合失調症に投与間隔延長・間欠投与は推奨されるか？</td>
+              <td class="p-2 text-gray-700"><strong>継続投与を弱く推奨</strong>。間欠投与で再発（A）・再入院（A）増加</td>
+              <td class="p-2"><span class="badge-2a">2A</span></td>
+            </tr>
+            <tr class="cq-quasi hover:bg-purple-50/50">
+              <td class="p-2 font-bold text-green-700">CQ2-4</td>
+              <td class="p-2">維持期治療に第一世代（FGA）vs 第二世代（SGA）どちらが有用か？</td>
+              <td class="p-2 text-gray-700"><strong>SGAが望ましい</strong>（準推奨）。SGAはFGAより再発・再入院が有意に少ない。遅発性ジスキネジアリスクも低い</td>
+              <td class="p-2"><span class="badge-qr">準推奨</span></td>
+            </tr>
+            <tr class="cq-quasi hover:bg-purple-50/50">
+              <td class="p-2 font-bold text-green-700">CQ2-5</td>
+              <td class="p-2">維持期治療に抗精神病薬のLAI（持効性注射剤）は有用か？</td>
+              <td class="p-2 text-gray-700"><strong>アドヒアランス低下・患者希望時はLAIが望ましい</strong>（準推奨）。実臨床データでは再入院・死亡リスク低減</td>
+              <td class="p-2"><span class="badge-qr">準推奨</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 第3章 EPS -->
+    <div class="mb-4">
+      <div class="font-bold text-sm text-orange-700 mb-2 flex items-center gap-2 bg-orange-50 rounded-lg px-3 py-2">
+        <i data-lucide="activity" class="w-4 h-4"></i>第3章 抗精神病薬の薬剤性錐体外路系副作用
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse min-w-[600px]">
+          <thead>
+            <tr class="bg-orange-50">
+              <th class="p-2 text-left font-bold text-gray-700 w-16">CQ</th>
+              <th class="p-2 text-left font-bold text-gray-700">副作用</th>
+              <th class="p-2 text-left font-bold text-gray-700">推奨</th>
+              <th class="p-2 text-left font-bold text-gray-700 w-20">強さ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-orange-50/30"><td class="p-2 font-bold text-orange-700">CQ3-1</td><td class="p-2">薬剤性パーキンソン症状</td><td class="p-2 text-gray-700">原因薬減量/SGA変更。抗コリン薬は副作用を勘案した上で最小限使用。<strong>予防：SGAを選択</strong></td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-orange-50/30"><td class="p-2 font-bold text-orange-700">CQ3-2</td><td class="p-2">急性ジストニア</td><td class="p-2 text-gray-700">SGA変更。次に<strong>抗コリン薬（ビペリデン等）経口/筋注</strong>。予防：SGAを選択</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-orange-50/30"><td class="p-2 font-bold text-orange-700">CQ3-3</td><td class="p-2">アカシジア</td><td class="p-2 text-gray-700">原因薬減量/変更。<strong>プロプラノロール</strong>を第一選択。ミルタザピン・クロナゼパムも選択肢</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-orange-50/30"><td class="p-2 font-bold text-orange-700">CQ3-4</td><td class="p-2">遅発性ジスキネジア（TD）</td><td class="p-2 text-gray-700">原因薬減量/変更またはクロザピンへ変更。<strong>バルベナジン（VMAT2阻害薬）</strong>。クロナゼパムも可</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-orange-50/30"><td class="p-2 font-bold text-orange-700">CQ3-5</td><td class="p-2">遅発性ジストニア</td><td class="p-2 text-gray-700">原因薬減量/SGA変更/クロザピン変更。抗コリン薬・テトラベナジン・ボツリヌストキシン</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 第4章 その他の副作用 -->
+    <div class="mb-4">
+      <div class="font-bold text-sm text-yellow-700 mb-2 flex items-center gap-2 bg-yellow-50 rounded-lg px-3 py-2">
+        <i data-lucide="triangle-alert" class="w-4 h-4"></i>第4章 抗精神病薬のその他の副作用
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse min-w-[600px]">
+          <thead>
+            <tr class="bg-yellow-50">
+              <th class="p-2 text-left font-bold text-gray-700 w-16">CQ</th>
+              <th class="p-2 text-left font-bold text-gray-700">副作用</th>
+              <th class="p-2 text-left font-bold text-gray-700">推奨</th>
+              <th class="p-2 text-left font-bold text-gray-700 w-20">強さ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-yellow-50/30"><td class="p-2 font-bold text-red-700">CQ4-1</td><td class="p-2">悪性症候群（NMS）</td><td class="p-2 text-gray-700"><strong>原因薬の即時中止・支持療法</strong>。ダントロレン・ブロモクリプチン補助的使用。完全回復後2週以上で慎重に再開</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-yellow-50/30"><td class="p-2 font-bold text-yellow-700">CQ4-2</td><td class="p-2">体重増加</td><td class="p-2 text-gray-700">体重増加の少ない薬剤（アリピプラゾール・ブロナンセリン等）への変更。メトフォルミン追加（準推奨）。生活指導</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-yellow-50/30"><td class="p-2 font-bold text-yellow-700">CQ4-3</td><td class="p-2">便秘</td><td class="p-2 text-gray-700">抗コリン作用の少ない薬剤への変更。<strong>ポリエチレングリコール製剤（PEG）を第一選択</strong>（2023年改訂）</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-yellow-50/30"><td class="p-2 font-bold text-yellow-700">CQ4-4</td><td class="p-2">QT延長</td><td class="p-2 text-gray-700">QT延長リスクの少ない薬剤へ変更。電解質補正（K・Mg）。QTc＞500ms or ≥60ms延長→変更</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="hover:bg-yellow-50/30"><td class="p-2 font-bold text-yellow-700">CQ4-5</td><td class="p-2">性機能障害（高プロラクチン血症）</td><td class="p-2 text-gray-700">プロラクチン上昇の少ない薬剤（アリピプラゾール・クエチアピン）へ変更。アリピプラゾール追加も選択肢</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 第5章 TRS -->
+    <div class="mb-4">
+      <div class="font-bold text-sm text-purple-700 mb-2 flex items-center gap-2 bg-purple-50 rounded-lg px-3 py-2">
+        <i data-lucide="shield-alert" class="w-4 h-4"></i>第5章 治療抵抗性統合失調症（TRS）
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse min-w-[600px]">
+          <thead>
+            <tr class="bg-purple-50">
+              <th class="p-2 text-left font-bold text-gray-700 w-16">CQ</th>
+              <th class="p-2 text-left font-bold text-gray-700">臨床疑問</th>
+              <th class="p-2 text-left font-bold text-gray-700">推奨</th>
+              <th class="p-2 text-left font-bold text-gray-700 w-20">強さ</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="cq-strong hover:bg-green-50/50"><td class="p-2 font-bold text-purple-700">CQ5-1</td><td class="p-2">TRSにクロザピン治療は有用か？</td><td class="p-2 text-gray-700"><strong>クロザピン治療を強く推奨</strong>。精神症状全般の改善（B）、QOL改善（B）、治療中断減少（B）。TRS唯一の保険適応薬</td><td class="p-2"><span class="badge-1b">1B</span></td></tr>
+            <tr class="cq-quasi hover:bg-purple-50/50"><td class="p-2 font-bold text-purple-700">CQ5-2</td><td class="p-2">クロザピン有効例に副作用が生じた場合の対処法は？</td><td class="p-2 text-gray-700">無顆粒球症：CPMS規定に従い中止/再開。代謝：メトフォルミン・薬剤変更。便秘：PEG製剤。痙攣：抗てんかん薬</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="cq-quasi hover:bg-purple-50/50"><td class="p-2 font-bold text-purple-700">CQ5-3</td><td class="p-2">クロザピン無効時の併用療法は何か？</td><td class="p-2 text-gray-700"><strong>アリピプラゾール追加</strong>（代謝改善・効果増強の報告）。ラモトリギン追加（一定の支持）。有効性の確立したものは少ない</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="cq-quasi hover:bg-purple-50/50"><td class="p-2 font-bold text-purple-700">CQ5-4</td><td class="p-2">クロザピン使用できないTRSにECTは有用か？</td><td class="p-2 text-gray-700"><strong>ECTを選択肢とすることが望ましい</strong>。クロザピン使用不可のTRSに対し、陽性症状改善の報告あり</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+            <tr class="cq-quasi hover:bg-purple-50/50"><td class="p-2 font-bold text-purple-700">CQ5-5</td><td class="p-2">クロザピン・ECT以外のTRS治療は？</td><td class="p-2 text-gray-700">rTMS・認知リハビリ等の非薬物治療を追加検討。現時点で確立した薬物療法はなく、専門機関紹介も考慮</td><td class="p-2"><span class="badge-qr">準推奨</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 第6・7章 特殊臨床状況（概略のみここに記載） -->
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="bg-teal-50 border border-teal-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-teal-800 mb-1.5">第6章 その他の臨床的諸問題1（詳細は↓特殊臨床状況セクション）</div>
+        <ul class="space-y-0.5 text-gray-700">
+          <li><span class="font-bold">CQ6-1</span> 不眠：鎮静AP使用→有害事象増加。非薬物・睡眠衛生指導を先行（準推奨）</li>
+          <li><span class="font-bold">CQ6-2</span> 不安・不穏の頓服：BZD頓服は限定的。AP頓服を考慮（準推奨）</li>
+          <li><span class="font-bold">CQ6-3</span> 過眠：AP変更・減量を検討（準推奨）</li>
+          <li><span class="font-bold">CQ6-4</span> 抑うつ症状：抗うつ薬追加の根拠乏しい。AP調整・心理的支援（準推奨）</li>
+          <li><span class="font-bold">CQ6-5</span> 認知機能障害：確立した薬物療法なし。認知リハビリ（準推奨）</li>
+        </ul>
+      </div>
+      <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-rose-800 mb-1.5">第7章 その他の臨床的諸問題2</div>
+        <ul class="space-y-0.5 text-gray-700">
+          <li><span class="font-bold">CQ7-1</span> 精神運動興奮：SGA IM（オランザピン・アリピプラゾール等）＋BZD（準推奨）</li>
+          <li><span class="font-bold">CQ7-2</span> 緊張病：BZD（ロラゼパム）を第一選択→無効ならECT（準推奨）</li>
+          <li><span class="font-bold">CQ7-3</span> 病的多飲水：AP変更（クロザピン有効報告）・輸液（準推奨）</li>
+          <li><span class="font-bold">CQ7-4/5</span> 妊娠・授乳：治療継続の益と催奇形性リスクを個別に評価。中止は再発リスク（準推奨）</li>
+          <li><span class="font-bold">CQ7-6</span> 初回エピソード精神病：AP治療を強く推奨。低用量から開始（1A）</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -318,7 +565,7 @@
       </div>
       <div>
         <h2 class="text-xl font-bold text-gray-800">治療アルゴリズム全体フロー</h2>
-        <p class="text-gray-500 text-xs">急性期 → 寛解維持 → 治療抵抗性</p>
+        <p class="text-gray-500 text-xs">急性期 → 維持期（寛解維持） → 治療抵抗性（TRS）</p>
       </div>
     </div>
 
@@ -328,26 +575,26 @@
       <div class="step-box step-acute w-full max-w-2xl" id="acute">
         <div class="flex items-center gap-2 mb-3">
           <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
-          <div class="font-bold text-red-800 text-base">急性期治療</div>
-          <span class="badge-level-a ml-auto">Level A</span>
+          <div class="font-bold text-red-800 text-base">急性期治療（CQ1）</div>
+          <span class="badge-1a ml-auto">1A</span>
         </div>
         <div class="grid md:grid-cols-2 gap-3 text-xs">
           <div>
             <div class="font-bold text-gray-700 mb-1.5 flex items-center gap-1"><i data-lucide="pill" class="w-3.5 h-3.5 text-red-500"></i>薬物治療の原則</div>
             <ul class="space-y-1 text-gray-700">
-              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span><strong>第二世代抗精神病薬（SGA）を第一選択</strong>（EPS・TD低減）</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>単剤投与が原則。多剤併用は避ける</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span><strong>効果判定：2週前後</strong>で反応の初期評価、<strong>4〜6週</strong>で本格評価</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>4〜6週で<strong>PANSS ≥20%改善なし</strong>→用量調整または薬剤変更を検討</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span><strong>SGA単剤を第一選択</strong>（EPS・TD低減; CQ2-4 準推奨）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>多剤併用・他向精神薬（Li/VPA/BZD）の追加は<strong>推奨しない</strong>（CQ1-3/4: 2C）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>効果判定：<strong>4〜6週</strong>で本格評価（PANSS ≥20%改善）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>効果不十分→<strong>十分量まで増量</strong>（CPZeq 600mg/日相当目安）または<strong>SGA変更</strong>（CQ1-2 準推奨）</span></li>
             </ul>
           </div>
           <div>
-            <div class="font-bold text-gray-700 mb-1.5 flex items-center gap-1"><i data-lucide="zap" class="w-3.5 h-3.5 text-orange-500"></i>急性興奮・激越への対応</div>
+            <div class="font-bold text-gray-700 mb-1.5 flex items-center gap-1"><i data-lucide="zap" class="w-3.5 h-3.5 text-orange-500"></i>急性興奮・精神運動興奮への対応（CQ7-1）</div>
             <ul class="space-y-1 text-gray-700">
               <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-orange-400 flex-shrink-0 mt-0.5"></i><span>まず<strong>言語的鎮静（de-escalation）</strong>を試みる</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-orange-400 flex-shrink-0 mt-0.5"></i><span>必要時：<strong>IM投与</strong>（ハロペリドール・オランザピン・アリピプラゾール等、製剤により）</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-orange-400 flex-shrink-0 mt-0.5"></i><span><strong>ロラゼパム（BZD）の補助使用</strong>：短期・必要最小量。呼吸・鎮静に注意</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-orange-400 flex-shrink-0 mt-0.5"></i><span>オランザピンとBZD IM の直接同時併用は避ける（呼吸抑制）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-orange-400 flex-shrink-0 mt-0.5"></i><span>必要時：<strong>SGA IM</strong>（オランザピン・アリピプラゾール等製剤による）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-orange-400 flex-shrink-0 mt-0.5"></i><span><strong>ロラゼパム（BZD）IM</strong>の補助使用：短期・必要最小量。呼吸に注意</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="x-circle" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span class="text-red-700 font-semibold">オランザピンIMとBZD IMの同時使用禁止（呼吸抑制）</span></li>
             </ul>
           </div>
         </div>
@@ -355,10 +602,10 @@
 
       <!-- 判定矢印 -->
       <div class="connector"></div>
-      <div class="arrow-label"><i data-lucide="arrow-down" class="w-4 h-4"></i><span>4〜6週後の効果評価</span></div>
+      <div class="arrow-label"><i data-lucide="arrow-down" class="w-4 h-4"></i><span>4〜6週後の効果評価（PANSS）</span></div>
       <div class="connector"></div>
 
-      <!-- 分岐：反応あり vs なし -->
+      <!-- 分岐 -->
       <div class="grid grid-cols-2 gap-4 w-full max-w-2xl">
         <div class="bg-green-50 border-2 border-green-400 rounded-xl p-3 text-xs">
           <div class="font-bold text-green-800 mb-1 flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i>反応あり（PANSS ≥20%改善）</div>
@@ -366,8 +613,9 @@
         </div>
         <div class="bg-red-50 border-2 border-red-400 rounded-xl p-3 text-xs">
           <div class="font-bold text-red-800 mb-1 flex items-center gap-1.5"><i data-lucide="x-circle" class="w-4 h-4"></i>反応不十分</div>
-          <p class="text-gray-600">用量最適化・服薬確認 → 別クラスSGAに変更（1剤目失敗）</p>
-          <p class="text-orange-700 font-semibold mt-1.5 flex items-center gap-1"><i data-lucide="refresh-cw" class="w-3 h-3"></i>2剤目も十分量・十分期間（≥6週）試行 → 改善なければTRSへ</p>
+          <p class="text-gray-600"><strong>①用量最適化</strong>：CPZeq 600mg/日まで増量（服薬確認）</p>
+          <p class="text-gray-600 mt-1"><strong>②SGA変更</strong>：別クラスのSGAに切り替え</p>
+          <p class="text-orange-700 font-semibold mt-1.5">2剤目も十分量・十分期間（≥6週）→改善なければTRSへ</p>
         </div>
       </div>
 
@@ -377,60 +625,61 @@
       <div class="step-box step-maintain w-full max-w-2xl" id="maintain">
         <div class="flex items-center gap-2 mb-3">
           <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
-          <div class="font-bold text-green-800 text-base">維持期・再発予防</div>
-          <span class="badge-level-a ml-auto">Level A</span>
+          <div class="font-bold text-green-800 text-base">維持期・再発予防（CQ2）</div>
+          <span class="badge-1a ml-auto">中止しない 1A</span>
         </div>
         <div class="grid md:grid-cols-2 gap-3 text-xs text-gray-700">
           <div>
-            <div class="font-bold text-gray-700 mb-1.5">維持期間の目安</div>
+            <div class="font-bold text-gray-700 mb-1.5">継続と減量の判断基準（CQ2-1/2）</div>
             <ul class="space-y-1">
-              <li class="flex items-start gap-1.5"><i data-lucide="clock" class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5"></i><span><strong>初発例：最低1〜2年</strong>（安易な早期中止は再発リスク↑）</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="clock" class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5"></i><span><strong>再発例・反復例：より長期</strong>（5年〜不定期、個別化）</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="clock" class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5"></i><span>中止する場合は<strong>計画的漸減</strong>、再燃サインを家族と共有</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="shield" class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5"></i><span><strong>中止は強く非推奨（1A）</strong>：中止→再発57% vs 継続22%</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="shield" class="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5"></i><span><strong>減量は弱く非推奨（2A）</strong>：減量→再発リスク増加</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="info" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span>ただし<strong>CPZeq 200mg/日超を維持できるなら</strong>減量を試みる余地あり</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="x-circle" class="w-3 h-3 text-red-500 flex-shrink-0 mt-0.5"></i><span><strong>間欠投与は非推奨（2A）</strong>：再発・再入院が有意に増加</span></li>
             </ul>
           </div>
           <div>
-            <div class="font-bold text-gray-700 mb-1.5">アドヒアランス不良への対応</div>
+            <div class="font-bold text-gray-700 mb-1.5">アドヒアランス不良への対応（CQ2-5）</div>
             <ul class="space-y-1">
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span>副作用を確認し剤形・薬剤変更</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span><strong>LAI（持続性注射製剤）を積極的に検討</strong></span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span>家族心理教育・共同意思決定</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span>スティグマ・経済・アクセス要因の確認</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span>副作用の確認・軽減。服薬理由・バリアを探る</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span><strong>LAI（持続性注射製剤）を積極的に検討</strong>（準推奨）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span>家族心理教育・共同意思決定（SDM）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5"></i><span>ピアサポート・ACT・訪問看護の活用</span></li>
             </ul>
           </div>
         </div>
       </div>
 
       <div class="connector"></div>
-      <div class="arrow-label"><i data-lucide="arrow-down" class="w-4 h-4 text-red-500"></i><span class="text-red-600 font-semibold">2剤（十分量・十分期間）で反応不十分 → TRS</span></div>
+      <div class="arrow-label"><i data-lucide="arrow-down" class="w-4 h-4 text-red-500"></i><span class="text-red-600 font-semibold">異なる2剤（十分量・十分期間各≥6週）で反応不十分 → TRS判定</span></div>
       <div class="connector"></div>
 
       <!-- Step 3: TRS -->
       <div class="step-box step-trs w-full max-w-2xl" id="trs">
         <div class="flex items-center gap-2 mb-3">
           <div class="w-8 h-8 bg-purple-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
-          <div class="font-bold text-purple-800 text-base">治療抵抗性統合失調症（TRS）</div>
-          <span class="badge-trs ml-auto">クロザピン</span>
+          <div class="font-bold text-purple-800 text-base">治療抵抗性統合失調症（TRS）（CQ5）</div>
+          <span class="badge-trs ml-auto">クロザピン 1B</span>
         </div>
         <div class="grid md:grid-cols-2 gap-3">
           <div>
             <div class="criteria-box !mt-0">
-              <div class="font-bold text-blue-800 text-xs mb-2">TRS定義（コンセンサス）</div>
+              <div class="font-bold text-blue-800 text-xs mb-2">TRS定義（本ガイドライン準拠）</div>
               <ul class="text-xs space-y-1 text-gray-700">
                 <li>・<strong>≥2種類の異なる抗精神病薬</strong>（少なくとも1剤はSGA）</li>
-                <li>・各薬剤で<strong>十分量（≥600mg CPZeq目安）</strong><br><span class="text-orange-600">※部分作動薬（アリピプラゾール等）のCPZ換算は信頼性低。添付文書上の上限・臨床的耐容性で判断</span></li>
+                <li>・各薬剤で<strong>十分量（CPZeq ≥600mg/日目安）</strong><br><span class="text-orange-600 text-xs">※アリピプラゾール等部分作動薬のCPZ換算は不確実。臨床的耐容性・添付文書上限で判断</span></li>
                 <li>・各薬剤で<strong>十分期間（≥6週間目安）</strong></li>
-                <li>・上記を経ても<strong>陽性症状が持続・機能障害</strong></li>
+                <li>・上記を経ても<strong>陽性症状の持続・機能障害</strong></li>
               </ul>
             </div>
             <div class="recommend-box !mt-2">
-              <div class="font-bold text-green-800 text-xs mb-2">クロザピン導入の原則</div>
+              <div class="font-bold text-green-800 text-xs mb-2">クロザピン導入の原則（CQ5-1: 1B）</div>
               <ul class="text-xs space-y-1 text-gray-700">
                 <li>・TRS確認後は<strong>早期導入が転帰に関連</strong></li>
-                <li>・漸増が必須（例：12.5mg→25mg→50mg...）</li>
-                <li>・目標用量：個人差大。多くは<strong>200〜450mg/日</strong>域</li>
-                <li>・血中濃度測定も考慮（350〜600 ng/mL目安）</li>
-                <li>・クロザピン登録システム（CPMS）への登録必須</li>
+                <li>・漸増必須（例：12.5→25→50→100…mg）</li>
+                <li>・目標用量：個人差大。多くは<strong>200〜450 mg/日</strong></li>
+                <li>・血中濃度モニタリング考慮（350〜600 ng/mL目安）</li>
+                <li>・<strong>CPMS（クロザリル患者モニタリングサービス）登録必須</strong></li>
               </ul>
             </div>
           </div>
@@ -439,28 +688,28 @@
               <div class="font-bold text-red-800 text-xs mb-2 flex items-center gap-1.5"><i data-lucide="triangle-alert" class="w-4 h-4"></i>クロザピン 必須モニタリング</div>
               <table class="w-full text-xs border-collapse">
                 <tbody class="divide-y divide-red-100">
-                  <tr><td class="py-1 font-bold text-red-700 pr-2">無顆粒球症</td><td class="py-1 text-gray-700">ANC・WBC定期測定。CPMS登録必須。<br><span class="text-red-600 font-semibold">中止・再開基準は必ず最新CPMS規定・添付文書に従う</span>（数値基準は改定あり得る）</td></tr>
-                  <tr><td class="py-1 font-bold text-orange-700 pr-2">心筋炎</td><td class="py-1 text-gray-700">導入初4週：CRP・心エコー・トロポニン。胸痛・発熱に注意</td></tr>
-                  <tr><td class="py-1 font-bold text-yellow-700 pr-2">代謝</td><td class="py-1 text-gray-700">体重・血糖・脂質。高体重・DM悪化リスク高</td></tr>
-                  <tr><td class="py-1 font-bold text-gray-700 pr-2">痙攣閾値低下</td><td class="py-1 text-gray-700">用量依存性。高用量では抗てんかん薬を考慮</td></tr>
-                  <tr><td class="py-1 font-bold text-gray-700 pr-2">便秘〜イレウス</td><td class="py-1 text-gray-700">重篤化防止のため定期確認・緩下剤</td></tr>
-                  <tr><td class="py-1 font-bold text-gray-600 pr-2">CYP1A2</td><td class="py-1 text-gray-700">喫煙中止で血中濃度急上昇→入院中の喫煙管理要</td></tr>
+                  <tr><td class="py-1 font-bold text-red-700 pr-2">無顆粒球症</td><td class="py-1 text-gray-700">ANC・WBC：週→隔週→月。CPMS規定に厳密に従う。中止・再開基準は最新添付文書確認</td></tr>
+                  <tr><td class="py-1 font-bold text-orange-700 pr-2">心筋炎</td><td class="py-1 text-gray-700">導入後4週：CRP・トロポニン・心エコー。<strong>発熱・胸痛・頻脈</strong>に注意</td></tr>
+                  <tr><td class="py-1 font-bold text-yellow-700 pr-2">代謝</td><td class="py-1 text-gray-700">体重・血糖・脂質。高代謝リスク薬（オランザピンと同等以上）</td></tr>
+                  <tr><td class="py-1 font-bold text-gray-700 pr-2">痙攣</td><td class="py-1 text-gray-700">用量依存性。高用量では抗てんかん薬（バルプロ酸）を考慮</td></tr>
+                  <tr><td class="py-1 font-bold text-gray-700 pr-2">便秘〜イレウス</td><td class="py-1 text-gray-700">重篤化防止。<strong>PEG製剤</strong>等の定期使用（CQ4-3改訂）</td></tr>
+                  <tr><td class="py-1 font-bold text-gray-600 pr-2">CYP1A2/喫煙</td><td class="py-1 text-gray-700">喫煙中止で血中濃度急上昇→入院中の喫煙管理・TDM要</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-        <!-- クロザピン不耐・無効 -->
+        <!-- クロザピン無効 -->
         <div class="mt-3 warning-box !mt-3">
-          <div class="font-bold text-yellow-800 text-xs mb-2">クロザピン不耐・無効時の選択肢</div>
+          <div class="font-bold text-yellow-800 text-xs mb-2">クロザピン不耐・無効時の選択肢（CQ5-3/4）</div>
           <div class="grid md:grid-cols-2 gap-2 text-xs text-gray-700">
             <ul class="space-y-1">
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>血中濃度・相互作用（CYP1A2）の再確認・最適化</span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>クロザピン + アリピプラゾール</strong>（代謝改善・効果増強） <span class="badge-level-b">B</span></span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>血中濃度・CYP1A2相互作用（喫煙等）の再確認・最適化</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>クロザピン + アリピプラゾール</strong>：代謝改善・効果増強の報告（準推奨）</span></li>
             </ul>
             <ul class="space-y-1">
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>ECT（電気けいれん療法）の併用</strong>：TRS+緊張病に有効報告あり <span class="badge-level-c">C</span></span></li>
-              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>専門施設・研究機関への紹介を検討</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span><strong>ECT（修正型電気けいれん療法）</strong>：TRS・緊張病で有効報告（準推奨）</span></li>
+              <li class="flex items-start gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>専門施設・研究機関への紹介を積極検討</span></li>
             </ul>
           </div>
         </div>
@@ -476,78 +725,78 @@
       </div>
       <div>
         <h2 class="text-xl font-bold text-gray-800">抗精神病薬 選択テーブル</h2>
-        <p class="text-gray-500 text-xs">SGA優先 ／ 副作用プロファイルで使い分け ／ 本邦添付文書確認必須</p>
+        <p class="text-gray-500 text-xs">SGA優先（CQ2-4 準推奨） ／ 副作用プロファイルで使い分け ／ 本邦添付文書確認必須</p>
       </div>
     </div>
 
     <!-- SGA -->
-    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2"><span class="badge-first">第二世代（SGA）</span></div>
+    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2"><span class="badge-first">第二世代（SGA）— 第一選択</span></div>
     <div class="overflow-x-auto mb-5">
-      <table class="w-full text-xs border-collapse min-w-[640px]">
+      <table class="w-full text-xs border-collapse min-w-[680px]">
         <thead>
           <tr class="bg-teal-50">
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">薬剤</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">薬剤</th>
             <th class="p-2.5 text-left font-bold text-gray-700">目安用量（経口）</th>
             <th class="p-2.5 text-left font-bold text-gray-700">主な特徴</th>
             <th class="p-2.5 text-left font-bold text-gray-700">注意副作用</th>
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">LAI</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">LAI</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
           <tr class="hover:bg-teal-50/30">
             <td class="p-2.5 font-semibold">リスペリドン</td>
             <td class="p-2.5">2–6 mg/日</td>
-            <td class="p-2.5 text-gray-600">陽性症状への効果確立。D2+5-HT2A</td>
-            <td class="p-2.5 text-gray-600"><span class="text-orange-600 font-semibold">高プロラクチン血症</span>、EPS（用量依存）</td>
-            <td class="p-2.5"><span class="text-green-700 font-bold">○</span> 2週製剤</td>
+            <td class="p-2.5 text-gray-600">陽性症状への効果確立。D2+5-HT2A遮断</td>
+            <td class="p-2.5 text-gray-600"><span class="text-orange-600 font-semibold">高プロラクチン血症</span>、EPS（用量依存、振戦〜20%）</td>
+            <td class="p-2.5 text-green-700 font-semibold">○ 2週製剤</td>
           </tr>
           <tr class="hover:bg-teal-50/30">
             <td class="p-2.5 font-semibold">パリペリドン</td>
             <td class="p-2.5">3–12 mg/日</td>
-            <td class="p-2.5 text-gray-600">リスペリドンの活性代謝物。腎排泄</td>
+            <td class="p-2.5 text-gray-600">リスペリドン活性代謝物。腎排泄（CrCl確認）</td>
             <td class="p-2.5 text-gray-600"><span class="text-orange-600 font-semibold">高プロラクチン</span>、EPS</td>
-            <td class="p-2.5"><span class="text-green-700 font-bold">○</span> 月1/3か月</td>
+            <td class="p-2.5 text-green-700 font-semibold">○ 月1/3か月</td>
           </tr>
           <tr class="hover:bg-teal-50/30">
             <td class="p-2.5 font-semibold">オランザピン</td>
             <td class="p-2.5">5–20 mg/日</td>
-            <td class="p-2.5 text-gray-600">鎮静・抗不安効果あり。急性期IM可</td>
-            <td class="p-2.5 text-gray-600"><span class="text-yellow-600 font-semibold">体重増加・血糖上昇</span>（代謝最大）</td>
-            <td class="p-2.5"><span class="text-green-700 font-bold">○</span> パモ酸塩</td>
+            <td class="p-2.5 text-gray-600">広域受容体作用。鎮静・急性期IM可</td>
+            <td class="p-2.5 text-gray-600"><span class="text-yellow-600 font-semibold">体重増加・血糖上昇最大</span>（代謝モニタリング必須）</td>
+            <td class="p-2.5 text-green-700 font-semibold">○ パモ酸塩（PDSS注意）</td>
           </tr>
           <tr class="hover:bg-teal-50/30">
             <td class="p-2.5 font-semibold">クエチアピン</td>
             <td class="p-2.5">150–750 mg/日</td>
-            <td class="p-2.5 text-gray-600">鎮静・睡眠改善。プロラクチン上昇少</td>
+            <td class="p-2.5 text-gray-600">鎮静・睡眠改善。プロラクチン上昇少。低力価</td>
             <td class="p-2.5 text-gray-600"><span class="text-yellow-600 font-semibold">代謝・眠気</span>、起立性低血圧</td>
             <td class="p-2.5 text-gray-400">—</td>
           </tr>
           <tr class="hover:bg-teal-50/30">
             <td class="p-2.5 font-semibold">アリピプラゾール</td>
             <td class="p-2.5">6–30 mg/日</td>
-            <td class="p-2.5 text-gray-600">D2部分アゴニスト。代謝・プロラクチン影響少</td>
-            <td class="p-2.5 text-gray-600"><span class="text-red-600 font-semibold">アカシジア</span>、不眠、嘔気</td>
-            <td class="p-2.5"><span class="text-green-700 font-bold">○</span> 月1/2か月</td>
+            <td class="p-2.5 text-gray-600">D2部分アゴニスト。代謝・プロラクチン影響少。クロザピン増強薬としても</td>
+            <td class="p-2.5 text-gray-600"><span class="text-red-600 font-semibold">アカシジア（頻度高）</span>、不眠、嘔気</td>
+            <td class="p-2.5 text-green-700 font-semibold">○ 月1/2か月</td>
           </tr>
           <tr class="hover:bg-teal-50/30">
             <td class="p-2.5 font-semibold">ブレクスピプラゾール</td>
             <td class="p-2.5">1–4 mg/日</td>
-            <td class="p-2.5 text-gray-600">D2部分アゴニスト。アリピプラゾールより弱い部分作動性</td>
+            <td class="p-2.5 text-gray-600">D2部分アゴニスト（アリピより弱い作動性）</td>
             <td class="p-2.5 text-gray-600">アカシジア（アリピより少）、体重増加</td>
             <td class="p-2.5 text-gray-400">—</td>
           </tr>
           <tr class="hover:bg-teal-50/30 bg-blue-50/20">
             <td class="p-2.5 font-semibold">ブロナンセリン</td>
-            <td class="p-2.5">8–16 mg/日</td>
-            <td class="p-2.5 text-gray-600">本邦開発。食後服用必須。貼付剤あり</td>
-            <td class="p-2.5 text-gray-600">EPS（用量依存）</td>
-            <td class="p-2.5"><span class="text-green-700 font-bold">○</span> 貼付剤</td>
+            <td class="p-2.5">8–16 mg/日（経口）</td>
+            <td class="p-2.5 text-gray-600">本邦開発。食後服用必須。貼付剤（テープ）あり</td>
+            <td class="p-2.5 text-gray-600">EPS（振戦〜20%）</td>
+            <td class="p-2.5 text-green-700 font-semibold">○ 貼付剤（毎日）</td>
           </tr>
           <tr class="hover:bg-teal-50/30 bg-blue-50/20">
             <td class="p-2.5 font-semibold">ペロスピロン</td>
             <td class="p-2.5">12–48 mg/日</td>
             <td class="p-2.5 text-gray-600">本邦開発。食後3回服用</td>
-            <td class="p-2.5 text-gray-600">EPS、眠気</td>
+            <td class="p-2.5 text-gray-600">EPS（〜15%）、眠気</td>
             <td class="p-2.5 text-gray-400">—</td>
           </tr>
         </tbody>
@@ -555,47 +804,51 @@
     </div>
 
     <!-- FGA -->
-    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2"><span class="badge-second">第一世代（FGA）</span><span class="text-gray-500 text-xs font-normal">個別正当化が必要</span></div>
+    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2"><span class="badge-second">第一世代（FGA）</span><span class="text-gray-500 text-xs font-normal">SGAで無効・副作用・コスト・急性興奮IMなど個別正当化が必要</span></div>
     <div class="overflow-x-auto mb-4">
-      <table class="w-full text-xs border-collapse min-w-[640px]">
+      <table class="w-full text-xs border-collapse min-w-[680px]">
         <thead>
           <tr class="bg-gray-100">
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">薬剤</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">薬剤</th>
             <th class="p-2.5 text-left font-bold text-gray-700">目安用量（経口）</th>
             <th class="p-2.5 text-left font-bold text-gray-700">特徴・適応場面</th>
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">注意副作用</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">注意副作用</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">LAI</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
           <tr class="hover:bg-gray-50">
             <td class="p-2.5 font-semibold">ハロペリドール</td>
             <td class="p-2.5">2–10 mg/日</td>
-            <td class="p-2.5 text-gray-600">IM製剤・LAI（デカノ酸）。急性興奮・コスト</td>
-            <td class="p-2.5 text-gray-600"><span class="text-red-600 font-semibold">EPS強い・TD・QTc延長</span>、高プロラクチン</td>
+            <td class="p-2.5 text-gray-600">IM製剤。急性興奮・コスト重視時。振戦〜40%</td>
+            <td class="p-2.5 text-gray-600"><span class="text-red-600 font-semibold">EPS最大・TD・QTc延長（IM）</span>、高プロラクチン</td>
+            <td class="p-2.5 text-gray-600">○ デカノ酸塩（4週）</td>
           </tr>
           <tr class="hover:bg-gray-50">
             <td class="p-2.5 font-semibold">クロルプロマジン</td>
             <td class="p-2.5">100–600 mg/日</td>
             <td class="p-2.5 text-gray-600">CPZ換算の基準薬。鎮静・制吐効果</td>
             <td class="p-2.5 text-gray-600">光線過敏・低血圧・EPS・QTc</td>
+            <td class="p-2.5 text-gray-400">—</td>
           </tr>
           <tr class="hover:bg-gray-50">
             <td class="p-2.5 font-semibold">レボメプロマジン</td>
             <td class="p-2.5">25–300 mg/日</td>
-            <td class="p-2.5 text-gray-600">鎮静・不眠に。緩和ケアでの使用</td>
-            <td class="p-2.5 text-gray-600">強い鎮静・低血圧</td>
+            <td class="p-2.5 text-gray-600">強い鎮静。不眠・緩和ケアでの使用</td>
+            <td class="p-2.5 text-gray-600">強い鎮静・低血圧・代謝</td>
+            <td class="p-2.5 text-gray-400">—</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- クロザピン -->
-    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2"><span class="badge-trs">クロザピン（TRS専用）</span></div>
+    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2"><span class="badge-trs">クロザピン（TRS専用 — 1B強く推奨）</span></div>
     <div class="drug-card drug-card-clz text-xs">
       <div class="grid md:grid-cols-3 gap-3 text-gray-700">
-        <div><span class="font-bold">用量</span><br>12.5mg →漸増→ 目標200–450 mg/日（血中濃度350–600 ng/mL目安）</div>
-        <div><span class="font-bold">適応</span><br>TRS（2剤失敗後）。一部：自殺リスク低減（本邦適応は添付文書確認）</div>
-        <div><span class="font-bold">モニタリング</span><br>ANC・WBC（週→隔週→月）、心筋炎マーカー（導入4週）、血糖・脂質、CYP1A2相互作用（喫煙）</div>
+        <div><span class="font-bold">用量</span><br>12.5mg→漸増→目標200–450 mg/日<br>血中濃度350–600 ng/mL目安</div>
+        <div><span class="font-bold">適応・特徴</span><br>TRS（≥2剤失敗後）唯一の保険適応薬<br>自殺リスク低減効果も</div>
+        <div><span class="font-bold">必須体制</span><br>CPMS登録・ANC/WBC定期測定<br>心筋炎モニタリング・便秘管理・CYP1A2管理</div>
       </div>
     </div>
   </div>
@@ -607,26 +860,27 @@
         <i data-lucide="syringe" class="w-5 h-5 text-green-700"></i>
       </div>
       <div>
-        <h2 class="text-xl font-bold text-gray-800">LAI（持続性注射製剤）</h2>
-        <p class="text-gray-500 text-xs">アドヒアランス改善・再発予防の重要な選択肢</p>
+        <h2 class="text-xl font-bold text-gray-800">LAI（持続性注射製剤）（CQ2-5 準推奨）</h2>
+        <p class="text-gray-500 text-xs">実臨床データ：再入院・死亡リスク有意低減。アドヒアランス不良・患者希望時に積極的に検討</p>
       </div>
     </div>
     <div class="grid md:grid-cols-2 gap-4 mb-4">
       <div class="recommend-box !mt-0">
         <div class="font-bold text-green-800 text-sm mb-2">LAI選択の適応</div>
         <ul class="text-xs space-y-1 text-gray-700">
-          <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>アドヒアランス不良・服薬管理困難</span></li>
+          <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span><strong>服薬アドヒアランス不良・管理困難</strong></span></li>
           <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>再発を繰り返している、または再発リスクが高い</span></li>
+          <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span><strong>患者本人がLAIを希望する場合</strong></span></li>
           <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>経口薬で安定しており、より確実な維持を望む</span></li>
-          <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5"></i><span>患者自身がLAIを希望（スティグマの少ない説明が重要）</span></li>
         </ul>
       </div>
       <div class="warning-box !mt-0">
         <div class="font-bold text-yellow-800 text-sm mb-2">LAI導入上の注意</div>
         <ul class="text-xs space-y-1 text-gray-700">
           <li>・経口薬で副作用が許容されていることを確認してから切り替え</li>
-          <li>・開始後は経口薬を一定期間並行（LAIの血中濃度が安定するまで）</li>
-          <li>・注射部位反応・PDSS（オランザピンパモ酸塩）に注意</li>
+          <li>・開始後は経口薬を一定期間並行（血中濃度安定まで）</li>
+          <li>・オランザピンパモ酸塩：<span class="text-red-600 font-semibold">PDSS（注射後症候群）—注射後3時間観察必須</span></li>
+          <li>・丁寧な説明と共同意思決定が導入の前提</li>
         </ul>
       </div>
     </div>
@@ -634,51 +888,226 @@
       <table class="w-full text-xs border-collapse min-w-[520px]">
         <thead>
           <tr class="bg-green-50">
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">LAI製剤</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">LAI製剤</th>
             <th class="p-2.5 text-left font-bold text-gray-700">投与間隔</th>
             <th class="p-2.5 text-left font-bold text-gray-700">特徴</th>
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">注意</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">注意</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
           <tr class="hover:bg-green-50/30">
-            <td class="p-2.5 font-semibold">パリペリドンパルミチン酸塩<br><span class="font-normal text-gray-500">（ゼプリオン）</span></td>
+            <td class="p-2.5 font-semibold">パリペリドンパルミチン酸塩<br><span class="font-normal text-gray-500">ゼプリオン®</span></td>
             <td class="p-2.5">月1回 or 3か月1回</td>
-            <td class="p-2.5 text-gray-600">最も広く使用。経口paリペリドンと同成分</td>
-            <td class="p-2.5 text-gray-600">高プロラクチン、EPS。腎機能で調整</td>
+            <td class="p-2.5 text-gray-600">最も広く使用。初回2回のロード必要</td>
+            <td class="p-2.5 text-gray-600">高プロラクチン、EPS。腎機能調整</td>
           </tr>
           <tr class="hover:bg-green-50/30">
-            <td class="p-2.5 font-semibold">リスペリドンマイクロスフェア<br><span class="font-normal text-gray-500">（リスパダールコンスタ）</span></td>
+            <td class="p-2.5 font-semibold">リスペリドンマイクロスフェア<br><span class="font-normal text-gray-500">リスパダールコンスタ®</span></td>
             <td class="p-2.5">2週1回</td>
-            <td class="p-2.5 text-gray-600">初期3週は経口リスペリドン併用必要</td>
+            <td class="p-2.5 text-gray-600">初期3週は経口リスペリドン必要</td>
             <td class="p-2.5 text-gray-600">高プロラクチン、EPS</td>
           </tr>
           <tr class="hover:bg-green-50/30">
-            <td class="p-2.5 font-semibold">アリピプラゾール水懸液<br><span class="font-normal text-gray-500">（エビリファイ持続性水懸）</span></td>
+            <td class="p-2.5 font-semibold">アリピプラゾール水懸液<br><span class="font-normal text-gray-500">エビリファイ持続性水懸®</span></td>
             <td class="p-2.5">月1回</td>
-            <td class="p-2.5 text-gray-600">代謝・プロラクチン影響少。アカシジアに注意</td>
-            <td class="p-2.5 text-gray-600">アカシジア</td>
+            <td class="p-2.5 text-gray-600">代謝・プロラクチン影響少</td>
+            <td class="p-2.5 text-gray-600">アカシジア注意</td>
           </tr>
           <tr class="hover:bg-green-50/30">
-            <td class="p-2.5 font-semibold">オランザピンパモ酸塩<br><span class="font-normal text-gray-500">（ジプレキサ・レルプレビブ）</span></td>
+            <td class="p-2.5 font-semibold">オランザピンパモ酸塩<br><span class="font-normal text-gray-500">ジプレキサ レルプレビブ®</span></td>
             <td class="p-2.5">2–4週1回</td>
-            <td class="p-2.5 text-gray-600">オランザピンの効果プロファイルを維持</td>
-            <td class="p-2.5 text-gray-600"><span class="text-red-600 font-semibold">PDSS（注射後症候群：3時間観察必須）</span>、代謝</td>
+            <td class="p-2.5 text-gray-600">オランザピンの効果プロファイル維持</td>
+            <td class="p-2.5 text-gray-600"><span class="text-red-600 font-semibold">PDSS（注射後3時間観察必須）</span>、代謝</td>
           </tr>
           <tr class="hover:bg-green-50/30">
-            <td class="p-2.5 font-semibold">ブロナンセリン貼付剤<br><span class="font-normal text-gray-500">（ロナセンテープ）</span></td>
+            <td class="p-2.5 font-semibold">ブロナンセリン貼付剤<br><span class="font-normal text-gray-500">ロナセンテープ®</span></td>
             <td class="p-2.5">1日1回貼付</td>
-            <td class="p-2.5 text-gray-600">注射でなく貼付型。皮膚刺激症状に注意</td>
-            <td class="p-2.5 text-gray-600">皮膚刺激・かぶれ</td>
+            <td class="p-2.5 text-gray-600">注射不要の貼付型。身体的侵襲なし</td>
+            <td class="p-2.5 text-gray-600">皮膚刺激・接触皮膚炎</td>
           </tr>
           <tr class="hover:bg-gray-50">
-            <td class="p-2.5 font-semibold text-gray-600">ハロペリドールデカノ酸<br><span class="font-normal text-gray-500">（ハロマンス等）</span></td>
+            <td class="p-2.5 font-semibold text-gray-600">ハロペリドールデカノ酸<br><span class="font-normal text-gray-500">ハロマンス®等</span></td>
             <td class="p-2.5">4週1回</td>
-            <td class="p-2.5 text-gray-600">FGA-LAI。コスト低。旧来からの使用</td>
-            <td class="p-2.5 text-gray-600">EPS・TD・QTc（FGAのリスク）</td>
+            <td class="p-2.5 text-gray-600">FGA-LAI。コスト低。SGA使用困難時</td>
+            <td class="p-2.5 text-gray-600">EPS・TD・QTc（FGAリスク）</td>
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- ===== 副作用管理 ===== -->
+  <div class="section-card" id="se">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="triangle-alert" class="w-5 h-5 text-orange-600"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">副作用管理（CQ3・CQ4）</h2>
+        <p class="text-gray-500 text-xs">アドヒアランス維持のために副作用への早期対応が必須</p>
+      </div>
+    </div>
+
+    <!-- EPS -->
+    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2">
+      <i data-lucide="activity" class="w-4 h-4 text-red-500"></i>錐体外路症状（EPS）— CQ3-1〜5
+    </div>
+    <div class="overflow-x-auto mb-4">
+      <table class="w-full text-xs border-collapse min-w-[600px]">
+        <thead>
+          <tr class="bg-red-50">
+            <th class="p-2.5 text-left font-bold text-gray-700">症状</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">特徴・出現時期</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">治療・予防（本ガイドライン推奨）</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-red-50/30">
+            <td class="p-2.5 font-semibold text-red-700">薬剤性パーキンソン症状<br><span class="font-normal text-gray-500">CQ3-1</span></td>
+            <td class="p-2.5 text-gray-600">振戦・筋強剛・寡動・仮面様顔貌。数日〜週内。中高年・高力価FGAで多い（振戦：HAL〜40%）</td>
+            <td class="p-2.5 text-gray-600">①原因薬減量②SGAへ変更③やむを得ず<strong>抗コリン薬（ビペリデン等）最小限使用</strong>。予防：SGAを選択</td>
+          </tr>
+          <tr class="hover:bg-red-50/30">
+            <td class="p-2.5 font-semibold text-orange-700">急性ジストニア<br><span class="font-normal text-gray-500">CQ3-2</span></td>
+            <td class="p-2.5 text-gray-600">筋肉の急激な攣縮（頸部・眼・舌）。数時間〜数日。若年男性・高力価FGAで多い（午後〜夜に多い）</td>
+            <td class="p-2.5 text-gray-600">SGA変更。次に<strong>抗コリン薬（ビペリデンIM等）</strong>または抗ヒスタミン薬（プロメタジン）筋注。予防：SGAを選択</td>
+          </tr>
+          <tr class="hover:bg-red-50/30">
+            <td class="p-2.5 font-semibold text-orange-700">アカシジア<br><span class="font-normal text-gray-500">CQ3-3</span></td>
+            <td class="p-2.5 text-gray-600">静坐不能・不快な焦燥感。<span class="text-red-600 font-semibold">精神病性興奮との鑑別必須</span>。アリピプラゾールでも頻発</td>
+            <td class="p-2.5 text-gray-600">①原因薬減量/SGA変更②<strong>プロプラノロール（β遮断薬）を第一選択</strong>③ミルタザピン・クロナゼパム。抗コリン薬は効果乏しい</td>
+          </tr>
+          <tr class="hover:bg-red-50/30">
+            <td class="p-2.5 font-semibold text-purple-700">遅発性ジスキネジア（TD）<br><span class="font-normal text-gray-500">CQ3-4</span></td>
+            <td class="p-2.5 text-gray-600">口周囲・四肢の反復不随意運動。数か月〜年単位。一度発症すると不可逆性のリスク。FGAで発現率高い</td>
+            <td class="p-2.5 text-gray-600">①原因薬減量/変更②クロザピンへ変更③<strong>バルベナジン（VMAT2阻害薬）</strong>④クロナゼパム。AIMS定期評価（3〜6か月毎）</td>
+          </tr>
+          <tr class="hover:bg-red-50/30">
+            <td class="p-2.5 font-semibold text-purple-700">遅発性ジストニア<br><span class="font-normal text-gray-500">CQ3-5</span></td>
+            <td class="p-2.5 text-gray-600">持続性筋収縮による姿勢異常。若年男性に多い。TDより持続時間長い</td>
+            <td class="p-2.5 text-gray-600">原因薬減量/SGA変更/クロザピン変更。抗コリン薬・テトラベナジン・ボツリヌストキシン局注</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- その他副作用 -->
+    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2">
+      <i data-lucide="alert-circle" class="w-4 h-4 text-yellow-500"></i>その他の副作用 — CQ4-1〜5
+    </div>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="se-nms rounded-xl p-3 text-xs">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-1.5"><i data-lucide="flame" class="w-4 h-4 text-red-600"></i>悪性症候群（NMS）— 緊急対応（CQ4-1）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">4徴：</span>高熱（≥39°C）・筋強剛・意識障害・自律神経不安定</li>
+          <li><span class="font-bold">検査：</span>CPK著明上昇・白血球増多・血液ガス</li>
+          <li><span class="font-bold text-red-700">対応：原因薬即時中止＋ICU管理＋補液・体冷却が第一</span></li>
+          <li><span class="font-bold">補助：</span>ダントロレン（筋強剛）・ブロモクリプチン（DA作動）—エビデンスは限定的。各施設のプロトコルに従う</li>
+          <li><span class="font-bold">再開：</span>完全回復後≥2週間、別クラス低力価薬から慎重に</li>
+        </ul>
+      </div>
+      <div class="se-metabolic rounded-xl p-3 text-xs">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-1.5"><i data-lucide="scale" class="w-4 h-4 text-yellow-600"></i>代謝系副作用（CQ4-2）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">体重増加：</span>オランザピン・クロザピン・クエチアピンで最大。アリピプラゾール・ブロナンセリンは比較的少ない</li>
+          <li><span class="font-bold">血糖：</span>開始3〜6か月後に血糖・HbA1c確認。DM既往は特に注意</li>
+          <li><span class="font-bold">対応：</span>代謝影響少ない薬剤へ変更。メトフォルミン（準推奨）。生活指導・運動療法</li>
+        </ul>
+      </div>
+      <div class="bg-green-50 border border-green-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-1.5"><i data-lucide="activity" class="w-4 h-4 text-green-600"></i>便秘（CQ4-3）— 2023年改訂ポイント</div>
+        <ul class="space-y-1 text-gray-700">
+          <li>抗コリン作用の少ない薬剤へ変更を検討</li>
+          <li><span class="font-bold text-green-700">第一選択：ポリエチレングリコール製剤（PEG）</span>（2023年8月改訂でマグネシウム製剤から変更）</li>
+          <li>クロザピンによる便秘は特に重篤化（イレウス）するため積極的介入</li>
+        </ul>
+      </div>
+      <div class="se-cardiac rounded-xl p-3 text-xs">
+        <div class="font-bold text-blue-800 mb-2 flex items-center gap-1.5"><i data-lucide="heart-pulse" class="w-4 h-4 text-blue-600"></i>QTc延長（CQ4-4）/ 高プロラクチン（CQ4-5）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">QT：</span>ハロペリドールIM・FGA・ジプラシドン等でリスク高。QTc＞500ms or ≥60ms延長→薬剤変更。電解質（K・Mg）補正</li>
+          <li><span class="font-bold">高プロラクチン：</span>リスペリドン・パリペリドン・FGAで多（無月経・性機能障害・骨密度低下）</li>
+          <li><span class="font-bold">対応：</span>アリピプラゾール・クエチアピンへ変更。アリピプラゾール少量追加も選択肢</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 特殊臨床状況 ===== -->
+  <div class="section-card" id="special">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-teal-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="git-branch" class="w-5 h-5 text-teal-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">特殊臨床状況（CQ6・CQ7）</h2>
+        <p class="text-gray-500 text-xs">合併症・特殊病態への対応</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+
+      <!-- 不眠・不安 -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-blue-800 mb-2 flex items-center gap-1.5"><i data-lucide="moon" class="w-4 h-4"></i>不眠・不安症状（CQ6-1/6-2）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">不眠（CQ6-1）：</span>まず非薬物療法（睡眠衛生指導・環境整備）。鎮静性AP増量は有害事象増加のみ（推奨しない）</li>
+          <li><span class="font-bold">不安・不穏の頓服（CQ6-2）：</span>BZD頓服は精神症状への明確な利益を示すエビデンスなし。APの頓服を優先検討</li>
+          <li><span class="font-bold">過眠（CQ6-3）：</span>鎮静性APの変更・減量、または鎮静作用のある併用薬の減量・中止を検討</li>
+        </ul>
+      </div>
+
+      <!-- 抑うつ・認知 -->
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-indigo-800 mb-2 flex items-center gap-1.5"><i data-lucide="brain" class="w-4 h-4"></i>抑うつ症状・認知機能障害（CQ6-4/6-5）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">抑うつ（CQ6-4）：</span>まずAPS副作用（EPS由来の「二次性陰性症状」）を除外。抗うつ薬追加の根拠は乏しい。AP調整・心理的支援が基本</li>
+          <li><span class="font-bold">認知機能障害（CQ6-5）：</span>確立した薬物療法はない（認知機能を改善するAPは現時点なし）。CRT・SST・就労支援が主軸</li>
+          <li class="text-orange-600 font-semibold">AP自体も認知機能に影響する可能性→用量最小化も戦略</li>
+        </ul>
+      </div>
+
+      <!-- 精神運動興奮・緊張病 -->
+      <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-1.5"><i data-lucide="zap" class="w-4 h-4"></i>精神運動興奮・緊張病（CQ7-1/7-2）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">精神運動興奮（CQ7-1）：</span>De-escalation→SGA IM（オランザピン・アリピプラゾール）＋BZD IM補助。オランザピンIMとBZD IMの同時使用禁止</li>
+          <li><span class="font-bold">緊張病（CQ7-2）：</span><span class="text-red-700 font-semibold">BZD（ロラゼパム2–4mg IM/IV）を第一選択</span>。APは緊張病をむしろ悪化させることがあるため注意</li>
+          <li>BZD無効→<strong>ECT（修正型電気けいれん療法）</strong>が有効。緊張病は ECT の良適応</li>
+        </ul>
+      </div>
+
+      <!-- 妊娠・授乳 -->
+      <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-rose-800 mb-2 flex items-center gap-1.5"><i data-lucide="heart" class="w-4 h-4"></i>妊娠・授乳・産後（CQ7-4/7-5）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">原則：</span>安易な中止は再発リスク↑。「治療継続の益」と「薬剤リスク」を個別に評価・SDM</li>
+          <li><span class="font-bold">妊娠中（CQ7-4）：</span>AP継続の益がリスクを上回る場合が多い。低用量・単剤を目指す。ハロペリドール・クロルプロマジン等は比較的データあり</li>
+          <li><span class="font-bold">授乳（CQ7-5）：</span>AP継続の益とリスクを評価。母乳育児を望む場合のストレスも考慮（患者・家族委員の指摘）</li>
+          <li>妊娠・授乳中の薬物使用は専門施設への相談を推奨</li>
+        </ul>
+      </div>
+
+      <!-- 初回エピソード -->
+      <div class="bg-green-50 border border-green-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-1.5"><i data-lucide="user-plus" class="w-4 h-4"></i>初回エピソード精神病（CQ7-6）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li><span class="font-bold">強く推奨（1A）：</span>初回エピソードに対しAP治療を行うことを強く推奨</li>
+          <li><span class="font-bold">低用量：</span>初回は感受性高いため低用量から開始。副作用モニタリングを密に</li>
+          <li><span class="font-bold">維持期間：</span>最低1〜2年の継続を目安。早期中止は再発リスク大</li>
+          <li>早期介入（DUP短縮）が長期予後改善に重要</li>
+        </ul>
+      </div>
+
+      <!-- 病的多飲水 -->
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs">
+        <div class="font-bold text-amber-800 mb-2 flex items-center gap-1.5"><i data-lucide="droplets" class="w-4 h-4"></i>病的多飲水・水中毒（CQ7-3）</div>
+        <ul class="space-y-1 text-gray-700">
+          <li>統合失調症患者に多い（機序は多因子）。低Na血症→痙攣・意識障害の危険</li>
+          <li><span class="font-bold">管理：</span>水分制限・行動療法・環境整備が基本</li>
+          <li><span class="font-bold">薬物：</span>クロザピンへの変更で多飲水が改善したとの報告あり（準推奨）</li>
+          <li>急性水中毒：高張食塩水・利尿薬・水分制限</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -690,156 +1119,67 @@
       </div>
       <div>
         <h2 class="text-xl font-bold text-gray-800">非薬物治療・心理社会的介入</h2>
-        <p class="text-gray-500 text-xs">薬物療法と並行して導入する</p>
+        <p class="text-gray-500 text-xs">薬物療法と並行して導入。回復（リカバリー）の支援に不可欠</p>
       </div>
     </div>
     <div class="grid md:grid-cols-2 gap-4">
       <div class="space-y-3">
         <div class="recommend-box !mt-0">
           <div class="flex items-center justify-between mb-2">
-            <div class="font-bold text-green-800 text-sm">家族心理教育（FPE）</div>
+            <div class="font-bold text-green-800 text-sm">心理教育（患者・家族）</div>
             <span class="badge-level-a">Level A</span>
           </div>
           <ul class="text-xs space-y-1 text-gray-700">
-            <li>・<strong>再発率の有意な低減</strong>がメタ解析で確立</li>
-            <li>・疾病理解・問題解決・コミュニケーション技術</li>
-            <li>・<strong>感情表出（EE）の低減</strong>が再発防止のメカニズム</li>
-            <li>・急性期が落ち着いた段階から開始。複数セッション</li>
+            <li>・疾患・治療・対処法の正確な情報を心理的配慮をもって伝える</li>
+            <li>・<strong>家族心理教育（FPE）</strong>：再発率の有意な低減。EE（感情表出）低減がメカニズム</li>
+            <li>・個別・集団×患者本人・家族×専門職・ピア等、多様なスタイル</li>
           </ul>
         </div>
         <div class="purple-box !mt-0">
           <div class="flex items-center justify-between mb-2">
-            <div class="font-bold text-purple-800 text-sm">CBTp（統合失調症への認知行動療法）</div>
+            <div class="font-bold text-purple-800 text-sm">CBTp / CBT-R</div>
             <span class="badge-level-a">Level A</span>
           </div>
           <ul class="text-xs space-y-1 text-gray-700">
-            <li>・持続する<strong>妄想・幻聴への個人療法</strong></li>
-            <li>・急性期より<strong>安定期に導入</strong>しやすい</li>
-            <li>・ストレス脆弱性モデルの心理教育を含む</li>
-            <li>・薬物療法への補助として効果がある</li>
+            <li>・<strong>CBTp</strong>：妄想・幻聴の苦痛軽減。コントロール感向上</li>
+            <li>・<strong>CBT-R</strong>：望む暮らしの実現に向けた機能改善中心</li>
+            <li>・安定期に導入しやすい。薬物療法への補助として有効</li>
           </ul>
+        </div>
+        <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-amber-800 text-sm">CRT（認知矯正療法）</div>
+            <span class="badge-level-a">Level A</span>
+          </div>
+          <p class="text-xs text-gray-700">注意・記憶・実行機能へ直接アプローチ。SSTと組み合わせると社会機能改善に相乗効果。就労・就学への橋渡し。</p>
         </div>
       </div>
       <div class="space-y-3">
         <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-3">
           <div class="flex items-center justify-between mb-2">
-            <div class="font-bold text-amber-800 text-sm">SST（社会技能訓練）</div>
+            <div class="font-bold text-amber-800 text-sm">SST（社会生活スキルトレーニング）</div>
             <span class="badge-level-b">Level B</span>
           </div>
-          <p class="text-xs text-gray-700">対人関係・役割機能の改善。グループ形式が多い。陰性症状・社会的引きこもりに有効。</p>
-        </div>
-        <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-3">
-          <div class="flex items-center justify-between mb-2">
-            <div class="font-bold text-amber-800 text-sm">認知リハビリテーション</div>
-            <span class="badge-level-a">Level A</span>
-          </div>
-          <p class="text-xs text-gray-700">認知機能・機能的アウトカムの改善がメタ解析で支持。CRT（Cognitive Remediation Therapy）等。就労支援と組み合わせると相乗効果。</p>
+          <p class="text-xs text-gray-700">対人関係・服薬自己管理・症状自己管理スキルの獲得。グループ形式が多い。「入院生活技能訓練療法」として診療報酬化。</p>
         </div>
         <div class="bg-blue-50 border-l-4 border-blue-400 rounded-r-xl p-3">
           <div class="flex items-center justify-between mb-2">
-            <div class="font-bold text-blue-800 text-sm">ACT（Assertive Community Treatment）</div>
+            <div class="font-bold text-blue-800 text-sm">ACT（包括的地域生活支援）</div>
             <span class="badge-level-a">Level A</span>
           </div>
-          <p class="text-xs text-gray-700">高頻度入院・ホームレス・治療参加困難者に。多職種チームによる地域包括的支援。入院日数・ホームレス率の低下。</p>
+          <p class="text-xs text-gray-700">多職種チーム（Ns・精神保健福祉士・OT・医師・ピアスタッフ）による24時間365日アウトリーチ。高頻度入院・治療参加困難者に特に有効。</p>
         </div>
         <div class="bg-teal-50 border-l-4 border-teal-400 rounded-r-xl p-3">
-          <div class="font-bold text-teal-800 text-sm mb-1">デイケア・就労支援（IPS）</div>
-          <p class="text-xs text-gray-700">IPS（Individual Placement and Support）は一般就労率向上のLevel Aエビデンス。機能回復・社会参加の具体的手段。</p>
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-teal-800 text-sm">職業リハビリ・IPS就労支援</div>
+            <span class="badge-level-a">Level A</span>
+          </div>
+          <p class="text-xs text-gray-700">IPS（Individual Placement and Support）：一般就労を目標とした個別就労支援。症状があっても本人希望を優先。一般就労率向上のLevel Aエビデンス。</p>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== 副作用管理 ===== -->
-  <div class="section-card" id="se">
-    <div class="flex items-center gap-3 mb-4">
-      <div class="w-11 h-11 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-        <i data-lucide="triangle-alert" class="w-5 h-5 text-orange-600"></i>
-      </div>
-      <div>
-        <h2 class="text-xl font-bold text-gray-800">副作用管理</h2>
-        <p class="text-gray-500 text-xs">アドヒアランス維持のために副作用への早期対応が必須</p>
-      </div>
-    </div>
-
-    <!-- EPS -->
-    <div class="font-bold text-gray-700 text-sm mb-2 flex items-center gap-2">
-      <i data-lucide="activity" class="w-4 h-4 text-red-500"></i>錐体外路症状（EPS）
-    </div>
-    <div class="overflow-x-auto mb-4">
-      <table class="w-full text-xs border-collapse min-w-[560px]">
-        <thead>
-          <tr class="bg-red-50">
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">症状</th>
-            <th class="p-2.5 text-left font-bold text-gray-700">特徴</th>
-            <th class="p-2.5 text-left font-bold text-gray-700">出現時期</th>
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">対応</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-          <tr class="hover:bg-red-50/30">
-            <td class="p-2.5 font-semibold text-red-700">パーキンソニズム</td>
-            <td class="p-2.5">振戦・筋強剛・寡動・仮面様顔貌</td>
-            <td class="p-2.5">数日〜数週</td>
-            <td class="p-2.5 text-gray-600">用量減量、SGAへ変更、<strong>抗コリン薬（最小限）</strong></td>
-          </tr>
-          <tr class="hover:bg-red-50/30">
-            <td class="p-2.5 font-semibold text-orange-700">アカシジア</td>
-            <td class="p-2.5">静坐不能・不快な焦燥感。<span class="text-red-600 font-semibold">精神病性興奮との鑑別必須</span></td>
-            <td class="p-2.5">数日〜数週</td>
-            <td class="p-2.5 text-gray-600">用量減量、<strong>プロプラノロール</strong>、クロナゼパム。抗コリンは効きにくい</td>
-          </tr>
-          <tr class="hover:bg-red-50/30">
-            <td class="p-2.5 font-semibold text-yellow-700">急性ジストニア</td>
-            <td class="p-2.5">筋肉の急激な攣縮（頸部・眼・舌等）</td>
-            <td class="p-2.5">数時間〜数日</td>
-            <td class="p-2.5 text-gray-600"><strong>抗コリン薬IM（ビペリデン等）</strong>が有効。若年男性・高力価FGAで多い</td>
-          </tr>
-          <tr class="hover:bg-red-50/30">
-            <td class="p-2.5 font-semibold text-purple-700">遅発性ジスキネジア（TD）</td>
-            <td class="p-2.5">口周囲・四肢の反復不随意運動。不可逆性のリスク</td>
-            <td class="p-2.5">数か月〜年単位</td>
-            <td class="p-2.5 text-gray-600">原因薬の減量・変更。<strong>バルベナジン（VMAT2阻害）</strong>。AIMS定期評価</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- 代謝・その他 -->
-    <div class="grid md:grid-cols-2 gap-3">
-      <div class="se-metabolic rounded-xl p-3 text-xs">
-        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-1.5"><i data-lucide="scale" class="w-4 h-4 text-yellow-600"></i>代謝系副作用</div>
-        <ul class="space-y-1 text-gray-700">
-          <li><span class="font-bold">体重増加：</span>オランザピン・クロザピン・クエチアピンで最大。BMI定期測定</li>
-          <li><span class="font-bold">血糖上昇：</span>開始3〜6か月後に血糖・HbA1c。DM既往は特に注意</li>
-          <li><span class="font-bold">脂質異常：</span>TG上昇が多い。年1回以上測定</li>
-          <li><span class="font-bold">対応：</span>薬剤変更（アリピプラゾール・ブロナンセリン等に）、生活指導</li>
-        </ul>
-      </div>
-      <div class="se-endo rounded-xl p-3 text-xs">
-        <div class="font-bold text-purple-800 mb-2 flex items-center gap-1.5"><i data-lucide="droplets" class="w-4 h-4 text-purple-600"></i>高プロラクチン血症</div>
-        <ul class="space-y-1 text-gray-700">
-          <li><span class="font-bold">原因薬：</span>リスペリドン・パリペリドン・FGAで特に多い</li>
-          <li><span class="font-bold">症状：</span>無月経・性欲低下・乳汁分泌・骨密度低下</li>
-          <li><span class="font-bold">対応：</span>アリピプラゾール・クエチアピンへの変更。症状があれば血清プロラクチン測定</li>
-        </ul>
-      </div>
-      <div class="se-cardiac rounded-xl p-3 text-xs">
-        <div class="font-bold text-blue-800 mb-2 flex items-center gap-1.5"><i data-lucide="heart-pulse" class="w-4 h-4 text-blue-600"></i>QTc延長</div>
-        <ul class="space-y-1 text-gray-700">
-          <li><span class="font-bold">ハイリスク薬：</span>ジプラシドン・FGA（ハロペリドールIM）・クロルプロマジン</li>
-          <li><span class="font-bold">リスク因子：</span>女性・低K/Mg・心疾患・QTc延長薬との併用</li>
-          <li><span class="font-bold">基準：</span>QTc &gt;500ms または ベースラインから60ms以上の延長 → 薬剤変更検討</li>
-        </ul>
-      </div>
-      <div class="se-nms rounded-xl p-3 text-xs">
-        <div class="font-bold text-red-800 mb-2 flex items-center gap-1.5"><i data-lucide="flame" class="w-4 h-4 text-red-600"></i>悪性症候群（NMS）— 緊急対応</div>
-        <ul class="space-y-1 text-gray-700">
-          <li><span class="font-bold">4徴：</span>高熱（39°C以上）・筋強剛・意識障害・自律神経不安定</li>
-          <li><span class="font-bold">検査：</span>CPK著明上昇（横紋筋融解）、白血球増多</li>
-          <li><span class="font-bold">対応：</span><span class="text-red-700 font-semibold">原因薬即時中止・ICU管理・補液冷却が第一。補助的にダントロレン（筋強剛緩解）・ブロモクリプチン（DA作動）が使われることがあるが、エビデンスは限定的。各施設のプロトコルに従う</span></li>
-          <li><span class="font-bold">再開：</span>完全回復後2週間以上、別クラスの低力価薬から慎重に</span></li>
-        </ul>
+        <div class="bg-gray-50 border-l-4 border-gray-400 rounded-r-xl p-3">
+          <div class="font-bold text-gray-700 text-sm mb-1">ピアサポート・家族支援</div>
+          <p class="text-xs text-gray-700">当事者・家族委員もガイドライン作成に参加。ピアカウンセリング・ピアリスニングが各地で実践。家族支援：感情表出への支持的助言・スティグマ軽減。</p>
+        </div>
       </div>
     </div>
   </div>
@@ -852,28 +1192,30 @@
       </div>
       <div>
         <h2 class="text-xl font-bold text-gray-800">定期モニタリング</h2>
+        <p class="text-gray-500 text-xs">平均余命が健常者より10〜25年短い→身体疾患の積極的管理が必要</p>
       </div>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-xs border-collapse min-w-[480px]">
         <thead>
           <tr class="bg-indigo-50">
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tl-lg">項目</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">項目</th>
             <th class="p-2.5 text-left font-bold text-gray-700">開始時</th>
             <th class="p-2.5 text-left font-bold text-gray-700">3か月後</th>
             <th class="p-2.5 text-left font-bold text-gray-700">以降</th>
-            <th class="p-2.5 text-left font-bold text-gray-700 rounded-tr-lg">備考</th>
+            <th class="p-2.5 text-left font-bold text-gray-700">備考</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
-          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">体重・BMI</td><td class="p-2.5">✓</td><td class="p-2.5">✓（毎月）</td><td class="p-2.5">毎月〜3か月毎</td><td class="p-2.5 text-gray-500">SGAは特に重要</td></tr>
-          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">血糖・HbA1c</td><td class="p-2.5">✓</td><td class="p-2.5">✓</td><td class="p-2.5">年1〜2回</td><td class="p-2.5 text-gray-500">オランザピン・クロザピンで優先</td></tr>
-          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">脂質（TG・LDL）</td><td class="p-2.5">✓</td><td class="p-2.5">✓</td><td class="p-2.5">年1回</td><td class="p-2.5 text-gray-500">—</td></tr>
-          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">ECG（QTc）</td><td class="p-2.5">✓</td><td class="p-2.5">必要時</td><td class="p-2.5">リスク薬使用時</td><td class="p-2.5 text-gray-500">ジプラシドン・IM FGA使用時</td></tr>
-          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">プロラクチン</td><td class="p-2.5">症状あれば</td><td class="p-2.5">症状あれば</td><td class="p-2.5">症状あれば</td><td class="p-2.5 text-gray-500">リスペリドン・パリペリドン・FGA</td></tr>
-          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">EPS・AIMS</td><td class="p-2.5">✓</td><td class="p-2.5">✓</td><td class="p-2.5">3〜6か月毎</td><td class="p-2.5 text-gray-500">TD早期発見のためAIMS定期評価</td></tr>
-          <tr class="hover:bg-indigo-50/20 bg-purple-50/30"><td class="p-2.5 font-semibold text-purple-700">ANC・WBC（クロザピン）</td><td class="p-2.5">毎週×18週</td><td class="p-2.5">隔週×1年</td><td class="p-2.5">月1回（以降）</td><td class="p-2.5 text-purple-600 font-semibold">CPMS登録必須。ANC&lt;1500→中止</td></tr>
-          <tr class="hover:bg-indigo-50/20 bg-purple-50/30"><td class="p-2.5 font-semibold text-purple-700">心筋炎マーカー（クロザピン）</td><td class="p-2.5">導入後4週</td><td class="p-2.5">—</td><td class="p-2.5">胸痛・発熱時</td><td class="p-2.5 text-gray-500">CRP・トロポニン・心エコー</td></tr>
+          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">体重・BMI</td><td class="p-2.5">✓</td><td class="p-2.5">✓（毎月）</td><td class="p-2.5">毎月〜3か月毎</td><td class="p-2.5 text-gray-500">オランザピン・クロザピンで必須</td></tr>
+          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">血糖・HbA1c</td><td class="p-2.5">✓</td><td class="p-2.5">✓</td><td class="p-2.5">年1〜2回</td><td class="p-2.5 text-gray-500">DM既往・代謝系SGAで頻度上げる</td></tr>
+          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">脂質（TG・LDL）</td><td class="p-2.5">✓</td><td class="p-2.5">✓</td><td class="p-2.5">年1回</td><td class="p-2.5 text-gray-500">TG上昇が多い</td></tr>
+          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">ECG（QTc）</td><td class="p-2.5">✓</td><td class="p-2.5">必要時</td><td class="p-2.5">リスク薬使用時・定期</td><td class="p-2.5 text-gray-500">FGA・ジプラシドン・HAL-IM使用時</td></tr>
+          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">プロラクチン</td><td class="p-2.5">症状あれば</td><td class="p-2.5">症状あれば</td><td class="p-2.5">症状あれば</td><td class="p-2.5 text-gray-500">リスペリドン・パリペリドン・FGAで特に</td></tr>
+          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">EPS・AIMS</td><td class="p-2.5">✓</td><td class="p-2.5">✓</td><td class="p-2.5">3〜6か月毎</td><td class="p-2.5 text-gray-500">TD早期発見。維持期に定期的AIMS評価</td></tr>
+          <tr class="hover:bg-indigo-50/20"><td class="p-2.5 font-semibold">血圧・脈拍</td><td class="p-2.5">✓</td><td class="p-2.5">✓</td><td class="p-2.5">定期的</td><td class="p-2.5 text-gray-500">起立性低血圧（クエチアピン等）</td></tr>
+          <tr class="hover:bg-purple-50/30"><td class="p-2.5 font-semibold text-purple-700">ANC・WBC（クロザピン）</td><td class="p-2.5">毎週×18週</td><td class="p-2.5">隔週×1年</td><td class="p-2.5">月1回（以降）</td><td class="p-2.5 text-purple-600 font-semibold">CPMS登録必須。中止基準は最新規定確認</td></tr>
+          <tr class="hover:bg-purple-50/30"><td class="p-2.5 font-semibold text-purple-700">心筋炎マーカー（クロザピン）</td><td class="p-2.5">導入後4週</td><td class="p-2.5">—</td><td class="p-2.5">胸痛・発熱時</td><td class="p-2.5 text-gray-500">CRP・トロポニン・心エコー</td></tr>
         </tbody>
       </table>
     </div>
@@ -881,12 +1223,13 @@
 
   <!-- 参照ガイドライン -->
   <div class="bg-gray-100 rounded-xl p-4 text-xs text-gray-500">
-    <div class="flex items-center gap-2 mb-1">
+    <div class="flex items-center gap-2 mb-2">
       <i data-lucide="book-open" class="w-4 h-4 text-gray-400"></i>
       <span class="font-bold text-gray-600">参照ガイドライン</span>
     </div>
-    <p>日本神経精神薬理学会「統合失調症薬物治療ガイドライン2022」／ APA Practice Guideline for Schizophrenia（第3版2020）／ NICE CG178（2014、サーベイ継続中）／ WFSBP Guidelines for Biological Treatment of Schizophrenia ／ Maudsley Prescribing Guidelines in Psychiatry</p>
-    <p class="mt-1 text-gray-400">本邦での承認適応・用量は各薬剤の最新添付文書・インタビューフォームで必ず確認すること</p>
+    <p class="font-semibold text-gray-600">◎ 日本神経精神薬理学会・日本臨床精神神経薬理学会「統合失調症薬物治療ガイドライン2022」（2022年5月公開・2023年8月改訂）</p>
+    <p class="mt-1">APA Practice Guideline for the Treatment of Schizophrenia（2020）／ NICE CG178 ／ WFSBP Guidelines for Biological Treatment of Schizophrenia ／ Maudsley Prescribing Guidelines in Psychiatry 13th Edition</p>
+    <p class="mt-1.5 text-gray-400">本邦での承認適応・用量は各薬剤の最新添付文書・インタビューフォームで必ず確認すること。本ガイドラインは医師の裁量を肯定するものであり、絶対的な規則ではない。</p>
   </div>
 
 </main>

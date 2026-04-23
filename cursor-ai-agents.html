@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursor AIエージェント完全比較ガイド</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --cursor-blue: #2563eb;
+      --cursor-purple: #7c3aed;
+      --cursor-teal: #0f766e;
+      --cursor-orange: #ea580c;
+      --cursor-green: #15803d;
+      --cursor-gray: #475569;
+      --gradient-main: linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #7c3aed 100%);
+      --gradient-agent: linear-gradient(135deg, #7c3aed, #2563eb);
+      --gradient-ask: linear-gradient(135deg, #0f766e, #059669);
+      --gradient-plan: linear-gradient(135deg, #d97706, #ea580c);
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background: #f0f4f8;
+      color: #1e293b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    .header-gradient { background: var(--gradient-main); }
+
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-agent {
+      background: linear-gradient(135deg, #ede9fe, #dbeafe);
+      border: 2px solid #7c3aed;
+    }
+    .mode-ask {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 2px solid #15803d;
+    }
+    .mode-plan {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 2px solid #d97706;
+    }
+
+    .model-card {
+      border-radius: 0.875rem;
+      padding: 1.25rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .model-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .model-claude {
+      background: linear-gradient(135deg, #fdf4ff, #ede9fe);
+      border: 1.5px solid #a855f7;
+    }
+    .model-openai {
+      background: linear-gradient(135deg, #f0f9ff, #dbeafe);
+      border: 1.5px solid #3b82f6;
+    }
+    .model-openai-reason {
+      background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+      border: 1.5px solid #f43f5e;
+    }
+    .model-gemini {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 1.5px solid #f59e0b;
+    }
+    .model-cursor {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 1.5px solid #22c55e;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-speed { background: linear-gradient(135deg, #16a34a, #22c55e); color: white; }
+    .badge-intel { background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; }
+    .badge-cheap { background: linear-gradient(135deg, #0369a1, #38bdf8); color: white; }
+    .badge-ctx   { background: linear-gradient(135deg, #b45309, #f59e0b); color: white; }
+    .badge-reason{ background: linear-gradient(135deg, #be123c, #f43f5e); color: white; }
+    .badge-auto  { background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; }
+
+    .star-bar {
+      display: flex;
+      gap: 3px;
+      margin-top: 4px;
+    }
+    .star-filled { color: #f59e0b; }
+    .star-empty  { color: #e2e8f0; }
+
+    .subagent-card {
+      background: white;
+      border-radius: 0.75rem;
+      border: 1.5px solid #e2e8f0;
+      padding: 1rem 1.25rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .subagent-card:hover {
+      border-color: #7c3aed;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.1);
+    }
+
+    .toc {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 50;
+      min-width: 156px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+
+    .toc a { transition: color 0.1s; }
+    .toc a:hover { color: #7c3aed; }
+
+    .comparison-row:nth-child(even) { background: #f8fafc; }
+    .comparison-row:hover { background: #eff6ff; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78em;
+      background: #f1f5f9;
+      padding: 0.1em 0.4em;
+      border-radius: 0.3em;
+      color: #7c3aed;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-10">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="bot" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">Cursor AI完全ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold leading-tight">Cursor AIエージェント<br class="md:hidden">比較・活用ガイド</h1>
+      <p class="mt-3 text-base opacity-85 max-w-2xl">モード選択 → モデル選択 → サブエージェント活用まで。用途に合わせた最適な組み合わせを解説。</p>
+      <div class="flex gap-2 mt-4 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">3つの動作モード</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">主要AIモデル比較</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">サブエージェント活用</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">ユースケース別推奨</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- フローティング目次 -->
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#overview" class="text-sm text-gray-600 block">全体マップ</a></li>
+      <li><a href="#modes" class="text-sm text-gray-600 block">動作モード</a></li>
+      <li><a href="#models" class="text-sm text-gray-600 block">AIモデル比較</a></li>
+      <li><a href="#subagents" class="text-sm text-gray-600 block">サブエージェント</a></li>
+      <li><a href="#comparison" class="text-sm text-gray-600 block">比較テーブル</a></li>
+      <li><a href="#cost" class="text-sm text-gray-600 block">コスト詳細</a></li>
+      <li><a href="#usecases" class="text-sm text-gray-600 block">用途別推奨</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- 全体マップ -->
+    <section id="overview" class="section-card">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="map" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">Cursor AI全体マップ</h2>
+          <p class="text-gray-500 text-sm">構造と選択フロー</p>
+        </div>
+      </div>
+
+      <!-- フロー図 -->
+      <div class="flex flex-col items-center gap-3 my-4">
+        <!-- 入口 -->
+        <div class="bg-gray-800 text-white rounded-xl px-6 py-3 font-bold text-base flex items-center gap-2 w-full max-w-xs text-center justify-center">
+          <i data-lucide="terminal" class="w-5 h-5 opacity-80"></i>
+          Cursor IDE
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- モード選択 -->
+        <div class="bg-amber-50 border-2 border-amber-400 rounded-xl px-6 py-3 font-bold text-amber-800 text-base w-full max-w-xs text-center">
+          Step 1 : 動作モードを選ぶ
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- 3モード -->
+        <div class="flex flex-col md:flex-row gap-3 w-full">
+          <div class="flex-1 mode-ask rounded-xl p-3 text-center">
+            <div class="font-bold text-green-800 text-sm mb-1 flex items-center justify-center gap-1"><i data-lucide="message-circle" class="w-4 h-4"></i> Ask モード</div>
+            <div class="text-xs text-gray-600">読み取り専用・質問・調査</div>
+          </div>
+          <div class="flex-1 mode-plan rounded-xl p-3 text-center">
+            <div class="font-bold text-amber-800 text-sm mb-1 flex items-center justify-center gap-1"><i data-lucide="layout-list" class="w-4 h-4"></i> Plan モード</div>
+            <div class="text-xs text-gray-600">計画・設計・レビュー</div>
+          </div>
+          <div class="flex-1 mode-agent rounded-xl p-3 text-center">
+            <div class="font-bold text-purple-800 text-sm mb-1 flex items-center justify-center gap-1"><i data-lucide="bot" class="w-4 h-4"></i> Agent モード</div>
+            <div class="text-xs text-gray-600">自律実行・ファイル編集・コマンド</div>
+          </div>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- モデル選択 -->
+        <div class="bg-blue-50 border-2 border-blue-400 rounded-xl px-6 py-3 font-bold text-blue-800 text-base w-full max-w-xs text-center">
+          Step 2 : AIモデルを選ぶ
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- モデル群 -->
+        <div class="flex flex-wrap gap-2 justify-center w-full">
+          <span class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-200">Claude 3.7</span>
+          <span class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-200">Claude 3.5</span>
+          <span class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-200">GPT-4o</span>
+          <span class="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-200">GPT-4o mini</span>
+          <span class="bg-rose-100 text-rose-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-200">o3 / o1</span>
+          <span class="bg-yellow-100 text-yellow-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-yellow-200">Gemini 2.0</span>
+          <span class="bg-green-100 text-green-800 px-3 py-1.5 rounded-lg text-xs font-bold border border-green-200">cursor-small</span>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- サブエージェント -->
+        <div class="bg-teal-50 border-2 border-teal-400 rounded-xl px-6 py-3 font-bold text-teal-800 text-base w-full max-w-xs text-center">
+          Step 3 : サブエージェントを活用（任意）
+        </div>
+      </div>
+    </section>
+
+    <!-- 動作モード -->
+    <section id="modes" class="section-card">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="layers" class="w-6 h-6 text-purple-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">3つの動作モード</h2>
+          <p class="text-gray-500 text-sm">何をしたいかでモードを選ぶ</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4">
+        <!-- Ask モード -->
+        <div class="mode-ask rounded-xl p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-9 h-9 bg-green-600 text-white rounded-xl flex items-center justify-center">
+              <i data-lucide="message-circle" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="font-bold text-green-800">Ask モード</div>
+              <div class="text-xs text-green-600">読み取り専用</div>
+            </div>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i><span>コードの説明・質問</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i><span>コードベース探索</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i><span>バグ原因の調査</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="x" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i><span class="text-gray-400">ファイル編集不可</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="x" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i><span class="text-gray-400">コマンド実行不可</span></li>
+          </ul>
+          <div class="mt-3 text-xs bg-white/70 rounded-lg p-2 text-green-800">
+            <span class="font-bold">最適用途：</span>理解・調査・レビュー
+          </div>
+        </div>
+
+        <!-- Plan モード -->
+        <div class="mode-plan rounded-xl p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-9 h-9 bg-amber-600 text-white rounded-xl flex items-center justify-center">
+              <i data-lucide="layout-list" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="font-bold text-amber-800">Plan モード</div>
+              <div class="text-xs text-amber-600">設計・計画</div>
+            </div>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i><span>実装方針の策定</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i><span>アーキテクチャ設計</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i><span>複数アプローチの比較</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i><span>大規模リファクタの計画</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="x" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i><span class="text-gray-400">ファイル編集不可</span></li>
+          </ul>
+          <div class="mt-3 text-xs bg-white/70 rounded-lg p-2 text-amber-800">
+            <span class="font-bold">最適用途：</span>大きな変更前の設計
+          </div>
+        </div>
+
+        <!-- Agent モード -->
+        <div class="mode-agent rounded-xl p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-9 h-9 bg-purple-600 text-white rounded-xl flex items-center justify-center">
+              <i data-lucide="bot" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="font-bold text-purple-800">Agent モード</div>
+              <div class="text-xs text-purple-600">自律実行</div>
+            </div>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5"></i><span>ファイル作成・編集・削除</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5"></i><span>ターミナルコマンド実行</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5"></i><span>サブエージェント起動</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5"></i><span>複数ステップの自律実行</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5"></i><span>Webブラウズ・検索</span></li>
+          </ul>
+          <div class="mt-3 text-xs bg-white/70 rounded-lg p-2 text-purple-800">
+            <span class="font-bold">最適用途：</span>実装・デバッグ・自動化
+          </div>
+        </div>
+      </div>
+
+      <!-- モード切り替えフロー -->
+      <div class="mt-5 bg-gray-50 rounded-xl p-4 border border-gray-200">
+        <div class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+          <i data-lucide="git-branch" class="w-4 h-4 text-gray-500"></i>
+          推奨ワークフロー
+        </div>
+        <div class="flex flex-col md:flex-row items-center gap-2 text-sm">
+          <div class="bg-green-100 text-green-800 px-3 py-1.5 rounded-lg font-medium">Ask: 調査・理解</div>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 hidden md:block"></i>
+          <i data-lucide="arrow-down" class="w-4 h-4 text-gray-400 md:hidden"></i>
+          <div class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg font-medium">Plan: 設計・議論</div>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 hidden md:block"></i>
+          <i data-lucide="arrow-down" class="w-4 h-4 text-gray-400 md:hidden"></i>
+          <div class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg font-medium">Agent: 実装・実行</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AIモデル比較 -->
+    <section id="models" class="section-card">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="cpu" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">AIモデル詳細比較</h2>
+          <p class="text-gray-500 text-sm">各モデルの特徴・強み・用途</p>
+        </div>
+      </div>
+
+      <!-- Anthropic Claude -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-2 h-6 bg-purple-500 rounded-full"></div>
+          <h3 class="font-bold text-lg text-gray-800">Anthropic — Claude シリーズ</h3>
+          <span class="badge badge-intel ml-1">コーディング最強クラス</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+
+          <!-- Claude 3.7 Sonnet -->
+          <div class="model-card model-claude">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-purple-900 text-base">Claude 3.7 Sonnet</div>
+                <div class="text-xs text-purple-600 mt-0.5">Anthropic • 2025年〜</div>
+              </div>
+              <span class="badge badge-intel">最新・推奨</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>拡張思考モード（Thinking）搭載</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="code-2" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>複雑なコーディングタスクに最強</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="book-open" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>コンテキスト200K トークン</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="clock" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>Thinkingモード時は低速・高コスト</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-intel">高知性</span>
+              <span class="badge badge-reason">推論強化</span>
+            </div>
+          </div>
+
+          <!-- Claude 3.5 Sonnet -->
+          <div class="model-card model-claude">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-purple-900 text-base">Claude 3.5 Sonnet</div>
+                <div class="text-xs text-purple-600 mt-0.5">Anthropic • 2024年〜</div>
+              </div>
+              <span class="badge badge-speed">バランス型</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>速度・精度のバランスが優秀</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="code-2" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>ToolUse（関数呼び出し）が安定</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="file-text" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>日本語指示への対応精度が高い</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="clock" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i><span>3.7より応答が若干速い</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-speed">高速</span>
+              <span class="badge badge-auto">ToolUse安定</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenAI GPT -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-2 h-6 bg-blue-500 rounded-full"></div>
+          <h3 class="font-bold text-lg text-gray-800">OpenAI — GPT シリーズ</h3>
+          <span class="badge badge-speed ml-1">汎用・マルチモーダル</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+
+          <!-- GPT-4o -->
+          <div class="model-card model-openai">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-blue-900 text-base">GPT-4o</div>
+                <div class="text-xs text-blue-600 mt-0.5">OpenAI • 2024年〜</div>
+              </div>
+              <span class="badge badge-auto">マルチモーダル</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="image" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i><span>画像・音声・テキストを統合処理</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="globe" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i><span>Web検索との統合が得意</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i><span>高速レスポンス</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="book-open" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i><span>コンテキスト128K トークン</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-speed">高速</span>
+              <span class="badge badge-auto">マルチモーダル</span>
+            </div>
+          </div>
+
+          <!-- GPT-4o mini -->
+          <div class="model-card model-openai">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-blue-900 text-base">GPT-4o mini</div>
+                <div class="text-xs text-blue-600 mt-0.5">OpenAI • 2024年〜</div>
+              </div>
+              <span class="badge badge-cheap">低コスト</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="trending-down" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i><span>GPT-4oの約10分の1のコスト</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i><span>最速レスポンスクラス</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i><span>簡単な質問・補完に最適</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="x-circle" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i><span class="text-gray-500">複雑な推論は苦手</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-cheap">低コスト</span>
+              <span class="badge badge-speed">超高速</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenAI 推論モデル -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-2 h-6 bg-rose-500 rounded-full"></div>
+          <h3 class="font-bold text-lg text-gray-800">OpenAI — 推論（o）シリーズ</h3>
+          <span class="badge badge-reason ml-1">深い推論特化</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+
+          <!-- o3 -->
+          <div class="model-card model-openai-reason">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-rose-900 text-base">o3</div>
+                <div class="text-xs text-rose-600 mt-0.5">OpenAI • 2025年〜</div>
+              </div>
+              <span class="badge badge-reason">最高推論</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="brain" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>数学・論理・科学で最高水準</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="git-branch" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>内部でステップを踏んで思考</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="clock" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>応答が遅く・高コスト</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>難解なバグ解析・アルゴリズム設計</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-reason">超高推論</span>
+              <span class="badge badge-intel">数学最強</span>
+            </div>
+          </div>
+
+          <!-- o1 / o3-mini -->
+          <div class="model-card model-openai-reason">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-rose-900 text-base">o1 / o3-mini</div>
+                <div class="text-xs text-rose-600 mt-0.5">OpenAI • 2024〜2025年</div>
+              </div>
+              <span class="badge badge-cheap">推論コスパ</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="brain" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>o3より軽量で推論特化</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="code-2" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>コード生成の精度が高い</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="trending-down" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>o3より低コスト・高速</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5"></i><span>日常的な推論タスクに最適</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-reason">推論強化</span>
+              <span class="badge badge-cheap">コスパ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Gemini -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-2 h-6 bg-yellow-500 rounded-full"></div>
+          <h3 class="font-bold text-lg text-gray-800">Google — Gemini シリーズ</h3>
+          <span class="badge badge-ctx ml-1">超長文コンテキスト</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+
+          <!-- Gemini 2.0 Flash -->
+          <div class="model-card model-gemini">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-yellow-900 text-base">Gemini 2.0 Flash</div>
+                <div class="text-xs text-yellow-700 mt-0.5">Google • 2025年〜</div>
+              </div>
+              <span class="badge badge-speed">高速・最新</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>高速レスポンス・低コスト</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="book-open" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>コンテキスト1M トークン</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="image" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>マルチモーダル対応（画像・動画）</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>大規模コードベース解析に有利</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-ctx">超長文脈</span>
+              <span class="badge badge-speed">高速</span>
+            </div>
+          </div>
+
+          <!-- Gemini 1.5 Pro -->
+          <div class="model-card model-gemini">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <div class="font-bold text-yellow-900 text-base">Gemini 1.5 Pro</div>
+                <div class="text-xs text-yellow-700 mt-0.5">Google • 2024年〜</div>
+              </div>
+              <span class="badge badge-ctx">長文脈最強</span>
+            </div>
+            <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+              <div class="flex items-start gap-2"><i data-lucide="book-open" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>コンテキスト最大2M トークン</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="file-text" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>大量ドキュメント一括処理</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="clock" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>長文になるほど処理が遅い</span></div>
+              <div class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5"></i><span>コードベース全体の把握に最適</span></div>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-ctx">2M コンテキスト</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- cursor-small -->
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-2 h-6 bg-green-500 rounded-full"></div>
+          <h3 class="font-bold text-lg text-gray-800">Cursor 独自モデル</h3>
+          <span class="badge badge-speed ml-1">IDE統合特化</span>
+        </div>
+        <div class="model-card model-cursor max-w-md">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="font-bold text-green-900 text-base">cursor-small</div>
+              <div class="text-xs text-green-600 mt-0.5">Cursor • エディタ統合専用</div>
+            </div>
+            <span class="badge badge-cheap">超軽量</span>
+          </div>
+          <div class="space-y-1.5 text-sm text-gray-700 mb-3">
+            <div class="flex items-start gap-2"><i data-lucide="keyboard" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i><span>Tab補完に最適化（爆速）</span></div>
+            <div class="flex items-start gap-2"><i data-lucide="zap" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i><span>インラインコード補完専用</span></div>
+            <div class="flex items-start gap-2"><i data-lucide="trending-down" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i><span>最低コスト・最速レスポンス</span></div>
+            <div class="flex items-start gap-2"><i data-lucide="x-circle" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i><span class="text-gray-500">会話・複雑タスクには不向き</span></div>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="badge badge-speed">超高速</span>
+            <span class="badge badge-cheap">最低コスト</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- サブエージェント -->
+    <section id="subagents" class="section-card">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="network" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">サブエージェント（Task）</h2>
+          <p class="text-gray-500 text-sm">Agentモードで起動できる専門サブエージェント</p>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-5">
+        <div class="flex items-start gap-3">
+          <i data-lucide="info" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-blue-800">
+            <span class="font-bold">サブエージェントとは：</span>
+            AgentモードのAIが、複雑なタスクを分担するために<code>Task()</code>で呼び出す専門エージェント。
+            並列実行・読み取り専用隔離・独立したコンテキストで動作する。
+          </div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3">
+        <!-- generalPurpose -->
+        <div class="subagent-card">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-4 h-4 text-purple-600"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm text-gray-800">generalPurpose</div>
+              <div class="text-xs text-gray-500">汎用エージェント</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">複雑な調査・コード検索・多ステップタスクの自律実行。ファイル編集・ツール利用が可能。</p>
+          <div class="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1"><span class="font-bold">用途例：</span>ライブラリ調査、バグ修正、機能実装</div>
+        </div>
+
+        <!-- explore -->
+        <div class="subagent-card">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="search" class="w-4 h-4 text-green-600"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm text-gray-800">explore</div>
+              <div class="text-xs text-gray-500">読み取り専用・高速探索</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">コードベースの読み取り専用調査に特化。ファイル検索・パターン検索・構造把握が高速。</p>
+          <div class="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1"><span class="font-bold">用途例：</span>「どこに定義があるか調べて」「API構造を把握して」</div>
+        </div>
+
+        <!-- shell -->
+        <div class="subagent-card">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="terminal" class="w-4 h-4 text-gray-600"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm text-gray-800">shell</div>
+              <div class="text-xs text-gray-500">コマンド実行専門</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">Bashコマンド・Git操作・npm/pip・Docker等の端末操作に特化したエージェント。</p>
+          <div class="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1"><span class="font-bold">用途例：</span>git操作、ビルド、テスト実行、デプロイ</div>
+        </div>
+
+        <!-- cursor-guide -->
+        <div class="subagent-card">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="help-circle" class="w-4 h-4 text-blue-600"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm text-gray-800">cursor-guide</div>
+              <div class="text-xs text-gray-500">Cursor製品ドキュメント専門</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">Cursorの機能・設定・使い方に関する公式ドキュメントを参照して回答する専門エージェント。</p>
+          <div class="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1"><span class="font-bold">用途例：</span>「Cursorのルール設定方法は？」「ホットキーを教えて」</div>
+        </div>
+
+        <!-- best-of-n-runner -->
+        <div class="subagent-card md:col-span-2">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="git-fork" class="w-4 h-4 text-orange-600"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm text-gray-800">best-of-n-runner</div>
+              <div class="text-xs text-gray-500">並列実験・隔離ブランチ実行</div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">独立したGitワークツリー上でタスクを実行。複数の実装案を並列に試して最良を選ぶ「best-of-N」実験が可能。</p>
+          <div class="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1"><span class="font-bold">用途例：</span>複数リファクタ案の並列検討、実験的な実装の安全なテスト</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 比較テーブル -->
+    <section id="comparison" class="section-card">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="table" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">モデル一覧比較テーブル</h2>
+          <p class="text-gray-500 text-sm">主要指標で横並び比較</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-gray-800 text-white">
+              <th class="text-left p-3 rounded-tl-lg font-bold">モデル</th>
+              <th class="text-center p-3 font-bold">速度</th>
+              <th class="text-center p-3 font-bold">コーディング</th>
+              <th class="text-center p-3 font-bold">推論</th>
+              <th class="text-center p-3 font-bold">コンテキスト</th>
+              <th class="text-left p-3 font-bold">API入力コスト<br><span class="text-gray-400 font-normal text-xs">/100万tokens</span></th>
+              <th class="text-left p-3 rounded-tr-lg font-bold">API出力コスト<br><span class="text-gray-400 font-normal text-xs">/100万tokens</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-purple-700">Claude 3.7 Sonnet</td>
+              <td class="p-3 text-center">⚡⚡⚡</td>
+              <td class="p-3 text-center text-purple-600 font-bold">★★★★★</td>
+              <td class="p-3 text-center">★★★★★</td>
+              <td class="p-3 text-center text-gray-600">200K</td>
+              <td class="p-3"><span class="font-bold text-orange-700">¥465</span><span class="text-xs text-gray-400 ml-1">($3.00)</span></td>
+              <td class="p-3"><span class="font-bold text-orange-700">¥2,325</span><span class="text-xs text-gray-400 ml-1">($15.00)</span></td>
+            </tr>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-purple-700">Claude 3.5 Sonnet</td>
+              <td class="p-3 text-center">⚡⚡⚡⚡</td>
+              <td class="p-3 text-center text-purple-600 font-bold">★★★★★</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center text-gray-600">200K</td>
+              <td class="p-3"><span class="font-bold text-orange-700">¥465</span><span class="text-xs text-gray-400 ml-1">($3.00)</span></td>
+              <td class="p-3"><span class="font-bold text-orange-700">¥2,325</span><span class="text-xs text-gray-400 ml-1">($15.00)</span></td>
+            </tr>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-blue-700">GPT-4o</td>
+              <td class="p-3 text-center">⚡⚡⚡⚡</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center text-gray-600">128K</td>
+              <td class="p-3"><span class="font-bold text-yellow-700">¥388</span><span class="text-xs text-gray-400 ml-1">($2.50)</span></td>
+              <td class="p-3"><span class="font-bold text-yellow-700">¥1,550</span><span class="text-xs text-gray-400 ml-1">($10.00)</span></td>
+            </tr>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-blue-700">GPT-4o mini</td>
+              <td class="p-3 text-center">⚡⚡⚡⚡⚡</td>
+              <td class="p-3 text-center">★★★</td>
+              <td class="p-3 text-center">★★★</td>
+              <td class="p-3 text-center text-gray-600">128K</td>
+              <td class="p-3"><span class="font-bold text-green-700">¥23</span><span class="text-xs text-gray-400 ml-1">($0.15)</span></td>
+              <td class="p-3"><span class="font-bold text-green-700">¥93</span><span class="text-xs text-gray-400 ml-1">($0.60)</span></td>
+            </tr>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-rose-700">o3</td>
+              <td class="p-3 text-center">⚡</td>
+              <td class="p-3 text-center">★★★★★</td>
+              <td class="p-3 text-center text-rose-600 font-bold">★★★★★</td>
+              <td class="p-3 text-center text-gray-600">200K</td>
+              <td class="p-3"><span class="font-bold text-orange-700">¥310</span><span class="text-xs text-gray-400 ml-1">($2.00)</span></td>
+              <td class="p-3"><span class="font-bold text-orange-700">¥1,240</span><span class="text-xs text-gray-400 ml-1">($8.00)</span></td>
+            </tr>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-rose-700">o3-mini / o1</td>
+              <td class="p-3 text-center">⚡⚡</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center">★★★★★</td>
+              <td class="p-3 text-center text-gray-600">128K</td>
+              <td class="p-3"><span class="font-bold text-yellow-700">¥171</span><span class="text-xs text-gray-400 ml-1">($1.10)</span></td>
+              <td class="p-3"><span class="font-bold text-yellow-700">¥682</span><span class="text-xs text-gray-400 ml-1">($4.40)</span></td>
+            </tr>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-yellow-700">Gemini 2.0 Flash</td>
+              <td class="p-3 text-center">⚡⚡⚡⚡</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center text-yellow-700 font-bold">1M</td>
+              <td class="p-3"><span class="font-bold text-green-700">¥12</span><span class="text-xs text-gray-400 ml-1">($0.075)</span></td>
+              <td class="p-3"><span class="font-bold text-green-700">¥47</span><span class="text-xs text-gray-400 ml-1">($0.30)</span></td>
+            </tr>
+            <tr class="comparison-row border-b border-gray-100">
+              <td class="p-3 font-bold text-yellow-700">Gemini 1.5 Pro</td>
+              <td class="p-3 text-center">⚡⚡</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center">★★★★</td>
+              <td class="p-3 text-center text-yellow-700 font-bold">2M</td>
+              <td class="p-3"><span class="font-bold text-yellow-700">¥194</span><span class="text-xs text-gray-400 ml-1">($1.25)</span></td>
+              <td class="p-3"><span class="font-bold text-yellow-700">¥775</span><span class="text-xs text-gray-400 ml-1">($5.00)</span></td>
+            </tr>
+            <tr class="comparison-row">
+              <td class="p-3 font-bold text-green-700">cursor-small</td>
+              <td class="p-3 text-center">⚡⚡⚡⚡⚡</td>
+              <td class="p-3 text-center text-xs text-gray-400">補完専用</td>
+              <td class="p-3 text-center">★</td>
+              <td class="p-3 text-center text-gray-600">短め</td>
+              <td class="p-3 font-bold text-green-700" colspan="2">Cursorプラン内 無料</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-3 text-xs text-gray-400">⚡：相対的な応答速度。★：各能力の相対評価（5段階）。API料金は $1=¥155 換算・2026年4月時点。Cursorサブスク利用時は下記コスト表を参照。</div>
+    </section>
+
+    <!-- コスト詳細 -->
+    <section id="cost" class="section-card">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="circle-dollar-sign" class="w-6 h-6 text-emerald-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">コスト詳細</h2>
+          <p class="text-gray-500 text-sm">Cursorサブスク vs API直接利用 / $1=¥155換算・2026年4月</p>
+        </div>
+      </div>
+
+      <!-- Cursorサブスクリプション -->
+      <h3 class="font-bold text-lg text-gray-700 mb-3 flex items-center gap-2">
+        <i data-lucide="credit-card" class="w-5 h-5 text-indigo-500"></i>
+        Cursor サブスクリプション料金
+      </h3>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <!-- Hobby -->
+        <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4">
+          <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Hobby</div>
+          <div class="text-2xl font-bold text-gray-800 mb-0.5">無料</div>
+          <div class="text-xs text-gray-500 mb-3">$0 / 月</div>
+          <ul class="text-xs space-y-1 text-gray-600">
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5"></i>スロープレミアム 50回/月</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5"></i>Tab補完 制限あり</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="x" class="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5"></i>フロンティアモデル制限</li>
+          </ul>
+        </div>
+
+        <!-- Pro -->
+        <div class="bg-indigo-50 border-2 border-indigo-400 rounded-xl p-4 relative">
+          <div class="absolute -top-2 right-3 bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">個人推奨</div>
+          <div class="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1">Pro</div>
+          <div class="text-2xl font-bold text-indigo-800 mb-0.5">¥3,100</div>
+          <div class="text-xs text-indigo-500 mb-3">$20 / 月</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-indigo-500 flex-shrink-0 mt-0.5"></i>ファスト 500回/月</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-indigo-500 flex-shrink-0 mt-0.5"></i>スロー 無制限</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-indigo-500 flex-shrink-0 mt-0.5"></i>Tab補完 無制限</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-indigo-500 flex-shrink-0 mt-0.5"></i>全フロンティアモデル</li>
+          </ul>
+        </div>
+
+        <!-- Pro+ -->
+        <div class="bg-purple-50 border-2 border-purple-400 rounded-xl p-4 relative">
+          <div class="absolute -top-2 right-3 bg-purple-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">毎日使う人向け</div>
+          <div class="text-xs font-bold text-purple-600 uppercase tracking-wider mb-1">Pro+</div>
+          <div class="text-2xl font-bold text-purple-800 mb-0.5">¥9,300</div>
+          <div class="text-xs text-purple-500 mb-3">$60 / 月</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-purple-500 flex-shrink-0 mt-0.5"></i>Proの3倍利用枠</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-purple-500 flex-shrink-0 mt-0.5"></i>全モデル拡張アクセス</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-purple-500 flex-shrink-0 mt-0.5"></i>Claude / GPT / Gemini 全対応</li>
+          </ul>
+        </div>
+
+        <!-- Ultra -->
+        <div class="bg-rose-50 border-2 border-rose-300 rounded-xl p-4 relative">
+          <div class="absolute -top-2 right-3 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">ヘビーユーザー</div>
+          <div class="text-xs font-bold text-rose-600 uppercase tracking-wider mb-1">Ultra</div>
+          <div class="text-2xl font-bold text-rose-800 mb-0.5">¥31,000</div>
+          <div class="text-xs text-rose-500 mb-3">$200 / 月</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0 mt-0.5"></i>Proの20倍利用枠</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0 mt-0.5"></i>新機能への優先アクセス</li>
+            <li class="flex items-start gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-rose-500 flex-shrink-0 mt-0.5"></i>エージェント使い放題</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Cursorでのリクエスト消費数 -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="gauge" class="w-4 h-4 text-blue-600"></i>
+          <span class="font-bold text-blue-800 text-sm">Cursor Pro：ファストリクエスト消費数（モデル別）</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <div>
+            <div class="text-xs font-bold text-gray-500 mb-2">1リクエスト消費（500回/月の枠から）</div>
+            <ul class="space-y-1 text-gray-700">
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></span>GPT-4o</li>
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-purple-400 rounded-full flex-shrink-0"></span>Claude 3.5 Sonnet</li>
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-purple-400 rounded-full flex-shrink-0"></span>Claude 3.7 Sonnet</li>
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-yellow-400 rounded-full flex-shrink-0"></span>Gemini 2.0 Flash</li>
+            </ul>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-gray-500 mb-2">10リクエスト消費（重いモデル）</div>
+            <ul class="space-y-1 text-gray-700 mb-3">
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-rose-500 rounded-full flex-shrink-0"></span>Claude Opus系</li>
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-rose-500 rounded-full flex-shrink-0"></span>o1 / o1-preview</li>
+            </ul>
+            <div class="text-xs font-bold text-gray-500 mb-2">消費なし（無料）</div>
+            <ul class="space-y-1 text-gray-700">
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>cursor-small</li>
+              <li class="flex items-center gap-2"><span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>GPT-4o mini</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-blue-200 text-xs text-blue-700">
+          <span class="font-bold">追加リクエスト購入：</span>500回 = $20（¥3,100）。月末でも使い切りたい場合に随時追加可能。
+        </div>
+      </div>
+
+      <!-- API直接利用 vs Cursorサブスク比較 -->
+      <h3 class="font-bold text-lg text-gray-700 mb-3 flex items-center gap-2">
+        <i data-lucide="git-compare" class="w-5 h-5 text-gray-500"></i>
+        利用量別コスト試算（Claude 3.5 Sonnet の場合）
+      </h3>
+
+      <div class="overflow-x-auto mb-4">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">月間利用量</th>
+              <th class="text-center p-3 font-bold text-gray-700">API直接利用<br><span class="font-normal text-xs text-gray-500">（自前APIキー）</span></th>
+              <th class="text-center p-3 font-bold text-indigo-700">Cursor Pro<br><span class="font-normal text-xs text-gray-500">¥3,100/月</span></th>
+              <th class="text-center p-3 font-bold text-gray-700 rounded-tr-lg">お得な選択</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">軽め（100リクエスト）</td>
+              <td class="p-3 text-center text-green-700 font-bold">約¥310〜770</td>
+              <td class="p-3 text-center text-indigo-700">¥3,100（固定）</td>
+              <td class="p-3 text-center"><span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full font-bold">API直接</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">普通（500リクエスト）</td>
+              <td class="p-3 text-center text-yellow-700 font-bold">約¥1,550〜3,875</td>
+              <td class="p-3 text-center text-indigo-700">¥3,100（固定）</td>
+              <td class="p-3 text-center"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full font-bold">ほぼ同等</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">多め（2,000リクエスト）</td>
+              <td class="p-3 text-center text-red-700 font-bold">約¥6,200〜15,500</td>
+              <td class="p-3 text-center text-indigo-700">¥3,100〜6,200</td>
+              <td class="p-3 text-center"><span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-0.5 rounded-full font-bold">Cursorお得</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">ヘビー（5,000+リクエスト）</td>
+              <td class="p-3 text-center text-red-700 font-bold">約¥15,500〜+</td>
+              <td class="p-3 text-center text-purple-700">Pro+ ¥9,300</td>
+              <td class="p-3 text-center"><span class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full font-bold">Pro+が最適</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-sm">
+        <div class="flex items-start gap-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+          <div class="text-amber-800">
+            <span class="font-bold">実用的なヒント：</span>
+            Tab補完・軽い質問には <code>cursor-small</code> や <code>GPT-4o mini</code>（無料消費）を活用し、
+            複雑な実装・重要な判断だけ Claude/GPT-4o を使う使い分けが最もコスパが高い。
+            Proプランの500ファストリクエストは1日約16〜17回分。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 用途別推奨 -->
+    <section id="usecases" class="section-card">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center">
+          <i data-lucide="lightbulb" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">用途別・推奨モデル</h2>
+          <p class="text-gray-500 text-sm">シーンに合わせた最適な選択</p>
+        </div>
+      </div>
+
+      <div class="grid gap-4">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-600">
+          <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <i data-lucide="code-2" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800 mb-1">複雑な機能実装・大規模リファクタ</div>
+            <p class="text-sm text-gray-600 mb-2">複数ファイルにまたがる変更、設計判断が必要な実装</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="bg-purple-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">Agent + Claude 3.7</span>
+              <span class="bg-purple-300 text-purple-900 text-xs px-2.5 py-1 rounded-full font-medium">or Claude 3.5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-rose-50 to-rose-100 rounded-xl border-l-4 border-rose-600">
+          <div class="w-10 h-10 bg-rose-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <i data-lucide="bug" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800 mb-1">難解なバグ・アルゴリズム・数学的問題</div>
+            <p class="text-sm text-gray-600 mb-2">根本原因が不明なバグ、最適化問題、論理の複雑な問題</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="bg-rose-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">Agent + o3</span>
+              <span class="bg-rose-300 text-rose-900 text-xs px-2.5 py-1 rounded-full font-medium">or o3-mini</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl border-l-4 border-yellow-600">
+          <div class="w-10 h-10 bg-yellow-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <i data-lucide="file-search" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800 mb-1">大規模コードベースの把握・ドキュメント解析</div>
+            <p class="text-sm text-gray-600 mb-2">数十万行のコード、大量のPDF・ドキュメントの一括処理</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="bg-yellow-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">Ask + Gemini 1.5 Pro</span>
+              <span class="bg-yellow-300 text-yellow-900 text-xs px-2.5 py-1 rounded-full font-medium">or Gemini 2.0 Flash</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border-l-4 border-green-600">
+          <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <i data-lucide="keyboard" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800 mb-1">日常のコード補完・Tab補完</div>
+            <p class="text-sm text-gray-600 mb-2">行補完、変数名補完、ボイラープレートの自動入力</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="bg-green-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">Tab + cursor-small</span>
+              <span class="bg-green-300 text-green-900 text-xs px-2.5 py-1 rounded-full font-medium">or GPT-4o mini</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl border-l-4 border-amber-600">
+          <div class="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <i data-lucide="layout-list" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800 mb-1">設計議論・アーキテクチャ決定</div>
+            <p class="text-sm text-gray-600 mb-2">技術選定、設計トレードオフの議論、実装前の計画</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="bg-amber-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">Plan + Claude 3.7</span>
+              <span class="bg-amber-300 text-amber-900 text-xs px-2.5 py-1 rounded-full font-medium">or GPT-4o</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-600">
+          <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <i data-lucide="image" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800 mb-1">画像・スクリーンショットからコード生成</div>
+            <p class="text-sm text-gray-600 mb-2">UIモックアップ画像からのコード生成、図からのデータ抽出</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="bg-blue-600 text-white text-xs px-2.5 py-1 rounded-full font-bold">Agent + GPT-4o</span>
+              <span class="bg-blue-300 text-blue-900 text-xs px-2.5 py-1 rounded-full font-medium">or Gemini 2.0 Flash</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- フッター -->
+    <div class="text-center text-gray-400 text-xs py-4">
+      作成日：2026年4月 ／ Cursor AI Agents Guide ／ 情報は随時更新されます
+    </div>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

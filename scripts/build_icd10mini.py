@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "icd10.html"
-OUT = ROOT / "icd10mini.html"
+OUT = ROOT / "icd10mini" / "icd10mini.html"
 
 
 def extract_definitions_block(text: str) -> str:
@@ -340,6 +340,7 @@ def main() -> None:
 """
     )
 
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text("".join(parts), encoding="utf-8")
     print("Wrote", OUT, "bytes", OUT.stat().st_size)
 

@@ -1,0 +1,1365 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""psych-terminology-jp.html をデータから生成する（編集はこのスクリプトの TERMS を更新）。"""
+
+from __future__ import annotations
+
+from html import escape
+from pathlib import Path
+from typing import Optional, Tuple, Union
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "psych-terminology-jp.html"
+
+# 各用語: title, summary, examples, dsm, icd, schools
+# examples は str（自動で診断書・カンファ用の例が付与される）または tuple[str, ...]（そのまま掲載）
+SECTIONS = [
+    {
+        "id": "psychiatry",
+        "icon": "stethoscope",
+        "icon_bg": "bg-teal-100",
+        "icon_color": "text-teal-800",
+        "title": "精神医学でよく使う用語",
+        "subtitle": "病歴・診断書・カンファレンス・ガイドライン",
+        "terms": [
+            (
+                "エピソード／寛解／再発",
+                "症状が顕在化した期間、症状が十分軽快した状態、再び顕在化すること。双極性障害では躁・うつ・混合エピソードなど極性ごとに記載する。",
+                "うつ病エピソードは3回目。前回寛解後、服薬中断から約8か月で再発。",
+                "気分エピソードの枠組み（Major depressive / Manic / Hypomanic / Mixed 等）と再発・寛解の記述が診断・治療期間の根拠になる。持続期間・回数はスペシファイアや鑑別に使用。",
+                "気分障害群では抑うつエピソード、躁狂エピソード、混合エピソード等の用語で病期を整理。再発性・単一エピソードの区別が記載される。",
+                "記述的精神医学・教科書: Sadock et al.『Comprehensive Textbook of Psychiatry』(10th ed. 等) の病期・経過章。日本語: 河合・中尾監修『精神医学』(医学書院) の気分障害・経過の節。",
+            ),
+            (
+                "内因性／外因性",
+                "ストレス由来か否かの対比で用いられることが多い歴史的語彙。現代は遺伝×環境の多因子モデルが主流で、鑑別語として残る。",
+                "生活イベントとの時系列が明確なため、外因性ストレスが関与したうつ病として整理した。",
+                "「内因性うつ」という診断カテゴリは用いない。うつ病は基準A〜にストレスの有無を必須としない（ストレスは有病率・再発と関連）。",
+                "抑うつエピソードの診断要件は症状・期間・機能障害中心。外因はコンテキストとして記録（適応障害・PTSD 等との鑑別）。",
+                "ジャスパース以降の理解精神病理学では「意味のある反応」と「病的過程」の対比が系譜。現代臨床ではICDの「適応障害」「反応性うつ様障害」などでストレス関連を分類。",
+                "外因性はストレスや生活事件との時系列が語りやすい語。内因性は『内因のみ』を想起させ歴史的誤解があり、現代は遺伝×環境の多因子で説明。診断名として内因性／外因性うつは用いない。",
+            ),
+            (
+                "器質性／機能性",
+                "脳・全身の疾患や物質で説明できるか、一次の精神・行動障害として扱うかの整理。",
+                "甲状腺機能低下を治療しても気分症状が残存するため、併存するうつ病を考慮。",
+                "「器質性」という用語は避け、物質/医原性/他医学的状態による精神障害を区別。鑑別では「他医学的状態」が原因十分かを評価。",
+                "一次精神障害と、神経認知障害・物質関連・他身体疾患による症状を階層化。CDDR では臨床像と除外を併記。",
+                "神経精神医学: Mesulam 等の皮質ネットワーク、谵妄の診断基準（DSM）と整合。日本語総論でも「脳症・身体疾患関連」の章で記載。",
+                "機能性：かつて『脳病変がなく精神症状』を指したが、画像・電生理の進歩で誤解を招きやすい。現在は他医学的／物質性と原発精神障害の鑑別が中心。※気質（temperament）は生得的な情動・活動の基調を指し、器質性（脳病変）とは無関係。聞き間違い・誤記に注意。",
+            ),
+            (
+                "アドヒアランス／コンプライアンス",
+                "処方・通院・行動処方への一致度。コンプライアンスは服従のニュアンスがあり、アドヒアランスが推奨されることが多い。",
+                "副作用懸念で自己減量。アドヒアランス不良が再発リスクになっている。",
+                "治療計画は「共同意思決定」の文脈で記載。服薬は診断名より行動面の記述としてカルテに残る。",
+                "管理・疫学では治療継続率として扱う。診断マニュアル本体より実践ガイド・WHO guideline で扱う。",
+                "動機づけ面接、家族介入、デジタルリマインダなどエビデンスは各ガイドライン。教科書では治療学の「患者中心」節。",
+                "コンプライアンス：処方への服従・遵守のニュアンスが強く、患者の納得や実行障害の多面性を捉えにくい。アドヒアランス：治療計画への同意・実行・障害要因（副作用恐怖、コスト、認知等）まで含む広い概念。記録・研究ではアドヒアランスが推奨されやすい。",
+            ),
+            (
+                "インフォームド・コンセント（IC）",
+                "診断名、治療の目的・利益・リスク・代替手段、拒否の権利についての説明と同意。",
+                "抗精神病薬の錐体外路症状・代謝影響について説明し、ICを得た上で開始。",
+                "治療は倫理原則に基づく。ECT 等は追加の手続きが臨床指針で求められることがある。",
+                "人権・倫理は分類とは別層。各国の医師会指針と併読。",
+                "医学教育・医事法テキスト、精神科臨床指針（学会）を参照。",
+            ),
+            (
+                "MSE（精神状態検査）",
+                "外見、行動、気分・感情、思考（形式・内容）、知覚、認知、洞察・判断力の体系的評価。",
+                "MSE上、幻聴を否認。思考連合は整。気分は「不安定」と記載。",
+                "文化面（Cultural formulation）や人格障害の評価枠組みと併用される。",
+                "CDDR は各障害の「臨床像」で観察項目を列挙。記録様式は国・施設差あり。",
+                "Trzepacz & Baker『The Psychiatric Mental Status Examination』等。日本語は『精神医学』初診・MSEの節。",
+            ),
+            (
+                "鑑別診断（Differential diagnosis）",
+                "症状が重なる複数疾患のうち、証拠に基づき優先順位をつける思考過程。",
+                "初発精神病像のため、物質誘発性精神病性障害と統合失調症様障害を鑑別した。",
+                "診断は基準の列挙に加え、時系列・物質・身体疾患・発達の除外が中心。",
+                "ICD-11 も診断要件に除外と関連障害を明記。多軸は記録システム次第。",
+                "臨床推論: First, M. et al.『DSM-5-TR 臨床家ガイド』(邦訳)、Oxford Textbook of Psychiatry の approach to diagnosis。",
+            ),
+            (
+                "自殺・自傷リスク評価",
+                "意念、計画、手段、保護因子、過去の試図を含む構造化評価。",
+                "消極的念慮はあるが具体計画は否認。高リスク日（事件後）は短期フォロー。",
+                "自殺リスクは診断カテゴリではなく危機度。多くの障害で増加しうる。",
+                "分類上は自傷行動を伴う障害・境界型人格障害などで行動面を記載。",
+                "Stanley & Brown の安全計画、各種スケールはガイドライン参照。日本の自殺対策ガイドラインと併読。",
+            ),
+        ],
+    },
+    {
+        "id": "pathology",
+        "icon": "brain",
+        "icon_bg": "bg-violet-100",
+        "icon_color": "text-violet-800",
+        "title": "精神病理学でよく使う用語",
+        "subtitle": "症状の意味づけ・理論的枠組み・次元モデル",
+        "terms": [
+            (
+                "一次症状／二次症状（歴史的用法）",
+                "統合失調症理解史における対比。現代はシュナイダー基準やICD/DSMの操作性定義が中心。",
+                "思考形式の障害を一次症状群として捉え、内容の新奇性より構造を重視した。",
+                "Schneiderian first-rank は参考概念。診断はCriterion Aの症状リストに統合。",
+                "ICD-11 統合失調症の臨床像でも「原発性精神病症状」として妄想・幻覚・解体化思考・経験のパッシビティ等を列挙。",
+                "Andreasen の陽性・陰性、現代はNAP S5 等の研究用枠組み。教科書: Häfner, Jablensky のレビュー章。",
+            ),
+            (
+                "自我障害",
+                "自己と外界・身体・思考の境界が揺らぐ体験（思考伝播・剥奪・挿入等の系譜）。",
+                "思考が漏れる感じがあり、自我障害の訴えとして記載。",
+                "経験のパッシビティ（passivity experiences）は精神病性症状の一部として評価。",
+                "ICD-11 でも「他人の思考が自分の中に入る」等の記載例が臨床記述に含まれる。",
+                "現象学: Sass & Parnas の自己障害研究、福間 等の日本語レビュー。Jaspers の理解精神病理学の系譜。",
+            ),
+            (
+                "現実検討能力（reality testing）",
+                "病理的知覚・信念が現実と区別できるかの度合い。",
+                "幻聴ありつつ病的確信は弱く、現実検討は保たれている。",
+                "精神病性障害では妄想・幻覚の確信度と洞察が重症度・治療選択に関わる。",
+                "ICD-11 でも妄想・幻覚の「病的確信」や鑑別の文脈で臨床記述。",
+                "精神分析では現実原則・自我の機能と接続して語られることがある（Gabbard）。",
+            ),
+            (
+                "形式思考障害／内容思考障害",
+                "連合の速度・論理性（形式）と、妄想の主題（内容）を分ける。",
+                "内容は被害だが形式は逸脱が目立つため、形式面の評価を優先した。",
+                "解体化言語（disorganized speech）は精神病性症状の一要素。",
+                "同様に思考形式の乱れは精神病性障害の記述に含まれる。",
+                "記述的精神医学の古典的分類。現代認知研究では言語フルエンシー・意味ネットワークと接続。",
+            ),
+            (
+                "情緒不調和（mood-incongruent）",
+                "気分極性と精神病症状の内容が整合しない様式。",
+                "躁状態だが内容は被害。気分不調和性精神病症状として記録。",
+                "気分エピソードに精神病性症状がある場合、調和性／不調和性のスペシファイアが用いられる。",
+                "気分エピソード随伴の精神病症状の記述で同様の区別が臨床上有用。",
+                "鑑別: 統合失調症 vs 気分障害随伴精神病症状の整理に用いる。",
+            ),
+            (
+                "病識（インサイト）",
+                "病気であること、症状が病的であることへの理解。",
+                "病識乏しいため、家族への心理教育と訪問看護調整を行った。",
+                "妄想の確信度と洞察は別次元で評価。アノソグノシア様の状態も鑑別。",
+                "記録上は治療コンプライアンス・リハビリ計画に影響。",
+                "Amador の研究、日本の「病識」臨床研究。認知療法では「信念の柔軟性」と接続。",
+            ),
+            (
+                "理解と説明（ヤスパース）",
+                "意味のある心のつながりとして理解できるものと、因果的に説明すべき病的過程の区別。",
+                "彼の行動は文脈から共感的に理解可能で、直ちに精神病性とは言えない。",
+                "DSM/ICD は主に操作性カテゴリ。現象学的厚みは別枠で記録。",
+                "ICD-11 も文化・文脈を考慮する記載を含む。",
+                "Jaspers『一般精神病理学』、現代は Stanghellini の現象学的精神医学。",
+            ),
+            (
+                "閾下症状／残存症状",
+                "基準未満だが機能に影響する症状、または寛解期の軽度持続症状。",
+                "PHQ-9は軽度だが倦怠が持続。閾下抑うつとして介入継続。",
+                "Major depressive episode 寛解のスペシファイアで部分的寛解等の概念。",
+                "長期経過の記述で臨床上有用。研究用閾下定義は複数。",
+                "再発予防ガイドライン（CANMAT 等）で残存症状の扱い。",
+            ),
+            (
+                "次元モデル",
+                "カテゴリ診断に加え、精神病性〜神経症性、重症度の軸で記述する考え方。",
+                "陽性症状スコアは中程度だが社会機能低下が顕著。",
+                "人格障害はAlternative Model（次元）でtrait記述。精神病性症状は重症度尺度（PANSS等）で補完。",
+                "ICD-11 の人格障害は程度指定子とtrait記述へ移行。",
+                "Widiger、Krueger の構造モデル。WHO の field study 報告。",
+            ),
+            (
+                "社会・職業機能（グローバル・アセスメント）",
+                "症状以外に、役割遂行の度合いを評価する。",
+                "在宅は可能だが就労は不可。機能面を別欄で明示した。",
+                "診断基準の多くに「臨床的に著しい苦痛または障害」を含む。GAFはDSM-5で廃止、WHODAS等推奨。",
+                "ICD-11 でも障害・活動制限の記録を推奨。",
+                "復職支援・ディスアビリティ評価のマニュアルと併読。",
+            ),
+            (
+                "複雑トラウマ／人格機能・感情調整",
+                "反復・長期の対人トラウマに続く、自己同一性・対人関係・感情調整の広範な困難。",
+                "児童期虐待後、対人不信と感情の麻痺が持続。",
+                "DSM-5-TR はPTSDに解離指定子等。複雑PTSDという独立診断名は用いない（研究・臨床用語としては議論継続）。",
+                "ICD-11 に Complex PTSD（複雑PTSD）を明記。PTSD核症状に加え人格機能障害・感情調整困難を要約。",
+                "Cloitre、Briere の発達トラウマモデル。Stanghellini の現象学的記述。",
+            ),
+            (
+                "神経発達症（知的・自閉スペクトラム・ADHD との境界）",
+                "発達段階からの持続的困難と精神病理の交差。",
+                "ASD 併存で感情表出が読み取りにくい。誤診に注意。",
+                "ASD・ADHD・知的障害は別章。併存時は症状帰属の注意書きあり。",
+                "ICD-11 も神経発達グループを整理。併存障害の記録を推奨。",
+                "NICE guideline、Lai 等のASD成人レビュー。",
+            ),
+            (
+                "気質（temperament）／状態（state・エピソード）",
+                "気質は比較的長期に安定した情動・活動・衝動性の基調。状態はうつ・躁など、明確な始まりと（寛解すれば）終わりをもつ病的エピソード。",
+                "気分循環性気質の素地の上に、今回初めて躁エピソードが出現した。",
+                "人格障害のtraitと気分エピソードの区別に関連。児童期からの気質は発達・性格病理の文脈でも記載。",
+                "ICD-11・DSM いずれも気分エピソードは期間・症状で定義。気質は研究・臨床記述語として併用。",
+                "Akiskal の気分気質、Cloninger の気質次元モデル等。日本語総論の気分障害・人格の節。",
+                "器質性（脳病変・身体疾患）とは無関係。器質／機能の対と、気質／状態の対は次元が異なる（誤記・聞き間違いで混同されやすい）。",
+            ),
+        ],
+    },
+    {
+        "id": "semiology",
+        "icon": "eye",
+        "icon_bg": "bg-sky-100",
+        "icon_color": "text-sky-800",
+        "title": "精神症候学でよく使う用語",
+        "subtitle": "観察・聴取で記述する症状・症候（精神病性・気分・不安・解離など）",
+        "terms": [
+            (
+                "妄想（delusion）",
+                "誤った信念が固定し、文化に照らしても説明しがたく、本人が病的確信をもつ。",
+                "同僚が自分を陥れているという被害妄想。反証に動かない。",
+                "妄想は精神病性障害の核心症状の一つ。誇大、被害、身体、混合型など内容分類。妄想性障害は妄想が主征。",
+                "妄想性障害(6A24)、統合失調症等の精神病性障害で妄想を中核に記述。病的確信と持続が鑑別上重要。",
+                "Mullen、Garety の認知モデル（妄想は信念更新の偏り）。日本語: 『精神医学』精神病性症状の節。",
+                "超価観念・固執：現実の出来事を根拠に拡大解釈しやすい信念で、完全な反証不可能性・病的確信の度合いは妄想より弱いことが多い（連続体）。誇大妄想との鑑別は程度・機能障害・他症状で。",
+            ),
+            (
+                "幻覚（hallucination）",
+                "相当する外界刺激がないのに生じる知覚様体験。幻聴が最多。",
+                "第三者人称幻聴。『あいつはダメだ』と囁かれる。",
+                "幻覚は精神病性症状。聴覚以外（視・嗅・味・体性）も記載。ヒプナゴジック等は鑑別。",
+                "原発性精神病性障害の臨床像で持続的幻覚を列挙。知覚様式ごとに記録。",
+                "Slade & Bentall の幻聴モデル、Sims『精神症状をどうみるか』(邦訳) の症候学。",
+                "錯覚：実際に存在する刺激を歪んで知覚する（暗がりのコートを人影と見る等）。幻覚は相当する外界刺激がない点が要点。譫妄・極度の注意狭窄時は鑑別に注意。",
+            ),
+            (
+                "思考の奔逸／連合弛緩",
+                "話題が素早く移り、音連合・意連合が目立つ。躁病性興奮で典型。",
+                "質問に答えず連合が飛び、思考の奔逸を認める。",
+                "躁または混合エピソードの可能指標。精神運動性興奮と併記されることが多い。",
+                "躁狂エピソードの臨床記述に含まれる思考・言語の加速。",
+                "記述的精神医学の古典用語。認知面では注意制御・反応抑制と関連づけられる研究あり。",
+            ),
+            (
+                "思考連合の弛緩・逸脱・固執・途切れ",
+                "話題からの脱線（tangential）、冗長な遠回り（circumstantial）、同一反復（perseveration）、突然の途切れ（blocking）。",
+                "答えに至る前に話題がそれるが、最終的には回答できる逸脱性思考。",
+                "解体化思考・言語は統合失調症スペクトラムで重要。器質性・注意欠如とも鑑別。",
+                "精神病性障害の思考形式障害として記載。",
+                "Harvey 等の言語サンプル研究。臨床面接技法のテキストでも定義。",
+            ),
+            (
+                "新語造語・語尾韻連合（clang association）",
+                "新造語や音の類似のみで連合が進む。",
+                "質問に対し意味をなさない語の連鎖。語尾韻が目立つ。",
+                "解体化言語の極端な例として評価。",
+                "思考形式障害の記述例。",
+                "古典的記述精神医学。",
+            ),
+            (
+                "経験のパッシビティ（思考剥奪・挿入・伝播・公開）",
+                "思考が奪われる・入れられる・漏れる・他人に聞こえる等の体験。",
+                "考えていることが隣人に筒抜けだという体験を訴える。",
+                "Schneider の first-rank symptoms の系譜。Criterion A に含まれる体験として評価。",
+                "統合失調症の臨床像に「他人が自分の思考を知っている」等の例示。",
+                "Mellor、Mishara 等の現象学的再検討。",
+            ),
+            (
+                "解体化（不協調）行動",
+                "目的に沿わない行動、奇異な姿勢・服装、無言・無反応など。",
+                "路上で奇声を発し衣服を脱ぐ。目的行動が途切れている。",
+                "精神病性症状の一要素。カタトニー・谵妄・物質中毒とも鑑別。",
+                "精神病性障害の行動面。緊張病と重複しうる。",
+                "Northoff のカタトニー神経機序レビュー等。",
+            ),
+            (
+                "陰性症状（感情平坦・アロリジア・アヘドニア等）",
+                "感情表出の減少、言語量低下、快感消失、意欲低下。",
+                "表情変化乏しく、自発語少。陰性症状が社会生活障害の主因。",
+                "統合失調症の陰性症状は5類型（DSM-5 記載の観点）で評価。抑うつ・孤独症スペクトラムとも鑑別。",
+                "統合失調症の臨床像に持続的陰性症状を記載。",
+                "PANSS、BNSS 等の評価ツール。Kirkpatrick の欠乏症候群概念。",
+                "抑うつによる無気力・興味喪失：気分エピソードに整合し、抗うつ薬等で変動しうる。陰性症状：統合失調症スペクトラムの欠乏側で、抑うつが寛解しても残存しうる。両者の重なりは臨床で頻繁—評価尺度・病歴で切り分け。",
+            ),
+            (
+                "カタトニー",
+                "精神運動性の著変（緘黙、蠟屈、拒絶、興奮、奇妙な姿勢等）。",
+                "蠟屈と緘黙。針打ち後に姿勢が保たれる。",
+                "カタトニーは他障害随伴としても診断カテゴリ化（カタトニー様症候群）。緊急度が高い。",
+                "緊張病は独立診断および他障害随伴の指定が可能。",
+                "Carroll のBFCRS、Fink & Taylor の治療ガイド。",
+            ),
+            (
+                "抑うつ気分・興味快感喪失・易刺激性",
+                "気分の抑うつまたは快感消失が中核。児童青年では易刺激性が主征になりうる。",
+                "連日の抑うつ気分と興味低下。早朝覚醒の訴えあり。",
+                "Major depressive episode の中核症状。Persistent depressive disorder は慢性軽度像。",
+                "抑うつエピソードの記述。単エピソード／再発性で区別。",
+                "CANMAT、英国NICE のうつ病ガイド。認知行動療法マニュアル（Beck）。",
+            ),
+            (
+                "躁気分・誇大・衝動性",
+                "高揚・易怒・活動増・睡眠欲求減少等。誇大信念は精神病性域に及ぶことも。",
+                "睡眠2時間で十分と言い、衝動買いが連日。",
+                "躁狂／軽躁エピソード。混合エピソードでは気分と相反する症状が同時。",
+                "躁狂・軽躁・混合エピソードの記載。双極Ⅰ・Ⅱの区別に使用。",
+                "Young Mania Rating Scale 等。Akiskal の気分気質論。",
+            ),
+            (
+                "精神病性抑うつ（気分随伴精神病症状）",
+                "抑うつエピソードに妄想・幻覚が随伴。",
+                "罪責妄想と命令幻聴。気分調和性。",
+                "Major depressive episode with psychotic features（調和／不調和の指定）。",
+                "抑うつエピソードに精神病症状を併記。",
+                "ECT が有効エビデンスが強い群の一つとしてガイドライン記載。",
+            ),
+            (
+                "不安・予期不安・パニック・回避",
+                "過度な心配、発作様の身体症状、状況回避。",
+                "電車内で動悸・窒息感、その後その路線を回避。",
+                "GAD、パニック障害、場面恐怖、社交不安障害など不安障害群で定義が異なる。",
+                "一般性不安障害、パニック障害、場面恐怖、社交恐怖等に細分化。",
+                "Barlow の統合理論、曝露療法エビデンス。日本の不安障害治療ガイド。",
+            ),
+            (
+                "強迫観念・強迫行為",
+                "侵入的思考とそれを中和する反復行為／心の行為。",
+                "汚染恐怖と45分かかる洗手の強迫行為。",
+                "OCD の中核。関連障害に躯体型、こだわり、積み重ね。",
+                "強迫性障害として独立。身体醜形障害等は関連障害。",
+                "Exposure and response prevention が第一選択。マニュアル: Foa 等。",
+            ),
+            (
+                "トラウマ再体験・回避・過覚醒",
+                "フラッシュバック、悪夢、想起回避、過敏さ。",
+                "夜間悪夢で睡眠障害。特定の場所を回避。",
+                "PTSD、急性ストレス障害。解離症状のスペシファイアあり。",
+                "PTSD、複雑PTSD（人格機能障害・感情調整困難を追加記述）。",
+                "Brewin の二重表現モデル、EMDR のエビデンスレビュー。",
+            ),
+            (
+                "解離（人格解体・現実感喪失・離人性）",
+                "自己・環境の非現実感、人格の分裂体験。",
+                "発作時、身体が自分のものでない感じ（人格解体様）を訴える。",
+                "解離性障害、PTSD、うつ・パニック随伴として鑑別。人格解体／現実感喪失は指定子・症状として記載。",
+                "解離性障害群、トラウマ関連障害で解離を記載。複雑PTSD でも感情切り離しを扱う。",
+                "Spitzer 等の構造化面接、日本語臨床解離研究。",
+                "解体化（disorganization）：思考・言語・行動の不協調で、統合失調症スペクトラムの陽性症状側の用語。解離（dissociation）：意識・同一性・記憶の連続性の断裂。英語綴りが似て混同されやすいが概念は別。",
+            ),
+            (
+                "注意欠如・多動・衝動性（成人を含む）",
+                "持続的注意困難、落ち着きのなさ、待てない。",
+                "仕事の締切を繰り返し誤る。会話で遮る。",
+                "ADHD は児童期開始が原則。成人期の顕在化は遡及診断で慎重に。",
+                "注意欠陥多動性障害として記載。実行機能障害と併記。",
+                "Barkley の理論、成人ADHDガイドライン（WHO ASRS 等）。",
+            ),
+            (
+                "物質誘発性精神病／離脱",
+                "覚醒剤、アルコール、ベンゾジアゼピン等の使用・離脱に時系列で整合する精神病症状。",
+                "使用後24時間以内に幻覚。尿検査陽性。",
+                "各物質使用障害・中毒・離脱の診断。精神病性障害は二次性を除外してから。",
+                "物質関連・中毒・離脱の章で整理。",
+                "臨床毒物学、依存症専門テキスト。",
+            ),
+            (
+                "認知障害・谵妄様症状",
+                "注意・意識レベルの変動、日内変動、見当識障害。",
+                "夜間に見当識低下と幻視。感染疑いで身体評価。",
+                "major neurocognitive disorder vs delirium。谵妄は急性・原因多様。",
+                "谵妄、神経認知障害（アルツハイマー等）を区別。",
+                "CAM、4AT 等スクリーニング。Lipowski の古典。",
+            ),
+            (
+                "物質使用障害・離脱・中毒",
+                "反復使用、欲求、コントロール低下、離脱・耐性。アルコール、覚醒剤、オピオイド、鎮静薬など。",
+                "週末だけ飲酒でも震えと幻覚。離脱として救急受診。",
+                "物質使用障害、中毒、離脱を物質ごとに診断。精神病性症状は二次性を鑑別。",
+                "有害使用から依存までICD-11で階層化。離脱・中毒の臨床像を章別に記載。",
+                "Volkow、Koob の報酬・ストレス系モデル。日本の依存症治療ガイドライン。",
+            ),
+            (
+                "身体症候性障害・疾患不安障害",
+                "身体症状への過度の心配、健康不安、医療利用のパターン。",
+                "検査は正常だが癌確信が消えない。疾患不安の主訴。",
+                "疾患不安障害、身体症候性障害（症状の種類・持続で区分）。関連して変換障害・心因性過敏症群。",
+                "身体症候性障害・神経症様障害の章で記載。医療利用と機能障害を重視。",
+                "認知行動モデル（健康不安の誤信念）、Primary care ガイドライン。",
+            ),
+            (
+                "摂食障害（制限・暴飲嘔吐・その他）",
+                "体重・体型への執着、摂取行動の異常、代償行為。",
+                "摂取後嘔吐を毎日。電解質異常。",
+                "神経性食欲不振症、神経性大食症、暴食障害、回避／制限摂取障害（ARFID）等。",
+                "摂食障害・異常摂食行動をICD-11で整理。身体合併症の記載。",
+                "Fairburn のトランスダイアグノスティックCBT、家族ベース治療（青少年）。",
+            ),
+            (
+                "不眠・過眠・覚醒リズム",
+                "入眠困難、中途覚醒、早朝覚醒、日中の眠気、リズムずれ。",
+                "うつ改善後も早朝覚醒が残存。睡眠衛生と評価。",
+                "不眠症、過眠症、睡眠関連呼吸障害等は別診断。うつ・不安・双極と併存しやすい。",
+                "睡眠覚醒障害として分類。不眠は症状兼疾患として扱う記載。",
+                "CBT-I が慢性不眠の第一選択。ICSD の器質的睡眠障害鑑別。",
+            ),
+            (
+                "性功能・性嗜好の困り（パラフィリア関連）",
+                "性的衝動・行為が本人・他者に苦痛／障害を生じるパターン。",
+                "衝動制御が効かず法的リスク。鑑別と安全計画。",
+                "パラフィリア障害は同意・被害の観点で診断。露見症等はカテゴリ別。",
+                "ICD-11 では性的関心・行動パターンを、同意・被害・苦痛の観点から再整理（パラフィリア関連障害ほか）。",
+                "法精神医学・性科学テキスト。児童保護との連携。",
+            ),
+            (
+                "人格パターン・対人様式（trait）",
+                "持続的な感情・対人・衝動の様式。苦痛または機能障害を伴う。",
+                "対人関係が毎回破局。感情の起伏が極端。",
+                "10種人格障害＋PDtrait指定、またはAlternative Modelの5領域trait。",
+                "ICD-11 は人格障害を程度指定＋trait記述へ。軽度〜重度で介入計画に反映。",
+                "Kernberg（境界性病理）、Linehan（DBT）、Livesley の次元的研究。",
+            ),
+        ],
+    },
+    {
+        "id": "psychoanalysis",
+        "icon": "heart-handshake",
+        "icon_bg": "bg-amber-100",
+        "icon_color": "text-amber-900",
+        "title": "精神分析学・精神動力でよく使う用語",
+        "subtitle": "理論・技術・移行現象（記録では枠組みを明示）",
+        "terms": [
+            (
+                "無意識・抑圧（repression）",
+                "意識に耐えがたい表象・衝動がアクセス不能になる過程。",
+                "自由連想法で関連が途切れる箇所に抑圧の働きを仮定した。",
+                "DSM/ICD は直接語らない。解離・変換・身体症候性障害の理解と接続されることがある。",
+                "解離・転換症状の心理社会的文脈を記述する補助概念として。",
+                "Freud 古典、現代: Fonagy のメンタライゼーション、Defense Mechanism Rating Scales。邦訳精神分析辞典。",
+            ),
+            (
+                "防衛機制（否認・分裂・合理化・置換など）",
+                "不安を和らげるための無意識的パターン。成熟度で階層化されるモデルがある。",
+                "重大な診断告知に対し否認が強く、防衛として機能している。",
+                "人格機能レベル（LPFS）や防衛機制はAlternative Modelで性格病理の深さに関与。",
+                "人格障害・適応の文脈で心理社会的因子として記録可能。",
+                "Vaillant の階層、Cramer。Gabbard『精神動力的精神医学の実際』(邦訳)。",
+            ),
+            (
+                "投影（projection）",
+                "自己に受け入れがたい感情・衝動を他者に帰属。",
+                "面接者を敵意ある存在と感じる投影が、関係構築を妨げている。",
+                "妄想のメカニズム説明語として誤用されやすい。診断名ではない。",
+                "—",
+                "Klein 系の投影性同一視と区別。書籍: Ogden、Sandler。",
+                "転移：過去の重要他者への感情・期待が治療関係に再現される過程。投影：自己の受け容れがたい感情を他者に帰属する防衛。臨床では併存しうるが、記録では用語を分けて書く。",
+            ),
+            (
+                "内射・同一化・投射同一視",
+                "他者の表象を内面に取り込む／相手に似る／自己他境界が曖昧になる。",
+                "亡母の口調で話し始める。同一化が目立つ。",
+                "人格障害の対人様式理解に用いる。",
+                "—",
+                "客体関係理論: Klein, Kernberg。",
+            ),
+            (
+                "分裂（splitting）",
+                "全好・全悪の極端な対人表象。境界型病理で頻出。",
+                "昨日は理想化、今日は完全否定。分裂様の推移。",
+                "境界型人格障害の特徴の理解に。",
+                "境界型人格障害の記述と接続。",
+                "Kernberg、Linehan（DBT での対人過敏性との統合）。",
+            ),
+            (
+                "転移・逆転移（countertransference）",
+                "過去の重要他者への感情が治療者へ向く／治療者側に喚起される感情。",
+                "治療者への過剰依存と怒りは、幼少の親像への転移として扱った。",
+                "診断基準外。心理療法のプロセス記録。",
+                "—",
+                "Heimann、Bion の容器モデル。Hayashi 等の日本語文献。",
+            ),
+            (
+                "抵抗（resistance）",
+                "治療的探求を無意識的に妨げる（沈黙、遅刻、忘れ、主題転換）。",
+                "トラウマ話題で話題転換が増え、抵抗の増強として記録。",
+                "—",
+                "—",
+                "Freud 技術論、現代は関係性抵抗として再概念化。",
+            ),
+            (
+                "リビドー・攻撃性（駆力）",
+                "古典理論の動機づけ概念。現代は愛着・感情調整と統合して語られる。",
+                "依存と自立の葛藤を、対象愛着の問題として概念化。",
+                "—",
+                "—",
+                "Greenberg & Mitchell『客体関係と精神分析的自己心理学』(邦訳)、Laplanche & Pontalis『用語解説』。",
+            ),
+            (
+                "自己愛（ナルシシズム）・理想化自己",
+                "自己価値調整、称賛への感受性、慢性的な空虚感の理解枠。",
+                "軽い批判で激しい羞恥。自己愛の脆弱性。",
+                "ナルシシスティック人格障害は誇大性・称賛希求のパターンとして定義。",
+                "人格障害の一型として記載。",
+                "Kohut、Kernberg の対照的理解。",
+            ),
+            (
+                "処理（working through）・修通",
+                "洞察を反復体験を通じて統合し、行動・感情様式を変える過程。",
+                "解釈後も同じパターンが数週続いたが、徐々に変化。",
+                "—",
+                "—",
+                "古典精神分析技術。短程動的療法でも「焦点」の維持として類似。",
+            ),
+            (
+                "行動化（acting out）",
+                "思考化されない衝動が行動で表出。",
+                "セッション直後の衝動的自傷。行動化として記録。",
+                "境界型人格障害の反復的自傷行動と鑑別上関連。",
+                "—",
+                "技術書では転移の行動的表現として扱う。",
+            ),
+            (
+                "メンタライゼーション・思考化（mentalization）",
+                "自己・他者の心の状態を推論する能力。愛着トラウマで低下しうる。",
+                "相手の意図を読み取れず誤解が連鎖。メンタライゼーション低下。",
+                "人格障害・ASD 鑑別で認知面の補助概念。",
+                "人格障害の心理社会的介入（MBT）の理論根拠。",
+                "Fonagy & Target、MBT マニュアル。",
+            ),
+            (
+                "投影同一視（projective identification）",
+                "自己の一部を他者に投影し、相手の反応を通じて処理しようとする無意識的対人過程。",
+                "面接中に治療者が強い無力感に襲われる。対移行現象として検討。",
+                "—",
+                "—",
+                "Klein 以降の客体関係理論。Ogden、Sandler が臨床記述を整理。",
+            ),
+            (
+                "容器（container）と被収容者（contained）",
+                "治療者が患者の耐えがたい感情を一時的に抱え、意味づけ可能な形に返すというビオンのモデル。",
+                "激しい怒りの後、沈黙が続く。容器機能が試される局面。",
+                "—",
+                "—",
+                "Bion『Experiences in Groups』系譜。現代精神分析スーパービジョンで常用。",
+            ),
+            (
+                "自己物（selfobject）・鏡映・理想化",
+                "コーフートの自己心理学における、自己の凝集性を支える他者機能。",
+                "称賛がないと崩れる。鏡映需要が強い。",
+                "ナルシシスティック人格障害の理解と接続されることがあるが同一ではない。",
+                "—",
+                "Kohut『The Analysis of the Self』／邦訳自己心理学文献。",
+            ),
+        ],
+    },
+]
+
+# 用語カード外の対照表（カード内「類似用語」と補完）
+SIMILAR_PAIRS: Tuple[Tuple[str, str, str], ...] = (
+    (
+        "アドヒアランス",
+        "コンプライアンス",
+        "服従・遵守強調か、納得・障害要因まで含むか。倫理・患者中心の文脈では前者が推奨されやすい。",
+    ),
+    (
+        "器質性（脳・身体）",
+        "気質（テンパラメント）",
+        "前者は病変・疾患による説明可能性。後者は生得的な情動・活動基調。音・字の取り違えに注意。",
+    ),
+    (
+        "機能性（歴史的用法）",
+        "器質性",
+        "古典の『機能性精神病』対『器質性』は、今日では他医学的／物質性と原発精神障害の鑑別に置き換わりつつある。",
+    ),
+    (
+        "気質",
+        "気分エピソード（状態）",
+        "気質は長期の基調、エピソードは明瞭な病期をもつうつ・躁等。",
+    ),
+    (
+        "内因性／外因性",
+        "ストレス関連障害（適応・PTSD 等）",
+        "歴史的対比語と、操作性カテゴリの対応は1対1ではない。",
+    ),
+    (
+        "妄想",
+        "固執・超価観念",
+        "病的確信の強さ・反証への抵抗・機能障害の程度で連続体。",
+    ),
+    (
+        "幻覚",
+        "錯覚",
+        "刺激の有無が決定的。",
+    ),
+    (
+        "解離",
+        "解体化（思考・言語・行動）",
+        "dissociation と disorganization。日本語も混同されやすい。",
+    ),
+    (
+        "投影（防衛）",
+        "転移（関係過程）",
+        "無意識的帰属か、過去関係の再演か。",
+    ),
+    (
+        "一次症状（歴史用語）",
+        "DSMのCriterion A症状",
+        "現代診断は操作性リスト。歴史用語は文献理解用。",
+    ),
+)
+
+
+def _short_title(title: str) -> str:
+    return title.split("／")[0].split("（")[0].strip()
+
+
+def normalize_examples(
+    title: str, raw: Union[str, Tuple[str, ...]], section_id: str
+) -> Tuple[str, ...]:
+    """単一文字列なら記録場面の異なる使用例を2件追加して計3件にする。"""
+    if isinstance(raw, tuple):
+        return raw
+    first = raw.strip()
+    primary = first.rstrip("。")
+    short = _short_title(title)
+    clip = primary[:52] + ("…" if len(primary) > 52 else "")
+
+    if section_id == "psychiatry":
+        second = f"診療録・要約：{primary}。退院／転院時のサマリにも転記可能な文面。"
+        third = f"多職種カンファ：「{short}」の点で、{clip}と説明した。"
+    elif section_id == "pathology":
+        second = f"症例検討・考察：精神病理学的には、{primary}という整理ができる。"
+        third = f"教育・抄録：概念「{short}」の説明例として、{clip}を挙げた。"
+    elif section_id == "semiology":
+        second = f"MSE／構造化記載：客観所見欄に「{primary}」と記した。"
+        third = f"鑑別の言い回し：診断会で「{short}」に当てはまるか、{clip}と述べた。"
+    else:
+        second = f"心理療法記録（プロセスノート）：{primary}と記載した。"
+        third = f"スーパービジョン申し送り：局面「{short}」について、{clip}と報告した。"
+
+    return (first, second, third)
+
+
+def ref_block(dsm: str, icd: str, schools: str) -> str:
+    def line(label: str, cls: str, body: str) -> str:
+        b = body.strip()
+        inner = "—" if (b == "—" or b == "") else escape(body)
+        return (
+            f'<p class="mb-1.5 last:mb-0"><span class="font-semibold {cls}">{label}</span> '
+            f"{inner}</p>"
+        )
+
+    return (
+        '<div class="mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1">'
+        + line("DSM-5-TR（要点・パラフレーズ）", "text-blue-900", dsm)
+        + line("ICD-11（CDDR 趣旨・パラフレーズ）", "text-teal-900", icd)
+        + line("学派・主要書（標準的教科書・最新版に近い版）", "text-violet-900", schools)
+        + "</div>"
+    )
+
+
+def unpack_term(
+    t: Tuple,
+) -> Tuple[str, str, Union[str, Tuple[str, ...]], str, str, str, Optional[str]]:
+    if len(t) == 7:
+        return t[0], t[1], t[2], t[3], t[4], t[5], t[6]
+    if len(t) == 6:
+        return t[0], t[1], t[2], t[3], t[4], t[5], None
+    raise ValueError("各用語は6要素または7要素（最後が類似語対比）のタプルにしてください")
+
+
+def contrast_block(text: str) -> str:
+    return f"""          <div class="contrast-box mt-2 text-xs text-gray-800 leading-relaxed">
+            <strong class="text-amber-900">類似用語との違い</strong>
+            <p class="mt-1">{escape(text)}</p>
+          </div>"""
+
+
+def example_block(examples: tuple[str, ...]) -> str:
+    items = "\n".join(
+        f'              <li class="leading-snug">{escape(ex)}</li>' for ex in examples
+    )
+    return f"""          <div class="example-box">
+            <strong class="text-gray-800">使用例</strong>
+            <ol class="mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1">
+{items}
+            </ol>
+          </div>"""
+
+
+def term_card(
+    title: str,
+    summary: str,
+    examples: tuple[str, ...],
+    dsm: str,
+    icd: str,
+    schools: str,
+    color: str,
+    contrast: Optional[str] = None,
+    card_id: str = "",
+) -> str:
+    chtml = contrast_block(contrast) if contrast else ""
+    id_attr = f' id="{escape(card_id)}"' if card_id else ""
+    return f"""        <div class="term-card scroll-mt-40"{id_attr}>
+          <div class="font-bold {color}">{escape(title)}</div>
+          <p class="text-sm text-gray-600 mt-1">{escape(summary)}</p>
+{chtml}{example_block(examples)}
+{ref_block(dsm, icd, schools)}
+        </div>"""
+
+
+def render_section(sec: dict) -> str:
+    col = (
+        "text-teal-900"
+        if sec["id"] == "psychiatry"
+        else "text-violet-900"
+        if sec["id"] == "pathology"
+        else "text-sky-900"
+        if sec["id"] == "semiology"
+        else "text-amber-950"
+    )
+    card_lines: list[str] = []
+    for idx, t in enumerate(sec["terms"]):
+        title, summary, ex_raw, dsm, icd, schools, contrast = unpack_term(t)
+        card_lines.append(
+            term_card(
+                title,
+                summary,
+                normalize_examples(title, ex_raw, sec["id"]),
+                dsm,
+                icd,
+                schools,
+                col,
+                contrast,
+                f"{sec['id']}-t{idx}",
+            )
+        )
+    cards = "\n".join(card_lines)
+    extra_flow = ""
+    if sec["id"] == "semiology":
+        extra_flow = """
+      <div class="mb-6 p-4 bg-sky-50 rounded-xl border border-sky-100">
+        <p class="text-sm font-semibold text-sky-900 mb-2 flex items-center gap-2">
+          <i data-lucide="layers" class="w-4 h-4"></i> 記述の流れ（簡易フロー）
+        </p>
+        <div class="flex flex-col md:flex-row md:items-center gap-2 text-sm text-gray-700">
+          <span class="px-3 py-1.5 bg-white rounded-lg border border-sky-200 font-medium">主観的訴え</span>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-sky-400 hidden md:block"></i>
+          <span class="px-3 py-1.5 bg-white rounded-lg border border-sky-200 font-medium">客観所見（言動・外観）</span>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-sky-400 hidden md:block"></i>
+          <span class="px-3 py-1.5 bg-white rounded-lg border border-sky-200 font-medium">症候学用語でラベル</span>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-sky-400 hidden md:block"></i>
+          <span class="px-3 py-1.5 bg-white rounded-lg border border-sky-200 font-medium">ICD-11／DSM-5-TR で位置づけ</span>
+        </div>
+      </div>"""
+    return f"""    <div class="section-card" id="{sec["id"]}">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 {sec["icon_bg"]} rounded-xl flex items-center justify-center">
+          <i data-lucide="{sec["icon"]}" class="w-6 h-6 {sec["icon_color"]}"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">{escape(sec["title"])}</h2>
+          <p class="text-sm text-gray-500">{escape(sec["subtitle"])}</p>
+        </div>
+      </div>
+{extra_flow}
+      <div class="grid md:grid-cols-2 gap-4">
+{cards}
+      </div>
+    </div>
+"""
+
+
+def render_similar_pairs_section() -> str:
+    rows = []
+    for i, (a, b, diff) in enumerate(SIMILAR_PAIRS):
+        rows.append(
+            f'<tr id="similar-t{i}" class="scroll-mt-40">'
+            f'<td class="p-3 border border-gray-200 font-medium text-gray-900">{escape(a)}</td>'
+            f'<td class="p-3 border border-gray-200 font-medium text-gray-900">{escape(b)}</td>'
+            f'<td class="p-3 border border-gray-200">{escape(diff)}</td>'
+            "</tr>"
+        )
+    body = "\n".join(rows)
+    return f"""    <div class="section-card" id="similar-terms">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-amber-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="arrow-left-right" class="w-6 h-6 text-amber-900"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">類似用語の対照（クイックリファレンス）</h2>
+          <p class="text-sm text-gray-500">各用語カード内の「類似用語との違い」とあわせて参照</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-amber-50 text-left">
+              <th class="p-3 border border-amber-200 font-semibold w-[22%]">用語A</th>
+              <th class="p-3 border border-amber-200 font-semibold w-[22%]">用語B</th>
+              <th class="p-3 border border-amber-200 font-semibold">区別の要点</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700">
+{body}
+          </tbody>
+        </table>
+      </div>
+    </div>
+"""
+
+
+def main() -> None:
+    sections_html = "\n".join(render_section(s) for s in SECTIONS)
+    similar_pairs_html = render_similar_pairs_section()
+
+    html = f"""<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神医学・精神病理学・精神症候学・精神分析学 — 用語マップ（拡張版）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {{
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }}
+    body {{ font-family: 'Noto Sans JP', 'Inter', sans-serif; }}
+    .header-gradient {{ background: var(--psych-gradient); }}
+    .section-card {{
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      scroll-margin-top: 9rem;
+    }}
+    .term-card {{
+      border-radius: 0.75rem;
+      border: 1px solid #e5e7eb;
+      padding: 1rem 1.15rem;
+      background: #fafafa;
+    }}
+    .example-box {{
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 3px solid #2563eb;
+      padding: 0.65rem 0.85rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }}
+    .hub-node {{
+      padding: 0.85rem 1.25rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      font-size: 0.9rem;
+    }}
+    .toc-nav ul {{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }}
+    .contrast-box {{
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 3px solid #d97706;
+      padding: 0.65rem 0.85rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }}
+    .section-no-search-match {{
+      display: none !important;
+    }}
+    tr.hidden {{
+      display: none !important;
+    }}
+    .search-jump-flash {{
+      animation: search-jump-flash 2s ease-out;
+    }}
+    @keyframes search-jump-flash {{
+      0%, 35% {{ box-shadow: inset 0 0 0 3px rgba(245, 158, 11, 0.85); background-color: rgba(254, 243, 199, 0.5); }}
+      100% {{ box-shadow: none; background-color: transparent; }}
+    }}
+    #term-search-results-list button:focus {{
+      outline: 2px solid #2563eb;
+      outline-offset: 2px;
+    }}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <header class="header-gradient text-white py-8">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="book-open" class="w-8 h-8 opacity-90"></i>
+        <span class="text-sm font-medium opacity-80 uppercase tracking-wider">用語マップ・拡張版</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold leading-tight">精神医学・精神病理学・精神症候学・精神分析学</h1>
+      <p class="mt-2 text-base opacity-90 max-w-3xl">用語ごとに<strong>使用例を複数（番号付き）</strong>と<strong>類似用語との違い</strong>（該当箇所）、<strong>DSM-5-TR</strong>・<strong>ICD-11（CDDR）</strong>での位置づけ（要約）、<strong>記述的精神医学・現象学・認知行動・神経科学・精神分析／精神動力</strong>の主要書の手がかりを併記します。末尾に<strong>類似用語の対照表</strong>があります。使用例の1番目はデータの原文、2・3番目は記録場面別の言い換えです。DSM／ICDの本文は著作権保護のため<strong>パラフレーズ</strong>にとどめ、確定診断は原典・臨床評価が必須です。</p>
+    </div>
+  </header>
+
+  <div id="sticky-toolbar" class="sticky top-0 z-[60] border-b border-gray-200 bg-white/95 backdrop-blur-md shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 pt-2 pb-1.5 border-b border-gray-100">
+      <nav class="toc-nav" aria-label="目次">
+        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">目次</div>
+        <ul class="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+          <li><a href="#overview" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">全体像</a></li>
+          <li><a href="#nosology" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">分類体系</a></li>
+          <li><a href="#psychiatry" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">精神医学</a></li>
+          <li><a href="#pathology" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">精神病理学</a></li>
+          <li><a href="#semiology" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">精神症候学</a></li>
+          <li><a href="#psychoanalysis" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">精神分析</a></li>
+          <li><a href="#similar-terms" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">類似用語</a></li>
+          <li><a href="#overlap" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">領域横断</a></li>
+          <li><a href="#bibliography" class="text-gray-600 hover:text-blue-700 py-0.5 inline-block">主要文献</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="max-w-5xl mx-auto px-4 py-2 flex flex-wrap items-center gap-2 sm:gap-3">
+      <label for="term-page-search" class="sr-only">ページ内検索</label>
+      <div class="flex flex-1 min-w-[min(100%,220px)] items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-1.5 shadow-sm focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-200">
+        <i data-lucide="search" class="w-4 h-4 text-gray-400 flex-shrink-0" aria-hidden="true"></i>
+        <input type="search" id="term-page-search" name="term-page-search" enterkeyhint="search" autocomplete="off"
+          placeholder="用語・説明・使用例・DSM／ICD欄・類似語表を検索…"
+          class="min-w-0 flex-1 border-0 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0" />
+      </div>
+      <button type="button" id="term-page-search-clear" class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50">クリア</button>
+      <span id="term-page-search-count" class="text-xs text-gray-500 tabular-nums whitespace-nowrap max-w-full sm:max-w-xs truncate" aria-live="polite"></span>
+    </div>
+    <div id="term-search-results-wrap" class="hidden border-t border-gray-200 bg-slate-50/95">
+      <div class="max-w-5xl mx-auto px-4">
+        <p class="pt-2 pb-1 text-xs font-semibold text-gray-600">検索結果一覧（クリックでジャンプ。ジャンプ後は一覧を閉じて本文が見やすくなります。一覧の再表示は検索欄をもう一度タップ）</p>
+        <ul id="term-search-results-list" class="max-h-52 overflow-y-auto pb-2 text-sm" role="listbox" aria-label="検索結果"></ul>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <div class="section-card" id="overview">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">四領域の関係（概念マップ）</h2>
+          <p class="text-sm text-gray-500">臨床実務・症状記述・理論枠組みの重なり</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-2 py-4">
+        <div class="hub-node bg-slate-800 text-white w-full max-w-md shadow-md">臨床現場・症例記録・研究</div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-3xl">
+          <div class="hub-node bg-teal-700 text-white">精神医学<br><span class="text-xs font-normal opacity-90">診断・治療・疫学・倫理</span></div>
+          <div class="hub-node bg-sky-800 text-white">精神症候学<br><span class="text-xs font-normal opacity-90">観察可能な症状・徴候</span></div>
+          <div class="hub-node bg-violet-800 text-white">精神病理学<br><span class="text-xs font-normal opacity-90">心の働きの病的変容の理論</span></div>
+          <div class="hub-node bg-amber-900 text-white">精神分析学<br><span class="text-xs font-normal opacity-90">無意識・防衛・関係性の理論</span></div>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="w-full max-w-3xl overflow-x-auto flex justify-center">
+          <div class="hub-node bg-gray-200 text-gray-800 border border-gray-300 whitespace-nowrap text-sm sm:text-base px-3">記述（症候学）→ 概念化（病理学・分析）→ 分類・介入（医学）</div>
+        </div>
+      </div>
+
+      <div class="warning-box bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg text-sm text-amber-950">
+        <div class="flex gap-2 items-start">
+          <i data-lucide="alert-circle" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
+          <div>
+            <p class="font-semibold mb-1">免責・利用上の注意</p>
+            <p>教育・参照用です。DSM-5-TR・ICD-11の確定文言は必ず公式出版物（APA／WHO）で確認してください。診断・治療決定は資格を持つ医療者が行ってください。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="nosology">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-rose-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-6 h-6 text-rose-800"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">ICD-11 と DSM-5-TR：分類の使われ方（対照）</h2>
+          <p class="text-sm text-gray-500">用語カードを読む前の「地図」</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-left">
+              <th class="p-3 border border-gray-200 font-semibold w-1/4">観点</th>
+              <th class="p-3 border border-gray-200 font-semibold">ICD-11（精神・行動・神経発達障害）</th>
+              <th class="p-3 border border-gray-200 font-semibold">DSM-5-TR</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700">
+            <tr id="nosology-r0" class="scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">目的・背景</td>
+              <td class="p-3 border border-gray-200">WHOの保健統計・各国の保健行政・グローバルな臨床記述の共通語。CDDRで臨床記述と診断要件を提供。</td>
+              <td class="p-3 border border-gray-200">主に米国の臨床・研究・保険請求での操作性診断。多文化考慮（CCM）を付録で補完。</td>
+            </tr>
+            <tr id="nosology-r1" class="bg-gray-50 scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">記述の粒度</td>
+              <td class="p-3 border border-gray-200">障害群ごとに臨床像・鑑別・病程を文章で示す章立て。複雑PTSDや人格障害の度指定など新設要素あり。</td>
+              <td class="p-3 border border-gray-200">箇条書き基準＋スペシファイアが中心。人格障害はカテゴリと代替次元モデルが併存。</td>
+            </tr>
+            <tr id="nosology-r2" class="scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">精神病性症状</td>
+              <td class="p-3 border border-gray-200">統合失調症スペクトラム、急性多形性精神病、妄想性障害などを区分。症状記述ブロック（6A25系）で随伴症状も整理。</td>
+              <td class="p-3 border border-gray-200">統合失調症スペクトラム障害、短暫性精神病性障害、妄想性障害など。カタトニーは独立／随伴の枠組みあり。</td>
+            </tr>
+            <tr id="nosology-r3" class="bg-gray-50 scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">気分障害</td>
+              <td class="p-3 border border-gray-200">双極・抑うつ関連でエピソード記述。季節性パターン等は臨床上の記載。</td>
+              <td class="p-3 border border-gray-200">双極Ⅰ・Ⅱ、循環性気分、大うつ病エピソード等。精神病性症状は調和性スペシファイアで修飾。</td>
+            </tr>
+            <tr id="nosology-r4" class="scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">解釈上の注意</td>
+              <td class="p-3 border border-gray-200" colspan="2">同一患者にICD-11コードとDSM診断名が常に1対1で対応するとは限らない。研究・国際比較では「合致アルゴリズム」を参照。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+{sections_html}
+
+{similar_pairs_html}
+
+    <div class="section-card" id="overlap">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-slate-200 rounded-xl flex items-center justify-center">
+          <i data-lucide="shuffle" class="w-6 h-6 text-slate-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">領域をまたいで現れる言葉</h2>
+          <p class="text-sm text-gray-500">DSM／ICD・精神分析での読み分け</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-left">
+              <th class="p-3 border border-gray-200 font-semibold">用語</th>
+              <th class="p-3 border border-gray-200 font-semibold">症候学・記録</th>
+              <th class="p-3 border border-gray-200 font-semibold">DSM-5-TR／ICD-11</th>
+              <th class="p-3 border border-gray-200 font-semibold">精神分析・精神動力</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700">
+            <tr id="overlap-r0" class="scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">投影</td>
+              <td class="p-3 border border-gray-200">他者の意図を被害的に読む体験の記述語としても使われがち。</td>
+              <td class="p-3 border border-gray-200">診断用語ではない。妄想・パラノイア様症状の記述は操作性定義に沿う。</td>
+              <td class="p-3 border border-gray-200">防衛機制としての投影（無意識的帰属）。投影性同一視と区別。</td>
+            </tr>
+            <tr id="overlap-r1" class="bg-gray-50 scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">否認</td>
+              <td class="p-3 border border-gray-200">病識・受容の問題。</td>
+              <td class="p-3 border border-gray-200">インサイト低下として記録されることがあるが、診断名ではない。</td>
+              <td class="p-3 border border-gray-200">defence の denial（事実を認知から除外）。</td>
+            </tr>
+            <tr id="overlap-r2" class="scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">分裂</td>
+              <td class="p-3 border border-gray-200">思考の分断（loosening）とも言語がぶつかるが、通常は文脈で区別。</td>
+              <td class="p-3 border border-gray-200">解体化思考・解離性症状など別カテゴリで記述。</td>
+              <td class="p-3 border border-gray-200">Klein 系の分裂＝全好／全悪の表象。境界型病理の理解に。</td>
+            </tr>
+            <tr id="overlap-r3" class="bg-gray-50 scroll-mt-40">
+              <td class="p-3 border border-gray-200 font-medium">転移</td>
+              <td class="p-3 border border-gray-200">—</td>
+              <td class="p-3 border border-gray-200">診断用語ではない。</td>
+              <td class="p-3 border border-gray-200">治療関係における感情の再演。逆転移と対で評価。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-500 mt-3">カルテでは「分析的概念」「DSMの症状名」「ICDの臨床像」を同じ段落で混ぜず、見出しまたは括弧で明示してください。</p>
+    </div>
+
+    <div class="section-card" id="bibliography">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-emerald-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="book-marked" class="w-6 h-6 text-emerald-800"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">主要文献（版は手元で要確認）</h2>
+          <p class="text-sm text-gray-500">用語カードの「学派・主要書」欄の根拠となる標準的二次文献</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-emerald-50 text-left">
+              <th class="p-3 border border-emerald-200 font-semibold">文献</th>
+              <th class="p-3 border border-emerald-200 font-semibold">位置づけ</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-700">
+            <tr><td class="p-3 border border-gray-200">American Psychiatric Association. <em>Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (DSM-5-TR)</em>. 2022.</td><td class="p-3 border border-gray-200">米国の操作性診断基準。用語カードの DSM 欄の参照先。</td></tr>
+            <tr class="bg-gray-50"><td class="p-3 border border-gray-200">World Health Organization. <em>Clinical descriptions and diagnostic requirements for ICD-11 mental, behavioural and neurodevelopmental disorders</em> (CDDR). （公式版／訳版）</td><td class="p-3 border border-gray-200">ICD-11 精神障害の臨床記述・診断要件。用語カードの ICD-11 欄の参照先。</td></tr>
+            <tr><td class="p-3 border border-gray-200">Sadock BJ, Sadock VA, Ruiz P. <em>Kaplan &amp; Sadock's Comprehensive Textbook of Psychiatry</em>（10th ed. 以降）.</td><td class="p-3 border border-gray-200">記述的精神医学・症候学・治療の英語総論。</td></tr>
+            <tr class="bg-gray-50"><td class="p-3 border border-gray-200">河合 忠・中尾 弘之 監修『精神医学』（医学書院）最新版</td><td class="p-3 border border-gray-200">日本語の精神医学総論・症候学の標準教科書の一つ。</td></tr>
+            <tr><td class="p-3 border border-gray-200">Gabbard GO. <em>Psychodynamic Psychiatry in Clinical Practice</em>（5th ed. 等）／邦訳『精神動力的精神医学の実際』</td><td class="p-3 border border-gray-200">現代の精神動力的精神医学の臨床記述。</td></tr>
+            <tr class="bg-gray-50"><td class="p-3 border border-gray-200">Cabaniss DL 等 <em>Psychodynamic Psychiatry in Clinical Practice</em>（入門）／関連邦訳書</td><td class="p-3 border border-gray-200">精神分析的概念の教育用。</td></tr>
+            <tr><td class="p-3 border border-gray-200">Jaspers K. <em>General Psychopathology</em>（Hoenig &amp; Hamilton 英訳）／『一般精神病理学』邦訳</td><td class="p-3 border border-gray-200">理解と説明、現象学的方法の古典。</td></tr>
+            <tr class="bg-gray-50"><td class="p-3 border border-gray-200">Beck JS. <em>Cognitive Therapy: Basics and Beyond</em>（3rd ed. 等）</td><td class="p-3 border border-gray-200">認知行動療法の症候記述・概念化。</td></tr>
+            <tr><td class="p-3 border border-gray-200">Sims A. <em>Symptoms in the Mind</em>／邦訳『精神症状をどうみるか』</td><td class="p-3 border border-gray-200">精神症候学の英語古典の系譜、臨床記述に近い。</td></tr>
+            <tr class="bg-gray-50"><td class="p-3 border border-gray-200">First MB 等 <em>DSM-5-TR Handbook of Differential Diagnosis</em>／関連邦訳・ガイド</td><td class="p-3 border border-gray-200">鑑別の手順・枠組み。</td></tr>
+            <tr><td class="p-3 border border-gray-200">Geddes JR 等（編）<em>New Oxford Textbook of Psychiatry</em>（3rd ed. 等）</td><td class="p-3 border border-gray-200">英語圏の総合精神医学（疫学・症候学・治療）。</td></tr>
+            <tr class="bg-gray-50"><td class="p-3 border border-gray-200">Stanghellini G, Broome M 等の現象学的精神医学論文・著書</td><td class="p-3 border border-gray-200">自我障害・精神病体験の記述を厚くする。</td></tr>
+            <tr><td class="p-3 border border-gray-200">Linehan MM. <em>DBT Skills Training Manual</em>（2nd ed. 等）</td><td class="p-3 border border-gray-200">境界型人格障害・感情調整の行動技法（弁証法的行動療法）。</td></tr>
+            <tr class="bg-gray-50"><td class="p-3 border border-gray-200">Kernberg OF. <em>Severe Personality Disorders</em> 等／邦訳関連書</td><td class="p-3 border border-gray-200">境界性・ナルシシスティック病理の精神動力的理解。</td></tr>
+            <tr><td class="p-3 border border-gray-200">日本精神神経学会・関連委員会による DSM-5-TR 解説・ICD-11 解説書（刊行物）</td><td class="p-3 border border-gray-200">国内の分類運用・保険・教育との接続。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-500 mt-3">最新版・改訂版は書店・出版社・医学会の案内で確認してください。大学図書館の電子ブックで CDDR・DSM にアクセスできる場合があります。</p>
+    </div>
+
+  </main>
+
+  <footer class="max-w-5xl mx-auto px-4 pb-10 text-center text-xs text-gray-400">
+    生成: scripts/build_psych_terminology_jp.py ／ 教育・参照用
+  </footer>
+
+  <script>lucide.createIcons();</script>
+  <script>
+  (function () {{
+    var input = document.getElementById('term-page-search');
+    var countEl = document.getElementById('term-page-search-count');
+    var clearBtn = document.getElementById('term-page-search-clear');
+    var resultsWrap = document.getElementById('term-search-results-wrap');
+    var resultsList = document.getElementById('term-search-results-list');
+    if (!input || !countEl || !clearBtn || !resultsWrap || !resultsList) return;
+
+    var termCards = Array.prototype.slice.call(document.querySelectorAll('.section-card .term-card'));
+    var similarRows = Array.prototype.slice.call(document.querySelectorAll('#similar-terms tbody tr'));
+    var overlapRows = Array.prototype.slice.call(document.querySelectorAll('#overlap tbody tr'));
+    var nosologyRows = Array.prototype.slice.call(document.querySelectorAll('#nosology tbody tr'));
+    var termSectionIds = ['psychiatry', 'pathology', 'semiology', 'psychoanalysis'];
+    var kindOrder = {{ '用語カード': 0, '分類表': 1, '類似語表': 2, '領域横断': 3 }};
+
+    function norm(s) {{
+      return String(s || '').toLowerCase().replace(/\\s+/g, ' ').trim();
+    }}
+
+    function escHtml(s) {{
+      var d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }}
+
+    function setSectionMatch(id, noMatch) {{
+      var el = document.getElementById(id);
+      if (el) el.classList.toggle('section-no-search-match', noMatch);
+    }}
+
+    function jumpTo(targetId) {{
+      var el = document.getElementById(targetId);
+      if (!el) return;
+      if (resultsWrap) resultsWrap.classList.add('hidden');
+      var bar = document.getElementById('sticky-toolbar');
+      var pad = 20;
+      function doScroll() {{
+        var barH = bar ? bar.getBoundingClientRect().height : 0;
+        var y = el.getBoundingClientRect().top + window.pageYOffset - barH - pad;
+        window.scrollTo({{ top: Math.max(0, y), behavior: 'smooth' }});
+      }}
+      requestAnimationFrame(function () {{
+        requestAnimationFrame(doScroll);
+      }});
+      el.classList.remove('search-jump-flash');
+      void el.offsetWidth;
+      el.classList.add('search-jump-flash');
+      window.setTimeout(function () {{ el.classList.remove('search-jump-flash'); }}, 2100);
+    }}
+
+    function updateResultsPanel(q) {{
+      resultsList.innerHTML = '';
+      if (!q) {{
+        resultsWrap.classList.add('hidden');
+        return;
+      }}
+      resultsWrap.classList.remove('hidden');
+      var entries = [];
+
+      termCards.forEach(function (card) {{
+        if (card.classList.contains('hidden')) return;
+        var cid = card.id;
+        if (!cid) return;
+        var titleEl = card.querySelector('.font-bold');
+        var label = titleEl ? titleEl.textContent.trim() : cid;
+        entries.push({{ id: cid, label: label, kind: '用語カード' }});
+      }});
+
+      nosologyRows.forEach(function (tr) {{
+        if (tr.classList.contains('hidden')) return;
+        var tid = tr.id;
+        if (!tid) return;
+        var tds = tr.querySelectorAll('td');
+        var label = tds.length ? tds[0].textContent.trim() : tid;
+        entries.push({{ id: tid, label: label, kind: '分類表' }});
+      }});
+
+      similarRows.forEach(function (tr) {{
+        if (tr.classList.contains('hidden')) return;
+        var tid = tr.id;
+        if (!tid) return;
+        var tds = tr.querySelectorAll('td');
+        var label = tds.length >= 2
+          ? tds[0].textContent.trim() + ' ↔ ' + tds[1].textContent.trim()
+          : (tds.length ? tds[0].textContent.trim() : tid);
+        entries.push({{ id: tid, label: label, kind: '類似語表' }});
+      }});
+
+      overlapRows.forEach(function (tr) {{
+        if (tr.classList.contains('hidden')) return;
+        var tid = tr.id;
+        if (!tid) return;
+        var tds = tr.querySelectorAll('td');
+        var label = tds.length ? tds[0].textContent.trim() : tid;
+        entries.push({{ id: tid, label: label, kind: '領域横断' }});
+      }});
+
+      entries.sort(function (a, b) {{
+        var d = kindOrder[a.kind] - kindOrder[b.kind];
+        if (d !== 0) return d;
+        return a.label.localeCompare(b.label, 'ja');
+      }});
+
+      if (entries.length === 0) {{
+        var empty = document.createElement('li');
+        empty.className = 'px-3 py-2 text-gray-500';
+        empty.textContent = '該当する項目はありません。';
+        resultsList.appendChild(empty);
+        return;
+      }}
+
+      var lastKind = '';
+      entries.forEach(function (e) {{
+        if (e.kind !== lastKind) {{
+          lastKind = e.kind;
+          var head = document.createElement('li');
+          head.className = 'px-3 py-1 text-xs font-bold text-gray-600 bg-gray-200/80';
+          head.textContent = e.kind;
+          resultsList.appendChild(head);
+        }}
+        var li = document.createElement('li');
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'w-full text-left px-3 py-2 rounded-md hover:bg-white border border-transparent hover:border-gray-200 text-gray-900';
+        btn.setAttribute('data-jump-id', e.id);
+        btn.innerHTML = escHtml(e.label);
+        li.appendChild(btn);
+        resultsList.appendChild(li);
+      }});
+    }}
+
+    function filter() {{
+      var q = norm(input.value);
+      var totalCards = termCards.length;
+      var i, show, n = 0;
+
+      if (!q) {{
+        for (i = 0; i < termCards.length; i++) {{
+          termCards[i].classList.remove('hidden');
+        }}
+        similarRows.forEach(function (tr) {{ tr.classList.remove('hidden'); }});
+        overlapRows.forEach(function (tr) {{ tr.classList.remove('hidden'); }});
+        nosologyRows.forEach(function (tr) {{ tr.classList.remove('hidden'); }});
+        termSectionIds.forEach(function (id) {{ setSectionMatch(id, false); }});
+        setSectionMatch('similar-terms', false);
+        setSectionMatch('overlap', false);
+        setSectionMatch('nosology', false);
+        countEl.textContent = '';
+        updateResultsPanel('');
+        return;
+      }}
+
+      for (i = 0; i < termCards.length; i++) {{
+        show = norm(termCards[i].innerText).indexOf(q) !== -1;
+        termCards[i].classList.toggle('hidden', !show);
+        if (show) n++;
+      }}
+
+      termSectionIds.forEach(function (id) {{
+        var sec = document.getElementById(id);
+        if (!sec) return;
+        var cards = sec.querySelectorAll('.term-card');
+        if (!cards.length) return;
+        var vis = 0;
+        for (var j = 0; j < cards.length; j++) {{
+          if (!cards[j].classList.contains('hidden')) vis++;
+        }}
+        setSectionMatch(id, vis === 0);
+      }});
+
+      function filterRows(rows) {{
+        rows.forEach(function (tr) {{
+          var ok = norm(tr.innerText).indexOf(q) !== -1;
+          tr.classList.toggle('hidden', !ok);
+        }});
+      }}
+      filterRows(similarRows);
+      filterRows(overlapRows);
+      filterRows(nosologyRows);
+
+      var ns = similarRows.filter(function (tr) {{ return !tr.classList.contains('hidden'); }}).length;
+      var no = overlapRows.filter(function (tr) {{ return !tr.classList.contains('hidden'); }}).length;
+      var nn = nosologyRows.filter(function (tr) {{ return !tr.classList.contains('hidden'); }}).length;
+
+      setSectionMatch('similar-terms', similarRows.length > 0 && ns === 0);
+      setSectionMatch('overlap', overlapRows.length > 0 && no === 0);
+      setSectionMatch('nosology', nosologyRows.length > 0 && nn === 0);
+
+      var parts = ['用語カード ' + n + '/' + totalCards + ' 件'];
+      if (similarRows.length) parts.push('類似語表 ' + ns + '/' + similarRows.length + ' 行');
+      if (overlapRows.length) parts.push('領域横断表 ' + no + '/' + overlapRows.length + ' 行');
+      if (nosologyRows.length) parts.push('分類表 ' + nn + '/' + nosologyRows.length + ' 行');
+      countEl.textContent = parts.join(' · ');
+      updateResultsPanel(q);
+    }}
+
+    resultsList.addEventListener('click', function (ev) {{
+      var btn = ev.target.closest('button[data-jump-id]');
+      if (!btn) return;
+      jumpTo(btn.getAttribute('data-jump-id'));
+    }});
+
+    input.addEventListener('focus', function () {{
+      var q = norm(input.value);
+      if (q) updateResultsPanel(q);
+    }});
+    input.addEventListener('input', filter);
+    input.addEventListener('search', filter);
+    clearBtn.addEventListener('click', function () {{
+      input.value = '';
+      filter();
+      input.focus();
+    }});
+
+    document.addEventListener('keydown', function (e) {{
+      if (e.key === '/' && document.activeElement !== input && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {{
+        var t = e.target;
+        if (t && t.isContentEditable) return;
+        e.preventDefault();
+        input.focus();
+      }}
+    }});
+  }})();
+  </script>
+</body>
+</html>
+"""
+
+    OUT.write_text(html, encoding="utf-8")
+    print(f"Wrote {OUT} ({len(html)} chars)")
+
+
+if __name__ == "__main__":
+    main()

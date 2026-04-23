@@ -1,3 +1,6 @@
 .DS_Store
+
+# ICD-10 ミニ版はこのリポジトリとは別管理（icd10mini/ 内で git init 済み）
+/icd10mini/
 # .claude/ 配下のプロジェクト同梱スキルはファイル単位で追跡する。
 # ローカル専用の設定のみ除外する例: .claude/settings.local.json
