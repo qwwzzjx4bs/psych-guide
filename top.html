@@ -8,67 +8,141 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #fff; color: #1a202c; }
-    .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); transform: translateY(-1px); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f8fafc; color: #1a202c; }
+
+    /* カードホバー */
     .card { transition: box-shadow 0.18s, transform 0.18s; }
-    .tag-new { background: #ebf8ff; color: #2b6cb0; }
-    .tag-updated { background: #f0fff4; color: #276749; }
-    .cat-border-blue  { border-left: 3px solid #3b82f6; }
-    .cat-border-violet{ border-left: 3px solid #7c3aed; }
-    .cat-border-teal  { border-left: 3px solid #0d9488; }
-    .cat-border-rose  { border-left: 3px solid #e11d48; }
-    .cat-border-amber { border-left: 3px solid #d97706; }
-    .cat-border-gray  { border-left: 3px solid #9ca3af; }
-    .section-dot-blue  { background: #3b82f6; }
-    .section-dot-violet{ background: #7c3aed; }
-    .section-dot-teal  { background: #0d9488; }
-    .section-dot-rose  { background: #e11d48; }
-    .section-dot-amber { background: #d97706; }
-    .section-dot-gray  { background: #9ca3af; }
+    .card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
+
+    /* NEW / 更新バッジ */
+    .badge-new     { background: #dbeafe; color: #1d4ed8; }
+    .badge-updated { background: #dcfce7; color: #15803d; }
+
+    /* ── カテゴリ色変数 ──────────────────────── */
+    /* ICD分類：Blue */
+    .sec-blue  { background: #1d4ed8; }
+    .bg-blue   { background: #eff6ff; }
+    .border-blue  { border-top: 3px solid #3b82f6; }
+    .tag-blue  { background: #dbeafe; color: #1e40af; }
+    .link-blue { color: #2563eb; }
+    .row-blue  { background: #eff6ff; }
+
+    /* 疾患別：Violet */
+    .sec-violet  { background: #6d28d9; }
+    .bg-violet   { background: #f5f3ff; }
+    .border-violet  { border-top: 3px solid #7c3aed; }
+    .tag-violet  { background: #ede9fe; color: #5b21b6; }
+    .link-violet { color: #7c3aed; }
+    .row-violet  { background: #f5f3ff; }
+
+    /* 評価スケール：Teal */
+    .sec-teal  { background: #0f766e; }
+    .bg-teal   { background: #f0fdfa; }
+    .border-teal  { border-top: 3px solid #14b8a6; }
+    .tag-teal  { background: #ccfbf1; color: #0f766e; }
+    .link-teal { color: #0d9488; }
+    .row-teal  { background: #f0fdfa; }
+
+    /* 教育・資格：Amber */
+    .sec-amber  { background: #b45309; }
+    .bg-amber   { background: #fffbeb; }
+    .border-amber  { border-top: 3px solid #f59e0b; }
+    .tag-amber  { background: #fef3c7; color: #92400e; }
+    .link-amber { color: #d97706; }
+    .row-amber  { background: #fffbeb; }
+
+    /* その他：Slate */
+    .sec-slate  { background: #475569; }
+    .bg-slate   { background: #f8fafc; }
+    .border-slate  { border-top: 3px solid #94a3b8; }
+    .tag-slate  { background: #e2e8f0; color: #475569; }
+    .link-slate { color: #64748b; }
+    .row-slate  { background: #f8fafc; }
+
     a { text-decoration: none; }
     @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+    /* セクションヘッダー */
+    .sec-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; border-radius: 10px;
+      margin-bottom: 16px; color: #fff; font-weight: 600; font-size: 0.9rem;
+    }
+    .sec-icon {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .sec-count {
+      margin-left: auto; background: rgba(255,255,255,0.25);
+      padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 500;
+    }
+
+    /* テーブルのカテゴリドット */
+    .cat-dot { display: inline-block; width: 8px; height: 8px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
   </style>
 </head>
 <body class="min-h-screen">
 
   <!-- ヘッダー -->
-  <header class="border-b border-gray-200 bg-white sticky top-0 z-10">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+  <header class="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center">
-          <span class="text-white text-xs font-bold">Ψ</span>
+        <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center shadow-sm">
+          <span class="text-white text-sm font-bold">Ψ</span>
         </div>
-        <span class="font-semibold text-gray-900 text-base tracking-tight">精神科臨床ガイド</span>
+        <div>
+          <span class="font-bold text-gray-900 text-sm tracking-tight">精神科臨床ガイド</span>
+          <span class="ml-2 text-xs text-gray-400 hidden sm:inline">外来参照ポータル</span>
+        </div>
       </div>
-      <nav class="hidden sm:flex items-center gap-5 text-sm text-gray-500">
-        <a href="#updates" class="hover:text-gray-900 transition-colors">更新情報</a>
-        <a href="#icd" class="hover:text-gray-900 transition-colors">ICD分類</a>
-        <a href="#diseases" class="hover:text-gray-900 transition-colors">疾患別</a>
-        <a href="#scales" class="hover:text-gray-900 transition-colors">評価スケール</a>
-        <a href="#education" class="hover:text-gray-900 transition-colors">教育・資格</a>
+      <nav class="hidden sm:flex items-center gap-1 text-xs">
+        <a href="#updates" class="px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors">更新情報</a>
+        <a href="#icd"      class="px-3 py-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors font-medium">ICD分類</a>
+        <a href="#diseases" class="px-3 py-1.5 rounded-lg text-violet-600 hover:bg-violet-50 transition-colors font-medium">疾患別</a>
+        <a href="#scales"   class="px-3 py-1.5 rounded-lg text-teal-600 hover:bg-teal-50 transition-colors font-medium">評価</a>
+        <a href="#education" class="px-3 py-1.5 rounded-lg text-amber-600 hover:bg-amber-50 transition-colors font-medium">教育・資格</a>
       </nav>
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
 
     <!-- ヒーロー -->
-    <section class="mb-12">
-      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 tracking-tight">精神科臨床ガイド</h1>
-      <p class="text-gray-500 text-sm sm:text-base leading-relaxed max-w-2xl">
-        ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、
-        用語集、資格ガイドをまとめた外来即時参照ポータルです。
-      </p>
+    <section class="mb-10">
+      <div class="bg-white rounded-2xl border border-gray-200 px-6 py-6 shadow-sm">
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 tracking-tight">精神科臨床ガイド</h1>
+        <p class="text-gray-500 text-sm leading-relaxed max-w-2xl">
+          ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドをまとめた外来即時参照ポータルです。
+        </p>
+        <!-- カテゴリ凡例 -->
+        <div class="mt-4 flex flex-wrap gap-2 text-xs">
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium">
+            <span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>ICD分類・診断
+          </span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-violet-200 bg-violet-50 text-violet-700 font-medium">
+            <span class="w-2 h-2 rounded-full bg-violet-600 inline-block"></span>疾患別 診断・治療
+          </span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 font-medium">
+            <span class="w-2 h-2 rounded-full bg-teal-600 inline-block"></span>評価スケール
+          </span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-700 font-medium">
+            <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>教育・資格
+          </span>
+        </div>
+      </div>
     </section>
 
     <!-- 最新更新情報 -->
-    <section id="updates" class="mb-14">
-      <div class="flex items-center gap-2 mb-5">
-        <div class="w-2 h-2 rounded-full bg-gray-800"></div>
-        <h2 class="text-base font-semibold text-gray-900">更新情報一覧</h2>
+    <section id="updates" class="mb-12">
+      <div class="sec-header" style="background:#334155;">
+        <div class="sec-icon">📋</div>
+        <span>更新情報一覧</span>
+        <span class="sec-count">13件</span>
       </div>
 
-      <div class="border border-gray-200 rounded-xl overflow-hidden">
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
         <table class="w-full text-sm">
           <thead class="bg-gray-50 border-b border-gray-200">
             <tr>
@@ -79,327 +153,322 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-23</td>
-              <td class="px-4 py-3"><a href="antipsychotics-japan.html" class="text-blue-600 hover:underline font-medium">抗精神病薬 選択ガイド（日本承認薬）</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">日本承認の抗精神病薬比較・選択ガイドを新規作成</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-violet">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td>
+              <td class="px-4 py-2.5"><a href="antipsychotics-japan.html" class="link-violet hover:underline font-medium">抗精神病薬 選択ガイド（日本承認薬）</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">日本承認の抗精神病薬比較・選択ガイドを新規作成</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-23</td>
-              <td class="px-4 py-3"><a href="schizophrenia-assessment-sheets.html" class="text-blue-600 hover:underline font-medium">統合失調症 評価シート（印刷用）</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">外来用印刷様式を新規作成</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-teal">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td>
+              <td class="px-4 py-2.5"><a href="schizophrenia-assessment-sheets.html" class="link-teal hover:underline font-medium">統合失調症 評価シート（印刷用）</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">外来用印刷様式を新規作成</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-23</td>
-              <td class="px-4 py-3"><a href="schizophrenia-scales.html" class="text-blue-600 hover:underline font-medium">統合失調症 評価スケール集</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">PANSS・BPRS・CGI等の臨床スケールを収録</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-teal">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td>
+              <td class="px-4 py-2.5"><a href="schizophrenia-scales.html" class="link-teal hover:underline font-medium">統合失調症 評価スケール集</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">PANSS・BPRS・CGI等の臨床スケールを収録</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-23</td>
-              <td class="px-4 py-3"><a href="shiteii-guide.html" class="text-blue-600 hover:underline font-medium">精神保健指定医 資格取得ガイド</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">専攻医1年目からの完全ロードマップを新規作成</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-amber">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td>
+              <td class="px-4 py-2.5"><a href="shiteii-guide.html" class="link-amber hover:underline font-medium">精神保健指定医 資格取得ガイド</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">専攻医1年目からの完全ロードマップを新規作成</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-23</td>
-              <td class="px-4 py-3"><a href="schizophrenia-algorithm.html" class="text-blue-600 hover:underline font-medium">統合失調症 薬物治療アルゴリズム</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">ガイドライン2022準拠の図解版を更新</td>
-              <td class="px-4 py-3"><span class="tag-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
+            <tr class="hover:brightness-95 row-violet">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td>
+              <td class="px-4 py-2.5"><a href="schizophrenia-algorithm.html" class="link-violet hover:underline font-medium">統合失調症 薬物治療アルゴリズム</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">ガイドライン2022準拠の図解版を更新</td>
+              <td class="px-4 py-2.5"><span class="badge-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-23</td>
-              <td class="px-4 py-3"><a href="icd10.html" class="text-blue-600 hover:underline font-medium">ICD-10 精神科疾患分類（詳細版）</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">コード表・定義・治療薬パネルを更新</td>
-              <td class="px-4 py-3"><span class="tag-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
+            <tr class="hover:brightness-95 row-blue">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td>
+              <td class="px-4 py-2.5"><a href="icd10.html" class="link-blue hover:underline font-medium">ICD-10 精神科疾患分類（詳細版）</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">コード表・定義・治療薬パネルを更新</td>
+              <td class="px-4 py-2.5"><span class="badge-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-13</td>
-              <td class="px-4 py-3"><a href="icd10-quiz.html" class="text-blue-600 hover:underline font-medium">ICD-10 精神科クイズ</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">定義から疾患を当てるインタラクティブ問題集を追加</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-blue">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-13</td>
+              <td class="px-4 py-2.5"><a href="icd10-quiz.html" class="link-blue hover:underline font-medium">ICD-10 精神科クイズ</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">定義から疾患を当てるインタラクティブ問題集を追加</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-08</td>
-              <td class="px-4 py-3"><a href="psych-terminology-jp.html" class="text-blue-600 hover:underline font-medium">精神医学用語マップ（拡張版）</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">精神病理学・精神分析学の用語を大幅追加</td>
-              <td class="px-4 py-3"><span class="tag-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
+            <tr class="hover:brightness-95 row-amber">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-08</td>
+              <td class="px-4 py-2.5"><a href="psych-terminology-jp.html" class="link-amber hover:underline font-medium">精神医学用語マップ（拡張版）</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">精神病理学・精神分析学の用語を大幅追加</td>
+              <td class="px-4 py-2.5"><span class="badge-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-06</td>
-              <td class="px-4 py-3"><a href="psychiatric-overview-icd10.html" class="text-blue-600 hover:underline font-medium">ICD-10 精神科疾患分類（概要版）</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">関連治療薬トグルパネルを全 F カテゴリに追加</td>
-              <td class="px-4 py-3"><span class="tag-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
+            <tr class="hover:brightness-95 row-blue">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-06</td>
+              <td class="px-4 py-2.5"><a href="psychiatric-overview-icd10.html" class="link-blue hover:underline font-medium">ICD-10 精神科疾患分類（概要版）</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">関連治療薬トグルパネルを全 F カテゴリに追加</td>
+              <td class="px-4 py-2.5"><span class="badge-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-05</td>
-              <td class="px-4 py-3"><a href="psychiatric-overview-icd11.html" class="text-blue-600 hover:underline font-medium">ICD-11 / DSM-5-TR 精神科疾患全体像</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">ICD-11準拠の全体像マップを初回リリース</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-blue">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-05</td>
+              <td class="px-4 py-2.5"><a href="psychiatric-overview-icd11.html" class="link-blue hover:underline font-medium">ICD-11 / DSM-5-TR 精神科疾患全体像</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">ICD-11準拠の全体像マップを初回リリース</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-05</td>
-              <td class="px-4 py-3"><a href="anxiety-disorders.html" class="text-blue-600 hover:underline font-medium">不安症群 診断ツリー＆治療アルゴリズム</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">ICD-10/DSM-5-TR準拠の診断・治療図解を初回リリース</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-violet">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-05</td>
+              <td class="px-4 py-2.5"><a href="anxiety-disorders.html" class="link-violet hover:underline font-medium">不安症群 診断ツリー＆治療アルゴリズム</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">ICD-10/DSM-5-TR準拠の診断・治療図解を初回リリース</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-05</td>
-              <td class="px-4 py-3"><a href="anxiety-assessment-scales.html" class="text-blue-600 hover:underline font-medium">不安症群 評価スケール集</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">GAD-7・HAM-A・Y-BOCS等の外来用様式を初回リリース</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-teal">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-05</td>
+              <td class="px-4 py-2.5"><a href="anxiety-assessment-scales.html" class="link-teal hover:underline font-medium">不安症群 評価スケール集</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">GAD-7・HAM-A・Y-BOCS等の外来用様式を初回リリース</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-gray-500 tabular-nums">2026-04-05</td>
-              <td class="px-4 py-3"><a href="depression-guideline2025.html" class="text-blue-600 hover:underline font-medium">うつ病 診断・治療選択ツリー</a></td>
-              <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">ガイドライン2025準拠の治療フローを初回リリース</td>
-              <td class="px-4 py-3"><span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
+            <tr class="hover:brightness-95 row-violet">
+              <td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-05</td>
+              <td class="px-4 py-2.5"><a href="depression-guideline2025.html" class="link-violet hover:underline font-medium">うつ病 診断・治療選択ツリー</a></td>
+              <td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">ガイドライン2025準拠の治療フローを初回リリース</td>
+              <td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- ICD分類・診断ツール -->
+    <!-- ① ICD分類・診断ツール ─ Blue -->
     <section id="icd" class="mb-12">
-      <div class="flex items-center gap-2 mb-5">
-        <div class="w-2 h-2 rounded-full section-dot-blue"></div>
-        <h2 class="text-base font-semibold text-gray-900">ICD分類・診断ツール</h2>
+      <div class="sec-header sec-blue">
+        <div class="sec-icon">🗂</div>
+        <span>ICD分類・診断ツール</span>
+        <span class="sec-count">5ページ</span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3">
 
-        <a href="icd10.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-blue bg-white">
+        <a href="icd10.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">ICD-10 詳細版</span>
+            <span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">ICD-10 詳細版</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-23 更新</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-10 精神科疾患分類（詳細版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">F0〜F9 全カテゴリの診断基準・鑑別診断・関連治療薬をコード表付きで網羅。外来診察中の即時参照に最適化。</p>
-          <div class="mt-3 text-xs text-blue-500 font-medium">icd10.html →</div>
+          <div class="mt-3 text-xs link-blue font-medium">icd10.html →</div>
         </a>
 
-        <a href="icd10index.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-blue bg-white">
+        <a href="icd10index.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">ICD-10 インデックス</span>
+            <span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">ICD-10 インデックス</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-06 更新</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-10 精神科疾患分類（インデックス版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">コード一覧から疾患へ素早くアクセスするためのインデックスページ。コード検索・ナビゲーション用途に最適。</p>
-          <div class="mt-3 text-xs text-blue-500 font-medium">icd10index.html →</div>
+          <div class="mt-3 text-xs link-blue font-medium">icd10index.html →</div>
         </a>
 
-        <a href="psychiatric-overview-icd10.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-blue bg-white">
+        <a href="psychiatric-overview-icd10.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">ICD-10 概要版</span>
+            <span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">ICD-10 概要版</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-06 更新</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-10 精神科疾患分類（概要版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">F0〜F9 のタブUI概要ビュー。診断基準・鑑別・注意点・関連治療薬トグルパネル付き。全体把握に最適。</p>
-          <div class="mt-3 text-xs text-blue-500 font-medium">psychiatric-overview-icd10.html →</div>
+          <div class="mt-3 text-xs link-blue font-medium">psychiatric-overview-icd10.html →</div>
         </a>
 
-        <a href="psychiatric-overview-icd11.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-blue bg-white">
+        <a href="psychiatric-overview-icd11.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">ICD-11 / DSM-5-TR</span>
+            <span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">ICD-11 / DSM-5-TR</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-11 / DSM-5-TR 精神科疾患全体像</h3>
           <p class="text-xs text-gray-500 leading-relaxed">ICD-11とDSM-5-TRの両分類を並置した全体像マップ。改訂ポイント・対応コードを対照表形式で整理。</p>
-          <div class="mt-3 text-xs text-blue-500 font-medium">psychiatric-overview-icd11.html →</div>
+          <div class="mt-3 text-xs link-blue font-medium">psychiatric-overview-icd11.html →</div>
         </a>
 
-        <a href="icd10-quiz.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-blue bg-white sm:col-span-2">
+        <a href="icd10-quiz.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue sm:col-span-2">
           <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">クイズ</span>
-              <span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
+              <span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">クイズ</span>
+              <span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
             </div>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-13 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-10 精神科クイズ — 定義から疾患を当てよう</h3>
           <p class="text-xs text-gray-500 leading-relaxed">疾患定義の文章から ICD-10 コード・疾患名を答えるインタラクティブ問題集。専攻医・医学生の自己学習・試験対策に対応。</p>
-          <div class="mt-3 text-xs text-blue-500 font-medium">icd10-quiz.html →</div>
+          <div class="mt-3 text-xs link-blue font-medium">icd10-quiz.html →</div>
         </a>
 
       </div>
     </section>
 
-    <!-- 疾患別 診断・治療 -->
+    <!-- ② 疾患別 診断・治療 ─ Violet -->
     <section id="diseases" class="mb-12">
-      <div class="flex items-center gap-2 mb-5">
-        <div class="w-2 h-2 rounded-full section-dot-violet"></div>
-        <h2 class="text-base font-semibold text-gray-900">疾患別 診断・治療アルゴリズム</h2>
+      <div class="sec-header sec-violet">
+        <div class="sec-icon">🧠</div>
+        <span>疾患別 診断・治療アルゴリズム</span>
+        <span class="sec-count">4ページ</span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3">
 
-        <a href="schizophrenia-algorithm.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-violet bg-white">
+        <a href="schizophrenia-algorithm.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">統合失調症</span>
+            <span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">統合失調症</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-23 更新</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 薬物治療アルゴリズム 図解版</h3>
           <p class="text-xs text-gray-500 leading-relaxed">統合失調症治療ガイドライン2022準拠。急性期・維持期の薬物選択・用量調整・切り替え戦略をフローチャートで図解。</p>
-          <div class="mt-3 text-xs text-violet-600 font-medium">schizophrenia-algorithm.html →</div>
+          <div class="mt-3 text-xs link-violet font-medium">schizophrenia-algorithm.html →</div>
         </a>
 
-        <a href="antipsychotics-japan.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-violet bg-white">
+        <a href="antipsychotics-japan.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
           <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-medium text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">薬物治療</span>
-              <span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
+              <span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">薬物治療</span>
+              <span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
             </div>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">抗精神病薬 選択ガイド（日本承認薬）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">日本で承認されている抗精神病薬の特性・用量・副作用プロファイルを比較整理した臨床選択ガイド。</p>
-          <div class="mt-3 text-xs text-violet-600 font-medium">antipsychotics-japan.html →</div>
+          <div class="mt-3 text-xs link-violet font-medium">antipsychotics-japan.html →</div>
         </a>
 
-        <a href="anxiety-disorders.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-violet bg-white">
+        <a href="anxiety-disorders.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">不安症群</span>
+            <span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">不安症群</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">不安症群 — 診断ツリー＆治療アルゴリズム</h3>
           <p class="text-xs text-gray-500 leading-relaxed">パニック症・社交不安症・全般不安症・特定の恐怖症・OCD の ICD-10/DSM-5-TR 診断ツリーと薬物・非薬物治療選択。</p>
-          <div class="mt-3 text-xs text-violet-600 font-medium">anxiety-disorders.html →</div>
+          <div class="mt-3 text-xs link-violet font-medium">anxiety-disorders.html →</div>
         </a>
 
-        <a href="depression-guideline2025.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-violet bg-white sm:col-span-2">
+        <a href="depression-guideline2025.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-violet-700 bg-violet-50 px-2 py-0.5 rounded-full">うつ病・双極性障害</span>
+            <span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">うつ病・双極性障害</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">うつ病 診断・治療選択ツリー — ガイドライン2025準拠</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">うつ病エピソードの重症度評価から初期薬物治療・増強療法・難治性うつへの対応まで、2025年ガイドラインに基づく治療フローを図解。双極性障害との鑑別ポイントも収録。</p>
-          <div class="mt-3 text-xs text-violet-600 font-medium">depression-guideline2025.html →</div>
+          <p class="text-xs text-gray-500 leading-relaxed">うつ病エピソードの重症度評価から初期薬物治療・増強療法・難治性うつへの対応まで治療フローを図解。双極性障害との鑑別ポイントも収録。</p>
+          <div class="mt-3 text-xs link-violet font-medium">depression-guideline2025.html →</div>
         </a>
 
       </div>
     </section>
 
-    <!-- 評価スケール -->
+    <!-- ③ 評価スケール ─ Teal -->
     <section id="scales" class="mb-12">
-      <div class="flex items-center gap-2 mb-5">
-        <div class="w-2 h-2 rounded-full section-dot-teal"></div>
-        <h2 class="text-base font-semibold text-gray-900">評価スケール・アセスメントシート</h2>
+      <div class="sec-header sec-teal">
+        <div class="sec-icon">📊</div>
+        <span>評価スケール・アセスメントシート</span>
+        <span class="sec-count">3ページ</span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3">
 
-        <a href="schizophrenia-scales.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-teal bg-white">
+        <a href="schizophrenia-scales.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
           <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-medium text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">統合失調症</span>
-              <span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
+              <span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">統合失調症</span>
+              <span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
             </div>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 精神症状評価スケール集</h3>
           <p class="text-xs text-gray-500 leading-relaxed">PANSS・BPRS・CGI・SAPS/SANS 等の評価スケールを収録した臨床リファレンス。スコア基準・判定方法付き。</p>
-          <div class="mt-3 text-xs text-teal-600 font-medium">schizophrenia-scales.html →</div>
+          <div class="mt-3 text-xs link-teal font-medium">schizophrenia-scales.html →</div>
         </a>
 
-        <a href="schizophrenia-assessment-sheets.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-teal bg-white">
+        <a href="schizophrenia-assessment-sheets.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
           <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-medium text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">統合失調症 印刷用</span>
-              <span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
+              <span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">統合失調症 印刷用</span>
+              <span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
             </div>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 評価スケール集（外来用印刷様式）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">外来診察での記入・印刷に最適化されたアセスメントシート集。評価記録・経過追跡に使用可能。</p>
-          <div class="mt-3 text-xs text-teal-600 font-medium">schizophrenia-assessment-sheets.html →</div>
+          <div class="mt-3 text-xs link-teal font-medium">schizophrenia-assessment-sheets.html →</div>
         </a>
 
-        <a href="anxiety-assessment-scales.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-teal bg-white sm:col-span-2">
+        <a href="anxiety-assessment-scales.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal sm:col-span-2">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">不安症群</span>
+            <span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">不安症群</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">不安症群 重症度評価スケール集 — 外来用様式</h3>
           <p class="text-xs text-gray-500 leading-relaxed">GAD-7・HAM-A・LSAS・Y-BOCS・PHQ-9 等の重症度評価スケールを外来用印刷様式として収録。エビデンスレベルバッジ付き。</p>
-          <div class="mt-3 text-xs text-teal-600 font-medium">anxiety-assessment-scales.html →</div>
+          <div class="mt-3 text-xs link-teal font-medium">anxiety-assessment-scales.html →</div>
         </a>
 
       </div>
     </section>
 
-    <!-- 教育・資格 -->
+    <!-- ④ 教育・資格 ─ Amber -->
     <section id="education" class="mb-12">
-      <div class="flex items-center gap-2 mb-5">
-        <div class="w-2 h-2 rounded-full section-dot-amber"></div>
-        <h2 class="text-base font-semibold text-gray-900">精神医学教育・用語・資格</h2>
+      <div class="sec-header sec-amber">
+        <div class="sec-icon">📚</div>
+        <span>精神医学教育・用語・資格</span>
+        <span class="sec-count">2ページ</span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3">
 
-        <a href="psych-terminology-jp.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-amber bg-white">
+        <a href="psych-terminology-jp.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">用語集</span>
+            <span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">用語集</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-08 更新</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">精神医学・精神病理学・精神症候学・精神分析学 用語マップ（拡張版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">精神医学の主要概念・症候学用語・精神分析用語を体系的にマッピング。症状記載・論文読解・症例検討に即座に参照可能。</p>
-          <div class="mt-3 text-xs text-amber-600 font-medium">psych-terminology-jp.html →</div>
+          <div class="mt-3 text-xs link-amber font-medium">psych-terminology-jp.html →</div>
         </a>
 
-        <a href="shiteii-guide.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-amber bg-white">
+        <a href="shiteii-guide.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber">
           <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">資格ガイド</span>
-              <span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
+              <span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">資格ガイド</span>
+              <span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
             </div>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 資格取得ガイド — 完全ロードマップ</h3>
           <p class="text-xs text-gray-500 leading-relaxed">専攻医1年目から始める申請要件・症例レポート対策・口頭試問対策・タイムラインを収録した資格取得の完全ガイド。</p>
-          <div class="mt-3 text-xs text-amber-600 font-medium">shiteii-guide.html →</div>
+          <div class="mt-3 text-xs link-amber font-medium">shiteii-guide.html →</div>
         </a>
 
       </div>
     </section>
 
-    <!-- その他 -->
+    <!-- ⑤ その他 ─ Slate（自己紹介削除済み）-->
     <section id="others" class="mb-10">
-      <div class="flex items-center gap-2 mb-5">
-        <div class="w-2 h-2 rounded-full section-dot-gray"></div>
-        <h2 class="text-base font-semibold text-gray-900">その他</h2>
+      <div class="sec-header sec-slate">
+        <div class="sec-icon">💡</div>
+        <span>その他</span>
+        <span class="sec-count">2ページ</span>
       </div>
-      <div class="grid sm:grid-cols-3 gap-3">
+      <div class="grid sm:grid-cols-2 gap-3">
 
-        <a href="context-engineering.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-gray bg-white">
+        <a href="context-engineering.html" class="card block border border-slate-200 rounded-xl p-4 border-slate bg-slate">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">AI技術</span>
+            <span class="text-xs font-medium tag-slate px-2 py-0.5 rounded-full">AI技術</span>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-18 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">コンテキストエンジニアリング完全解説</h3>
           <p class="text-xs text-gray-500 leading-relaxed">Anthropic 技術記事の日本語訳。AIエージェントへの情報提供手法を解説。</p>
-          <div class="mt-3 text-xs text-gray-500 font-medium">context-engineering.html →</div>
+          <div class="mt-3 text-xs link-slate font-medium">context-engineering.html →</div>
         </a>
 
-        <a href="cursor-ai-agents.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-gray bg-white">
+        <a href="cursor-ai-agents.html" class="card block border border-slate-200 rounded-xl p-4 border-slate bg-slate">
           <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">AI技術</span>
-              <span class="tag-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
+              <span class="text-xs font-medium tag-slate px-2 py-0.5 rounded-full">AI技術</span>
+              <span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
             </div>
             <span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span>
           </div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">Cursor AIエージェント完全比較ガイド</h3>
           <p class="text-xs text-gray-500 leading-relaxed">Cursor 搭載の各AIエージェントの特徴・用途・選び方を比較解説。</p>
-          <div class="mt-3 text-xs text-gray-500 font-medium">cursor-ai-agents.html →</div>
-        </a>
-
-        <a href="自己紹介.html" class="card block border border-gray-200 rounded-xl p-4 cat-border-gray bg-white">
-          <div class="flex items-start justify-between mb-2">
-            <span class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">プロフィール</span>
-            <span class="text-xs text-gray-400 tabular-nums">2026-04-04 作成</span>
-          </div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">自己紹介図解 — いおり</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">図解スタイルの自己紹介ページ。経歴・スキル・興味領域をビジュアルで紹介。</p>
-          <div class="mt-3 text-xs text-gray-500 font-medium">自己紹介.html →</div>
+          <div class="mt-3 text-xs link-slate font-medium">cursor-ai-agents.html →</div>
         </a>
 
       </div>
@@ -408,13 +477,13 @@
   </main>
 
   <!-- フッター -->
-  <footer class="border-t border-gray-200 mt-6">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+  <footer class="border-t border-gray-200 bg-white mt-4">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center gap-2">
-        <div class="w-5 h-5 rounded bg-blue-600 flex items-center justify-center">
+        <div class="w-6 h-6 rounded-md bg-blue-700 flex items-center justify-center">
           <span class="text-white text-xs font-bold">Ψ</span>
         </div>
-        <span class="text-sm text-gray-500">精神科臨床ガイド</span>
+        <span class="text-sm text-gray-600 font-medium">精神科臨床ガイド</span>
       </div>
       <p class="text-xs text-gray-400 text-center sm:text-right">
         掲載情報は外来診察中の参照用途を想定しています。最新のガイドラインを必ず確認の上ご使用ください。
