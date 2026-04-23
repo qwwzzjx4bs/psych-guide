@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症 評価スケール集｜外来用印刷様式</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ========== PRINT SETTINGS ========== */
+    @page { size: A4 portrait; margin: 10mm 12mm; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
+      font-size: 9pt;
+      color: #111827;
+      line-height: 1.4;
+      background: white;
+    }
+
+    /* ========== SCREEN PREVIEW ========== */
+    @media screen {
+      body { background: #94a3b8; }
+      .page {
+        background: white;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto 20px;
+        padding: 10mm 12mm;
+        box-shadow: 0 4px 28px rgba(0,0,0,.25);
+        display: flex;
+        flex-direction: column;
+      }
+      .screen-nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #1e3a5f;
+        color: white;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 11px;
+        font-family: 'Noto Sans JP', sans-serif;
+      }
+      .screen-nav a {
+        color: #93c5fd;
+        text-decoration: none;
+        padding: 2px 8px;
+        border-radius: 4px;
+        transition: background .15s;
+      }
+      .screen-nav a:hover { background: rgba(255,255,255,.15); color: white; }
+      .screen-nav .nav-title { font-weight: 700; color: white; margin-right: 6px; font-size: 12px; }
+      .print-btn {
+        margin-left: auto;
+        background: #0f766e;
+        color: white;
+        border: none;
+        padding: 4px 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 11px;
+        font-family: inherit;
+        font-weight: 700;
+      }
+      .print-btn:hover { background: #0d9488; }
+    }
+
+    @media print {
+      body { background: white; }
+      .screen-nav { display: none; }
+      .page { display: block; padding: 10mm 12mm; }
+    }
+
+    /* ========== PAGE LAYOUT ========== */
+    .page { page-break-after: always; }
+    .page:last-of-type { page-break-after: auto; }
+    .page-content { flex: 1; }
+
+    /* ========== SCALE HEADER ========== */
+    .hd {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding-bottom: 5px;
+      margin-bottom: 6px;
+    }
+    .hd-name { font-size: 13.5pt; font-weight: 800; line-height: 1.2; }
+    .hd-en { font-size: 8pt; color: #6b7280; margin-top: 2px; }
+    .hd-right { text-align: right; font-size: 7.5pt; color: #9ca3af; line-height: 1.6; white-space: nowrap; }
+
+    /* ── color themes ── */
+    .t-cdss .hd { border-bottom: 3px solid #16a34a; }
+    .t-cdss .hd-name { color: #14532d; }
+    .t-cgi  .hd { border-bottom: 3px solid #ea580c; }
+    .t-cgi  .hd-name { color: #7c2d12; }
+    .t-dai  .hd { border-bottom: 3px solid #ca8a04; }
+    .t-dai  .hd-name { color: #713f12; }
+    .t-aims .hd { border-bottom: 3px solid #dc2626; }
+    .t-aims .hd-name { color: #7f1d1d; }
+    .t-sas  .hd { border-bottom: 3px solid #c2410c; }
+    .t-sas  .hd-name { color: #7c2d12; }
+    .t-bars .hd { border-bottom: 3px solid #db2777; }
+    .t-bars .hd-name { color: #831843; }
+    .t-panss .hd { border-bottom: 3px solid #1d4ed8; }
+    .t-panss .hd-name { color: #1e3a8a; }
+
+    /* ========== PATIENT INFO BAR ========== */
+    .pt {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr 1.1fr 0.9fr;
+      gap: 6px;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      padding: 4px 9px;
+      margin-bottom: 6px;
+      background: #f9fafb;
+    }
+    .pt-f label { display: block; font-size: 6.5pt; color: #9ca3af; margin-bottom: 1px; }
+    .pt-f .ul  { border-bottom: 1px solid #9ca3af; height: 16px; display: block; }
+
+    /* ========== INSTRUCTION BOX ========== */
+    .instr {
+      padding: 5px 9px;
+      font-size: 8.5pt;
+      margin-bottom: 6px;
+      border-radius: 0 4px 4px 0;
+    }
+    .i-cdss { background: #f0fdf4; border-left: 3px solid #16a34a; }
+    .i-cgi  { background: #fff7ed; border-left: 3px solid #ea580c; }
+    .i-dai  { background: #fefce8; border-left: 3px solid #ca8a04; }
+    .i-aims { background: #fef2f2; border-left: 3px solid #dc2626; }
+    .i-sas  { background: #fff7ed; border-left: 3px solid #c2410c; }
+    .i-bars { background: #fdf2f8; border-left: 3px solid #db2777; }
+    .i-panss { background: #eff6ff; border-left: 3px solid #1d4ed8; }
+    .i-obs  { background: #f5f3ff; border-left: 3px solid #7c3aed; }
+
+    /* ========== TABLES ========== */
+    table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 5px; }
+    thead th {
+      padding: 3.5px 4px;
+      text-align: center;
+      border: 1px solid #d1d5db;
+      font-size: 7.5pt;
+      font-weight: 700;
+      background: #f8fafc;
+    }
+    thead th.tl { text-align: left; }
+    td { padding: 3px 5px; border: 1px solid #e2e8f0; vertical-align: middle; }
+    tr:nth-child(even) td { background: #fafafa; }
+    .n  { text-align: center; color: #9ca3af; font-size: 7.5pt; width: 17px; }
+    .ck { text-align: center; width: 26px; color: #374151; }
+    .sc { text-align: center; width: 29px; border: 1px solid #9ca3af !important; }
+    .sc-w { text-align: center; width: 36px; border: 1px solid #9ca3af !important; }
+    .total-r td { background: #f0f9ff !important; font-weight: 700; }
+    .obs-row td { background: #f5f3ff !important; }
+
+    /* compact tables */
+    .compact th, .compact td { padding: 2.5px 3px; font-size: 8pt; }
+    .compact .ck { width: 22px; }
+    .compact .sc { width: 24px; }
+
+    /* ========== SCORING GUIDE ========== */
+    .scoring {
+      border: 1px solid #e5e7eb;
+      border-radius: 5px;
+      padding: 5px 9px;
+      background: #f9fafb;
+      font-size: 8pt;
+    }
+    .scoring b { font-size: 8.5pt; }
+    .sbar { display: flex; border-radius: 3px; overflow: hidden; height: 17px; margin: 3px 0; }
+    .sbar-s {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 7pt; font-weight: 700; color: white; padding: 0 3px;
+      white-space: nowrap;
+    }
+
+    /* ========== RATING SCALE BOXES ========== */
+    .rating-row {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .rating-item {
+      display: grid;
+      grid-template-columns: 18px 1fr 26px;
+      gap: 4px;
+      align-items: center;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 3px 5px;
+      font-size: 8.5pt;
+    }
+    .rating-item:nth-child(even) { background: #fafafa; }
+    .rating-num { text-align: center; font-weight: 700; color: #6b7280; font-size: 8pt; }
+    .rating-score { text-align: center; border: 1px solid #9ca3af; border-radius: 3px; height: 18px; width: 24px; }
+
+    /* CGI rating boxes */
+    .cgi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .cgi-box { border: 1px solid #e2e8f0; border-radius: 5px; overflow: hidden; }
+    .cgi-box-header {
+      padding: 4px 8px;
+      font-weight: 700;
+      font-size: 8.5pt;
+    }
+    .cgi-item {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 0;
+      border-top: 1px solid #e2e8f0;
+      align-items: stretch;
+    }
+    .cgi-score-box {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11pt; font-weight: 800;
+      border-right: 1px solid #e2e8f0;
+      cursor: pointer;
+    }
+    .cgi-label { padding: 3px 6px; font-size: 7.5pt; }
+    .cgi-sublabel { font-size: 6.5pt; color: #6b7280; line-height: 1.3; }
+
+    /* ========== DIVIDER ========== */
+    .divider { border-top: 2px dashed #d1d5db; margin: 10px 0; padding-top: 10px; }
+
+    /* ========== FOOTER ========== */
+    .ft {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 6pt;
+      color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 3px;
+      margin-top: 6px;
+    }
+
+    /* ========== PROCEDURE BOX ========== */
+    .proc {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 5px;
+      padding: 4px 9px;
+      font-size: 7.5pt;
+      margin-bottom: 5px;
+      line-height: 1.55;
+    }
+    .proc b { color: #92400e; }
+
+    /* ========== NOTE BOX ========== */
+    .note {
+      background: #f3f4f6;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 7.5pt;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    /* ========== DAI ITEM ========== */
+    .dai-item {
+      display: grid;
+      grid-template-columns: 16px 1fr 32px 32px 32px;
+      gap: 3px;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      padding: 3px 4px;
+      font-size: 8.5pt;
+    }
+    .dai-item:last-child { border-bottom: none; }
+    .dai-n { text-align: center; color: #9ca3af; font-size: 7.5pt; }
+    .dai-dir { text-align: center; font-size: 7pt; font-weight: 700; }
+    .dai-btn { text-align: center; border: 1px solid #d1d5db; border-radius: 3px; padding: 2px; font-size: 8pt; }
+  </style>
+</head>
+<body>
+
+<!-- SCREEN NAVIGATION -->
+<nav class="screen-nav">
+  <span class="nav-title">統合失調症 評価スケール集</span>
+  <a href="#cdss">CDSS</a>
+  <a href="#cgi">CGI-S/I</a>
+  <a href="#dai">DAI-10</a>
+  <a href="#aims">AIMS</a>
+  <a href="#sas">SAS</a>
+  <a href="#bars">BARS</a>
+  <a href="#panss">PANSS</a>
+  <button class="print-btn" onclick="window.print()">印刷 / PDF保存</button>
+</nav>
+
+
+<!-- ═══════════════ PAGE 1: CDSS ═══════════════ -->
+<div class="page t-cdss" id="cdss">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">CDSS　統合失調症用カルガリーうつ病スケール</div>
+        <div class="hd-en">Calgary Depression Scale for Schizophrenia（Addington et al., 1990）</div>
+      </div>
+      <div class="hd-right">対象：統合失調症のうつ症状評価<br>スコア：0–27点 ｜ ≥5 スクリーニング陽性 ｜ ≥6 うつ病エピソード疑い</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="instr i-cdss">
+      <strong>施行者（医師・コメディカル）</strong>が半構造化面接で評価します。各項目を最後まで読み上げ、患者の反応と面接中の観察に基づいて採点してください。<br>
+      <strong>評価期間：過去2週間　　採点：0＝なし　1＝軽度　2＝中等度　3＝重度</strong>
+    </div>
+
+    <div class="instr i-obs" style="margin-bottom:6px;font-size:8pt;">
+      ⚠️ <strong>注意</strong>：統合失調症の陰性症状（情動鈍麻・無気力・発話の乏しさ）や錐体外路症状（精神運動遅滞・仮面様顔貌）はHAMDと重複するため、CDSSを使用すること。
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:17px">#</th>
+          <th class="tl">診察での質問・評価ポイント</th>
+          <th style="width:27px">0<br>なし</th>
+          <th style="width:27px">1<br>軽度</th>
+          <th style="width:27px">2<br>中等度</th>
+          <th style="width:27px">3<br>重度</th>
+          <th style="width:29px">得点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="n">1</td>
+          <td>
+            <strong>抑うつ気分</strong>（過去2週間、悲しみ・気分の落ち込みを感じましたか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=表情に軽度の悲しみ　2=はっきりした抑うつ気分（ほぼ毎日）　3=持続的な強い悲しみ・絶望感</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">2</td>
+          <td>
+            <strong>希望のなさ</strong>（将来について希望がもてない・良くならないと感じますか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=ときに将来を悲観する　2=将来に見通しなし（多くの日）　3=ほぼ毎日・確信的に将来を諦めている</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">3</td>
+          <td>
+            <strong>自己批判・自己否定</strong>（自分はダメな人間だ、失敗ばかりだと感じますか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=軽い自己批判　2=自分に価値がないという感覚（多くの日）　3=自己嫌悪・自分が存在していない方が良いと感じる</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">4</td>
+          <td>
+            <strong>罪業妄想的観念</strong>（周囲の悪いことが自分のせいで起きている、人に迷惑をかけていると感じますか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=軽い自責感（根拠あり）　2=根拠のない罪責的観念（非妄想的）　3=罪業妄想（揺るぎない確信）</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">5</td>
+          <td>
+            <strong>病的罪責感</strong>（過去のことを繰り返し悔やんで、自分を責め続けていますか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=過去への後悔あるが一時的　2=罪悪感が繰り返し・持続　3=罪悪感への没頭・苦悩が強い</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">6</td>
+          <td>
+            <strong>朝方の気分悪化</strong>（朝目が覚めたとき気分が一番落ち込んでいて、午後から夕方に少し楽になりますか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=軽い日内変動（朝悪い）　2=はっきりした朝の悪化（多くの日）　3=毎日・顕著な朝悪化</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">7</td>
+          <td>
+            <strong>早朝覚醒</strong>（普段の起床時刻の2時間以上前に目が覚めて、その後眠れないことが続いていますか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=ときに早朝覚醒（週1〜2回）　2=週3〜4回の早朝覚醒　3=ほぼ毎日</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">8</td>
+          <td>
+            <strong>自殺念慮</strong>（死にたいとか、消えてしまいたいという気持ちはありますか？）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=生きていたくないという感覚（漠然）　2=死への希求・具体的な希死念慮　3=自殺企図・具体的計画あり</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr class="obs-row">
+          <td class="n">9</td>
+          <td>
+            <strong>観察された抑うつ〔面接者評価〕</strong>（面接中の観察：沈んだ表情・声調・涙・絶望的な雰囲気）<br>
+            <span style="font-size:7.5pt;color:#6b7280">0=なし　1=表情にわずかな悲しみ　2=明らかな抑うつ的外見（面接の大半）　3=持続的に強く落ち込んだ印象・自発的に涙</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr class="total-r">
+          <td colspan="2" style="text-align:right;padding-right:10px;font-size:8.5pt">合計得点（0〜27点）</td>
+          <td colspan="4"></td>
+          <td class="sc" style="border:2px solid #16a34a !important;font-size:11pt"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">※ 項目9のみ面接者（施行者）が観察で評価。項目1〜8は半構造化面接で患者に確認後採点。</div>
+
+    <div class="scoring">
+      <b>採点・重症度判定</b>
+      <div class="sbar">
+        <div class="sbar-s" style="background:#22c55e;flex:5">0–4 / 抑うつなし</div>
+        <div class="sbar-s" style="background:#84cc16;flex:2">5 / スクリーニング陽性</div>
+        <div class="sbar-s" style="background:#eab308;flex:6">6–12 / 軽〜中等度うつ病</div>
+        <div class="sbar-s" style="background:#ef4444;flex:15">≥13 / 重度うつ病エピソード</div>
+      </div>
+      <div style="margin-top:3px;line-height:1.65;color:#374151">
+        ◆ <strong>≥5点</strong>：スクリーニング陽性（感度優先）。<strong>≥6点</strong>：うつ病エピソード診断的閾値（特異度優先）。<br>
+        ◆ HAMDの代用不可。統合失調症の陰性症状・EPS由来の偽高値を避けるためCDSSを使用すること。<br>
+        ◆ 項目8（自殺念慮）≥2の場合は即日リスク評価・安全確認を行う。<br>
+        ◆ 参考文献：Addington D et al. Schizophr Res. 1990;3:247–251 ｜ cut-off：Addington D et al. Schizophr Res. 1996;19:205–212
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <span>CDSS ｜ Addington D et al., Schizophr Res. 1990;3:247–251 ｜ 公式日本語版：Calgary大学公式サイトより入手可</span>
+    <span>統合失調症 評価スケール集　1 / 7</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PAGE 2: CGI-S / CGI-I + PSP ═══════════════ -->
+<div class="page t-cgi" id="cgi">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">CGI-S / CGI-I　臨床全般印象スケール</div>
+        <div class="hd-en">Clinical Global Impression – Severity / Improvement（Guy W., NIMH, 1976）</div>
+      </div>
+      <div class="hd-right">施行者：担当医（1〜3分）<br>CGI-S：1–7点 ｜ CGI-I：1–7点</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="instr i-cgi">
+      <strong>担当医が記入</strong>します。過去1週間の患者の状態を踏まえて、それぞれ1〜7点で評価してください。<br>
+      CGI-Sは治療介入を知らずに評価すること。CGI-Iはベースラインと比較して改善・悪化の程度を評価します。
+    </div>
+
+    <div class="cgi-grid">
+      <!-- CGI-S -->
+      <div class="cgi-box">
+        <div class="cgi-box-header" style="background:#fff7ed;color:#7c2d12;">
+          CGI-S　重症度評価（Severity）
+          <span style="font-size:9pt;font-weight:400;color:#9ca3af;margin-left:8px">今回得点：</span>
+          <span style="display:inline-block;border:2px solid #ea580c;border-radius:3px;width:28px;height:18px;text-align:center;font-size:11pt;font-weight:800;vertical-align:middle;"></span>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#22c55e;font-size:14pt;">1</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">正常域</span>
+            <div class="cgi-sublabel">精神疾患の症状なし。日常機能に問題なし</div>
+          </div>
+        </div>
+        <div class="cgi-item">
+          <div class="cgi-score-box" style="color:#84cc16;font-size:14pt;">2</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">境界的に病的</span>
+            <div class="cgi-sublabel">症状は疑わしい程度。機能はほぼ正常</div>
+          </div>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#eab308;font-size:14pt;">3</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">軽症</span>
+            <div class="cgi-sublabel">明らかな症状あり。機能障害は軽微</div>
+          </div>
+        </div>
+        <div class="cgi-item">
+          <div class="cgi-score-box" style="color:#f97316;font-size:14pt;">4</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">中等症</span>
+            <div class="cgi-sublabel">症状が日常機能に影響するが管理可能</div>
+          </div>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#ef4444;font-size:14pt;">5</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">重症</span>
+            <div class="cgi-sublabel">日常機能に顕著な障害。密なサポート要</div>
+          </div>
+        </div>
+        <div class="cgi-item">
+          <div class="cgi-score-box" style="color:#dc2626;font-size:14pt;">6</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">かなり重症</span>
+            <div class="cgi-sublabel">激しい症状。自立した生活が困難</div>
+          </div>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#991b1b;font-size:14pt;">7</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">最重症</span>
+            <div class="cgi-sublabel">極めて激しい症状。自傷・他害・保護が必要</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CGI-I -->
+      <div class="cgi-box">
+        <div class="cgi-box-header" style="background:#fff7ed;color:#7c2d12;">
+          CGI-I　改善度評価（Improvement）
+          <span style="font-size:9pt;font-weight:400;color:#9ca3af;margin-left:8px">今回得点：</span>
+          <span style="display:inline-block;border:2px solid #ea580c;border-radius:3px;width:28px;height:18px;text-align:center;font-size:11pt;font-weight:800;vertical-align:middle;"></span>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#15803d;font-size:14pt;">1</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">非常に大きく改善</span>
+            <div class="cgi-sublabel">症状が大幅に消退。機能が著明に回復</div>
+          </div>
+        </div>
+        <div class="cgi-item">
+          <div class="cgi-score-box" style="color:#22c55e;font-size:14pt;">2</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">大きく改善</span>
+            <div class="cgi-sublabel">明らかな症状改善。機能も改善</div>
+          </div>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#84cc16;font-size:14pt;">3</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">最低限改善</span>
+            <div class="cgi-sublabel">わずかな改善。機能変化は乏しい</div>
+          </div>
+        </div>
+        <div class="cgi-item">
+          <div class="cgi-score-box" style="color:#9ca3af;font-size:14pt;">4</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">変化なし</span>
+            <div class="cgi-sublabel">ベースラインから実質的な変化なし</div>
+          </div>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#f97316;font-size:14pt;">5</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">最低限悪化</span>
+            <div class="cgi-sublabel">わずかな悪化。機能への影響は軽微</div>
+          </div>
+        </div>
+        <div class="cgi-item">
+          <div class="cgi-score-box" style="color:#ef4444;font-size:14pt;">6</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">悪化</span>
+            <div class="cgi-sublabel">明らかな症状悪化。機能障害増加</div>
+          </div>
+        </div>
+        <div class="cgi-item" style="background:#f9fafb;">
+          <div class="cgi-score-box" style="color:#991b1b;font-size:14pt;">7</div>
+          <div class="cgi-label">
+            <span style="font-weight:700;">非常に大きく悪化</span>
+            <div class="cgi-sublabel">著しく悪化。緊急対応を要する状態</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scoring" style="margin-bottom:8px;">
+      <b>活用のポイント</b>
+      <div style="margin-top:2px;line-height:1.65;color:#374151">
+        ◆ CGI-Sは<strong>独立した客観的評価</strong>として担当医が記録。毎回の外来で1〜3分で施行可能。<br>
+        ◆ CGI-I 1〜2点：治療反応あり。CGI-I 3点：最低限改善（臨床的意義は限定的）。CGI-I ≥5点：治療変更を検討。<br>
+        ◆ PANSSと組み合わせることで治療反応のクロスバリデーションが可能。
+      </div>
+    </div>
+
+    <!-- PSP -->
+    <div class="divider">
+      <div class="hd" style="border-bottom:2.5px solid #0f766e;padding-bottom:5px;margin-bottom:6px;">
+        <div>
+          <div class="hd-name" style="color:#134e4a;font-size:12pt;">PSP　個人的・社会的機能評価スケール</div>
+          <div class="hd-en">Personal and Social Performance Scale（Morosini et al., 2000）　スコア：1〜100点</div>
+        </div>
+        <div class="hd-right">施行者：担当医（5〜20分）<br>PSP得点：<span style="display:inline-block;border:2px solid #0f766e;border-radius:3px;width:34px;height:18px;text-align:center;font-size:11pt;font-weight:800;vertical-align:middle;margin-left:4px;"></span></div>
+      </div>
+
+      <div class="instr i-obs">
+        過去<strong>1ヶ月</strong>の状態を基に、4つのドメインをそれぞれ a〜f の6段階で評価し、総合的にPSPスコア（1〜100）を算出します。
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th class="tl" style="width:40%">ドメイン</th>
+            <th style="width:26px">a<br>なし</th>
+            <th style="width:26px">b<br>軽微</th>
+            <th style="width:26px">c<br>顕著</th>
+            <th style="width:26px">d<br>高度</th>
+            <th style="width:26px">e<br>重度</th>
+            <th style="width:26px">f<br>最重度</th>
+            <th style="width:29px">判定</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>① 社会的に有用な活動</strong><br><span style="font-size:7pt;color:#6b7280">就労・学業・家事・ボランティアなど</span></td>
+            <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+          </tr>
+          <tr>
+            <td><strong>② 個人的・社会的関係</strong><br><span style="font-size:7pt;color:#6b7280">家族・友人・地域社会との関係性</span></td>
+            <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+          </tr>
+          <tr>
+            <td><strong>③ 自己保健</strong><br><span style="font-size:7pt;color:#6b7280">身だしなみ・衛生・食事・安全管理</span></td>
+            <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+          </tr>
+          <tr>
+            <td><strong>④ 攪乱・攻撃的行動</strong>（逆転項目）<br><span style="font-size:7pt;color:#6b7280">他者・自己への問題行動・攻撃性</span></td>
+            <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="font-size:8pt;background:#f0fdfa;border:1px solid #99f6e4;border-radius:4px;padding:4px 9px;">
+        <strong>PSPスコア換算：</strong>
+        91〜100 優秀な機能　｜　71〜90 軽微な障害のみ　｜　51〜70 明らかな障害（自立可）　｜　31〜50 顕著な障害（部分支援）　｜　1〜30 重度障害（集中支援・入院）
+      </div>
+    </div>
+
+  </div>
+  <div class="ft">
+    <span>CGI ｜ Guy W. ECDEU Assessment Manual. NIMH, 1976 ｜ PSP ｜ Morosini PL et al., Acta Psychiatr Scand. 2000;101:323–329</span>
+    <span>統合失調症 評価スケール集　2 / 7</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PAGE 3: DAI-10 ═══════════════ -->
+<div class="page t-dai" id="dai">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">DAI-10　薬物態度尺度 10項目版</div>
+        <div class="hd-en">Drug Attitude Inventory – 10 items（Hogan et al., 1983）</div>
+      </div>
+      <div class="hd-right">形式：患者自記式（5〜10分）<br>スコア：−10〜+10 ｜ +1以上で服薬態度良好</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="instr i-dai">
+      あなた自身の薬（抗精神病薬）についての考え・気持ちをお聞きします。各文章を読んで、自分の気持ちに<strong>「あてはまる」か「あてはまらない」</strong>を〇で囲んでください。正しい・間違いはありません。正直にお答えください。
+    </div>
+
+    <div style="border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:8px;">
+      <div style="display:grid;grid-template-columns:16px 1fr 56px 56px 40px;background:#f8fafc;padding:4px 6px;font-size:8pt;font-weight:700;border-bottom:1px solid #e2e8f0;gap:3px;align-items:center;">
+        <div style="color:#9ca3af;">#</div>
+        <div>質問文</div>
+        <div style="text-align:center;color:#15803d;">あてはまる</div>
+        <div style="text-align:center;color:#dc2626;">あてはまらない</div>
+        <div style="text-align:center;">得点</div>
+      </div>
+      <div class="dai-item">
+        <div class="dai-n">1</div>
+        <div>薬を飲むと、良いことの方が悪いことより多いと感じる</div>
+        <div class="dai-btn" style="color:#15803d;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#15803d;">はい＝+1</div>
+      </div>
+      <div class="dai-item" style="background:#fafafa;">
+        <div class="dai-n">2</div>
+        <div>薬を飲むと、ぼんやりしてゾンビのような感じがする</div>
+        <div class="dai-btn" style="color:#dc2626;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#dc2626;">はい＝−1</div>
+      </div>
+      <div class="dai-item">
+        <div class="dai-n">3</div>
+        <div>薬は自分の意志で自由に飲んでいる</div>
+        <div class="dai-btn" style="color:#15803d;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#15803d;">はい＝+1</div>
+      </div>
+      <div class="dai-item" style="background:#fafafa;">
+        <div class="dai-n">4</div>
+        <div>薬を飲むと、よりリラックスできる</div>
+        <div class="dai-btn" style="color:#15803d;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#15803d;">はい＝+1</div>
+      </div>
+      <div class="dai-item">
+        <div class="dai-n">5</div>
+        <div>薬を飲むと、疲れてだるい感じがする</div>
+        <div class="dai-btn" style="color:#dc2626;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#dc2626;">はい＝−1</div>
+      </div>
+      <div class="dai-item" style="background:#fafafa;">
+        <div class="dai-n">6</div>
+        <div>気分が悪いときだけ薬を飲む（調子が良ければ飲まない）</div>
+        <div class="dai-btn" style="color:#dc2626;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#dc2626;">はい＝−1</div>
+      </div>
+      <div class="dai-item">
+        <div class="dai-n">7</div>
+        <div>薬を飲むと、より普通（自分らしい）感じがする</div>
+        <div class="dai-btn" style="color:#15803d;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#15803d;">はい＝+1</div>
+      </div>
+      <div class="dai-item" style="background:#fafafa;">
+        <div class="dai-n">8</div>
+        <div>薬によって心や体をコントロールされるのは不自然だと思う</div>
+        <div class="dai-btn" style="color:#dc2626;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#dc2626;">はい＝−1</div>
+      </div>
+      <div class="dai-item">
+        <div class="dai-n">9</div>
+        <div>薬を飲むと、考えがよりはっきりする</div>
+        <div class="dai-btn" style="color:#15803d;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#15803d;">はい＝+1</div>
+      </div>
+      <div class="dai-item" style="background:#fafafa;">
+        <div class="dai-n">10</div>
+        <div>薬を飲み続けることで、病気の悪化を防ぐことができると思う</div>
+        <div class="dai-btn" style="color:#15803d;">○ はい</div>
+        <div class="dai-btn" style="color:#9ca3af;">○ いいえ</div>
+        <div class="dai-dir" style="color:#15803d;">はい＝+1</div>
+      </div>
+    </div>
+
+    <!-- 採点 -->
+    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:5px;padding:6px 12px;margin-bottom:8px;font-size:8.5pt;">
+      <strong>採点方法</strong>：各項目「はい」と回答した場合、右端の指定スコア（+1または−1）を記録し合算。<br>
+      陽性項目（1, 3, 4, 7, 9, 10）：「はい」＝+1点　　陰性項目（2, 5, 6, 8）：「はい」＝−1点<br>
+      <div style="margin-top:4px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div>陽性項目得点（6項目）：_____ 点</div>
+        <div>陰性項目得点（4項目）：_____ 点</div>
+        <div style="font-size:10pt;font-weight:800;">合　計：<span style="display:inline-block;border:2px solid #ca8a04;border-radius:3px;width:36px;height:20px;text-align:center;vertical-align:middle;font-size:12pt;"></span> 点</div>
+      </div>
+    </div>
+
+    <div class="scoring">
+      <b>採点・解釈</b>
+      <div class="sbar">
+        <div class="sbar-s" style="background:#dc2626;flex:10">−10〜−1 / 服薬態度 否定的（アドヒアランス不良リスク）</div>
+        <div class="sbar-s" style="background:#6b7280;flex:1">0 / 中立</div>
+        <div class="sbar-s" style="background:#22c55e;flex:10">+1〜+10 / 服薬態度 良好（治療同盟が確立）</div>
+      </div>
+      <div style="margin-top:3px;line-height:1.65;color:#374151">
+        ◆ <strong>陰性スコア（−1以下）</strong>：面接で服薬に関する認識・副作用・病識を詳細に探索する。<br>
+        ◆ LAI（持続性注射剤）切り替えの検討指標として活用。スコアの縦断的変化でSDMの進捗を評価。<br>
+        ◆ 自記式のため社会的望ましさの影響あり。低スコアでも否定しない姿勢で面接を続けることが重要。
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <span>DAI-10 ｜ Hogan TP et al., Psychol Med. 1983;13:177–183 ｜ DAI-30の短縮版（10項目版）</span>
+    <span>統合失調症 評価スケール集　3 / 7</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PAGE 4: AIMS ═══════════════ -->
+<div class="page t-aims" id="aims">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">AIMS　異常不随意運動スケール</div>
+        <div class="hd-en">Abnormal Involuntary Movement Scale — 遅発性ジスキネジア（TD）モニタリング（NIMH）</div>
+      </div>
+      <div class="hd-right">施行者：医師・訓練済み医療者（5〜10分）<br>各項目 0〜4点　TD基準：Schooler &amp; Kane, 1982</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="proc">
+      <b>【施行手順（必ず順番通りに行う）】</b><br>
+      ① まず患者が何か特異な動きをしているか静かに観察する（口・手・体幹）。<br>
+      ② 「何か口の中が変な感じ・舌が動く感じはありますか？」と確認。義歯は外してもらう。<br>
+      ③ <u>患者に椅子に座らせ、手は膝の上、足は床につけてもらう</u>。10秒間観察。<br>
+      ④ 口を開けてもらい、舌を観察（2回）。<br>
+      ⑤ 両手を前に伸ばして観察（上肢評価）。<br>
+      ⑥ 立たせて全体を観察（体幹・下肢）。
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:17px">#</th>
+          <th class="tl">評価部位・評価ポイント</th>
+          <th style="width:27px">0<br>なし</th>
+          <th style="width:27px">1<br>最小限</th>
+          <th style="width:27px">2<br>軽度</th>
+          <th style="width:27px">3<br>中等度</th>
+          <th style="width:27px">4<br>重度</th>
+          <th style="width:29px">得点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fef9f9;"><td colspan="8" style="font-size:7.5pt;font-weight:700;color:#7f1d1d;padding:3px 6px;">▶ 不随意運動（0〜4点）：身体各部位で最も激しい動きを評価する</td></tr>
+        <tr>
+          <td class="n">1</td>
+          <td><strong>顔面筋</strong>（額・眉・口周囲を除く顔面）<br><span style="font-size:7pt;color:#6b7280">上眼瞼・目周囲の動き、眉の上下動など</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">2</td>
+          <td><strong>口唇・口周囲</strong><br><span style="font-size:7pt;color:#6b7280">すぼめ・まるめ・引っ張り・オフロールなど</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">3</td>
+          <td><strong>顎</strong><br><span style="font-size:7pt;color:#6b7280">咬む・咀嚼動作・側方運動</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">4</td>
+          <td><strong>舌</strong>（口を開けさせて観察）<br><span style="font-size:7pt;color:#6b7280">舌の前突・側方運動・くねり。安静時・口開口時の両方を観察</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">5</td>
+          <td><strong>上肢</strong>（腕・手首・手指）<br><span style="font-size:7pt;color:#6b7280">前腕伸展させ観察。振戦との鑑別：振戦は律動的、TDは不律動的</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">6</td>
+          <td><strong>下肢</strong>（大腿・膝・脚首・足趾）<br><span style="font-size:7pt;color:#6b7280">立位・座位で観察。足の踏み鳴らし・足趾の動き</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">7</td>
+          <td><strong>体幹</strong>（頸部・肩・腰）<br><span style="font-size:7pt;color:#6b7280">頸部の回旋・肩のよじれ・腰の揺れ・後屈など</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr style="background:#fef9f9;"><td colspan="8" style="font-size:7.5pt;font-weight:700;color:#7f1d1d;padding:3px 6px;">▶ 全般的評価（0〜4点）</td></tr>
+        <tr>
+          <td class="n">8</td>
+          <td><strong>不随意運動の全般的重症度</strong><br><span style="font-size:7pt;color:#6b7280">上記1〜7を全体的に見た重症度の評価者全般印象</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">9</td>
+          <td><strong>日常機能への影響（Incapacitation）</strong><br><span style="font-size:7pt;color:#6b7280">不随意運動が社会的・職業的機能に与える障害の程度</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">10</td>
+          <td><strong>患者の自覚・苦悩</strong>（「この動きに気づいていますか？困りますか？」）<br><span style="font-size:7pt;color:#6b7280">患者自身の認識・主観的苦痛を評価</span></td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr style="background:#eff6ff;"><td colspan="8" style="font-size:7.5pt;font-weight:700;color:#1e3a8a;padding:3px 6px;">▶ 歯科的状況（0=なし・1=あり）— 口腔・舌評価の前に確認必須</td></tr>
+        <tr>
+          <td class="n">11</td>
+          <td><strong>現在の義歯・入れ歯の使用</strong>（「入れ歯をしていますか？」）</td>
+          <td class="ck" colspan="2" style="color:#6b7280;font-size:8pt;">0 = なし</td>
+          <td class="ck" colspan="3" style="color:#6b7280;font-size:8pt;">1 = あり</td>
+          <td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">12</td>
+          <td><strong>義歯を外さず評価可能か</strong></td>
+          <td class="ck" colspan="2" style="color:#6b7280;font-size:8pt;">0 = 困難</td>
+          <td class="ck" colspan="3" style="color:#6b7280;font-size:8pt;">1 = 可能</td>
+          <td class="sc"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="scoring">
+      <b>TD診断基準（Schooler &amp; Kane, 1982）</b>
+      <div style="margin-top:3px;line-height:1.65;color:#374151">
+        ◆ <strong>①</strong> 抗精神病薬の累積使用 ≥3ヶ月 　<strong>②</strong> AIMS：1項目以上 ≥3点、または2項目以上 ≥2点（項目1〜7）　<strong>③</strong> 他疾患を除外（ハンチントン病・Wilson病等）<br>
+        ◆ 0〜1点：なし / 2点：軽度（要観察） / 3〜4点：中等〜重度（TD疑い・積極的対応を検討）<br>
+        ◆ <strong>モニタリング頻度</strong>：開始時ベースライン → 以降3〜6ヶ月ごと（クロザピン使用中はより頻回に）
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <span>AIMS ｜ NIMH 1976 ｜ TD診断基準：Schooler NR &amp; Kane JM, Arch Gen Psychiatry. 1982;39:486–487</span>
+    <span>統合失調症 評価スケール集　4 / 7</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PAGE 5: SAS ═══════════════ -->
+<div class="page t-sas" id="sas">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">SAS　シンプソン・アンガス尺度</div>
+        <div class="hd-en">Simpson-Angus Scale — パーキンソニズム・錐体外路症状（EPS）評価（Simpson &amp; Angus, 1970）</div>
+      </div>
+      <div class="hd-right">施行者：医師・訓練済み医療者（約10分）<br>各項目 0〜4点 / 合計 0〜40点 / 平均値 &gt;0.3 でEPS疑い</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="instr i-sas">
+      <strong>施行者が身体診察を行い評価</strong>します。各検査の具体的な手順は下記「施行手順」を参照してください。<br>
+      <strong>0＝正常　1＝軽微（正常の最外縁）　2＝軽度　3＝中等度（明らかな異常）　4＝重度（著しい障害）</strong>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:17px">#</th>
+          <th class="tl">項目・施行手順・評価ポイント</th>
+          <th style="width:27px">0</th>
+          <th style="width:27px">1</th>
+          <th style="width:27px">2</th>
+          <th style="width:27px">3</th>
+          <th style="width:27px">4</th>
+          <th style="width:29px">得点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="n">1</td>
+          <td>
+            <strong>歩行</strong>（廊下を10歩歩いてもらい観察）<br>
+            <span style="font-size:7pt;color:#6b7280">0=正常 1=手の振りわずかに減少 2=歩幅小・体前傾 3=小刻み歩行・ぎこちなさ明らか 4=著しい歩行障害</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">2</td>
+          <td>
+            <strong>腕の落下</strong>（肩越しに持ち上げた腕を自然に落とす）<br>
+            <span style="font-size:7pt;color:#6b7280">0=腕が自由に振り子のように落下 1〜2=落下やや遅め 3=明らかな制動 4=ほぼ落下しない</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">3</td>
+          <td>
+            <strong>肩の揺らし</strong>（患者の後ろに立ち両肩を掴んで前後に揺らす）<br>
+            <span style="font-size:7pt;color:#6b7280">0=自由に揺れる 1=軽度抵抗 2=中等度抵抗 3=かなり硬い 4=ほぼ揺れない</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">4</td>
+          <td>
+            <strong>肘の硬直</strong>（肘を曲げ伸ばし・回旋させ筋緊張を評価）<br>
+            <span style="font-size:7pt;color:#6b7280">0=全く抵抗なし 1=わずかに増加 2=軽度の歯車様抵抗または鉛管様 3=中等度 4=重度の歯車様・鉛管様硬直</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">5</td>
+          <td>
+            <strong>手首の硬直</strong>（手首を屈曲・伸展・回旋させ評価）<br>
+            <span style="font-size:7pt;color:#6b7280">0=正常 1〜2=軽度抵抗 3=中等度 4=重度の手首硬直</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">6</td>
+          <td>
+            <strong>下肢振り子テスト</strong>（椅子端に座り、下肢をぶら下げ自然に揺らす）<br>
+            <span style="font-size:7pt;color:#6b7280">0=振り子のように自由に振れる 2=振幅減少・すぐ止まる 4=全く振れない</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">7</td>
+          <td>
+            <strong>頭部落下テスト</strong>（仰臥位で頭を持ち上げ、素早く放す）<br>
+            <span style="font-size:7pt;color:#6b7280">0=枕に落下する 1〜2=落下がわずかに遅い 4=ゆっくり落下または全く落下しない</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">8</td>
+          <td>
+            <strong>眉間反射</strong>（眉間を1秒間隔で軽く叩き、瞬目反射を評価）<br>
+            <span style="font-size:7pt;color:#6b7280">0=5回以内で反射消退（正常） 1=5〜10回 2=11〜15回 3=16〜20回 4=20回以上・消退しない</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">9</td>
+          <td>
+            <strong>振戦</strong>（上肢・顔面・体幹の安静時振戦を観察）<br>
+            <span style="font-size:7pt;color:#6b7280">0=なし 1=軽微 2=軽度（安静時） 3=中等度（機能障害あり） 4=重度</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr>
+          <td class="n">10</td>
+          <td>
+            <strong>流涎</strong>（面接中の唾液の流れを観察、または口腔内を確認）<br>
+            <span style="font-size:7pt;color:#6b7280">0=なし 1=軽度（舌が湿っている） 2=中等度（唾液が口からにじむ） 3=重度 4=著しい流涎</span>
+            <br><span style="font-size:7pt;color:#db2777;font-weight:600;">※ アカシジアはBARSで別途評価すること。</span>
+          </td>
+          <td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td>
+        </tr>
+        <tr class="total-r">
+          <td colspan="2" style="text-align:right;padding-right:10px;font-size:8.5pt">合計得点（0〜40点）</td>
+          <td colspan="5"></td>
+          <td class="sc" style="border:2px solid #c2410c !important;font-size:11pt"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;padding:4px 9px;font-size:8pt;margin-bottom:5px;">
+      <strong>平均値 ＝ 合計点 ÷ 10 ＝ </strong>
+      <span style="display:inline-block;border:1.5px solid #c2410c;border-radius:3px;width:36px;height:18px;text-align:center;font-size:11pt;font-weight:800;vertical-align:middle;margin:0 4px;"></span>
+      <strong>/ 4　　EPS判定基準：平均値 &gt;0.3 でEPS「あり」疑い</strong>
+    </div>
+
+    <div class="scoring">
+      <b>採点・解釈</b>
+      <div style="margin-top:3px;line-height:1.65;color:#374151">
+        ◆ <strong>平均値 &gt;0.3</strong>（合計 &gt;3）：EPS疑い（感度高め・特異度やや低い）。<strong>0.65以上</strong>でより特異的（Janno et al.）。<br>
+        ◆ 抗パーキンソン薬追加・抗精神病薬減量・SGA変更を検討。パーキンソン病との鑑別（片側性・安静時振戦・嗅覚障害）。<br>
+        ◆ EPS評価にはAIMS（TD）・BARS（アカシジア）を必ず組み合わせること。
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <span>SAS ｜ Simpson GM &amp; Angus JWS, Acta Psychiatr Scand Suppl. 1970;212:11–19</span>
+    <span>統合失調症 評価スケール集　5 / 7</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PAGE 6: BARS ═══════════════ -->
+<div class="page t-bars" id="bars">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">BARS　バーンズアカシジア評価スケール</div>
+        <div class="hd-en">Barnes Akathisia Rating Scale（Barnes TR, 1989）</div>
+      </div>
+      <div class="hd-right">施行者：医師・訓練済み医療者（5〜10分）<br>4ドメイン評価 ｜ 全般評価 ≥2 でアカシジア確診</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="instr i-bars">
+      半構造化面接で主観的症状を確認後、<strong>観察と面接の両方</strong>を踏まえて評価します。「じっとしていられない感覚がありますか？足を動かしたい衝動はありますか？」と直接問いかけてください。
+    </div>
+
+    <div class="instr i-obs" style="margin-bottom:6px;font-size:8pt;">
+      ⚠️ <strong>アカシジアの重要性</strong>：主観的な焦燥感（「じっとしていられない」）は抑うつ・精神症状悪化と誤診されやすい。見逃した場合、自殺念慮との関連が報告されている。必ずBARSによる評価を行うこと。
+    </div>
+
+    <!-- Section 1: 客観的 -->
+    <div style="background:#fdf2f8;border:1.5px solid #f9a8d4;border-radius:6px;padding:6px 10px;margin-bottom:6px;">
+      <div style="font-weight:700;color:#831843;margin-bottom:4px;font-size:9pt;">① 客観的アカシジア（観察評価）　0〜3点</div>
+      <table>
+        <thead>
+          <tr style="background:transparent;">
+            <th style="width:28px;background:#fdf2f8;border:1px solid #f9a8d4;color:#831843;">得点</th>
+            <th class="tl" style="background:#fdf2f8;border:1px solid #f9a8d4;color:#831843;">観察上の特徴</th>
+            <th style="width:30px;background:#fdf2f8;border:1px solid #f9a8d4;color:#831843;">選択</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="ck" style="font-weight:700;">0</td><td style="border:1px solid #f9a8d4;">不随意運動なし</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+          <tr style="background:#fafafa;"><td class="ck" style="font-weight:700;">1</td><td style="border:1px solid #f9a8d4;">坐位・立位で正常範囲を超えた動き（足の上げ下ろし・体重移動・身もだえなど）</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+          <tr><td class="ck" style="font-weight:700;">2</td><td style="border:1px solid #f9a8d4;">頻繁な動き・しばしば立ち上がる・面接中も静止が困難</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+          <tr style="background:#fafafa;"><td class="ck" style="font-weight:700;">3</td><td style="border:1px solid #f9a8d4;">持続的な動き・ほぼ常に歩き回るか足踏み・1分以上じっとしていられない</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+        </tbody>
+      </table>
+      <div style="text-align:right;margin-top:3px;font-size:8.5pt;font-weight:700;color:#831843;">客観的アカシジア得点：<span style="display:inline-block;border:2px solid #db2777;border-radius:3px;width:28px;height:18px;text-align:center;font-size:11pt;font-weight:800;vertical-align:middle;color:#000;"></span></div>
+    </div>
+
+    <!-- Section 2+3: 主観的 -->
+    <div style="background:#fff0f6;border:1.5px solid #f9a8d4;border-radius:6px;padding:6px 10px;margin-bottom:6px;">
+      <div style="font-weight:700;color:#831843;margin-bottom:4px;font-size:9pt;">② 主観的アカシジア（面接評価）</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <!-- A: 焦燥感 -->
+        <div>
+          <div style="font-size:8pt;font-weight:700;margin-bottom:3px;color:#9d174d;">A. 焦燥感・静座不能の自覚　0〜3点</div>
+          <table>
+            <tbody>
+              <tr><td style="width:26px;text-align:center;font-weight:700;border:1px solid #f9a8d4;">0</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">焦燥感なし</td><td class="ck" style="width:24px;border:1px solid #f9a8d4;">○</td></tr>
+              <tr style="background:#fafafa;"><td style="text-align:center;font-weight:700;border:1px solid #f9a8d4;">1</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">軽度（足や体を動かしたい衝動）</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+              <tr><td style="text-align:center;font-weight:700;border:1px solid #f9a8d4;">2</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">中等度（明確な焦燥感・内的不穏）</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+              <tr style="background:#fafafa;"><td style="text-align:center;font-weight:700;border:1px solid #f9a8d4;">3</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">重度（じっとしていられない強烈な不穏）</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+            </tbody>
+          </table>
+          <div style="text-align:right;margin-top:2px;font-size:8pt;font-weight:700;color:#831843;">A得点：<span style="display:inline-block;border:1.5px solid #db2777;border-radius:3px;width:24px;height:16px;text-align:center;vertical-align:middle;color:#000;"></span></div>
+        </div>
+        <!-- B: 苦悩 -->
+        <div>
+          <div style="font-size:8pt;font-weight:700;margin-bottom:3px;color:#9d174d;">B. 苦悩・苦痛の程度　0〜3点</div>
+          <table>
+            <tbody>
+              <tr><td style="width:26px;text-align:center;font-weight:700;border:1px solid #f9a8d4;">0</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">苦悩なし</td><td class="ck" style="width:24px;border:1px solid #f9a8d4;">○</td></tr>
+              <tr style="background:#fafafa;"><td style="text-align:center;font-weight:700;border:1px solid #f9a8d4;">1</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">軽度の苦悩・受け入れられる</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+              <tr><td style="text-align:center;font-weight:700;border:1px solid #f9a8d4;">2</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">中等度の苦悩・日常生活に影響</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+              <tr style="background:#fafafa;"><td style="text-align:center;font-weight:700;border:1px solid #f9a8d4;">3</td><td style="font-size:8pt;border:1px solid #f9a8d4;padding:2px 4px;">重度の苦悩・著しい苦痛・耐えられない</td><td class="ck" style="border:1px solid #f9a8d4;">○</td></tr>
+            </tbody>
+          </table>
+          <div style="text-align:right;margin-top:2px;font-size:8pt;font-weight:700;color:#831843;">B得点：<span style="display:inline-block;border:1.5px solid #db2777;border-radius:3px;width:24px;height:16px;text-align:center;vertical-align:middle;color:#000;"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: 全般 -->
+    <div style="background:#fdf2f8;border:2px solid #db2777;border-radius:6px;padding:6px 10px;margin-bottom:6px;">
+      <div style="font-weight:700;color:#831843;margin-bottom:4px;font-size:9pt;">③ 全般的臨床評価（Global Clinical Assessment of Akathisia）　0〜5点</div>
+      <table>
+        <tbody>
+          <tr>
+            <td style="width:26px;text-align:center;font-weight:800;font-size:13pt;color:#22c55e;border:1px solid #f9a8d4;">0</td>
+            <td style="border:1px solid #f9a8d4;padding:2px 6px;font-size:8.5pt;"><strong>アカシジアなし</strong>：客観的・主観的いずれの特徴もない</td>
+            <td class="ck" style="width:24px;border:1px solid #f9a8d4;">○</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="text-align:center;font-weight:800;font-size:13pt;color:#84cc16;border:1px solid #f9a8d4;">1</td>
+            <td style="border:1px solid #f9a8d4;padding:2px 6px;font-size:8.5pt;"><strong>疑わしいアカシジア / 偽性アカシジア</strong>：客観的な動きはあるが主観的苦悩なし（偽性）</td>
+            <td class="ck" style="border:1px solid #f9a8d4;">○</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:800;font-size:13pt;color:#eab308;border:1px solid #f9a8d4;">2</td>
+            <td style="border:1px solid #f9a8d4;padding:2px 6px;font-size:8.5pt;"><strong>軽度アカシジア</strong>：客観的動き＋主観的焦燥感あり、機能障害は軽微</td>
+            <td class="ck" style="border:1px solid #f9a8d4;">○</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="text-align:center;font-weight:800;font-size:13pt;color:#f97316;border:1px solid #f9a8d4;">3</td>
+            <td style="border:1px solid #f9a8d4;padding:2px 6px;font-size:8.5pt;"><strong>中等度アカシジア</strong>：顕著な焦燥感・苦悩。日常機能に支障</td>
+            <td class="ck" style="border:1px solid #f9a8d4;">○</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;font-weight:800;font-size:13pt;color:#ef4444;border:1px solid #f9a8d4;">4</td>
+            <td style="border:1px solid #f9a8d4;padding:2px 6px;font-size:8.5pt;"><strong>重度アカシジア</strong>：持続的で激しい苦悩。静止ほぼ不可能</td>
+            <td class="ck" style="border:1px solid #f9a8d4;">○</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="text-align:center;font-weight:800;font-size:13pt;color:#991b1b;border:1px solid #f9a8d4;">5</td>
+            <td style="border:1px solid #f9a8d4;padding:2px 6px;font-size:8.5pt;"><strong>重篤アカシジア</strong>：極度の苦悩。自傷・希死念慮に関連する可能性</td>
+            <td class="ck" style="border:1px solid #f9a8d4;">○</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="text-align:right;margin-top:3px;font-size:9pt;font-weight:700;color:#831843;">全般的臨床評価（0〜5）：<span style="display:inline-block;border:2px solid #db2777;border-radius:3px;width:28px;height:20px;text-align:center;font-size:13pt;font-weight:800;vertical-align:middle;color:#000;"></span></div>
+    </div>
+
+    <div class="scoring">
+      <b>判定・対応</b>
+      <div style="margin-top:3px;line-height:1.65;color:#374151">
+        ◆ <strong>全般評価 ≥2</strong>（軽度以上アカシジア）：① 抗精神病薬減量、② β遮断薬（プロプラノロール）、③ BZD（ロラゼパム）、④ クエチアピン等SGA変更を検討。<br>
+        ◆ <strong>全般評価 1（偽性アカシジア）</strong>：主観的苦悩なし。客観的動きのみ。経過観察。<br>
+        ◆ 全般評価 ≥4 かつ自殺念慮を伴う場合は緊急対応（薬剤変更・緊急受診）を優先する。
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <span>BARS ｜ Barnes TR, Br J Psychiatry. 1989;154:672–676</span>
+    <span>統合失調症 評価スケール集　6 / 7</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PAGE 7: PANSS 採点シート ═══════════════ -->
+<div class="page t-panss" id="panss">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">PANSS　陽性・陰性症状評価尺度　採点シート</div>
+        <div class="hd-en">Positive and Negative Syndrome Scale（Kay SR et al., 1987）</div>
+      </div>
+      <div class="hd-right">施行者：訓練を受けた臨床家（面接40〜50分）<br>各項目 1〜7点 ｜ 合計 30〜210点</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="instr i-panss">
+      半構造化面接・観察・家族からの情報を総合して採点します。各項目 <strong>1（なし）〜7（極重度）</strong>で評価。
+      必ず公式マニュアル（Kay, Opler, Fiszbein）の行動アンカーを参照してください。
+    </div>
+
+    <!-- 採点アンカーバー -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px;font-size:7pt;text-align:center;">
+      <div style="background:#f3f4f6;border-radius:3px;padding:2px;"><span style="font-weight:800;font-size:9pt;">1</span><br>なし</div>
+      <div style="background:#f3f4f6;border-radius:3px;padding:2px;"><span style="font-weight:800;font-size:9pt;">2</span><br>疑い/境界</div>
+      <div style="background:#fef9c3;border-radius:3px;padding:2px;"><span style="font-weight:800;font-size:9pt;">3</span><br>軽度</div>
+      <div style="background:#fed7aa;border-radius:3px;padding:2px;"><span style="font-weight:800;font-size:9pt;">4</span><br>中等度</div>
+      <div style="background:#fca5a5;border-radius:3px;padding:2px;"><span style="font-weight:800;font-size:9pt;">5</span><br>中〜重度</div>
+      <div style="background:#f87171;border-radius:3px;padding:2px;color:#7f1d1d;"><span style="font-weight:800;font-size:9pt;">6</span><br>重度</div>
+      <div style="background:#dc2626;border-radius:3px;padding:2px;color:white;"><span style="font-weight:800;font-size:9pt;">7</span><br>極重度</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:5px;">
+
+      <!-- P尺度 -->
+      <div style="border:1.5px solid #fca5a5;border-radius:6px;overflow:hidden;">
+        <div style="background:#fef2f2;padding:4px 8px;font-weight:700;font-size:8.5pt;color:#7f1d1d;border-bottom:1.5px solid #fca5a5;">
+          P 陽性尺度（7〜49点）
+          <span style="float:right;">計：<span style="display:inline-block;border:1.5px solid #dc2626;border-radius:3px;width:28px;height:16px;vertical-align:middle;"></span></span>
+        </div>
+        <table class="compact">
+          <tbody>
+            <tr><td class="n">P1</td><td>妄想<br><span style="font-size:6.5pt;color:#6b7280">被害・誇大・関係・支配妄想</span></td><td class="sc"></td></tr>
+            <tr><td class="n">P2</td><td>概念の統合解体<br><span style="font-size:6.5pt;color:#6b7280">連合弛緩・観念奔逸・脱線</span></td><td class="sc"></td></tr>
+            <tr><td class="n">P3</td><td>幻覚的行動<br><span style="font-size:6.5pt;color:#6b7280">命令幻声・幻視・幻触への反応</span></td><td class="sc"></td></tr>
+            <tr><td class="n">P4</td><td>興奮<br><span style="font-size:6.5pt;color:#6b7280">多動・過活動・過剰な精力</span></td><td class="sc"></td></tr>
+            <tr><td class="n">P5</td><td>誇大性<br><span style="font-size:6.5pt;color:#6b7280">誇大的・高揚した自己評価</span></td><td class="sc"></td></tr>
+            <tr><td class="n">P6</td><td>猜疑心・被害感<br><span style="font-size:6.5pt;color:#6b7280">不信感・妄想的被害感</span></td><td class="sc"></td></tr>
+            <tr><td class="n">P7</td><td>敵意<br><span style="font-size:6.5pt;color:#6b7280">言語的・身体的攻撃性</span></td><td class="sc"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- N尺度 -->
+      <div style="border:1.5px solid #93c5fd;border-radius:6px;overflow:hidden;">
+        <div style="background:#eff6ff;padding:4px 8px;font-weight:700;font-size:8.5pt;color:#1e3a8a;border-bottom:1.5px solid #93c5fd;">
+          N 陰性尺度（7〜49点）
+          <span style="float:right;">計：<span style="display:inline-block;border:1.5px solid #1d4ed8;border-radius:3px;width:28px;height:16px;vertical-align:middle;"></span></span>
+        </div>
+        <table class="compact">
+          <tbody>
+            <tr><td class="n">N1</td><td>情動の鈍麻<br><span style="font-size:6.5pt;color:#6b7280">感情表現減少・顔の表情の乏しさ</span></td><td class="sc"></td></tr>
+            <tr><td class="n">N2</td><td>情緒的引きこもり<br><span style="font-size:6.5pt;color:#6b7280">対人関係への興味喪失</span></td><td class="sc"></td></tr>
+            <tr><td class="n">N3</td><td>ラポール障害<br><span style="font-size:6.5pt;color:#6b7280">面接者との疎通性の欠如</span></td><td class="sc"></td></tr>
+            <tr><td class="n">N4</td><td>受動的社会的退縮<br><span style="font-size:6.5pt;color:#6b7280">社会的活動からの撤退</span></td><td class="sc"></td></tr>
+            <tr><td class="n">N5</td><td>抽象的思考の困難<br><span style="font-size:6.5pt;color:#6b7280">ことわざ理解・抽象概念の処理</span></td><td class="sc"></td></tr>
+            <tr><td class="n">N6</td><td>会話の自発性欠如<br><span style="font-size:6.5pt;color:#6b7280">会話量の減少・アロジア</span></td><td class="sc"></td></tr>
+            <tr><td class="n">N7</td><td>常同的思考<br><span style="font-size:6.5pt;color:#6b7280">思考の硬直性・固定した思考</span></td><td class="sc"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- G尺度 -->
+      <div style="border:1.5px solid #c4b5fd;border-radius:6px;overflow:hidden;">
+        <div style="background:#f5f3ff;padding:4px 8px;font-weight:700;font-size:8.5pt;color:#4c1d95;border-bottom:1.5px solid #c4b5fd;">
+          G 一般精神病理（16〜112点）
+          <span style="float:right;">計：<span style="display:inline-block;border:1.5px solid #7c3aed;border-radius:3px;width:28px;height:16px;vertical-align:middle;"></span></span>
+        </div>
+        <table class="compact">
+          <tbody>
+            <tr><td class="n">G1</td><td>身体的訴え</td><td class="sc"></td></tr>
+            <tr><td class="n">G2</td><td>不安</td><td class="sc"></td></tr>
+            <tr><td class="n">G3</td><td>罪責感</td><td class="sc"></td></tr>
+            <tr><td class="n">G4</td><td>緊張</td><td class="sc"></td></tr>
+            <tr><td class="n" style="color:#dc2626;font-weight:700;">G5</td><td>衒奇症・作様姿勢 <span style="font-size:6pt;color:#dc2626;">★寛解</span></td><td class="sc"></td></tr>
+            <tr><td class="n">G6</td><td>抑うつ気分</td><td class="sc"></td></tr>
+            <tr><td class="n">G7</td><td>精神運動性遅滞</td><td class="sc"></td></tr>
+            <tr><td class="n">G8</td><td>非協力性</td><td class="sc"></td></tr>
+            <tr><td class="n" style="color:#dc2626;font-weight:700;">G9</td><td>思考内容の異常 <span style="font-size:6pt;color:#dc2626;">★寛解</span></td><td class="sc"></td></tr>
+            <tr><td class="n">G10</td><td>見当識の欠如</td><td class="sc"></td></tr>
+            <tr><td class="n">G11</td><td>注意の障害</td><td class="sc"></td></tr>
+            <tr><td class="n">G12</td><td>判断力・病識の欠如</td><td class="sc"></td></tr>
+            <tr><td class="n">G13</td><td>意志障害</td><td class="sc"></td></tr>
+            <tr><td class="n">G14</td><td>衝動制御の障害</td><td class="sc"></td></tr>
+            <tr><td class="n">G15</td><td>先取り</td><td class="sc"></td></tr>
+            <tr><td class="n">G16</td><td>能動的社会回避</td><td class="sc"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 合計・寛解判定 -->
+    <div style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:6px;padding:6px 10px;margin-bottom:5px;font-size:8.5pt;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:5px;">
+        <div style="text-align:center;">
+          <div style="font-size:7.5pt;color:#6b7280;">P尺度合計</div>
+          <div style="border:2px solid #dc2626;border-radius:4px;height:22px;font-size:12pt;font-weight:800;color:#dc2626;display:flex;align-items:center;justify-content:center;"></div>
+          <div style="font-size:6.5pt;color:#6b7280;margin-top:1px;">/ 49点</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:7.5pt;color:#6b7280;">N尺度合計</div>
+          <div style="border:2px solid #1d4ed8;border-radius:4px;height:22px;font-size:12pt;font-weight:800;color:#1d4ed8;display:flex;align-items:center;justify-content:center;"></div>
+          <div style="font-size:6.5pt;color:#6b7280;margin-top:1px;">/ 49点</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:7.5pt;color:#6b7280;">G尺度合計</div>
+          <div style="border:2px solid #7c3aed;border-radius:4px;height:22px;font-size:12pt;font-weight:800;color:#7c3aed;display:flex;align-items:center;justify-content:center;"></div>
+          <div style="font-size:6.5pt;color:#6b7280;margin-top:1px;">/ 112点</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:7.5pt;font-weight:700;color:#1e3a8a;">PANSS 合計</div>
+          <div style="border:3px solid #1d4ed8;border-radius:4px;height:24px;font-size:14pt;font-weight:800;color:#1e3a8a;display:flex;align-items:center;justify-content:center;background:white;"></div>
+          <div style="font-size:6.5pt;color:#6b7280;margin-top:1px;">/ 210点</div>
+        </div>
+      </div>
+      <div style="font-size:7.5pt;line-height:1.6;color:#374151;">
+        <strong>寛解基準（Andreasen 2005）</strong>：P1, P2, P3, N1, N4, N6, G5, G9 の8項目すべて ≤3点 かつ <strong>6ヶ月以上</strong> 維持。<br>
+        上記8項目の確認：P1___ P2___ P3___ N1___ N4___ N6___ G5___ G9___　→ 全て ≤3？ □ はい（寛解）　□ いいえ（非寛解）
+      </div>
+    </div>
+
+    <div class="scoring">
+      <b>PANSS合計点の重症度目安</b>
+      <div class="sbar">
+        <div class="sbar-s" style="background:#22c55e;flex:28">30–58 / 症状軽微・寛解域</div>
+        <div class="sbar-s" style="background:#eab308;flex:16">59–74 / 軽〜中等度</div>
+        <div class="sbar-s" style="background:#f97316;flex:24">75–99 / 中等〜重度</div>
+        <div class="sbar-s" style="background:#ef4444;flex:111">≥100 / 重度〜極重度（急性期対応）</div>
+      </div>
+      <div style="margin-top:3px;line-height:1.65;color:#374151">
+        ◆ <strong>治療反応</strong>：ベースラインからの合計点 <strong>≥20〜30%減少</strong>（試験プロトコルによる）。<br>
+        ◆ <strong>施行上の注意</strong>：採点は観察・面接・記録の統合評価。必ず公式マニュアルのアンカーを参照すること。<br>
+        ◆ 参考文献：Kay SR et al. Schizophr Bull. 1987;13:261–276 ｜ 寛解基準：Andreasen NC et al. Am J Psychiatry. 2005;162:441–449
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <span>PANSS ｜ Kay SR et al., Schizophr Bull. 1987;13:261–276 ｜ 日本語版：日本精神科評価尺度研究会（JSPRS）</span>
+    <span>統合失調症 評価スケール集　7 / 7</span>
+  </div>
+</div>
+
+</body>
+</html>

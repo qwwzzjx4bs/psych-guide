@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神保健指定医 資格取得ガイド - 専攻医1年目から始める完全ロードマップ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+    }
+
+    .header-gradient {
+      background: var(--psych-gradient);
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .term-badge {
+      display: inline-block;
+      background: #1e3a5f;
+      color: white;
+      padding: 0.1rem 0.6rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 0.25rem;
+    }
+
+    /* タイムラインスタイル */
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      padding-bottom: 2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0.625rem;
+      top: 2rem;
+      bottom: 0;
+      width: 2px;
+      background: #e2e8f0;
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 0;
+      top: 0.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ケースレポートカード */
+    .case-card {
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .case-f0 { background: #f0f9ff; border-color: #0ea5e9; }
+    .case-f1 { background: #fdf4ff; border-color: #a855f7; }
+    .case-f2 { background: #fef3c7; border-color: #f59e0b; }
+    .case-f3 { background: #f0fdf4; border-color: #22c55e; }
+    .case-f4 { background: #fff1f2; border-color: #fb7185; }
+
+    /* 書類カード */
+    .doc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.625rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* 用語カード */
+    .term-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* 年表バッジ */
+    .year-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--psych-gradient);
+      color: white;
+      font-weight: 700;
+      padding: 0.25rem 0.875rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+
+    /* TOC */
+    .toc {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 50;
+      min-width: 150px;
+    }
+    @media (max-width: 1280px) {
+      .toc { display: none; }
+    }
+
+    /* 要件バー */
+    .req-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1.25rem;
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .req-bar-blue { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .req-bar-teal { background: #f0fdfa; border: 1px solid #99f6e4; }
+    .req-bar-purple { background: #faf5ff; border: 1px solid #e9d5ff; }
+    .req-bar-orange { background: #fff7ed; border: 1px solid #fed7aa; }
+
+    /* 審査ステップ */
+    .review-step {
+      flex: 1;
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      border: 2px solid #e2e8f0;
+      text-align: center;
+      position: relative;
+    }
+
+    /* 注意アコーディオン */
+    details summary {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .badge-must {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .badge-optional {
+      background: linear-gradient(135deg, #6b7280, #9ca3af);
+      color: white;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .badge-new {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- フローティング目次 -->
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1.5">
+      <li><a href="#what" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">指定医とは</a></li>
+      <li><a href="#terms" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">用語解説</a></li>
+      <li><a href="#timeline" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">全体タイムライン</a></li>
+      <li><a href="#requirements" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">取得要件</a></li>
+      <li><a href="#casereport" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">ケースレポート</a></li>
+      <li><a href="#documents" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">申請書類</a></li>
+      <li><a href="#review" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">審査プロセス</a></li>
+      <li><a href="#renewal" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">更新・義務</a></li>
+      <li><a href="#reform" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">制度改革</a></li>
+      <li><a href="#tips" class="text-sm text-gray-600 hover:text-blue-700 block leading-tight">専攻医へのTips</a></li>
+    </ul>
+  </nav>
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-8 md:py-12">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-check" class="w-6 h-6"></i>
+        </div>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科 資格取得ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold leading-tight">精神保健指定医<br class="md:hidden">資格取得ガイド</h1>
+      <p class="mt-2 text-lg opacity-85">専攻医1年目から始める完全ロードマップ</p>
+      <div class="flex gap-2 mt-4 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1.5">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i> 精神保健福祉法 第18条
+        </span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1.5">
+          <i data-lucide="file-text" class="w-3.5 h-3.5"></i> 5症例5分野
+        </span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1.5">
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i> 最短5年
+        </span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1.5">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> 5年ごと更新
+        </span>
+      </div>
+      <div class="mt-4 p-3 bg-white/10 rounded-lg text-sm opacity-90">
+        <span class="font-semibold">対象読者：</span>専攻医1年目の精神科医師。専門用語には随時解説を付けています。
+      </div>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- ① 指定医とは何か -->
+    <div class="section-card" id="what">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-check" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">精神保健指定医とは？</h2>
+          <p class="text-gray-500 text-sm">精神保健及び精神障害者福祉に関する法律（精神保健福祉法）第18条</p>
+        </div>
+      </div>
+
+      <p class="text-gray-700 mb-4 leading-relaxed">
+        精神保健指定医（以下「指定医」）とは、<strong>厚生労働大臣から指定を受けた精神科医師</strong>のことです。
+        精神科専門医（学会認定）とは別の<strong>法律に基づく公的な資格</strong>で、患者さんの意思に反した入院や行動制限を判断する際に、法的に必要とされます。
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="gavel" class="w-5 h-5 text-slate-600"></i>
+            <h3 class="font-bold text-slate-800">主な権限（できること）</h3>
+          </div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span><strong>医療保護入院</strong>の判定・診察</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span><strong>措置入院</strong>の要否の診察（2名の指定医が必要）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span>入院継続の要否の判定</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span><strong>身体的拘束</strong>の指示（時間によらず全例）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span><strong>12時間超の隔離</strong>の指示（法第36条第3項）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span>移送の要否の診察</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="user-check" class="w-5 h-5 text-amber-700"></i>
+            <h3 class="font-bold text-amber-800">精神科専門医との違い</h3>
+          </div>
+          <div class="space-y-3 text-sm">
+            <div class="bg-white rounded-lg p-3 border border-amber-100">
+              <div class="font-bold text-amber-800 mb-1">精神科専門医（学会認定）</div>
+              <div class="text-gray-600">日本精神神経学会が認定。診断・治療の専門性を証明。<br>法的権限なし。</div>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-amber-100">
+              <div class="font-bold text-blue-800 mb-1">精神保健指定医（国の指定）</div>
+              <div class="text-gray-600">厚生労働大臣が指定。<strong>法律上の判断権限あり</strong>。<br>公的権限を行使するため、公務員に準ずる高い倫理的責任が求められる。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-5 h-5 text-blue-700 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-blue-900">
+            <strong>指定医の倫理的責任について</strong><br>
+            指定医は措置入院など行政処分に関わる公的判断を担います。「みなし公務員」という慣用表現が使われることもありますが、精神保健福祉法上の明文規定ではなく、公的権限行使に伴う高い倫理的責任・職業的自律性を求める趣旨で語られる表現です。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 用語解説 -->
+    <div class="section-card" id="terms">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="book-open" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">専門用語ミニ辞典</h2>
+          <p class="text-gray-500 text-sm">専攻医1年目が知っておくべきキーワード</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">措置入院</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            本人の同意がなくても行える入院形態のひとつ。<strong>自傷・他害のおそれがある</strong>と2名の指定医が診察で認めた場合、都道府県知事の命令で行う。法的強制力が最も強い入院形態。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">医療保護入院</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            本人の同意がなくても、<strong>1名の指定医の判定</strong>と<strong>家族等の同意</strong>があれば行える入院形態。日常臨床で最も多く使われる非自発的入院。「家族等」とは配偶者・親権者・扶養義務者・後見人等（2013年に保護者制度廃止後に整備）。家族等がいない場合は<strong>市区町村長の同意</strong>による。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">任意入院</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            患者本人が同意して入院する形態。精神科入院の中で最も多い。原則として本人が望めばいつでも退院できる。ただし<strong>例外あり</strong>：指定医が診察し入院継続が必要と認めた場合、<strong>72時間以内は退院を制限できる</strong>（精神保健福祉法第21条第3項）。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">ケースレポート</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            指定医申請に必要な<strong>症例報告書</strong>。自分が実際に担当した患者を、決められた書式（様式3-1）に従って詳細に記述する。症例の実在性・自分の関与の証明が求められる。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">指導医</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            ケースレポート作成において、あなたの症例経験を法的・実務的に担保する<strong>すでに指定医である上司・先輩医師</strong>。2018年の不正問題後、指導医の要件が強化された。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">口頭試問</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            書類審査通過後に行われる<strong>面接形式の審査</strong>。2019年7月以降の申請から本格導入。ケースレポートの内容について、実際に担当したかを確認する目的もある。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">登録研修機関</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            厚生労働大臣が指定した、指定医の研修を行う機関。申請前に<strong>必ずこの研修を修了</strong>する必要がある（法18条1項4号）。研修は定員制なので早めに予約が必要。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">ICD-10 F分類</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            WHO（世界保健機関）の疾患分類。精神疾患は「F」で始まるコード（F0〜F9）で分類される。ケースレポートでは<strong>各Fカテゴリから1症例ずつ</strong>提出する必要がある。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">緊急措置入院</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            急を要し通常の措置入院手続きができない場合に、<strong>指定医1名の診察</strong>で<strong>72時間以内</strong>に限り行える入院（精神保健福祉法第29条の2）。通常の措置入院（指定医2名）の補完制度。実務で頻繁に関与する。
+          </p>
+        </div>
+
+        <div class="term-card">
+          <div class="flex items-start gap-2 mb-1">
+            <span class="term-badge">応急入院</span>
+          </div>
+          <p class="text-sm text-gray-700 leading-relaxed">
+            急を要し家族等の同意が得られない場合に、<strong>指定医の判断</strong>で<strong>72時間以内</strong>に限り行える入院（法第33条の7）。応急入院指定病院でのみ実施可能。指定医が関与する非自発的入院の一形態。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 全体タイムライン -->
+    <div class="section-card" id="timeline">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="milestone" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">資格取得 全体タイムライン</h2>
+          <p class="text-gray-500 text-sm">医師免許取得から指定医証交付まで（最短5年）</p>
+        </div>
+      </div>
+
+      <div class="relative">
+        <!-- Timeline -->
+        <div class="timeline-item">
+          <div class="timeline-dot bg-gray-400">
+            <span class="text-white text-xs font-bold">0</span>
+          </div>
+          <div class="ml-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="year-badge">医師免許取得</span>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mt-2">
+              <h3 class="font-bold text-gray-800 mb-1">初期研修（医師法による2年間の義務研修）</h3>
+              <p class="text-sm text-gray-600 leading-relaxed">内科・外科・救急など各科をローテーション。精神科ローテーションも含む。<strong>この期間も「医療実務経験5年」に算入可能</strong>（様式2-2で証明）。</p>
+              <div class="mt-2 flex items-center gap-2">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i>
+                <span class="text-xs text-amber-700 font-medium">精神科ローテ中から症例記録の習慣をつけ始めよう</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot bg-teal-500">
+            <span class="text-white text-xs font-bold">2</span>
+          </div>
+          <div class="ml-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="year-badge">2年目〜</span>
+              <span class="text-sm font-medium text-teal-700">精神科専攻医（後期研修）開始</span>
+            </div>
+            <div class="bg-teal-50 rounded-xl p-4 border border-teal-200 mt-2">
+              <h3 class="font-bold text-teal-800 mb-2">精神科での臨床経験を積む（3年以上必要）</h3>
+              <ul class="text-sm text-gray-700 space-y-2">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+                  <span><strong>精神病床のある医療機関</strong>で勤務することが原則</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+                  <span>医療保護入院・措置入院の担当から<strong>症例ログを記録開始</strong></span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+                  <span>5分野（F0〜F4）をカバーできるよう<strong>偏りなく担当</strong>する</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+                  <span>指導医の下で症例の診断・治療を学ぶ</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot bg-blue-500">
+            <span class="text-white text-xs font-bold">4</span>
+          </div>
+          <div class="ml-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="year-badge">4〜5年目</span>
+              <span class="text-sm font-medium text-blue-700">研修受講・ケースレポート準備</span>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-4 border border-blue-200 mt-2">
+              <h3 class="font-bold text-blue-800 mb-2">申請準備フェーズ</h3>
+              <ul class="text-sm text-gray-700 space-y-2">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="calendar" class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0"></i>
+                  <span><strong>登録研修機関の研修</strong>を受講（定員あり・早めに申込み）</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="file-text" class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0"></i>
+                  <span>5症例分の<strong>ケースレポート</strong>を作成・指導医に確認</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0"></i>
+                  <span>研修修了証発行日から<strong>3年以内</strong>に申請（令和5年4月以降）</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0"></i>
+                  <span>症例は申請日から<strong>過去7年以内</strong>のものに限る</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot bg-indigo-500">
+            <span class="text-white text-xs font-bold">5</span>
+          </div>
+          <div class="ml-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="year-badge">5年目〜</span>
+              <span class="text-sm font-medium text-indigo-700">申請（年2回受付）</span>
+            </div>
+            <div class="bg-indigo-50 rounded-xl p-4 border border-indigo-200 mt-2">
+              <h3 class="font-bold text-indigo-800 mb-2">住所地の都道府県へ申請</h3>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white rounded-lg p-3 border border-indigo-100 text-center">
+                  <div class="text-indigo-700 font-bold text-sm mb-1">前期締切（例：東京）</div>
+                  <div class="text-lg font-bold text-indigo-900">6月上旬〜中旬必着</div>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-indigo-100 text-center">
+                  <div class="text-indigo-700 font-bold text-sm mb-1">後期締切（例：東京）</div>
+                  <div class="text-lg font-bold text-indigo-900">11月下旬〜12月必着</div>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">※締切日は都道府県により異なります。必ず住所地の窓口で確認してください。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot bg-violet-500">
+            <i data-lucide="search" class="w-3 h-3 text-white"></i>
+          </div>
+          <div class="ml-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="year-badge">申請後</span>
+              <span class="text-sm font-medium text-violet-700">審査（書面→口頭試問）</span>
+            </div>
+            <div class="bg-violet-50 rounded-xl p-4 border border-violet-200 mt-2">
+              <h3 class="font-bold text-violet-800 mb-2">書面審査 → 口頭試問（2019年〜）</h3>
+              <p class="text-sm text-gray-600">申請から指定まで約<strong>10〜12ヶ月</strong>かかることもあります。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item" style="padding-bottom: 0">
+          <div class="timeline-dot bg-green-500">
+            <i data-lucide="check" class="w-3 h-3 text-white"></i>
+          </div>
+          <div class="ml-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="year-badge">取得後</span>
+              <span class="text-sm font-medium text-green-700">指定医証交付・更新へ</span>
+            </div>
+            <div class="bg-green-50 rounded-xl p-4 border border-green-200 mt-2">
+              <h3 class="font-bold text-green-800 mb-1">指定医として勤務開始</h3>
+              <p class="text-sm text-gray-600">5年ごとに更新研修が必要。更新を怠ると失効します。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 取得要件 -->
+    <div class="section-card" id="requirements">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="list-checks" class="w-6 h-6 text-amber-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">資格取得の要件</h2>
+          <p class="text-gray-500 text-sm">精神保健福祉法 第18条第1項 各号</p>
+        </div>
+      </div>
+
+      <div class="space-y-3 mb-6">
+        <div class="req-bar req-bar-blue">
+          <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-white font-bold text-sm">第1号</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-blue-900">医療実務経験 5年以上</div>
+            <div class="text-sm text-gray-600 mt-0.5">医師免許取得後の診療従事期間。<strong>初期研修の2年も算入可能</strong>（様式2-2で証明）。</div>
+          </div>
+          <div class="text-2xl font-black text-blue-300">5年</div>
+        </div>
+
+        <div class="req-bar req-bar-teal">
+          <div class="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-white font-bold text-sm">第2号</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-teal-900">精神科実務経験 3年以上</div>
+            <div class="text-sm text-gray-600 mt-0.5">精神障害の診療経験。原則として<strong>精神病床を有する医療機関</strong>での常時勤務が必要。</div>
+          </div>
+          <div class="text-2xl font-black text-teal-300">3年</div>
+        </div>
+
+        <div class="req-bar req-bar-purple">
+          <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-white font-bold text-sm">第3号</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-purple-900">所定の精神障害の診療経験</div>
+            <div class="text-sm text-gray-600 mt-0.5">大臣が定める精神障害・程度の診療経験。実務上は<strong>5症例のケースレポートと口頭試問</strong>で審査される。</div>
+          </div>
+          <div class="text-2xl font-black text-purple-300">5例</div>
+        </div>
+
+        <div class="req-bar req-bar-orange">
+          <div class="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-white font-bold text-sm">第4号</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-bold text-orange-900">登録研修機関の研修修了</div>
+            <div class="text-sm text-gray-600 mt-0.5">厚労大臣が認定した機関での研修。<strong>修了証発行日から3年以内</strong>（令和5年4月以降）に申請すること。</div>
+          </div>
+          <div class="text-2xl font-black text-orange-300">3年内</div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="alert-circle" class="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-amber-900">
+            <strong>注意：「5年のうち3年が精神科」ではありません</strong><br>
+            「医療実務5年以上（第1号）」と「精神科実務3年以上（第2号）」は独立した要件です。
+            例：初期研修2年＋精神科専攻医3年＝合計5年で、かつ精神科3年以上を満たす、というイメージです。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ ケースレポート -->
+    <div class="section-card" id="casereport">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="file-text" class="w-6 h-6 text-rose-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">ケースレポート（症例報告）</h2>
+          <p class="text-gray-500 text-sm">5分野・5症例 ― 申請の核心部分</p>
+        </div>
+      </div>
+
+      <div class="recommend-box mb-4">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-5 h-5 text-green-700 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-green-900">
+            <strong>令和元年（2019年）7月以降の申請から「6分野8症例」→「5分野5症例」に変更（2018年の制度改革決定・2019年7月申請分より適用）。</strong>
+            数は減りましたが、各症例への関与の実態・深さの審査が厳しくなりました。「触れただけ」の症例はNGです。
+          </div>
+        </div>
+      </div>
+
+      <!-- 5症例カード -->
+      <div class="grid md:grid-cols-2 gap-3 mb-6">
+        <div class="case-card case-f0">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-sky-600 text-white text-xs font-bold px-2 py-0.5 rounded">症例1</span>
+            <span class="font-bold text-sky-900">F0：器質性・症状性精神障害</span>
+          </div>
+          <p class="text-xs text-gray-600">認知症（アルツハイマー型・レビー小体型など）、脳器質性障害に伴う精神症状。</p>
+          <div class="mt-2 text-xs text-sky-700 font-medium">例）認知症の行動・心理症状（BPSD）、せん妄</div>
+        </div>
+
+        <div class="case-card case-f1">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded">症例2</span>
+            <span class="font-bold text-purple-900">F1：精神作用物質使用障害</span>
+          </div>
+          <p class="text-xs text-gray-600"><strong>依存症に係るものに限る</strong>という注意書きあり。アルコール・薬物依存症など。</p>
+          <div class="mt-2 text-xs text-purple-700 font-medium">例）アルコール依存症、覚醒剤依存症</div>
+        </div>
+
+        <div class="case-card case-f2">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-amber-600 text-white text-xs font-bold px-2 py-0.5 rounded">症例3</span>
+            <span class="font-bold text-amber-900">F2：統合失調症圏</span>
+          </div>
+          <p class="text-xs text-gray-600">統合失調症、統合失調感情障害、妄想性障害など。精神科入院で最も頻度が高い疾患群。</p>
+          <div class="mt-2 text-xs text-amber-700 font-medium">例）統合失調症（急性期入院）、初発精神病</div>
+        </div>
+
+        <div class="case-card case-f3">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">症例4</span>
+            <span class="font-bold text-green-900">F3：気分（感情）障害</span>
+          </div>
+          <p class="text-xs text-gray-600">うつ病、双極性障害など。重症例で医療保護入院となるケースを選ぶ。</p>
+          <div class="mt-2 text-xs text-green-700 font-medium">例）双極Ⅰ型（躁状態の入院）、重症うつ病</div>
+        </div>
+
+        <div class="case-card case-f4 md:col-span-2">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-rose-600 text-white text-xs font-bold px-2 py-0.5 rounded">症例5</span>
+            <span class="font-bold text-rose-900">F4〜F8 または F90〜F98：その他の精神障害</span>
+          </div>
+          <p class="text-xs text-gray-600">神経症性・ストレス関連障害（F4）、解離性障害、摂食障害・睡眠障害（F5）、パーソナリティ障害（F6）、知的障害（F7）、発達障害（F8）、または児童青年期障害（F90-F98）から1症例。</p>
+          <div class="mt-2 text-xs text-rose-700 font-medium">例）強迫症（OCD）の入院治療、摂食障害（拒食症）の入院、18歳未満の精神障害</div>
+        </div>
+      </div>
+
+      <!-- 入院形態要件 -->
+      <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+        <i data-lucide="alert-circle" class="w-5 h-5 text-amber-500"></i>
+        入院形態の必須要件（これが最重要！）
+      </h3>
+
+      <div class="bg-amber-50 rounded-xl p-4 border border-amber-200 mb-4">
+        <div class="grid md:grid-cols-3 gap-3">
+          <div class="bg-white rounded-lg p-3 border border-amber-100 text-center">
+            <div class="text-amber-700 text-xs font-bold mb-1">全症例の対象</div>
+            <div class="font-bold text-gray-800 text-sm">措置入院または<br>医療保護入院のみ</div>
+            <div class="mt-1 text-xs text-gray-500">任意入院は不可</div>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-amber-100 text-center">
+            <div class="text-amber-700 text-xs font-bold mb-1">必須：1例以上</div>
+            <div class="font-bold text-gray-800 text-sm">医療保護入院<br>（入院時から関与）</div>
+            <div class="mt-1 text-xs text-gray-500">入院時の指定医診察に立会</div>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-amber-100 text-center">
+            <div class="text-amber-700 text-xs font-bold mb-1">必須：1例以上</div>
+            <div class="font-bold text-gray-800 text-sm">措置入院</div>
+            <div class="mt-1 text-xs text-gray-500">措置診察後の入院管理への主治医としての継続的関与が必要</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 関与の要件 -->
+      <div class="info-box mb-4">
+        <div class="flex items-start gap-2">
+          <i data-lucide="clock" class="w-5 h-5 text-blue-700 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-blue-900">
+            <strong>関与の濃さが審査されます</strong><br>
+            入院期間中は<strong>週4日以上・少なくとも1週間以上</strong>の担当が必要（事務取扱要領）。
+            「入院時だけ顔を出した」程度では不十分です。経過・治療方針決定に継続的に関わること。
+          </div>
+        </div>
+      </div>
+
+      <!-- 提出期限 -->
+      <div class="danger-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="triangle-alert" class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-red-900">
+            <strong>症例は申請日から過去7年以内のものに限る！</strong><br>
+            令和4年7月以降の申請から適用。古い症例（7年超）は原則認められません。
+            症例を溜めすぎてから申請すると使えなくなる可能性があります。計画的に準備を。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑥ 申請書類 -->
+    <div class="section-card" id="documents">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="folder-open" class="w-6 h-6 text-slate-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">申請書類一覧</h2>
+          <p class="text-gray-500 text-sm">新規申請の場合（様式は都道府県・厚労省HPより入手）</p>
+        </div>
+      </div>
+
+      <div class="space-y-2 mb-4">
+        <div class="doc-item">
+          <span class="badge-must mt-0.5">必須</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">申請書（様式1-1）</div>
+            <div class="text-xs text-gray-500">精神保健指定医指定申請書。自筆署名が必要。</div>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <span class="badge-must mt-0.5">必須</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">履歴書・医師免許証の写し</div>
+            <div class="text-xs text-gray-500">身元・資格の確認のため。</div>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <span class="badge-must mt-0.5">必須</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">実務経験証明書（様式2-1 / 2-2）</div>
+            <div class="text-xs text-gray-500">5年の医療実務経験＋3年の精神科経験を証明。初期研修期間は様式2-2で対応。</div>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <span class="badge-must mt-0.5">必須</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">ケースレポート（様式3-1）× 5症例</div>
+            <div class="text-xs text-gray-500">症例ごとに様式3-1を原本で提出。様式3-2（一覧）も必要。</div>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <span class="badge-must mt-0.5">必須</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">常時勤務証明書（様式4）</div>
+            <div class="text-xs text-gray-500">各症例の担当期間中の勤務を証明。<strong>全指導医分が必要。</strong></div>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <span class="badge-must mt-0.5">必須</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">新規研修修了証の写し（法18条1項4号）</div>
+            <div class="text-xs text-gray-500">登録研修機関が発行した修了証。</div>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <span class="badge-must mt-0.5">必須</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">写真（指定医証用）</div>
+            <div class="text-xs text-gray-500">6×4cm程度、6ヶ月以内撮影。履歴書用も別途必要。</div>
+          </div>
+        </div>
+
+        <div class="doc-item">
+          <span class="badge-new mt-0.5">新要件</span>
+          <div>
+            <div class="font-medium text-gray-800 text-sm">指導医の法19条1項研修修了証の写し（全指導医分）</div>
+            <div class="text-xs text-gray-500">令和7年7月以降に担当開始した症例から本格適用。指導医が更新研修を修了していることの証明。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="alert-circle" class="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-amber-900">
+            <strong>書類の形式に要注意！</strong><br>
+            <span class="text-amber-800">片面印刷・ホチキス禁止・自筆署名</span>など、細則が厳格です。様式は必ず最新版（厚労省HP・自治体HP）を使用してください。旧様式での提出は受理されないことがあります。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑦ 審査プロセス -->
+    <div class="section-card" id="review">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="search" class="w-6 h-6 text-violet-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">審査プロセス</h2>
+          <p class="text-gray-500 text-sm">申請から指定まで（令和元年7月〜口頭試問導入）</p>
+        </div>
+      </div>
+
+      <!-- 審査フロー（横並び） -->
+      <div class="flex flex-col md:flex-row items-stretch gap-3 mb-6">
+        <div class="review-step border-blue-200 bg-blue-50">
+          <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+            <span class="text-white font-bold text-sm">1</span>
+          </div>
+          <div class="font-bold text-blue-900 text-sm mb-1">自治体受付</div>
+          <div class="text-xs text-gray-600">都道府県窓口で形式審査。書類の欠落・不備をチェック。</div>
+        </div>
+
+        <div class="flex items-center justify-center text-gray-400">
+          <i data-lucide="arrow-right" class="w-5 h-5 hidden md:block"></i>
+          <i data-lucide="arrow-down" class="w-5 h-5 md:hidden"></i>
+        </div>
+
+        <div class="review-step border-indigo-200 bg-indigo-50">
+          <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2">
+            <span class="text-white font-bold text-sm">2</span>
+          </div>
+          <div class="font-bold text-indigo-900 text-sm mb-1">書面審査</div>
+          <div class="text-xs text-gray-600">医道審議会 精神保健分科会 精神保健指定医資格審査部会がケースレポートを審査。</div>
+        </div>
+
+        <div class="flex items-center justify-center text-gray-400">
+          <i data-lucide="arrow-right" class="w-5 h-5 hidden md:block"></i>
+          <i data-lucide="arrow-down" class="w-5 h-5 md:hidden"></i>
+        </div>
+
+        <div class="review-step border-violet-200 bg-violet-50">
+          <div class="w-8 h-8 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-2">
+            <span class="text-white font-bold text-sm">3</span>
+          </div>
+          <div class="font-bold text-violet-900 text-sm mb-1">口頭試問</div>
+          <div class="text-xs text-gray-600">書面通過後に面接。症例への関与・知識・倫理観を確認（令和2年1月の事務連絡で整備）。</div>
+        </div>
+
+        <div class="flex items-center justify-center text-gray-400">
+          <i data-lucide="arrow-right" class="w-5 h-5 hidden md:block"></i>
+          <i data-lucide="arrow-down" class="w-5 h-5 md:hidden"></i>
+        </div>
+
+        <div class="review-step border-green-200 bg-green-50">
+          <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-2">
+            <i data-lucide="check" class="w-4 h-4 text-white"></i>
+          </div>
+          <div class="font-bold text-green-900 text-sm mb-1">指定・証交付</div>
+          <div class="text-xs text-gray-600">指定医番号付与。指定医証（5年有効）が交付される。</div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+          <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 text-slate-600"></i>
+            審査期間の目安
+          </h3>
+          <p class="text-sm text-gray-700">申請から指定まで<strong>10〜12ヶ月程度</strong>かかることもあります。全国一斉処理のため、申請時期によって変わります。</p>
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+          <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+            <i data-lucide="percent" class="w-4 h-4 text-slate-600"></i>
+            合格率について
+          </h3>
+          <p class="text-sm text-gray-700">書面段階で一定割合が不合格となる場合があります。口頭試問の通過率は比較的高め（参考値・年次変動あり）。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑧ 更新・義務 -->
+    <div class="section-card" id="renewal">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="refresh-cw" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">指定後の義務・更新</h2>
+          <p class="text-gray-500 text-sm">精神保健福祉法 第19条 / 精神保健指定医の証の更新等に係る事務取扱要領</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="bg-teal-50 rounded-xl p-5 border border-teal-200">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="calendar-check" class="w-5 h-5 text-teal-700"></i>
+            <h3 class="font-bold text-teal-800">5年ごとの更新</h3>
+          </div>
+          <ul class="text-sm text-gray-700 space-y-2">
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span>指定医証の有効期限は<strong>5年間</strong></span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span>更新には<strong>登録研修機関の更新研修</strong>を受講</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0"></i>
+              <span>更新研修会場で手続書類を扱うことが多い</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-red-50 rounded-xl p-5 border border-red-200">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="triangle-alert" class="w-5 h-5 text-red-700"></i>
+            <h3 class="font-bold text-red-800">失効・取消しに注意</h3>
+          </div>
+          <ul class="text-sm text-gray-700 space-y-2">
+            <li class="flex items-start gap-2">
+              <i data-lucide="x-circle" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+              <span>更新を怠ると指定医証は<strong>失効</strong></span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="x-circle" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+              <span>不正行為が発覚した場合は<strong>指定取消し</strong>処分</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="x-circle" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+              <span>失効後1年未満での再申請は様式1-2を使用</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-5 h-5 text-blue-700 flex-shrink-0 mt-0.5"></i>
+          <p class="text-sm text-blue-900">
+            指定医を取得した後も継続的な学習・研修が義務付けられています。
+            「取れば終わり」ではなく、精神医療の質を維持・向上させる責任が伴います。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑨ 制度改革 -->
+    <div class="section-card" id="reform">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="history" class="w-6 h-6 text-red-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">制度改革の背景と変更点</h2>
+          <p class="text-gray-500 text-sm">2015〜2019年の不正問題を経て大幅に厳格化</p>
+        </div>
+      </div>
+
+      <div class="danger-box mb-4">
+        <div class="flex items-start gap-2">
+          <i data-lucide="triangle-alert" class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"></i>
+          <div class="text-sm text-red-900">
+            <strong>何が起きたか？</strong><br>
+            2015〜2016年に発覚した複数の医師による<strong>症例の使い回し・虚偽記載</strong>が問題となり、
+            大規模な指定取消し処分が行われました（2018〜2019年にも追加処分）。
+            この問題を受け、申請制度が抜本的に見直されました。
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-800 mb-3">主な制度変更（新しい制度で何が変わったか）</h3>
+
+      <div class="space-y-3">
+        <div class="flex gap-3 items-start p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-xs font-bold">旧</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-medium text-gray-700 text-sm">6分野8症例のケースレポート</div>
+          </div>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-medium text-blue-700 text-sm">5分野5症例（令和元年7月申請分〜。関与の実態を重視）</div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 items-start p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-xs font-bold">旧</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-medium text-gray-700 text-sm">書面審査のみ</div>
+          </div>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-medium text-blue-700 text-sm"><strong>口頭試問が追加</strong>（2019年7月〜）</div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 items-start p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-xs font-bold">旧</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-medium text-gray-700 text-sm">症例の年限なし</div>
+          </div>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-medium text-blue-700 text-sm">申請前<strong>7年以内</strong>の症例に限定（令和4年7月〜）</div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 items-start p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-xs font-bold">旧</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-medium text-gray-700 text-sm">指導医の証明要件が緩やか</div>
+          </div>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-medium text-blue-700 text-sm">指導医の更新研修修了証明が必要（令和7年〜本格化）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑩ 専攻医へのTips -->
+    <div class="section-card" id="tips">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="lightbulb" class="w-6 h-6 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">専攻医1年目へのTips</h2>
+          <p class="text-gray-500 text-sm">先輩からのリアルなアドバイス</p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="recommend-box">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white font-bold text-sm">1</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-green-800 mb-1">今すぐ「症例ログ」を始めよう</h3>
+              <p class="text-sm text-gray-700 leading-relaxed">
+                医療保護入院・措置入院を担当するたびに、<strong>日付・診断・入院形態・自分の関与の内容</strong>を記録しましょう。
+                後から「あの症例、何年だったっけ？」となりがちです。電子メモでも何でもOK。特に<strong>入院時立会・週の担当日数・退院後フォロー</strong>の事実を残すと後が楽です。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="recommend-box">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white font-bold text-sm">2</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-green-800 mb-1">5分野のバランスに注意</h3>
+              <p class="text-sm text-gray-700 leading-relaxed">
+                統合失調症（F2）や気分障害（F3）の入院は多いですが、<strong>依存症（F1）</strong>や<strong>F4〜F8</strong>は意識しないと担当機会が少なくなりがちです。
+                ローテや病棟配置を考える際に「5分野揃えられるか」を念頭に置きましょう。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="recommend-box">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white font-bold text-sm">3</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-green-800 mb-1">研修は早めに予約を</h3>
+              <p class="text-sm text-gray-700 leading-relaxed">
+                登録研修機関の研修は<strong>定員制</strong>で、希望の日程に参加できないことがあります。
+                申請の逆算スケジュールを立てて、<strong>3〜4年目には研修受講</strong>できるよう早めに動きましょう。
+                修了証の有効期限（3年）にも注意。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="recommend-box">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white font-bold text-sm">4</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-green-800 mb-1">指導医・病院選びが重要</h3>
+              <p class="text-sm text-gray-700 leading-relaxed">
+                精神病床があり、非自発的入院の実務が十分ある施設を選ぶことが大切です。
+                また、<strong>指導医が複数いる職場</strong>の方が、5分野を揃えやすく、指導医証明の要件も満たしやすいです。
+                異動・転職時には「指定医申請に適した環境か」も確認しましょう。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="danger-box">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <i data-lucide="triangle-alert" class="w-4 h-4 text-white"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-red-800 mb-1">絶対にNGなこと</h3>
+              <p class="text-sm text-red-900 leading-relaxed">
+                症例の<strong>使い回し・虚偽記載</strong>は、指定取消し・医師としての処分に直結します。
+                「担当した」と書ける症例は<strong>自分が実際に継続的に関与したもの</strong>だけに限ること。
+                2015〜2016年の不正問題の教訓を忘れずに。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- チェックリスト -->
+      <div class="mt-6 bg-slate-50 rounded-xl p-5 border border-slate-200">
+        <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <i data-lucide="clipboard-list" class="w-5 h-5 text-slate-600"></i>
+          専攻医1年目の今日からできるチェックリスト
+        </h3>
+        <ul class="space-y-2 text-sm text-gray-700">
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 text-teal-600 rounded flex-shrink-0">
+            <span>精神保健指定医の申請要件を把握した（このページを読んだ）</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 text-teal-600 rounded flex-shrink-0">
+            <span>勤務先に精神病床があり、医療保護入院・措置入院の実務があることを確認した</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 text-teal-600 rounded flex-shrink-0">
+            <span>職場の指定医の先輩に「症例記録のつけ方」を相談した</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 text-teal-600 rounded flex-shrink-0">
+            <span>今担当している症例の入院形態・診断分類（F0〜F8）を意識するようになった</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 text-teal-600 rounded flex-shrink-0">
+            <span>登録研修機関の研修スケジュールを確認した（<a href="https://www.shiteii.com/" target="_blank" class="text-blue-600 underline">shiteii.com</a>）</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 text-teal-600 rounded flex-shrink-0">
+            <span>住所地の都道府県の申請受付時期・窓口を調べた</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 参考情報 -->
+    <div class="section-card bg-slate-800 text-white">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+          <i data-lucide="external-link" class="w-5 h-5"></i>
+        </div>
+        <h2 class="text-xl font-bold">参考・公式情報</h2>
+      </div>
+      <ul class="space-y-3 text-sm">
+        <li class="flex items-start gap-2">
+          <i data-lucide="globe" class="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0"></i>
+          <div>
+            <div class="font-medium text-white">厚生労働省 精神保健指定医ポータル</div>
+            <div class="text-slate-400 text-xs">事務取扱要領・申請様式・チェックリストはこちらから入手</div>
+            <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/seishinhokenshiteii.html" target="_blank" class="text-teal-400 hover:text-teal-300 text-xs break-all">https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/seishinhokenshiteii.html</a>
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <i data-lucide="globe" class="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0"></i>
+          <div>
+            <div class="font-medium text-white">精神保健指定医研修会（登録研修機関）</div>
+            <div class="text-slate-400 text-xs">研修日程・申込みはこちら（定員制なので早めに確認）</div>
+            <a href="https://www.shiteii.com/" target="_blank" class="text-teal-400 hover:text-teal-300 text-xs">https://www.shiteii.com/</a>
+          </div>
+        </li>
+        <li class="flex items-start gap-2">
+          <i data-lucide="file-text" class="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0"></i>
+          <div>
+            <div class="font-medium text-white">主要法令・通知（名称）</div>
+            <div class="text-slate-400 text-xs leading-relaxed">
+              精神保健及び精神障害者福祉に関する法律（昭和25年法律第123号）第18条・第19条 ／
+              精神保健指定医の新規申請等に係る事務取扱要領（令和7年1月31日改正）／
+              精神保健指定医申請時のケースレポート記述上の配慮について（事務連絡）／
+              精神保健指定医の新規申請に係る口頭試問の実施について（令和2年1月6日事務連絡）
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="mt-4 pt-4 border-t border-slate-700 text-xs text-slate-400">
+        <strong class="text-slate-300">免責事項：</strong>
+        本ページは公開情報をもとに作成した参考資料です。申請要件・様式・締切日は都道府県や改正により変更されます。必ず最新の厚生労働省・住所地の自治体の情報をご確認ください。
+      </div>
+    </div>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

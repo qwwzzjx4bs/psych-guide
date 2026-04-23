@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症 精神症状評価スケール集｜臨床リファレンス</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .scale-box {
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+      border-left: 4px solid #7c3aed;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-core {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-sub {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-optional {
+      background: linear-gradient(135deg, #6b7280, #9ca3af);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .item-row { border-bottom: 1px solid #f1f5f9; padding: 0.5rem 0; }
+    .item-row:last-child { border-bottom: none; }
+    .score-cell {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.75rem; height: 1.75rem;
+      border-radius: 50%; font-size: 0.75rem; font-weight: 700;
+    }
+    .toc {
+      position: fixed; right: 1.5rem; top: 50%;
+      transform: translateY(-50%);
+      background: white; padding: 1rem; border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh; overflow-y: auto;
+      z-index: 50; min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .anchor-offset { scroll-margin-top: 1rem; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- ヘッダー -->
+<header class="header-gradient text-white py-8">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="clipboard-list" class="w-8 h-8 opacity-80"></i>
+      <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床リファレンス</span>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold">統合失調症 精神症状評価スケール集</h1>
+    <p class="mt-2 text-lg opacity-85">PANSS / BPRS / CDSS / CGI / PSP / AIMS / SAS / BARS / BACS / DAI-10</p>
+    <div class="flex gap-2 mt-3 flex-wrap">
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">精神症状評価</span>
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">副作用モニタリング</span>
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">認知機能</span>
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">社会機能・QOL</span>
+      <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">アドヒアランス</span>
+    </div>
+  </div>
+</header>
+
+<!-- フローティング目次 -->
+<nav class="toc">
+  <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+  <ul class="space-y-1">
+    <li><a href="#selection" class="text-xs text-gray-600 hover:text-blue-700 block">スケール選択ガイド</a></li>
+    <li class="pt-1 pb-0.5"><span class="text-xs font-bold text-gray-400">精神症状</span></li>
+    <li><a href="#panss" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">PANSS</a></li>
+    <li><a href="#bprs" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">BPRS</a></li>
+    <li><a href="#negative" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">陰性症状スケール</a></li>
+    <li class="pt-1 pb-0.5"><span class="text-xs font-bold text-gray-400">抑うつ・全般</span></li>
+    <li><a href="#cdss" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">CDSS</a></li>
+    <li><a href="#cgi" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">CGI-S / CGI-I</a></li>
+    <li><a href="#psp" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">GAF / PSP</a></li>
+    <li class="pt-1 pb-0.5"><span class="text-xs font-bold text-gray-400">副作用</span></li>
+    <li><a href="#aims" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">AIMS</a></li>
+    <li><a href="#sas" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">SAS</a></li>
+    <li><a href="#bars" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">BARS</a></li>
+    <li class="pt-1 pb-0.5"><span class="text-xs font-bold text-gray-400">認知・アドヒアランス</span></li>
+    <li><a href="#cognition" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">BACS / MCCB</a></li>
+    <li><a href="#adherence" class="text-xs text-gray-600 hover:text-blue-700 block pl-2">DAI-10</a></li>
+  </ul>
+</nav>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- ===== スケール選択ガイド ===== -->
+  <section class="section-card anchor-offset" id="selection">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center">
+        <i data-lucide="map" class="w-6 h-6 text-white"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">スケール選択ガイド</h2>
+        <p class="text-gray-500 text-sm">目的・場面別のスケール使い分け</p>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto mb-6">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">評価目的</th>
+            <th class="text-left p-3 font-bold text-gray-700">推奨スケール</th>
+            <th class="text-left p-3 font-bold text-gray-700">所要時間</th>
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">位置づけ</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">精神症状の総合評価（研究・治験）</td>
+            <td class="p-3"><span class="font-bold text-blue-700">PANSS</span></td>
+            <td class="p-3 text-gray-600">40〜50分</td>
+            <td class="p-3"><span class="badge-core">中核スケール</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">精神症状のスクリーニング・外来経過観察</td>
+            <td class="p-3"><span class="font-bold text-blue-700">BPRS</span> または PANSS</td>
+            <td class="p-3 text-gray-600">20〜30分</td>
+            <td class="p-3"><span class="badge-sub">日常外来</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">陰性症状の詳細評価</td>
+            <td class="p-3"><span class="font-bold text-blue-700">SANS</span> / BNSS / NSA-16</td>
+            <td class="p-3 text-gray-600">20〜40分</td>
+            <td class="p-3"><span class="badge-sub">専門評価</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">統合失調症における抑うつ評価</td>
+            <td class="p-3"><span class="font-bold text-green-700">CDSS</span>（HAMDより優先）</td>
+            <td class="p-3 text-gray-600">10〜15分</td>
+            <td class="p-3"><span class="badge-core">中核スケール</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">全般的重症度・改善度</td>
+            <td class="p-3"><span class="font-bold text-purple-700">CGI-S / CGI-I</span></td>
+            <td class="p-3 text-gray-600">1〜3分</td>
+            <td class="p-3"><span class="badge-core">中核スケール</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">社会機能・日常生活能力</td>
+            <td class="p-3"><span class="font-bold text-teal-700">PSP</span> / GAF / SOFAS</td>
+            <td class="p-3 text-gray-600">5〜20分</td>
+            <td class="p-3"><span class="badge-sub">機能評価</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">遅発性ジスキネジア（TD）のモニタリング</td>
+            <td class="p-3"><span class="font-bold text-red-700">AIMS</span></td>
+            <td class="p-3 text-gray-600">5〜10分</td>
+            <td class="p-3"><span class="badge-core">副作用必須</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">パーキンソニズム・EPS評価</td>
+            <td class="p-3"><span class="font-bold text-red-700">SAS</span>（Simpson-Angus）</td>
+            <td class="p-3 text-gray-600">10分</td>
+            <td class="p-3"><span class="badge-core">副作用必須</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">アカシジア評価</td>
+            <td class="p-3"><span class="font-bold text-red-700">BARS</span>（Barnes）</td>
+            <td class="p-3 text-gray-600">5〜10分</td>
+            <td class="p-3"><span class="badge-core">副作用必須</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">認知機能評価（日常外来）</td>
+            <td class="p-3"><span class="font-bold text-indigo-700">BACS-J</span></td>
+            <td class="p-3 text-gray-600">約30分</td>
+            <td class="p-3"><span class="badge-sub">認知評価</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">認知機能評価（治験・研究）</td>
+            <td class="p-3"><span class="font-bold text-indigo-700">MCCB</span></td>
+            <td class="p-3 text-gray-600">60〜90分</td>
+            <td class="p-3"><span class="badge-optional">研究用</span></td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium text-gray-800">服薬アドヒアランス・薬物態度</td>
+            <td class="p-3"><span class="font-bold text-orange-700">DAI-10</span></td>
+            <td class="p-3 text-gray-600">5〜10分</td>
+            <td class="p-3"><span class="badge-sub">アドヒアランス</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 外来での最小セット -->
+    <div class="recommend-box">
+      <div class="font-bold text-green-800 mb-3 flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        外来定期評価の最小セット（推奨）
+      </div>
+      <div class="grid md:grid-cols-3 gap-3 text-sm">
+        <div class="bg-white rounded-lg p-3 border border-green-200">
+          <div class="font-bold text-gray-800 mb-1">精神症状</div>
+          <p class="text-gray-600">PANSS または BPRS（治療反応の判定）</p>
+        </div>
+        <div class="bg-white rounded-lg p-3 border border-green-200">
+          <div class="font-bold text-gray-800 mb-1">副作用</div>
+          <p class="text-gray-600">AIMS + SAS + BARS（3点セット）</p>
+        </div>
+        <div class="bg-white rounded-lg p-3 border border-green-200">
+          <div class="font-bold text-gray-800 mb-1">全般・機能</div>
+          <p class="text-gray-600">CGI-S/I + PSP（3〜6ヶ月ごと）</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANSSのcut-off概要 -->
+    <div class="warning-box mt-4">
+      <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+        <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+        統合失調症における「治療反応」の一般的定義
+      </div>
+      <div class="grid md:grid-cols-3 gap-3 text-sm text-gray-700">
+        <div>
+          <span class="font-bold text-gray-800">治療反応（Response）</span>
+          <p class="text-gray-600 mt-1">PANSS合計点が baseline から <strong>≥20〜30%</strong> 減少（研究プロトコルによる）</p>
+        </div>
+        <div>
+          <span class="font-bold text-gray-800">寛解（Remission）</span>
+          <p class="text-gray-600 mt-1">Andreasen基準：8項目すべて ≤3 を <strong>6ヶ月以上</strong> 維持</p>
+        </div>
+        <div>
+          <span class="font-bold text-gray-800">治療抵抗（TRS）</span>
+          <p class="text-gray-600 mt-1">異なる抗精神病薬 ≥2剤（各 ≥600mg CPZeq、≥6週）で不十分な反応</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PANSS ===== -->
+  <section class="section-card anchor-offset" id="panss">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="clipboard-list" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">PANSS</h2>
+        <p class="text-gray-500 text-sm">Positive and Negative Syndrome Scale（Kay et al., 1987）</p>
+      </div>
+    </div>
+
+    <!-- 概要 -->
+    <div class="grid md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-blue-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-blue-700">30</div>
+        <div class="text-sm text-gray-600 mt-1">総項目数</div>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-blue-700">1–7</div>
+        <div class="text-sm text-gray-600 mt-1">各項目の得点範囲</div>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-blue-700">30–210</div>
+        <div class="text-sm text-gray-600 mt-1">合計得点範囲</div>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-blue-700">40–50分</div>
+        <div class="text-sm text-gray-600 mt-1">面接・採点所要時間</div>
+      </div>
+    </div>
+
+    <!-- 採点アンカー -->
+    <div class="criteria-box mb-6">
+      <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4"></i>
+        各項目共通の採点アンカー（1〜7点）
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+        <div class="bg-white rounded-lg p-2 text-center border">
+          <span class="score-cell bg-gray-100 text-gray-700 mx-auto mb-1" style="display:flex;">1</span>
+          <div class="text-gray-600">なし</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 text-center border">
+          <span class="score-cell bg-gray-100 text-gray-600 mx-auto mb-1" style="display:flex;">2</span>
+          <div class="text-gray-600">疑わしい/境界</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 text-center border">
+          <span class="score-cell bg-yellow-100 text-yellow-700 mx-auto mb-1" style="display:flex;">3</span>
+          <div class="text-gray-600">軽度</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 text-center border">
+          <span class="score-cell bg-orange-100 text-orange-700 mx-auto mb-1" style="display:flex;">4</span>
+          <div class="text-gray-600">中等度</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 text-center border">
+          <span class="score-cell bg-orange-200 text-orange-800 mx-auto mb-1" style="display:flex;">5</span>
+          <div class="text-gray-600">中等〜重度</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 text-center border">
+          <span class="score-cell bg-red-100 text-red-700 mx-auto mb-1" style="display:flex;">6</span>
+          <div class="text-gray-600">重度</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 text-center border">
+          <span class="score-cell bg-red-200 text-red-800 mx-auto mb-1" style="display:flex;">7</span>
+          <div class="text-gray-600">極重度</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3サブスケール -->
+    <div class="grid md:grid-cols-3 gap-4 mb-6">
+      <!-- 陽性症状 -->
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-red-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">P</div>
+          <div>
+            <div class="font-bold text-red-800">陽性尺度</div>
+            <div class="text-xs text-gray-500">Positive Scale（7項目、7〜49点）</div>
+          </div>
+        </div>
+        <div class="space-y-1.5 text-sm">
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-red-600 w-6 flex-shrink-0">P1</span>
+            <div>
+              <span class="font-medium">妄想</span>
+              <p class="text-gray-500 text-xs">被害妄想、誇大妄想、関係妄想など</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-red-600 w-6 flex-shrink-0">P2</span>
+            <div>
+              <span class="font-medium">概念の統合解体</span>
+              <p class="text-gray-500 text-xs">連合弛緩、観念奔逸、脱線など</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-red-600 w-6 flex-shrink-0">P3</span>
+            <div>
+              <span class="font-medium">幻覚的行動</span>
+              <p class="text-gray-500 text-xs">命令幻声、幻視、幻触への反応</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-red-600 w-6 flex-shrink-0">P4</span>
+            <div>
+              <span class="font-medium">興奮</span>
+              <p class="text-gray-500 text-xs">多動、過活動、過剰な精力</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-red-600 w-6 flex-shrink-0">P5</span>
+            <div>
+              <span class="font-medium">誇大性</span>
+              <p class="text-gray-500 text-xs">誇大的・高揚した自己評価</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-red-600 w-6 flex-shrink-0">P6</span>
+            <div>
+              <span class="font-medium">猜疑心・被害</span>
+              <p class="text-gray-500 text-xs">不信感、疑惑、妄想的被害感</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-red-600 w-6 flex-shrink-0">P7</span>
+            <div>
+              <span class="font-medium">敵意</span>
+              <p class="text-gray-500 text-xs">言語的・身体的攻撃性</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 陰性症状 -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">N</div>
+          <div>
+            <div class="font-bold text-blue-800">陰性尺度</div>
+            <div class="text-xs text-gray-500">Negative Scale（7項目、7〜49点）</div>
+          </div>
+        </div>
+        <div class="space-y-1.5 text-sm">
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-blue-600 w-6 flex-shrink-0">N1</span>
+            <div>
+              <span class="font-medium">情動の鈍麻</span>
+              <p class="text-gray-500 text-xs">感情表現の減少、顔の表情の乏しさ</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-blue-600 w-6 flex-shrink-0">N2</span>
+            <div>
+              <span class="font-medium">情緒的引きこもり</span>
+              <p class="text-gray-500 text-xs">対人関係への興味喪失、感情的隔絶</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-blue-600 w-6 flex-shrink-0">N3</span>
+            <div>
+              <span class="font-medium">ラポール障害</span>
+              <p class="text-gray-500 text-xs">面接者との対人的距離、疎通性の欠如</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-blue-600 w-6 flex-shrink-0">N4</span>
+            <div>
+              <span class="font-medium">受動的社会的退縮</span>
+              <p class="text-gray-500 text-xs">社会的活動・関係からの撤退</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-blue-600 w-6 flex-shrink-0">N5</span>
+            <div>
+              <span class="font-medium">抽象的思考の困難</span>
+              <p class="text-gray-500 text-xs">ことわざ理解、抽象的概念の処理</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-blue-600 w-6 flex-shrink-0">N6</span>
+            <div>
+              <span class="font-medium">会話の自発性・流暢性の欠如</span>
+              <p class="text-gray-500 text-xs">会話量の減少、発話の乏しさ（アロジア）</p>
+            </div>
+          </div>
+          <div class="item-row flex items-start gap-2">
+            <span class="font-bold text-blue-600 w-6 flex-shrink-0">N7</span>
+            <div>
+              <span class="font-medium">常同的思考</span>
+              <p class="text-gray-500 text-xs">思考の硬直性、固定した思考パターン</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 一般精神病理 -->
+      <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">G</div>
+          <div>
+            <div class="font-bold text-purple-800">一般精神病理尺度</div>
+            <div class="text-xs text-gray-500">General Psychopathology（16項目、16〜112点）</div>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm">
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G1</span><span>身体的訴え</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G2</span><span>不安</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G3</span><span>罪責感</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G4</span><span>緊張</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G5</span><span>衒奇症・作様姿勢 <span class="text-red-600">★寛解項目</span></span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G6</span><span>抑うつ気分</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G7</span><span>精神運動性遅滞</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G8</span><span>非協力性</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G9</span><span>思考内容の異常 <span class="text-red-600">★寛解項目</span></span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G10</span><span>見当識の欠如</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G11</span><span>注意の障害</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G12</span><span>判断力・病識の欠如</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G13</span><span>意志障害</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G14</span><span>衝動制御の障害</span>
+          </div>
+          <div class="flex gap-1.5 text-xs border-b border-purple-100 pb-1">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G15</span><span>先取り</span>
+          </div>
+          <div class="flex gap-1.5 text-xs">
+            <span class="font-bold text-purple-600 w-7 flex-shrink-0">G16</span><span>能動的社会回避</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 寛解基準 -->
+    <div class="scale-box mb-4">
+      <div class="font-bold text-purple-800 mb-3 flex items-center gap-2">
+        <i data-lucide="award" class="w-4 h-4"></i>
+        寛解基準（Andreasen et al., 2005）
+      </div>
+      <p class="text-sm text-gray-700 mb-3">下記8項目がすべて <strong>≤3点（軽度以下）</strong> を <strong>6ヶ月以上</strong> 維持した場合を寛解と定義。</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-red-600">P1</div><div class="text-gray-600 text-xs">妄想</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-red-600">P2</div><div class="text-gray-600 text-xs">概念の統合解体</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-red-600">P3</div><div class="text-gray-600 text-xs">幻覚的行動</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-blue-600">N1</div><div class="text-gray-600 text-xs">情動の鈍麻</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-blue-600">N4</div><div class="text-gray-600 text-xs">受動的社会的退縮</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-blue-600">N6</div><div class="text-gray-600 text-xs">会話の自発性欠如</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-purple-600">G5</div><div class="text-gray-600 text-xs">衒奇症・作様姿勢</div>
+        </div>
+        <div class="bg-white rounded-lg p-2 border border-purple-200 text-sm text-center">
+          <div class="font-bold text-purple-600">G9</div><div class="text-gray-600 text-xs">思考内容の異常</div>
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">※原論文（Am J Psychiatry. 2005;162:441–449）を必ず参照のこと。</p>
+    </div>
+
+    <!-- PANSSスコア解釈 -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">PANSS合計点</th>
+            <th class="text-left p-3 font-bold text-gray-700">重症度の目安</th>
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">臨床的意義</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium">30〜58</td>
+            <td class="p-3"><span class="px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs font-medium">症状軽微・寛解域</span></td>
+            <td class="p-3 text-gray-600">症状がほぼ消退、維持期・回復期（全項目1点で最小値30点）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium">59〜74</td>
+            <td class="p-3"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">軽度〜中等度</span></td>
+            <td class="p-3 text-gray-600">部分寛解、外来管理可能</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium">75〜99</td>
+            <td class="p-3"><span class="px-2 py-0.5 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">中等度〜重度</span></td>
+            <td class="p-3 text-gray-600">症状活発、治療変更を検討</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-medium">≥100</td>
+            <td class="p-3"><span class="px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs font-medium">重度〜極重度</span></td>
+            <td class="p-3 text-gray-600">急性増悪、入院/集中的介入を要する</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-500 mt-2">※PANSS合計点の重症度区分は研究によりやや異なる。Leucht et al. (2005, Schizophr Res)等を参照。</p>
+
+    <div class="warning-box mt-4">
+      <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4"></i>
+        PANSS 5因子モデル（研究・治験での標準）
+      </div>
+      <p class="text-sm text-gray-700 mb-2">古典的な3因子（陽性・陰性・一般精神病理）に加え、現代の治験・研究では <strong>5因子モデル</strong>（Wallwork et al., 2012）がより広く使用される。</p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+        <div class="bg-white rounded-lg p-2 border text-center"><span class="font-bold text-red-600">陽性因子</span><p class="text-gray-500 mt-0.5">P1, P3, P5, G9</p></div>
+        <div class="bg-white rounded-lg p-2 border text-center"><span class="font-bold text-blue-600">陰性因子</span><p class="text-gray-500 mt-0.5">N1, N2, N3, N4, N6, G7</p></div>
+        <div class="bg-white rounded-lg p-2 border text-center"><span class="font-bold text-purple-600">認知/解体因子</span><p class="text-gray-500 mt-0.5">P2, N5, G11</p></div>
+        <div class="bg-white rounded-lg p-2 border text-center"><span class="font-bold text-orange-600">興奮因子</span><p class="text-gray-500 mt-0.5">P4, P7, G8, G14</p></div>
+        <div class="bg-white rounded-lg p-2 border text-center"><span class="font-bold text-green-600">抑うつ/不安因子</span><p class="text-gray-500 mt-0.5">G2, G3, G6</p></div>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">Wallwork RS et al. Schizophr Res. 2012;137:246–250</p>
+    </div>
+  </section>
+
+  <!-- ===== BPRS ===== -->
+  <section class="section-card anchor-offset" id="bprs">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="clipboard" class="w-6 h-6 text-teal-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">BPRS</h2>
+        <p class="text-gray-500 text-sm">Brief Psychiatric Rating Scale（Overall & Gorham, 1962）</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-4 mb-5">
+      <div class="bg-teal-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-teal-700">18</div>
+        <div class="text-sm text-gray-600 mt-1">項目数</div>
+      </div>
+      <div class="bg-teal-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-teal-700">1–7</div>
+        <div class="text-sm text-gray-600 mt-1">各項目得点</div>
+      </div>
+      <div class="bg-teal-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-teal-700">18–126</div>
+        <div class="text-sm text-gray-600 mt-1">合計範囲</div>
+      </div>
+      <div class="bg-teal-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-teal-700">20〜30分</div>
+        <div class="text-sm text-gray-600 mt-1">所要時間</div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <div class="font-bold text-gray-700 mb-2 text-sm">18項目（拡張版）</div>
+        <div class="bg-gray-50 rounded-xl p-4 text-sm space-y-1">
+          <div class="grid grid-cols-2 gap-x-4">
+            <div>① 身体的訴え</div><div>② 不安・心配</div>
+            <div>③ 情動的引きこもり</div><div>④ 概念の解体</div>
+            <div>⑤ 罪責感</div><div>⑥ 緊張</div>
+            <div>⑦ 衒奇症・姿勢</div><div>⑧ 誇大性</div>
+            <div>⑨ 抑うつ気分</div><div>⑩ 敵意</div>
+            <div>⑪ 疑惑</div><div>⑫ 幻覚的行動</div>
+            <div>⑬ 精神運動性遅滞</div><div>⑭ 非協力性</div>
+            <div>⑮ 思考内容の異常</div><div>⑯ 情動鈍麻</div>
+            <div>⑰ 興奮</div><div>⑱ 見当識の欠如</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="font-bold text-gray-700 mb-2 text-sm">PANSSとの比較</div>
+        <div class="space-y-3">
+          <div class="recommend-box">
+            <div class="font-bold text-green-800 text-sm mb-1">BPRSの利点</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・PANSSより短時間で施行可能</li>
+              <li>・外来スクリーニングに適する</li>
+              <li>・歴史的な治験データが豊富</li>
+              <li>・急性期モニタリングに適する</li>
+            </ul>
+          </div>
+          <div class="warning-box">
+            <div class="font-bold text-yellow-800 text-sm mb-1">BPRSの限界</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li>・陰性症状の評価が不十分</li>
+              <li>・認知・社会的側面の掘り下げ弱</li>
+              <li>・PANSSほど詳細でない</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 陰性症状スケール ===== -->
+  <section class="section-card anchor-offset" id="negative">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="minus-circle" class="w-6 h-6 text-indigo-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">陰性症状スケール</h2>
+        <p class="text-gray-500 text-sm">SANS / BNSS / NSA-16 / PSYRATS</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <!-- SANS -->
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+        <div class="font-bold text-indigo-800 mb-2">SANS（陰性症状評価尺度）</div>
+        <div class="text-xs text-gray-500 mb-3">Andreasen, 1983 ｜ 0〜5点 × 5ドメイン（計25項目）</div>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+            <div><span class="font-medium">情動の鈍麻・平板化</span><p class="text-gray-500 text-xs">顔の表情・目の接触・情動反応性・不適切な情動</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+            <div><span class="font-medium">アロジア（思考の貧困）</span><p class="text-gray-500 text-xs">会話の貧困、会話内容の貧困、思考のブロック</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+            <div><span class="font-medium">無気力・無感動</span><p class="text-gray-500 text-xs">身だしなみ、仕事・学業、身体的不活動</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+            <div><span class="font-medium">快楽欠如・非社会性</span><p class="text-gray-500 text-xs">娯楽・社会的活動・性的関心の低下</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">5</span>
+            <div><span class="font-medium">注意障害</span><p class="text-gray-500 text-xs">社会的注意・課題での注意持続</p></div>
+          </div>
+        </div>
+        <div class="mt-3 text-xs text-gray-500">⚠️ うつ病の二次性陰性症状との鑑別に注意</div>
+      </div>
+
+      <!-- BNSS -->
+      <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+        <div class="font-bold text-purple-800 mb-2">BNSS（簡易陰性症状尺度）</div>
+        <div class="text-xs text-gray-500 mb-3">Kirkpatrick et al., 2011 ｜ 0〜6点 × 13項目 ｜ 約15分</div>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-start gap-2">
+            <div class="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <div><span class="font-medium">快楽欠如（Anhedonia）</span><p class="text-gray-500 text-xs">期待性快楽・経験的快楽の2側面を評価</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <div class="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <div><span class="font-medium">情動の鈍麻・平板化</span><p class="text-gray-500 text-xs">顔・発声・ジェスチャー</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <div class="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <div><span class="font-medium">アロジア</span><p class="text-gray-500 text-xs">会話量・自発的発話</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <div class="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <div><span class="font-medium">無感動（Avolition）</span><p class="text-gray-500 text-xs">活動への関与・持続性</p></div>
+          </div>
+          <div class="flex items-start gap-2">
+            <div class="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <div><span class="font-medium">社会的引きこもり</span><p class="text-gray-500 text-xs">対人交流への欲求・開始</p></div>
+          </div>
+        </div>
+        <div class="mt-3"><span class="badge-level-b">推奨</span><span class="text-xs text-gray-500 ml-2">二次性陰性症状との区別を意識した設計</span></div>
+      </div>
+
+      <!-- PSYRATS -->
+      <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+        <div class="font-bold text-rose-800 mb-2">PSYRATS（精神病症状評価尺度）</div>
+        <div class="text-xs text-gray-500 mb-3">Haddock et al., 1999 ｜ 0〜4点 × 2尺度 ｜ 約15〜30分</div>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <div class="font-medium text-rose-700 mb-1">聴性幻覚尺度（11項目）</div>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>・頻度</li><li>・持続時間</li><li>・場所（内/外）</li>
+              <li>・音量</li><li>・内容（中性〜否定的）</li>
+              <li>・繰り返し</li><li>・確信度</li>
+              <li>・苦悩の量・強度</li>
+              <li>・生活への支障</li><li>・コントロール</li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-medium text-rose-700 mb-1">妄想尺度（6項目）</div>
+            <ul class="text-xs text-gray-600 space-y-0.5">
+              <li>・先取り・没頭度</li>
+              <li>・持続時間</li>
+              <li>・確信度</li>
+              <li>・苦悩の量・強度</li>
+              <li>・生活への支障</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-3"><span class="badge-level-b">推奨</span><span class="text-xs text-gray-500 ml-2">CBTp・症状特化研究に有用</span></div>
+      </div>
+
+      <!-- NSA-16 -->
+      <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-800 mb-2">NSA-16（陰性症状評価）</div>
+        <div class="text-xs text-gray-500 mb-3">Alphs et al., 1993 ｜ 1〜6点 × 16項目 + グローバル ｜ 15〜30分</div>
+        <div class="text-sm text-gray-700 mb-2">5因子構成：</div>
+        <div class="grid grid-cols-1 gap-1.5 text-sm">
+          <div class="flex gap-2">
+            <div class="w-2 h-2 bg-gray-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <span><span class="font-medium">コミュニケーション</span>（会話質・量）</span>
+          </div>
+          <div class="flex gap-2">
+            <div class="w-2 h-2 bg-gray-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <span><span class="font-medium">情動</span>（表現・範囲）</span>
+          </div>
+          <div class="flex gap-2">
+            <div class="w-2 h-2 bg-gray-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <span><span class="font-medium">社会的関与</span>（対人行動）</span>
+          </div>
+          <div class="flex gap-2">
+            <div class="w-2 h-2 bg-gray-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <span><span class="font-medium">動機・関心</span>（活動への意欲）</span>
+          </div>
+          <div class="flex gap-2">
+            <div class="w-2 h-2 bg-gray-500 rounded-full mt-1.5 flex-shrink-0"></div>
+            <span><span class="font-medium">遅滞</span>（精神運動）</span>
+          </div>
+        </div>
+        <div class="mt-3"><span class="badge-optional">研究用</span><span class="text-xs text-gray-500 ml-2">国際臨床試験での使用実績あり</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CDSS ===== -->
+  <section class="section-card anchor-offset" id="cdss">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="heart" class="w-6 h-6 text-green-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">CDSS</h2>
+        <p class="text-gray-500 text-sm">Calgary Depression Scale for Schizophrenia（Addington et al., 1990）</p>
+      </div>
+    </div>
+
+    <div class="danger-box mb-5">
+      <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4"></i>
+        なぜHAMDではなくCDSSを使うのか
+      </div>
+      <p class="text-sm text-gray-700">統合失調症の陰性症状（精神運動性遅滞、感情鈍麻、会話の乏しさ）や錐体外路症状（仮面様顔貌、運動遅滞）は、HAMDの抑うつ項目と重複し偽高値を生じる。CDSSはこれらを考慮した統合失調症特異的設計のため、より特異的にうつ症状を評価できる。</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4 mb-5">
+      <div class="bg-green-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-green-700">9</div>
+        <div class="text-sm text-gray-600 mt-1">項目数</div>
+      </div>
+      <div class="bg-green-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-green-700">0–27</div>
+        <div class="text-sm text-gray-600 mt-1">合計得点範囲</div>
+      </div>
+      <div class="bg-green-50 rounded-xl p-4 text-center">
+        <div class="text-2xl font-bold text-green-700">≥5 / ≥6</div>
+        <div class="text-sm text-gray-600 mt-1">スクリーニング / MDE診断cut-off</div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto mb-4">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg w-8">#</th>
+            <th class="text-left p-3 font-bold text-gray-700">項目</th>
+            <th class="text-left p-3 font-bold text-gray-700">採点（0〜3点）</th>
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">評価方法</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">1</td>
+            <td class="p-3 font-medium">抑うつ気分</td>
+            <td class="p-3 text-gray-600">0=なし→3=重度（悲しみ・暗さ・希望のなさ）</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">2</td>
+            <td class="p-3 font-medium">希望のなさ</td>
+            <td class="p-3 text-gray-600">将来への悲観的見通し</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">3</td>
+            <td class="p-3 font-medium">自己批判・自己否定</td>
+            <td class="p-3 text-gray-600">自分への責め、欠陥・失敗感</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">4</td>
+            <td class="p-3 font-medium">罪業妄想的観念</td>
+            <td class="p-3 text-gray-600">自分のせいで不幸が起きるという信念</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">5</td>
+            <td class="p-3 font-medium">病的罪責感</td>
+            <td class="p-3 text-gray-600">過去の行為への不当な罪悪感</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">6</td>
+            <td class="p-3 font-medium">朝方の気分悪化</td>
+            <td class="p-3 text-gray-600">日内変動（朝悪化パターン）</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">7</td>
+            <td class="p-3 font-medium">早朝覚醒</td>
+            <td class="p-3 text-gray-600">通常の起床時刻の2時間以上前の覚醒</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">8</td>
+            <td class="p-3 font-medium">自殺念慮</td>
+            <td class="p-3 text-gray-600">0=なし→3=重篤な希死念慮・企図</td>
+            <td class="p-3 text-gray-500">面接評価</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">9</td>
+            <td class="p-3 font-medium">観察された抑うつ（観察項目）</td>
+            <td class="p-3 text-gray-600">面接中の抑うつ外見・沈んだ表情・涙</td>
+            <td class="p-3 text-gray-500 font-medium text-green-700">観察評価</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-3">
+      <div class="bg-green-50 rounded-xl p-3 text-center border border-green-200">
+        <div class="text-xl font-bold text-green-700">0〜4</div>
+        <div class="text-xs text-gray-600 mt-1">抑うつなし</div>
+      </div>
+      <div class="bg-yellow-50 rounded-xl p-3 text-center border border-yellow-200">
+        <div class="text-xl font-bold text-yellow-700">5〜6</div>
+        <div class="text-xs text-gray-600 mt-1">閾値域（要観察）</div>
+      </div>
+      <div class="bg-orange-50 rounded-xl p-3 text-center border border-orange-200">
+        <div class="text-xl font-bold text-orange-700">7〜12</div>
+        <div class="text-xs text-gray-600 mt-1">軽〜中等度うつ</div>
+      </div>
+      <div class="bg-red-50 rounded-xl p-3 text-center border border-red-200">
+        <div class="text-xl font-bold text-red-700">≥13</div>
+        <div class="text-xs text-gray-600 mt-1">重度うつ</div>
+      </div>
+    </div>
+    <p class="text-xs text-gray-500 mt-2">※CDSSの公式日本語版はCalgary大学公式サイトより入手可（日本語あり）。<strong>≥5</strong>：スクリーニング閾値（感度優先）、<strong>≥6</strong>：MDE診断的閾値（特異度優先）（Addington D et al. Schizophr Res. 1996;19:205–212）。</p>
+  </section>
+
+  <!-- ===== CGI ===== -->
+  <section class="section-card anchor-offset" id="cgi">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="gauge" class="w-6 h-6 text-orange-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">CGI-S / CGI-I</h2>
+        <p class="text-gray-500 text-sm">Clinical Global Impression（NIMH, Guy, 1976）</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- CGI-S -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-orange-600"></i>
+          CGI-S（重症度）
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
+            <span class="score-cell bg-gray-100 text-gray-600" style="display:inline-flex;">1</span>
+            <div class="text-sm"><span class="font-medium">正常域</span> — 精神疾患の症状なし</div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
+            <span class="score-cell bg-gray-100 text-gray-500" style="display:inline-flex;">2</span>
+            <div class="text-sm"><span class="font-medium">境界的に病的</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-green-50">
+            <span class="score-cell bg-green-100 text-green-700" style="display:inline-flex;">3</span>
+            <div class="text-sm"><span class="font-medium">軽症</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-yellow-50">
+            <span class="score-cell bg-yellow-100 text-yellow-700" style="display:inline-flex;">4</span>
+            <div class="text-sm"><span class="font-medium">中等症</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-orange-50">
+            <span class="score-cell bg-orange-100 text-orange-700" style="display:inline-flex;">5</span>
+            <div class="text-sm"><span class="font-medium">重症</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-red-50">
+            <span class="score-cell bg-red-100 text-red-700" style="display:inline-flex;">6</span>
+            <div class="text-sm"><span class="font-medium">かなり重症</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-red-100">
+            <span class="score-cell bg-red-200 text-red-800" style="display:inline-flex;">7</span>
+            <div class="text-sm"><span class="font-medium">最重症</span> — 著しい機能障害</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CGI-I -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <i data-lucide="trending-up" class="w-4 h-4 text-orange-600"></i>
+          CGI-I（改善度）
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-green-100">
+            <span class="score-cell bg-green-200 text-green-800" style="display:inline-flex;">1</span>
+            <div class="text-sm"><span class="font-medium">非常に大きく改善</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-green-50">
+            <span class="score-cell bg-green-100 text-green-700" style="display:inline-flex;">2</span>
+            <div class="text-sm"><span class="font-medium">大きく改善</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-green-50">
+            <span class="score-cell bg-green-100 text-green-600" style="display:inline-flex;">3</span>
+            <div class="text-sm"><span class="font-medium">最低限改善</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
+            <span class="score-cell bg-gray-200 text-gray-700" style="display:inline-flex;">4</span>
+            <div class="text-sm"><span class="font-medium">変化なし</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-orange-50">
+            <span class="score-cell bg-orange-100 text-orange-600" style="display:inline-flex;">5</span>
+            <div class="text-sm"><span class="font-medium">最低限悪化</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-red-50">
+            <span class="score-cell bg-red-100 text-red-600" style="display:inline-flex;">6</span>
+            <div class="text-sm"><span class="font-medium">悪化</span></div>
+          </div>
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-red-100">
+            <span class="score-cell bg-red-200 text-red-800" style="display:inline-flex;">7</span>
+            <div class="text-sm"><span class="font-medium">非常に大きく悪化</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 recommend-box">
+      <div class="font-bold text-green-800 mb-1 flex items-center gap-2">
+        <i data-lucide="zap" class="w-4 h-4"></i>
+        CGIの強み
+      </div>
+      <p class="text-sm text-gray-700">1〜3分で施行可能。外来での毎回評価が現実的。治験における標準アウトカム指標。「全般的な変化」の把握に優れる。</p>
+    </div>
+  </section>
+
+  <!-- ===== PSP / GAF ===== -->
+  <section class="section-card anchor-offset" id="psp">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="users" class="w-6 h-6 text-teal-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">社会機能・全般機能評価</h2>
+        <p class="text-gray-500 text-sm">PSP / GAF / SOFAS</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- PSP -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3">PSP（Personal and Social Performance Scale）</div>
+        <div class="text-xs text-gray-500 mb-3">Morosini et al., 2000 ｜ 4ドメイン → 100点満点に換算 ｜ 5〜20分</div>
+        <div class="space-y-3">
+          <div class="bg-teal-50 rounded-xl p-3 border border-teal-200">
+            <div class="font-bold text-teal-800 text-sm mb-1">ドメイン① 社会的に有用な活動</div>
+            <p class="text-xs text-gray-600">就労・学業・家事などの生産的活動</p>
+          </div>
+          <div class="bg-teal-50 rounded-xl p-3 border border-teal-200">
+            <div class="font-bold text-teal-800 text-sm mb-1">ドメイン② 個人的・社会的関係</div>
+            <p class="text-xs text-gray-600">家族・友人・地域社会との関係</p>
+          </div>
+          <div class="bg-teal-50 rounded-xl p-3 border border-teal-200">
+            <div class="font-bold text-teal-800 text-sm mb-1">ドメイン③ 自己保健</div>
+            <p class="text-xs text-gray-600">身だしなみ・衛生・食事・住環境</p>
+          </div>
+          <div class="bg-teal-50 rounded-xl p-3 border border-teal-200">
+            <div class="font-bold text-teal-800 text-sm mb-1">ドメイン④ 攪乱・攻撃的行動</div>
+            <p class="text-xs text-gray-600">他者や自己への問題行動（逆転項目）</p>
+          </div>
+        </div>
+        <div class="mt-3 overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="p-2 text-left font-bold text-gray-700">PSPスコア</th>
+                <th class="p-2 text-left font-bold text-gray-700">機能水準</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr><td class="p-2 font-medium">91〜100</td><td class="p-2 text-gray-600">優秀な機能</td></tr>
+              <tr><td class="p-2 font-medium">71〜90</td><td class="p-2 text-gray-600">軽微な障害のみ</td></tr>
+              <tr><td class="p-2 font-medium">51〜70</td><td class="p-2 text-gray-600">明らかな障害があるが自立可</td></tr>
+              <tr><td class="p-2 font-medium">31〜50</td><td class="p-2 text-gray-600">顕著な障害、部分的支援が必要</td></tr>
+              <tr><td class="p-2 font-medium">1〜30</td><td class="p-2 text-gray-600">重度障害、集中的支援・入院</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GAF / SOFAS -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3">GAF（Global Assessment of Functioning）</div>
+        <div class="text-xs text-gray-500 mb-3">DSM-IV 軸V（DSM-5で削除）｜ 1〜100点 ｜ 1〜5分</div>
+
+        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+          <div class="text-sm font-bold text-gray-700 mb-2">GAFスコアの目安</div>
+          <div class="space-y-1 text-xs text-gray-700">
+            <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-medium">91〜100</span><span>症状なし、各領域で高機能</span></div>
+            <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-medium">71〜90</span><span>軽微な症状、正常域</span></div>
+            <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-medium">51〜70</span><span>軽〜中等度症状、機能障害あり</span></div>
+            <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-medium">31〜50</span><span>重篤な症状、著しい機能障害</span></div>
+            <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-medium">11〜30</span><span>幻覚・妄想・思考解体が持続</span></div>
+            <div class="flex justify-between"><span class="font-medium">1〜10</span><span>自傷他害リスク高、最重度</span></div>
+          </div>
+        </div>
+
+        <div class="warning-box mb-4">
+          <div class="font-bold text-yellow-800 text-sm mb-1">GAFの限界</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li>・症状と機能を一尺度で混在評価</li>
+            <li>・DSM-5からは公式削除</li>
+            <li>・SOFAS（機能のみ）またはPSP推奨</li>
+          </ul>
+        </div>
+
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+          <div class="font-bold text-blue-800 text-sm mb-2">SOFAS</div>
+          <p class="text-xs text-gray-700">Social and Occupational Functioning Assessment Scale。GAFと同じ1〜100スケールだが、精神症状の重症度を直接スコアに含めない。社会・職業機能を純粋に評価。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AIMS ===== -->
+  <section class="section-card anchor-offset" id="aims">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="activity" class="w-6 h-6 text-red-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">AIMS</h2>
+        <p class="text-gray-500 text-sm">Abnormal Involuntary Movement Scale — 遅発性ジスキネジア（TD）モニタリング</p>
+      </div>
+    </div>
+
+    <div class="danger-box mb-5">
+      <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+        <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+        TD（遅発性ジスキネジア）スクリーニング基準（Schooler & Kane, 1982）
+      </div>
+      <div class="grid md:grid-cols-3 gap-3 text-sm text-gray-700">
+        <div class="bg-white rounded-lg p-2 border"><span class="font-bold">①</span> 抗精神病薬の累積使用 ≥3ヶ月</div>
+        <div class="bg-white rounded-lg p-2 border"><span class="font-bold">②</span> AIMS 1項目以上が ≥3点、または2項目以上が ≥2点</div>
+        <div class="bg-white rounded-lg p-2 border"><span class="font-bold">③</span> 他の原因（ハンチントン病、Wilson病など）を除外</div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mb-4">
+      <!-- 不随意運動評価 -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+          <span class="badge-core">評価項目①〜⑦（0〜4点）</span> 不随意運動
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-red-50">
+                <th class="text-left p-2 font-bold text-red-800 text-xs">#</th>
+                <th class="text-left p-2 font-bold text-red-800 text-xs">部位</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50"><td class="p-2 text-xs font-medium">①</td><td class="p-2 text-xs text-gray-700">顔面筋（額・眼周囲）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 text-xs font-medium">②</td><td class="p-2 text-xs text-gray-700">口唇・口周囲筋</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 text-xs font-medium">③</td><td class="p-2 text-xs text-gray-700">顎</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 text-xs font-medium">④</td><td class="p-2 text-xs text-gray-700">舌</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 text-xs font-medium">⑤</td><td class="p-2 text-xs text-gray-700">上肢（腕・手首・手）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 text-xs font-medium">⑥</td><td class="p-2 text-xs text-gray-700">下肢（脚・足首・足）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 text-xs font-medium">⑦</td><td class="p-2 text-xs text-gray-700">体幹（頸・肩・腰）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 全般評価・歯科 -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3 text-sm">
+          <span class="badge-sub">評価項目⑧〜⑫</span> 全般評価・歯科確認
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="bg-gray-50 rounded-lg p-3 border">
+            <div class="font-medium text-gray-800">⑧ 全般的重症度（0〜4）</div>
+            <p class="text-xs text-gray-600 mt-1">不随意運動全体の評価者による全般評価</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border">
+            <div class="font-medium text-gray-800">⑨ 日常機能への影響（0〜4）</div>
+            <p class="text-xs text-gray-600 mt-1">不随意運動が社会・職業的機能に与える障害（Incapacitation）</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border">
+            <div class="font-medium text-gray-800">⑩ 患者の自覚・苦悩（0〜4）</div>
+            <p class="text-xs text-gray-600 mt-1">不随意運動に対する患者の自覚・認識・主観的苦痛</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
+            <div class="font-medium text-gray-800">⑪ 義歯・入れ歯の有無（0/1）</div>
+            <p class="text-xs text-gray-600 mt-1">口腔・舌の不随意運動評価前に確認必須</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
+            <div class="font-medium text-gray-800">⑫ 義歯なしで評価可能か（0/1）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-4 gap-2 text-sm text-center mb-4">
+      <div class="bg-green-50 rounded-xl p-3 border border-green-200">
+        <div class="text-xl font-bold text-green-700">0</div>
+        <div class="text-xs text-gray-600 mt-1">なし</div>
+      </div>
+      <div class="bg-yellow-50 rounded-xl p-3 border border-yellow-200">
+        <div class="text-xl font-bold text-yellow-700">1</div>
+        <div class="text-xs text-gray-600 mt-1">最小限</div>
+      </div>
+      <div class="bg-orange-50 rounded-xl p-3 border border-orange-200">
+        <div class="text-xl font-bold text-orange-700">2</div>
+        <div class="text-xs text-gray-600 mt-1">軽度</div>
+      </div>
+      <div class="bg-red-50 rounded-xl p-3 border border-red-200">
+        <div class="text-xl font-bold text-red-700">3〜4</div>
+        <div class="text-xs text-gray-600 mt-1">中等〜重度</div>
+      </div>
+    </div>
+
+    <div class="recommend-box">
+      <div class="font-bold text-green-800 mb-1 text-sm">モニタリング頻度（推奨）</div>
+      <div class="grid md:grid-cols-3 gap-2 text-sm text-gray-700">
+        <div>・抗精神病薬開始時にベースライン</div>
+        <div>・以降 <strong>3〜6ヶ月ごと</strong>（クロザピン使用中は更に頻回）</div>
+        <div>・TD疑い時は即時施行・記録</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== UKU補足 ===== -->
+  <div class="section-card bg-gray-50 border border-gray-200">
+    <div class="flex items-start gap-3">
+      <div class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+        <i data-lucide="list-checks" class="w-5 h-5 text-gray-700"></i>
+      </div>
+      <div class="text-sm">
+        <div class="font-bold text-gray-800 mb-1">UKU副作用スケール — 総合的副作用評価（参考）</div>
+        <p class="text-gray-600">Lingjaerde O et al. <em>Acta Psychiatr Scand Suppl.</em> 1987;334:1–100</p>
+        <p class="text-gray-600 mt-1">AIMS/SAS/BARSが運動系副作用に特化しているのに対し、UKUは<strong>精神系・神経系・自律神経系・その他</strong>の副作用を網羅した包括的副作用スケール。抗精神病薬の長期外来フォローアップで補完的に使用。</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 text-xs">
+          <div class="bg-white rounded p-2 border"><span class="font-bold text-indigo-700">精神系</span>：集中力低下、眠気、記憶障害、不安など</div>
+          <div class="bg-white rounded p-2 border"><span class="font-bold text-orange-700">神経系</span>：EPS、振戦、けいれん、自律神経症状</div>
+          <div class="bg-white rounded p-2 border"><span class="font-bold text-teal-700">自律神経系</span>：口渇、便秘、低血圧など</div>
+          <div class="bg-white rounded p-2 border"><span class="font-bold text-gray-700">その他</span>：体重変化、月経異常、性機能障害など</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SAS ===== -->
+  <section class="section-card anchor-offset" id="sas">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="footprints" class="w-6 h-6 text-orange-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">SAS</h2>
+        <p class="text-gray-500 text-sm">Simpson-Angus Scale — パーキンソニズム・EPS評価（Simpson & Angus, 1970）</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4 mb-5">
+      <div class="bg-orange-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-orange-700">10</div>
+        <div class="text-sm text-gray-600 mt-1">項目数</div>
+      </div>
+      <div class="bg-orange-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-orange-700">0〜4</div>
+        <div class="text-sm text-gray-600 mt-1">各項目得点</div>
+      </div>
+      <div class="bg-orange-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-orange-700">&gt;0.3</div>
+        <div class="text-sm text-gray-600 mt-1">EPS「あり」の目安（平均値）</div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto mb-4">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg w-8">#</th>
+            <th class="text-left p-3 font-bold text-gray-700">項目</th>
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">評価ポイント</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">1</td>
+            <td class="p-3 font-medium">歩行</td>
+            <td class="p-3 text-gray-600">歩行時の速度・ぎこちなさ・小歩歩行</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">2</td>
+            <td class="p-3 font-medium">腕の落下</td>
+            <td class="p-3 text-gray-600">肩越しに腕を落とした際の動き（抵抗の程度）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">3</td>
+            <td class="p-3 font-medium">肩の揺らし</td>
+            <td class="p-3 text-gray-600">両肩を掴み前後に揺らした際の抵抗感</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">4</td>
+            <td class="p-3 font-medium">肘の硬直</td>
+            <td class="p-3 text-gray-600">肘関節の屈伸における筋緊張（鉛管・歯車）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">5</td>
+            <td class="p-3 font-medium">手首の硬直</td>
+            <td class="p-3 text-gray-600">手首の屈伸・回旋における抵抗</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">6</td>
+            <td class="p-3 font-medium">下肢振り子テスト</td>
+            <td class="p-3 text-gray-600">椅子端に座った状態で下肢を振り子のように揺らした際の振幅・抵抗</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">7</td>
+            <td class="p-3 font-medium">頭部落下テスト</td>
+            <td class="p-3 text-gray-600">仰臥位で頭部を持ち上げて離した際の落下速度・筋緊張</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">8</td>
+            <td class="p-3 font-medium">眉間反射</td>
+            <td class="p-3 text-gray-600">眉間への軽打で瞬目反射の消退がみられない（持続的瞬目反射）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">9</td>
+            <td class="p-3 font-medium">振戦</td>
+            <td class="p-3 text-gray-600">安静時・企図時振戦（上肢・口・顔面）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-500">10</td>
+            <td class="p-3 font-medium">流涎</td>
+            <td class="p-3 text-gray-600">唾液分泌過多・よだれ（アカシジア評価はBARSで別途施行）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="criteria-box">
+      <div class="font-bold text-blue-800 mb-2 text-sm">採点計算と解釈</div>
+      <div class="grid md:grid-cols-3 gap-3 text-sm text-gray-700">
+        <div class="bg-white rounded-lg p-2 border">
+          <span class="font-bold">合計点</span>：0〜40点
+        </div>
+        <div class="bg-white rounded-lg p-2 border">
+          <span class="font-bold">平均値</span>：合計÷10で算出
+        </div>
+        <div class="bg-white rounded-lg p-2 border">
+          <span class="font-bold">EPS判定</span>：平均値 &gt;0.3 でEPS疑い（感度高め）
+        </div>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">※平均値 0.65〜0.85以上でより特異的との報告もある。臨床判断と組み合わせて評価すること。</p>
+    </div>
+  </section>
+
+  <!-- ===== BARS ===== -->
+  <section class="section-card anchor-offset" id="bars">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="zap" class="w-6 h-6 text-rose-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">BARS</h2>
+        <p class="text-gray-500 text-sm">Barnes Akathisia Rating Scale — アカシジア評価（Barnes, 1989）</p>
+      </div>
+    </div>
+
+    <div class="warning-box mb-5">
+      <div class="font-bold text-yellow-800 mb-1 flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4"></i>
+        アカシジアの特性
+      </div>
+      <p class="text-sm text-gray-700">主観的な内的不穏感（「じっとしていられない」）と客観的な不随意運動（足踏み、歩き回る）の両面を評価。抑うつ・不安・精神症状の悪化と誤診されやすい。自殺念慮との関連も報告されており、早期同定が重要。</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mb-5">
+      <!-- 客観的 -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3 text-sm">客観的アカシジア（0〜3点）</div>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
+            <span class="score-cell bg-gray-100 text-gray-600 flex-shrink-0" style="display:inline-flex;">0</span>
+            <span>不随意運動なし</span>
+          </div>
+          <div class="flex items-start gap-3 bg-yellow-50 rounded-lg p-3">
+            <span class="score-cell bg-yellow-100 text-yellow-700 flex-shrink-0" style="display:inline-flex;">1</span>
+            <span>坐位または立位で正常範囲を超えた動き（足の上げ下ろし、体重移動など）</span>
+          </div>
+          <div class="flex items-start gap-3 bg-orange-50 rounded-lg p-3">
+            <span class="score-cell bg-orange-100 text-orange-700 flex-shrink-0" style="display:inline-flex;">2</span>
+            <span>頻繁な動き・持続する歩き回り、面接中も静止できない</span>
+          </div>
+          <div class="flex items-start gap-3 bg-red-50 rounded-lg p-3">
+            <span class="score-cell bg-red-100 text-red-700 flex-shrink-0" style="display:inline-flex;">3</span>
+            <span>持続的な動き・ほぼ常に歩き回るか足踏み</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 主観的 -->
+      <div>
+        <div class="font-bold text-gray-800 mb-3 text-sm">主観的アカシジア</div>
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200 mb-3">
+          <div class="font-bold text-blue-800 text-sm mb-2">A. 焦燥感・不穏の自覚（0〜3点）</div>
+          <div class="text-xs text-gray-600 space-y-0.5">
+            <div>0 = なし</div>
+            <div>1 = 軽度の焦燥感（足や体を動かしたい衝動）</div>
+            <div>2 = 中等度（明確な焦燥感・内的不穏）</div>
+            <div>3 = 重度（じっとしていられない強烈な不穏）</div>
+          </div>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200 mb-3">
+          <div class="font-bold text-blue-800 text-sm mb-2">B. 苦悩・苦痛（0〜3点）</div>
+          <div class="text-xs text-gray-600 space-y-0.5">
+            <div>0 = なし</div>
+            <div>1 = 軽度の苦悩</div>
+            <div>2 = 中等度の苦悩</div>
+            <div>3 = 重度の苦悩・日常生活への著しい影響</div>
+          </div>
+        </div>
+        <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
+          <div class="font-bold text-purple-800 text-sm mb-2">全般的臨床評価（0〜5点）</div>
+          <div class="text-xs text-gray-600 space-y-0.5">
+            <div>0 = なし</div>
+            <div>1 = 疑わしい（偽性アカシジア含む）</div>
+            <div>2 = 軽度アカシジア</div>
+            <div>3 = 中等度アカシジア</div>
+            <div>4 = 重度アカシジア</div>
+            <div>5 = 重篤アカシジア</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="font-bold text-yellow-800 mb-2 text-sm flex items-center gap-2">
+        <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+        偽性アカシジア（Pseudoakathisia）
+      </div>
+      <p class="text-sm text-gray-700">客観的な不随意運動が観察されるが、主観的な焦燥感・苦痛を伴わない。BARSでは全般評価1点に分類。アカシジアとの鑑別は主観的苦悩の有無による。</p>
+    </div>
+  </section>
+
+  <!-- ===== 認知機能 ===== -->
+  <section class="section-card anchor-offset" id="cognition">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="brain" class="w-6 h-6 text-indigo-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">認知機能評価スケール</h2>
+        <p class="text-gray-500 text-sm">BACS-J / MCCB</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- BACS -->
+      <div>
+        <div class="font-bold text-gray-800 mb-2">BACS-J（統合失調症認知機能簡易評価）</div>
+        <div class="text-xs text-gray-500 mb-3">Keefe et al., 2004 ｜ 日本語版（BACS-J）：住吉太幹ら（国立精神・神経医療研究センター）｜ 約30〜35分 ｜ <span class="badge-level-b">外来向き</span></div>
+
+        <div class="space-y-2 mb-4">
+          <div class="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-medium text-sm">① 言語記憶（単語リスト）</span>
+              <span class="text-xs text-gray-500">15単語 × 5試行</span>
+            </div>
+            <p class="text-xs text-gray-600">即時再生・遅延再生</p>
+          </div>
+          <div class="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-medium text-sm">② 数字・文字配列（作業記憶）</span>
+              <span class="text-xs text-gray-500">数字と文字の混合</span>
+            </div>
+            <p class="text-xs text-gray-600">数字・文字を昇順に並び替え</p>
+          </div>
+          <div class="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-medium text-sm">③ トークン運動（精神運動速度）</span>
+              <span class="text-xs text-gray-500">60秒間</span>
+            </div>
+            <p class="text-xs text-gray-600">コインを容器に入れる運動課題</p>
+          </div>
+          <div class="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-medium text-sm">④ 言語流暢性</span>
+              <span class="text-xs text-gray-500">各60秒 × 2条件</span>
+            </div>
+            <p class="text-xs text-gray-600">文字流暢性（音韻）＋カテゴリー流暢性</p>
+          </div>
+          <div class="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-medium text-sm">⑤ 記号数字変換（処理速度）</span>
+              <span class="text-xs text-gray-500">90秒</span>
+            </div>
+            <p class="text-xs text-gray-600">記号と数字の対応付け（Digit Symbol型）</p>
+          </div>
+          <div class="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-medium text-sm">⑥ Tower of London（実行機能）</span>
+              <span class="text-xs text-gray-500">計画立案・問題解決</span>
+            </div>
+            <p class="text-xs text-gray-600">最少手数で目標配置にする計画課題</p>
+          </div>
+        </div>
+
+        <div class="recommend-box">
+          <div class="font-bold text-green-800 text-sm mb-1">BACS-Jの特徴</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li>・健常者規範データ（日本人）が整備済み</li>
+            <li>・外来での施行が比較的容易</li>
+            <li>・MCCBより安価・短時間</li>
+            <li>・z スコアで標準化、プロファイル比較可能</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- MCCB -->
+      <div>
+        <div class="font-bold text-gray-800 mb-2">MCCB（MATRICS認知機能評価バッテリー）</div>
+        <div class="text-xs text-gray-500 mb-3">Nuechterlein et al., 2008 ｜ 7認知ドメイン・10テスト ｜ 60〜90分以上 ｜ <span class="badge-optional">主に研究用</span></div>
+
+        <div class="overflow-x-auto mb-4">
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="text-left p-2 font-bold text-gray-700">認知ドメイン</th>
+                <th class="text-left p-2 font-bold text-gray-700">使用テスト</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">処理速度</td><td class="p-2 text-gray-600">BACS符号化、カテゴリー流暢性、TMT-A</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">持続注意</td><td class="p-2 text-gray-600">CPT-IP（持続的注意課題）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">作業記憶（言語）</td><td class="p-2 text-gray-600">数字配列（LNS）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">作業記憶（非言語）</td><td class="p-2 text-gray-600">空間スパン（WMS-III）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">言語学習・記憶</td><td class="p-2 text-gray-600">HVLT-R（ホプキンズ言語学習課題）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">視覚学習・記憶</td><td class="p-2 text-gray-600">BVMT-R（簡易視覚空間記憶課題）</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">推論・問題解決</td><td class="p-2 text-gray-600">NAB迷路テスト</td></tr>
+              <tr class="hover:bg-gray-50"><td class="p-2 font-medium">社会認知</td><td class="p-2 text-gray-600">MSCEIT（感情知性課題）</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 text-sm mb-1">MCCBの使用における注意</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li>・治験・認知機能改善薬の研究がFDA推奨の標準</li>
+            <li>・キット購入・研修が必要（著作権管理）</li>
+            <li>・心理士等の施行が現実的</li>
+            <li>・日常外来での使用はコスト・時間面で困難</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DAI-10 ===== -->
+  <section class="section-card anchor-offset" id="adherence">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="pill" class="w-6 h-6 text-amber-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">DAI-10</h2>
+        <p class="text-gray-500 text-sm">Drug Attitude Inventory（Hogan et al., 1983）— 服薬態度・アドヒアランス評価</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4 mb-5">
+      <div class="bg-amber-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-amber-700">10</div>
+        <div class="text-sm text-gray-600 mt-1">項目数（はい/いいえ）</div>
+      </div>
+      <div class="bg-amber-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-amber-700">−10〜+10</div>
+        <div class="text-sm text-gray-600 mt-1">合計得点範囲</div>
+      </div>
+      <div class="bg-amber-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-amber-700">5〜10分</div>
+        <div class="text-sm text-gray-600 mt-1">自記式・所要時間</div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mb-5">
+      <div>
+        <div class="font-bold text-gray-800 mb-3 text-sm">DAI-10の10項目</div>
+        <div class="space-y-2 text-sm">
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>① 薬を飲むと調子が良くなる気がする</span>
+            <span class="badge-level-a text-xs">「はい」＝+1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>② 薬を飲むと気が滅入る</span>
+            <span class="badge-level-c text-xs">「はい」＝−1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>③ 薬は自分の意志でコントロールしたい</span>
+            <span class="badge-level-c text-xs">「はい」＝−1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>④ 薬を飲むと将来への不安が減る</span>
+            <span class="badge-level-a text-xs">「はい」＝+1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>⑤ 薬は精神的に問題がある証拠だと感じる</span>
+            <span class="badge-level-c text-xs">「はい」＝−1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>⑥ 薬を飲むとより正常に感じる</span>
+            <span class="badge-level-a text-xs">「はい」＝+1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>⑦ 薬の副作用が嫌だ</span>
+            <span class="badge-level-c text-xs">「はい」＝−1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>⑧ 薬を飲むと思考がはっきりする</span>
+            <span class="badge-level-a text-xs">「はい」＝+1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>⑨ 薬は必要でなければ飲みたくない</span>
+            <span class="badge-level-c text-xs">「はい」＝−1</span>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-3 border flex justify-between items-center">
+            <span>⑩ 薬が生活の一部になっている</span>
+            <span class="badge-level-a text-xs">「はい」＝+1</span>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">※実際の項目は原典・日本語版を参照。上記は意味・方向性の参考例。</p>
+      </div>
+
+      <div>
+        <div class="font-bold text-gray-800 mb-3 text-sm">スコア解釈</div>
+        <div class="space-y-3 mb-4">
+          <div class="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-200">
+            <div class="text-xl font-bold text-green-700 w-16 text-center">+1〜+10</div>
+            <div class="text-sm">
+              <div class="font-bold text-green-800">服薬態度 良好</div>
+              <p class="text-gray-600 text-xs">治療同盟が構築されている状態</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200">
+            <div class="text-xl font-bold text-gray-700 w-16 text-center">0</div>
+            <div class="text-sm">
+              <div class="font-bold text-gray-800">中立的</div>
+              <p class="text-gray-600 text-xs">アンビバレントな態度</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-red-50 rounded-xl border border-red-200">
+            <div class="text-xl font-bold text-red-700 w-16 text-center">−1〜−10</div>
+            <div class="text-sm">
+              <div class="font-bold text-red-800">服薬態度 否定的</div>
+              <p class="text-gray-600 text-xs">アドヒアランス不良のリスク高い</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 text-sm mb-1">DAI-10の限界と活用法</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li>・自記式のため社会的望ましさの影響あり</li>
+            <li>・スコア低値は面接での詳細探索のきっかけに</li>
+            <li>・LAI切り替え検討の際の参考指標として有用</li>
+            <li>・縦断的に追跡することで変化の把握が可能</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 病識 ITAQ -->
+    <div class="criteria-box">
+      <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+        <i data-lucide="eye" class="w-4 h-4"></i>
+        ITAQ（Insight and Treatment Attitudes Questionnaire）
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <p class="text-gray-700 mb-2">McEvoy et al., 1989 ｜ 11項目 ｜ 各0〜2点 ｜ 合計0〜22点</p>
+          <ul class="text-gray-600 space-y-1 text-xs">
+            <li>・精神疾患の自己認識（病識）</li>
+            <li>・薬物治療の必要性の認識</li>
+            <li>・入院治療の必要性の認識</li>
+            <li>・将来的な再発リスクの認識</li>
+          </ul>
+        </div>
+        <div>
+          <div class="bg-white rounded-lg p-3 border border-blue-200">
+            <div class="font-bold text-gray-800 text-xs mb-1">スコア解釈</div>
+            <div class="text-xs text-gray-600 space-y-0.5">
+              <div>高スコア → 病識良好</div>
+              <div>低スコア → 病識欠如（アドヒアランス不良リスク）</div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">DAI-10（薬物態度）と組み合わせることで、アドヒアランス問題の多面的把握が可能。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 参考文献・出典 ===== -->
+  <section class="section-card anchor-offset">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="book-open" class="w-6 h-6 text-gray-700"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">主要参考文献</h2>
+        <p class="text-gray-500 text-sm">各スケールの原典・日本語版情報</p>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">スケール</th>
+            <th class="text-left p-3 font-bold text-gray-700">原典</th>
+            <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">日本語版・備考</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 text-xs">
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-blue-700">PANSS</td>
+            <td class="p-3 text-gray-600">Kay SR et al. Schizophr Bull. 1987;13:261-276</td>
+            <td class="p-3 text-gray-600">日本精神科評価尺度研究会（JSPRS）：山田他訳マニュアル（星和書店）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-teal-700">BPRS</td>
+            <td class="p-3 text-gray-600">Overall JE, Gorham DR. Psychol Rep. 1962;10:799-812</td>
+            <td class="p-3 text-gray-600">精神医学誌等で日本語版の信頼性研究あり</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-indigo-700">SANS</td>
+            <td class="p-3 text-gray-600">Andreasen NC. Arch Gen Psychiatry. 1983;39:784-788</td>
+            <td class="p-3 text-gray-600">学会誌掲載の日本語版あり</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-purple-700">BNSS</td>
+            <td class="p-3 text-gray-600">Kirkpatrick B et al. Am J Psychiatry. 2011;168:659-665</td>
+            <td class="p-3 text-gray-600">翻訳研究あり。NIMH推奨の新世代陰性尺度</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-rose-700">PSYRATS</td>
+            <td class="p-3 text-gray-600">Haddock G et al. Psychol Med. 1999;29:879-889</td>
+            <td class="p-3 text-gray-600">学術的翻訳・使用報告あり</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-green-700">CDSS</td>
+            <td class="p-3 text-gray-600">Addington D et al. Schizophr Res. 1990;3:247-251</td>
+            <td class="p-3 text-gray-600">Calgary大学公式サイトに日本語版あり（無料）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-orange-700">CGI</td>
+            <td class="p-3 text-gray-600">Guy W. ECDEU Assessment Manual. NIMH, 1976</td>
+            <td class="p-3 text-gray-600">パブリックドメイン。広く使用</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-teal-700">PSP</td>
+            <td class="p-3 text-gray-600">Morosini PL et al. Acta Psychiatr Scand. 2000;101:323-329</td>
+            <td class="p-3 text-gray-600">製薬ガイド等で日本語版情報あり</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-red-700">AIMS</td>
+            <td class="p-3 text-gray-600">NIMH, 1976（Schooler & Kane 1982 TD診断基準）</td>
+            <td class="p-3 text-gray-600">パブリックドメイン。各施設で使用可</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-orange-700">SAS</td>
+            <td class="p-3 text-gray-600">Simpson GM, Angus JWS. Acta Psychiatr Scand Suppl. 1970;212:11-19</td>
+            <td class="p-3 text-gray-600">広くパブリックドメイン的に使用</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-rose-700">BARS</td>
+            <td class="p-3 text-gray-600">Barnes TR. Br J Psychiatry. 1989;154:672-676</td>
+            <td class="p-3 text-gray-600">学術的使用広く認められる</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-indigo-700">BACS-J</td>
+            <td class="p-3 text-gray-600">Keefe RS et al. Schizophr Res. 2004;68:283-297</td>
+            <td class="p-3 text-gray-600">日本語版（BACS-J）：住吉太幹ら（国立精神・神経医療研究センター, 2007規準）</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-indigo-700">MCCB</td>
+            <td class="p-3 text-gray-600">Nuechterlein KH et al. Am J Psychiatry. 2008;165:203-213</td>
+            <td class="p-3 text-gray-600">MATRICS Assessmentよりキット購入要</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-amber-700">DAI-10</td>
+            <td class="p-3 text-gray-600">Hogan TP et al. Psychol Med. 1983;13:177-183</td>
+            <td class="p-3 text-gray-600">日本語版紹介あり。DAI-30短縮版</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-blue-700">PANSS寛解基準</td>
+            <td class="p-3 text-gray-600">Andreasen NC et al. Am J Psychiatry. 2005;162:441-449</td>
+            <td class="p-3 text-gray-600">8項目 ≤3点 × 6ヶ月維持を寛解と定義</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- フッター -->
+<footer class="bg-gray-800 text-gray-300 py-6 mt-4">
+  <div class="max-w-5xl mx-auto px-4 text-center text-sm">
+    <p>統合失調症 精神症状評価スケール集 ｜ 精神科臨床リファレンス</p>
+    <p class="text-gray-500 mt-1 text-xs">各スケールの使用にあたっては原典・公式マニュアルを必ず参照し、適切な研修のもとで施行してください。</p>
+  </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

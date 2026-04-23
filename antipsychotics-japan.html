@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>抗精神病薬 選択ガイド（日本承認薬）- 精神科臨床</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --level-a: #15803d;
+      --level-b: #1d4ed8;
+      --level-c: #6b7280;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-first {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-augment {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .receptor-dot-high { background:#dc2626; border-radius:50%; width:1rem; height:1rem; display:inline-block; }
+    .receptor-dot-med  { background:#d97706; border-radius:50%; width:1rem; height:1rem; display:inline-block; }
+    .receptor-dot-low  { background:#6ee7b7; border-radius:50%; width:1rem; height:1rem; display:inline-block; }
+    .receptor-dot-none { background:#e5e7eb; border-radius:50%; width:1rem; height:1rem; display:inline-block; }
+    .receptor-dot-partial { background:#818cf8; border-radius:50%; width:1rem; height:1rem; display:inline-block; }
+    .drug-card {
+      border-radius: 0.75rem;
+      padding: 1rem;
+      border: 1px solid;
+    }
+    .drug-card-fga { background:#fef2f2; border-color:#fca5a5; }
+    .drug-card-sga { background:#eff6ff; border-color:#93c5fd; }
+    .drug-card-partial { background:#f5f3ff; border-color:#c4b5fd; }
+    .drug-card-clozapine { background:#fdf4ff; border-color:#e879f9; }
+    .toc {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 50;
+      min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .th-cell { background:#f1f5f9; font-weight:700; font-size:0.78rem; padding:0.6rem 0.5rem; text-align:center; color:#374151; }
+    .td-cell { padding:0.55rem 0.5rem; text-align:center; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .td-left { padding:0.55rem 0.75rem; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .generation-badge-fga { background:#fee2e2; color:#991b1b; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .generation-badge-sga { background:#dbeafe; color:#1e40af; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .generation-badge-3rd { background:#ede9fe; color:#5b21b6; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .generation-badge-clz { background:#fae8ff; color:#701a75; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .side-effect-bar { height:8px; border-radius:4px; margin-top:2px; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-8">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="pill" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold">抗精神病薬 選択ガイド</h1>
+      <p class="mt-2 text-lg opacity-85">日本承認薬 — 分類・受容体・使い分け・副作用・モニタリング</p>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">薬剤分類</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">受容体プロファイル</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">選択アルゴリズム</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">副作用比較</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">LAI</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">モニタリング</span>
+      </div>
+      <p class="mt-3 text-xs opacity-60">参照：統合失調症薬物治療ガイドライン2022（日本神経精神薬理学会）/ JSNP 2023改訂版 / 各添付文書</p>
+    </div>
+  </header>
+
+  <!-- フローティング目次 -->
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#quickref" class="text-sm text-gray-600 hover:text-blue-700 block">クイックリファレンス</a></li>
+      <li><a href="#classification" class="text-sm text-gray-600 hover:text-blue-700 block">薬剤分類</a></li>
+      <li><a href="#selection" class="text-sm text-gray-600 hover:text-blue-700 block">選択アルゴリズム</a></li>
+      <li><a href="#receptor" class="text-sm text-gray-600 hover:text-blue-700 block">受容体プロファイル</a></li>
+      <li><a href="#druglist" class="text-sm text-gray-600 hover:text-blue-700 block">薬剤詳細</a></li>
+      <li><a href="#lai" class="text-sm text-gray-600 hover:text-blue-700 block">LAI（持続性注射）</a></li>
+      <li><a href="#sideeffects" class="text-sm text-gray-600 hover:text-blue-700 block">副作用比較</a></li>
+      <li><a href="#monitoring" class="text-sm text-gray-600 hover:text-blue-700 block">モニタリング</a></li>
+      <li><a href="#interactions" class="text-sm text-gray-600 hover:text-blue-700 block">相互作用・禁忌</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- クイックリファレンス -->
+    <div class="section-card" id="quickref">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる4ポイント</h2>
+          <p class="text-gray-500 text-sm">診察中に即座に確認すべき要点</p>
+        </div>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
+          <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">SGAを第一選択・単剤で十分試行</div>
+            <p class="text-gray-600 text-sm">初回エピソードはSGAを低用量から。十分量で4〜6週試行後に評価。多剤併用は原則避ける</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-l-4 border-orange-600">
+          <div class="w-10 h-10 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">代謝・EPS・QTを患者別に評価</div>
+            <p class="text-gray-600 text-sm">若年者は代謝系（オランザピン回避）、高齢者はEPS・鎮静・QT。副作用プロファイルで薬剤選択</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl border-l-4 border-teal-600">
+          <div class="w-10 h-10 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">2剤失敗 → クロザピンを躊躇なく</div>
+            <p class="text-gray-600 text-sm">十分量の異なる2剤で無効なら治療抵抗性。クロザピンは最も強いエビデンスを持つ唯一の選択肢</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-600">
+          <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">アドヒアランス不良はLAIへ</div>
+            <p class="text-gray-600 text-sm">服薬中断リスクが高い患者は早期にLAIを検討。再発防止の観点から経口剤と同等以上の選択肢</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 薬剤分類概要 -->
+    <div class="section-card" id="classification">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤分類</h2>
+          <p class="text-gray-500 text-sm">世代別・作用機序別の全体像</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <!-- FGA -->
+        <div class="drug-card drug-card-fga">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="generation-badge-fga">第一世代（FGA）</span>
+            <span class="text-xs text-gray-500">定型抗精神病薬</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">主にD2受容体を強力に遮断。陽性症状に有効だがEPSが強い。</p>
+          <div class="space-y-2">
+            <div>
+              <div class="text-xs font-bold text-red-700 mb-1">フェノチアジン系</div>
+              <div class="grid grid-cols-2 gap-1 text-xs">
+                <span class="bg-white rounded px-2 py-1 border border-red-200">クロルプロマジン<br><span class="text-gray-400">コントミン</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">レボメプロマジン<br><span class="text-gray-400">ヒルナミン</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">フルフェナジン<br><span class="text-gray-400">フルメジン</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">ペルフェナジン<br><span class="text-gray-400">ピーゼットシー</span></span>
+              </div>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-red-700 mb-1">ブチロフェノン系</div>
+              <div class="grid grid-cols-2 gap-1 text-xs">
+                <span class="bg-white rounded px-2 py-1 border border-red-200">ハロペリドール<br><span class="text-gray-400">セレネース</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">ブロムペリドール<br><span class="text-gray-400">インプロメン</span></span>
+              </div>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-red-700 mb-1">ベンザミド系</div>
+              <div class="grid grid-cols-2 gap-1 text-xs">
+                <span class="bg-white rounded px-2 py-1 border border-red-200">スルピリド<br><span class="text-gray-400">ドグマチール</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">チアプリド<br><span class="text-gray-400">グラマリール</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-red-700 bg-red-50 rounded p-2">
+            <i data-lucide="triangle-alert" class="w-3 h-3 inline-block mr-1"></i>
+            <strong>EPS</strong>（アカシジア・パーキンソニズム・遅発性ジスキネジア）リスクが高い
+          </div>
+        </div>
+
+        <!-- SGA -->
+        <div class="drug-card drug-card-sga">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="generation-badge-sga">第二世代（SGA）</span>
+            <span class="text-xs text-gray-500">非定型抗精神病薬</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">D2＋5-HT2A拮抗。EPS軽減されるが代謝系副作用に注意。</p>
+          <div class="grid grid-cols-2 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">リスペリドン<br><span class="text-gray-400">リスパダール</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">パリペリドン<br><span class="text-gray-400">インベガ</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">オランザピン<br><span class="text-gray-400">ジプレキサ</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">クエチアピン<br><span class="text-gray-400">セロクエル</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">クエチアピン徐放<br><span class="text-gray-400">ビプレッソ</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ペロスピロン<br><span class="text-gray-400">ルーラン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ブロナンセリン<br><span class="text-gray-400">ロナセン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">アセナピン<br><span class="text-gray-400">サクライズ</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ルラシドン<br><span class="text-gray-400">ラツーダ</span></span>
+          </div>
+          <div class="mt-3 text-xs text-blue-700 bg-blue-50 rounded p-2">
+            <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
+            薬剤によって代謝・鎮静・プロラクチン上昇のプロファイルが大きく異なる
+          </div>
+        </div>
+
+        <!-- Partial agonist -->
+        <div class="drug-card drug-card-partial">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="generation-badge-3rd">第三世代（部分作動薬）</span>
+            <span class="text-xs text-gray-500">D2部分アゴニスト</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">D2受容体の部分作動。ドパミン過活動状態では拮抗薬として、過少状態では作動薬として機能（スタビライザー作用）。</p>
+          <div class="space-y-2 text-xs">
+            <div class="bg-white rounded p-3 border border-purple-200">
+              <div class="font-bold text-purple-800">アリピプラゾール</div>
+              <div class="text-gray-400">エビリファイ / エビリファイDVS</div>
+              <div class="text-gray-600 mt-1">D2部分作動 ＋ 5-HT1A部分作動 ＋ 5-HT2A拮抗<br>代謝系副作用が最も少ない群。アカシジア注意</div>
+            </div>
+            <div class="bg-white rounded p-3 border border-purple-200">
+              <div class="font-bold text-purple-800">ブレクスピプラゾール</div>
+              <div class="text-gray-400">レキサルティ</div>
+              <div class="text-gray-600 mt-1">D2/D3部分作動 ＋ 5-HT1A部分作動 ＋ 5-HT2A拮抗 ＋ α1B/α2C拮抗<br>アカシジアがアリピプラゾールより少ない傾向。うつ増強・BPSD（2024年承認）</div>
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-purple-700 bg-purple-50 rounded p-2">
+            <i data-lucide="check-circle" class="w-3 h-3 inline-block mr-1"></i>
+            代謝系副作用・プロラクチン上昇が相対的に少ない。EPSリスクも低い
+          </div>
+        </div>
+
+        <!-- Clozapine -->
+        <div class="drug-card drug-card-clozapine">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="generation-badge-clz">クロザピン（特別管理薬）</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">治療抵抗性統合失調症（TRS）における唯一のLevel Aエビデンスを持つ薬剤。無顆粒球症リスクのため登録制管理下で使用。</p>
+          <div class="bg-white rounded p-3 border border-fuchsia-200 text-xs">
+            <div class="font-bold text-fuchsia-800">クロザピン</div>
+            <div class="text-gray-400">クロザリル</div>
+            <div class="text-gray-600 mt-1">
+              D1/D2/D3/D4拮抗 ＋ 5-HT2A/2C拮抗 ＋ H1拮抗 ＋ M1拮抗 ＋ α1拮抗<br>
+              D2親和性は低く、多受容体作用による幅広い効果
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-fuchsia-700 bg-fuchsia-50 rounded p-2">
+            <i data-lucide="triangle-alert" class="w-3 h-3 inline-block mr-1"></i>
+            <strong>無顆粒球症（1-2%）・心筋炎・痙攣</strong>リスク。CPMS登録必須。血液検査定期実施
+          </div>
+          <div class="mt-2 text-xs bg-green-50 rounded p-2 text-green-800">
+            <strong>適応：</strong>十分量の異なる2剤以上のAP薬で効果不十分な統合失調症（TRS）
+          </div>
+        </div>
+      </div>
+
+      <!-- クロルプロマジン換算表 -->
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="calculator" class="w-5 h-5 text-blue-700"></i>
+          <span class="font-bold text-blue-800">クロルプロマジン（CPZ）換算の目安</span>
+        </div>
+        <p class="text-xs text-gray-600 mb-3">「十分量」の評価・多剤比較に使用（CPZ 600〜1000mg/日相当が標準的試行範囲）</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs">
+            <thead>
+              <tr>
+                <th class="th-cell rounded-tl-lg text-left pl-3">薬剤名</th>
+                <th class="th-cell">CPZ換算比</th>
+                <th class="th-cell">600mg相当</th>
+                <th class="th-cell rounded-tr-lg">備考</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="td-left">ハロペリドール</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">高力価</td></tr>
+              <tr class="bg-gray-50"><td class="td-left">リスペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">—</td></tr>
+              <tr><td class="td-left">パリペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">リスの活性代謝物</td></tr>
+              <tr class="bg-gray-50"><td class="td-left">オランザピン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">—</td></tr>
+              <tr><td class="td-left">クエチアピン</td><td class="td-cell">×0.75</td><td class="td-cell">800mg</td><td class="td-cell text-gray-500">低力価</td></tr>
+              <tr class="bg-gray-50"><td class="td-left">アリピプラゾール</td><td class="td-cell">×67</td><td class="td-cell">9mg</td><td class="td-cell text-gray-500">参考値</td></tr>
+              <tr><td class="td-left">ブレクスピプラゾール</td><td class="td-cell">×100</td><td class="td-cell">6mg</td><td class="td-cell text-gray-500">参考値</td></tr>
+              <tr class="bg-gray-50"><td class="td-left">ルラシドン</td><td class="td-cell">×3</td><td class="td-cell">200mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
+              <tr><td class="td-left">ブロナンセリン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
+              <tr class="bg-gray-50"><td class="td-left">クロルプロマジン</td><td class="td-cell">×1</td><td class="td-cell">600mg</td><td class="td-cell text-gray-500">基準薬</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">※換算値は各種文献・ガイドラインにより差があります。臨床的判断に用いる目安値です。</p>
+      </div>
+    </div>
+
+    <!-- 選択アルゴリズム -->
+    <div class="section-card" id="selection">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤選択アルゴリズム</h2>
+          <p class="text-gray-500 text-sm">患者背景・病態別の選択指針</p>
+        </div>
+      </div>
+
+      <!-- メインフロー -->
+      <div class="flex flex-col items-center gap-2 mb-8">
+        <div class="bg-gray-800 text-white rounded-xl px-6 py-3 text-center font-bold text-sm w-72">統合失調症（新規処方・薬変更）</div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="bg-yellow-100 border-2 border-yellow-500 rounded-xl px-4 py-3 text-center text-sm w-80 font-medium text-yellow-900">
+          <i data-lucide="alert-circle" class="w-4 h-4 inline-block mr-1 text-yellow-600"></i>
+          器質性疾患・薬剤誘発性を除外<br>
+          <span class="text-xs text-yellow-700">（脳器質疾患・代謝疾患・薬剤・物質使用等）</span>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <div class="flex gap-4 items-start w-full justify-center">
+          <!-- 初回エピソード -->
+          <div class="flex flex-col items-center gap-2 flex-1 max-w-xs">
+            <div class="bg-blue-100 border-2 border-blue-400 rounded-xl px-3 py-2 text-center text-xs font-bold text-blue-800 w-full">初回エピソード</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-blue-400"></i>
+            <div class="bg-green-50 border border-green-300 rounded-xl px-3 py-2 text-xs w-full">
+              <div class="font-bold text-green-800 mb-1">SGA 低用量から開始</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・リスペリドン 1-2mg/日</li>
+                <li>・アリピプラゾール 12-24mg/日</li>
+                <li>・オランザピン 5-10mg/日 ※若年代謝注意</li>
+                <li>・ルラシドン 40-80mg/日（食後）</li>
+              </ul>
+              <div class="mt-1"><span class="badge-level-a">Level A</span></div>
+            </div>
+          </div>
+
+          <!-- 急性増悪・興奮 -->
+          <div class="flex flex-col items-center gap-2 flex-1 max-w-xs">
+            <div class="bg-red-100 border-2 border-red-400 rounded-xl px-3 py-2 text-center text-xs font-bold text-red-800 w-full">急性増悪・激しい興奮</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-red-400"></i>
+            <div class="bg-red-50 border border-red-300 rounded-xl px-3 py-2 text-xs w-full">
+              <div class="font-bold text-red-800 mb-1">鎮静効果のあるSGA or FGA</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・オランザピン筋注 10mg</li>
+                <li>・ハロペリドール筋注 5mg</li>
+                <li>・BZD 系（ロラゼパム）の併用</li>
+                <li>・クエチアピン（経口：鎮静効果）</li>
+              </ul>
+              <div class="mt-1"><span class="badge-level-a">Level A</span></div>
+            </div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400 mt-2"></i>
+        <div class="bg-orange-50 border-2 border-orange-400 rounded-xl px-5 py-3 text-center text-sm font-medium text-orange-900 w-80">
+          4〜6週 十分量試行 → 効果判定（PANSS等）
+        </div>
+
+        <div class="flex gap-4 mt-2 w-full justify-center">
+          <div class="flex flex-col items-center gap-1">
+            <div class="text-green-700 font-bold text-sm">有効</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-green-500"></i>
+            <div class="bg-green-50 border border-green-300 rounded-xl px-3 py-2 text-xs text-center">
+              <div class="font-bold text-green-800">維持療法継続</div>
+              <div class="text-gray-600">最小有効量で1〜2年以上<br>LAI変更を検討</div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div class="text-red-700 font-bold text-sm">無効・副作用</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-red-500"></i>
+            <div class="bg-yellow-50 border border-yellow-300 rounded-xl px-3 py-2 text-xs text-center">
+              <div class="font-bold text-yellow-800">別のSGAへ変更</div>
+              <div class="text-gray-600">副作用プロファイルが<br>異なる薬剤を選択</div>
+            </div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400 mt-2"></i>
+        <div class="bg-orange-50 border-2 border-orange-400 rounded-xl px-5 py-3 text-center text-sm font-medium text-orange-900 w-80">
+          2剤目も無効（十分量・十分期間）
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="bg-fuchsia-100 border-2 border-fuchsia-600 rounded-xl px-6 py-3 text-center font-bold text-sm w-72 text-fuchsia-900">
+          <i data-lucide="triangle-alert" class="w-4 h-4 inline-block mr-1 text-fuchsia-700"></i>
+          治療抵抗性統合失調症（TRS）→ <strong>クロザピン</strong>
+          <div class="text-xs font-normal mt-1 text-fuchsia-700">CPMS登録・施設基準の確認</div>
+        </div>
+      </div>
+
+      <!-- 患者背景別選択マトリックス -->
+      <h3 class="font-bold text-gray-700 text-lg mb-4 flex items-center gap-2">
+        <i data-lucide="user-check" class="w-5 h-5 text-blue-600"></i>
+        患者背景・病態別の推奨薬剤
+      </h3>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+            陽性症状優位（幻覚・妄想・思考障害）
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>リスペリドン 2-6mg/日</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>パリペリドン 6-12mg/日</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>オランザピン 10-20mg/日</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>ハロペリドール 2-6mg/日（FGA）</li>
+          </ul>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+          <div class="font-bold text-indigo-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="trending-down" class="w-4 h-4"></i>
+            陰性症状・認知機能障害優位
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>アリピプラゾール 12-30mg/日</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ルラシドン 40-80mg/日</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>クエチアピン 300-600mg/日</li>
+            <li class="text-xs text-gray-500">※陰性症状への直接効果のエビデンスは限定的</li>
+          </ul>
+        </div>
+
+        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+          <div class="font-bold text-yellow-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="weight" class="w-4 h-4"></i>
+            代謝リスク高・若年・肥満
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>アリピプラゾール（代謝中立）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ブレクスピプラゾール（代謝中立）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ルラシドン（体重増加少）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ブロナンセリン（代謝中立）</li>
+            <li class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold">回避</span>オランザピン・クロザピン</li>
+          </ul>
+        </div>
+
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+          <div class="font-bold text-orange-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="activity" class="w-4 h-4"></i>
+            EPS・錐体外路症状リスク高
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>クエチアピン（EPS最少）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>オランザピン</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>クロザピン（TDに対して）</li>
+            <li class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold">回避</span>ハロペリドール・リスペリドン高用量</li>
+          </ul>
+        </div>
+
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <div class="font-bold text-green-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+            不眠・興奮・鎮静が必要
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>クエチアピン 100-300mg（鎮静効果）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>オランザピン 5-20mg</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>レボメプロマジン（強鎮静）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>クロルプロマジン（FGA）</li>
+          </ul>
+        </div>
+
+        <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+          <div class="font-bold text-rose-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="heart" class="w-4 h-4"></i>
+            高齢者・認知症（BPSD）
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ブレクスピプラゾール（2024年BPSD適応）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>クエチアピン少量（転倒・血圧注意）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>リスペリドン 0.5-1mg（最小量・短期）</li>
+            <li class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold">注意</span>全抗精神病薬で死亡リスク増加のBlack Box Warning</li>
+          </ul>
+        </div>
+
+        <div class="bg-teal-50 border border-teal-200 rounded-xl p-4">
+          <div class="font-bold text-teal-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+            双極性障害（うつ症状）
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ルラシドン（双極うつ承認）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>クエチアピン徐放（ビプレッソ）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>オランザピン＋気分安定薬</li>
+          </ul>
+        </div>
+
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+          <div class="font-bold text-purple-800 text-sm mb-2 flex items-center gap-1">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            うつ病増強療法
+          </div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>アリピプラゾール（SSRI/SNRIに追加）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ブレクスピプラゾール（SSRI/SNRIに追加）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>クエチアピン徐放（低用量）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>オランザピン＋フルオキセチン（海外）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 受容体プロファイル -->
+    <div class="section-card" id="receptor">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="circle-dot" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">受容体プロファイル比較</h2>
+          <p class="text-gray-500 text-sm">主要受容体への親和性（定性的比較）</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 mb-4 text-xs">
+        <div class="flex items-center gap-1"><span class="receptor-dot-high"></span> 強い（High）</div>
+        <div class="flex items-center gap-1"><span class="receptor-dot-med"></span> 中等度（Mod）</div>
+        <div class="flex items-center gap-1"><span class="receptor-dot-low"></span> 弱い（Low）</div>
+        <div class="flex items-center gap-1"><span class="receptor-dot-none"></span> なし（None）</div>
+        <div class="flex items-center gap-1"><span class="receptor-dot-partial"></span> 部分作動（Partial）</div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse min-w-max">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg w-36">薬剤</th>
+              <th class="th-cell w-16">D2<br>拮抗</th>
+              <th class="th-cell w-16">5-HT2A<br>拮抗</th>
+              <th class="th-cell w-16">5-HT1A<br>作用</th>
+              <th class="th-cell w-16">H1<br>拮抗</th>
+              <th class="th-cell w-16">M1<br>拮抗</th>
+              <th class="th-cell w-16">α1<br>拮抗</th>
+              <th class="th-cell w-16">D3<br>親和性</th>
+              <th class="th-cell rounded-tr-lg">主な副作用への影響</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- FGA -->
+            <tr class="bg-red-50">
+              <td class="td-left font-bold text-red-800" colspan="9">第一世代（FGA）</td>
+            </tr>
+            <tr>
+              <td class="td-left">ハロペリドール</td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell text-left text-gray-600">EPS強い・高プロラクチン・QT延長</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left">クロルプロマジン</td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell text-left text-gray-600">強鎮静・起立性低血圧・抗コリン</td>
+            </tr>
+            <tr>
+              <td class="td-left">レボメプロマジン</td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell text-left text-gray-600">最強鎮静・起立性低血圧・認知障害</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left">スルピリド</td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell text-left text-gray-600">高プロラクチン・低鎮静・軽い抗うつ効果</td>
+            </tr>
+
+            <!-- SGA -->
+            <tr class="bg-blue-50">
+              <td class="td-left font-bold text-blue-800" colspan="9">第二世代（SGA）</td>
+            </tr>
+            <tr>
+              <td class="td-left">リスペリドン</td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell text-left text-gray-600">EPS用量依存・高プロラクチン・起立性低血圧</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left">パリペリドン</td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell text-left text-gray-600">リスペリドンと類似（活性代謝物）</td>
+            </tr>
+            <tr>
+              <td class="td-left">オランザピン</td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell text-left text-gray-600">体重増加・血糖上昇・鎮静・抗コリン</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left">クエチアピン</td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell text-left text-gray-600">鎮静・起立性低血圧・EPS少・代謝中等度</td>
+            </tr>
+            <tr>
+              <td class="td-left">ブロナンセリン</td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell text-left text-gray-600">EPSやや注意・代謝中立・食後投与</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left">ルラシドン</td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell text-left text-gray-600">代謝中立・体重増加少・アカシジア注意・食後必須</td>
+            </tr>
+            <tr>
+              <td class="td-left">アセナピン</td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell text-left text-gray-600">舌下錠・口腔内しびれ・鎮静中等度</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left">ペロスピロン</td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell text-left text-gray-600">EPS中等度・代謝軽微・鎮静軽い</td>
+            </tr>
+
+            <!-- Partial agonists -->
+            <tr class="bg-purple-50">
+              <td class="td-left font-bold text-purple-800" colspan="9">第三世代（部分作動薬）</td>
+            </tr>
+            <tr>
+              <td class="td-left">アリピプラゾール</td>
+              <td class="td-cell"><span class="receptor-dot-partial"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-partial"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-partial"></span></td>
+              <td class="td-cell text-left text-gray-600">アカシジア注意・代謝中立・低鎮静・プロラクチン低</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left">ブレクスピプラゾール</td>
+              <td class="td-cell"><span class="receptor-dot-partial"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-partial"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-none"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell"><span class="receptor-dot-partial"></span></td>
+              <td class="td-cell text-left text-gray-600">アカシジアがARP比少・代謝中立・体重軽増あり</td>
+            </tr>
+
+            <!-- Clozapine -->
+            <tr class="bg-fuchsia-50">
+              <td class="td-left font-bold text-fuchsia-800" colspan="9">クロザピン（治療抵抗性）</td>
+            </tr>
+            <tr>
+              <td class="td-left">クロザピン</td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-low"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-high"></span></td>
+              <td class="td-cell"><span class="receptor-dot-med"></span></td>
+              <td class="td-cell text-left text-gray-600">EPS最少・代謝著明増加・鎮静強・抗コリン・無顆粒球症</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 受容体と臨床的意義の解説 -->
+      <div class="mt-4 grid md:grid-cols-2 gap-3 text-xs">
+        <div class="bg-gray-50 rounded-xl p-3 border">
+          <div class="font-bold text-gray-700 mb-2">受容体と副作用の対応</div>
+          <ul class="space-y-1 text-gray-600">
+            <li><strong>D2強遮断</strong> → EPS・高プロラクチン血症（FGA・リスペリドン高用量）</li>
+            <li><strong>5-HT2A拮抗</strong> → D2遮断によるEPSを相殺（非定型性の核心）</li>
+            <li><strong>H1強拮抗</strong> → 鎮静・体重増加（オランザピン・クロザピン）</li>
+            <li><strong>M1拮抗</strong> → 口渇・便秘・認知障害（クロザピン・オランザピン）</li>
+            <li><strong>α1拮抗</strong> → 起立性低血圧・ふらつき（クロルプロマジン・クエチアピン）</li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3 border">
+          <div class="font-bold text-gray-700 mb-2">部分作動薬（アリピプラゾール・ブレクスピプラゾール）の特性</div>
+          <ul class="space-y-1 text-gray-600">
+            <li><strong>D2部分作動</strong> → ドパミン過活動では拮抗薬として働き、正常〜低活動では作動薬として働く</li>
+            <li><strong>代謝への影響</strong> → H1・M1親和性が低いため体重増加・代謝異常が少ない</li>
+            <li><strong>プロラクチン</strong> → D2完全遮断でないため上昇しにくい</li>
+            <li><strong>アカシジア</strong> → 特にアリピプラゾールで比較的多い（ブレクスピプラゾールは少ない傾向）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 薬剤詳細テーブル -->
+    <div class="section-card" id="druglist">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="pill" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤詳細・用量・適応</h2>
+          <p class="text-gray-500 text-sm">日本承認薬の主要データ（添付文書基準）</p>
+        </div>
+      </div>
+
+      <!-- SGA詳細テーブル -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="generation-badge-sga text-xs">第二世代（SGA）</span><span class="generation-badge-3rd text-xs ml-1">第三世代</span></h3>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">成分名（商品名）</th>
+              <th class="th-cell">開始量</th>
+              <th class="th-cell">維持量</th>
+              <th class="th-cell">最大量</th>
+              <th class="th-cell">主な剤形</th>
+              <th class="th-cell">主な承認適応</th>
+              <th class="th-cell rounded-tr-lg">特記事項</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-left font-medium">リスペリドン<br><span class="text-gray-400">リスパダール他</span></td>
+              <td class="td-cell">1-2mg</td>
+              <td class="td-cell">2-6mg</td>
+              <td class="td-cell">12mg</td>
+              <td class="td-cell">錠・細粒・液・OD錠</td>
+              <td class="td-cell">統合失調症・双極性躁病</td>
+              <td class="td-cell text-left">EPS用量依存性。高プロラクチン。LAIあり</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">パリペリドン<br><span class="text-gray-400">インベガ他</span></td>
+              <td class="td-cell">3-6mg</td>
+              <td class="td-cell">6-9mg</td>
+              <td class="td-cell">12mg</td>
+              <td class="td-cell">徐放錠</td>
+              <td class="td-cell">統合失調症</td>
+              <td class="td-cell text-left">空腹/食事で吸収変化少。LAI（ゼプリオン）あり</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium">オランザピン<br><span class="text-gray-400">ジプレキサ他</span></td>
+              <td class="td-cell">5-10mg</td>
+              <td class="td-cell">10-20mg</td>
+              <td class="td-cell">20mg</td>
+              <td class="td-cell">錠・OD錠・筋注</td>
+              <td class="td-cell">統合失調症・双極性障害</td>
+              <td class="td-cell text-left">糖尿病禁忌。体重↑↑。鎮静強。急性期筋注あり</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">クエチアピン<br><span class="text-gray-400">セロクエル他</span></td>
+              <td class="td-cell">25-50mg</td>
+              <td class="td-cell">150-600mg</td>
+              <td class="td-cell">750mg</td>
+              <td class="td-cell">錠・細粒</td>
+              <td class="td-cell">統合失調症</td>
+              <td class="td-cell text-left">糖尿病禁忌。EPS最少。鎮静活用。QT注意</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium">クエチアピン徐放<br><span class="text-gray-400">ビプレッソ</span></td>
+              <td class="td-cell">50mg</td>
+              <td class="td-cell">150-300mg</td>
+              <td class="td-cell">300mg</td>
+              <td class="td-cell">徐放錠</td>
+              <td class="td-cell">双極Ⅰ型うつ</td>
+              <td class="td-cell text-left">就寝前服用。糖尿病禁忌。眠気注意</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">ブロナンセリン<br><span class="text-gray-400">ロナセン</span></td>
+              <td class="td-cell">4mg</td>
+              <td class="td-cell">8-16mg</td>
+              <td class="td-cell">24mg</td>
+              <td class="td-cell">錠・散・テープ</td>
+              <td class="td-cell">統合失調症</td>
+              <td class="td-cell text-left">食後投与必須（空腹で吸収↓）。経皮吸収テープあり</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium">ルラシドン<br><span class="text-gray-400">ラツーダ</span></td>
+              <td class="td-cell">40mg</td>
+              <td class="td-cell">40-80mg</td>
+              <td class="td-cell">80mg</td>
+              <td class="td-cell">錠</td>
+              <td class="td-cell">統合失調症・双極Ⅰ型うつ</td>
+              <td class="td-cell text-left"><strong>食後必須</strong>（350kcal以上の食事と）。CYP3A4基質</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">ペロスピロン<br><span class="text-gray-400">ルーラン</span></td>
+              <td class="td-cell">4-8mg</td>
+              <td class="td-cell">12-48mg</td>
+              <td class="td-cell">48mg</td>
+              <td class="td-cell">錠</td>
+              <td class="td-cell">統合失調症</td>
+              <td class="td-cell text-left">1日3回分割。食後投与推奨</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium">アセナピン<br><span class="text-gray-400">サクライズ</span></td>
+              <td class="td-cell">5mg×2</td>
+              <td class="td-cell">5-10mg×2</td>
+              <td class="td-cell">20mg</td>
+              <td class="td-cell">舌下錠</td>
+              <td class="td-cell">統合失調症</td>
+              <td class="td-cell text-left">舌下吸収。10分間飲食不可。口腔内しびれあり</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">アリピプラゾール<br><span class="text-gray-400">エビリファイ他</span></td>
+              <td class="td-cell">6-12mg</td>
+              <td class="td-cell">12-30mg</td>
+              <td class="td-cell">30mg</td>
+              <td class="td-cell">錠・散・液・OD錠・注射</td>
+              <td class="td-cell">統合失調症・双極性障害・うつ病補助</td>
+              <td class="td-cell text-left">D2部分作動。アカシジア注意。CYP2D6・3A4基質</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium">ブレクスピプラゾール<br><span class="text-gray-400">レキサルティ</span></td>
+              <td class="td-cell">0.5-1mg</td>
+              <td class="td-cell">2-4mg</td>
+              <td class="td-cell">4mg</td>
+              <td class="td-cell">錠・OD錠</td>
+              <td class="td-cell">統合失調症・うつ補助・BPSD(2024)</td>
+              <td class="td-cell text-left">BPSD：1mg/日。CYP2D6・3A4基質。アカシジア比較的少</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FGA詳細テーブル -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="generation-badge-fga text-xs">第一世代（FGA）</span></h3>
+      <div class="overflow-x-auto mb-4">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">成分名（商品名）</th>
+              <th class="th-cell">系統</th>
+              <th class="th-cell">標準用量目安</th>
+              <th class="th-cell">CPZ換算比</th>
+              <th class="th-cell">特徴</th>
+              <th class="th-cell rounded-tr-lg">主な用途</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-left font-medium">ハロペリドール（セレネース）</td>
+              <td class="td-cell">ブチロフェノン</td>
+              <td class="td-cell">2-10mg/日</td>
+              <td class="td-cell">×50</td>
+              <td class="td-cell text-left">高力価・EPS強・陽性症状に強い</td>
+              <td class="td-cell">統合失調症・せん妄・器質性</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">クロルプロマジン（コントミン）</td>
+              <td class="td-cell">フェノチアジン</td>
+              <td class="td-cell">100-600mg/日</td>
+              <td class="td-cell">×1</td>
+              <td class="td-cell text-left">低力価・強鎮静・起立性低血圧</td>
+              <td class="td-cell">統合失調症・鎮静目的</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium">レボメプロマジン（ヒルナミン）</td>
+              <td class="td-cell">フェノチアジン</td>
+              <td class="td-cell">25-200mg/日</td>
+              <td class="td-cell">×2</td>
+              <td class="td-cell text-left">最強鎮静・緩和ケアでも使用</td>
+              <td class="td-cell">急性期・鎮静・緩和</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">スルピリド（ドグマチール）</td>
+              <td class="td-cell">ベンザミド</td>
+              <td class="td-cell">150-600mg/日</td>
+              <td class="td-cell">×1</td>
+              <td class="td-cell text-left">低用量で抗うつ・胃潰瘍。高プロラクチン</td>
+              <td class="td-cell">統合失調症・抑うつ・消化器</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium">チアプリド（グラマリール）</td>
+              <td class="td-cell">ベンザミド</td>
+              <td class="td-cell">150-300mg/日</td>
+              <td class="td-cell">—</td>
+              <td class="td-cell text-left">高齢者の不穏・ジスキネジア適応</td>
+              <td class="td-cell">脳血管疾患・高齢者不穏</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium">フルフェナジン（フルメジン）</td>
+              <td class="td-cell">フェノチアジン</td>
+              <td class="td-cell">0.5-10mg/日</td>
+              <td class="td-cell">×50</td>
+              <td class="td-cell text-left">高力価・LAI（フルデカシン）あり</td>
+              <td class="td-cell">統合失調症・LAI適応</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          オランザピン・クエチアピン 糖尿病患者禁忌
+        </div>
+        <p class="text-sm text-gray-700">オランザピン・クエチアピン（速放・徐放ともに）は糖尿病患者（糖尿病の既往含む）への投与が禁忌（添付文書）。血糖値測定・HbA1c定期確認必須。</p>
+      </div>
+    </div>
+
+    <!-- LAI -->
+    <div class="section-card" id="lai">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="syringe" class="w-6 h-6 text-violet-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">LAI（持続性注射剤）</h2>
+          <p class="text-gray-500 text-sm">Long-Acting Injectable — アドヒアランス改善と再発予防</p>
+        </div>
+      </div>
+
+      <div class="recommend-box mb-4">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          LAI適応の考え方
+        </div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>・服薬アドヒアランス不良の既往 / 中断による再発歴</li>
+          <li>・患者・家族の希望（注射のほうが管理しやすい場合）</li>
+          <li>・経口剤での安定後、維持療法として変更</li>
+          <li>・初回エピソード後でも早期LAI導入を検討（日本ガイドライン2022でも言及）</li>
+        </ul>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">製品名</th>
+              <th class="th-cell">成分</th>
+              <th class="th-cell">投与間隔</th>
+              <th class="th-cell">投与部位</th>
+              <th class="th-cell">開始時の経口オーバーラップ</th>
+              <th class="th-cell rounded-tr-lg">特徴・注意</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-left font-bold text-blue-800">リスパダール・コンスタ<br><span class="text-gray-400 font-normal">筋注用</span></td>
+              <td class="td-cell">リスペリドン<br>マイクロスフェア</td>
+              <td class="td-cell font-bold">2週</td>
+              <td class="td-cell">臀部筋注</td>
+              <td class="td-cell">3週間経口継続</td>
+              <td class="td-cell text-left">初回注射後3週で有効血中濃度到達。冷蔵保存</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-bold text-blue-800">ゼプリオン水懸注<br><span class="text-gray-400 font-normal">（月1回）</span></td>
+              <td class="td-cell">パリペリドン<br>パルミチン酸</td>
+              <td class="td-cell font-bold">4週</td>
+              <td class="td-cell">三角筋 or 臀部</td>
+              <td class="td-cell">初回150mg→1週後100mg<br>（経口不要）</td>
+              <td class="td-cell text-left">初回2回でローディング。経口不要が利点。冷蔵不要</td>
+            </tr>
+            <tr>
+              <td class="td-left font-bold text-blue-800">ゼプリオンTRI水懸注<br><span class="text-gray-400 font-normal">（3ヶ月1回）</span></td>
+              <td class="td-cell">パリペリドン<br>パルミチン酸</td>
+              <td class="td-cell font-bold">12週</td>
+              <td class="td-cell">臀部筋注</td>
+              <td class="td-cell">月1回製剤で安定後に変更</td>
+              <td class="td-cell text-left">3ヶ月1回で最長間隔。ゼプリオンからの変換式あり</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-bold text-purple-800">エビリファイ持続性<br>水懸筋注用<br><span class="text-gray-400 font-normal">（月1回）</span></td>
+              <td class="td-cell">アリピプラゾール<br>水和物</td>
+              <td class="td-cell font-bold">4週</td>
+              <td class="td-cell">三角筋 or 臀部</td>
+              <td class="td-cell">14日間経口アリピプラゾール継続</td>
+              <td class="td-cell text-left">代謝副作用少。初回注射後14日経口継続必須。冷蔵保存</td>
+            </tr>
+            <tr>
+              <td class="td-left font-bold text-red-800">ハロマンス筋注<br>ネオペリドール筋注<br><span class="text-gray-400 font-normal">（FGA LAI）</span></td>
+              <td class="td-cell">ハロペリドール<br>デカン酸</td>
+              <td class="td-cell font-bold">4週前後</td>
+              <td class="td-cell">臀部筋注</td>
+              <td class="td-cell">製品・用量に応じて</td>
+              <td class="td-cell text-left">FGA LAI。EPSリスク。コスト安。SGAで代替可</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-bold text-red-800">フルデカシン<br><span class="text-gray-400 font-normal">（FGA LAI）</span></td>
+              <td class="td-cell">フルフェナジン<br>デカン酸</td>
+              <td class="td-cell font-bold">2-4週</td>
+              <td class="td-cell">臀部筋注</td>
+              <td class="td-cell">製品による</td>
+              <td class="td-cell text-left">FGA LAI。EPSリスク注意</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="warning-box mt-4">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          LAI切り替え時の注意点
+        </div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>・<strong>経口剤で忍容性と有効性を確認してから</strong>LAIへ変更する</li>
+          <li>・リスパダール・コンスタは<strong>初回注射後3週間は経口薬を継続</strong>する（血中濃度到達まで時間がかかるため）</li>
+          <li>・ゼプリオン（月1）は専用のローディング法（初回150mg→1週後100mg）が必要</li>
+          <li>・エビリファイLAIは初回注射後<strong>14日間経口アリピプラゾール継続</strong>必須</li>
+          <li>・LAI投与後に重篤な副作用が出た場合、経口薬より長く持続することを説明する</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 副作用比較 -->
+    <div class="section-card" id="sideeffects">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">副作用プロファイル比較</h2>
+          <p class="text-gray-500 text-sm">主要カテゴリ別の相対的リスク（〇多い / △中等度 / ✕少ない）</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg w-36">薬剤</th>
+              <th class="th-cell">EPS</th>
+              <th class="th-cell">遅発性<br>ジスキネジア</th>
+              <th class="th-cell">体重増加</th>
+              <th class="th-cell">血糖上昇</th>
+              <th class="th-cell">鎮静</th>
+              <th class="th-cell">QT<br>延長</th>
+              <th class="th-cell">高ﾌﾟﾛ<br>ﾗｸﾁﾝ</th>
+              <th class="th-cell">抗コリン<br>作用</th>
+              <th class="th-cell rounded-tr-lg">起立性<br>低血圧</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-red-50">
+              <td class="td-left font-bold">ハロペリドール</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-red-600 font-bold">〇</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-red-600 font-bold">〇</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+            </tr>
+            <tr>
+              <td class="td-left font-bold">クロルプロマジン</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-red-600 font-bold">〇</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-bold">リスペリドン</td>
+              <td class="td-cell text-orange-500">△（用量依存）</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-orange-500">△</td>
+            </tr>
+            <tr>
+              <td class="td-left font-bold">オランザピン</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-gray-400">✕</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-bold">クエチアピン</td>
+              <td class="td-cell text-green-600">✕✕</td>
+              <td class="td-cell text-green-600">✕</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-orange-500">△</td>
+            </tr>
+            <tr>
+              <td class="td-left font-bold">ブロナンセリン</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-bold">ルラシドン</td>
+              <td class="td-cell text-orange-500">△</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+            </tr>
+            <tr>
+              <td class="td-left font-bold">アリピプラゾール</td>
+              <td class="td-cell text-orange-500">△<br><span class="text-xs">(アカシジア)</span></td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-bold">ブレクスピプラゾール</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕（軽微）</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+            </tr>
+            <tr class="bg-fuchsia-50">
+              <td class="td-left font-bold text-fuchsia-800">クロザピン</td>
+              <td class="td-cell text-green-600">✕✕</td>
+              <td class="td-cell text-green-600">✕✕</td>
+              <td class="td-cell text-red-600 font-bold">〇〇〇</td>
+              <td class="td-cell text-red-600 font-bold">〇〇〇</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-gray-400">✕</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+              <td class="td-cell text-red-600 font-bold">〇〇</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 重大な副作用 -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+            <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+            重大な副作用（全薬剤共通）
+          </div>
+          <ul class="text-sm space-y-2 text-gray-700">
+            <li>
+              <div class="font-bold text-red-700">悪性症候群（NMS）</div>
+              <div class="text-xs text-gray-600">高熱・筋強剛・自律神経不安定・意識障害・CK上昇。全AP薬で起こりうる。直ちに投与中止・ICU管理</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">遅発性ジスキネジア（TD）</div>
+              <div class="text-xs text-gray-600">長期使用後に出現する不随意運動（口周囲・体幹）。FGAリスク高。可逆性低い。バルベナジン（有効）</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">QTc延長・心室頻拍</div>
+              <div class="text-xs text-gray-600">電解質異常・併用薬に注意。ハロペリドール・クロルプロマジン・クエチアピンで要注意</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+            <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+            クロザピン固有の重大副作用
+          </div>
+          <ul class="text-sm space-y-2 text-gray-700">
+            <li>
+              <div class="font-bold text-red-700">無顆粒球症（1-2%）</div>
+              <div class="text-xs text-gray-600">好中球&lt;1500/μL→投与中止。登録制CPMS下での血液検査スケジュール遵守が必須</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">心筋炎・心筋症</div>
+              <div class="text-xs text-gray-600">開始後4-8週に好発。発熱・胸痛・心悸亢進・CRP上昇→心電図・エコーで確認</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">痙攣発作</div>
+              <div class="text-xs text-gray-600">用量依存性（高用量で↑）。EEG異常歴・既往てんかんで慎重</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">腸閉塞（腸管麻痺）</div>
+              <div class="text-xs text-gray-600">強い抗コリン→便秘→腸閉塞。下剤の積極的使用、排便管理</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- EPS詳細 -->
+      <div class="warning-box mt-4">
+        <div class="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          EPS（錐体外路症状）の種類と対応
+        </div>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <table class="w-full text-xs">
+              <thead>
+                <tr><th class="th-cell text-left pl-2">EPS種類</th><th class="th-cell">出現時期</th><th class="th-cell">症状</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="td-left">急性ジストニア</td><td class="td-cell">1-3日</td><td class="td-cell text-left">頸部・眼球・体幹の筋収縮</td></tr>
+                <tr class="bg-gray-50"><td class="td-left">パーキンソニズム</td><td class="td-cell">数週間</td><td class="td-cell text-left">振戦・固縮・無動</td></tr>
+                <tr><td class="td-left">アカシジア</td><td class="td-cell">1-6週</td><td class="td-cell text-left">静座不能・不安感</td></tr>
+                <tr class="bg-gray-50"><td class="td-left">遅発性ジスキネジア</td><td class="td-cell">数ヶ月〜年</td><td class="td-cell text-left">口周囲・体幹の不随意運動</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <div class="font-bold text-yellow-800 text-xs mb-2">対応・管理</div>
+            <ul class="text-xs space-y-1 text-gray-700">
+              <li>・急性ジストニア → <strong>ビペリデン（アキネトン）筋注</strong>で即効性</li>
+              <li>・パーキンソニズム → 減量 or 抗パーキンソン薬（ビペリデン経口）</li>
+              <li>・アカシジア → 減量 / <strong>βブロッカー（プロプラノロール）</strong> / BZD / ミルタザピン</li>
+              <li>・TD → 可能ならSGAへ変更 / クロザピンへ / <strong>バルベナジン</strong>（VMAT2阻害薬）</li>
+              <li>・DIEPSS（日本語版副作用評価尺度）で定期評価</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- モニタリング -->
+    <div class="section-card" id="monitoring">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="activity" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">モニタリング・安全管理</h2>
+          <p class="text-gray-500 text-sm">定期検査・評価の標準スケジュール</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">モニタリング項目</th>
+              <th class="th-cell">開始前</th>
+              <th class="th-cell">1ヶ月</th>
+              <th class="th-cell">3ヶ月</th>
+              <th class="th-cell">6ヶ月</th>
+              <th class="th-cell rounded-tr-lg">年1回以降</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left">体重・BMI・腹囲</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">空腹時血糖・HbA1c</td><td class="td-cell text-green-600">●</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-green-600">●</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-green-600">●</td></tr>
+            <tr><td class="td-left">脂質（LDL・TG・HDL）</td><td class="td-cell text-green-600">●</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-green-600">●</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-green-600">●</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">血圧・脈拍</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+            <tr><td class="td-left">EPS評価（DIEPSS）</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">精神症状評価（PANSS/BPRS）</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+            <tr><td class="td-left">プロラクチン値（必要時）</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">心電図（QTc）</td><td class="td-cell text-green-600">●</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr><td class="td-left">血算・肝機能</td><td class="td-cell text-green-600">●</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-orange-500">△</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- クロザピン特別スケジュール -->
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          クロザピン（クロザリル）特別管理スケジュール（CPMS登録必須）
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs">
+            <thead>
+              <tr>
+                <th class="th-cell rounded-tl-lg">期間</th>
+                <th class="th-cell">WBC（血算）</th>
+                <th class="th-cell">好中球数</th>
+                <th class="th-cell rounded-tr-lg">その他モニタリング</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="td-cell font-bold">開始前</td><td class="td-cell">WBC≥3500/μL確認</td><td class="td-cell">ANC≥2000/μL確認</td><td class="td-cell text-left">心電図・心筋逸脱酵素・体重・血糖・脂質</td></tr>
+              <tr class="bg-gray-50"><td class="td-cell font-bold">開始〜18週</td><td class="td-cell">週1回</td><td class="td-cell">週1回</td><td class="td-cell text-left">体温・体重・血圧。心筋炎症状のモニタリング（1-8週特に）</td></tr>
+              <tr><td class="td-cell font-bold">19週以降</td><td class="td-cell">4週に1回</td><td class="td-cell">4週に1回</td><td class="td-cell text-left">代謝・血糖・脂質は3〜6ヶ月ごと。排便管理継続</td></tr>
+              <tr class="bg-gray-50"><td class="td-cell font-bold">WBC&lt;3000</td><td class="td-cell text-red-600 font-bold">→ 投与中止検討</td><td class="td-cell text-red-600 font-bold">ANC&lt;1500→中止</td><td class="td-cell text-left">再開の判断は専門家が行う</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-4 grid md:grid-cols-3 gap-3 text-xs">
+        <div class="bg-blue-50 rounded-xl p-3 border border-blue-200">
+          <div class="font-bold text-blue-800 mb-2 flex items-center gap-1">
+            <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+            評価スケール
+          </div>
+          <ul class="space-y-1 text-gray-600">
+            <li>・<strong>PANSS</strong>：陽性/陰性/一般精神病理の3軸</li>
+            <li>・<strong>BPRS</strong>：簡易精神症状評価</li>
+            <li>・<strong>DIEPSS</strong>：薬原性錐体外路症状（EPS）</li>
+            <li>・<strong>AIMS</strong>：不随意運動（TD評価）</li>
+            <li>・<strong>SAS</strong>：Simpson-Angus Scale（EPS）</li>
+            <li>・<strong>BAS</strong>：Barnes Akathisia Scale</li>
+          </ul>
+        </div>
+        <div class="bg-orange-50 rounded-xl p-3 border border-orange-200">
+          <div class="font-bold text-orange-800 mb-2 flex items-center gap-1">
+            <i data-lucide="heart-pulse" class="w-4 h-4"></i>
+            QTc管理
+          </div>
+          <ul class="space-y-1 text-gray-600">
+            <li>・QTc &gt; 500ms → 投与中止検討</li>
+            <li>・ベースラインから +60ms → 要注意</li>
+            <li>・リスク因子：低K・低Mg・徐脈・女性・心疾患</li>
+            <li>・併用回避：抗不整脈薬、一部抗菌薬（フルオロキノロン系等）</li>
+          </ul>
+        </div>
+        <div class="bg-green-50 rounded-xl p-3 border border-green-200">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-1">
+            <i data-lucide="user" class="w-4 h-4"></i>
+            高齢者・認知症
+          </div>
+          <ul class="space-y-1 text-gray-600">
+            <li>・全AP薬で死亡リスク増のBlack Box Warning</li>
+            <li>・最小量・短期使用が原則</li>
+            <li>・転倒・骨折リスク：EPS・鎮静に注意</li>
+            <li>・抗コリン認知機能↓：クロザピン・オランザピン要注意</li>
+            <li>・非薬物療法（環境調整・心理ケア）を第一選択</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 相互作用・禁忌 -->
+    <div class="section-card" id="interactions">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="x-circle" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">相互作用・禁忌・注意事項</h2>
+          <p class="text-gray-500 text-sm">安全処方のための必須知識</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+            主要な禁忌
+          </div>
+          <ul class="text-sm space-y-2 text-gray-700">
+            <li>
+              <div class="font-bold text-red-700">糖尿病（コントロール不良含む）</div>
+              <div class="text-xs">オランザピン・クエチアピン（速放・徐放）の禁忌。血糖値・HbA1c確認必須</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">QTc延長（先天性）</div>
+              <div class="text-xs">ハロペリドール、クロルプロマジン、クエチアピン等で要注意</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">重篤な心疾患</div>
+              <div class="text-xs">クロザピンは心筋炎・心筋症既往で慎重</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">Parkinson病・Lewy小体型認知症</div>
+              <div class="text-xs">D2拮抗薬でパーキンソン症状著明悪化。クエチアピンが比較的安全</div>
+            </li>
+            <li>
+              <div class="font-bold text-red-700">アドレナリン投与中</div>
+              <div class="text-xs">α1遮断薬（CPZ・クロザピン等）との併用でアドレナリン昇圧反転（血圧低下）</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            主要な薬物相互作用
+          </div>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="font-bold text-yellow-800 mb-1">CYP1A2（クロザピン・オランザピン）</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・<strong>喫煙（CYP1A2誘導）</strong>→ 濃度低下。禁煙時に濃度上昇・副作用増</li>
+                <li>・フルボキサミン（CYP1A2阻害）→ 血中濃度上昇</li>
+                <li>・シプロフロキサシン → 血中濃度上昇</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-yellow-800 mb-1">CYP3A4（アリピプラゾール・ブレクスピプラゾール・ルラシドン）</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・<strong>強阻害薬</strong>（ケトコナゾール・クラリスロマイシン）→ 血中濃度著明上昇 → 減量</li>
+                <li>・<strong>強誘導薬</strong>（カルバマゼピン・リファンピシン）→ 血中濃度低下 → 増量検討</li>
+                <li>・ルラシドンはCYP3A4阻害薬との併用禁忌</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-yellow-800 mb-1">CYP2D6（リスペリドン・アリピプラゾール等）</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・パロキセチン・フルオキセチン（CYP2D6阻害）→ リスペリドン血中濃度上昇</li>
+                <li>・Poor metabolizer (PM) では通常量で過剰に</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-yellow-800 mb-1">QTc延長薬との併用</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・抗不整脈薬・三環系抗うつ薬・一部抗菌薬（フルオロキノロン）との累積リスク</li>
+                <li>・電解質異常（低K・低Mg）の補正が先決</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 妊婦・授乳 -->
+      <div class="warning-box mt-4">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+          <i data-lucide="heart" class="w-4 h-4"></i>
+          妊婦・授乳婦への対応
+        </div>
+        <div class="grid md:grid-cols-2 gap-3 text-xs text-gray-700">
+          <ul class="space-y-1">
+            <li>・精神症状のコントロールは母児双方にとって重要（未治療のリスクも考慮）</li>
+            <li>・比較的安全性データが多い：ハロペリドール・クロルプロマジン・リスペリドン</li>
+            <li>・オランザピンは妊娠糖尿病リスクあり</li>
+          </ul>
+          <ul class="space-y-1">
+            <li>・分娩直前投与 → 新生児EPS・離脱症状リスク</li>
+            <li>・授乳：多くが母乳中に移行。リスクベネフィット評価</li>
+            <li>・クロザピンは授乳中禁忌（母乳中濃度が高い）</li>
+            <li>・<strong>産科・周産期精神医学専門家との連携</strong>を強く推奨</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ガイドライン -->
+      <div class="recommend-box mt-4">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          参照ガイドライン
+        </div>
+        <ul class="text-sm space-y-1 text-gray-700">
+          <li>・<strong>統合失調症薬物治療ガイドライン2022</strong>（日本神経精神薬理学会・日本臨床精神神経薬理学会）2023年8月改訂版</li>
+          <li>・<strong>双極性障害治療ガイドライン2020</strong>（日本うつ病学会・日本双極性障害学会）</li>
+          <li>・<strong>NICE Guidelines: Psychosis and schizophrenia in adults</strong>（NICE CG178, 2014/2024更新）</li>
+          <li>・<strong>WFSBP Guidelines for Biological Treatment of Schizophrenia</strong></li>
+          <li>・<strong>APA Practice Guideline for Schizophrenia</strong>（2021）</li>
+          <li>・各薬剤の最新添付文書（PMDA：<a href="https://www.pmda.go.jp" class="text-green-700 underline">pmda.go.jp</a>）</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center py-6 text-xs text-gray-400 border-t border-gray-200">
+    <p>本資料は医療専門職向け参照資料です。処方判断には最新の各薬剤添付文書・ガイドラインを必ず参照してください。</p>
+    <p class="mt-1">参照：統合失調症薬物治療ガイドライン2022（JSNP/JSCNP）/ PMDA添付文書 / 2026年4月現在</p>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
