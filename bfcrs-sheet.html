@@ -80,6 +80,15 @@
       .item-card { box-shadow:none; border:1px solid #e5e7eb; margin-bottom:0.4rem; page-break-inside:avoid; }
       .score-btn, .bin-btn { display:none !important; }
       main { padding-bottom:0 !important; }
+      /* ─── コンパクト印刷モード ─── */
+      body.compact-print .item-body { display:none !important; }
+      body.compact-print #global-tips-card { display:none !important; }
+      body.compact-print .item-card { margin-bottom:0.08rem !important; border-radius:0.2rem !important; }
+      body.compact-print .item-header { padding:0.18rem 0.5rem !important; }
+      body.compact-print .num-badge { width:1.3rem !important; height:1.3rem !important; font-size:0.56rem !important; }
+      body.compact-print .sec-div { padding:0.15rem 0.5rem !important; margin-top:0.2rem !important; margin-bottom:0.04rem !important; font-size:0.58rem !important; }
+      body.compact-print .point-card { padding:0.3rem 0.6rem !important; margin-bottom:0.2rem !important; }
+      body.compact-print #print-summary { display:block !important; }
     }
   </style>
 </head>
@@ -100,6 +109,7 @@
       <button onclick="collapseAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="chevrons-up" class="w-3 h-3"></i>折りたたみ</button>
       <button onclick="resetAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
       <button onclick="window.print()" class="flex items-center gap-1 bg-white text-purple-900 text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-gray-100"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+      <button onclick="compactPrint()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;" title="記入欄・項目・点数のみを最小ページで印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
       <a href="panss-sheet.html" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="arrow-left" class="w-3 h-3"></i>PANSS</a>
     </div>
   </div>
@@ -119,7 +129,7 @@
   </div>
 
   <!-- 全体ポイント -->
-  <div class="point-card mb-4">
+  <div class="point-card mb-4" id="global-tips-card">
     <button class="w-full flex items-center justify-between text-left" onclick="toggleSection('global-body', this)">
       <div class="flex items-center gap-2">
         <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"><i data-lucide="lightbulb" class="w-4 h-4 text-purple-600"></i></div>
@@ -669,6 +679,29 @@
   <!-- 備考 -->
   <div class="point-card mt-3"><label class="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2"><i data-lucide="file-text" class="w-4 h-4 text-gray-400 no-print"></i>備考・特記事項（ベンゾジアゼピン反応試験結果・投薬・バイタルサイン詳細等）</label><textarea class="w-full border border-gray-200 rounded-lg p-3 text-sm text-gray-700 resize-none focus:outline-none focus:border-purple-400" rows="3" placeholder="Lz試験：投与量・投与前スコア・投与後スコア・反応 / バイタル詳細 / 鑑別診断の検討..."></textarea></div>
 
+  <!-- 印刷用スコアサマリー（コンパクト印刷専用・画面では非表示） -->
+  <div id="print-summary" style="display:none;margin-top:0.6rem;border:2px solid #7c3aed;border-radius:0.5rem;padding:0.6rem 0.875rem;background:white;page-break-inside:avoid;">
+    <div style="font-size:0.65rem;font-weight:800;color:#4c1d95;letter-spacing:0.05em;border-bottom:1px solid #ddd6fe;padding-bottom:0.25rem;margin-bottom:0.4rem;">▌ BFCRS スコアサマリー</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;">
+      <div style="background:#ede9fe;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#6d28d9;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">BFCSS 陽性数</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-bfcss">0</span> / 14項目</div>
+      </div>
+      <div style="background:#fff1f2;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#be123c;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">BFCSS 判定</div>
+        <div style="font-size:0.92rem;font-weight:800;" id="ps-bfcss-result">－</div>
+      </div>
+      <div style="background:#dbeafe;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#1d4ed8;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">追加項目 (15–23)</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-extra">0</span> 点</div>
+      </div>
+      <div style="background:#f0fdf4;padding:0.3rem 0.5rem;border-radius:0.25rem;border:1.5px solid #16a34a;">
+        <div style="color:#15803d;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">BFCRS 合計</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-total">0</span> / 69点　<span id="ps-severity" style="font-size:0.7rem;font-weight:600;color:#374151;"></span></div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- スティッキーフッター -->
@@ -709,6 +742,7 @@
     </div>
     <div class="flex gap-2 border-l border-gray-200 pl-3">
       <button onclick="window.print()" class="flex items-center gap-1 bg-purple-700 hover:bg-purple-800 text-white text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+      <button onclick="compactPrint()" class="flex items-center gap-1 bg-purple-100 hover:bg-purple-200 text-purple-800 text-xs font-semibold px-3 py-2 rounded-lg" title="記入欄・項目・点数のみを最小ページで印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
       <button onclick="resetAll()" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
       <a href="panss-sheet.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="arrow-left" class="w-3 h-3"></i>PANSS</a>
       <a href="bprs-sheet.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="arrow-left" class="w-3 h-3"></i>BPRS</a>
@@ -816,12 +850,31 @@
     }
 
     const lel = document.getElementById('severity-label');
+    let _sevText = '';
     if (scoredCount < 23) { lel.textContent = `残り${23-scoredCount}項目`; lel.className = 'font-semibold text-gray-400'; }
     else {
       const map = [[10,'軽症','text-green-600'],[25,'中等度','text-yellow-600'],[45,'重症','text-orange-600'],[999,'最重症','text-red-600']];
       const found = map.find(m => total <= m[0]);
-      lel.textContent = found[1]; lel.className = `font-semibold ${found[2]}`;
+      lel.textContent = found[1]; lel.className = `font-semibold ${found[2]}`; _sevText = found[1];
     }
+    // 印刷サマリー更新
+    const _psB = document.getElementById('ps-bfcss'); if (_psB) _psB.textContent = bfcssCount;
+    const _psE = document.getElementById('ps-extra'); if (_psE) _psE.textContent = extraScore;
+    const _psT = document.getElementById('ps-total'); if (_psT) _psT.textContent = total;
+    const _psS = document.getElementById('ps-severity'); if (_psS) _psS.textContent = _sevText ? `（${_sevText}）` : '';
+    const _psR = document.getElementById('ps-bfcss-result');
+    if (_psR) {
+      if (bfcssScored === 0) { _psR.textContent = '未評価'; _psR.style.color = '#9ca3af'; }
+      else if (bfcssCount >= 2) { _psR.textContent = '陽性'; _psR.style.color = '#b91c1c'; }
+      else if (bfcssCount === 1) { _psR.textContent = '要注意'; _psR.style.color = '#b45309'; }
+      else { _psR.textContent = '陰性'; _psR.style.color = '#15803d'; }
+    }
+  }
+
+  function compactPrint() {
+    document.body.classList.add('compact-print');
+    window.print();
+    window.addEventListener('afterprint', () => document.body.classList.remove('compact-print'), { once: true });
   }
 
   function toggleItem(id) {
