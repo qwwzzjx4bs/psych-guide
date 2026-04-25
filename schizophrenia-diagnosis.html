@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症 診断プロセス完全ガイド - 精神科</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --level-a: #15803d;
+      --level-b: #1d4ed8;
+      --level-c: #6b7280;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-first {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-classic {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .dx-node { padding: 0.75rem 1.25rem; border-radius: 0.75rem; text-align: center; font-weight: 600; }
+    .dx-node-start { background: #1e3a5f; color: white; }
+    .dx-node-check { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
+    .dx-node-yes { background: #dcfce7; border: 2px solid #15803d; color: #14532d; }
+    .dx-node-no { background: #fee2e2; border: 2px solid #dc2626; color: #7f1d1d; }
+    .dx-node-diagnosis { background: linear-gradient(135deg, #1e3a5f, #0f766e); color: white; }
+    .toc {
+      position: fixed; right: 1.5rem; top: 50%;
+      transform: translateY(-50%); background: white;
+      padding: 1rem; border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh; overflow-y: auto; z-index: 50; min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .compare-table th { background: linear-gradient(135deg, #1e3a5f, #0f766e); color: white; padding: 0.75rem 1rem; font-size: 0.875rem; }
+    .compare-table td { padding: 0.75rem 1rem; border: 1px solid #e5e7eb; font-size: 0.875rem; vertical-align: top; }
+    .compare-table tr:nth-child(even) td { background: #f9fafb; }
+    .step-arrow { display: flex; align-items: center; justify-content: center; color: #94a3b8; }
+    .flow-step {
+      border-radius: 0.75rem; padding: 1rem 1.25rem;
+      border: 2px solid; position: relative;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-8">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="brain" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold">統合失調症 — 診断プロセス完全ガイド</h1>
+      <p class="mt-2 text-lg opacity-85">ICD-10: F20 ／ DSM-5-TR: 統合失調症スペクトラム障害群</p>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">古典的診断 vs 操作的基準</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">鑑別・除外診断</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">一般的・専門的検査</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">診断フロー</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- フローティング目次 -->
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#quickref" class="text-sm text-gray-600 hover:text-blue-700 block">外来ポイント</a></li>
+      <li><a href="#classic-vs-operational" class="text-sm text-gray-600 hover:text-blue-700 block">古典的 vs 操作的</a></li>
+      <li><a href="#dsm5tr" class="text-sm text-gray-600 hover:text-blue-700 block">DSM-5-TR基準</a></li>
+      <li><a href="#icd10" class="text-sm text-gray-600 hover:text-blue-700 block">ICD-10基準</a></li>
+      <li><a href="#diag-flow" class="text-sm text-gray-600 hover:text-blue-700 block">診断プロセスフロー</a></li>
+      <li><a href="#differential" class="text-sm text-gray-600 hover:text-blue-700 block">鑑別診断</a></li>
+      <li><a href="#tests" class="text-sm text-gray-600 hover:text-blue-700 block">除外のための検査</a></li>
+      <li><a href="#autoimmune" class="text-sm text-gray-600 hover:text-blue-700 block">自己免疫性脳炎</a></li>
+      <li><a href="#scales" class="text-sm text-gray-600 hover:text-blue-700 block">評価スケール</a></li>
+      <li><a href="#staging" class="text-sm text-gray-600 hover:text-blue-700 block">病期分類</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- 外来クイックリファレンス -->
+    <div class="section-card" id="quickref">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる3ポイント</h2>
+          <p class="text-gray-500 text-sm">診断プロセスで見逃してはならない要点</p>
+        </div>
+      </div>
+      <div class="grid gap-4">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
+          <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">器質性・自己免疫性脳炎を必ず除外する</div>
+            <p class="text-gray-600 text-sm">初発精神病（FEP）では抗NMDA受容体脳炎が精神科初診となりうる。MRI・脳波・自己免疫パネルを適切に施行し、見逃しを防ぐ。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl border-l-4 border-teal-600">
+          <div class="w-10 h-10 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">操作的診断基準（DSM-5-TR/ICD-10）に沿って系統的に評価する</div>
+            <p class="text-gray-600 text-sm">シュナイダーの一級症状や古典的概念は参考にしつつも、現行の基準（A〜E基準/6か月/1か月）に従い診断する。一級症状は必須条件ではない。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-600">
+          <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">気分障害（精神病性特徴を伴う）との鑑別を慎重に行う</div>
+            <p class="text-gray-600 text-sm">双極性障害・重症うつ病（精神病性）との鑑別は縦断的経過観察も必要。精神病症状と気分エピソードの時間的関係（D基準）を丁寧に確認する。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 古典的診断 vs 操作的診断 比較 -->
+    <div class="section-card" id="classic-vs-operational">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-purple-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">古典的診断概念 vs 操作的診断基準</h2>
+          <p class="text-gray-500 text-sm">歴史的変遷と現代的診断の比較対比</p>
+        </div>
+      </div>
+
+      <!-- 古典的診断 3巨頭 -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span class="badge-classic">古典的診断概念</span>
+        <span class="text-gray-500 text-sm font-normal">クレペリン・ブロイラー・シュナイダー</span>
+      </h3>
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+
+        <!-- クレペリン -->
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">K</div>
+            <div>
+              <div class="font-bold text-purple-800">クレペリン（1899）</div>
+              <div class="text-xs text-gray-500">早発性痴呆 Dementia Praecox</div>
+            </div>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span><strong>予後・経過</strong>を診断基準の中心に据える</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span>精神病を<strong>早発性痴呆</strong>と<strong>躁うつ病</strong>に大別</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span>若年発症・<strong>慢性化・機能低下</strong>を重視</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span>限界：予後は一様でなく、横断的症状評価が不明確</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ブロイラー -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">B</div>
+            <div>
+              <div class="font-bold text-blue-800">ブロイラー（1911）</div>
+              <div class="text-xs text-gray-500">統合失調症 Schizophrenia</div>
+            </div>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+              <span><strong>4A症状</strong>（基本症状）を提唱</span>
+            </li>
+          </ul>
+          <div class="mt-2 bg-white rounded-lg p-2.5 border border-blue-100">
+            <div class="text-xs font-bold text-blue-700 mb-1">4A 基本症状</div>
+            <ul class="text-xs space-y-1 text-gray-700">
+              <li>① <strong>A</strong>ssoziationslockerung（連合弛緩）</li>
+              <li>② <strong>A</strong>ffektivität（感情鈍麻・不適切）</li>
+              <li>③ <strong>A</strong>mbivalenz（両価性）</li>
+              <li>④ <strong>A</strong>utismus（自閉）</li>
+            </ul>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700 mt-2">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+              <span>幻覚・妄想は<strong>副症状</strong>（アクセサリー）と位置付け</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+              <span>限界：基本症状の操作的定義が困難</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- シュナイダー -->
+        <div class="bg-teal-50 border border-teal-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">S</div>
+            <div>
+              <div class="font-bold text-teal-800">シュナイダー（1959）</div>
+              <div class="text-xs text-gray-500">一級症状 First-Rank Symptoms</div>
+            </div>
+          </div>
+          <div class="mt-1 bg-white rounded-lg p-2.5 border border-teal-100 mb-2">
+            <div class="text-xs font-bold text-teal-700 mb-1">一級症状（11項目）</div>
+            <ul class="text-xs space-y-0.5 text-gray-700">
+              <li>① 思考可聴化（考想化声）</li>
+              <li>② 対話する幻聴</li>
+              <li>③ 身体への語りかけ幻聴</li>
+              <li>④〜⑦ 作為体験（衝動・情動・意志・身体への）</li>
+              <li>⑧ 思考奪取</li>
+              <li>⑨ 思考挿入</li>
+              <li>⑩ 思考放散（broadcasting）</li>
+              <li>⑪ 妄想知覚</li>
+            </ul>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-teal-500 flex-shrink-0 mt-0.5"></i>
+              <span>限界：一級症状は双極性障害等でも出現。特異度に限界あり</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="triangle-alert" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+              <span class="text-orange-700 font-medium">DSM-5/ICD-11では必須条件ではない</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 比較表 -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span class="badge-level-b">比較対照表</span>
+        <span class="text-gray-500 text-sm font-normal">古典的概念 vs 現行操作的基準</span>
+      </h3>
+      <div class="overflow-x-auto rounded-xl border border-gray-200">
+        <table class="w-full compare-table">
+          <thead>
+            <tr>
+              <th class="rounded-tl-xl text-left">観点</th>
+              <th class="text-left">古典的概念（クレペリン/ブロイラー/シュナイダー）</th>
+              <th class="text-left">DSM-5-TR</th>
+              <th class="rounded-tr-xl text-left">ICD-10 / ICD-11</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold text-gray-700">診断の中心軸</td>
+              <td>病質像・予後仮説・病理的体験の質</td>
+              <td>操作可能な症状チェック＋期間＋除外</td>
+              <td>症状の存在＋除外（亜型でコード分け：ICD-10）</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-gray-700">一級症状の位置付け</td>
+              <td>シュナイダーでは診断の柱</td>
+              <td>5症状のうちの1要素（必須ではない）</td>
+              <td>ICD-10: 重視（a/b群） ICD-11: 中核症状の1つに包含</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-gray-700">陰性症状の扱い</td>
+              <td>ブロイラーが4Aで重視（基本症状）</td>
+              <td>A基準⑤に明示（情動表出↓・無欲・無口）</td>
+              <td>ICD-11で陰性症状次元として追加記述</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-gray-700">必要な罹患期間</td>
+              <td>明確な数値規定なし（臨床的コース重視）</td>
+              <td>活動期1か月以上＋全体6か月以上（C基準）</td>
+              <td>ICD-10/ICD-11: 症状1か月以上</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-gray-700">亜型分類</td>
+              <td>妄想型・解体型・緊張型・単純型等</td>
+              <td>亜型廃止（DSM-5から）</td>
+              <td>ICD-10: 亜型あり(F20.0〜F20.9) ICD-11: 亜型廃止→次元記述</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-gray-700">感情障害との境界</td>
+              <td>理論的に分離（クレペリン二分法）</td>
+              <td>D基準で気分エピソードとの時間的関係を定式化</td>
+              <td>G2で感情障害優先を規定</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-gray-700">信頼性・再現性</td>
+              <td>主観性が高く国際的再現性に限界</td>
+              <td>高い（国際標準）</td>
+              <td>高い（国際標準）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DSM-5-TR診断基準 -->
+    <div class="section-card" id="dsm5tr">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">DSM-5-TR 診断基準</h2>
+          <p class="text-gray-500 text-sm">統合失調症（Schizophrenia）— A〜E基準</p>
+        </div>
+      </div>
+
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-4">
+          <i data-lucide="clipboard-list" class="w-5 h-5 text-blue-700"></i>
+          <span class="font-bold text-blue-800 text-lg">A基準：活動期症状（1か月以上）</span>
+          <span class="text-sm text-blue-700 ml-1">— 以下のうち2つ以上、少なくとも1つは①②③から</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="bg-white rounded-lg p-3 border-2 border-red-200">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-red-600 font-bold text-lg">①</span>
+              <span class="font-bold text-gray-800">妄想</span>
+              <span class="text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full">必須項目のいずれか</span>
+            </div>
+            <p class="text-sm text-gray-600">被害妄想・関係妄想・誇大妄想・思考奪取・思考吹入・妄想知覚等</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border-2 border-red-200">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-red-600 font-bold text-lg">②</span>
+              <span class="font-bold text-gray-800">幻覚</span>
+              <span class="text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full">必須項目のいずれか</span>
+            </div>
+            <p class="text-sm text-gray-600">幻聴が最多（議論する声、命令する声等）。幻視・体感幻覚も</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border-2 border-red-200">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-red-600 font-bold text-lg">③</span>
+              <span class="font-bold text-gray-800">解体した言語（思考障害）</span>
+              <span class="text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full">必須項目のいずれか</span>
+            </div>
+            <p class="text-sm text-gray-600">思考の脱線・支離滅裂・言葉のサラダ（word salad）</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray-200">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-gray-500 font-bold text-lg">④</span>
+              <span class="font-bold text-gray-800">著しく解体した行動 / 緊張病</span>
+            </div>
+            <p class="text-sm text-gray-600">目標指向行動の著しい障害、または昏迷・拒絶症・反響動作等の緊張病症状</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray-200 md:col-span-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-gray-500 font-bold text-lg">⑤</span>
+              <span class="font-bold text-gray-800">陰性症状</span>
+            </div>
+            <div class="grid md:grid-cols-3 gap-2 mt-1">
+              <div class="text-sm text-gray-600 bg-gray-50 rounded p-2">情動表出の減退（flat affect）</div>
+              <div class="text-sm text-gray-600 bg-gray-50 rounded p-2">無欲（avolition）</div>
+              <div class="text-sm text-gray-600 bg-gray-50 rounded p-2">無口（alogia）</div>
+              <div class="text-sm text-gray-600 bg-gray-50 rounded p-2">無快感（anhedonia）</div>
+              <div class="text-sm text-gray-600 bg-gray-50 rounded p-2">非社交性（asociality）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3 mt-4">
+        <div class="bg-white rounded-xl p-4 border-2 border-blue-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="font-bold text-blue-800 text-base">B基準</span>
+            <span class="text-sm text-gray-600">— 機能水準の低下</span>
+          </div>
+          <p class="text-sm text-gray-600">就労・対人関係・自己管理において、発症以前に比し著しく低下。小児・青年発症では達成水準の遅延。</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border-2 border-blue-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="font-bold text-blue-800 text-base">C基準</span>
+            <span class="text-sm text-gray-600">— 持続期間（重要！）</span>
+          </div>
+          <div class="text-sm text-gray-600">
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+              <span>障害の徴候が<strong>6か月以上</strong>持続</span>
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+              <span>うちA基準を満たす<strong>活動期が1か月以上</strong></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+              <span>残余は前駆期/残遺期で可</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 border-2 border-orange-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="font-bold text-orange-800 text-base">D基準</span>
+            <span class="text-sm text-gray-600">— 感情障害の除外（鑑別の要）</span>
+          </div>
+          <p class="text-sm text-gray-600">活動期症状と同時に大うつ病/躁/混合エピソードがない。または気分エピソードが全病程の一部に限定される。</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border-2 border-red-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="font-bold text-red-800 text-base">E基準</span>
+            <span class="text-sm text-gray-600">— 物質・身体疾患の除外</span>
+          </div>
+          <p class="text-sm text-gray-600">物質（違法薬物・薬剤）または一般身体疾患の生理学的効果によるものでない。</p>
+        </div>
+      </div>
+
+      <div class="warning-box mt-4">
+        <div class="font-bold text-yellow-800 mb-1 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          DSM-5-TRとICD-10の期間要件の違い
+        </div>
+        <div class="flex gap-6 text-sm text-gray-700">
+          <div><span class="font-bold text-blue-700">DSM-5-TR:</span> 活動期1か月以上 + 全病程6か月以上（C基準）</div>
+          <div><span class="font-bold text-green-700">ICD-10:</span> 症状1か月以上（G1）</div>
+          <div><span class="font-bold text-teal-700">ICD-11:</span> 症状1か月以上</div>
+        </div>
+        <p class="text-xs text-gray-500 mt-1">※ DSM-5-TRで6か月未満 → 統合失調症様障害（Schizophreniform disorder）として暫定診断</p>
+      </div>
+    </div>
+
+    <!-- ICD-10基準 -->
+    <div class="section-card" id="icd10">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="book-open" class="w-6 h-6 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">ICD-10 F20 診断基準</h2>
+          <p class="text-gray-500 text-sm">G1・G2基準 — 日本でも広く使用</p>
+        </div>
+      </div>
+
+      <div class="criteria-box">
+        <div class="font-bold text-blue-800 mb-3">G1基準: 以下のいずれかが1か月以上のほとんどの期間に存在</div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="bg-white rounded-lg p-3 border-2 border-red-200">
+            <div class="font-bold text-red-700 text-sm mb-2">a〜d群（1つで十分）— シュナイダー一級症状を含む高特異的症状</div>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li>(a) 思考反響・思考挿入・思考奪取・思考放送</li>
+              <li>(b) 支配される・影響を受ける・受動体験の妄想 + 妄想知覚</li>
+              <li>(c) 患者の行動を実況解説する幻聴（running commentary）・患者について話し合う2つ以上の声</li>
+              <li>(d) 宗教・政治・超人間的・奇異な内容の持続的妄想</li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray-200">
+            <div class="font-bold text-gray-700 text-sm mb-2">e〜h群（2つ以上必要）— 広範な精神病理</div>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li>(e) 持続的幻覚（任意の感覚様式）+ 半形成的（half-formed）妄想様確信・誇大/関係妄想/持続的超価値的観念（毎日、数週間以上）</li>
+              <li>(f) 連想弛緩（loosening of associations）・滅裂（incoherence）・新造語（neologisms）による言語解体</li>
+              <li>(g) 緊張病性行動（興奮・固縮・昏迷・拒絶症・反響動作）</li>
+              <li>(h) 陰性症状（無関心・言語貧困・感情鈍麻・社会的引きこもり）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="danger-box mt-3">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>
+          G2基準: 除外条件
+        </div>
+        <ul class="text-sm space-y-1 text-gray-700">
+          <li>・躁/うつエピソードが十分なら、F20より気分障害を優先する</li>
+          <li>・明らかな器質性脳疾患（F0x）または精神活性物質（F1x）による状態ではない</li>
+          <li>・てんかん性精神病や他の器質性精神疾患でない</li>
+        </ul>
+      </div>
+
+      <!-- ICD-10 亜型 -->
+      <h3 class="font-bold text-gray-700 mt-5 mb-3 flex items-center gap-2">
+        <i data-lucide="git-branch" class="w-5 h-5 text-green-600"></i>
+        ICD-10 亜型分類（F20.x）
+      </h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-gray-50 rounded-lg p-3 border text-center">
+          <div class="font-bold text-gray-800 text-sm">F20.0</div>
+          <div class="text-xs text-gray-600 mt-1">妄想型（Paranoid）<br>妄想・幻覚が主体</div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border text-center">
+          <div class="font-bold text-gray-800 text-sm">F20.1</div>
+          <div class="text-xs text-gray-600 mt-1">解体型（Hebephrenic）<br>感情・行動の解体が主体</div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border text-center">
+          <div class="font-bold text-gray-800 text-sm">F20.2</div>
+          <div class="text-xs text-gray-600 mt-1">緊張型（Catatonic）<br>緊張病症状が主体</div>
+          <div class="text-xs text-orange-600 mt-1">※DSM-5では亜型廃止<br>→「緊張病指定子」として独立（うつ病・双極等にも付加可）</div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border text-center">
+          <div class="font-bold text-gray-800 text-sm">F20.5</div>
+          <div class="text-xs text-gray-600 mt-1">残遺型（Residual）<br>陰性症状が持続</div>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border text-center md:col-span-2">
+          <div class="font-bold text-gray-800 text-sm">F20.6</div>
+          <div class="text-xs text-gray-600 mt-1">単純型（Simple）<br>陰性症状のみ進行（妄想・幻覚なし）</div>
+        </div>
+        <div class="bg-yellow-50 rounded-lg p-3 border border-yellow-200 text-center md:col-span-2">
+          <div class="font-bold text-yellow-800 text-xs mb-1">ICD-11（6A20）の変更点</div>
+          <div class="text-xs text-gray-600">亜型廃止 → 陽性・陰性・認知・興奮・抑うつの<strong>5次元記述</strong>に変更</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 診断プロセスフロー -->
+    <div class="section-card" id="diag-flow">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="workflow" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">診断プロセスフロー</h2>
+          <p class="text-gray-500 text-sm">初回受診から確定診断まで</p>
+        </div>
+      </div>
+
+      <!-- フロー図 -->
+      <div class="flex flex-col items-center gap-2 my-4">
+
+        <!-- Step 1 -->
+        <div class="w-full max-w-2xl bg-indigo-700 text-white rounded-xl p-4 text-center">
+          <div class="flex items-center justify-center gap-2 mb-1">
+            <div class="w-6 h-6 bg-white/30 rounded-full flex items-center justify-center text-xs font-bold">1</div>
+            <span class="font-bold">初期評価（初回診察）</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-xs mt-2">
+            <div class="bg-white/20 rounded p-1.5">主訴・発症経緯<br>生活歴・家族歴</div>
+            <div class="bg-white/20 rounded p-1.5">自傷・他害リスク<br>緊急介入の判断</div>
+            <div class="bg-white/20 rounded p-1.5">物質使用歴<br>既往歴・内服歴</div>
+          </div>
+          <div class="mt-2 bg-white/15 rounded p-2 text-xs">
+            <span class="font-bold">発症年齢の性差：</span>男性 15〜25歳 / 女性 25〜35歳がピーク（第2ピーク：女性 45〜50歳代）
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- Step 2 -->
+        <div class="w-full max-w-2xl bg-orange-50 border-2 border-orange-400 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
+            <span class="font-bold text-orange-800">器質性・身体的原因の除外（優先順位最高）</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-2 text-sm">
+            <div class="flex items-center gap-2 text-gray-700">
+              <i data-lucide="activity" class="w-4 h-4 text-red-500"></i>
+              <span>血液検査（CBC・代謝・甲状腺・B12等）</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-700">
+              <i data-lucide="scan" class="w-4 h-4 text-blue-500"></i>
+              <span>頭部MRI（または緊急時CT）</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-700">
+              <i data-lucide="zap" class="w-4 h-4 text-yellow-500"></i>
+              <span>脳波（EEG）— てんかん除外</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-700">
+              <i data-lucide="flask-conical" class="w-4 h-4 text-purple-500"></i>
+              <span>尿中薬物スクリーニング</span>
+            </div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- 分岐: 器質性あり / なし -->
+        <div class="w-full max-w-2xl">
+          <div class="flex gap-4 items-start">
+            <div class="flex-1 bg-red-50 border-2 border-red-300 rounded-xl p-3 text-center">
+              <div class="text-red-700 font-bold text-sm mb-1">器質性疾患を示唆</div>
+              <div class="text-xs text-gray-600">神経内科・内科と連携<br>原疾患の治療を優先</div>
+            </div>
+            <div class="flex items-center pt-8">
+              <div class="text-gray-400 font-bold text-sm">or</div>
+            </div>
+            <div class="flex-1 bg-green-50 border-2 border-green-300 rounded-xl p-3 text-center">
+              <div class="text-green-700 font-bold text-sm mb-1">器質性疾患なし</div>
+              <div class="text-xs text-gray-600">次ステップへ進む</div>
+            </div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- Step 3 -->
+        <div class="w-full max-w-2xl bg-blue-50 border-2 border-blue-400 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
+            <span class="font-bold text-blue-800">精神症状の系統的評価</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3 text-sm">
+            <div>
+              <div class="font-bold text-gray-700 mb-1">陽性症状</div>
+              <ul class="text-gray-600 space-y-0.5">
+                <li>・妄想（内容・体系化・奇異性）</li>
+                <li>・幻覚（形式・内容・対処）</li>
+                <li>・思考障害（形式・内容）</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-gray-700 mb-1">陰性症状</div>
+              <ul class="text-gray-600 space-y-0.5">
+                <li>・情動表出の減退</li>
+                <li>・無欲・無口・無快感</li>
+                <li>・非社交性・意欲低下</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-gray-700 mb-1">解体症状</div>
+              <ul class="text-gray-600 space-y-0.5">
+                <li>・思考の脱線・支離滅裂</li>
+                <li>・不適切な行動</li>
+                <li>・緊張病症状</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-gray-700 mb-1">認知機能・病識</div>
+              <ul class="text-gray-600 space-y-0.5">
+                <li>・注意・記憶・実行機能</li>
+                <li>・病識の程度（自覚の有無）</li>
+                <li>・PANSS/BPRS による評価</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- Step 4 -->
+        <div class="w-full max-w-2xl bg-teal-50 border-2 border-teal-400 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">4</div>
+            <span class="font-bold text-teal-800">縦断的経過の確認（6か月基準 / D基準）</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+            <div>
+              <div class="font-bold text-teal-700 mb-1">DSM-5-TR C基準の確認</div>
+              <ul class="space-y-0.5">
+                <li>・症状開始はいつか？</li>
+                <li>・活動期（精神病症状）は1か月以上か？</li>
+                <li>・全体として6か月以上継続か？</li>
+                <li>・前駆期・残遺期症状の有無</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-teal-700 mb-1">D基準（感情障害の鑑別）</div>
+              <ul class="space-y-0.5">
+                <li>・精神病症状と気分エピソードは同時か？</li>
+                <li>・気分症状は全病程の一部か？</li>
+                <li>・精神病が気分エピソードなしで存在するか？</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- Step 5 診断確定 -->
+        <div class="w-full max-w-2xl bg-gradient-to-r from-indigo-700 to-teal-700 text-white rounded-xl p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-6 h-6 bg-white/30 rounded-full flex items-center justify-center text-xs font-bold">5</div>
+            <span class="font-bold text-lg">診断の確定と病期分類</span>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
+              <div class="font-bold">A基準満たす<br>1か月未満</div>
+              <div class="mt-1 text-white/80">短期精神病性障害<br>(F23/DSM)</div>
+            </div>
+            <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
+              <div class="font-bold">A基準満たす<br>1〜6か月</div>
+              <div class="mt-1 text-white/80">統合失調症様障害<br>(暫定)</div>
+            </div>
+            <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
+              <div class="font-bold">A基準満たす<br>6か月以上</div>
+              <div class="mt-1 text-white/80">統合失調症<br>F20 / DSM-5-TR</div>
+            </div>
+            <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
+              <div class="font-bold">精神病症状 +<br>気分エピソード</div>
+              <div class="mt-1 text-white/80">統合失調感情障害<br>F25</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 鑑別診断 -->
+    <div class="section-card" id="differential">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="alert-circle" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">鑑別診断・除外診断</h2>
+          <p class="text-gray-500 text-sm">見逃し危険度の高い順に優先して除外する</p>
+        </div>
+      </div>
+
+      <!-- 優先度1: 器質性・身体疾患 -->
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-5 h-5"></i>
+          優先度1：必須除外（見逃し危険・治療が異なる）
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div>
+            <div class="font-bold text-sm text-red-700 mb-1.5">器質性脳疾患</div>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span><strong>自己免疫性脳炎</strong>（抗NMDA受容体脳炎等） — 精神症状で発症しうる</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>側頭葉てんかん（複雑部分発作後精神病）</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>脳腫瘍・脳血管障害（特に側頭・前頭葉）</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>脳炎・脳症（ヘルペス脳炎等）</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>梅毒神経症（神経梅毒）</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-bold text-sm text-red-700 mb-1.5">代謝・内分泌・全身疾患</div>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>甲状腺疾患（甲状腺機能低下症・亢進症）</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>副腎不全・Cushing症候群</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>低血糖・電解質異常（低Na、低Ca等）</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span><strong>Wilson病（肝レンズ核変性症）</strong> — 銅・セルロプラスミン、角膜KF環</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>ポルフィリア — 尿ポルフィリン、精神症状＋腹痛・神経症状</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>SLE（全身性エリテマトーデス） — 抗体検査</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
+                <span>22q11.2欠失症候群（若年・発達歴を要確認）</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 優先度2: 物質誘発性 -->
+      <div class="danger-box mt-3">
+        <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+          <i data-lucide="flask-conical" class="w-5 h-5"></i>
+          優先度2：物質・薬剤誘発性精神病
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div>
+            <div class="font-bold text-sm text-red-700 mb-1.5">違法薬物・乱用物質</div>
+            <ul class="text-sm space-y-0.5 text-gray-700">
+              <li>・<strong>覚醒剤（アンフェタミン系）</strong> — 陽性症状が主体、類似度高</li>
+              <li>・大麻（THC高濃度品） — 若年発症リスク因子</li>
+              <li>・LSD・フェンシクリジン（PCP） — 幻覚・解体</li>
+              <li>・コカイン — 急性精神病様状態</li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-bold text-sm text-red-700 mb-1.5">処方薬・その他</div>
+            <ul class="text-sm space-y-0.5 text-gray-700">
+              <li>・高用量ステロイド — 精神病性症状</li>
+              <li>・インターフェロン（IFN）</li>
+              <li>・抗コリン薬（過量）</li>
+              <li>・アルコール離脱 — 振戦せん妄との鑑別</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 優先度3: 精神疾患の鑑別 -->
+      <div class="warning-box mt-3">
+        <div class="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+          <i data-lucide="brain" class="w-5 h-5"></i>
+          優先度3：鑑別すべき精神疾患
+        </div>
+        <div class="overflow-x-auto rounded-lg">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-yellow-200">
+                <th class="text-left p-2.5 font-bold text-yellow-900">疾患</th>
+                <th class="text-left p-2.5 font-bold text-yellow-900">鑑別の要点</th>
+                <th class="text-left p-2.5 font-bold text-yellow-900">ICD-10</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-yellow-100">
+              <tr class="bg-white">
+                <td class="p-2.5 font-medium">双極性障害（精神病性特徴を伴う）</td>
+                <td class="p-2.5 text-gray-600">精神病症状が気分エピソードに限定；躁・うつの縦断的経過を確認。D基準で区別</td>
+                <td class="p-2.5 text-gray-500">F31</td>
+              </tr>
+              <tr class="bg-yellow-50">
+                <td class="p-2.5 font-medium">統合失調感情障害</td>
+                <td class="p-2.5 text-gray-600">精神病症状と気分エピソードが気分に一致しない形で同時存在；気分症状が全病程に比し相当な比率</td>
+                <td class="p-2.5 text-gray-500">F25</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="p-2.5 font-medium">妄想性障害</td>
+                <td class="p-2.5 text-gray-600">非奇異な体系的妄想のみ；幻覚・解体・陰性症状は顕著でない；機能保たれることが多い</td>
+                <td class="p-2.5 text-gray-500">F22</td>
+              </tr>
+              <tr class="bg-yellow-50">
+                <td class="p-2.5 font-medium">短期精神病性障害</td>
+                <td class="p-2.5 text-gray-600">発症から1か月以内に完全回復；明確なストレス因がある場合も</td>
+                <td class="p-2.5 text-gray-500">F23</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="p-2.5 font-medium">重症うつ病（精神病性）</td>
+                <td class="p-2.5 text-gray-600">精神病症状が抑うつエピソード中のみに出現；罪業妄想・貧困妄想が多い</td>
+                <td class="p-2.5 text-gray-500">F32.3</td>
+              </tr>
+              <tr class="bg-yellow-50">
+                <td class="p-2.5 font-medium">解離性障害（DID等）</td>
+                <td class="p-2.5 text-gray-600">声は「内側から」聴こえることが多い；人格交代・健忘・トラウマ歴；幻聴と混同されやすい</td>
+                <td class="p-2.5 text-gray-500">F44</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="p-2.5 font-medium">境界性パーソナリティ障害（BPD）</td>
+                <td class="p-2.5 text-gray-600">一過性の精神病様体験・関係念慮；対人関係の不安定性・自己同一性の拡散；時間的一貫性なし</td>
+                <td class="p-2.5 text-gray-500">F60.3</td>
+              </tr>
+              <tr class="bg-yellow-50">
+                <td class="p-2.5 font-medium">ASD（自閉スペクトラム症）</td>
+                <td class="p-2.5 text-gray-600">社会的コミュニケーション障害・常同行動が発達早期から；精神病様体験は二次的に生じうる；DSM-5-TRでは1か月以上の明確な幻覚・妄想があれば統合失調症も併記可</td>
+                <td class="p-2.5 text-gray-500">F84</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="p-2.5 font-medium">統合失調型パーソナリティ障害（SPD）</td>
+                <td class="p-2.5 text-gray-600">統合失調症スペクトラムの軽症型；奇異な信念・魔術的思考・関係念慮・一過性の精神病様体験を持続的に呈するが、閾値以上の精神病エピソードなし；発達早期からの縦断的評価が重要</td>
+                <td class="p-2.5 text-gray-500">F21</td>
+              </tr>
+              <tr class="bg-yellow-50">
+                <td class="p-2.5 font-medium">ハンチントン病（HD）</td>
+                <td class="p-2.5 text-gray-600">精神症状（妄想・易刺激性・抑うつ）・認知機能低下・舞踏運動が初発症状になりうる；常染色体優性遺伝、家族歴；遺伝子検査（CAGリピート）で確定。不随意運動を伴う若年精神症状では必ず念頭に</td>
+                <td class="p-2.5 text-gray-500">G10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 除外のための検査 -->
+    <div class="section-card" id="tests">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="activity" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">除外診断のための検査</h2>
+          <p class="text-gray-500 text-sm">一般的検査（初発で標準施行）〜 専門的検査（疑いがある場合）</p>
+        </div>
+      </div>
+
+      <!-- 一般的検査 -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span class="badge-first">一般的検査（FEP初診で標準施行）</span>
+      </h3>
+      <div class="grid md:grid-cols-2 gap-4 mb-5">
+
+        <!-- 血液検査 -->
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="activity" class="w-5 h-5 text-red-600"></i>
+            <span class="font-bold text-red-800">血液検査</span>
+          </div>
+          <div class="space-y-2">
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-xs text-gray-600 mb-1">血算・凝固</div>
+              <div class="text-sm text-gray-700">CBC（白血球分画含む）、血小板</div>
+            </div>
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-xs text-gray-600 mb-1">生化学・代謝</div>
+              <div class="text-sm text-gray-700">Cr/eGFR、肝機能（AST/ALT/γGTP）、空腹時血糖、HbA1c、CK、LDH</div>
+            </div>
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-xs text-gray-600 mb-1">電解質</div>
+              <div class="text-sm text-gray-700">Na、K、Cl、Ca、Mg（低Mg血症は精神症状を来しうる）</div>
+            </div>
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-xs text-gray-600 mb-1">内分泌</div>
+              <div class="text-sm text-gray-700">TSH / FT4（甲状腺機能）、必要に応じてコルチゾール</div>
+            </div>
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-xs text-gray-600 mb-1">栄養・感染</div>
+              <div class="text-sm text-gray-700">ビタミンB12・葉酸（欠乏は精神症状の原因）、HIV抗体、梅毒（TPHA/RPR）— リスクに応じて</div>
+            </div>
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-xs text-gray-600 mb-1">追加（疑いに応じて）</div>
+              <div class="text-sm text-gray-700">銅・セルロプラスミン（Wilson病スクリーニング）、プロラクチン（高PRL血症・抗精神病薬前ベースライン）、脂質（LDL/HDL/TG）</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 尿検査・画像・生理 -->
+        <div class="space-y-3">
+          <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="flask-conical" class="w-5 h-5 text-yellow-600"></i>
+              <span class="font-bold text-yellow-800">尿検査</span>
+            </div>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li>・<strong>尿中薬物スクリーニング</strong>（覚醒剤・大麻・ベンゾ・オピオイド等）</li>
+              <li>・尿一般（蛋白・糖・潜血）</li>
+              <li>・必要に応じて特定薬物の定量検査</li>
+            </ul>
+          </div>
+
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="scan" class="w-5 h-5 text-blue-600"></i>
+              <span class="font-bold text-blue-800">頭部画像検査</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="bg-white rounded p-2 border">
+                <span class="font-bold text-blue-700">頭部MRI（推奨）</span>
+                <p class="text-gray-600 mt-0.5">腫瘍・脱髄・脳炎・萎縮・白質病変の検出。FEP初発では可能な限り施行</p>
+              </div>
+              <div class="bg-white rounded p-2 border">
+                <span class="font-bold text-gray-600">頭部CT（緊急時/MRI不能時）</span>
+                <p class="text-gray-600 mt-0.5">頭蓋内出血・緊急スクリーニングに有用。解像度はMRIに劣る</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="zap" class="w-5 h-5 text-green-600"></i>
+              <span class="font-bold text-green-800">脳波（EEG）</span>
+            </div>
+            <ul class="text-sm space-y-1 text-gray-700">
+              <li>・てんかん（特に側頭葉）が疑われる場合</li>
+              <li>・意識障害・一過性の錯乱を伴う精神症状</li>
+              <li>・夜間発作様行動・健忘エピソードがある場合</li>
+              <li>・自己免疫性脳炎（異常EEGが補助診断となる）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 専門的検査 -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span class="badge-second">専門的検査（疑いがある場合に追加）</span>
+      </h3>
+      <div class="grid md:grid-cols-2 gap-4">
+
+        <!-- 自己免疫パネル -->
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="shield" class="w-5 h-5 text-purple-600"></i>
+            <span class="font-bold text-purple-800">自己免疫性脳炎パネル</span>
+            <span class="badge-level-a text-xs ml-1">優先度高</span>
+          </div>
+          <div class="bg-white rounded-lg p-3 border mb-2">
+            <div class="font-bold text-sm text-purple-700 mb-1.5">推奨される場面</div>
+            <ul class="text-xs space-y-0.5 text-gray-700">
+              <li>・<strong>急性〜亜急性発症</strong>の精神症状（年齢・性別問わず）</li>
+              <li>・治療反応が乏しい初発精神病</li>
+              <li>・自律神経症状・不随意運動（口舌ジスキネジア等）を伴う</li>
+              <li>・発熱・髄液炎症所見がある</li>
+              <li>・卵巣奇形腫等の腫瘍が併存（若年女性に多い）</li>
+              <li>・LGI1抗体脳炎は<strong>高齢男性に多い</strong>（顔面・上肢の筋緊張異常発作）</li>
+            </ul>
+          </div>
+          <div class="space-y-1.5 text-sm">
+            <div class="flex items-start gap-2">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span class="text-gray-700"><strong>抗NMDA受容体抗体</strong>（血清・髄液）— 最頻</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span class="text-gray-700">抗LGI1・抗CASPR2抗体（辺縁系脳炎）</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span class="text-gray-700">抗GABA-B・抗AMPA受容体抗体等</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span class="text-gray-700">抗ANA、抗dsDNA（SLE関連）</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 髄液検査 -->
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="droplets" class="w-5 h-5 text-gray-600"></i>
+            <span class="font-bold text-gray-800">髄液検査（腰椎穿刺）</span>
+          </div>
+          <div class="bg-white rounded-lg p-3 border mb-2">
+            <div class="font-bold text-sm text-gray-700 mb-1.5">適応</div>
+            <ul class="text-xs space-y-0.5 text-gray-700">
+              <li>・中枢神経感染症が疑われる場合（髄膜炎・脳炎）</li>
+              <li>・自己免疫性脳炎疑い（血清抗体陰性でも髄液要確認）</li>
+              <li>・亜急性経過の精神症状＋神経徴候</li>
+              <li>・発熱＋精神症状（ヘルペス脳炎除外）</li>
+            </ul>
+          </div>
+          <div class="text-sm text-gray-700">
+            <div class="font-bold text-xs text-gray-600 mb-1">検査項目</div>
+            <ul class="space-y-0.5 text-xs">
+              <li>・細胞数・蛋白・糖（血清との比較）</li>
+              <li>・グラム染色・培養</li>
+              <li>・ウイルスPCR（HSV、EBV、CMV等）</li>
+              <li>・自己免疫性脳炎抗体パネル（髄液）</li>
+              <li>・梅毒反応（TPHA）</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 神経心理学的検査 -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="brain" class="w-5 h-5 text-blue-600"></i>
+            <span class="font-bold text-blue-800">神経心理学的検査</span>
+          </div>
+          <div class="text-sm space-y-2 text-gray-700">
+            <div>
+              <div class="font-bold text-xs text-blue-700 mb-1">認知機能評価</div>
+              <ul class="space-y-0.5 text-xs">
+                <li>・MMSE / MoCA — スクリーニング</li>
+                <li>・WCST（ウィスコンシンカード分類）— 前頭葉機能</li>
+                <li>・WAIS-IV — 知的機能評価（発達障害との鑑別）</li>
+                <li>・BACS-J — 統合失調症の認知機能評価</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-xs text-blue-700 mb-1">適応</div>
+              <ul class="space-y-0.5 text-xs">
+                <li>・発達歴からの知的障害・ASDの鑑別</li>
+                <li>・就労・教育計画の立案</li>
+                <li>・認知機能障害の程度評価（陰性症状との鑑別）</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 遺伝学的検査 -->
+        <div class="bg-teal-50 border border-teal-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="dna" class="w-5 h-5 text-teal-600"></i>
+            <span class="font-bold text-teal-800">遺伝学的検査</span>
+            <span class="badge-level-c text-xs ml-1">専門機関で</span>
+          </div>
+          <div class="text-sm space-y-2 text-gray-700">
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-teal-700 text-xs mb-1">22q11.2欠失症候群</div>
+              <p class="text-xs text-gray-600">若年発症統合失調症の約1〜2%。顔貌異常・心奇形・低Ca・免疫不全を伴う場合に疑う。FISH法またはアレイCGH</p>
+            </div>
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-teal-700 text-xs mb-1">コピー数多型（CNV）解析</div>
+              <p class="text-xs text-gray-600">研究目的。15q11-13、16p11.2等の高リスクCNVの同定。遺伝カウンセリングとセットで</p>
+            </div>
+            <div class="text-xs text-gray-500 mt-1">
+              <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>
+              発達歴・家族歴・身体的特徴から疑う場合に限定的に施行
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 検査の流れサマリー -->
+      <div class="recommend-box mt-4">
+        <div class="font-bold text-green-800 mb-3 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          初発精神病（FEP）における検査の実施フロー
+        </div>
+        <div class="flex flex-col md:flex-row gap-3">
+          <div class="flex-1 bg-white rounded-lg p-3 border border-green-200">
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <div class="w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
+              <span class="font-bold text-sm text-red-800">初診当日（緊急）</span>
+            </div>
+            <ul class="text-xs space-y-0.5 text-gray-700">
+              <li>・バイタル・意識レベル確認</li>
+              <li>・血糖・電解質・CBC</li>
+              <li>・尿中薬物スクリーニング</li>
+              <li>・必要に応じてCT</li>
+            </ul>
+          </div>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-green-500 self-center hidden md:block flex-shrink-0"></i>
+          <div class="flex-1 bg-white rounded-lg p-3 border border-green-200">
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <div class="w-5 h-5 bg-yellow-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
+              <span class="font-bold text-sm text-yellow-800">第1週以内</span>
+            </div>
+            <ul class="text-xs space-y-0.5 text-gray-700">
+              <li>・血液検査フルセット</li>
+              <li>・頭部MRI</li>
+              <li>・脳波（てんかん疑い）</li>
+              <li>・甲状腺・梅毒・HIV</li>
+            </ul>
+          </div>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-green-500 self-center hidden md:block flex-shrink-0"></i>
+          <div class="flex-1 bg-white rounded-lg p-3 border border-green-200">
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <div class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
+              <span class="font-bold text-sm text-blue-800">疑いに応じて追加</span>
+            </div>
+            <ul class="text-xs space-y-0.5 text-gray-700">
+              <li>・自己免疫性脳炎抗体パネル</li>
+              <li>・髄液検査</li>
+              <li>・神経心理学的検査</li>
+              <li>・遺伝学的検査（要紹介）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 自己免疫性脳炎との鑑別（重要） -->
+    <div class="section-card" id="autoimmune">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">自己免疫性脳炎との鑑別（特に重要）</h2>
+          <p class="text-gray-500 text-sm">抗NMDA受容体脳炎 — 精神科初診となりうる</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+            <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+            抗NMDA受容体脳炎の典型的経過
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-start gap-2">
+              <div class="w-16 text-xs text-gray-500 flex-shrink-0 mt-0.5">前駆期</div>
+              <div class="text-gray-700">発熱・頭痛（インフルエンザ様）<br>数日〜2週間</div>
+            </div>
+            <div class="flex items-start gap-2">
+              <div class="w-16 text-xs font-bold text-red-600 flex-shrink-0 mt-0.5">精神期★</div>
+              <div class="text-gray-700">興奮・不安・妄想様行動・幻覚・奇異な言動 <br><span class="text-red-600 font-medium">→ 精神科初診となりやすい！</span></div>
+            </div>
+            <div class="flex items-start gap-2">
+              <div class="w-16 text-xs text-gray-500 flex-shrink-0 mt-0.5">神経期</div>
+              <div class="text-gray-700">意識障害・けいれん・不随意運動（口舌ジスキネジア）・自律神経障害</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+            <i data-lucide="search" class="w-4 h-4"></i>
+            統合失調症との鑑別ポイント
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-yellow-200">
+                  <th class="text-left p-1.5">観点</th>
+                  <th class="text-left p-1.5">抗NMDA受容体脳炎</th>
+                  <th class="text-left p-1.5">統合失調症</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-yellow-100">
+                <tr class="bg-white">
+                  <td class="p-1.5 font-bold text-gray-600">患者背景</td>
+                  <td class="p-1.5">若年女性に多い（抗NMDA）<br>高齢男性に多い（LGI1）</td>
+                  <td class="p-1.5">生涯有病率1%（性差ほぼなし）<br>遺伝因子は関与するが必須ではない</td>
+                </tr>
+                <tr>
+                  <td class="p-1.5 font-bold text-gray-600">発症経過</td>
+                  <td class="p-1.5">急性（数日〜週）</td>
+                  <td class="p-1.5">亜急性〜慢性（月〜年単位）</td>
+                </tr>
+                <tr class="bg-white">
+                  <td class="p-1.5 font-bold text-gray-600">意識障害</td>
+                  <td class="p-1.5">後期で出現</td>
+                  <td class="p-1.5">通常なし</td>
+                </tr>
+                <tr>
+                  <td class="p-1.5 font-bold text-gray-600">不随意運動</td>
+                  <td class="p-1.5">口舌ジスキネジア等あり</td>
+                  <td class="p-1.5">薬剤性以外は通常なし</td>
+                </tr>
+                <tr class="bg-white">
+                  <td class="p-1.5 font-bold text-gray-600">自律神経</td>
+                  <td class="p-1.5">頻脈・血圧不安定</td>
+                  <td class="p-1.5">通常なし</td>
+                </tr>
+                <tr>
+                  <td class="p-1.5 font-bold text-gray-600">MRI</td>
+                  <td class="p-1.5">正常〜辺縁系異常</td>
+                  <td class="p-1.5">非特異的変化</td>
+                </tr>
+                <tr class="bg-white">
+                  <td class="p-1.5 font-bold text-gray-600">髄液</td>
+                  <td class="p-1.5">炎症所見（細胞↑）</td>
+                  <td class="p-1.5">通常正常</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommend-box mt-3">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          自己免疫性脳炎が疑われる場合の対応
+        </div>
+        <div class="grid md:grid-cols-3 gap-3 text-sm">
+          <div class="flex items-start gap-2">
+            <i data-lucide="flask-conical" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i>
+            <span class="text-gray-700">血清＋髄液の抗NMDA受容体抗体検査（髄液の感度が高い）</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="scan" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i>
+            <span class="text-gray-700">骨盤MRI/エコー（卵巣奇形腫スクリーニング）</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="stethoscope" class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"></i>
+            <span class="text-gray-700">神経内科への紹介・連携。疑いが強ければ免疫療法の早期開始を検討</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 評価スケール -->
+    <div class="section-card" id="scales">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">診断補助・重症度評価スケール</h2>
+          <p class="text-gray-500 text-sm">診断確定・治療効果判定・前駆期評価に使用</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+
+        <!-- PANSS -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="font-bold text-blue-800">PANSS</span>
+            <span class="text-sm text-gray-600">— 陽性・陰性症状評価尺度</span>
+            <span class="badge-level-a ml-auto">Level A</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <div class="bg-white rounded-lg p-2 border text-center">
+              <div class="font-bold text-red-700 text-lg">7項目</div>
+              <div class="text-xs text-gray-600">陽性症状尺度(P)</div>
+              <div class="text-xs text-gray-500 mt-1">妄想・幻覚・解体・興奮・誇大性等</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border text-center">
+              <div class="font-bold text-blue-700 text-lg">7項目</div>
+              <div class="text-xs text-gray-600">陰性症状尺度(N)</div>
+              <div class="text-xs text-gray-500 mt-1">感情鈍麻・無口・無動・社会回避等</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border text-center">
+              <div class="font-bold text-green-700 text-lg">16項目</div>
+              <div class="text-xs text-gray-600">総合精神病理(G)</div>
+              <div class="text-xs text-gray-500 mt-1">不安・抑うつ・病識・協調性等</div>
+            </div>
+          </div>
+          <div class="text-xs text-gray-600 bg-white rounded p-2 border">
+            <span class="font-bold">用途：</span>治療効果判定・重症度モニタリング・研究。各項目1〜7点（7=最重度）。診断確定用ではない。
+          </div>
+        </div>
+
+        <!-- BPRS -->
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="font-bold text-gray-800">BPRS</span>
+            <span class="text-sm text-gray-600">— 簡易精神症状評価尺度</span>
+            <span class="badge-level-b ml-auto">Level B</span>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5"></i>
+              <span>18〜24項目の包括的精神症状評価</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5"></i>
+              <span>外来での簡易的な全体重症度トラッキングに有用</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5"></i>
+              <span>PANSSより簡便で時間効率が高い</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 前駆期スケール -->
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="font-bold text-orange-800">SIPS / CAARMS</span>
+            <span class="text-sm text-gray-600">— 前駆期・超高危険群</span>
+            <span class="badge-level-b ml-auto">Level B</span>
+          </div>
+          <ul class="text-sm space-y-1.5 text-gray-700">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+              <span>亜臨床的な前駆症状（妄想様観念・知覚体験変容等）の評価</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+              <span>CHR-P（精神病超高危険群）の同定に使用</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="triangle-alert" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+              <span class="text-orange-700">主に研究・専門外来。倫理的配慮と十分な説明が必要</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- CGI -->
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="font-bold text-green-800">CGI-S / CGI-I</span>
+            <span class="text-sm text-gray-600">— 全般臨床印象</span>
+            <span class="badge-level-b ml-auto">Level B</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-green-700 text-xs mb-1">CGI-S（重症度）</div>
+              <p class="text-xs text-gray-600">1〜7点。1=正常、4=中等度、7=最重症</p>
+            </div>
+            <div class="bg-white rounded-lg p-2.5 border">
+              <div class="font-bold text-green-700 text-xs mb-1">CGI-I（改善度）</div>
+              <p class="text-xs text-gray-600">1〜7点。1=著明改善、4=変化なし、7=著明悪化</p>
+            </div>
+          </div>
+          <p class="text-xs text-gray-600 mt-2">簡便なグローバル評価。外来治療記録・治療効果の簡易記録に有用。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 病期分類 -->
+    <div class="section-card" id="staging">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clock" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">病期分類と診断的意義</h2>
+          <p class="text-gray-500 text-sm">縦断的経過が診断に組み込まれる（DSM-5-TR C基準）</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-3">
+        <div class="flex-1 bg-gray-50 border-t-4 border-gray-400 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2">前駆期</div>
+          <div class="text-xs text-gray-500 mb-2">DSM-5-TR C基準の前駆期に相当</div>
+          <ul class="text-sm space-y-1 text-gray-600">
+            <li>・非特異的な機能低下</li>
+            <li>・社会的引きこもり</li>
+            <li>・奇異な信念（亜臨床）</li>
+            <li>・睡眠障害・認知機能低下</li>
+            <li>・CHR-P状態（前駆期スケール）</li>
+          </ul>
+        </div>
+        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 self-center hidden md:block flex-shrink-0"></i>
+        <div class="flex-1 bg-red-50 border-t-4 border-red-500 rounded-xl p-4">
+          <div class="font-bold text-red-700 mb-2">急性期（活動期）</div>
+          <div class="text-xs text-gray-500 mb-2">A基準を満たす期間（1か月以上）</div>
+          <ul class="text-sm space-y-1 text-gray-600">
+            <li>・陽性症状が顕著（妄想・幻覚等）</li>
+            <li>・入院治療が必要なことが多い</li>
+            <li>・抗精神病薬の開始</li>
+            <li>・安全確保・環境調整</li>
+          </ul>
+        </div>
+        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 self-center hidden md:block flex-shrink-0"></i>
+        <div class="flex-1 bg-yellow-50 border-t-4 border-yellow-500 rounded-xl p-4">
+          <div class="font-bold text-yellow-700 mb-2">回復期（不安定期）</div>
+          <div class="text-xs text-gray-500 mb-2">急性期症状の減弱</div>
+          <ul class="text-sm space-y-1 text-gray-600">
+            <li>・陽性症状の軽減</li>
+            <li>・抑うつ・無気力が出やすい</li>
+            <li>・薬剤調整・心理教育開始</li>
+            <li>・再発予防の準備</li>
+          </ul>
+        </div>
+        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 self-center hidden md:block flex-shrink-0"></i>
+        <div class="flex-1 bg-blue-50 border-t-4 border-blue-500 rounded-xl p-4">
+          <div class="font-bold text-blue-700 mb-2">慢性期（安定期）</div>
+          <div class="text-xs text-gray-500 mb-2">DSM C基準の残遺期</div>
+          <ul class="text-sm space-y-1 text-gray-600">
+            <li>・陰性症状・認知機能障害が残存</li>
+            <li>・社会機能の制限</li>
+            <li>・維持療法・リハビリ</li>
+            <li>・SST・デイケア・就労支援</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ガイドライン -->
+      <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mt-5">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="book-open" class="w-5 h-5 text-gray-600"></i>
+          <span class="font-bold text-gray-700">参照ガイドライン</span>
+        </div>
+        <div class="grid md:grid-cols-3 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3 border">
+            <div class="font-bold text-gray-700 text-xs mb-1">日本神経精神薬理学会</div>
+            <p class="text-gray-600 text-xs">統合失調症薬物治療ガイドライン2022（2023年一部改訂）</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border">
+            <div class="font-bold text-gray-700 text-xs mb-1">APA（米国精神医学会）</div>
+            <p class="text-gray-600 text-xs">Practice Guideline for the Treatment of Patients with Schizophrenia, 3rd ed.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border">
+            <div class="font-bold text-gray-700 text-xs mb-1">NICE（英国）</div>
+            <p class="text-gray-600 text-xs">Psychosis and schizophrenia in adults: prevention and management (CG178)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- フッター -->
+    <div class="text-center text-sm text-gray-400 pb-8">
+      <p>ICD-10 F20 / DSM-5-TR 統合失調症スペクトラム障害群 — 精神科臨床ガイド</p>
+      <p class="mt-1">本資料は外来診察での参照補助を目的としています。最終判断は原典・ガイドラインに基づいてください。</p>
+    </div>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
