@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BFCRS 詳細採点シート｜Bush-Francis 緊張病評価尺度</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --psych-gradient: linear-gradient(135deg, #312e81, #7c3aed); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; }
+    /* スコアボタン（0-3用）*/
+    .score-btn {
+      width: 2rem; height: 2rem; border-radius: 0.375rem;
+      border: 1.5px solid #d1d5db; background: white;
+      font-size: 0.82rem; font-weight: 700; cursor: pointer;
+      transition: all 0.12s; display: flex; align-items: center;
+      justify-content: center; color: #6b7280; flex-shrink: 0; user-select: none;
+    }
+    .score-btn:hover { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+    .score-btn.s0 { background:#f8fafc; border-color:#94a3b8; color:#475569; }
+    .score-btn.s1 { background:#fef9c3; border-color:#ca8a04; color:#854d0e; }
+    .score-btn.s2 { background:#ffedd5; border-color:#ea580c; color:#c2410c; }
+    .score-btn.s3 { background:#fecaca; border-color:#b91c1c; color:#7f1d1d; }
+    .score-disp {
+      width: 2rem; height: 2rem; border-radius: 0.375rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; font-weight: 700; flex-shrink: 0;
+    }
+    .sd-none { background:#f1f5f9; color:#cbd5e1; }
+    .sd0 { background:#f8fafc; color:#475569; border: 1.5px solid #94a3b8; }
+    .sd1 { background:#fef9c3; color:#854d0e; }
+    .sd2 { background:#ffedd5; color:#c2410c; }
+    .sd3 { background:#fecaca; color:#7f1d1d; }
+    /* バイナリボタン（0 or 3）*/
+    .bin-btn {
+      padding: 0.25rem 0.75rem; border-radius: 0.375rem;
+      border: 1.5px solid #d1d5db; background: white;
+      font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      transition: all 0.12s; color: #6b7280; flex-shrink: 0; user-select: none;
+    }
+    .bin-btn:hover { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+    .bin-btn.b0 { background:#f8fafc; border-color:#94a3b8; color:#475569; }
+    .bin-btn.b3 { background:#fecaca; border-color:#b91c1c; color:#7f1d1d; }
+    /* カード */
+    .item-card { background: white; border-radius: 0.875rem; margin-bottom: 0.6rem; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .item-header { display: grid; grid-template-columns: 2.5rem 1fr auto auto; align-items: center; gap: 0.5rem; padding: 0.625rem 0.875rem; cursor: pointer; transition: background 0.1s; }
+    .item-header:hover { background: #fafaf9; }
+    .num-badge { width: 1.9rem; height: 1.9rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; }
+    .nb-bfcss { background:#ede9fe; color:#6d28d9; }   /* 緊張病スクリーニング */
+    .nb-bfcrs { background:#dbeafe; color:#1d4ed8; }   /* 追加評価項目 */
+    .nb-bin   { background:#fce7f3; color:#be185d; }   /* バイナリ */
+    .item-body { border-top: 1px solid #f1f5f9; padding: 0 0.875rem 0.875rem; }
+    .eval-box { background:#f5f3ff; border-left:3px solid #7c3aed; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.625rem; line-height:1.55; }
+    .exam-box  { background:#f0fdf4; border-left:3px solid #16a34a; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+    .warn-box  { background:#fffbeb; border-left:3px solid #d97706; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+    .bin-box   { background:#fdf4ff; border-left:3px solid #a855f7; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+    .score-table { width:100%; border-collapse:collapse; font-size:0.72rem; margin-top:0.75rem; }
+    .score-table th { padding:0.4rem 0.6rem; font-weight:700; text-align:center; font-size:0.68rem; }
+    .score-table td { padding:0.4rem 0.6rem; border-bottom:1px solid #f3f4f6; vertical-align:top; line-height:1.45; }
+    .score-table tr:last-child td { border-bottom:none; }
+    .score-table tr:hover td { background:#fafafa; }
+    .sc0{background:#f8fafc;color:#475569;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #f1f5f9;}
+    .sc1{background:#fef9c3;color:#854d0e;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #f1f5f9;}
+    .sc2{background:#ffedd5;color:#c2410c;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #f1f5f9;}
+    .sc3{background:#fecaca;color:#7f1d1d;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #f1f5f9;}
+    .sec-div { padding:0.4rem 0.875rem; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; display:flex; align-items:center; gap:0.5rem; border-radius:0.75rem; }
+    .point-card { background:white; border-radius:1rem; padding:0.875rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.06); margin-bottom:0.75rem; }
+    .sticky-footer { position:fixed; bottom:0; left:0; right:0; z-index:50; background:white; border-top:1px solid #e2e8f0; padding:0.625rem 1.25rem; box-shadow:0 -4px 12px rgba(0,0,0,0.08); }
+    .chevron-icon { transition:transform 0.2s; flex-shrink:0; }
+    .chevron-open { transform:rotate(180deg); }
+    .item-body[hidden] { display:none; }
+    @media print {
+      body { background:white; }
+      .no-print { display:none !important; }
+      .sticky-footer { display:none !important; }
+      .item-body { display:block !important; }
+      .item-card { box-shadow:none; border:1px solid #e5e7eb; margin-bottom:0.4rem; page-break-inside:avoid; }
+      .score-btn, .bin-btn { display:none !important; }
+      main { padding-bottom:0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="no-print text-white py-3" style="background:var(--psych-gradient);">
+  <div class="max-w-5xl mx-auto px-4 flex items-center justify-between">
+    <div style="color:white;">
+      <div class="flex items-center gap-2">
+        <i data-lucide="activity" class="w-5 h-5 opacity-80" style="color:white;"></i>
+        <span class="text-sm font-bold" style="color:white;">BFCRS 詳細採点シート</span>
+        <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full" style="color:white;">Bush-Francis 緊張病評価尺度</span>
+      </div>
+      <p class="text-xs opacity-60 mt-0.5" style="color:white;">Bush-Francis Catatonia Rating Scale｜Bush, Fink, Petrides, Dowling, Francis (1996)</p>
+    </div>
+    <div class="flex gap-2">
+      <button onclick="expandAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="chevrons-down" class="w-3 h-3"></i>全展開</button>
+      <button onclick="collapseAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="chevrons-up" class="w-3 h-3"></i>折りたたみ</button>
+      <button onclick="resetAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+      <button onclick="window.print()" class="flex items-center gap-1 bg-white text-purple-900 text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-gray-100"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+      <a href="panss-sheet.html" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="arrow-left" class="w-3 h-3"></i>PANSS</a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-4 pb-36">
+
+  <!-- 患者情報 -->
+  <div class="point-card mb-3">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div><label class="text-xs text-gray-500 block mb-1">患者ID / イニシャル</label><input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-purple-400" id="patientId" placeholder="例：A.T."></div>
+      <div><label class="text-xs text-gray-500 block mb-1">評価日</label><input type="date" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-purple-400" id="evalDate"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">評価者</label><input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-purple-400" id="evaluator" placeholder="氏名・職種"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">診断（疑い）</label><input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-purple-400" id="diagnosis" placeholder="例：緊張病（統合失調症）"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">評価時状況</label><select class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-purple-400" id="evalSetting"><option>初回評価</option><option>治療前</option><option>Lz反応試験後</option><option>治療中（経過）</option><option>治療後</option></select></div>
+    </div>
+  </div>
+
+  <!-- 全体ポイント -->
+  <div class="point-card mb-4">
+    <button class="w-full flex items-center justify-between text-left" onclick="toggleSection('global-body', this)">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"><i data-lucide="lightbulb" class="w-4 h-4 text-purple-600"></i></div>
+        <div><div class="text-sm font-bold text-gray-800">全体的な評価ポイント・スコア解釈・診断的意義</div><div class="text-xs text-gray-400">評価実施前に確認</div></div>
+      </div>
+      <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon"></i>
+    </button>
+    <div id="global-body" class="mt-3" hidden>
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="bg-purple-50 rounded-lg p-3 text-xs space-y-1">
+          <p class="font-bold text-purple-700 mb-1.5 flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i>BFCRSとは</p>
+          <p>・Bush, Fink, Petrides, Dowling, Francis（1996）が開発した緊張病（カタトニア）の標準的評価尺度</p>
+          <p>・<strong>23項目</strong>からなる包括的評価尺度（BFCRS）</p>
+          <p>・前半14項目は<strong>BFCSS（スクリーニング）</strong>として単独使用可能</p>
+          <p>・評価期間：現在の観察（過去数日以内）。評価時間：約10〜20分</p>
+          <p>・スコア範囲：0〜69点（一部バイナリ項目あり）</p>
+        </div>
+        <div class="bg-indigo-50 rounded-lg p-3 text-xs">
+          <p class="font-bold text-indigo-700 mb-1.5 flex items-center gap-1"><i data-lucide="filter" class="w-3 h-3"></i>BFCSS スクリーニング（項目1〜14）</p>
+          <div class="space-y-1.5">
+            <div class="flex items-start gap-2 bg-white rounded p-1.5">
+              <span class="w-5 h-5 bg-green-100 text-green-700 text-xs font-bold rounded flex items-center justify-center flex-shrink-0 mt-0.5">0</span>
+              <span class="text-gray-600"><strong>0項目</strong>：緊張病の可能性低い</span>
+            </div>
+            <div class="flex items-start gap-2 bg-white rounded p-1.5">
+              <span class="w-5 h-5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+              <span class="text-gray-600"><strong>1項目</strong>：要注意、経過観察</span>
+            </div>
+            <div class="flex items-start gap-2 bg-red-50 rounded p-1.5 border border-red-200">
+              <span class="w-5 h-5 bg-red-500 text-white text-xs font-bold rounded flex items-center justify-center flex-shrink-0 mt-0.5">≥2</span>
+              <span class="text-gray-700 font-semibold"><strong>2項目以上</strong>：緊張病疑い → 全23項目評価・ベンゾジアゼピン反応試験を検討</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-amber-50 rounded-lg p-3 text-xs">
+          <p class="font-bold text-amber-700 mb-1.5 flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i>悪性緊張病・鑑別</p>
+          <p class="mb-1"><strong>悪性緊張病の徴候：</strong></p>
+          <div class="space-y-1">
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span><span>項目23（自律神経異常）≥2 + 重篤な運動症状</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span><span>発熱・頻脈・血圧不安定・発汗</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span><span>横紋筋融解・腎不全リスク</span></div>
+          </div>
+          <p class="mt-2 font-bold">NMS鑑別：<span class="font-normal">抗精神病薬使用歴、CK上昇、発症経過</span></p>
+        </div>
+      </div>
+      <div class="mt-3 bg-gray-50 rounded-lg p-3 text-xs">
+        <p class="font-bold text-gray-700 mb-1.5">採点基準（全項目共通）</p>
+        <div class="grid grid-cols-4 gap-1.5">
+          <div class="bg-white rounded p-1.5 text-center border border-gray-200"><div class="font-bold text-gray-500 text-base">0</div><div class="text-gray-500 mt-0.5">なし<br>Absent</div></div>
+          <div class="bg-yellow-50 rounded p-1.5 text-center border border-yellow-200"><div class="font-bold text-yellow-700 text-base">1</div><div class="text-gray-500 mt-0.5">軽度<br>間欠的</div></div>
+          <div class="bg-orange-50 rounded p-1.5 text-center border border-orange-200"><div class="font-bold text-orange-700 text-base">2</div><div class="text-gray-500 mt-0.5">中等度<br>頻繁</div></div>
+          <div class="bg-red-50 rounded p-1.5 text-center border border-red-200"><div class="font-bold text-red-700 text-base">3</div><div class="text-gray-500 mt-0.5">重度<br>持続的/極度</div></div>
+        </div>
+        <p class="mt-2 text-gray-500">※バイナリ項目（13・17〜21）：0（なし）または3（あり）のみ。項目は<span class="bg-pink-100 text-pink-700 px-1 rounded font-bold">2値</span>バッジで識別。</p>
+      </div>
+      <div class="mt-3 bg-green-50 rounded-lg p-3 text-xs">
+        <p class="font-bold text-green-700 mb-1.5 flex items-center gap-1"><i data-lucide="flask-conical" class="w-3 h-3"></i>ベンゾジアゼピン反応試験（Lorazepam challenge）</p>
+        <div class="grid md:grid-cols-2 gap-2">
+          <div><p class="font-semibold text-gray-700 mb-1">実施方法：</p><p class="text-gray-600">ロラゼパム 1〜2mg を静注または筋注。投与前後（30分以内）にBFCRSを評価。50%以上の改善を陽性とする。</p></div>
+          <div><p class="font-semibold text-gray-700 mb-1">判定：</p>
+            <div class="flex items-center gap-2 mb-1"><span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold">陽性</span><span>緊張病を支持。継続的なBZP投与を検討</span></div>
+            <div class="flex items-center gap-2"><span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold">陰性</span><span>他の緊張病原因・NMS・ECTを検討</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BFCSS スクリーニング項目 ===== -->
+  <div class="sec-div bg-purple-50 text-purple-700 mb-2">
+    <i data-lucide="search" class="w-3.5 h-3.5"></i>BFCSS スクリーニング項目（Bush-Francis Catatonia Screening Scale）― 項目 1〜14
+    <span class="ml-1 text-purple-400 font-normal text-xs">2項目以上陽性 → 緊張病疑い</span>
+    <span class="ml-auto font-normal normal-case text-xs" id="bfcss-label">陽性 0 / 14項目</span>
+  </div>
+
+  <!-- 1 興奮 -->
+  <div class="item-card" id="card-1">
+    <div class="item-header" onclick="toggleItem(1)">
+      <div class="num-badge nb-bfcss">1</div>
+      <div><div class="text-sm font-bold text-gray-800">興奮 <span class="text-gray-400 font-normal text-xs ml-1">Excitement</span></div><div class="text-xs text-gray-400">明らかに目的のない極度の多動・運動不穏（アカシジアや目標指向の焦燥とは区別）</div></div>
+      <div class="flex gap-1 items-center" id="btns-1"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-1">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-1"></i></div>
+    </div>
+    <div class="item-body" id="body-1" hidden>
+      <div class="eval-box"><strong>定義：</strong>明らかに目的のない極度の過活動・運動不穏。アカシジア（静坐不能症）や目標指向性の焦燥感とは区別すること。<br><strong>注意：</strong>緊張病性興奮は「無目的」であることが特徴。苦悶・不快感に基づくアカシジアや、妄想・命令幻声に従った行動とは異なる。</div>
+      <div class="exam-box"><strong>観察・評価ポイント：</strong>患者が静止できているか、動きに目的性があるか、面接中・安静時の動きを観察。誘導で行動が変わるか確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>過活動なし</td>
+        <td>過剰な運動が見られるが間欠的（断続的に止まる時間がある）</td>
+        <td>持続的な運動・多動、休止期なし（ひっきりなしに動き続ける）</td>
+        <td>完全な緊張病性興奮。際限のない激しい運動活動（制御が非常に困難）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 2 不動/昏迷 -->
+  <div class="item-card" id="card-2">
+    <div class="item-header" onclick="toggleItem(2)">
+      <div class="num-badge nb-bfcss">2</div>
+      <div><div class="text-sm font-bold text-gray-800">不動 / 昏迷 <span class="text-gray-400 font-normal text-xs ml-1">Immobility / Stupor</span></div><div class="text-xs text-gray-400">極度の活動低下・不動。刺激への反応が最小限</div></div>
+      <div class="flex gap-1 items-center" id="btns-2"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-2">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-2"></i></div>
+    </div>
+    <div class="item-body" id="body-2" hidden>
+      <div class="eval-box"><strong>定義：</strong>極度の活動低下・不動状態。刺激への反応が最小限となる。<br><strong>注意：</strong>うつ病性制止（抑制）・昏睡・鎮静剤による意識障害と鑑別が必要。緊張病性昏迷は急激な発症や他の緊張病徴候の併存が特徴。</div>
+      <div class="exam-box"><strong>評価方法：</strong>声かけへの反応、疼痛刺激（胸骨圧迫等）への反応を観察。眼球の動き・まばたきの有無も確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>活動は正常範囲</td>
+        <td>異常なほど静止している。短時間の交流は可能（呼びかけに応じることがある）</td>
+        <td>外界との交流がほぼない。刺激には反応するが積極的関与なし</td>
+        <td>昏迷状態。疼痛刺激にも反応しない</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 3 無言症 -->
+  <div class="item-card" id="card-3">
+    <div class="item-header" onclick="toggleItem(3)">
+      <div class="num-badge nb-bfcss">3</div>
+      <div><div class="text-sm font-bold text-gray-800">無言症 <span class="text-gray-400 font-normal text-xs ml-1">Mutism</span></div><div class="text-xs text-gray-400">言語的に無反応または最小限の反応</div></div>
+      <div class="flex gap-1 items-center" id="btns-3"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-3">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-3"></i></div>
+    </div>
+    <div class="item-body" id="body-3" hidden>
+      <div class="eval-box"><strong>定義：</strong>言語による反応がないか、最小限の反応のみ。<br><strong>注意：</strong>ロ腔・喉頭の器質的障害、失語症との鑑別が必要。緊張病性無言症では発声器官に器質的問題はない。書字・筆談で意思疎通できる場合は軽症。</div>
+      <div class="exam-box"><strong>評価方法：</strong>5分間の会話を試み、発話語数を数える。囁き声・口の動きだけでも1とする。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>通常の言語表出</td>
+        <td>大多数の質問に言語的に反応しない、または聞き取れない囁き声のみ</td>
+        <td>5分間に20語以下しか話さない</td>
+        <td>発語が全くない（完全無言）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 4 凝視 -->
+  <div class="item-card" id="card-4">
+    <div class="item-header" onclick="toggleItem(4)">
+      <div class="num-badge nb-bfcss">4</div>
+      <div><div class="text-sm font-bold text-gray-800">凝視 <span class="text-gray-400 font-normal text-xs ml-1">Staring</span></div><div class="text-xs text-gray-400">固定した視線・視覚的走査の減少・瞬目の減少</div></div>
+      <div class="flex gap-1 items-center" id="btns-4"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-4">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-4"></i></div>
+    </div>
+    <div class="item-body" id="body-4" hidden>
+      <div class="eval-box"><strong>定義：</strong>固定した視線、周囲の視覚的走査の減少、瞬目の減少。<br><strong>注意：</strong>正常では通常3〜5秒ごとに視線を変える。瞬目は通常10〜15回/分。緊張病では視線が固定し、まばたきが著しく減少する。</div>
+      <div class="exam-box"><strong>評価方法：</strong>視線の変化頻度を計測（20秒以上同一方向なら2以上）。瞬目回数を1分間計測。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>視線・瞬目は正常</td>
+        <td>アイコンタクト不良。20秒未満ごとに視線を変える、瞬目が減少</td>
+        <td>視線を20秒以上保持。時折注意を移すが固定傾向あり</td>
+        <td>完全に固定した視線。無反応（瞬目がほぼない、外的刺激にも視線が動かない）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 5 姿勢保持/カタレプシー -->
+  <div class="item-card" id="card-5">
+    <div class="item-header" onclick="toggleItem(5)">
+      <div class="num-badge nb-bfcss">5</div>
+      <div><div class="text-sm font-bold text-gray-800">姿勢保持 / カタレプシー <span class="text-gray-400 font-normal text-xs ml-1">Posturing / Catalepsy</span></div><div class="text-xs text-gray-400">姿勢の自発的な保持（奇異なものを含む日常的姿勢の長時間保持）</div></div>
+      <div class="flex gap-1 items-center" id="btns-5"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-5">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-5"></i></div>
+    </div>
+    <div class="item-body" id="body-5" hidden>
+      <div class="eval-box"><strong>定義：</strong>自発的に姿勢を保持する。日常的姿勢（座位・立位の長時間保持）から奇異な姿勢まで含む。<br><strong>注意：</strong>カタレプシー（蝋様固縮）と混同しないこと。ここでは「自発的な姿勢保持」の持続時間を評価する。外部から置かれた姿勢を保持し続けることは蝋様固縮（項目13）。</div>
+      <div class="exam-box"><strong>評価方法：</strong>異常な姿勢の持続時間を計測。奇異な姿勢（例：腕を水平に上げたまま、頭を後屈させたまま等）の有無を確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>自発的な姿勢保持なし</td>
+        <td>1分未満の姿勢保持（日常的または奇異な姿勢を短時間保持）</td>
+        <td>1分以上15分未満の姿勢保持</td>
+        <td>15分以上の姿勢保持、または奇異な姿勢の保持</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 6 顔しかめ -->
+  <div class="item-card" id="card-6">
+    <div class="item-header" onclick="toggleItem(6)">
+      <div class="num-badge nb-bfcss">6</div>
+      <div><div class="text-sm font-bold text-gray-800">顔しかめ <span class="text-gray-400 font-normal text-xs ml-1">Grimacing</span></div><div class="text-xs text-gray-400">奇妙な表情の保持</div></div>
+      <div class="flex gap-1 items-center" id="btns-6"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-6">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-6"></i></div>
+    </div>
+    <div class="item-body" id="body-6" hidden>
+      <div class="eval-box"><strong>定義：</strong>奇妙または不自然な顔の表情の保持。<br><strong>注意：</strong>単なる情動に基づく表情変化（泣き顔・怒り顔）や、痛みに伴うしかめ面とは区別する。緊張病の顔しかめは文脈に無関係な固定した奇妙な表情が特徴。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>顔しかめなし</td>
+        <td>10秒未満の顔しかめ（断続的）</td>
+        <td>10秒以上1分未満の持続</td>
+        <td>奇妙な表情の長時間保持（1分以上）または著しく奇妙な表情</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 7 エコープラクシア/エコーラリア -->
+  <div class="item-card" id="card-7">
+    <div class="item-header" onclick="toggleItem(7)">
+      <div class="num-badge nb-bfcss">7</div>
+      <div><div class="text-sm font-bold text-gray-800">反響動作 / 反響言語 <span class="text-gray-400 font-normal text-xs ml-1">Echopraxia / Echolalia</span></div><div class="text-xs text-gray-400">検査者の動作・発言の模倣</div></div>
+      <div class="flex gap-1 items-center" id="btns-7"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-7">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-7"></i></div>
+    </div>
+    <div class="item-body" id="body-7" hidden>
+      <div class="eval-box"><strong>定義：</strong>検査者の動作（エコープラクシア）または発言（エコーラリア）の模倣。<br><strong>注意：</strong>通常の社会的模倣（うなずき等）とは区別する。発言をそのまま繰り返す（オウム返し）、動作をそのままなぞるなどが対象。</div>
+      <div class="exam-box"><strong>誘発方法：</strong>患者に向かって腕を上げる・顔を触る等の動作をゆっくり行い、模倣するかを観察。「今何時ですか？」と質問し、「今何時ですか？」と繰り返すかを確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　時折</th><th class="sc2">2　頻繁</th><th class="sc3">3　持続的</th></tr></thead><tbody><tr>
+        <td>模倣なし</td>
+        <td>時折、動作または発言を模倣する</td>
+        <td>頻繁に動作または発言を模倣する</td>
+        <td>ほぼ常に模倣し続ける</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 8 常同症 -->
+  <div class="item-card" id="card-8">
+    <div class="item-header" onclick="toggleItem(8)">
+      <div class="num-badge nb-bfcss">8</div>
+      <div><div class="text-sm font-bold text-gray-800">常同症 <span class="text-gray-400 font-normal text-xs ml-1">Stereotypy</span></div><div class="text-xs text-gray-400">非目的指向性の反復運動（行為そのものより頻度に異常がある）</div></div>
+      <div class="flex gap-1 items-center" id="btns-8"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-8">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-8"></i></div>
+    </div>
+    <div class="item-body" id="body-8" hidden>
+      <div class="eval-box"><strong>定義：</strong>目的を持たない反復運動（指の動き・自分を繰り返し触る・叩くなど）。動作の種類に異常があるのではなく、<strong>その頻度</strong>が病的である。<br><strong>区別：</strong>マンネリズム（項目9）は動作の種類自体が奇妙・目的外。常同症は種類は正常でも頻度が病的。</div>
+      <div class="exam-box"><strong>例：</strong>指を繰り返し曲げ伸ばす、自分の体を繰り返し撫でる、同じ動作を何度も繰り返す</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　時折</th><th class="sc2">2　頻繁</th><th class="sc3">3　持続的</th></tr></thead><tbody><tr>
+        <td>反復運動なし</td>
+        <td>時折、非目的指向性の反復運動が見られる</td>
+        <td>頻繁に反復運動が見られる</td>
+        <td>ほぼ常に反復運動が持続する</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 9 マンネリズム（衒奇症） -->
+  <div class="item-card" id="card-9">
+    <div class="item-header" onclick="toggleItem(9)">
+      <div class="num-badge nb-bfcss">9</div>
+      <div><div class="text-sm font-bold text-gray-800">マンネリズム（衒奇症） <span class="text-gray-400 font-normal text-xs ml-1">Mannerisms</span></div><div class="text-xs text-gray-400">奇妙な目的外行動（行為の種類そのものに異常がある）</div></div>
+      <div class="flex gap-1 items-center" id="btns-9"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-9">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-9"></i></div>
+    </div>
+    <div class="item-body" id="body-9" hidden>
+      <div class="eval-box"><strong>定義：</strong>奇妙で目的外の行動。ぴょんぴょん跳びながら歩く・つま先歩きをする・通行人に敬礼する・日常的な動作の誇張した模倣など。<strong>動作の種類自体に異常</strong>がある。<br><strong>常同症との区別：</strong>マンネリズムは行為そのものが奇妙（例：自分の頭を叩く特定のパターン）、常同症は通常の行為が過剰に繰り返される（例：手を過剰に擦り合わせる）。</div>
+      <div class="exam-box"><strong>例：</strong>つま先立ちで歩く・手を独特のパターンで振る・誰もいない方向に敬礼する・食べる仕草を食事以外の場面でする</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　時折</th><th class="sc2">2　頻繁</th><th class="sc3">3　持続的</th></tr></thead><tbody><tr>
+        <td>奇妙な動作なし</td>
+        <td>時折、奇妙・目的外の行動が見られる</td>
+        <td>頻繁に奇妙な行動が見られる</td>
+        <td>ほぼ常に奇妙な行動が持続する</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 10 保続発話 -->
+  <div class="item-card" id="card-10">
+    <div class="item-header" onclick="toggleItem(10)">
+      <div class="num-badge nb-bfcss">10</div>
+      <div><div class="text-sm font-bold text-gray-800">保続発話 <span class="text-gray-400 font-normal text-xs ml-1">Verbigeration</span></div><div class="text-xs text-gray-400">フレーズや文の繰り返し（傷のついたレコードのように）</div></div>
+      <div class="flex gap-1 items-center" id="btns-10"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-10">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-10"></i></div>
+    </div>
+    <div class="item-body" id="body-10" hidden>
+      <div class="eval-box"><strong>定義：</strong>フレーズや文を繰り返す（傷のついたレコードのように同じ言葉が繰り返される）。<br><strong>注意：</strong>保続（思考の保続）との違い：保続発話は同じフレーズの繰り返し自体が問題。エコーラリア（他者の言葉の反響）とも区別する。</div>
+      <div class="exam-box"><strong>例：</strong>「帰りたい、帰りたい、帰りたい…」と繰り返す / 「わかりません、わかりません、わかりません…」と繰り返す</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　時折</th><th class="sc2">2　頻繁</th><th class="sc3">3　持続的</th></tr></thead><tbody><tr>
+        <td>フレーズ・文の繰り返しなし</td>
+        <td>時折フレーズや文を繰り返す</td>
+        <td>頻繁に繰り返す。中断させることが困難</td>
+        <td>ほぼ常に繰り返し続ける（中断不可能）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 11 固縮 -->
+  <div class="item-card" id="card-11">
+    <div class="item-header" onclick="toggleItem(11)">
+      <div class="num-badge nb-bfcss">11</div>
+      <div><div class="text-sm font-bold text-gray-800">固縮 <span class="text-gray-400 font-normal text-xs ml-1">Rigidity</span></div><div class="text-xs text-gray-400">他動的に動かそうとする努力に抗して硬直した体位を維持（歯車様・振戦を除く）</div></div>
+      <div class="flex gap-1 items-center" id="btns-11"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-11">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-11"></i></div>
+    </div>
+    <div class="item-body" id="body-11" hidden>
+      <div class="eval-box"><strong>定義：</strong>検査者が他動的に関節を動かそうとする際の抵抗。歯車様硬直や振戦がある場合は除外（パーキンソン症状との鑑別）。<br><strong>注意：</strong>鉛管様固縮（全可動域にわたる一定の抵抗）が特徴的。蝋様固縮（項目13）とは区別する。</div>
+      <div class="exam-box"><strong>評価方法：</strong>肘関節を他動的にゆっくり屈伸し、抵抗の程度を確認。腕全体・頸部も確認する。歯車様・振戦があればパーキンソン症状として除外。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>他動運動への抵抗なし</td>
+        <td>軽度の抵抗（他動運動は可能）</td>
+        <td>中等度の抵抗（他動運動は可能だが著しい努力を要する）</td>
+        <td>重篤な抵抗。体位の変換が不可能</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 12 拒絶症 -->
+  <div class="item-card" id="card-12">
+    <div class="item-header" onclick="toggleItem(12)">
+      <div class="num-badge nb-bfcss">12</div>
+      <div><div class="text-sm font-bold text-gray-800">拒絶症 / 反抗症 <span class="text-gray-400 font-normal text-xs ml-1">Negativism</span></div><div class="text-xs text-gray-400">指示・検査への明らかな動機のない抵抗。指示と逆の行動をとる</div></div>
+      <div class="flex gap-1 items-center" id="btns-12"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-12">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-12"></i></div>
+    </div>
+    <div class="item-body" id="body-12" hidden>
+      <div class="eval-box"><strong>定義：</strong>動機が見当たらない指示や移動・検査への抵抗。あるいは反対の行動をとる（指示の逆をする）。<br><strong>注意：</strong>患者が「嫌だ」という理由を述べる場合は非協調性（G8）に近い。緊張病性拒絶症は理由を述べられないか、理由が乏しい点が特徴。</div>
+      <div class="exam-box"><strong>評価方法：</strong>「手を上げてください」と指示し、下げるかどうか確認（「命令に逆らう」タイプ）。また診察・移動への抵抗の程度を評価。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>抵抗・反対行動なし</td>
+        <td>軽度の抵抗、または時折指示と逆の行動をとる</td>
+        <td>中等度の抵抗、または頻繁に指示と逆の行動をとる</td>
+        <td>重篤な抵抗、または常に逆の行動をとる（全面的拒絶）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 13 蝋様固縮 [Binary] -->
+  <div class="item-card" id="card-13">
+    <div class="item-header" onclick="toggleItem(13)">
+      <div class="num-badge nb-bin">13</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">蝋様固縮 <span class="text-gray-400 font-normal text-xs ml-1">Waxy Flexibility</span> <span class="ml-1.5 text-xs bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full font-bold">2値 0 or 3</span></div>
+        <div class="text-xs text-gray-400">他動的体位変換時に曲げろうそくのような初期抵抗の後に体位を受け入れ、そのまま保持する</div>
+      </div>
+      <div class="flex gap-2 items-center" id="btns-13"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-13">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-13"></i></div>
+    </div>
+    <div class="item-body" id="body-13" hidden>
+      <div class="eval-box"><strong>定義：</strong>体位を他動的に変換する際、曲げろうそく（anglepoise lamp）のような柔軟な抵抗を示した後に、新しい体位を保持し続ける現象。<br><strong>評価：</strong>あり（3点）またはなし（0点）の2値評価。</div>
+      <div class="exam-box"><strong>評価方法：</strong>腕をゆっくり別の位置に移動させる。初期の柔軟な「蝋のような」抵抗の後に、その位置でそのまま保持し続けるか確認。</div>
+      <div class="bin-box"><strong>注意：</strong>固縮（項目11）との違い：固縮は動かすこと自体への持続的な抵抗。蝋様固縮は一度置いた体位を保持し続けること。カタレプシーとも関連するが、検査者が体位を置く点が異なる。</div>
+      <table class="score-table"><thead><tr><th class="sc0" style="width:50%">0　なし</th><th class="sc3" style="width:50%">3　あり</th></tr></thead><tbody><tr>
+        <td>体位を保持しない。置いた位置から動く</td>
+        <td>他動的に置かれた体位を（蝋のような柔軟な抵抗の後に）そのまま保持し続ける</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 14 引きこもり/拒食 -->
+  <div class="item-card" id="card-14">
+    <div class="item-header" onclick="toggleItem(14)">
+      <div class="num-badge nb-bfcss">14</div>
+      <div><div class="text-sm font-bold text-gray-800">引きこもり / 拒食・拒水 <span class="text-gray-400 font-normal text-xs ml-1">Withdrawal</span></div><div class="text-xs text-gray-400">食事・水分の拒否、またはアイコンタクト・交流の拒否</div></div>
+      <div class="flex gap-1 items-center" id="btns-14"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-14">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-14"></i></div>
+    </div>
+    <div class="item-body" id="body-14" hidden>
+      <div class="eval-box"><strong>定義：</strong>食事・水分の拒否および/またはアイコンタクト・交流の拒否。<br><strong>注意：</strong>緊張病性の引きこもり・拒食は意識的な理由に基づかない点が特徴。食事を促しても無反応・無動で受け取れない状態。脱水・低栄養の管理が重要。</div>
+      <div class="warn-box"><strong>臨床的重要性：</strong>重度（3点）の場合は即時の医学的介入（輸液・経管栄養）が必要。脱水・電解質異常を合併しやすい。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>食事・水分・交流に問題なし</td>
+        <td>1日未満の間、経口摂取または交流の最小化（促せば取れることがある）</td>
+        <td>1日以上にわたり経口摂取または交流が最小限</td>
+        <td>1日以上にわたり経口摂取が全くない、またはいかなる交流もない（完全拒絶）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- ===== BFCRS 追加評価項目 ===== -->
+  <div class="sec-div bg-blue-50 text-blue-700 mb-2 mt-3">
+    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>BFCRS 追加評価項目 ― 項目 15〜23（BFCSSに加えて実施）
+    <span class="ml-auto font-normal normal-case text-xs" id="bfcrs-label">追加スコア 0点</span>
+  </div>
+
+  <!-- 15 衝動性 -->
+  <div class="item-card" id="card-15">
+    <div class="item-header" onclick="toggleItem(15)">
+      <div class="num-badge nb-bfcrs">15</div>
+      <div><div class="text-sm font-bold text-gray-800">衝動性 <span class="text-gray-400 font-normal text-xs ml-1">Impulsivity</span></div><div class="text-xs text-gray-400">誘発なしに突然不適切な行動をとる（事後に説明できないか表面的な説明のみ）</div></div>
+      <div class="flex gap-1 items-center" id="btns-15"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-15">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-15"></i></div>
+    </div>
+    <div class="item-body" id="body-15" hidden>
+      <div class="eval-box"><strong>定義：</strong>誘発なしに突然不適切な行動をとる。事後に説明できないか、表面的・稚拙な説明しかできない。<br><strong>注意：</strong>妄想・幻覚に基づく行動（例：命令幻声への服従）とは区別する。緊張病性衝動行為は文脈なしに突然起こり、患者自身も理由を説明できない。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　時折</th><th class="sc2">2　頻繁</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>衝動的行動なし</td>
+        <td>時折、突然不適切な行動をとる（事後説明できない）</td>
+        <td>頻繁に突然の不適切行動が見られる</td>
+        <td>ほぼ常に突然の不適切行動が見られ、方向転換が不可能</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 16 自動服従 -->
+  <div class="item-card" id="card-16">
+    <div class="item-header" onclick="toggleItem(16)">
+      <div class="num-badge nb-bfcrs">16</div>
+      <div><div class="text-sm font-bold text-gray-800">自動服従 <span class="text-gray-400 font-normal text-xs ml-1">Automatic Obedience</span></div><div class="text-xs text-gray-400">検査者の指示への誇張した服従、または要求した動作の自発的継続</div></div>
+      <div class="flex gap-1 items-center" id="btns-16"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-16">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-16"></i></div>
+    </div>
+    <div class="item-body" id="body-16" hidden>
+      <div class="eval-box"><strong>定義：</strong>検査者の指示に対して誇張された服従を示す、または要求された動作を止めるよう指示されても自発的に継続する。<br><strong>注意：</strong>拒絶症（項目12）とは逆の現象。「腕を上げて」と言うと腕を非常に高く上げ続けたり、「やめていいですよ」と言っても止まらない。</div>
+      <div class="exam-box"><strong>評価方法：</strong>「腕を上げてください」と指示後、「では下げてください」と指示。指示が取り消されても継続するかを確認。または「手を開いてください」と言い、止めるよう指示しても開き続けるか確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　時折</th><th class="sc2">2　頻繁</th><th class="sc3">3　持続的</th></tr></thead><tbody><tr>
+        <td>自動服従なし。通常の指示への反応</td>
+        <td>時折、誇張した服従または動作の自発的継続が見られる</td>
+        <td>頻繁に自動服従が見られる</td>
+        <td>ほぼ常に自動服従状態。指示を取り消しても停止しない</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 17 ミットゲーエン [Binary] -->
+  <div class="item-card" id="card-17">
+    <div class="item-header" onclick="toggleItem(17)">
+      <div class="num-badge nb-bin">17</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">ミットゲーエン <span class="text-gray-400 font-normal text-xs ml-1">Mitgehen</span> <span class="ml-1.5 text-xs bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full font-bold">2値 0 or 3</span></div>
+        <div class="text-xs text-gray-400">しないように指示しても、指の軽い圧力で「電気スタンドの腕のように」腕が持ち上がる</div>
+      </div>
+      <div class="flex gap-2 items-center" id="btns-17"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-17">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-17"></i></div>
+    </div>
+    <div class="item-body" id="body-17" hidden>
+      <div class="eval-box"><strong>定義：</strong>「しないように」と明示的に指示しているにもかかわらず、検査者の指の軽い圧力に反応して腕が持ち上がる（電気スタンドの関節のように）。<br><strong>評価：</strong>あり（3点）またはなし（0点）の2値評価。</div>
+      <div class="exam-box"><strong>評価方法：</strong>「今から軽く指で触れますが、持ち上げないでください」と指示。患者の手首または前腕の下から指1本で軽く上向きの圧をかけ、腕が上がるかを確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0" style="width:50%">0　なし</th><th class="sc3" style="width:50%">3　あり</th></tr></thead><tbody><tr>
+        <td>軽い圧力をかけても腕は上がらない</td>
+        <td>「しないように」と指示しているにもかかわらず、指の軽い圧力で腕が持ち上がる</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 18 ゲーゲンハルテン [Binary] -->
+  <div class="item-card" id="card-18">
+    <div class="item-header" onclick="toggleItem(18)">
+      <div class="num-badge nb-bin">18</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">ゲーゲンハルテン <span class="text-gray-400 font-normal text-xs ml-1">Gegenhalten</span> <span class="ml-1.5 text-xs bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full font-bold">2値 0 or 3</span></div>
+        <div class="text-xs text-gray-400">刺激の強さに比例した受動的運動への自動的な抵抗（意志的ではない）</div>
+      </div>
+      <div class="flex gap-2 items-center" id="btns-18"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-18">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-18"></i></div>
+    </div>
+    <div class="item-body" id="body-18" hidden>
+      <div class="eval-box"><strong>定義：</strong>受動的運動への抵抗が刺激の強さに比例して増加し、自動的（意志的ではない）に見える。<br><strong>ミットゲーエンとの区別：</strong>ミットゲーエンは「同方向への服従的な従いすぎ」、ゲーゲンハルテンは「逆方向への刺激依存性の自動的抵抗」。</div>
+      <div class="exam-box"><strong>評価方法：</strong>「腕を脱力させてください」と指示した上で、ゆっくり〜速く腕を動かす。速く動かすほど抵抗が強くなる（刺激依存性）かを確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0" style="width:50%">0　なし</th><th class="sc3" style="width:50%">3　あり</th></tr></thead><tbody><tr>
+        <td>刺激の強さによって抵抗が変化しない</td>
+        <td>刺激（速度・力）が強いほど抵抗が自動的に増加する</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 19 アンビテンデンシー [Binary] -->
+  <div class="item-card" id="card-19">
+    <div class="item-header" onclick="toggleItem(19)">
+      <div class="num-badge nb-bin">19</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">アンビテンデンシー <span class="text-gray-400 font-normal text-xs ml-1">Ambitendency</span> <span class="ml-1.5 text-xs bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full font-bold">2値 0 or 3</span></div>
+        <div class="text-xs text-gray-400">優柔不断な躊躇した動作によって「動きが止まる」</div>
+      </div>
+      <div class="flex gap-2 items-center" id="btns-19"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-19">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-19"></i></div>
+    </div>
+    <div class="item-body" id="body-19" hidden>
+      <div class="eval-box"><strong>定義：</strong>動作上で「動きが止まる」。優柔不断な躊躇した動作を示す。複数の意図がせめぎ合うように、動作が開始されては止まる状態。<br><strong>例：</strong>握手しようと手を差し伸べると、患者は手を動かし始めるが途中で止まり、引き、また動かし始める。</div>
+      <div class="exam-box"><strong>評価方法：</strong>握手を求める（手を差し伸べる）。患者が手を動かし始めては止め、引き、また動かす「迷いの繰り返し」が見られるか確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0" style="width:50%">0　なし</th><th class="sc3" style="width:50%">3　あり</th></tr></thead><tbody><tr>
+        <td>動作の迷い・停止なし。意図した動作を実行できる</td>
+        <td>動作が迷い・停止を繰り返し、完了できない（運動上で「動きが止まる」）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 20 把握反射 [Binary] -->
+  <div class="item-card" id="card-20">
+    <div class="item-header" onclick="toggleItem(20)">
+      <div class="num-badge nb-bin">20</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">把握反射 <span class="text-gray-400 font-normal text-xs ml-1">Grasp Reflex</span> <span class="ml-1.5 text-xs bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full font-bold">2値 0 or 3</span></div>
+        <div class="text-xs text-gray-400">神経学的検査による。前頭葉系の原始反射</div>
+      </div>
+      <div class="flex gap-2 items-center" id="btns-20"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-20">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-20"></i></div>
+    </div>
+    <div class="item-body" id="body-20" hidden>
+      <div class="eval-box"><strong>定義：</strong>神経学的検査で確認される把握反射（原始反射の一種）。前頭葉機能の障害を示す。<br><strong>臨床的意義：</strong>前頭葉機能不全のサイン。緊張病の神経基盤が前頭葉−基底核回路にあることと関連する。</div>
+      <div class="exam-box"><strong>評価方法（標準的神経学的検査）：</strong>患者の手のひらを検査者の指でゆっくり撫でる（手掌から指先方向へ）。患者が意図せず指を握り締める反応があれば陽性。「握らないようにしてください」と指示しても反射が出るか確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0" style="width:50%">0　なし</th><th class="sc3" style="width:50%">3　あり</th></tr></thead><tbody><tr>
+        <td>把握反射なし（指示通り握らない）</td>
+        <td>把握反射あり（手掌刺激で意図せず指を握る）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 21 保続 [Binary] -->
+  <div class="item-card" id="card-21">
+    <div class="item-header" onclick="toggleItem(21)">
+      <div class="num-badge nb-bin">21</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">保続 <span class="text-gray-400 font-normal text-xs ml-1">Perseveration</span> <span class="ml-1.5 text-xs bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full font-bold">2値 0 or 3</span></div>
+        <div class="text-xs text-gray-400">同じ話題に繰り返し戻る、または動作を繰り返し続ける</div>
+      </div>
+      <div class="flex gap-2 items-center" id="btns-21"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-21">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-21"></i></div>
+    </div>
+    <div class="item-body" id="body-21" hidden>
+      <div class="eval-box"><strong>定義：</strong>同じ話題に繰り返し戻る、または動作を繰り返し続ける（前の刺激・課題が次の反応に干渉し続ける）。<br><strong>保続発話（項目10）との違い：</strong>保続発話は同じフレーズを繰り返す発話の問題。保続（項目21）は話題・思考・動作が切り替わらず前のものに戻り続ける問題全般を指す。</div>
+      <div class="exam-box"><strong>評価方法：</strong>別の話題に転換しても同じ話題に戻り続けるか確認。「右手でこぶしを作ってください」「次に左手を開いてください」と指示し、左手をこぶしにする（前の動作を繰り返す）かを確認。</div>
+      <table class="score-table"><thead><tr><th class="sc0" style="width:50%">0　なし</th><th class="sc3" style="width:50%">3　あり</th></tr></thead><tbody><tr>
+        <td>話題・動作の切り替えができる</td>
+        <td>同じ話題に繰り返し戻る、または前の動作が次の動作に干渉し続ける</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 22 攻撃性 -->
+  <div class="item-card" id="card-22">
+    <div class="item-header" onclick="toggleItem(22)">
+      <div class="num-badge nb-bfcrs">22</div>
+      <div><div class="text-sm font-bold text-gray-800">攻撃性 <span class="text-gray-400 font-normal text-xs ml-1">Combativeness</span></div><div class="text-xs text-gray-400">主に無指向性。事後に説明できないか表面的な説明のみ</div></div>
+      <div class="flex gap-1 items-center" id="btns-22"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-22">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-22"></i></div>
+    </div>
+    <div class="item-body" id="body-22" hidden>
+      <div class="eval-box"><strong>定義：</strong>通常は無指向性。事後に説明できないか、表面的・稚拙な説明しかできない攻撃的行動。<br><strong>注意：</strong>妄想・被害念慮に基づく計画的な攻撃行動とは区別する。緊張病性の攻撃性は文脈なしに突発的に起こり、患者自身も理由を十分に説明できない。</div>
+      <div class="warn-box"><strong>安全管理：</strong>スコア2〜3の場合、評価者の安全確保が最優先。複数スタッフで評価する、保護具を準備するなどの対応を検討。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　時折</th><th class="sc2">2　頻繁</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>攻撃的行動なし</td>
+        <td>時折、打つ・つかむ等の攻撃行為（他者への危険は低い）</td>
+        <td>頻繁な攻撃行為</td>
+        <td>他者への重大な危険（重篤な傷害が生じうる）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 23 自律神経異常 -->
+  <div class="item-card" id="card-23">
+    <div class="item-header" onclick="toggleItem(23)">
+      <div class="num-badge nb-bfcrs">23</div>
+      <div><div class="text-sm font-bold text-gray-800">自律神経異常 <span class="text-gray-400 font-normal text-xs ml-1">Autonomic Abnormality</span></div><div class="text-xs text-gray-400">体温・血圧・脈拍・呼吸数・発汗の異常（異常パラメータ数で評価）</div></div>
+      <div class="flex gap-1 items-center" id="btns-23"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-23">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-23"></i></div>
+    </div>
+    <div class="item-body" id="body-23" hidden>
+      <div class="eval-box"><strong>定義：</strong>以下のパラメータの異常数で評価：体温・血圧・脈拍・呼吸数・発汗。<br><strong>評価対象：</strong>① 体温（発熱≥38℃）　② 血圧（高血圧・低血圧・不安定）　③ 脈拍（頻脈・徐脈・不整）　④ 呼吸数（頻呼吸・徐呼吸）　⑤ 発汗（著明な多汗）</div>
+      <div class="warn-box"><strong>悪性緊張病の警戒：</strong>スコア2以上（2パラメータ以上の異常）が重篤な運動症状と同時に出現した場合、悪性緊張病を疑い緊急対応を検討。CK・ミオグロビン・腎機能を緊急確認。NMSとの鑑別も実施。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0　なし</th><th class="sc1">1　軽度</th><th class="sc2">2　中等度</th><th class="sc3">3　重度</th></tr></thead><tbody><tr>
+        <td>全パラメータ正常</td>
+        <td>1つのパラメータに異常あり</td>
+        <td>2つのパラメータに異常あり</td>
+        <td>3つ以上のパラメータに異常あり（悪性緊張病の可能性）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- 備考 -->
+  <div class="point-card mt-3"><label class="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2"><i data-lucide="file-text" class="w-4 h-4 text-gray-400 no-print"></i>備考・特記事項（ベンゾジアゼピン反応試験結果・投薬・バイタルサイン詳細等）</label><textarea class="w-full border border-gray-200 rounded-lg p-3 text-sm text-gray-700 resize-none focus:outline-none focus:border-purple-400" rows="3" placeholder="Lz試験：投与量・投与前スコア・投与後スコア・反応 / バイタル詳細 / 鑑別診断の検討..."></textarea></div>
+
+</main>
+
+<!-- スティッキーフッター -->
+<div class="sticky-footer no-print">
+  <div class="max-w-5xl mx-auto flex items-center gap-3">
+    <div class="flex items-center gap-3 flex-1">
+      <div class="text-center min-w-[3.5rem]">
+        <div class="text-xs text-gray-500">合計</div>
+        <div class="text-2xl font-bold text-gray-800" id="total-score">0</div>
+        <div class="text-xs text-gray-400">/69</div>
+      </div>
+      <div class="flex-1">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span id="scored-count">0 / 23項目</span>
+          <span id="severity-label" class="font-semibold"></span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+          <div class="h-2.5 rounded-full transition-all duration-300" id="score-bar" style="width:0%;background:linear-gradient(to right,#a3e635,#fbbf24,#f97316,#dc2626);"></div>
+        </div>
+        <div class="flex justify-between text-xs text-gray-300 mt-0.5"><span>0</span><span>23</span><span>46</span><span>69</span></div>
+      </div>
+    </div>
+    <div class="flex gap-3 text-center border-l border-gray-200 pl-3">
+      <div>
+        <div class="text-xs text-purple-600 font-semibold">BFCSS</div>
+        <div class="text-lg font-bold" id="bfcss-count">0</div>
+        <div class="text-xs text-gray-400">陽性/14</div>
+      </div>
+      <div class="border-l border-gray-200 pl-3">
+        <div class="text-xs font-semibold" id="bfcss-result-label">判定</div>
+        <div class="text-sm font-bold px-2 py-0.5 rounded-lg" id="bfcss-result">－</div>
+      </div>
+      <div class="border-l border-gray-200 pl-3">
+        <div class="text-xs text-blue-600 font-semibold">追加(15-23)</div>
+        <div class="text-lg font-bold text-gray-700" id="extra-score">0</div>
+        <div class="text-xs text-gray-400">/27</div>
+      </div>
+    </div>
+    <div class="flex gap-2 border-l border-gray-200 pl-3">
+      <button onclick="window.print()" class="flex items-center gap-1 bg-purple-700 hover:bg-purple-800 text-white text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+      <button onclick="resetAll()" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+      <a href="panss-sheet.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="arrow-left" class="w-3 h-3"></i>PANSS</a>
+      <a href="bprs-sheet.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="arrow-left" class="w-3 h-3"></i>BPRS</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  // 通常項目（0-3）
+  const REGULAR_ITEMS = [1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,22,23];
+  // バイナリ項目（0 or 3のみ）
+  const BINARY_ITEMS  = [13,17,18,19,20,21];
+  // BFCSS項目（1-14）
+  const BFCSS_ITEMS   = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  // 全項目
+  const ALL_ITEMS = [...REGULAR_ITEMS, ...BINARY_ITEMS].sort((a,b)=>a-b);
+
+  const scores = {};
+
+  function buildButtons() {
+    REGULAR_ITEMS.forEach(id => {
+      const c = document.getElementById(`btns-${id}`);
+      if (!c) return;
+      for (let v = 0; v <= 3; v++) {
+        const btn = document.createElement('button');
+        btn.className = 'score-btn';
+        btn.textContent = v;
+        btn.addEventListener('click', e => { e.stopPropagation(); setScore(id, v); });
+        c.appendChild(btn);
+      }
+    });
+    BINARY_ITEMS.forEach(id => {
+      const c = document.getElementById(`btns-${id}`);
+      if (!c) return;
+      [0, 3].forEach(v => {
+        const btn = document.createElement('button');
+        btn.className = 'bin-btn';
+        btn.textContent = v === 0 ? '0 なし' : '3 あり';
+        btn.addEventListener('click', e => { e.stopPropagation(); setScore(id, v); });
+        c.appendChild(btn);
+      });
+    });
+  }
+
+  function setScore(id, val) { scores[id] = val; updateDisplay(id); updateTotal(); }
+
+  function updateDisplay(id) {
+    const val = scores[id];
+    const disp = document.getElementById(`disp-${id}`);
+    if (disp) {
+      disp.textContent = val !== undefined ? val : '－';
+      disp.className = `score-disp ${val !== undefined ? `sd${val}` : 'sd-none'}`;
+    }
+    if (REGULAR_ITEMS.includes(id)) {
+      document.querySelectorAll(`#btns-${id} .score-btn`).forEach((btn, i) => {
+        btn.className = `score-btn${i === val ? ` s${i}` : ''}`;
+      });
+    } else {
+      document.querySelectorAll(`#btns-${id} .bin-btn`).forEach(btn => {
+        const btnVal = btn.textContent.startsWith('0') ? 0 : 3;
+        btn.className = `bin-btn${btnVal === val ? ` b${btnVal}` : ''}`;
+      });
+    }
+  }
+
+  function updateTotal() {
+    let total = 0, bfcssCount = 0, extraScore = 0, scoredCount = 0;
+    ALL_ITEMS.forEach(id => {
+      const v = scores[id];
+      if (v !== undefined) {
+        scoredCount++;
+        total += v;
+        if (BFCSS_ITEMS.includes(id) && v > 0) bfcssCount++;
+        if (!BFCSS_ITEMS.includes(id)) extraScore += v;
+      }
+    });
+
+    document.getElementById('total-score').textContent = total;
+    document.getElementById('scored-count').textContent = `${scoredCount} / 23項目`;
+    document.getElementById('bfcss-count').textContent = bfcssCount;
+    document.getElementById('extra-score').textContent = extraScore;
+    document.getElementById('bfcss-label').textContent = `陽性 ${bfcssCount} / 14項目`;
+    document.getElementById('bfcrs-label').textContent = `追加スコア ${extraScore}点`;
+
+    const pct = total > 0 ? Math.min(100, (total / 69) * 100) : 0;
+    document.getElementById('score-bar').style.width = `${pct}%`;
+
+    const resEl = document.getElementById('bfcss-result');
+    const resLabel = document.getElementById('bfcss-result-label');
+    const bfcssScored = BFCSS_ITEMS.filter(id => scores[id] !== undefined).length;
+    if (bfcssScored === 0) {
+      resEl.textContent = '－'; resEl.className = 'text-sm font-bold text-gray-400 px-2 py-0.5 rounded-lg';
+      resLabel.className = 'text-xs font-semibold text-gray-400';
+    } else if (bfcssCount >= 2) {
+      resEl.textContent = '陽性'; resEl.className = 'text-sm font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-lg';
+      resLabel.className = 'text-xs font-semibold text-red-600';
+    } else if (bfcssCount === 1) {
+      resEl.textContent = '要注意'; resEl.className = 'text-sm font-bold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-lg';
+      resLabel.className = 'text-xs font-semibold text-yellow-600';
+    } else {
+      resEl.textContent = '陰性'; resEl.className = 'text-sm font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-lg';
+      resLabel.className = 'text-xs font-semibold text-green-600';
+    }
+
+    const lel = document.getElementById('severity-label');
+    if (scoredCount < 23) { lel.textContent = `残り${23-scoredCount}項目`; lel.className = 'font-semibold text-gray-400'; }
+    else {
+      const map = [[10,'軽症','text-green-600'],[25,'中等度','text-yellow-600'],[45,'重症','text-orange-600'],[999,'最重症','text-red-600']];
+      const found = map.find(m => total <= m[0]);
+      lel.textContent = found[1]; lel.className = `font-semibold ${found[2]}`;
+    }
+  }
+
+  function toggleItem(id) {
+    const body = document.getElementById(`body-${id}`);
+    const chev = document.getElementById(`chev-${id}`);
+    if (!body) return;
+    if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); chev && chev.classList.add('chevron-open'); }
+    else { body.setAttribute('hidden',''); chev && chev.classList.remove('chevron-open'); }
+  }
+
+  function toggleSection(id, btn) {
+    const body = document.getElementById(id);
+    if (!body) return;
+    const chev = btn.querySelector('.chevron-icon');
+    if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); chev && chev.classList.add('chevron-open'); }
+    else { body.setAttribute('hidden',''); chev && chev.classList.remove('chevron-open'); }
+  }
+
+  function expandAll() {
+    ALL_ITEMS.forEach(id => {
+      const b = document.getElementById(`body-${id}`);
+      const c = document.getElementById(`chev-${id}`);
+      if (b) b.removeAttribute('hidden');
+      if (c) c.classList.add('chevron-open');
+    });
+    const gb = document.getElementById('global-body');
+    if (gb) gb.removeAttribute('hidden');
+  }
+
+  function collapseAll() {
+    ALL_ITEMS.forEach(id => {
+      const b = document.getElementById(`body-${id}`);
+      const c = document.getElementById(`chev-${id}`);
+      if (b) b.setAttribute('hidden','');
+      if (c) c.classList.remove('chevron-open');
+    });
+  }
+
+  function resetAll() {
+    if (!confirm('すべての採点をリセットしますか？')) return;
+    ALL_ITEMS.forEach(id => { delete scores[id]; updateDisplay(id); });
+    updateTotal();
+  }
+
+  const t = new Date();
+  document.getElementById('evalDate').value = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  buildButtons();
+  updateTotal();
+</script>
+</body>
+</html>
