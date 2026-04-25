@@ -68,7 +68,7 @@
     .chevron-icon { transition:transform 0.2s; flex-shrink:0; }
     .chevron-open { transform:rotate(180deg); }
     /* Toggle pill button */
-    .toggle-pill { display:inline-flex; align-items:center; gap:0.2rem; background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; border-radius:9999px; padding:0.18rem 0.55rem; font-size:0.7rem; font-weight:600; white-space:nowrap; transition:background 0.15s,border-color 0.15s; flex-shrink:0; pointer-events:none; user-select:none; }
+    .toggle-pill { display:inline-flex; align-items:center; gap:0.2rem; background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; border-radius:9999px; padding:0.18rem 0.55rem; font-size:0.7rem; font-weight:600; white-space:nowrap; transition:background 0.15s,border-color 0.15s; margin-top:0.25rem; pointer-events:none; user-select:none; }
     .toggle-pill.open { background:#e0e7ff; border-color:#a5b4fc; color:#3730a3; }
     .toggle-pill .tpill-label { font-size:0.7rem; }
     .item-card.open { border-left: 3px solid #6366f1; }
@@ -700,15 +700,19 @@
 
   function initTogglePills() {
     document.querySelectorAll('[id^="chev-"]').forEach(icon => {
+      const itemId = icon.id.slice(5);
+      const header = icon.closest('.item-header');
+      if (!header) return;
+      const infoCol = header.children[1];
+      if (!infoCol) return;
       const pill = document.createElement('span');
       pill.className = 'toggle-pill';
-      pill.id = 'pill-' + icon.id.slice(5);
+      pill.id = 'pill-' + itemId;
       const label = document.createElement('span');
       label.className = 'tpill-label';
       label.textContent = '解説';
       pill.appendChild(label);
-      icon.parentNode.insertBefore(pill, icon);
-      pill.appendChild(icon);
+      infoCol.appendChild(pill);
     });
   }
   initTogglePills();
