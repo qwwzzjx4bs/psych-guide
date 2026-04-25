@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPRS 日本語版 評価ガイド｜簡易精神症状評価尺度</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .badge-lang {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white; padding: 0.15rem 0.6rem; border-radius: 9999px;
+      font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+    .badge-obs {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white; padding: 0.15rem 0.6rem; border-radius: 9999px;
+      font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+    .badge-special {
+      background: linear-gradient(135deg, #b45309, #d97706);
+      color: white; padding: 0.15rem 0.6rem; border-radius: 9999px;
+      font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+    .badge-added {
+      background: linear-gradient(135deg, #475569, #64748b);
+      color: white; padding: 0.15rem 0.6rem; border-radius: 9999px;
+      font-size: 0.7rem; font-weight: 700; white-space: nowrap;
+    }
+
+    .item-card {
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+      border: 1px solid #e5e7eb;
+      background: white;
+      transition: box-shadow 0.2s;
+    }
+    .item-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .item-card-lang { border-left: 4px solid #2563eb; }
+    .item-card-obs { border-left: 4px solid #8b5cf6; }
+    .item-card-special { border-left: 4px solid #d97706; }
+
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1rem 1.25rem; border-radius: 0.75rem; margin: 0.75rem 0;
+    }
+
+    .score-bar {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      gap: 0.25rem; margin: 0.5rem 0;
+    }
+    .score-cell {
+      text-align: center; padding: 0.4rem 0.2rem; border-radius: 0.5rem;
+      font-size: 0.75rem; font-weight: 600;
+    }
+
+    .phase-step {
+      display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;
+    }
+    .phase-num {
+      width: 2rem; height: 2rem; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+    }
+
+    .toc {
+      position: fixed; right: 1.5rem; top: 50%;
+      transform: translateY(-50%);
+      background: white; padding: 0.875rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 85vh; overflow-y: auto; z-index: 50; min-width: 140px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+
+    .group-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1rem; padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    details > summary { cursor: pointer; list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details[open] .chevron { transform: rotate(180deg); }
+    .chevron { transition: transform 0.2s; }
+
+    .q-example {
+      background: #f8fafc; border: 1px dashed #cbd5e1;
+      border-radius: 0.5rem; padding: 0.6rem 0.875rem;
+      font-size: 0.8rem; color: #475569; margin-top: 0.5rem;
+    }
+    .q-example span { font-size: 0.7rem; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 0.25rem; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- ヘッダー -->
+<header class="header-gradient text-white py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="clipboard-list" class="w-7 h-7 opacity-80"></i>
+      <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床評価ガイド</span>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold">BPRS 日本語版</h1>
+    <p class="mt-1 text-lg opacity-85">Brief Psychiatric Rating Scale ― 簡易精神症状評価尺度</p>
+    <div class="flex gap-2 mt-3 flex-wrap text-sm">
+      <span class="bg-white/20 px-3 py-1 rounded-full">18項目</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">7段階評価</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">評価期間：最近1週間</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">標準面接時間：約18分</span>
+    </div>
+    <p class="mt-3 text-xs opacity-60">出典：山梨県立北病院 宮田量治「BPRS 日本語版・評価マニュアル Ver.1.1」(2013)</p>
+  </div>
+</header>
+
+<!-- フローティング目次 -->
+<nav class="toc">
+  <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+  <ul class="space-y-1">
+    <li><a href="#overview" class="text-xs text-gray-600 hover:text-blue-700 block py-0.5">概要</a></li>
+    <li><a href="#scoring" class="text-xs text-gray-600 hover:text-blue-700 block py-0.5">採点基準</a></li>
+    <li><a href="#interview" class="text-xs text-gray-600 hover:text-blue-700 block py-0.5">面接手順</a></li>
+    <li><a href="#items-lang" class="text-xs text-gray-600 hover:text-blue-700 block py-0.5">言語表出項目</a></li>
+    <li><a href="#items-obs" class="text-xs text-gray-600 hover:text-blue-700 block py-0.5">観察項目</a></li>
+    <li><a href="#groups" class="text-xs text-gray-600 hover:text-blue-700 block py-0.5">グループ別記憶法</a></li>
+    <li><a href="#faq" class="text-xs text-gray-600 hover:text-blue-700 block py-0.5">FAQ</a></li>
+  </ul>
+</nav>
+
+<main class="max-w-4xl mx-auto px-4 py-8">
+
+  <!-- ===== 概要 ===== -->
+  <section class="section-card" id="overview">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="info" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">BPRSとは</h2>
+        <p class="text-gray-500 text-sm">Overall &amp; Gorham (1962) 作成、1966年に18項目版へ</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-4 mb-4">
+      <div class="bg-blue-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-blue-700 mb-1">18</div>
+        <div class="text-sm text-gray-600">評価項目数</div>
+        <div class="text-xs text-gray-400 mt-1">当初16項目→1966年に+2</div>
+      </div>
+      <div class="bg-teal-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-teal-700 mb-1">1〜7</div>
+        <div class="text-sm text-gray-600">採点スケール</div>
+        <div class="text-xs text-gray-400 mt-1">1点(なし)〜7点(最重度)</div>
+      </div>
+      <div class="bg-indigo-50 rounded-xl p-4 text-center">
+        <div class="text-2xl font-bold text-indigo-700 mb-1">18〜126</div>
+        <div class="text-sm text-gray-600">合計スコア範囲</div>
+        <div class="text-xs text-gray-400 mt-1">全項目1点＝18点（最低）</div>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-purple-700 mb-1">1週間</div>
+        <div class="text-sm text-gray-600">評価期間</div>
+        <div class="text-xs text-gray-400 mt-1">最もひどかった時点で評価</div>
+      </div>
+    </div>
+
+    <div class="criteria-box">
+      <p class="text-sm font-semibold text-blue-800 mb-2 flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>特徴・強み
+      </p>
+      <ul class="text-sm text-gray-700 space-y-1">
+        <li>・疾患を限定せず幅広く精神症状を評価できる（統合失調症・気分障害・器質性疾患 等）</li>
+        <li>・比較的短時間（18分）で網羅的な精神症状評価が可能</li>
+        <li>・臨床試験・自主研究で広く使用されてきた実績あり</li>
+        <li>・評価トレーニングにより高い評価者間信頼性が確保できる</li>
+      </ul>
+    </div>
+
+    <div class="warning-box mt-2">
+      <p class="text-sm font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+        <i data-lucide="alert-circle" class="w-4 h-4"></i>留意点
+      </p>
+      <ul class="text-sm text-gray-700 space-y-1">
+        <li>・採点者の臨床経験への依存度がやや高い（操作的基準はPANSSを参照して補完）</li>
+        <li>・「敵意」項目のみ面接外での情報収集（看護師・家族等）が必要</li>
+        <li>・症状と副作用を区別せず「いまそこにある症状」を評価する</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 採点基準 ===== -->
+  <section class="section-card" id="scoring">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-teal-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="bar-chart-2" class="w-6 h-6 text-teal-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">採点基準（7段階）</h2>
+        <p class="text-gray-500 text-sm">PANSS一般的基準を参照した今日的解釈</p>
+      </div>
+    </div>
+
+    <div class="score-bar mb-2">
+      <div class="score-cell bg-gray-100 text-gray-500">1</div>
+      <div class="score-cell bg-blue-100 text-blue-700">2</div>
+      <div class="score-cell bg-green-100 text-green-700">3</div>
+      <div class="score-cell bg-yellow-100 text-yellow-700">4</div>
+      <div class="score-cell bg-orange-100 text-orange-700">5</div>
+      <div class="score-cell bg-red-100 text-red-700">6</div>
+      <div class="score-cell bg-red-200 text-red-900">7</div>
+    </div>
+
+    <div class="space-y-2">
+      <div class="flex gap-3 items-start p-3 bg-gray-50 rounded-lg">
+        <div class="w-8 h-8 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+        <div>
+          <span class="font-semibold text-gray-800">症状なし</span>
+          <p class="text-xs text-gray-500 mt-0.5">該当症状の存在が認められない</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start p-3 bg-blue-50 rounded-lg">
+        <div class="w-8 h-8 bg-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+        <div>
+          <span class="font-semibold text-gray-800">ごく軽度</span>
+          <p class="text-xs text-gray-500 mt-0.5">（1〜3点の中間：症状が疑わしいが確証が得られない）</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start p-3 bg-green-50 rounded-lg">
+        <div class="w-8 h-8 bg-green-200 text-green-700 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+        <div>
+          <span class="font-semibold text-gray-800">軽度</span>
+          <p class="text-xs text-gray-500 mt-0.5">症状は確実に存在するが顕著ではなく、日常機能にほとんど影響がない</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start p-3 bg-yellow-50 rounded-lg">
+        <div class="w-8 h-8 bg-yellow-200 text-yellow-700 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
+        <div>
+          <span class="font-semibold text-gray-800">中等度（平均的）</span>
+          <p class="text-xs text-gray-500 mt-0.5">症状が散発的に出現するか、持続的だが極端ではない。日常機能にあまり影響しない</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start p-3 bg-orange-50 rounded-lg">
+        <div class="w-8 h-8 bg-orange-200 text-orange-700 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">5</div>
+        <div>
+          <span class="font-semibold text-gray-800">やや重度</span>
+          <p class="text-xs text-gray-500 mt-0.5">症状により日常機能に影響があるが完全には停止させない。随意に抑制できる</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start p-3 bg-red-50 rounded-lg">
+        <div class="w-8 h-8 bg-red-200 text-red-700 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">6</div>
+        <div>
+          <span class="font-semibold text-gray-800">重度</span>
+          <p class="text-xs text-gray-500 mt-0.5">症状が頻繁に出現し非常に破壊的。直接的な管理が必要となる場合あり</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start p-3 bg-red-100 rounded-lg">
+        <div class="w-8 h-8 bg-red-400 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">7</div>
+        <div>
+          <span class="font-semibold text-gray-800">最重度</span>
+          <p class="text-xs text-gray-500 mt-0.5">症状が生活機能を根底から蝕んでいる。多くの領域で直接的指導・援助が必要</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box mt-4">
+      <p class="text-sm font-semibold text-yellow-800 mb-1 flex items-center gap-2">
+        <i data-lucide="alert-circle" class="w-4 h-4"></i>採点バイアスに注意
+      </p>
+      <div class="grid md:grid-cols-2 gap-2 text-xs text-gray-700">
+        <div>・重症例ばかり診る医師 → 過小評価になりやすい</div>
+        <div>・軽症例ばかり診る医師 → 過大評価になりやすい</div>
+      </div>
+      <p class="text-xs text-gray-600 mt-1">→ 点数が決まらない場合は<strong>控え目に採点</strong>。PANSSのアンカーポイントを参照して患者集団のイメージを再認証すること。</p>
+    </div>
+  </section>
+
+  <!-- ===== 面接手順 ===== -->
+  <section class="section-card" id="interview">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="users" class="w-6 h-6 text-indigo-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">評価面接の実施方法</h2>
+        <p class="text-gray-500 text-sm">半構造化面接 ― 3期構成（標準18分）</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-4 mb-4">
+      <!-- Phase 1 -->
+      <div class="flex-1 bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+          <div>
+            <div class="font-bold text-indigo-800 text-sm">第1期：ラポールの確立</div>
+            <div class="text-xs text-indigo-500">所要時間：約3分</div>
+          </div>
+        </div>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>・面接の目的を説明する</li>
+          <li>・「なぜここに来たか」（初回のみ）</li>
+          <li>・「いちばん困っていることは何か」</li>
+          <li>・「ほかにも何かあるか」</li>
+        </ul>
+      </div>
+
+      <!-- Arrow -->
+      <div class="flex items-center justify-center">
+        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 hidden md:block"></i>
+        <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 md:hidden"></i>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="flex-1 bg-teal-50 border border-teal-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+          <div>
+            <div class="font-bold text-teal-800 text-sm">第2期：非指示的相互作用</div>
+            <div class="text-xs text-teal-500">所要時間：約10分（最重要）</div>
+          </div>
+        </div>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>・自発的な発言・行動を引き出す</li>
+          <li>・非指示的な質問により重症度を明らかにする</li>
+          <li>・対象者の自由な発言から評価情報を収集</li>
+          <li>・話が脱線した場合は適宜焦点化</li>
+        </ul>
+      </div>
+
+      <!-- Arrow -->
+      <div class="flex items-center justify-center">
+        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 hidden md:block"></i>
+        <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 md:hidden"></i>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="flex-1 bg-green-50 border border-green-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+          <div>
+            <div class="font-bold text-green-800 text-sm">第3期：直接的な質問</div>
+            <div class="text-xs text-green-500">所要時間：約5分</div>
+          </div>
+        </div>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>・2期までに言及されなかった項目を質問</li>
+          <li>・「以前そういった症状はあったか」</li>
+          <li>・「もう少し詳しく話してもらえるか」</li>
+          <li>・①〜④のグループで抜け漏れ確認</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4グループ記憶法 -->
+    <div id="groups" class="mt-2">
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+          <i data-lucide="layers" class="w-4 h-4 text-gray-500"></i>面接終了時の4グループ確認
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="bg-white border-2 border-blue-200 rounded-lg p-3 text-center">
+            <div class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">①</div>
+            <div class="text-xs font-bold text-blue-800">幻覚・妄想</div>
+            <div class="text-xs text-gray-500 mt-1">幻覚による行動<br>猜疑心</div>
+          </div>
+          <div class="bg-white border-2 border-rose-200 rounded-lg p-3 text-center">
+            <div class="w-7 h-7 bg-rose-600 text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">②</div>
+            <div class="text-xs font-bold text-rose-800">気分</div>
+            <div class="text-xs text-gray-500 mt-1">誇大性<br>抑うつ・罪責感</div>
+          </div>
+          <div class="bg-white border-2 border-amber-200 rounded-lg p-3 text-center">
+            <div class="w-7 h-7 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">③</div>
+            <div class="text-xs font-bold text-amber-800">心配・考えごと</div>
+            <div class="text-xs text-gray-500 mt-1">不安・心気症<br>不自然な思考内容</div>
+          </div>
+          <div class="bg-white border-2 border-teal-200 rounded-lg p-3 text-center">
+            <div class="w-7 h-7 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm mx-auto mb-2">④</div>
+            <div class="text-xs font-bold text-teal-800">見当識</div>
+            <div class="text-xs text-gray-500 mt-1">失見当識</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 言語表出項目 ===== -->
+  <section class="section-card" id="items-lang">
+    <div class="group-header">
+      <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="message-square" class="w-6 h-6 text-blue-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">主として言語表出にもとづく評価項目</h2>
+        <p class="text-gray-500 text-sm">9項目（#1・2・5・8・9・11・12・15・18）― 対象者の陳述内容・主観的体験にもとづいて評価</p>
+      </div>
+      <span class="badge-lang ml-auto">言語表出</span>
+    </div>
+
+    <!-- 1. 心気症 -->
+    <details class="item-card item-card-lang" open>
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+            <div>
+              <span class="font-bold text-gray-800">心気症</span>
+              <span class="text-xs text-gray-400 ml-2">Somatic Concern</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>現在の身体の健康状態についての関心の程度。訴えに相当する所見の有無に関わらず評価する。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・実際の器質的基礎の有無は問わない。訴えの<strong>頻度・重さのみ</strong>を評価</p>
+          <p>・「身体への非妄想的な関心（強い心配）」と「心気妄想」の2成分が4点付近で重なる</p>
+          <p>・罪責感・猜疑心も同様の仮想スペクトルで評価可能</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「いままで、からだの具合はどうでしたか。この一年では？」<br>
+          「からだのことで、何か気になっていることがありますか。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 2. 不安 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+            <div>
+              <span class="font-bold text-gray-800">不安</span>
+              <span class="text-xs text-gray-400 ml-2">Anxiety</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>現在または未来に対する心配、恐れあるいは過剰なこだわり。患者自身の主観的体験についての言語的訴えのみに基づいて評価せよ。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・<strong>身体症状（震え・発汗・落ち着きなさ等）は除外</strong> → 「緊張」で評価</p>
+          <p>・「心配」「恐れ」「過剰なこだわり」「憂慮」を広く含む</p>
+          <p>・妄想を背景にした不安・世界没落体験もここで評価</p>
+          <p>・「心配していることはないか」「気になることはないか」と言い換えも有用</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「なにかほかに気になることがありますか。」<br>
+          「長いこと、不安を感じるようなことは？」「理由もわからず、不安を感じることは？」
+        </div>
+      </div>
+    </details>
+
+    <!-- 5. 罪責感 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">5</span>
+            <div>
+              <span class="font-bold text-gray-800">罪責感</span>
+              <span class="text-xs text-gray-400 ml-2">Guilt Feelings</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>過去の行動についての過剰なこだわりまたは自責感。抑うつ・不安・神経症的防衛機制から推測してはならない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・「非妄想的な自責」から「罪業妄想」まで連続スペクトル</p>
+          <p>・入院したことへの自責感も見落とさない</p>
+          <p>・「入院したことで自分を責めたりしますか」も有用</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「過去にしたことで、罪の意識を持っていたり、恥ずかしく思っていることがありますか。」<br>
+          「そのことで、どれくらい悩んでいますか。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 8. 誇大性 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">8</span>
+            <div>
+              <span class="font-bold text="gray-800">誇大性</span>
+              <span class="text-xs text-gray-400 ml-2">Grandiosity</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>過大な自己評価と並はずれた才能や力を持っているとの確信。患者の陳述のみに基づいて評価せよ。面接状況における患者の態度から評価してはならない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・非妄想的な優越感から誇大妄想まで評価対象</p>
+          <p>・<strong>態度がでかい → 誇大とは限らない</strong></p>
+          <p>・<strong>態度が謙虚 → 誇大がないとは限らない</strong>（統合失調症の誇大妄想では乖離が多い）</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「あなたには、人にうらやましがられるような特別な才能や力がありますか。」<br>
+          「あなたには、世界のためにしようとしている、なにか重要なことがありますか。」<br>
+          「あなたは特別な使命や役割を持っていると感じることがありますか。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 9. 抑うつ気分 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">9</span>
+            <div>
+              <span class="font-bold text-gray-800">抑うつ気分</span>
+              <span class="text-xs text-gray-400 ml-2">Depressive Mood</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>意気消沈と悲哀。落胆の程度のみを評価せよ。いわゆる制止や身体的愁訴から推測して評価してはならない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・落胆・悲観・悲哀感・絶望・無力感・陰気な主題の言い回し</p>
+          <p>・表情・泣泣・嘆きは考慮してかまわない</p>
+          <p>・運動減退・罪責感・心気症は<strong>この項目では考慮しない</strong></p>
+          <p>・抑うつ気分の存在が確認できたら関連症状（罪責感・心気症・運動減退）も確認</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「最近の気分は全体としてはどうでしたか。」<br>
+          「気分がふさいだりはしませんでしたか。」「そのようなことが、どれくらいありましたか。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 11. 猜疑心 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">11</span>
+            <div>
+              <span class="font-bold text-gray-800">猜疑心</span>
+              <span class="text-xs text-gray-400 ml-2">Suspiciousness</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>他者から悪意や差別があったとの（妄想的または非妄想的な）確信。言語的訴えに基づいて、それが存在した時期に関わらず、現在認められる猜疑心のみを評価せよ。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・疑い深さ（非妄想）→ 被害念慮 → 被害妄想のスペクトルを評価</p>
+          <p>・「心気症」「罪責感」と同様、2成分が4点付近で重なる</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「ほかのひととすごすことが、どれくらいありましたか。」<br>
+          「最近、誰かに嫌がらせをされたりしませんでしたか。」<br>
+          「信頼しているひとに、傷つけられるようなことがありましたか。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 12. 幻覚による行動 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">12</span>
+            <div>
+              <span class="font-bold text-gray-800">幻覚による行動</span>
+              <span class="text-xs text-gray-400 ml-2">Hallucinatory Behavior</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>通常の外界の刺激に対応のない知覚。過去1週間以内に起こったと患者が訴える体験のみを評価せよ。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・幻聴・幻視・その他の幻覚（複数の知覚領域）を確認する</p>
+          <p>・体験が幻覚なのか生き生きとしたイメージに過ぎないかの判断が必要</p>
+          <p>・頻度・内容・生活への影響を考慮して重症度判断</p>
+          <p>・確証なき場合は「なし（1点）」から評価開始</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「何かが見えたり、声が聞こえたりするような、いつもと違った経験をしたことがありますか。」<br>
+          「それは、どれくらいありますか。最近では、いつ頃ありましたか。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 15. 不自然な思考内容 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">15</span>
+            <div>
+              <span class="font-bold text-gray-800">不自然な思考内容</span>
+              <span class="text-xs text-gray-400 ml-2">Unusual Thought Content</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>普通ではない、風変わりな、異様あるいは奇怪な思考内容。不自然さの程度を評価し、思考過程の解体の程度を評価してはならない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・妄想的思考に限らず、ユニークな考え方・空想なども含む</p>
+          <p>・対象者の文化・属性の中でその思考が受け入れられるかを判断（宗教・健康食品への傾倒等）</p>
+          <p>・思考の統合度・解体度は「概念の統合障害」で評価</p>
+          <p>・重症ほど本人が思考に時間を費やし、生活への影響がある</p>
+        </div>
+        <div class="q-example">
+          <span>質問例</span>
+          「何か不自然なことが続いているとか、起こりそう、ということはないですか。」<br>
+          「頭やからだに何か変わったことが続いているようなことは。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 18. 失見当識 -->
+    <details class="item-card item-card-lang">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-gray-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">18</span>
+            <div>
+              <span class="font-bold text-gray-800">失見当識</span>
+              <span class="text-xs text-gray-400 ml-2">Disorientation</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-lang">言語表出</span>
+            <span class="badge-added">1966追加</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>人、場所あるいは時についての適切な関連性の混乱または欠如。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・原著（1966年追加）に評価の指針なし</p>
+          <p>・<strong>日付・場所・人物についての質問を必ず行う</strong></p>
+          <p>・意識レベルが変動するケース（せん妄等）では面接タイミングに注意</p>
+        </div>
+        <div class="q-example">
+          <span>見当識確認（必須）</span>
+          「今日は何日ですか？」「今は何年ですか？」<br>
+          「今いる場所はどこですか？」「私が誰だかわかりますか？」
+        </div>
+        <div class="q-example">
+          <span>認知・集中の補足確認</span>
+          「以前と同じくらいはっきりと物事を考えることができますか。」<br>
+          「集中できますか。」「記憶についてはどうですか。」
+        </div>
+      </div>
+    </details>
+
+    <!-- 10. 敵意（特殊） -->
+    <details class="item-card" style="border-left:4px solid #d97706;">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-amber-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">10</span>
+            <div>
+              <span class="font-bold text-gray-800">敵意</span>
+              <span class="text-xs text-gray-400 ml-2">Hostility</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-special">面接外情報収集</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>面接状況ではないところでの、他者に対する憎悪、侮辱軽蔑、好戦性あるいは尊大。他者に対する患者の感情や行動の言語的訴えのみに基づいて評価せよ。
+        </p>
+        <div class="warning-box py-2">
+          <p class="text-xs font-semibold text-yellow-800">⚠️ 18項目中唯一、面接場面外での情報収集が必要</p>
+          <p class="text-xs text-gray-600 mt-1">担当看護師・家族等から直接情報収集することが推奨される</p>
+        </div>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p class="font-semibold mt-2">「敵意」と「非協調性」の区別（ペアで覚える）：</p>
+          <p>・<strong>敵意</strong>（#10）→ 面接外における他者への反応（面接者も含む）</p>
+          <p>・<strong>非協調性</strong>（#14）→ 面接中観察される面接者への反応</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== 観察項目 ===== -->
+  <section class="section-card" id="items-obs">
+    <div class="group-header">
+      <div class="w-11 h-11 bg-purple-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="eye" class="w-6 h-6 text-purple-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">主として観察にもとづく評価項目</h2>
+        <p class="text-gray-500 text-sm">8項目 ― 面接者が面接中に意識的・無意識的に観察した事項を評価</p>
+      </div>
+      <span class="badge-obs ml-auto">観察</span>
+    </div>
+
+    <!-- 3. 情動的引きこもり -->
+    <details class="item-card item-card-obs" open>
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+            <div>
+              <span class="font-bold text-gray-800">情動的引きこもり</span>
+              <span class="text-xs text-gray-400 ml-2">Emotional Withdrawal</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>面接者と面接状況に対する交流の減少。面接状況において患者が他者との感情的接触に障害があるという印象を与える程度のみを評価せよ。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・アイコンタクト・表情・声の調子・変化・姿勢・動きに注目</p>
+          <p>・面接者が患者との間に「どれくらい感情的へだたりを感じるか」で判断</p>
+          <p>・健全な他者との比較（友人だったら？）が有用</p>
+          <p>・患者本位の精神科医は陰性症状を軽めに評価しやすい点に注意</p>
+          <p class="text-yellow-700">・PANSSの「情動的引きこもり」とは<strong>まったく別概念</strong>（PANSSでは「生活上の出来事への興味・関心の欠如」）</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- 4. 概念の統合障害 -->
+    <details class="item-card item-card-obs">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+            <div>
+              <span class="font-bold text-gray-800">概念の統合障害</span>
+              <span class="text-xs text-gray-400 ml-2">Conceptual Disorganization</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>思考過程の混乱、弛緩あるいは解体の程度。患者の言語表出の統合の程度に基づいて評価せよ。思考機能レベルに対する患者の自覚的印象から評価してはならない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・混乱・脱線・まとまりのなさ・支離滅裂・阻害・作話・自閉・異常な脈絡</p>
+          <p>・<strong>思考プロセスが目的地（答えるべきこと）に向かって筋道立って進んでいるか</strong>を観察</p>
+          <p>・患者の「自分は話し下手」などの自己評価によらず判断する</p>
+          <p>・面接初期の非指示的部分における自発的発言から評価</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- 6. 緊張 -->
+    <details class="item-card item-card-obs">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">6</span>
+            <div>
+              <span class="font-bold text-gray-800">緊張</span>
+              <span class="text-xs text-gray-400 ml-2">Tension</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>緊張、神経過敏あるいは活動レベルの高まりによる身体と運動機能における徴候。身体徴候や行動・態度に基づいて評価すべきであり、患者の訴える緊張についての主観的体験に基づいて評価してはならない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・神経質・落ち着きなさ・振戦・ひきつり・発汗・頻繁に変わる姿勢・筋緊張亢進</p>
+          <p>・<strong>主観的な緊張感（「いま緊張しています」）ではなく、身体所見を観察</strong></p>
+          <p>・「不安」の身体症状はここで評価（「不安」では身体症状は評価しない）</p>
+          <p>・アカシジアとの鑑別が問題になることがある</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- 7. 衒奇症と不自然な姿勢 -->
+    <details class="item-card item-card-obs">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">7</span>
+            <div>
+              <span class="font-bold text-gray-800">衒奇症と不自然な姿勢</span>
+              <span class="text-xs text-gray-400 ml-2">Mannerisms &amp; Posturing</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>奇妙で不自然な行動と態度。健常人の中では目立つようなある種の精神病者の行動と態度の類型。動作の異常のみを評価せよ。単なる運動性亢進はこの項目では評価しない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・異常な動き・長時間保持された異常な姿勢・ひそめ眉・口唇・舌・目の不自然な動き</p>
+          <p>・チック・ひきつりは「緊張」の徴候 → ここでは評価しない</p>
+          <p class="text-yellow-700">・<strong>遅発性ジスキネジア・ジストニア等の錐体外路系副作用も評価対象</strong>（症状か副作用かを区別しない）</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- 13. 運動減退 -->
+    <details class="item-card item-card-obs">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">13</span>
+            <div>
+              <span class="font-bold text-gray-800">運動減退</span>
+              <span class="text-xs text-gray-400 ml-2">Motor Retardation</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>緩徐な動きによって示されるエネルギー水準の低下。患者の行動観察のみに基づいて評価せよ。自己のエネルギー水準についての患者自身の自覚的印象に基づいて評価してはならない。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・統合失調症の意欲低下・うつ病の精神運動制止に典型的</p>
+          <p>・身体の動き・会話のスピードが遅いほど、少ないほど重症</p>
+          <p>・「情動的引きこもり」（感情的側面）とペアの概念（運動的側面）</p>
+          <p>・寡動状態では「緊張」との鑑別が必要（緊迫した雰囲気・会話のスピードで鑑別）</p>
+          <p>・パーキンソニズムとの鑑別は困難だが、症状として評価する</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- 14. 非協調性 -->
+    <details class="item-card item-card-obs">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">14</span>
+            <div>
+              <span class="font-bold text-gray-800">非協調性</span>
+              <span class="text-xs text-gray-400 ml-2">Uncooperativeness</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>面接者に対する抵抗、非友好性、易怒性の徴候あるいは協調的態度の欠如。面接者と面接状況に対する患者の態度と反応のみに基づいて評価せよ。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・面接外での易怒性・非協調性の情報から評価してはならない</p>
+          <p class="font-semibold mt-2">「敵意」と「非協調性」の区別：</p>
+          <p>・<strong>非協調性</strong>（#14）→ 面接中観察される面接者への反応</p>
+          <p>・<strong>敵意</strong>（#10）→ 面接外における他者への反応（面接者も含む）</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- 16. 情動の平板化 -->
+    <details class="item-card item-card-obs">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">16</span>
+            <div>
+              <span class="font-bold text-gray-800">情動の平板化</span>
+              <span class="text-xs text-gray-400 ml-2">Blunted Affect</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>感情的緊張度の低下。正常の感受性と興味・関心の明らかな欠如。
+        </p>
+        <div class="text-xs text-gray-600 space-y-1 mb-2">
+          <p>3成分で理解する：</p>
+          <div class="grid grid-cols-3 gap-1 mt-1">
+            <div class="bg-purple-50 rounded p-2 text-center">
+              <div class="font-bold text-purple-700 mb-1">①</div>
+              <div>感情の緊張度の低下</div>
+              <div class="text-gray-400 mt-0.5">感情表現が不適切・空虚・見かけだけになる</div>
+            </div>
+            <div class="bg-purple-50 rounded p-2 text-center">
+              <div class="font-bold text-purple-700 mb-1">②</div>
+              <div>正常の感受性の欠如</div>
+              <div class="text-gray-400 mt-0.5">喜怒哀楽の表現が乏しく平坦</div>
+            </div>
+            <div class="bg-purple-50 rounded p-2 text-center">
+              <div class="font-bold text-purple-700 mb-1">③</div>
+              <div>興味・関心の欠如</div>
+              <div class="text-gray-400 mt-0.5">周囲への無関心・無感動</div>
+            </div>
+          </div>
+        </div>
+        <div class="warning-box py-2">
+          <p class="text-xs text-yellow-800">BPRSの「情動の平板化」は<br>PANSSの「情動の平板化」＋「情動的引きこもり」の2項目に分割されている（要注意）</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- 17. 興奮 -->
+    <details class="item-card item-card-obs">
+      <summary>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 bg-gray-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">17</span>
+            <div>
+              <span class="font-bold text-gray-800">興奮</span>
+              <span class="text-xs text-gray-400 ml-2">Excitement</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="badge-obs">観察</span>
+            <span class="badge-added">1966追加</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron"></i>
+          </div>
+        </div>
+      </summary>
+      <div class="mt-3 pl-10">
+        <p class="text-xs text-gray-700 bg-gray-50 rounded-lg p-3 mb-2">
+          <strong>定義：</strong>感情的緊張度の高揚、焦燥感あるいは反応性亢進。（評価の指針：記載なし）
+        </p>
+        <div class="text-xs text-gray-600 space-y-1">
+          <p>・イライラ・易怒性・易刺激性が主な評価対象</p>
+          <p>・「緊張」「非協調性」と同様、興奮が強すぎると面接実施が困難になる</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== 副作用との関係 ===== -->
+  <section class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-amber-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="pill" class="w-6 h-6 text-amber-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">症状と副作用の関係</h2>
+        <p class="text-gray-500 text-sm">BPRSは症状か副作用かを区別せず評価する</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="bg-amber-50 rounded-xl p-4">
+        <p class="text-xs font-bold text-amber-800 mb-2">錐体外路症状との対応</p>
+        <table class="w-full text-xs text-gray-700">
+          <tr class="border-b border-amber-200">
+            <td class="py-1.5 font-medium">アカシジア</td>
+            <td class="py-1.5 text-gray-500">↔</td>
+            <td class="py-1.5"><strong>緊張</strong>（#6）で評価</td>
+          </tr>
+          <tr class="border-b border-amber-200">
+            <td class="py-1.5 font-medium">ジスキネジア</td>
+            <td class="py-1.5 text-gray-500">↔</td>
+            <td class="py-1.5"><strong>衒奇症と不自然な姿勢</strong>（#7）で評価</td>
+          </tr>
+          <tr class="border-b border-amber-200">
+            <td class="py-1.5 font-medium">パーキンソニズム</td>
+            <td class="py-1.5 text-gray-500">↔</td>
+            <td class="py-1.5"><strong>運動減退</strong>（#13）で評価</td>
+          </tr>
+          <tr>
+            <td class="py-1.5 font-medium">過鎮静・傾眠</td>
+            <td class="py-1.5 text-gray-500">↔</td>
+            <td class="py-1.5"><strong>運動減退</strong>（#13）等で評価</td>
+          </tr>
+        </table>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-4">
+        <p class="text-xs font-bold text-blue-800 mb-2">BPRSの方針</p>
+        <ul class="text-xs text-gray-700 space-y-1.5">
+          <li>・症状か副作用かを区別<strong>せず</strong>、いまそこにある症状を評価する</li>
+          <li>・副作用が改善した後、改善した分だけBPRS評価点数を動かしてよい</li>
+          <li>・アカシジアと緊張が<strong>合併</strong>する場合もある</li>
+          <li>・「睡眠時無呼吸による過眠」も評価対象となりうる</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section-card" id="faq">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="help-circle" class="w-6 h-6 text-gray-600"></i>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800">よくある質問</h2>
+    </div>
+
+    <div class="space-y-3">
+      <details class="border border-gray-200 rounded-xl overflow-hidden">
+        <summary class="bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 flex items-center justify-between cursor-pointer">
+          <span>面接が行えない場合はどうすればよいですか？</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron flex-shrink-0"></i>
+        </summary>
+        <div class="px-4 py-3 text-xs text-gray-600 space-y-2">
+          <p><strong>①拒否する場合：</strong>面接の形式にこだわらず情報収集を継続。18項目は治療方針決定に必要な項目であり、拒否があっても聴取不能とはならない。複数回に分けて対応することも有効。</p>
+          <p><strong>②意思疎通困難な場合：</strong>コミュニケーション手段に合わせた面接を実施。重度の意識障害例には通例BPRS評価を行わない。</p>
+          <p><strong>③言葉が通じない場合：</strong>通訳を介した評価も可能だが精度への影響に留意する。</p>
+        </div>
+      </details>
+
+      <details class="border border-gray-200 rounded-xl overflow-hidden">
+        <summary class="bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 flex items-center justify-between cursor-pointer">
+          <span>患者が症状を隠している場合はどうしますか？</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron flex-shrink-0"></i>
+        </summary>
+        <div class="px-4 py-3 text-xs text-gray-600 space-y-2">
+          <p>面接者は積極的に症状を聞き出すことが基本。事前に対象者の状態をよく把握しておくほど踏み込んだ評価が可能。</p>
+          <p>例：「昨日、部屋で泣いていたようだけど…」と具体的な情報を基に質問する。</p>
+          <p class="text-yellow-700">それでも認めない場合、BPRSでは「面接中に確認されなかった症状は評価しない」が原則。面接タイミングにも配慮（食事・入浴前・プログラム直前を避ける）。</p>
+        </div>
+      </details>
+
+      <details class="border border-gray-200 rounded-xl overflow-hidden">
+        <summary class="bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 flex items-center justify-between cursor-pointer">
+          <span>どうしても点数が決まらない場合はどうしますか？</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron flex-shrink-0"></i>
+        </summary>
+        <div class="px-4 py-3 text-xs text-gray-600 space-y-2">
+          <p><strong>基本方針：</strong>ある評点に該当するかはっきりしない場合、<strong>点数は控え目につける</strong>方がよいとされている。</p>
+          <p>定義にうまく該当しない場合は、7段階全体からの大局的な採点（「5点くらい」という判断）も許容される。</p>
+          <p>PANSSのアンカーポイントを参照して患者集団のイメージを再認証することも有効。</p>
+        </div>
+      </details>
+
+      <details class="border border-gray-200 rounded-xl overflow-hidden">
+        <summary class="bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 flex items-center justify-between cursor-pointer">
+          <span>BPRSをはじめて評価する際に必要な準備は？</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron flex-shrink-0"></i>
+        </summary>
+        <div class="px-4 py-3 text-xs text-gray-600 space-y-2">
+          <p>1. BPRS本文を熟読し、各項目の定義・評価方法を「暗記できる程度」に理解する</p>
+          <p>2. 同僚とシミュレーション面接（練習面接）を行う</p>
+          <p>3. BPRS経験者との同席面接で評価を行い、独立採点後に「評点合わせ」をする ← 最も有効</p>
+          <p>4. 練習用ビデオ等を用いたトレーニングに参加することも有用</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===== 全18項目一覧 ===== -->
+  <section class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-green-100 rounded-xl flex items-center justify-center">
+        <i data-lucide="list" class="w-6 h-6 text-green-700"></i>
+      </div>
+      <h2 class="text-xl font-bold text-gray-800">18評価項目 一覧</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-2">
+      <!-- 言語表出 -->
+      <div>
+        <p class="text-xs font-bold text-blue-700 mb-2 flex items-center gap-1"><span class="badge-lang">言語表出</span> 9項目</p>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>心気症 <span class="text-gray-400 ml-auto">Somatic Concern</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>不安 <span class="text-gray-400 ml-auto">Anxiety</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">5</span>罪責感 <span class="text-gray-400 ml-auto">Guilt Feelings</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">8</span>誇大性 <span class="text-gray-400 ml-auto">Grandiosity</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">9</span>抑うつ気分 <span class="text-gray-400 ml-auto">Depressive Mood</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">11</span>猜疑心 <span class="text-gray-400 ml-auto">Suspiciousness</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">12</span>幻覚による行動 <span class="text-gray-400 ml-auto">Hallucinatory Behavior</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">15</span>不自然な思考内容 <span class="text-gray-400 ml-auto">Unusual Thought Content</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-blue-50 rounded-lg"><span class="w-5 h-5 bg-gray-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">18</span>失見当識 <span class="text-gray-400 ml-auto">Disorientation</span></div>
+        </div>
+        <!-- 特殊（敵意） -->
+        <p class="text-xs font-bold text-amber-700 mb-2 mt-3 flex items-center gap-1"><span class="badge-special">面接外情報</span> 1項目</p>
+        <div class="flex items-center gap-2 text-xs p-2 bg-amber-50 rounded-lg border border-amber-200">
+          <span class="w-5 h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">10</span>
+          敵意
+          <span class="text-gray-400 ml-auto">Hostility ★看護師・家族から情報収集</span>
+        </div>
+      </div>
+      <!-- 観察 -->
+      <div>
+        <p class="text-xs font-bold text-purple-700 mb-2 flex items-center gap-1"><span class="badge-obs">観察</span> 8項目</p>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>情動的引きこもり <span class="text-gray-400 ml-auto">Emotional Withdrawal</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>概念の統合障害 <span class="text-gray-400 ml-auto">Conceptual Disorganization</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">6</span>緊張 <span class="text-gray-400 ml-auto">Tension</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">7</span>衒奇症と不自然な姿勢 <span class="text-gray-400 ml-auto">Mannerisms &amp; Posturing</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">13</span>運動減退 <span class="text-gray-400 ml-auto">Motor Retardation</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">14</span>非協調性 <span class="text-gray-400 ml-auto">Uncooperativeness</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">16</span>情動の平板化 <span class="text-gray-400 ml-auto">Blunted Affect</span></div>
+          <div class="flex items-center gap-2 text-xs p-2 bg-purple-50 rounded-lg"><span class="w-5 h-5 bg-gray-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">17</span>興奮 <span class="text-gray-400 ml-auto">Excitement</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 p-3 bg-gray-50 rounded-xl text-xs text-gray-500 flex items-start gap-2">
+      <i data-lucide="info" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i>
+      <span>番号の付き方（原著順）：1心気症 / 2不安 / 3情動的引きこもり / 4概念の統合障害 / 5罪責感 / 6緊張 / 7衒奇症と不自然な姿勢 / 8誇大性 / 9抑うつ気分 / 10敵意 / 11猜疑心 / 12幻覚による行動 / 13運動減退 / 14非協調性 / 15不自然な思考内容 / 16情動の平板化 / <strong>17興奮</strong>（1966追加）/ <strong>18失見当識</strong>（1966追加）</span>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <div class="text-center text-xs text-gray-400 py-6">
+    BPRS 日本語版・評価マニュアル Ver.1.1（山梨県立北病院 宮田量治）をもとに作成 ／ 外来参照用
+  </div>
+</main>
+
+<script>
+  lucide.createIcons();
+
+  // details/summary の開閉でchevronを回転
+  document.querySelectorAll('details').forEach(d => {
+    d.addEventListener('toggle', () => {
+      const chevron = d.querySelector('.chevron');
+      if (chevron) {
+        if (d.open) {
+          chevron.style.transform = 'rotate(180deg)';
+        } else {
+          chevron.style.transform = 'rotate(0deg)';
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>

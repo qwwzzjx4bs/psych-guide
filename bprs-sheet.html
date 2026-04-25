@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPRS 採点シート｜簡易精神症状評価尺度</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; }
+
+    /* スコアボタン */
+    .score-btn {
+      width: 2rem; height: 2rem;
+      border-radius: 0.375rem;
+      border: 1.5px solid #d1d5db;
+      background: white;
+      font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: all 0.12s;
+      display: flex; align-items: center; justify-content: center;
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+    .score-btn:hover { border-color: #6366f1; color: #6366f1; background: #eef2ff; }
+    .score-btn.active-1 { background: #e0f2fe; border-color: #0284c7; color: #0369a1; }
+    .score-btn.active-2 { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+    .score-btn.active-3 { background: #d1fae5; border-color: #059669; color: #047857; }
+    .score-btn.active-4 { background: #fef9c3; border-color: #ca8a04; color: #854d0e; }
+    .score-btn.active-5 { background: #ffedd5; border-color: #ea580c; color: #c2410c; }
+    .score-btn.active-6 { background: #fee2e2; border-color: #dc2626; color: #b91c1c; }
+    .score-btn.active-7 { background: #fecaca; border-color: #b91c1c; color: #7f1d1d; font-size: 0.9rem; }
+
+    /* 行のスタイル */
+    .item-row {
+      display: grid;
+      grid-template-columns: 2rem 1fr auto auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.1s;
+    }
+    .item-row:hover { background: #f8fafc; }
+    .item-row:last-child { border-bottom: none; }
+
+    .num-badge {
+      width: 1.6rem; height: 1.6rem; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700; flex-shrink: 0;
+    }
+    .num-lang { background: #dbeafe; color: #1d4ed8; }
+    .num-obs { background: #ede9fe; color: #7c3aed; }
+    .num-special { background: #fef3c7; color: #b45309; }
+
+    .item-name { font-size: 0.82rem; font-weight: 600; color: #1e293b; }
+    .item-hint { font-size: 0.68rem; color: #94a3b8; line-height: 1.3; }
+
+    .score-display {
+      width: 2rem; height: 2rem; border-radius: 0.375rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; flex-shrink: 0;
+    }
+    .score-none { background: #f1f5f9; color: #cbd5e1; }
+    .score-1 { background: #e0f2fe; color: #0369a1; }
+    .score-2 { background: #dcfce7; color: #15803d; }
+    .score-3 { background: #d1fae5; color: #047857; }
+    .score-4 { background: #fef9c3; color: #854d0e; }
+    .score-5 { background: #ffedd5; color: #c2410c; }
+    .score-6 { background: #fee2e2; color: #b91c1c; }
+    .score-7 { background: #fecaca; color: #7f1d1d; }
+
+    /* スコアバー（合計スコア用） */
+    .total-bar {
+      height: 0.75rem; border-radius: 9999px;
+      background: linear-gradient(to right, #0284c7, #16a34a, #ca8a04, #dc2626, #7f1d1d);
+      transition: width 0.4s ease;
+    }
+
+    /* セクション区切り */
+    .section-divider {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ヒントポップオーバー */
+    .hint-popup {
+      position: absolute; z-index: 100; left: 0; top: 100%;
+      background: #1e293b; color: white; border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem; font-size: 0.7rem; line-height: 1.5;
+      width: 18rem; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      pointer-events: none; opacity: 0; transition: opacity 0.15s;
+      white-space: normal;
+    }
+    .hint-trigger { position: relative; }
+    .hint-trigger:hover .hint-popup { opacity: 1; }
+
+    /* 入力フォームフィールド */
+    .info-input {
+      border: 1px solid #e2e8f0; border-radius: 0.375rem;
+      padding: 0.35rem 0.6rem; font-size: 0.8rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      background: white; color: #1e293b; width: 100%;
+      outline: none; transition: border-color 0.15s;
+    }
+    .info-input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.15); }
+
+    /* 印刷スタイル */
+    @media print {
+      body { background: white; font-size: 10px; }
+      .no-print { display: none !important; }
+      .print-break { page-break-before: always; }
+      .score-btn { display: none !important; }
+      .print-score-cell { display: flex !important; }
+      header, .sticky { position: static !important; }
+      .shadow-lg, .shadow-md, .shadow { box-shadow: none !important; }
+      .rounded-2xl, .rounded-xl { border-radius: 0 !important; }
+      .bg-gray-50, .bg-slate-50 { background: white !important; }
+      main { padding: 0 !important; }
+      .item-row { padding: 0.3rem 0.4rem !important; }
+      .score-display { width: 1.5rem; height: 1.5rem; font-size: 0.8rem; }
+    }
+
+    .sticky-footer {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      background: white; border-top: 1px solid #e2e8f0;
+      padding: 0.75rem 1.5rem;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+    }
+    @media print { .sticky-footer { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header class="no-print" style="background: var(--psych-gradient);" class="text-white py-4">
+  <div class="max-w-3xl mx-auto px-4 flex items-center justify-between">
+    <div style="color:white;">
+      <div class="flex items-center gap-2">
+        <i data-lucide="clipboard-list" class="w-5 h-5 opacity-80" style="color:white;"></i>
+        <span class="text-sm font-medium opacity-80" style="color:white;">BPRS 採点シート</span>
+      </div>
+      <p class="text-xs opacity-60 mt-0.5" style="color:white;">Brief Psychiatric Rating Scale ― 日本語版</p>
+    </div>
+    <div class="flex gap-2">
+      <button onclick="resetAll()" class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>リセット
+      </button>
+      <button onclick="window.print()" class="flex items-center gap-1.5 bg-white text-indigo-800 text-xs font-semibold px-3 py-1.5 rounded-lg transition hover:bg-gray-100">
+        <i data-lucide="printer" class="w-3.5 h-3.5"></i>印刷
+      </button>
+      <a href="bprs-guide.html" target="_blank" class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+        <i data-lucide="book-open" class="w-3.5 h-3.5"></i>評価ガイド
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- 印刷用ヘッダー（画面では非表示） -->
+<div class="hidden print:block px-4 pt-3 pb-2 border-b border-gray-300">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-lg font-bold text-gray-900">BPRS 採点シート</h1>
+      <p class="text-xs text-gray-500">Brief Psychiatric Rating Scale 日本語版（山梨県立北病院 宮田量治）</p>
+    </div>
+    <div class="text-right text-xs text-gray-500">
+      <div>評価期間：最近1週間（最も重篤な状態を評価）</div>
+      <div>採点：1点（なし）〜 7点（最重度）</div>
+    </div>
+  </div>
+</div>
+
+<main class="max-w-3xl mx-auto px-4 py-5 pb-32">
+
+  <!-- 患者情報 -->
+  <div class="bg-white rounded-2xl shadow-md p-4 mb-4">
+    <div class="flex items-center gap-2 mb-3">
+      <i data-lucide="user" class="w-4 h-4 text-gray-500 no-print"></i>
+      <span class="text-sm font-bold text-gray-700">患者・評価情報</span>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">患者ID / イニシャル</label>
+        <input type="text" class="info-input" id="patientId" placeholder="例：A.T.">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価日</label>
+        <input type="date" class="info-input" id="evalDate">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価者</label>
+        <input type="text" class="info-input" id="evaluator" placeholder="氏名・職種">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価回数</label>
+        <select class="info-input" id="evalNum">
+          <option value="1">第1回</option>
+          <option value="2">第2回</option>
+          <option value="3">第3回</option>
+          <option value="4">第4回</option>
+          <option value="5">第5回以降</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 採点スケール凡例 -->
+  <div class="bg-white rounded-2xl shadow-md p-3 mb-4 no-print">
+    <div class="flex items-center gap-1.5 mb-2">
+      <i data-lucide="bar-chart-2" class="w-4 h-4 text-gray-400"></i>
+      <span class="text-xs font-bold text-gray-600">採点基準（クリックで点数を選択）</span>
+    </div>
+    <div class="grid grid-cols-7 gap-1 text-center">
+      <div><div class="score-btn active-1 mx-auto pointer-events-none">1</div><div class="text-xs text-gray-400 mt-1">なし</div></div>
+      <div><div class="score-btn active-2 mx-auto pointer-events-none">2</div><div class="text-xs text-gray-400 mt-1">ごく軽</div></div>
+      <div><div class="score-btn active-3 mx-auto pointer-events-none">3</div><div class="text-xs text-gray-400 mt-1">軽度</div></div>
+      <div><div class="score-btn active-4 mx-auto pointer-events-none">4</div><div class="text-xs text-gray-400 mt-1">中等度</div></div>
+      <div><div class="score-btn active-5 mx-auto pointer-events-none">5</div><div class="text-xs text-gray-400 mt-1">やや重</div></div>
+      <div><div class="score-btn active-6 mx-auto pointer-events-none">6</div><div class="text-xs text-gray-400 mt-1">重度</div></div>
+      <div><div class="score-btn active-7 mx-auto pointer-events-none">7</div><div class="text-xs text-gray-400 mt-1">最重度</div></div>
+    </div>
+  </div>
+
+  <!-- 採点テーブル -->
+  <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-4">
+
+    <!-- グループA: 言語表出 -->
+    <div class="section-divider bg-blue-50 text-blue-700 flex items-center gap-1.5">
+      <i data-lucide="message-square" class="w-3 h-3"></i>
+      言語表出にもとづく項目（9項目）― 対象者の陳述・主観的体験から評価
+    </div>
+
+    <!-- 1 心気症 -->
+    <div class="item-row" id="row-1">
+      <div class="num-badge num-lang">1</div>
+      <div class="hint-trigger">
+        <div class="item-name">心気症 <span class="text-gray-400 font-normal text-xs">Somatic Concern</span></div>
+        <div class="item-hint">身体の健康への関心・訴えの程度。器質的基礎の有無は問わない</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>現在の身体の健康状態についての関心の程度<br>
+          <strong>評価の注意：</strong>訴えに相当する所見の有無に関わらず評価。訴えの頻度・重さのみを評価する<br>
+          <strong>質問例：</strong>「からだのことで何か気になっていることがありますか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-1"></div>
+      <div class="score-display score-none" id="disp-1">－</div>
+    </div>
+
+    <!-- 2 不安 -->
+    <div class="item-row" id="row-2">
+      <div class="num-badge num-lang">2</div>
+      <div class="hint-trigger">
+        <div class="item-name">不安 <span class="text-gray-400 font-normal text-xs">Anxiety</span></div>
+        <div class="item-hint">心配・恐れ・過剰なこだわり。言語表出のみ（身体症状は「緊張」で評価）</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>現在または未来に対する心配・恐れ・過剰なこだわり<br>
+          <strong>注意：</strong>不安の身体症状（震え・発汗等）は「緊張（#6）」で評価<br>
+          <strong>質問例：</strong>「なにかほかに気になることがありますか」「理由もわからず不安を感じることは？」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-2"></div>
+      <div class="score-display score-none" id="disp-2">－</div>
+    </div>
+
+    <!-- 5 罪責感 -->
+    <div class="item-row" id="row-5">
+      <div class="num-badge num-lang">5</div>
+      <div class="hint-trigger">
+        <div class="item-name">罪責感 <span class="text-gray-400 font-normal text-xs">Guilt Feelings</span></div>
+        <div class="item-hint">過去の行動への過剰なこだわり・自責。抑うつ・不安から推測しない</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>過去の行動についての過剰なこだわりまたは自責感<br>
+          <strong>注意：</strong>抑うつ状態・全般化した不安の徴候から推察しない<br>
+          <strong>質問例：</strong>「過去にしたことで罪の意識を持っていたり恥ずかしく思っていることがありますか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-5"></div>
+      <div class="score-display score-none" id="disp-5">－</div>
+    </div>
+
+    <!-- 8 誇大性 -->
+    <div class="item-row" id="row-8">
+      <div class="num-badge num-lang">8</div>
+      <div class="hint-trigger">
+        <div class="item-name">誇大性 <span class="text-gray-400 font-normal text-xs">Grandiosity</span></div>
+        <div class="item-hint">過大な自己評価・才能への確信。陳述内容から評価（態度からではない）</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>過大な自己評価と並はずれた才能や力を持っているとの確信<br>
+          <strong>注意：</strong>面接状況における患者の態度から評価してはならない<br>
+          <strong>質問例：</strong>「人にうらやましがられるような特別な才能や力がありますか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-8"></div>
+      <div class="score-display score-none" id="disp-8">－</div>
+    </div>
+
+    <!-- 9 抑うつ気分 -->
+    <div class="item-row" id="row-9">
+      <div class="num-badge num-lang">9</div>
+      <div class="hint-trigger">
+        <div class="item-name">抑うつ気分 <span class="text-gray-400 font-normal text-xs">Depressive Mood</span></div>
+        <div class="item-hint">意気消沈・悲哀・落胆。運動減退・心気症・罪責感からは推測しない</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>意気消沈と悲哀。落胆の程度のみを評価<br>
+          <strong>注意：</strong>制止や身体的愁訴から抑うつの存在を推測して評価しない<br>
+          <strong>質問例：</strong>「最近の気分は全体としてはどうでしたか」「気分がふさいだりはしませんでしたか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-9"></div>
+      <div class="score-display score-none" id="disp-9">－</div>
+    </div>
+
+    <!-- 11 猜疑心 -->
+    <div class="item-row" id="row-11">
+      <div class="num-badge num-lang">11</div>
+      <div class="hint-trigger">
+        <div class="item-name">猜疑心 <span class="text-gray-400 font-normal text-xs">Suspiciousness</span></div>
+        <div class="item-hint">他者から悪意・差別があったとの確信（非妄想〜被害妄想まで）</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>他者から悪意や差別があったとの（妄想的または非妄想的な）確信<br>
+          <strong>スペクトル：</strong>疑い深さ → 被害念慮 → 被害妄想<br>
+          <strong>質問例：</strong>「最近、誰かに嫌がらせをされたりしませんでしたか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-11"></div>
+      <div class="score-display score-none" id="disp-11">－</div>
+    </div>
+
+    <!-- 12 幻覚による行動 -->
+    <div class="item-row" id="row-12">
+      <div class="num-badge num-lang">12</div>
+      <div class="hint-trigger">
+        <div class="item-name">幻覚による行動 <span class="text-gray-400 font-normal text-xs">Hallucinatory Behavior</span></div>
+        <div class="item-hint">外界刺激に対応のない知覚（幻聴・幻視等）。過去1週間以内の訴えのみ</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>通常の外界の刺激に対応のない知覚<br>
+          <strong>注意：</strong>幻覚なのか生き生きとしたイメージかの判断が必要。確証ない場合は「なし」<br>
+          <strong>質問例：</strong>「何かが見えたり声が聞こえたりするような、いつもと違った経験をしたことがありますか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-12"></div>
+      <div class="score-display score-none" id="disp-12">－</div>
+    </div>
+
+    <!-- 15 不自然な思考内容 -->
+    <div class="item-row" id="row-15">
+      <div class="num-badge num-lang">15</div>
+      <div class="hint-trigger">
+        <div class="item-name">不自然な思考内容 <span class="text-gray-400 font-normal text-xs">Unusual Thought Content</span></div>
+        <div class="item-hint">奇妙・異様・奇怪な思考内容（思考過程の解体ではなく内容の異常）</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>普通ではない、風変わりな、異様あるいは奇怪な思考内容<br>
+          <strong>注意：</strong>思考内容の異常のみを評価。思考プロセスの解体は「概念の統合障害（#4）」<br>
+          <strong>質問例：</strong>「何か不自然なことが続いているとか、起こりそうということはないですか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-15"></div>
+      <div class="score-display score-none" id="disp-15">－</div>
+    </div>
+
+    <!-- 18 失見当識 -->
+    <div class="item-row" id="row-18">
+      <div class="num-badge num-lang">18</div>
+      <div class="hint-trigger">
+        <div class="item-name">失見当識 <span class="text-gray-400 font-normal text-xs">Disorientation</span></div>
+        <div class="item-hint">人・場所・時間に関する見当識の混乱。日付・場所の質問を必ず行う</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>人・場所あるいは時についての適切な関連性の混乱または欠如<br>
+          <strong>注意：</strong>意識レベルが変動するケース（せん妄等）では面接タイミングに注意<br>
+          <strong>見当識確認：</strong>「今日は何日ですか」「今いる場所はどこですか」「私が誰だかわかりますか」
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-18"></div>
+      <div class="score-display score-none" id="disp-18">－</div>
+    </div>
+
+    <!-- 特殊項目: 敵意 -->
+    <div class="section-divider bg-amber-50 text-amber-700 flex items-center gap-1.5">
+      <i data-lucide="alert-circle" class="w-3 h-3"></i>
+      面接外情報収集が必要な項目（1項目）― 看護師・家族等から事前に情報収集すること
+    </div>
+
+    <!-- 10 敵意 -->
+    <div class="item-row" id="row-10">
+      <div class="num-badge num-special">10</div>
+      <div class="hint-trigger">
+        <div class="item-name">
+          敵意 <span class="text-gray-400 font-normal text-xs">Hostility</span>
+          <span class="ml-1 text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold">★ 面接外情報</span>
+        </div>
+        <div class="item-hint">面接外での他者への憎悪・侮辱・好戦性。「非協調性（#14）」と区別</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>面接状況ではないところでの、他者に対する憎悪・侮蔑・好戦性・尊大<br>
+          <strong>情報源：</strong>担当看護師・家族等から直接情報収集（18項目中唯一）<br>
+          <strong>区別：</strong>面接中に面接者へ向けられた敵意→「非協調性（#14）」で評価
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-10"></div>
+      <div class="score-display score-none" id="disp-10">－</div>
+    </div>
+
+    <!-- グループB: 観察 -->
+    <div class="section-divider bg-purple-50 text-purple-700 flex items-center gap-1.5">
+      <i data-lucide="eye" class="w-3 h-3"></i>
+      観察にもとづく項目（8項目）― 面接中の行動・態度・反応を観察して評価
+    </div>
+
+    <!-- 3 情動的引きこもり -->
+    <div class="item-row" id="row-3">
+      <div class="num-badge num-obs">3</div>
+      <div class="hint-trigger">
+        <div class="item-name">情動的引きこもり <span class="text-gray-400 font-normal text-xs">Emotional Withdrawal</span></div>
+        <div class="item-hint">面接者との感情的交流の減少。アイコンタクト・表情・声のトーンで評価</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>面接者と面接状況に対する交流の減少<br>
+          <strong>注意：</strong>PANSSの「情動的引きこもり」とは別概念。健全な他者との比較が有用<br>
+          <strong>評価視点：</strong>アイコンタクト・表情・声の調子・姿勢・動き
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-3"></div>
+      <div class="score-display score-none" id="disp-3">－</div>
+    </div>
+
+    <!-- 4 概念の統合障害 -->
+    <div class="item-row" id="row-4">
+      <div class="num-badge num-obs">4</div>
+      <div class="hint-trigger">
+        <div class="item-name">概念の統合障害 <span class="text-gray-400 font-normal text-xs">Conceptual Disorganization</span></div>
+        <div class="item-hint">思考過程の混乱・解体。言語表出の統合度を観察（患者の自覚は参考にしない）</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>思考過程の混乱・弛緩・解体の程度。患者の言語表出の統合の程度から評価<br>
+          <strong>注意：</strong>患者の自己評価「話し下手」などによらず重症度を判断<br>
+          <strong>評価視点：</strong>思考プロセスが目的地（答えるべきこと）に筋道立って進んでいるか
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-4"></div>
+      <div class="score-display score-none" id="disp-4">－</div>
+    </div>
+
+    <!-- 6 緊張 -->
+    <div class="item-row" id="row-6">
+      <div class="num-badge num-obs">6</div>
+      <div class="hint-trigger">
+        <div class="item-name">緊張 <span class="text-gray-400 font-normal text-xs">Tension</span></div>
+        <div class="item-hint">神経過敏・活動亢進の身体徴候。主観的な緊張感ではなく身体所見で評価</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>緊張・神経過敏・活動レベルの高まりによる身体と運動機能の徴候<br>
+          <strong>注意：</strong>「いま緊張しています」という主観的体験では評価しない<br>
+          <strong>身体所見：</strong>落ち着きなさ・振戦・ひきつり・発汗・頻繁な姿勢変換・筋緊張亢進
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-6"></div>
+      <div class="score-display score-none" id="disp-6">－</div>
+    </div>
+
+    <!-- 7 衒奇症と不自然な姿勢 -->
+    <div class="item-row" id="row-7">
+      <div class="num-badge num-obs">7</div>
+      <div class="hint-trigger">
+        <div class="item-name">衒奇症と不自然な姿勢 <span class="text-gray-400 font-normal text-xs">Mannerisms &amp; Posturing</span></div>
+        <div class="item-hint">奇妙・不自然な動作・姿勢。チック・ひきつりは「緊張」。錐体外路副作用も含む</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>奇妙で不自然な行動と態度。動作の異常のみを評価<br>
+          <strong>注意：</strong>チック・ひきつり→「緊張（#6）」。遅発性ジスキネジア・ジストニアも評価対象<br>
+          <strong>観察対象：</strong>異常な動き・長時間保持される姿勢・口唇・舌・眼の不自然な動き
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-7"></div>
+      <div class="score-display score-none" id="disp-7">－</div>
+    </div>
+
+    <!-- 13 運動減退 -->
+    <div class="item-row" id="row-13">
+      <div class="num-badge num-obs">13</div>
+      <div class="hint-trigger">
+        <div class="item-name">運動減退 <span class="text-gray-400 font-normal text-xs">Motor Retardation</span></div>
+        <div class="item-hint">緩徐な動き・エネルギー低下。行動観察のみ（自覚的エネルギー感は評価しない）</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>緩徐な動きによって示されるエネルギー水準の低下<br>
+          <strong>注意：</strong>自己のエネルギー水準についての患者自身の印象から評価しない<br>
+          <strong>鑑別：</strong>寡動状態→「緊張」との鑑別が必要。パーキンソニズムも評価対象
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-13"></div>
+      <div class="score-display score-none" id="disp-13">－</div>
+    </div>
+
+    <!-- 14 非協調性 -->
+    <div class="item-row" id="row-14">
+      <div class="num-badge num-obs">14</div>
+      <div class="hint-trigger">
+        <div class="item-name">非協調性 <span class="text-gray-400 font-normal text-xs">Uncooperativeness</span></div>
+        <div class="item-hint">面接中の面接者への抵抗・非友好性・易怒性。面接外の情報から評価しない</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>面接者に対する抵抗・非友好性・易怒性の徴候または協調的態度の欠如<br>
+          <strong>注意：</strong>面接状況以外での易怒性・非協調性の情報から評価してはならない<br>
+          <strong>区別：</strong>非協調性→面接中・面接者への反応 / 敵意→面接外・他者への反応
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-14"></div>
+      <div class="score-display score-none" id="disp-14">－</div>
+    </div>
+
+    <!-- 16 情動の平板化 -->
+    <div class="item-row" id="row-16">
+      <div class="num-badge num-obs">16</div>
+      <div class="hint-trigger">
+        <div class="item-name">情動の平板化 <span class="text-gray-400 font-normal text-xs">Blunted Affect</span></div>
+        <div class="item-hint">感情的緊張度の低下・正常な感受性と興味・関心の欠如</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>感情的緊張度の低下。正常の感受性と興味・関心の明らかな欠如<br>
+          <strong>3成分：</strong>①感情表現が不適切・空虚 ②喜怒哀楽の表現が乏しい ③周囲への無関心<br>
+          <strong>注意：</strong>PANSSの「情動の平板化」+「情動的引きこもり」の2項目に相当
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-16"></div>
+      <div class="score-display score-none" id="disp-16">－</div>
+    </div>
+
+    <!-- 17 興奮 -->
+    <div class="item-row" id="row-17">
+      <div class="num-badge num-obs">17</div>
+      <div class="hint-trigger">
+        <div class="item-name">興奮 <span class="text-gray-400 font-normal text-xs">Excitement</span></div>
+        <div class="item-hint">感情的緊張度の高揚・焦燥感・反応性亢進（1966年追加）</div>
+        <div class="hint-popup">
+          <strong>定義：</strong>感情的緊張度の高揚・焦燥感あるいは反応性亢進<br>
+          <strong>注意：</strong>1966年追加項目のため評価の指針なし。イライラ・易怒性・易刺激性が主な対象<br>
+          <strong>補足：</strong>興奮が強すぎる場合は面接の実施自体が困難になる
+        </div>
+      </div>
+      <div class="flex gap-1" id="btns-17"></div>
+      <div class="score-display score-none" id="disp-17">－</div>
+    </div>
+
+  </div>
+
+  <!-- 備考 -->
+  <div class="bg-white rounded-2xl shadow-md p-4 mb-4">
+    <label class="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2">
+      <i data-lucide="file-text" class="w-4 h-4 text-gray-400 no-print"></i>
+      備考・特記事項
+    </label>
+    <textarea class="w-full border border-gray-200 rounded-lg p-3 text-sm text-gray-700 resize-none focus:outline-none focus:border-indigo-400" rows="3" placeholder="面接の状況・評価上の注意点・副作用との鑑別など..."></textarea>
+  </div>
+
+  <!-- 合計スコア（印刷用） -->
+  <div class="hidden print:block bg-white border border-gray-300 rounded-lg p-4 mt-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-sm font-bold text-gray-700">合計スコア</div>
+        <div class="text-xs text-gray-400">採点済み項目数 / 18項目</div>
+      </div>
+      <div class="text-4xl font-bold text-gray-800" id="print-total">－</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- スティッキーフッター: リアルタイム合計 -->
+<div class="sticky-footer no-print">
+  <div class="max-w-3xl mx-auto flex items-center gap-4">
+    <!-- スコア集計 -->
+    <div class="flex items-center gap-3 flex-1">
+      <div>
+        <div class="text-xs text-gray-500 mb-0.5">合計スコア</div>
+        <div class="flex items-baseline gap-1">
+          <span class="text-3xl font-bold text-gray-800" id="total-score">0</span>
+          <span class="text-sm text-gray-400">/ 126</span>
+        </div>
+      </div>
+      <div class="flex-1">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span id="scored-count">0項目採点済み</span>
+          <span id="severity-label" class="font-semibold"></span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+          <div class="total-bar h-3" id="score-bar" style="width:0%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-gray-300 mt-0.5">
+          <span>18</span><span>45</span><span>72</span><span>99</span><span>126</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- サブスコア -->
+    <div class="hidden md:flex gap-4 text-center border-l border-gray-200 pl-4">
+      <div>
+        <div class="text-xs text-blue-600 font-semibold">言語表出</div>
+        <div class="text-lg font-bold text-gray-700" id="sub-lang">0</div>
+        <div class="text-xs text-gray-400">/63</div>
+      </div>
+      <div>
+        <div class="text-xs text-purple-600 font-semibold">観察</div>
+        <div class="text-lg font-bold text-gray-700" id="sub-obs">0</div>
+        <div class="text-xs text-gray-400">/56</div>
+      </div>
+      <div>
+        <div class="text-xs text-amber-600 font-semibold">敵意</div>
+        <div class="text-lg font-bold text-gray-700" id="sub-special">0</div>
+        <div class="text-xs text-gray-400">/7</div>
+      </div>
+    </div>
+
+    <!-- ボタン -->
+    <div class="flex gap-2 border-l border-gray-200 pl-4">
+      <button onclick="window.print()" class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
+        <i data-lucide="printer" class="w-3.5 h-3.5"></i>印刷
+      </button>
+      <button onclick="resetAll()" class="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg transition">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>リセット
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  // 項目定義
+  const ITEMS = [
+    { id: 1,  group: 'lang' },
+    { id: 2,  group: 'lang' },
+    { id: 5,  group: 'lang' },
+    { id: 8,  group: 'lang' },
+    { id: 9,  group: 'lang' },
+    { id: 11, group: 'lang' },
+    { id: 12, group: 'lang' },
+    { id: 15, group: 'lang' },
+    { id: 18, group: 'lang' },
+    { id: 10, group: 'special' },
+    { id: 3,  group: 'obs' },
+    { id: 4,  group: 'obs' },
+    { id: 6,  group: 'obs' },
+    { id: 7,  group: 'obs' },
+    { id: 13, group: 'obs' },
+    { id: 14, group: 'obs' },
+    { id: 16, group: 'obs' },
+    { id: 17, group: 'obs' },
+  ];
+
+  const scores = {};
+
+  // ボタン生成
+  function buildButtons() {
+    ITEMS.forEach(item => {
+      const container = document.getElementById(`btns-${item.id}`);
+      if (!container) return;
+      for (let v = 1; v <= 7; v++) {
+        const btn = document.createElement('button');
+        btn.className = 'score-btn';
+        btn.textContent = v;
+        btn.setAttribute('data-item', item.id);
+        btn.setAttribute('data-val', v);
+        btn.addEventListener('click', () => setScore(item.id, v));
+        container.appendChild(btn);
+      }
+    });
+  }
+
+  function setScore(itemId, val) {
+    scores[itemId] = val;
+    updateDisplay(itemId);
+    updateTotal();
+  }
+
+  function updateDisplay(itemId) {
+    const val = scores[itemId];
+    const disp = document.getElementById(`disp-${itemId}`);
+    const btns = document.querySelectorAll(`[data-item="${itemId}"]`);
+
+    // ディスプレイ更新
+    if (!disp) return;
+    disp.textContent = val || '－';
+    disp.className = `score-display ${val ? `score-${val}` : 'score-none'}`;
+
+    // ボタンアクティブ更新
+    btns.forEach(btn => {
+      const v = parseInt(btn.getAttribute('data-val'));
+      btn.className = `score-btn${v === val ? ` active-${v}` : ''}`;
+    });
+  }
+
+  function updateTotal() {
+    let total = 0;
+    let langTotal = 0;
+    let obsTotal = 0;
+    let specialTotal = 0;
+    let scoredCount = 0;
+
+    ITEMS.forEach(item => {
+      const v = scores[item.id] || 0;
+      if (v > 0) {
+        total += v;
+        scoredCount++;
+        if (item.group === 'lang') langTotal += v;
+        else if (item.group === 'obs') obsTotal += v;
+        else if (item.group === 'special') specialTotal += v;
+      }
+    });
+
+    document.getElementById('total-score').textContent = total;
+    document.getElementById('scored-count').textContent = `${scoredCount}項目採点済み`;
+    document.getElementById('sub-lang').textContent = langTotal;
+    document.getElementById('sub-obs').textContent = obsTotal;
+    document.getElementById('sub-special').textContent = specialTotal;
+
+    // スコアバー（18〜126のレンジ）
+    const pct = scoredCount > 0 ? Math.min(100, ((total - 18) / (126 - 18)) * 100) : 0;
+    document.getElementById('score-bar').style.width = `${Math.max(0, pct)}%`;
+
+    // 重症度ラベル
+    const labelEl = document.getElementById('severity-label');
+    if (scoredCount < 18) {
+      labelEl.textContent = `残り${18 - scoredCount}項目`;
+      labelEl.className = 'font-semibold text-gray-400';
+    } else {
+      let label = '', color = '';
+      if (total <= 30) { label = '軽症圏'; color = 'text-green-600'; }
+      else if (total <= 48) { label = '中等度'; color = 'text-yellow-600'; }
+      else if (total <= 66) { label = 'やや重症'; color = 'text-orange-600'; }
+      else { label = '重症圏'; color = 'text-red-600'; }
+      labelEl.textContent = label;
+      labelEl.className = `font-semibold ${color}`;
+    }
+
+    // 印刷用合計
+    const printTotal = document.getElementById('print-total');
+    if (printTotal) printTotal.textContent = total > 0 ? `${total}点` : '未採点';
+  }
+
+  function resetAll() {
+    if (!confirm('すべての採点をリセットしますか？')) return;
+    ITEMS.forEach(item => {
+      delete scores[item.id];
+      updateDisplay(item.id);
+    });
+    updateTotal();
+  }
+
+  // 今日の日付をデフォルトで設定
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('evalDate').value = `${yyyy}-${mm}-${dd}`;
+
+  buildButtons();
+  updateTotal();
+</script>
+</body>
+</html>

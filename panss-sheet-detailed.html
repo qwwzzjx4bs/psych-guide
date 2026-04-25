@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PANSS 詳細採点シート｜陽性・陰性症状評価尺度</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; }
+    .score-btn {
+      width: 1.85rem; height: 1.85rem; border-radius: 0.375rem;
+      border: 1.5px solid #d1d5db; background: white;
+      font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      transition: all 0.12s; display: flex; align-items: center;
+      justify-content: center; color: #6b7280; flex-shrink: 0; user-select: none;
+    }
+    .score-btn:hover { border-color: #6366f1; color: #6366f1; background: #eef2ff; }
+    .score-btn.s1  { background:#e0f2fe; border-color:#0284c7; color:#0369a1; }
+    .score-btn.s2  { background:#dcfce7; border-color:#16a34a; color:#15803d; }
+    .score-btn.s3  { background:#d1fae5; border-color:#059669; color:#047857; }
+    .score-btn.s4  { background:#fef9c3; border-color:#ca8a04; color:#854d0e; }
+    .score-btn.s5  { background:#ffedd5; border-color:#ea580c; color:#c2410c; }
+    .score-btn.s6  { background:#fee2e2; border-color:#dc2626; color:#b91c1c; }
+    .score-btn.s7  { background:#fecaca; border-color:#b91c1c; color:#7f1d1d; }
+    .score-disp {
+      width: 1.85rem; height: 1.85rem; border-radius: 0.375rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; font-weight: 700; flex-shrink: 0;
+    }
+    .sd0 { background:#f1f5f9; color:#cbd5e1; }
+    .sd1 { background:#e0f2fe; color:#0369a1; }
+    .sd2 { background:#dcfce7; color:#15803d; }
+    .sd3 { background:#d1fae5; color:#047857; }
+    .sd4 { background:#fef9c3; color:#854d0e; }
+    .sd5 { background:#ffedd5; color:#c2410c; }
+    .sd6 { background:#fee2e2; color:#b91c1c; }
+    .sd7 { background:#fecaca; color:#7f1d1d; }
+    .item-card { background: white; border-radius: 0.875rem; margin-bottom: 0.6rem; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .item-header { display: grid; grid-template-columns: 2.25rem 1fr auto auto; align-items: center; gap: 0.5rem; padding: 0.625rem 0.875rem; cursor: pointer; transition: background 0.1s; }
+    .item-header:hover { background: #f8fafc; }
+    .num-badge { width: 1.8rem; height: 1.8rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; }
+    .np  { background:#fee2e2; color:#b91c1c; }   /* Positive */
+    .nn  { background:#ede9fe; color:#7c3aed; }   /* Negative */
+    .ng  { background:#dbeafe; color:#1d4ed8; }   /* General */
+    .item-body { border-top: 1px solid #f1f5f9; padding: 0 0.875rem 0.875rem; }
+    .eval-box { background:#f8fafc; border-left:3px solid #6366f1; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.625rem; line-height:1.55; }
+    .warn-box  { background:#fffbeb; border-left:3px solid #d97706; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+    .q-box     { background:#f0fdf4; border-left:3px solid #16a34a; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+    .score-table { width:100%; border-collapse:collapse; font-size:0.72rem; margin-top:0.75rem; }
+    .score-table th { padding: 0.4rem 0.5rem; font-weight:700; text-align:center; font-size:0.68rem; }
+    .score-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height:1.4; }
+    .score-table tr:last-child td { border-bottom:none; }
+    .score-table tr:hover td { background:#fafafa; }
+    .sc1{background:#e0f2fe;color:#0369a1;font-weight:700;text-align:center;white-space:nowrap;}
+    .sc2{background:#dcfce7;color:#15803d;font-weight:700;text-align:center;white-space:nowrap;}
+    .sc3{background:#d1fae5;color:#047857;font-weight:700;text-align:center;white-space:nowrap;}
+    .sc4{background:#fef9c3;color:#854d0e;font-weight:700;text-align:center;white-space:nowrap;}
+    .sc5{background:#ffedd5;color:#c2410c;font-weight:700;text-align:center;white-space:nowrap;}
+    .sc6{background:#fee2e2;color:#b91c1c;font-weight:700;text-align:center;white-space:nowrap;}
+    .sc7{background:#fecaca;color:#7f1d1d;font-weight:700;text-align:center;white-space:nowrap;}
+    .sec-div { padding:0.4rem 0.875rem; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; display:flex; align-items:center; gap:0.5rem; border-radius:0.75rem; }
+    .point-card { background:white; border-radius:1rem; padding:0.875rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.06); margin-bottom:0.75rem; }
+    .sticky-footer { position:fixed; bottom:0; left:0; right:0; z-index:50; background:white; border-top:1px solid #e2e8f0; padding:0.625rem 1.25rem; box-shadow:0 -4px 12px rgba(0,0,0,0.08); }
+    .chevron-icon { transition:transform 0.2s; flex-shrink:0; }
+    .chevron-open { transform:rotate(180deg); }
+    .item-body[hidden] { display:none; }
+    .sub-pill { display:inline-flex; align-items:center; gap:0.3rem; padding:0.2rem 0.6rem; border-radius:9999px; font-size:0.7rem; font-weight:700; }
+    @media print {
+      body { background:white; }
+      .no-print { display:none !important; }
+      .sticky-footer { display:none !important; }
+      .item-body { display:block !important; }
+      .item-card { box-shadow:none; border:1px solid #e5e7eb; margin-bottom:0.4rem; page-break-inside:avoid; }
+      .score-btn { display:none !important; }
+      main { padding-bottom:0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="no-print text-white py-3" style="background:var(--psych-gradient);">
+  <div class="max-w-5xl mx-auto px-4 flex items-center justify-between">
+    <div style="color:white;">
+      <div class="flex items-center gap-2">
+        <i data-lucide="brain" class="w-5 h-5 opacity-80" style="color:white;"></i>
+        <span class="text-sm font-bold" style="color:white;">PANSS 詳細採点シート</span>
+        <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full" style="color:white;">陽性・陰性症状評価尺度</span>
+      </div>
+      <p class="text-xs opacity-60 mt-0.5" style="color:white;">Positive and Negative Syndrome Scale｜Kay, Opler, Fiszbein (1987/1991)</p>
+    </div>
+    <div class="flex gap-2">
+      <button onclick="expandAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="chevrons-down" class="w-3 h-3"></i>全展開</button>
+      <button onclick="collapseAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="chevrons-up" class="w-3 h-3"></i>全折りたたみ</button>
+      <button onclick="resetAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+      <button onclick="window.print()" class="flex items-center gap-1 bg-white text-indigo-800 text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-gray-100"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+      <a href="panss-sheet.html" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="clipboard-list" class="w-3 h-3"></i>簡易版</a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-4 pb-36">
+
+  <!-- 患者情報 -->
+  <div class="point-card mb-3">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div><label class="text-xs text-gray-500 block mb-1">患者ID / イニシャル</label><input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-indigo-400" id="patientId" placeholder="例：A.T."></div>
+      <div><label class="text-xs text-gray-500 block mb-1">評価日</label><input type="date" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-indigo-400" id="evalDate"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">評価者</label><input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-indigo-400" id="evaluator" placeholder="氏名・職種"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">診断</label><input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-indigo-400" id="diagnosis" placeholder="例：統合失調症"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">評価回数</label><select class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-indigo-400" id="evalNum"><option>第1回</option><option>第2回</option><option>第3回</option><option>第4回</option><option>第5回以降</option></select></div>
+    </div>
+  </div>
+
+  <!-- 全体ポイント -->
+  <div class="point-card mb-4">
+    <button class="w-full flex items-center justify-between text-left" onclick="toggleSection('global-body', this)">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center"><i data-lucide="lightbulb" class="w-4 h-4 text-indigo-600"></i></div>
+        <div><div class="text-sm font-bold text-gray-800">全体的な評価ポイント・スコア解釈</div><div class="text-xs text-gray-400">PANSS実施前に確認</div></div>
+      </div>
+      <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon"></i>
+    </button>
+    <div id="global-body" class="mt-3" hidden>
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="bg-indigo-50 rounded-lg p-3 text-xs space-y-1">
+          <p class="font-bold text-indigo-700 mb-1.5 flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i>PANSSとは</p>
+          <p>・Kay, Opler, Fiszbein（1987）が開発。統合失調症の症状評価のゴールドスタンダード</p>
+          <p>・BPRSの18項目を内包した拡張版。30項目7段階評価</p>
+          <p>・陽性尺度7項目／陰性尺度7項目／総合精神病理尺度16項目</p>
+          <p>・評価期間：<strong>最近1週間</strong>。面接時間：<strong>約45〜50分</strong></p>
+          <p>・評価者は十分なトレーニングを受けることが推奨される</p>
+        </div>
+        <div class="bg-green-50 rounded-lg p-3 text-xs">
+          <p class="font-bold text-green-700 mb-1.5 flex items-center gap-1"><i data-lucide="bar-chart-2" class="w-3 h-3"></i>スコア範囲と臨床的解釈目安</p>
+          <table class="w-full text-xs">
+            <tr class="border-b border-green-200"><td class="py-1 font-bold text-gray-700">陽性（P）</td><td class="py-1 text-gray-600">7〜49点</td></tr>
+            <tr class="border-b border-green-200"><td class="py-1 font-bold text-gray-700">陰性（N）</td><td class="py-1 text-gray-600">7〜49点</td></tr>
+            <tr class="border-b border-green-200"><td class="py-1 font-bold text-gray-700">総合（G）</td><td class="py-1 text-gray-600">16〜112点</td></tr>
+            <tr class="border-b border-green-200"><td class="py-1 font-bold text-gray-700">合計（T）</td><td class="py-1 text-gray-600">30〜210点</td></tr>
+            <tr class="border-b border-green-200"><td class="py-1 font-bold text-gray-700">複合（P-N）</td><td class="py-1 text-gray-600">+42〜-42点</td></tr>
+          </table>
+          <p class="mt-2 text-gray-600">複合スコア：＋は陽性症状優勢、−は陰性症状優勢</p>
+        </div>
+        <div class="bg-amber-50 rounded-lg p-3 text-xs">
+          <p class="font-bold text-amber-700 mb-1.5 flex items-center gap-1"><i data-lucide="activity" class="w-3 h-3"></i>重症度の目安（合計スコア）</p>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2"><span class="w-14 text-center bg-green-100 text-green-700 rounded px-1 font-bold">〜58点</span><span class="text-gray-600">軽症圏</span></div>
+            <div class="flex items-center gap-2"><span class="w-14 text-center bg-yellow-100 text-yellow-700 rounded px-1 font-bold">59〜74点</span><span class="text-gray-600">中等度</span></div>
+            <div class="flex items-center gap-2"><span class="w-14 text-center bg-orange-100 text-orange-700 rounded px-1 font-bold">75〜94点</span><span class="text-gray-600">やや重症</span></div>
+            <div class="flex items-center gap-2"><span class="w-14 text-center bg-red-100 text-red-700 rounded px-1 font-bold">95点〜</span><span class="text-gray-600">重症圏</span></div>
+          </div>
+          <p class="mt-2 text-gray-500 text-xs">Leucht et al. (2005) の基準を参考</p>
+        </div>
+      </div>
+      <div class="mt-3 bg-gray-50 rounded-lg p-3 text-xs">
+        <p class="font-bold text-gray-700 mb-1.5">PANSSアンカーポイント 一般的基準</p>
+        <div class="grid grid-cols-7 gap-1">
+          <div class="bg-gray-100 rounded p-1.5 text-center"><div class="font-bold text-gray-500">1</div><div class="text-gray-500 mt-0.5">なし</div></div>
+          <div class="bg-blue-50 rounded p-1.5 text-center"><div class="font-bold text-blue-700">2</div><div class="text-gray-500 mt-0.5">ごく軽度<br>病的とは確言できない</div></div>
+          <div class="bg-green-50 rounded p-1.5 text-center"><div class="font-bold text-green-700">3</div><div class="text-gray-500 mt-0.5">軽度<br>確実に存在。日常機能への影響ほぼなし</div></div>
+          <div class="bg-yellow-50 rounded p-1.5 text-center"><div class="font-bold text-yellow-700">4</div><div class="text-gray-500 mt-0.5">中等度<br>散発的、または日常的だが極端でない</div></div>
+          <div class="bg-orange-50 rounded p-1.5 text-center"><div class="font-bold text-orange-700">5</div><div class="text-gray-500 mt-0.5">やや重度<br>日常機能に影響するが完全には停止させない</div></div>
+          <div class="bg-red-50 rounded p-1.5 text-center"><div class="font-bold text-red-700">6</div><div class="text-gray-500 mt-0.5">重度<br>頻繁で破壊的。直接管理が必要な場合あり</div></div>
+          <div class="bg-red-100 rounded p-1.5 text-center"><div class="font-bold text-red-900">7</div><div class="text-gray-500 mt-0.5">最重度<br>生活機能を根底から蝕んでいる</div></div>
+        </div>
+      </div>
+      <div class="mt-3 bg-purple-50 rounded-lg p-3 text-xs">
+        <p class="font-bold text-purple-700 mb-1.5">寛解基準（Andreasen et al. 2005）</p>
+        <p class="text-gray-700">以下8項目すべてが<strong>3点以下</strong>かつ<strong>6か月以上</strong>維持されている場合に症状寛解と定義：</p>
+        <div class="flex flex-wrap gap-1.5 mt-1">
+          <span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold">P1 妄想</span>
+          <span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold">P2 概念の統合障害</span>
+          <span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold">P3 幻覚による行動</span>
+          <span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">N1 情動の平板化</span>
+          <span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">N2 情動的引きこもり</span>
+          <span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">N3 疎通性の貧困さ</span>
+          <span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">N6 会話の自発性欠如</span>
+          <span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">G9 不自然な思考内容</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 陽性尺度 ===== -->
+  <div class="sec-div bg-red-50 text-red-700 mb-2">
+    <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>陽性尺度（Positive Scale）― P1〜P7｜合計7〜49点
+    <span class="ml-auto font-normal normal-case text-xs" id="pos-total-label">0 / 49点</span>
+  </div>
+
+  <!-- P1 妄想 -->
+  <div class="item-card" id="card-P1">
+    <div class="item-header" onclick="toggleItem('P1')">
+      <div class="num-badge np">P1</div>
+      <div><div class="text-sm font-bold text-gray-800">妄想 <span class="text-gray-400 font-normal text-xs ml-1">Delusions</span></div><div class="text-xs text-gray-400">信念の強度・確信度・影響の程度（誤信念か妄想かの判断を含む）</div></div>
+      <div class="flex gap-1" id="btns-P1"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-P1">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-P1"></i></div>
+    </div>
+    <div class="item-body" id="body-P1" hidden>
+      <div class="eval-box"><strong>定義：</strong>信念、確信または観念の固定化の程度。確証のない、あるいはばかげた考えを指す。<br><strong>注意：</strong>妄想の内容（被害・誇大・関係・思考伝播等）・固着性・現実検討への影響を評価する。面接者の是正に対しても固執する場合は確信度が高い。</div>
+      <div class="q-box"><strong>質問例：</strong>「誰かがあなたを傷つけようとしたり、監視したりしていると思いますか？」「あなたには特別な力や使命がありますか？」「周囲の出来事が特別にあなたに関係していると感じますか？」</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>妄想なし</td>
+        <td>妄想的な考えへの疑問があり、現実と区別できる。病的とは断言しにくい</td>
+        <td>1〜2つの妄想があるが顕著ではなく、日常機能への影響はほとんどない</td>
+        <td>複数の妄想が存在し、時折日常行動や判断に影響を及ぼすが、部分的に現実認識がある</td>
+        <td>多くの妄想が存在し、患者は妄想的な枠組みで現実を解釈している。日常生活への影響が明らか</td>
+        <td>妄想的な思考が優勢で、多くの行動・感情・判断が歪められ、生活に重大な支障をきたしている</td>
+        <td>妄想が思考・感情・行動を完全に支配しており、現実との区別が失われ、日常生活が機能不全</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- P2 概念の統合障害 -->
+  <div class="item-card" id="card-P2">
+    <div class="item-header" onclick="toggleItem('P2')">
+      <div class="num-badge np">P2</div>
+      <div><div class="text-sm font-bold text-gray-800">概念の統合障害 <span class="text-gray-400 font-normal text-xs ml-1">Conceptual Disorganization</span></div><div class="text-xs text-gray-400">思考過程の混乱・弛緩・解体（言語表出の統合度を観察）</div></div>
+      <div class="flex gap-1" id="btns-P2"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-P2">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-P2"></i></div>
+    </div>
+    <div class="item-body" id="body-P2" hidden>
+      <div class="eval-box"><strong>定義：</strong>思考過程の混乱、弛緩あるいは解体の程度。患者の言語表出の統合の程度に基づいて評価する。<br><strong>観察視点：</strong>思考プロセスが目的（答えるべきこと）に向かって筋道立って進んでいるか。脱線・迂回・支離滅裂・連合弛緩・言語新作・エコーラリアの有無。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>思考過程に障害なし。会話が明瞭で一貫</td>
+        <td>わずかに話が回り道になるが理解は可能</td>
+        <td>時折脱線・迂回発言があるが会話の流れは概ね維持</td>
+        <td>思考の関連性が損なわれ、時折脱線。誘導すれば軌道修正できる</td>
+        <td>思考が著しく乱れ、面接全体を通じて理解が困難なことが多い</td>
+        <td>会話がほとんど支離滅裂で、繰り返し誘導しても意味の把握が困難</td>
+        <td>コミュニケーションが完全に崩壊しており、意味のある会話が不可能（言語サラダ）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- P3 幻覚による行動 -->
+  <div class="item-card" id="card-P3">
+    <div class="item-header" onclick="toggleItem('P3')">
+      <div class="num-badge np">P3</div>
+      <div><div class="text-sm font-bold text-gray-800">幻覚による行動 <span class="text-gray-400 font-normal text-xs ml-1">Hallucinatory Behavior</span></div><div class="text-xs text-gray-400">外界刺激に対応のない知覚（幻聴・幻視・体感幻覚等）の頻度・強度・行動への影響</div></div>
+      <div class="flex gap-1" id="btns-P3"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-P3">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-P3"></i></div>
+    </div>
+    <div class="item-body" id="body-P3" hidden>
+      <div class="eval-box"><strong>定義：</strong>外からの刺激に基づかない言語的、知覚的体験。PANSSでは幻覚体験の頻度・強度・行動への影響を含めて評価する。<br><strong>注意：</strong>幻聴（会話・命令等）・幻視・体感幻覚・嗅覚幻覚を確認。重症度は体験の頻度・持続性・行動への影響度で評価。</div>
+      <div class="q-box"><strong>質問例：</strong>「誰もいないのに声が聞こえますか？その声は何を言っていますか？」「実際には存在しないものが見えますか？」「体の中や体表面に変な感覚がありますか？」</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>幻覚体験なし</td>
+        <td>幻覚に近い体験があるが確信は弱く、幻覚とは断言できない（入眠時幻覚等）</td>
+        <td>幻覚体験があるが頻度は少なく（週数回程度）、日常機能への影響はほとんどない。病識あり</td>
+        <td>幻覚体験が頻繁に起こる。患者は批判的態度を保てる場合があるが、行動に時折影響</td>
+        <td>頻繁・持続的な幻覚体験。患者の思考・行動に明らかに影響しているが、完全には停止させない</td>
+        <td>幻覚が患者の行動の大部分を決定しており（命令幻声への服従等）、生活に重大な支障</td>
+        <td>幻覚体験が行動を完全に支配しており、現実から完全に断絶した状態。日常生活が成立しない</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- P4 興奮 -->
+  <div class="item-card" id="card-P4">
+    <div class="item-header" onclick="toggleItem('P4')">
+      <div class="num-badge np">P4</div>
+      <div><div class="text-sm font-bold text-gray-800">興奮 <span class="text-gray-400 font-normal text-xs ml-1">Excitement</span></div><div class="text-xs text-gray-400">過活動・焦燥感・易怒性・反応性の亢進（面接中の観察が主）</div></div>
+      <div class="flex gap-1" id="btns-P4"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-P4">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-P4"></i></div>
+    </div>
+    <div class="item-body" id="body-P4" hidden>
+      <div class="eval-box"><strong>定義：</strong>感情的緊張度の高揚または過活動。面接中の観察と報告に基づいて評価する。<br><strong>注意：</strong>BPRS #17「興奮」と同義。多弁・多動・焦燥感・易怒性・易刺激性を観察する。過活動すぎる場合は面接の実施自体が困難になる。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>興奮・焦燥なし</td>
+        <td>わずかな焦燥感や落ち着きなさ。健常範囲内</td>
+        <td>軽度の過活動または焦燥感。面接中に明らかになるが自制可能</td>
+        <td>明らかな過活動・易怒性。面接の進行に影響するが継続可能</td>
+        <td>著明な過活動・興奮。鎮静介入が必要なことがあり、日常生活に支障</td>
+        <td>非常に強い興奮状態。物的破壊や身体的攻撃の可能性あり。直接的管理が必要</td>
+        <td>暴力的な興奮で自己・他者への危険があり、隔離・保護が必要な状態</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- P5 誇大性 -->
+  <div class="item-card" id="card-P5">
+    <div class="item-header" onclick="toggleItem('P5')">
+      <div class="num-badge np">P5</div>
+      <div><div class="text-sm font-bold text-gray-800">誇大性 <span class="text-gray-400 font-normal text-xs ml-1">Grandiosity</span></div><div class="text-xs text-gray-400">過大な自己評価・並はずれた才能・権力・知識・アイデンティティの確信</div></div>
+      <div class="flex gap-1" id="btns-P5"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-P5">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-P5"></i></div>
+    </div>
+    <div class="item-body" id="body-P5" hidden>
+      <div class="eval-box"><strong>定義：</strong>誇張された自己評価や並はずれた能力、富、知識、名声、権力、道徳的な純粋さについての確信を指す。<br><strong>注意：</strong>BPRS #8と同義だが PANSSでは、評価の対象は患者の陳述内容であり、態度からの推測は行わない。</div>
+      <div class="q-box"><strong>質問例：</strong>「あなたには特別な力や才能、知識がありますか？」「あなたには特別な使命や役割がありますか？」「あなたは有名な人物や特別な存在と関わりがあると思いますか？」</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>誇大な自己評価なし</td>
+        <td>わずかな自信過剰があるが内容的に見合っており健常範囲内</td>
+        <td>自分を過大評価する発言があるが妄想的確信には至っていない（「特別な才能がある」程度）</td>
+        <td>誇大な思考が繰り返し表出。現実とやや乖離しているが確信の揺らぎが残る</td>
+        <td>明らかに非現実的な誇大的思考（特別な使命・神からの選択等）。確信が強まり行動に影響</td>
+        <td>誇大妄想が強く確立されており、行動・判断に重大な影響を及ぼし生活に重大な支障</td>
+        <td>誇大妄想が完全に行動を支配しており、使命遂行のために社会的機能が根底から崩壊</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- P6 猜疑心/迫害感 -->
+  <div class="item-card" id="card-P6">
+    <div class="item-header" onclick="toggleItem('P6')">
+      <div class="num-badge np">P6</div>
+      <div><div class="text-sm font-bold text-gray-800">猜疑心・迫害感 <span class="text-gray-400 font-normal text-xs ml-1">Suspiciousness/Persecution</span></div><div class="text-xs text-gray-400">他者の悪意・差別・被害についての確信（疑い深さ〜被害妄想のスペクトル）</div></div>
+      <div class="flex gap-1" id="btns-P6"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-P6">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-P6"></i></div>
+    </div>
+    <div class="item-body" id="body-P6" hidden>
+      <div class="eval-box"><strong>定義：</strong>他者から不当な扱いを受けているという（妄想的あるいは非妄想的な）確信の程度。<br><strong>スペクトル：</strong>疑い深さ（非妄想）→ 被害念慮 → 関係念慮 → 被害妄想。BPRSの「猜疑心（#11）」とほぼ同義。</div>
+      <div class="q-box"><strong>質問例：</strong>「誰かがあなたを傷つけようとしていると思いますか？」「周囲の人が自分の悪口を言っていると感じますか？」「監視・追跡されていると感じますか？」</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>猜疑心なし</td>
+        <td>わずかな疑い深さがあるが健常範囲内。説明できる根拠がある</td>
+        <td>他者の動機に対する著しい不信感があるが、被害妄想には至っていない</td>
+        <td>顕著な不信感・被害念慮があり、時折行動に影響を及ぼす（特定の人物を避けるなど）</td>
+        <td>被害妄想が明確に存在し、思考・感情・行動に広く影響を及ぼしている</td>
+        <td>根強い被害妄想システムがあり、行動に重大な支障（訴訟行動・逃避・回避が著明）</td>
+        <td>被害妄想が完全に行動を支配しており、攻撃的行動化や完全な没交渉状態</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- P7 敵意 -->
+  <div class="item-card" id="card-P7">
+    <div class="item-header" onclick="toggleItem('P7')">
+      <div class="num-badge np">P7</div>
+      <div><div class="text-sm font-bold text-gray-800">敵意 <span class="text-gray-400 font-normal text-xs ml-1">Hostility</span></div><div class="text-xs text-gray-400">面接中・面接外の他者への憎悪・好戦性・軽蔑（BPRSとは異なり面接中の観察も含む）</div></div>
+      <div class="flex gap-1" id="btns-P7"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-P7">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-P7"></i></div>
+    </div>
+    <div class="item-body" id="body-P7" hidden>
+      <div class="eval-box"><strong>定義：</strong>他者に対する言語的・非言語的な敵意、軽蔑、好戦性の表出。<br><strong>BPRSとの違い：</strong>BPRSでは「敵意（#10）」は面接外のみを評価するが、<strong>PANSSでは面接中・面接外の双方を評価対象とする</strong>。面接中の反応も含めて評価する。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>敵意なし</td>
+        <td>わずかな苛立ちや不快感があるが健常範囲内</td>
+        <td>特定の状況や人物への明らかな敵意が言語・態度に表れる</td>
+        <td>態度や会話の中で頻繁に敵意が表出される。面接中にも感じられる</td>
+        <td>敵意が目立ち、対人関係に重大な支障をきたしている。身体的攻撃が起こりうる状態</td>
+        <td>激しい敵意が非常に頻繁で直接的な管理が必要なことがある</td>
+        <td>極度の敵意で実際に暴力行為が見られる。隔離・保護が必要</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- ===== 陰性尺度 ===== -->
+  <div class="sec-div bg-purple-50 text-purple-700 mb-2 mt-3">
+    <i data-lucide="trending-down" class="w-3.5 h-3.5"></i>陰性尺度（Negative Scale）― N1〜N7｜合計7〜49点
+    <span class="ml-auto font-normal normal-case text-xs" id="neg-total-label">0 / 49点</span>
+  </div>
+
+  <!-- N1 情動の平板化 -->
+  <div class="item-card" id="card-N1">
+    <div class="item-header" onclick="toggleItem('N1')">
+      <div class="num-badge nn">N1</div>
+      <div><div class="text-sm font-bold text-gray-800">情動の平板化 <span class="text-gray-400 font-normal text-xs ml-1">Blunted Affect</span></div><div class="text-xs text-gray-400">感情表現の減少（顔の表情・声のトーン・身体的表現の観察）</div></div>
+      <div class="flex gap-1" id="btns-N1"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-N1">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-N1"></i></div>
+    </div>
+    <div class="item-body" id="body-N1" hidden>
+      <div class="eval-box"><strong>定義：</strong>表情・感情の調整・コミュニケーションにおける身ぶりの減少に特徴づけられる情動反応性の減少。<br><strong>BPRSとの違い：</strong>BPRSの「情動の平板化（#16）」は、PANSSの「N1情動の平板化」+「N2情動的引きこもり」に相当する広い概念。PANSSのN1は<strong>感情の表出の側面</strong>を評価する。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>感情表現は正常。状況に応じた豊かな表情・声調あり</td>
+        <td>感情表現がわずかに減少しているが健常範囲内</td>
+        <td>感情表現が軽度に減少。感情的トピックでの反応は鈍いが完全には欠如していない</td>
+        <td>感情表現が顕著に減少。表情が乏しく、声調が単調になっている</td>
+        <td>感情表現が著明に減少。強い感情的トピックでも反応がほとんどない</td>
+        <td>感情表現がほぼ消失。表情変化・声調変化がほとんど見られない</td>
+        <td>感情表現が完全に消失。単調な音声・無表情・身体言語の欠如（蝋様固縮を伴う場合も）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- N2 情動的引きこもり -->
+  <div class="item-card" id="card-N2">
+    <div class="item-header" onclick="toggleItem('N2')">
+      <div class="num-badge nn">N2</div>
+      <div><div class="text-sm font-bold text-gray-800">情動的引きこもり <span class="text-gray-400 font-normal text-xs ml-1">Emotional Withdrawal</span></div><div class="text-xs text-gray-400">生活上の出来事への興味・関心・情動的関与の欠如（BPRSの「情動的引きこもり」とは別概念）</div></div>
+      <div class="flex gap-1" id="btns-N2"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-N2">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-N2"></i></div>
+    </div>
+    <div class="item-body" id="body-N2" hidden>
+      <div class="eval-box"><strong>定義：</strong>生活上の出来事に対する興味・関心・情動的関与の欠如。<br><strong>重要な注意：</strong>PANSSのN2は「<strong>生活上の出来事への興味・関心の欠如</strong>」を評価する。BPRSの「情動的引きこもり（#3）」（面接者との疎通性）とは<strong>まったく別の概念</strong>。BPRSの「情動的引きこもり」に近い概念はPANSSのN3「疎通性の貧困さ」にあたる。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>生活上の出来事への興味・関心は正常</td>
+        <td>生活上の出来事への関心がわずかに減少しているが健常範囲内</td>
+        <td>日常の活動・趣味への興味が軽度に減少しているが、会話の中で感情的関与が時折見られる</td>
+        <td>日常の出来事への興味・関心に顕著な欠如がある。社会的活動への参加意欲が低下</td>
+        <td>生活上の出来事にほとんど興味・関心を示さない。他者との接触を最小限にしている</td>
+        <td>生活への興味・関心・情動的関与がほぼ完全に欠如。孤立した生活を送っている</td>
+        <td>社会的・感情的な関与が完全に欠如。自分の世界に完全に閉じこもっている</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- N3 疎通性の貧困さ -->
+  <div class="item-card" id="card-N3">
+    <div class="item-header" onclick="toggleItem('N3')">
+      <div class="num-badge nn">N3</div>
+      <div><div class="text-sm font-bold text-gray-800">疎通性の貧困さ <span class="text-gray-400 font-normal text-xs ml-1">Poor Rapport</span></div><div class="text-xs text-gray-400">面接者との対人共感性・会話の開放性・親近感の欠如（BPRSの「情動的引きこもり#3」に相当）</div></div>
+      <div class="flex gap-1" id="btns-N3"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-N3">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-N3"></i></div>
+    </div>
+    <div class="item-body" id="body-N3" hidden>
+      <div class="eval-box"><strong>定義：</strong>対人共感性・会話の開放性が欠如しており、面接者への親近感・関心・関与がきわめて少ない。対人距離ならびに言語的・非言語的コミュニケーションの減少によって明らかになる。<br><strong>対応関係：</strong>BPRSの「情動的引きこもり（#3）」に相当する概念がこのN3。健全な他者との比較が有用。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>面接者との疎通性は良好。自発的な対話・温かみあり</td>
+        <td>面接者との会話に軽度の障害。時折よそよそしい感じ</td>
+        <td>面接者との接触に明らかな問題。関心・温かみ・親密さが減少している</td>
+        <td>面接者との会話において、開放性・親密感・共感が著しく欠如している</td>
+        <td>面接者との会話において非常に距離感があり、コミュニケーションがほとんどない</td>
+        <td>面接者との個人的な接触を完全に拒否している状態</td>
+        <td>面接者との意味のある接触が全くない。自動的・固定的な反応のみ</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- N4 受動性/社会的引きこもり -->
+  <div class="item-card" id="card-N4">
+    <div class="item-header" onclick="toggleItem('N4')">
+      <div class="num-badge nn">N4</div>
+      <div><div class="text-sm font-bold text-gray-800">受動性・意欲低下による社会的引きこもり <span class="text-gray-400 font-normal text-xs ml-1">Passive/Apathetic Social Withdrawal</span></div><div class="text-xs text-gray-400">無気力・意欲低下による社会的関与の減少（能動的な拒否ではなく受動的な引きこもり）</div></div>
+      <div class="flex gap-1" id="btns-N4"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-N4">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-N4"></i></div>
+    </div>
+    <div class="item-body" id="body-N4" hidden>
+      <div class="eval-box"><strong>定義：</strong>無気力・意欲低下のために社会的活動から引きこもっている程度。受動的・無感動的な特徴が主で、能動的な拒絶（G16「自主的な社会回避」）とは区別される。<br><strong>注意：</strong>G16「自主的な社会回避」は猜疑心・不信感に基づく能動的な回避であるのに対し、N4は<strong>無気力・意欲低下</strong>による受動的引きこもり。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>社会的関与は正常。自発的な社会的活動に積極的</td>
+        <td>ほとんどの社会的状況に参加しているが、意欲がわずかに低下</td>
+        <td>社会的活動への参加が軽度に減少。招かれると参加するが自発性が乏しい</td>
+        <td>社会的活動への関与が顕著に減少。しばしば孤立しがちだが、促せば交流可能</td>
+        <td>社会的接触への関心がほとんどなく、日常的な社会的状況への参加が最低限</td>
+        <td>社会的な接触から積極的に撤退。孤立した生活を送っており、介入がないと交流がない</td>
+        <td>完全な社会的孤立。他者とのいかなる交流も起こらない</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- N5 抽象的思考の困難 -->
+  <div class="item-card" id="card-N5">
+    <div class="item-header" onclick="toggleItem('N5')">
+      <div class="num-badge nn">N5</div>
+      <div><div class="text-sm font-bold text-gray-800">抽象的思考の困難さ <span class="text-gray-400 font-normal text-xs ml-1">Difficulty in Abstract Thinking</span></div><div class="text-xs text-gray-400">格言解釈・類似性判断・抽象的概念の理解の困難（BPRSにない独自の陰性尺度項目）</div></div>
+      <div class="flex gap-1" id="btns-N5"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-N5">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-N5"></i></div>
+    </div>
+    <div class="item-body" id="body-N5" hidden>
+      <div class="eval-box"><strong>定義：</strong>抽象的・象徴的な思考の障害。格言・類似性の解釈において具体的・個人的な判断が顕著になる。<br><strong>評価方法：</strong>「犬も歩けば棒に当たる」などの格言の意味を尋ねる、二つの物の共通点（「りんごとオレンジは？」等）を質問する。</div>
+      <div class="q-box"><strong>質問例：</strong>「『七転び八起き』の意味は何ですか？」「りんごとバナナの共通点は何ですか？」「『目には目を』というのはどういう意味ですか？」</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>抽象的思考に問題なし。格言・類似性を容易に理解</td>
+        <td>抽象化が難しい場合があるが、具体的に指摘すれば理解できる</td>
+        <td>格言や類似性の意味について抽象的に解釈することが時々難しい（部分的に具体的解釈）</td>
+        <td>格言の解釈や類似性の検討において、しばしば具体的・私的な判断をする。指摘後も修正が難しい</td>
+        <td>格言や類似性の理解が著しく損なわれており、具体的解釈が優勢（「棒に当たる＝実際に棒に当たる」）</td>
+        <td>抽象的な概念を理解する能力がほぼ失われており、全て具体的・字義的な解釈のみ</td>
+        <td>完全に具体的な思考のみ。抽象的な質問に対して全く理解できないか、無関係な回答をする</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- N6 会話の自発性と流暢性の欠如 -->
+  <div class="item-card" id="card-N6">
+    <div class="item-header" onclick="toggleItem('N6')">
+      <div class="num-badge nn">N6</div>
+      <div><div class="text-sm font-bold text-gray-800">会話の流暢さと自発性の欠如 <span class="text-gray-400 font-normal text-xs ml-1">Lack of Spontaneity &amp; Flow of Conversation</span></div><div class="text-xs text-gray-400">会話の流暢さ・自発性・量の減少（BPRSにない独自の陰性尺度項目・寛解基準の1項目）</div></div>
+      <div class="flex gap-1" id="btns-N6"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-N6">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-N6"></i></div>
+    </div>
+    <div class="item-body" id="body-N6" hidden>
+      <div class="eval-box"><strong>定義：</strong>通常の流暢さと自発性を欠く会話の流れの減少。会話の内容ではなく、流暢さ・自発性・量を評価する。<br><strong>注意：</strong>会話の「量」ではなく「自発性と流暢さ」を評価する点に注意。不安・非協調性による寡黙とは区別が必要。Andreasen寛解基準の一項目。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>会話は流暢で自発的。十分な量の発言あり</td>
+        <td>会話がやや制限されているが、直接質問されれば容易に返答できる</td>
+        <td>会話が制限されており、自発的な発言が少ない。誘導があれば詳しく話せる</td>
+        <td>会話が著しく減少。自発的な発言がほとんどなく、返答も短い</td>
+        <td>会話の自発性がほぼ消失。最低限の返答のみ（はい/いいえが主体）</td>
+        <td>最低限の言語しか出現しない。直接質問しても単音節や短い語句のみ</td>
+        <td>完全な無言症（無言mutism）。会話がない</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- N7 常同的思考 -->
+  <div class="item-card" id="card-N7">
+    <div class="item-header" onclick="toggleItem('N7')">
+      <div class="num-badge nn">N7</div>
+      <div><div class="text-sm font-bold text-gray-800">常同的思考 <span class="text-gray-400 font-normal text-xs ml-1">Stereotyped Thinking</span></div><div class="text-xs text-gray-400">同じ考え・言葉・テーマの繰り返し（思考の固定化・硬直性）</div></div>
+      <div class="flex gap-1" id="btns-N7"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-N7">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-N7"></i></div>
+    </div>
+    <div class="item-body" id="body-N7" hidden>
+      <div class="eval-box"><strong>定義：</strong>同じ考え・言葉・テーマの繰り返しによって示される思考の流動性の低下。<br><strong>注意：</strong>固着した妄想的思考（P1）とは異なり、思考の「硬直性・固定化」そのものを評価する。パーセベレーション（保続）・エコーラリア（反響言語）も評価対象。</div>
+      <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr>
+        <td>思考に柔軟性あり。多様なテーマを扱える</td>
+        <td>思考がわずかに硬直しており、特定のテーマへの固執傾向がある</td>
+        <td>会話の中で繰り返しの言葉・テーマが時々見られるが、新しい考えも取り入れられる</td>
+        <td>思考が固定化されており、同じテーマ・考えを繰り返す。固執が明らか</td>
+        <td>思考が著しく固定化されており、新しい考えを取り入れることが困難</td>
+        <td>同じ言葉・フレーズ・考えが繰り返される。思考の多様性がほとんどない</td>
+        <td>完全に固定した同じ反応しか示さない（エコーラリア・パーセベレーションが著明）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <!-- ===== 総合精神病理尺度 ===== -->
+  <div class="sec-div bg-blue-50 text-blue-700 mb-2 mt-3">
+    <i data-lucide="layers" class="w-3.5 h-3.5"></i>総合精神病理尺度（General Psychopathology Scale）― G1〜G16｜合計16〜112点
+    <span class="ml-auto font-normal normal-case text-xs" id="gen-total-label">0 / 112点</span>
+  </div>
+
+  <!-- G1 身体的関心 -->
+  <div class="item-card" id="card-G1"><div class="item-header" onclick="toggleItem('G1')"><div class="num-badge ng">G1</div><div><div class="text-sm font-bold text-gray-800">身体についての懸念 <span class="text-gray-400 font-normal text-xs ml-1">Somatic Concern</span></div><div class="text-xs text-gray-400">身体的健康への関心・訴えの程度（BPRS #1「心気症」に相当）</div></div><div class="flex gap-1" id="btns-G1"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G1">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G1"></i></div></div>
+    <div class="item-body" id="body-G1" hidden><div class="eval-box"><strong>定義：</strong>訴えに対応する所見の有無を問わず、身体の健康状態についての関心の程度。訴えの頻度・重さのみを評価する。</div><div class="q-box"><strong>質問例：</strong>「からだのことで何か気になっていることがありますか？」「身体の具合についてどれほど心配していますか？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>身体への過剰な関心なし</td><td>ごく軽度の身体への心配。一般的な健康上の関心程度</td><td>身体不調の訴えがある。内容的に見合っており日常生活への影響はほとんどない</td><td>身体症状への訴えが繰り返し述べられるが妄想的ではない</td><td>身体症状への強いこだわりが日常生活に影響（頻繁な受診行動・生活制限）</td><td>心気妄想に近い確信（身体疾患があるとの強固なこだわり）。生活に重大な支障</td><td>心気妄想が確立しており、日常生活が根底から機能不全</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G2 不安 -->
+  <div class="item-card" id="card-G2"><div class="item-header" onclick="toggleItem('G2')"><div class="num-badge ng">G2</div><div><div class="text-sm font-bold text-gray-800">不安 <span class="text-gray-400 font-normal text-xs ml-1">Anxiety</span></div><div class="text-xs text-gray-400">心配・恐れ・過剰なこだわり（BPRS #2に相当。PANSSでは身体症状も含めて評価）</div></div><div class="flex gap-1" id="btns-G2"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G2">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G2"></i></div></div>
+    <div class="item-body" id="body-G2" hidden><div class="eval-box"><strong>定義：</strong>過剰な心配、恐れ、憂慮の主観的体験および不安に関連した身体的症状。<br><strong>BPRSとの違い：</strong>BPRSの「不安（#2）」では身体症状を除外するが、<strong>PANSSのG2では不安の身体症状（震え・発汗等）も含めて評価</strong>する。</div><div class="q-box"><strong>質問例：</strong>「なにか気になることや心配なことがありますか？」「不安を感じますか？身体に緊張を感じますか？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>不安なし</td><td>軽微な心配があるが内容的に見合っており健常範囲内</td><td>不安や心配があるが顕著でなく日常機能への影響はほとんどない</td><td>不安が繰り返し体験される。散発的または持続的だが極端でない</td><td>強い不安が日常的にあり日常機能に影響するが完全には停止させない</td><td>非常に強い不安が頻繁に出現し生活に重大な支障。身体症状も著明（恐慌発作等）</td><td>圧倒的な恐怖・不安が常時存在し日常生活が成立しない</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G3 罪責感 -->
+  <div class="item-card" id="card-G3"><div class="item-header" onclick="toggleItem('G3')"><div class="num-badge ng">G3</div><div><div class="text-sm font-bold text-gray-800">罪責感 <span class="text-gray-400 font-normal text-xs ml-1">Guilt Feelings</span></div><div class="text-xs text-gray-400">過去の行動への過剰なこだわり・自責（BPRS #5に相当）</div></div><div class="flex gap-1" id="btns-G3"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G3">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G3"></i></div></div>
+    <div class="item-body" id="body-G3" hidden><div class="eval-box"><strong>定義：</strong>過去の行動に関する後悔・自責・恥の意識。<br><strong>スペクトル：</strong>自責的な思考（非妄想）→ 罪業妄想（自分は罰せられるべきとの確信）</div><div class="q-box"><strong>質問例：</strong>「過去にしたことで罪の意識や恥ずかしさを感じることがありますか？」「そのことでどれくらい悩んでいますか？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>罪責感なし</td><td>わずかな自責があるが内容的に見合っており健常範囲内</td><td>過去への後悔があるが妄想的ではなく日常機能への影響はほとんどない</td><td>自責の訴えが繰り返される。内容がやや不合理だが確信は揺らぎうる</td><td>強い罪責感があり日常生活に影響。自責思考が持続的で払拭困難</td><td>罪業妄想に近い強い罪責感。「罰せられるべき」との確信が強く生活に重大な支障</td><td>罪業妄想が確立しており、日常生活が根底から機能不全</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G4 緊張 -->
+  <div class="item-card" id="card-G4"><div class="item-header" onclick="toggleItem('G4')"><div class="num-badge ng">G4</div><div><div class="text-sm font-bold text-gray-800">緊張 <span class="text-gray-400 font-normal text-xs ml-1">Tension</span></div><div class="text-xs text-gray-400">神経過敏・活動亢進の身体徴候（BPRS #6に相当・主観的体験ではなく身体所見で評価）</div></div><div class="flex gap-1" id="btns-G4"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G4">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G4"></i></div></div>
+    <div class="item-body" id="body-G4" hidden><div class="eval-box"><strong>定義：</strong>神経過敏あるいは活動レベルの高まりによる身体・運動機能の徴候。身体徴候・行動・態度に基づいて評価する。<br><strong>評価対象：</strong>落ち着きなさ・振戦・ひきつり・発汗・頻繁に変わる姿勢・貧乏揺すり・筋緊張亢進</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>緊張の身体徴候なし</td><td>わずかな落ち着きなさがあるが健常範囲内</td><td>時折姿勢の変換・手指の動き・軽度の発汗などの緊張徴候がある</td><td>緊張の身体徴候が繰り返し観察される（貧乏揺すり・頻繁な姿勢変換・持続的振戦）</td><td>明らかな緊張状態。振戦・発汗・筋緊張亢進が持続的。日常動作に影響</td><td>非常に強い緊張。面接中ほとんど座っていられない状態。多汗・顕著な振戦</td><td>緊張が極度に強く面接の実施が困難。硬直または一言も発せられない状態</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G5 衒奇症と不自然な姿勢 -->
+  <div class="item-card" id="card-G5"><div class="item-header" onclick="toggleItem('G5')"><div class="num-badge ng">G5</div><div><div class="text-sm font-bold text-gray-800">衒奇的な動作と姿勢 <span class="text-gray-400 font-normal text-xs ml-1">Mannerisms and Posturing</span></div><div class="text-xs text-gray-400">奇妙・不自然な動作・姿勢（BPRS #7に相当・錐体外路副作用も含む）</div></div><div class="flex gap-1" id="btns-G5"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G5">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G5"></i></div></div>
+    <div class="item-body" id="body-G5" hidden><div class="eval-box"><strong>定義：</strong>奇妙で不自然な行動・姿勢。健常者の中に見られたら目立つような行動の類型。<br><strong>注意：</strong>遅発性ジスキネジア・ジストニア等の錐体外路副作用も評価対象（症状か副作用かを区別しない）。</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>動作・姿勢に異常なし</td><td>ごくわずかに風変わりな動きがあるが日常的な範囲内</td><td>健常者では目立つような奇妙な動き・姿勢が時折見られる</td><td>異常な動き・姿勢が繰り返し観察される（口唇・舌の不随意運動・固定した不自然な姿勢等）</td><td>明らかに奇妙な動き・姿勢が頻繁または持続的。生活への影響あり</td><td>著明な衒奇的行動。周囲が精神病者と気づくレベル</td><td>極度に奇怪な動き・姿勢が常時存在し日常生活を著しく障害する</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G6 抑うつ -->
+  <div class="item-card" id="card-G6"><div class="item-header" onclick="toggleItem('G6')"><div class="num-badge ng">G6</div><div><div class="text-sm font-bold text-gray-800">抑うつ <span class="text-gray-400 font-normal text-xs ml-1">Depression</span></div><div class="text-xs text-gray-400">悲哀・絶望・自己評価の低下・希死念慮（BPRS「抑うつ気分#9」に相当するが、より広い評価）</div></div><div class="flex gap-1" id="btns-G6"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G6">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G6"></i></div></div>
+    <div class="item-body" id="body-G6" hidden><div class="eval-box"><strong>定義：</strong>悲哀、落胆、無力感、悲観的思考。罪責感・睡眠障害・希死念慮も含めて評価する。<br><strong>BPRSとの違い：</strong>BPRSの「抑うつ気分（#9）」は感情面のみだが、PANSSのG6はより広く抑うつ症候群として評価する。</div><div class="q-box"><strong>質問例：</strong>「最近の気分はどうですか？」「気分がふさいだり、絶望感を感じますか？」「死にたいと思うことはありますか？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>抑うつなし</td><td>わずかな気分の落ち込みがあるが日常的な範囲内</td><td>悲哀感・落胆があるが顕著でなく日常機能への影響はほとんどない</td><td>抑うつ気分が明らかに存在する。波があり軽快する時間もある</td><td>強い悲哀感・絶望感が日常的にあり日常機能に影響。希死念慮が出現することがある</td><td>深刻な抑うつ。強い絶望感・無力感が頻繁。希死念慮・自傷リスクが懸念される状態</td><td>圧倒的な絶望感・虚無感が常時存在。日常生活が機能不全。自殺リスクが非常に高い</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G7 運動減退 -->
+  <div class="item-card" id="card-G7"><div class="item-header" onclick="toggleItem('G7')"><div class="num-badge ng">G7</div><div><div class="text-sm font-bold text-gray-800">運動減退 <span class="text-gray-400 font-normal text-xs ml-1">Motor Retardation</span></div><div class="text-xs text-gray-400">緩徐な動き・エネルギー低下（BPRS #13に相当・行動観察のみ）</div></div><div class="flex gap-1" id="btns-G7"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G7">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G7"></i></div></div>
+    <div class="item-body" id="body-G7" hidden><div class="eval-box"><strong>定義：</strong>緩徐な動きによって示されるエネルギー水準の低下。患者の行動観察のみに基づいて評価する。</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>運動の減退なし</td><td>動作がわずかに緩慢な印象があるが健常範囲内</td><td>軽度の動作の緩慢さ・会話の遅さがあるが日常機能への影響は少ない</td><td>明らかな動作の緩慢さ・会話の乏しさがある。活動は維持されている</td><td>著明な運動減退。動作・会話が非常に緩慢で少なく日常生活に影響</td><td>重篤な運動減退。自発的な動き・言語がほとんどない</td><td>極度の運動減退（昏迷状態）。日常生活の遂行が不可能。直接的介助が必要</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G8 非協調性 -->
+  <div class="item-card" id="card-G8"><div class="item-header" onclick="toggleItem('G8')"><div class="num-badge ng">G8</div><div><div class="text-sm font-bold text-gray-800">非協調性 <span class="text-gray-400 font-normal text-xs ml-1">Uncooperativeness</span></div><div class="text-xs text-gray-400">面接者に対する抵抗・非友好性・易怒性（BPRS #14に相当・面接中の観察のみ）</div></div><div class="flex gap-1" id="btns-G8"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G8">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G8"></i></div></div>
+    <div class="item-body" id="body-G8" hidden><div class="eval-box"><strong>定義：</strong>面接者に対する抵抗・非友好性・易怒性の徴候あるいは協調的態度の欠如。面接者と面接状況に対する患者の態度と反応のみに基づいて評価する。</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>協調的。返答も積極的</td><td>わずかな抵抗感があるが面接は円滑</td><td>時折不本意そうな態度・短い返答があるが面接は継続可能</td><td>明らかな抵抗・非友好的態度が繰り返し見られるが面接は継続可能</td><td>強い非協調性。返答拒否・易怒的反応が頻繁で面接の進行が困難</td><td>著明な非協調性。面接継続が困難（怒鳴り声・威嚇的行動・離席傾向）</td><td>極度の非協調性。面接の実施が不可能（退室・暴言・身体的攻撃）</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G9 不自然な思考内容 -->
+  <div class="item-card" id="card-G9"><div class="item-header" onclick="toggleItem('G9')"><div class="num-badge ng">G9</div><div><div class="text-sm font-bold text-gray-800">不自然な思考内容 <span class="text-gray-400 font-normal text-xs ml-1">Unusual Thought Content</span></div><div class="text-xs text-gray-400">奇妙・異様な思考内容（BPRS #15に相当・寛解基準の1項目）</div></div><div class="flex gap-1" id="btns-G9"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G9">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G9"></i></div></div>
+    <div class="item-body" id="body-G9" hidden><div class="eval-box"><strong>定義：</strong>普通ではない、風変わりな、異様あるいは奇怪な思考内容。不自然さの程度を評価し、思考過程（P2）とは区別する。<br><strong>注意：</strong>Andreasen寛解基準の一項目。妄想的思考（P1）と一部重なるが、より広い「思考内容の異常さ」を評価する。</div><div class="q-box"><strong>質問例：</strong>「何か不自然なことが続いているとか、起こりそうということはないですか？」「頭やからだに変わったことが続いているようなことは？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>思考内容に異常なし</td><td>わずかに風変わりな考えがあるが文化・個人的に許容範囲内</td><td>やや奇妙な思考内容があるが妄想的ではない</td><td>思考内容が奇妙・異様。妄想に近い考えが繰り返し表出されるが確信が揺らぎうる</td><td>明らかに非現実的・妄想的な思考内容。日常生活への影響が明らか</td><td>妄想的思考が生活のほとんどを占める。確信が固く揺るがない</td><td>妄想的思考が生活機能を根底から蝕んでいる</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G10 失見当識 -->
+  <div class="item-card" id="card-G10"><div class="item-header" onclick="toggleItem('G10')"><div class="num-badge ng">G10</div><div><div class="text-sm font-bold text-gray-800">失見当識 <span class="text-gray-400 font-normal text-xs ml-1">Disorientation</span></div><div class="text-xs text-gray-400">時間・場所・人物の見当識（BPRS #18に相当）</div></div><div class="flex gap-1" id="btns-G10"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G10">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G10"></i></div></div>
+    <div class="item-body" id="body-G10" hidden><div class="eval-box"><strong>定義：</strong>人・場所あるいは時についての適切な関連性の混乱または欠如。</div><div class="q-box"><strong>見当識確認（必須）：</strong>「今日は何日ですか？」「今いる場所はどこですか？」「私が誰だかわかりますか？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>時間・場所・人物の見当識は正常</td><td>見当識に若干の不確かさがあるが大まかには正確</td><td>時間見当識に軽度の誤りがあるが場所・人物の見当識は正確</td><td>時間・場所の一方または双方に明らかな見当識障害がある</td><td>時間・場所の双方に著明な見当識障害。現在の状況理解が著しく乏しい</td><td>時間・場所・人物のすべてに重篤な見当識障害がある</td><td>完全な見当識喪失。日常生活が成立しない</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G11 注意の障害 -->
+  <div class="item-card" id="card-G11"><div class="item-header" onclick="toggleItem('G11')"><div class="num-badge ng">G11</div><div><div class="text-sm font-bold text-gray-800">注意の障害 <span class="text-gray-400 font-normal text-xs ml-1">Poor Attention</span></div><div class="text-xs text-gray-400">注意集中力・課題持続能力の障害（BPRSにない独自の項目）</div></div><div class="flex gap-1" id="btns-G11"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G11">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G11"></i></div></div>
+    <div class="item-body" id="body-G11" hidden><div class="eval-box"><strong>定義：</strong>課題への集中・注意維持の困難。<br><strong>評価方法：</strong>面接中の注意散漫・ぼんやり・刺激への被誘導性を観察する。必要に応じて数唱（順唱・逆唱）などの神経心理学的課題を使用。</div><div class="q-box"><strong>質問例：</strong>「集中することが難しいですか？」「話を追うのが難しいと感じますか？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>注意集中力に問題なし</td><td>注意がわずかに低下しているが健常範囲内</td><td>注意の集中・維持に軽度の困難がある。時折ぼんやりするが日常機能への影響は少ない</td><td>注意散漫が顕著。面接中に頻繁に注意が逸れ、誘導が必要</td><td>注意集中能力が著しく低下。短い課題も維持困難。日常生活に影響</td><td>注意がほとんど維持できない。簡単な指示も理解・実行が困難</td><td>注意の維持が完全に不可能。日常生活のいかなる課題も遂行できない</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G12 判断力と病識の欠如 -->
+  <div class="item-card" id="card-G12"><div class="item-header" onclick="toggleItem('G12')"><div class="num-badge ng">G12</div><div><div class="text-sm font-bold text-gray-800">判断力と病識の欠如 <span class="text-gray-400 font-normal text-xs ml-1">Lack of Judgment and Insight</span></div><div class="text-xs text-gray-400">自身の精神障害の認識・受容・必要な治療への自覚（BPRSにない独自の項目）</div></div><div class="flex gap-1" id="btns-G12"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G12">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G12"></i></div></div>
+    <div class="item-body" id="body-G12" hidden><div class="eval-box"><strong>定義：</strong>精神障害の有無に対する認識・受容の欠如。自身の行動・思考・精神症状に対する判断力の低下を含む。<br><strong>重要：</strong>自発的服薬継続意思・外来受診意欲・症状の自覚の程度も評価に含める。</div><div class="q-box"><strong>質問例：</strong>「精神的に問題があると思いますか？」「薬を飲む必要があると思いますか？」「病院に通い続けることが大切だと思いますか？」</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>自身の精神障害と治療の必要性を十分に認識・受容している</td><td>自身の状態について若干の疑問があるが、治療の必要性は認めている</td><td>治療の必要性は認めるが、精神障害の有無や性質については否定または疑問を持っている</td><td>症状の一部は認めるが、精神障害の本質的な理解が欠如している（「身体の病気」と言い張るなど）</td><td>精神障害の存在を基本的に否定している。説明しても揺るがない</td><td>精神障害の存在を完全に否定しており、治療の必要性も認めない。服薬拒否が顕著</td><td>自身の状態・行動についての判断力が完全に失われており、いかなる援助も受け入れない</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G13 意志の障害 -->
+  <div class="item-card" id="card-G13"><div class="item-header" onclick="toggleItem('G13')"><div class="num-badge ng">G13</div><div><div class="text-sm font-bold text-gray-800">意志の障害 <span class="text-gray-400 font-normal text-xs ml-1">Disturbance of Volition</span></div><div class="text-xs text-gray-400">意図・行動の開始・実行の困難（意欲・動機づけの障害。BPRSにない独自の項目）</div></div><div class="flex gap-1" id="btns-G13"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G13">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G13"></i></div></div>
+    <div class="item-body" id="body-G13" hidden><div class="eval-box"><strong>定義：</strong>意図・動機づけ・行動の実行の障害。主として意欲低下・無意欲・アンビバレンスに起因する行動困難を評価する。<br><strong>注意：</strong>N4「受動性による社会的引きこもり」と関連するが、G13は社会的引きこもりに限らない広い「意志の障害」を評価する。</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>意志の障害なし。目的的行動を開始・実行できる</td><td>意欲・動機づけがわずかに低下しているが日常的な活動は維持</td><td>意志の障害が軽度。自発的行動の開始が時折困難だが、促せば実行できる</td><td>意志の障害が顕著。日常的な活動（セルフケア・社会的活動等）の多くが促しを必要とする</td><td>意欲・動機づけが著しく低下。多くの場面で直接の援助・監督がないと行動できない</td><td>重篤な意志の障害。ほぼすべての行動に介助・指示が必要</td><td>完全な意志の消失（無意欲）。外部からの援助なしには何もできない</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G14 衝動性の調節障害 -->
+  <div class="item-card" id="card-G14"><div class="item-header" onclick="toggleItem('G14')"><div class="num-badge ng">G14</div><div><div class="text-sm font-bold text-gray-800">衝動性の調節障害 <span class="text-gray-400 font-normal text-xs ml-1">Poor Impulse Control</span></div><div class="text-xs text-gray-400">衝動・怒り・性的衝動・反社会的行動の制御障害（BPRSにない独自の項目）</div></div><div class="flex gap-1" id="btns-G14"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G14">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G14"></i></div></div>
+    <div class="item-body" id="body-G14" hidden><div class="eval-box"><strong>定義：</strong>衝動・怒り・性的衝動・反社会的衝動の調節困難。<br><strong>注意：</strong>P7「敵意」やP4「興奮」とも関連するが、G14はより広く衝動全般の調節を評価する。過去の衝動行為の歴史も評価に含める。</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>衝動性の調節に問題なし</td><td>わずかに衝動的な傾向があるが健常範囲内</td><td>衝動性の調節に軽度の困難がある。時折言語的な衝動行為（怒鳴り等）があるが自制可能</td><td>衝動性の調節が散発的に困難。衝動行動が時折見られるが、日常生活は概ね維持</td><td>衝動性の調節が著しく困難。衝動行動が頻繁で日常生活・対人関係に支障</td><td>重篤な衝動調節障害。物的破壊・身体的攻撃・性的逸脱等が頻繁に起こる</td><td>完全な衝動調節の消失。衝動行動を自ら抑制する能力がなく、常時管理が必要</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G15 没入性 -->
+  <div class="item-card" id="card-G15"><div class="item-header" onclick="toggleItem('G15')"><div class="num-badge ng">G15</div><div><div class="text-sm font-bold text-gray-800">没入性・とらわれ <span class="text-gray-400 font-normal text-xs ml-1">Preoccupation</span></div><div class="text-xs text-gray-400">内的体験（思考・感情・幻覚等）へのとらわれ・没頭（BPRSにない独自の項目）</div></div><div class="flex gap-1" id="btns-G15"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G15">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G15"></i></div></div>
+    <div class="item-body" id="body-G15" hidden><div class="eval-box"><strong>定義：</strong>自身の内的体験（幻覚・妄想・強迫的思考・感情等）へのとらわれ・没頭の程度。現実への関与を妨げる内的体験への固執。<br><strong>注意：</strong>G9「不自然な思考内容」（内容の異常）や P3「幻覚による行動」とは異なり、「内的体験にどれだけとらわれているか」の程度を評価する。</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>内的体験へのとらわれなし。外界への注意が十分保たれている</td><td>ときどき内的体験に没頭することがあるが健常範囲内</td><td>内的体験へのとらわれが時折見られる。面接中に注意が内向きになることがある</td><td>内的体験へのとらわれが明らか。面接中にしばしば内的体験に注意が向き、会話に集中できないことがある</td><td>内的体験へのとらわれが著明で日常生活に支障をきたしている</td><td>内的体験に深く没頭しており、外界への注意が著しく損なわれている</td><td>完全に内的体験に支配されており、外界への注意がほぼ不可能</td></tr></tbody></table></div>
+  </div>
+
+  <!-- G16 自主的な社会回避 -->
+  <div class="item-card" id="card-G16"><div class="item-header" onclick="toggleItem('G16')"><div class="num-badge ng">G16</div><div><div class="text-sm font-bold text-gray-800">自主的な社会回避 <span class="text-gray-400 font-normal text-xs ml-1">Active Social Avoidance</span></div><div class="text-xs text-gray-400">猜疑心・不信感・敵意に基づく能動的な社会回避（N4「受動的引きこもり」とは区別）</div></div><div class="flex gap-1" id="btns-G16"></div><div class="flex items-center gap-1.5"><div class="score-disp sd0" id="disp-G16">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-G16"></i></div></div>
+    <div class="item-body" id="body-G16" hidden><div class="eval-box"><strong>定義：</strong>猜疑心・敵意・不信感のために社会的場面を能動的に回避している程度。<br><strong>重要な区別：</strong>N4「受動性・意欲低下による社会的引きこもり」は無気力が原因であるのに対し、G16は<strong>猜疑心・恐怖・敵意</strong>に基づく積極的な回避行動を評価する。</div>
+    <table class="score-table"><thead><tr><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th><th class="sc7">7</th></tr></thead><tbody><tr><td>社会回避なし。社会的場面に積極的に関与できる</td><td>不信感のため特定の人物・場面を軽度に避けることがあるが日常生活は維持</td><td>猜疑心・不信感のため特定の社会的場面を避ける傾向がある</td><td>能動的な社会回避が顕著。多くの社会的場面を猜疑心・敵意から避けており、日常生活に影響</td><td>社会的接触を広く回避しており、わずかな接触しか維持していない</td><td>ほぼ完全に社会的接触から回避しており、強制されない限り他者と関わらない</td><td>完全な社会回避。他者との接触をあらゆる手段で拒絶する</td></tr></tbody></table></div>
+  </div>
+
+  <!-- 備考 -->
+  <div class="point-card mt-3"><label class="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2"><i data-lucide="file-text" class="w-4 h-4 text-gray-400 no-print"></i>備考・特記事項</label><textarea class="w-full border border-gray-200 rounded-lg p-3 text-sm text-gray-700 resize-none focus:outline-none focus:border-indigo-400" rows="3" placeholder="面接の状況・評価上の注意点・薬物療法の内容・BPRS対比など..."></textarea></div>
+
+</main>
+
+<!-- スティッキーフッター -->
+<div class="sticky-footer no-print">
+  <div class="max-w-5xl mx-auto flex items-center gap-3">
+    <div class="flex items-center gap-3 flex-1">
+      <div class="text-center min-w-[3rem]">
+        <div class="text-xs text-gray-500">合計</div>
+        <div class="text-2xl font-bold text-gray-800" id="total-score">0</div>
+        <div class="text-xs text-gray-400">/210</div>
+      </div>
+      <div class="flex-1">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span id="scored-count">0/30項目</span>
+          <span id="severity-label" class="font-semibold"></span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+          <div class="h-2.5 rounded-full transition-all duration-300" id="score-bar" style="width:0%;background:linear-gradient(to right,#0284c7,#16a34a,#ca8a04,#dc2626);"></div>
+        </div>
+        <div class="flex justify-between text-xs text-gray-300 mt-0.5"><span>30</span><span>90</span><span>150</span><span>210</span></div>
+      </div>
+    </div>
+    <div class="flex gap-3 text-center border-l border-gray-200 pl-3">
+      <div><div class="text-xs text-red-600 font-semibold">陽性P</div><div class="text-lg font-bold text-gray-700" id="sub-p">0</div><div class="text-xs text-gray-400">/49</div></div>
+      <div><div class="text-xs text-purple-600 font-semibold">陰性N</div><div class="text-lg font-bold text-gray-700" id="sub-n">0</div><div class="text-xs text-gray-400">/49</div></div>
+      <div><div class="text-xs text-blue-600 font-semibold">総合G</div><div class="text-lg font-bold text-gray-700" id="sub-g">0</div><div class="text-xs text-gray-400">/112</div></div>
+      <div class="border-l border-gray-200 pl-3"><div class="text-xs text-teal-600 font-semibold">複合P-N</div><div class="text-lg font-bold" id="sub-comp">0</div><div class="text-xs text-gray-400">+陽性優位</div></div>
+    </div>
+    <div class="flex gap-2 border-l border-gray-200 pl-3">
+      <button onclick="window.print()" class="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+      <button onclick="resetAll()" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+      <a href="panss-sheet.html" class="flex items-center gap-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="clipboard-list" class="w-3 h-3"></i>簡易版</a>
+      <a href="bprs-sheet-detailed.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="arrow-left" class="w-3 h-3"></i>BPRS詳細</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  const ITEMS = [
+    {id:'P1',g:'p'},{id:'P2',g:'p'},{id:'P3',g:'p'},{id:'P4',g:'p'},{id:'P5',g:'p'},{id:'P6',g:'p'},{id:'P7',g:'p'},
+    {id:'N1',g:'n'},{id:'N2',g:'n'},{id:'N3',g:'n'},{id:'N4',g:'n'},{id:'N5',g:'n'},{id:'N6',g:'n'},{id:'N7',g:'n'},
+    {id:'G1',g:'g'},{id:'G2',g:'g'},{id:'G3',g:'g'},{id:'G4',g:'g'},{id:'G5',g:'g'},{id:'G6',g:'g'},{id:'G7',g:'g'},
+    {id:'G8',g:'g'},{id:'G9',g:'g'},{id:'G10',g:'g'},{id:'G11',g:'g'},{id:'G12',g:'g'},{id:'G13',g:'g'},
+    {id:'G14',g:'g'},{id:'G15',g:'g'},{id:'G16',g:'g'},
+  ];
+  const scores = {};
+
+  function buildButtons() {
+    ITEMS.forEach(item => {
+      const c = document.getElementById(`btns-${item.id}`);
+      if (!c) return;
+      for (let v = 1; v <= 7; v++) {
+        const btn = document.createElement('button');
+        btn.className = 'score-btn';
+        btn.textContent = v;
+        btn.addEventListener('click', e => { e.stopPropagation(); setScore(item.id, v); });
+        c.appendChild(btn);
+      }
+    });
+  }
+
+  function setScore(id, val) { scores[id] = val; updateDisplay(id); updateTotal(); }
+
+  function updateDisplay(id) {
+    const val = scores[id];
+    const disp = document.getElementById(`disp-${id}`);
+    if (disp) { disp.textContent = val || '－'; disp.className = `score-disp ${val ? `sd${val}` : 'sd0'}`; }
+    document.querySelectorAll(`#btns-${id} .score-btn`).forEach((btn, i) => {
+      btn.className = `score-btn${i+1 === val ? ` s${i+1}` : ''}`;
+    });
+  }
+
+  function updateTotal() {
+    let total=0, p=0, n=0, g=0, count=0;
+    ITEMS.forEach(item => {
+      const v = scores[item.id] || 0;
+      if (v > 0) { total += v; count++;
+        if (item.g==='p') p += v;
+        else if (item.g==='n') n += v;
+        else g += v;
+      }
+    });
+    document.getElementById('total-score').textContent = total;
+    document.getElementById('scored-count').textContent = `${count}/30項目`;
+    document.getElementById('sub-p').textContent = p;
+    document.getElementById('sub-n').textContent = n;
+    document.getElementById('sub-g').textContent = g;
+    const comp = p - n;
+    const compEl = document.getElementById('sub-comp');
+    compEl.textContent = (comp >= 0 ? '+' : '') + comp;
+    compEl.className = `text-lg font-bold ${comp > 0 ? 'text-red-600' : comp < 0 ? 'text-purple-600' : 'text-gray-700'}`;
+
+    // 陽性/陰性サブラベル
+    document.getElementById('pos-total-label').textContent = `${p} / 49点`;
+    document.getElementById('neg-total-label').textContent = `${n} / 49点`;
+    document.getElementById('gen-total-label').textContent = `${g} / 112点`;
+
+    const pct = count > 0 ? Math.min(100, ((total - 30) / 180) * 100) : 0;
+    document.getElementById('score-bar').style.width = `${Math.max(0, pct)}%`;
+
+    const lel = document.getElementById('severity-label');
+    if (count < 30) { lel.textContent = `残り${30-count}項目`; lel.className = 'font-semibold text-gray-400'; }
+    else {
+      const map = [[58,'軽症圏','text-green-600'],[74,'中等度','text-yellow-600'],[94,'やや重症','text-orange-600'],[999,'重症圏','text-red-600']];
+      const found = map.find(m => total <= m[0]);
+      lel.textContent = found[1]; lel.className = `font-semibold ${found[2]}`;
+    }
+  }
+
+  function toggleItem(id) {
+    const body = document.getElementById(`body-${id}`);
+    const chev = document.getElementById(`chev-${id}`);
+    if (!body) return;
+    if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); chev && chev.classList.add('chevron-open'); }
+    else { body.setAttribute('hidden',''); chev && chev.classList.remove('chevron-open'); }
+  }
+
+  function toggleSection(id, btn) {
+    const body = document.getElementById(id);
+    if (!body) return;
+    const chev = btn.querySelector('.chevron-icon');
+    if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); chev && chev.classList.add('chevron-open'); }
+    else { body.setAttribute('hidden',''); chev && chev.classList.remove('chevron-open'); }
+  }
+
+  function expandAll() {
+    ITEMS.forEach(item => {
+      const body = document.getElementById(`body-${item.id}`);
+      const chev = document.getElementById(`chev-${item.id}`);
+      if (body) body.removeAttribute('hidden');
+      if (chev) chev.classList.add('chevron-open');
+    });
+    const gb = document.getElementById('global-body');
+    if (gb) gb.removeAttribute('hidden');
+  }
+
+  function collapseAll() {
+    ITEMS.forEach(item => {
+      const body = document.getElementById(`body-${item.id}`);
+      const chev = document.getElementById(`chev-${item.id}`);
+      if (body) body.setAttribute('hidden','');
+      if (chev) chev.classList.remove('chevron-open');
+    });
+  }
+
+  function resetAll() {
+    if (!confirm('すべての採点をリセットしますか？')) return;
+    ITEMS.forEach(item => { delete scores[item.id]; updateDisplay(item.id); });
+    updateTotal();
+  }
+
+  const t = new Date();
+  document.getElementById('evalDate').value = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+
+  buildButtons();
+  updateTotal();
+</script>
+</body>
+</html>

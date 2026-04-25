@@ -76,7 +76,7 @@
         <a href="#scales"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 transition-colors text-xs font-medium text-teal-800 whitespace-nowrap">
           📊 評価スケール
-          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">3</span>
+          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">5</span>
         </a>
         <a href="#education"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-800 whitespace-nowrap">
@@ -127,6 +127,8 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
+            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="panss-sheet.html" class="link-teal hover:underline font-medium">PANSS 採点シート（簡易版・詳細版）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">30項目インタラクティブ採点・P/N/G/複合スコア・7段階アンカーポイント詳細版を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="bprs-sheet.html" class="link-teal hover:underline font-medium">BPRS 採点シート（簡易版・詳細版・ガイド）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">18項目インタラクティブ採点・各7段階の具体例付き詳細版・解説ガイドを新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-blue"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-24</td><td class="px-4 py-2.5"><a href="icd10.html" class="link-blue hover:underline font-medium">ICD-10 精神科疾患分類（詳細版）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">スマホ画面でFコードヘッダーの表示崩れを修正</td><td class="px-4 py-2.5"><span class="badge-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td></tr>
             <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td><td class="px-4 py-2.5"><a href="antipsychotics-japan.html" class="link-violet hover:underline font-medium">抗精神病薬 選択ガイド（日本承認薬）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">日本承認の抗精神病薬比較・選択ガイドを新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-23</td><td class="px-4 py-2.5"><a href="schizophrenia-assessment-sheets.html" class="link-teal hover:underline font-medium">統合失調症 評価シート（印刷用）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">外来用印刷様式を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
@@ -149,7 +151,7 @@
         <div class="border-t border-gray-100 text-center py-2.5">
           <button id="btn-toggle-updates" onclick="toggleUpdates()"
             class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-800 transition-colors px-4 py-1.5 rounded-lg hover:bg-gray-100">
-            <span id="btn-updates-label">もっと見る（残り10件）</span>
+            <span id="btn-updates-label">もっと見る（残り10件以上）</span>
             <svg id="btn-updates-icon" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </button>
         </div>
@@ -259,6 +261,28 @@
           <p class="text-xs text-gray-500 leading-relaxed">外来診察での記入・印刷に最適化されたアセスメントシート集。評価記録・経過追跡に使用可能。</p>
           <div class="mt-3 text-xs link-teal font-medium">schizophrenia-assessment-sheets.html →</div>
         </a>
+        <a id="card-bprs" href="bprs-sheet.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">BPRS</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">BPRS 採点シート（簡易版・詳細版・解説ガイド）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">簡易精神症状評価尺度（18項目）のインタラクティブ採点シート。項目ごとの7段階具体例・評価基準付き詳細版と、外来すぐ使える簡易版・解説ガイドの3点セット。</p>
+          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">簡易版</span>
+            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">詳細版（7段階具体例）</span>
+            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">解説ガイド</span>
+          </div>
+          <div class="mt-2 text-xs link-teal font-medium">bprs-sheet.html →</div>
+        </a>
+        <a id="card-panss" href="panss-sheet.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">PANSS</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">PANSS 採点シート（簡易版・詳細版）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">陽性・陰性症状評価尺度（30項目）のインタラクティブ採点シート。陽性P・陰性N・総合G・複合スコア（P-N）をリアルタイム集計。7段階アンカーポイント・Andreasen寛解基準付き詳細版も収録。</p>
+          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">簡易版</span>
+            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">詳細版（アンカーポイント）</span>
+            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">複合スコア</span>
+          </div>
+          <div class="mt-2 text-xs link-teal font-medium">panss-sheet.html →</div>
+        </a>
         <a id="card-anxiety-scales" href="anxiety-assessment-scales.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">不安症群</span><span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">不安症群 重症度評価スケール集 — 外来用様式</h3>
@@ -352,7 +376,7 @@
     const SECTIONS = {
       icd:       ['card-icd10','card-icd10index','card-icd10-overview','card-icd11','card-icd10mini','card-icd10-quiz'],
       diseases:  ['card-schiz-algo','card-antipsychotics','card-anxiety','card-depression'],
-      scales:    ['card-schiz-scales','card-schiz-sheets','card-anxiety-scales'],
+      scales:    ['card-schiz-scales','card-schiz-sheets','card-bprs','card-panss','card-anxiety-scales'],
       education: ['card-terminology','card-shiteii'],
       others:    ['card-context','card-cursor']
     };
