@@ -71,7 +71,7 @@
         <a href="#diseases"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors text-xs font-medium text-violet-800 whitespace-nowrap">
           🧠 疾患別診断・治療
-          <span class="bg-violet-200 text-violet-700 px-1.5 py-0.5 rounded-full text-xs leading-none">4</span>
+          <span class="bg-violet-200 text-violet-700 px-1.5 py-0.5 rounded-full text-xs leading-none">5</span>
         </a>
         <a href="#scales"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 transition-colors text-xs font-medium text-teal-800 whitespace-nowrap">
@@ -127,6 +127,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
+            <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="schizophrenia-diagnosis.html" class="link-violet hover:underline font-medium">統合失調症 診断プロセス完全ガイド</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">古典的診断（クレペリン/ブロイラー/シュナイダー）vs 操作的基準（DSM-5-TR/ICD-10）比較・鑑別診断・除外検査・自己免疫性脳炎との鑑別を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="panss-sheet.html" class="link-teal hover:underline font-medium">PANSS 採点シート（簡易版・詳細版）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">30項目インタラクティブ採点・P/N/G/複合スコア・7段階アンカーポイント詳細版を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="bprs-sheet.html" class="link-teal hover:underline font-medium">BPRS 採点シート（簡易版・詳細版・ガイド）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">18項目インタラクティブ採点・各7段階の具体例付き詳細版・解説ガイドを新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-blue"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-24</td><td class="px-4 py-2.5"><a href="icd10.html" class="link-blue hover:underline font-medium">ICD-10 精神科疾患分類（詳細版）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">スマホ画面でFコードヘッダーの表示崩れを修正</td><td class="px-4 py-2.5"><span class="badge-updated text-xs font-medium px-2 py-0.5 rounded-full">更新</span></td></tr>
@@ -237,6 +238,12 @@
           <h3 class="font-semibold text-gray-900 text-sm mb-1">うつ病 診断・治療選択ツリー — ガイドライン2025準拠</h3>
           <p class="text-xs text-gray-500 leading-relaxed">うつ病エピソードの重症度評価から初期薬物治療・増強療法・難治性うつへの対応まで治療フローを図解。双極性障害との鑑別ポイントも収録。</p>
           <div class="mt-3 text-xs link-violet font-medium">depression-guideline2025.html →</div>
+        </a>
+        <a id="card-schiz-diagnosis" href="schizophrenia-diagnosis.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">統合失調症 診断</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 診断プロセス完全ガイド — 古典的診断 vs 操作的基準・鑑別・除外検査</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">クレペリン/ブロイラー/シュナイダーの古典的概念からDSM-5-TR/ICD-10/ICD-11の操作的基準を比較対照。初発精神病（FEP）の診断プロセスフロー・10疾患の鑑別診断・自己免疫性脳炎との鑑別・一般的・専門的除外検査（抗NMDA受容体抗体等）を網羅した外来即時参照ガイド。</p>
+          <div class="mt-3 text-xs link-violet font-medium">schizophrenia-diagnosis.html →</div>
         </a>
       </div>
     </section>
@@ -383,7 +390,7 @@
     // カードID → セクションIDのマッピング
     const SECTIONS = {
       icd:       ['card-icd10','card-icd10index','card-icd10-overview','card-icd11','card-icd10mini','card-icd10-quiz'],
-      diseases:  ['card-schiz-algo','card-antipsychotics','card-anxiety','card-depression'],
+      diseases:  ['card-schiz-algo','card-antipsychotics','card-anxiety','card-depression','card-schiz-diagnosis'],
       scales:    ['card-schiz-scales','card-schiz-sheets','card-bprs-guide','card-bprs-sheet','card-bprs-detailed','card-panss-sheet','card-panss-detailed','card-anxiety-scales'],
       education: ['card-terminology','card-shiteii'],
       others:    ['card-context','card-cursor']
