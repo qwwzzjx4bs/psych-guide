@@ -156,19 +156,11 @@
       </div>
       <p class="text-xs opacity-60 mt-0.5" style="color:white;">Brief Psychiatric Rating Scale 日本語版</p>
     </div>
-    <div class="flex gap-2">
-      <button onclick="expandAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;">
-        <i data-lucide="chevrons-down" class="w-3 h-3"></i>すべて展開
-      </button>
-      <button onclick="collapseAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;">
-        <i data-lucide="chevrons-up" class="w-3 h-3"></i>すべて折りたたむ
-      </button>
-      <button onclick="resetAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;">
-        <i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット
-      </button>
-      <button onclick="window.print()" class="flex items-center gap-1 bg-white text-indigo-800 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition hover:bg-gray-100">
-        <i data-lucide="printer" class="w-3 h-3"></i>印刷
-      </button>
+    <div class="flex gap-2 flex-wrap justify-end">
+      <button onclick="expandAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;"><i data-lucide="chevrons-down" class="w-3 h-3"></i>すべて展開</button>
+      <button onclick="collapseAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;"><i data-lucide="chevrons-up" class="w-3 h-3"></i>すべて折りたたむ</button>
+      <button onclick="resetAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+      <button onclick="window.print()" class="flex items-center gap-1 bg-white text-indigo-800 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition hover:bg-gray-100"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
       <button onclick="compactPrint()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;" title="記入欄・項目・点数のみを最小ページで印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
     </div>
   </div>
