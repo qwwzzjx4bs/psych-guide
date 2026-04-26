@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f8fafc; color: #1a202c; }
-    .card { transition: box-shadow 0.18s, transform 0.18s; }
+    .card { transition: box-shadow 0.18s, transform 0.18s; position: relative; }
     .card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
     .badge-new     { background: #16a34a; color: #fff; font-weight: 700; letter-spacing: 0.04em; }
     .badge-updated { background: #dcfce7; color: #15803d; }
@@ -17,6 +17,9 @@
     .card-recent { position: relative; box-shadow: 0 0 0 2px #f97316 !important; }
     .card-recent:hover { box-shadow: 0 0 0 2px #f97316, 0 6px 20px rgba(249,115,22,0.22) !important; transform: translateY(-2px); }
     .card-recent::before { content: '今週'; position: absolute; top: -1px; right: 12px; background: #f97316; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 0 0 6px 6px; letter-spacing: 0.06em; z-index: 1; }
+    /* 強調カード */
+    .card-highlighted { outline: 2.5px solid #eab308; outline-offset: 1px; }
+    .card-highlighted::after { content: '★'; position: absolute; bottom: 9px; right: 12px; font-size: 12px; color: #ca8a04; line-height: 1; z-index: 1; }
     .sec-blue   { background: #1d4ed8; } .bg-blue   { background: #eff6ff; }
     .border-blue   { border-top: 3px solid #3b82f6; } .tag-blue   { background: #dbeafe; color: #1e40af; }
     .link-blue  { color: #2563eb; } .row-blue   { background: #eff6ff; }
@@ -440,7 +443,8 @@
     };
 
     function applyVisibility() {
-      const hidden = JSON.parse(localStorage.getItem('portalHidden') || '[]');
+      const hidden      = JSON.parse(localStorage.getItem('portalHidden')      || '[]');
+      const highlighted = JSON.parse(localStorage.getItem('portalHighlighted') || '[]');
       Object.entries(SECTIONS).forEach(([sec, ids]) => {
         let visible = 0;
         ids.forEach(id => {
@@ -448,6 +452,7 @@
           if (!el) return;
           const isHidden = hidden.includes(id);
           el.style.display = isHidden ? 'none' : '';
+          el.classList.toggle('card-highlighted', highlighted.includes(id));
           if (!isHidden) visible++;
         });
         const cnt = document.getElementById('cnt-' + sec);
