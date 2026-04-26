@@ -246,6 +246,18 @@
     #compact-toggle.active { background: #e8eef6 !important; color: #2a4070 !important; }
 
     /* ===================================
+       ショートカットタグ
+       =================================== */
+    .shortcut-tags { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .utag {
+      display: inline-flex; align-items: center;
+      font-size: 0.62rem; padding: 2px 7px; border-radius: 999px;
+      font-weight: 500; background: rgba(0,0,0,0.055); color: #545454;
+      letter-spacing: 0.01em; white-space: nowrap;
+    }
+    body.compact-mode .shortcut-tags { display: none !important; }
+
+    /* ===================================
        モバイル
        =================================== */
     @media (max-width: 640px) {
@@ -716,6 +728,53 @@
       document.body.classList.add('compact-mode');
       applyCompactUI(true);
     }
+
+    // === ショートカットタグ ===
+    const CARD_TAGS = {
+      'card-icd10':            ['🏥 外来参照', '📖 ICD-10'],
+      'card-icd11':            ['🏥 外来参照', '📖 ICD-11'],
+      'card-icd10mini':        ['🏥 外来参照', '⚡ 軽量版'],
+      'card-icd10-quiz':       ['🎓 学習・確認'],
+      'card-antipsychotics':   ['🏥 外来参照', '💊 薬剤選択'],
+      'card-anxiety':          ['🏥 外来参照', '📋 診断・治療'],
+      'card-schiz-diagnosis':  ['🏥 外来参照', '📋 診断フロー'],
+      'card-schiz-history':    ['🏥 外来参照', '📝 病歴聴取'],
+      'card-atypical-depression': ['🏥 外来参照', '🔍 鑑別診断'],
+      'card-schiz-algo':       ['📋 ガイドライン', '💊 薬物療法'],
+      'card-depression':       ['📋 ガイドライン', '💊 薬物療法'],
+      'card-bipolar':          ['📋 ガイドライン', '💊 薬物療法'],
+      'card-schiz-sheets':     ['🖨 印刷用', '📄 PDF対応'],
+      'card-anxiety-scales':   ['🖨 印刷用', '📄 PDF対応'],
+      'card-bprs-detailed':    ['💻 WEB入力', '📊 採点'],
+      'card-panss-detailed':   ['💻 WEB入力', '📊 採点'],
+      'card-bfcrs':            ['💻 WEB入力', '📊 採点', '🚨 緊張病'],
+      'card-ymrs':             ['💻 WEB入力', '📊 採点', '⚡ 躁状態'],
+      'card-schiz-scales':     ['📖 解説', '🏥 外来参照'],
+      'card-bprs-guide':       ['📖 解説', '🏥 外来参照'],
+      'card-terminology':      ['📚 用語集', '🏥 外来参照'],
+      'card-shiteii':          ['🎓 資格取得', '📋 ガイド'],
+      'card-context':          ['💡 AI活用'],
+      'card-cursor':           ['💡 AI活用'],
+    };
+
+    (function addShortcutTags() {
+      Object.entries(CARD_TAGS).forEach(([id, tags]) => {
+        const card = document.getElementById(id);
+        if (!card) return;
+        const row = document.createElement('div');
+        row.className = 'shortcut-tags';
+        tags.forEach(tag => {
+          const s = document.createElement('span');
+          s.className = 'utag';
+          s.textContent = tag;
+          row.appendChild(s);
+        });
+        // 説明文の直後に挿入
+        const desc = card.querySelector('p');
+        if (desc) desc.after(row);
+        else card.appendChild(row);
+      });
+    })();
   </script>
 </body>
 </html>
