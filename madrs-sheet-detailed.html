@@ -708,6 +708,37 @@ function addScoreTableClasses() {
 }
 addScoreTableClasses();
 
+function printCompactHtmlDocument(html) {
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  var delay = isAndroid ? 850 : 400;
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('aria-hidden', 'true');
+  iframe.setAttribute('title', 'print-compact');
+  iframe.style.cssText = 'position:fixed;inset:0;width:0;height:0;border:0;opacity:0;pointer-events:none;visibility:hidden';
+  document.body.appendChild(iframe);
+  var win = iframe.contentWindow;
+  var doc = win.document;
+  doc.open();
+  doc.write(html);
+  doc.close();
+  var cleanup = function() {
+    try { if (iframe.parentNode) iframe.parentNode.removeChild(iframe); } catch (e) {}
+  };
+  var doPrint = function() {
+    try {
+      if (doc.body) { void doc.body.offsetHeight; }
+      win.focus();
+      win.print();
+    } catch (e) {
+      cleanup();
+      alert('印刷の起動に失敗しました。通常の「印刷」からお試しください。');
+    }
+  };
+  win.addEventListener('afterprint', function() { setTimeout(cleanup, isAndroid ? 1600 : 300); }, { once: true });
+  setTimeout(cleanup, 300000);
+  setTimeout(doPrint, delay);
+}
+
 function compactPrint() {
   var pId = document.getElementById('patientId') && document.getElementById('patientId').value || '—';
   var pDate = document.getElementById('evalDate') && document.getElementById('evalDate').value || '—';
@@ -747,12 +778,8 @@ function compactPrint() {
     '<div><label>患者ID</label><span>' + pId + '</span></div>' +
     '<div><label>評価日</label><span>' + pDate + '</span></div>' +
     '<div><label>評価者</label><span>' + pEval + '</span></div>' +
-    '<div><label>評価回数</label><span>' + pNum + '</span></div></div><table>' + rows + '</table>' + notesHtml + '<div class="sw">' + summaryHtml + '</div>' +
-    '<script>window.addEventListener("load",function(){setTimeout(function(){window.print();},300);window.addEventListener("afterprint",function(){setTimeout(function(){window.close();},100);},{once:true});});<' + '/script></body></html>';
-  var w = window.open('', '_blank');
-  if (!w) { alert('ポップアップを許可してから再試行してください。'); return; }
-  w.document.write(html);
-  w.document.close();
+    '<div><label>評価回数</label><span>' + pNum + '</span></div></div><table>' + rows + '</table>' + notesHtml + '<div class="sw">' + summaryHtml + '</div></body></html>';
+  printCompactHtmlDocument(html);
 }
 
 window.addEventListener('beforeprint', function() { updateTotal(); var ps = document.getElementById('print-summary'); if (ps) ps.style.display = 'block'; });

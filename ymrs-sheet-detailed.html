@@ -703,8 +703,39 @@
     const _psS  = document.getElementById('ps-severity');if (_psS)  _psS.textContent  = _sevText ? `（${_sevText}）` : '';
   }
 
-  // コンパクト印刷：beforeprint/afterprint フックで制御（Android対応）
-  // コンパクト印刷：新規ウィンドウに最小限HTMLを生成して印刷（Android Chrome対応）
+  // ───── 簡易印刷用：隠しiframe（Android「PDF形式で保存」で子窓+document.writeが失敗しやすい）─────
+  function printCompactHtmlDocument(html) {
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const delay = isAndroid ? 850 : 400;
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.setAttribute('title', 'print-compact');
+    iframe.style.cssText = 'position:fixed;inset:0;width:0;height:0;border:0;opacity:0;pointer-events:none;visibility:hidden';
+    document.body.appendChild(iframe);
+    const win = iframe.contentWindow;
+    const doc = win.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+    const cleanup = function() {
+      try { if (iframe.parentNode) iframe.parentNode.removeChild(iframe); } catch (e) {}
+    };
+    const doPrint = function() {
+      try {
+        if (doc.body) { void doc.body.offsetHeight; }
+        win.focus();
+        win.print();
+      } catch (e) {
+        cleanup();
+        alert('印刷の起動に失敗しました。通常の「印刷」からお試しください。');
+      }
+    };
+    win.addEventListener('afterprint', function() { setTimeout(cleanup, isAndroid ? 1600 : 300); }, { once: true });
+    setTimeout(cleanup, 300000);
+    setTimeout(doPrint, delay);
+  }
+
+  // コンパクト印刷（隠しiframe + print）
   function compactPrint() {
     const pId   = document.getElementById('patientId')?.value  || '—';
     const pDate = document.getElementById('evalDate')?.value   || '—';
@@ -758,23 +789,8 @@ span.desc{color:#6b7280;font-size:7px;}
 </div>
 <table>${rows}</table>
 <div class="sumwrap">${summaryHtml}</div>
-<script>
-  window.addEventListener('load', function() {
-    setTimeout(function() { window.print(); }, 300);
-    window.addEventListener('afterprint', function() {
-      setTimeout(function() { window.close(); }, 100);
-    }, { once: true });
-  });
-<\/script>
 </body></html>`;
-
-    const w = window.open('', '_blank');
-    if (!w) {
-      alert('ポップアップがブロックされています。このサイトのポップアップを許可してから再試行してください。');
-      return;
-    }
-    w.document.write(html);
-    w.document.close();
+    printCompactHtmlDocument(html);
   }
 
   function toggleItem(id) {
