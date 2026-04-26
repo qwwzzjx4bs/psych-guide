@@ -78,47 +78,71 @@
       background: linear-gradient(135deg, #15803d, #16a34a);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-level-b {
       background: linear-gradient(135deg, #1d4ed8, #2563eb);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-level-c {
       background: linear-gradient(135deg, #4b5563, #6b7280);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-first {
       background: linear-gradient(135deg, #7c3aed, #8b5cf6);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-second {
       background: linear-gradient(135deg, #d97706, #f59e0b);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-approved {
       background: linear-gradient(135deg, #0f766e, #0d9488);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-offLabel {
       background: linear-gradient(135deg, #6b7280, #9ca3af);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-weak-yes {
       background: linear-gradient(135deg, #15803d, #16a34a);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
     .badge-weak-no {
       background: linear-gradient(135deg, #dc2626, #ef4444);
       color: white; padding: 0.2rem 0.65rem;
       border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+      white-space: nowrap; display: inline-block;
     }
+    /* モバイル対応 */
+    @media (max-width: 640px) {
+      .section-card { padding: 1rem; }
+      .tree-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .tree-scroll-wrap::-webkit-scrollbar { height: 4px; }
+      .tree-scroll-wrap::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 9999px; }
+    }
+    .tree-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tree-inner { min-width: 680px; }
+    .scroll-hint {
+      display: none;
+      font-size: 0.7rem; color: #7c3aed; text-align: center;
+      padding: 0.25rem 0; margin-bottom: 0.25rem;
+    }
+    @media (max-width: 640px) { .scroll-hint { display: block; } }
     .dx-node { padding: 0.75rem 1.25rem; border-radius: 0.75rem; text-align: center; font-weight: 600; }
     .dx-node-start { background: #4c1d95; color: white; }
     .dx-node-check { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
@@ -265,13 +289,15 @@
           <i data-lucide="git-branch" class="w-6 h-6 text-purple-700"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">診断ツリー</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">診断ツリー</h2>
           <p class="text-gray-500 text-sm">DSM-5-TR / 日本うつ病学会GL2023</p>
         </div>
       </div>
 
       <!-- 診断フロー -->
-      <div class="flex flex-col items-center gap-2 my-6">
+      <p class="scroll-hint">← 横にスクロールできます →</p>
+      <div class="tree-scroll-wrap">
+      <div class="tree-inner flex flex-col items-center gap-2 my-6">
         <!-- 入口 -->
         <div class="dx-node dx-node-start w-72 text-sm">
           気分・行動・エネルギーの変化
@@ -338,7 +364,8 @@
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /tree-inner -->
+      </div><!-- /tree-scroll-wrap -->
 
       <!-- 器質性除外の注意 -->
       <div class="warning-box mt-4">
@@ -365,7 +392,7 @@
           <i data-lucide="clipboard-list" class="w-6 h-6 text-blue-700"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">DSM-5-TR 診断基準</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">DSM-5-TR 診断基準</h2>
           <p class="text-gray-500 text-sm">各エピソードの要点</p>
         </div>
       </div>
@@ -440,8 +467,9 @@
       <!-- 双極I型 vs II型の鑑別 -->
       <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
         <div class="font-bold text-gray-700 mb-3">双極I型・II型・気分循環性障害の比較</div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm border-collapse">
+        <div class="overflow-x-auto -mx-1 px-1">
+          <p class="scroll-hint">← 横にスクロールできます →</p>
+          <table class="w-full text-sm border-collapse min-w-[480px]">
             <thead>
               <tr class="bg-gray-200">
                 <th class="text-left p-2 font-bold text-gray-700">疾患</th>
@@ -486,7 +514,7 @@
           <i data-lucide="layers" class="w-6 h-6 text-purple-700"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">サブタイプ・Specifier</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">サブタイプ・Specifier</h2>
           <p class="text-gray-500 text-sm">治療選択に影響するものを優先</p>
         </div>
       </div>
@@ -590,7 +618,7 @@
           <i data-lucide="alert-circle" class="w-6 h-6 text-orange-600"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">鑑別診断</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">鑑別診断</h2>
           <p class="text-gray-500 text-sm">除外すべき疾患・状態</p>
         </div>
       </div>
@@ -646,7 +674,7 @@
           <i data-lucide="pill" class="w-6 h-6 text-teal-700"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">保険適用薬一覧</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">保険適用薬一覧</h2>
           <p class="text-gray-500 text-sm">2022年7月現在 / 日本うつ病学会GL2023掲載</p>
         </div>
       </div>
@@ -702,7 +730,7 @@
           <i data-lucide="zap" class="w-6 h-6 text-purple-700"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">躁病エピソード治療</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">躁病エピソード治療</h2>
           <p class="text-gray-500 text-sm">CQ 2-3/2-4 ＜日本うつ病学会GL2023＞</p>
         </div>
       </div>
@@ -822,7 +850,7 @@
           <i data-lucide="cloud-rain" class="w-6 h-6 text-blue-700"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">抑うつエピソード治療（双極うつ）</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">抑うつエピソード治療（双極うつ）</h2>
           <p class="text-gray-500 text-sm">CQ 3-2〜3-5 ＜日本うつ病学会GL2023＞</p>
         </div>
       </div>
@@ -840,8 +868,9 @@
       <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
         <span class="badge-first">双極うつ 標準薬物療法</span>
       </h3>
-      <div class="overflow-x-auto mb-4">
-        <table class="w-full text-sm border-collapse">
+      <div class="overflow-x-auto mb-4 -mx-1 px-1">
+          <p class="scroll-hint">← 横にスクロールできます →</p>
+        <table class="w-full text-sm border-collapse min-w-[560px]">
           <thead>
             <tr class="bg-blue-100">
               <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">薬剤名</th>
@@ -939,7 +968,7 @@
           <i data-lucide="shield-check" class="w-6 h-6 text-green-700"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">維持療法（再発予防）</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">維持療法（再発予防）</h2>
           <p class="text-gray-500 text-sm">CQ 4-1〜4-6 ＜日本うつ病学会GL2023＞</p>
         </div>
       </div>
@@ -953,8 +982,9 @@
       </div>
 
       <h3 class="font-bold text-gray-700 mb-3">維持療法選択薬（CQ4-2）</h3>
-      <div class="overflow-x-auto mb-4">
-        <table class="w-full text-sm border-collapse">
+      <div class="overflow-x-auto mb-4 -mx-1 px-1">
+          <p class="scroll-hint">← 横にスクロールできます →</p>
+        <table class="w-full text-sm border-collapse min-w-[720px]">
           <thead>
             <tr class="bg-green-100">
               <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">薬剤</th>
@@ -1034,7 +1064,7 @@
           <i data-lucide="heart-handshake" class="w-6 h-6 text-rose-600"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">心理社会的支援・非薬物治療</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">心理社会的支援・非薬物治療</h2>
           <p class="text-gray-500 text-sm">CQ5 ＜日本うつ病学会GL2023＞</p>
         </div>
       </div>
@@ -1144,7 +1174,7 @@
           <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">副作用・禁忌・モニタリング</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">副作用・禁忌・モニタリング</h2>
           <p class="text-gray-500 text-sm">第7章 ＜日本うつ病学会GL2023＞</p>
         </div>
       </div>
@@ -1263,7 +1293,7 @@
           <i data-lucide="zap" class="w-6 h-6 text-white"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる5ポイント</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-800">外来で押さえる5ポイント</h2>
           <p class="text-gray-500 text-sm">双極症診療中に即座に確認すべき要点</p>
         </div>
       </div>
