@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>双極症 診断・治療選択ツリー - 精神科臨床ガイド</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --bipolar-manic: #7c3aed;
+      --bipolar-depressive: #1d4ed8;
+      --bipolar-mixed: #b45309;
+      --level-a: #15803d;
+      --level-b: #1d4ed8;
+      --level-c: #6b7280;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: linear-gradient(135deg, #4c1d95, #1e3a5f); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .manic-box {
+      background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
+      border-left: 4px solid #7c3aed;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .depressive-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-first {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-approved {
+      background: linear-gradient(135deg, #0f766e, #0d9488);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-offLabel {
+      background: linear-gradient(135deg, #6b7280, #9ca3af);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-weak-yes {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-weak-no {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .dx-node { padding: 0.75rem 1.25rem; border-radius: 0.75rem; text-align: center; font-weight: 600; }
+    .dx-node-start { background: #4c1d95; color: white; }
+    .dx-node-check { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
+    .dx-node-yes { background: #dcfce7; border: 2px solid #15803d; color: #14532d; }
+    .dx-node-no { background: #fee2e2; border: 2px solid #dc2626; color: #7f1d1d; }
+    .dx-node-diagnosis { background: linear-gradient(135deg, #4c1d95, #1e3a5f); color: white; }
+    .dx-node-manic { background: linear-gradient(135deg, #6d28d9, #7c3aed); color: white; }
+    .dx-node-depressive { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: white; }
+    .dx-node-cyclothymia { background: linear-gradient(135deg, #0f766e, #0d9488); color: white; }
+    .toc {
+      position: fixed; right: 1.5rem; top: 50%;
+      transform: translateY(-50%); background: white;
+      padding: 1rem; border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh; overflow-y: auto;
+      z-index: 50; min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .phase-step {
+      border-radius: 0.75rem;
+      padding: 1rem;
+      border: 2px solid transparent;
+    }
+    .phase-manic { background: #faf5ff; border-color: #a78bfa; }
+    .phase-depressive { background: #eff6ff; border-color: #93c5fd; }
+    .phase-maintenance { background: #f0fdf4; border-color: #86efac; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-8">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="brain" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold">双極症</h1>
+      <p class="mt-2 text-lg opacity-85">ICD-10: F31 ／ DSM-5-TR: 双極I型・II型障害</p>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">診断ツリー</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">躁病エピソード治療</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">うつ病エピソード治療</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">維持療法</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">非薬物治療</span>
+      </div>
+      <div class="mt-3 text-sm opacity-70">
+        <i data-lucide="book-open" class="w-4 h-4 inline mr-1"></i>
+        日本うつ病学会 診療ガイドライン 双極症2023 準拠
+      </div>
+    </div>
+  </header>
+
+  <!-- フローティング目次 -->
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#quick" class="text-sm text-purple-700 font-bold hover:text-purple-900 block">⚡ 外来クイックRef</a></li>
+      <li><a href="#diagnosis-tree" class="text-sm text-gray-600 hover:text-purple-700 block">診断ツリー</a></li>
+      <li><a href="#criteria" class="text-sm text-gray-600 hover:text-purple-700 block">診断基準</a></li>
+      <li><a href="#subtypes" class="text-sm text-gray-600 hover:text-purple-700 block">サブタイプ・Specifier</a></li>
+      <li><a href="#differential" class="text-sm text-gray-600 hover:text-purple-700 block">鑑別診断</a></li>
+      <li><a href="#approved-drugs" class="text-sm text-gray-600 hover:text-purple-700 block">保険適用薬一覧</a></li>
+      <li><a href="#treatment-manic" class="text-sm text-gray-600 hover:text-purple-700 block">躁病エピソード治療</a></li>
+      <li><a href="#treatment-depressive" class="text-sm text-gray-600 hover:text-purple-700 block">うつエピソード治療</a></li>
+      <li><a href="#maintenance" class="text-sm text-gray-600 hover:text-purple-700 block">維持療法</a></li>
+      <li><a href="#psychosocial" class="text-sm text-gray-600 hover:text-purple-700 block">非薬物治療</a></li>
+      <li><a href="#monitoring" class="text-sm text-gray-600 hover:text-purple-700 block">副作用・モニタリング</a></li>
+      <li><a href="#quick-ref" class="text-sm text-gray-600 hover:text-purple-700 block">外来ポイント</a></li>
+    </ul>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- ========== 外来クイックリファレンス ========== -->
+    <div class="section-card" id="quick">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-gradient-to-br from-purple-700 to-blue-800 rounded-xl flex items-center justify-center flex-shrink-0">
+          <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">外来クイックリファレンス</h2>
+          <p class="text-gray-500 text-xs flex items-center gap-1.5"><span class="inline-block bg-purple-700 text-white text-xs font-bold px-2 py-0.5 rounded-full">GL2023</span>日本うつ病学会 双極症ガイドライン準拠の重点ポイント</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+
+        <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
+          <div class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-gray-800 text-sm">抗うつ薬の追加は行わないことを弱く推奨</div>
+            <p class="text-gray-600 text-xs mt-0.5">CQ3-5（推奨2C）。気分安定薬・SGA への抗うつ薬追加は寛解率に有意差なし、躁転・急速交代化リスクあり。うつで来院したら躁/軽躁の既往を必ず問診。</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-700">
+          <div class="w-8 h-8 bg-purple-700 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-gray-800 text-sm">躁病急性期は気分安定薬＋SGA 併用が第一選択</div>
+            <p class="text-gray-600 text-xs mt-0.5">CQ2-4（弱く推奨2A）。バルプロ酸/リチウム＋アリピプラゾール/クエチアピン/アセナピン等。単剤より反応率・寛解率が有意に高い。維持療法の連続性も考慮。</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-l-4 border-orange-600">
+          <div class="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-gray-800 text-sm">混合性の特徴・急速交代型は見逃さない</div>
+            <p class="text-gray-600 text-xs mt-0.5">混合状態は自殺リスク高・治療抵抗性。抗うつ薬・BZPは急速交代化のリスク。Specifier（混合性/急速交代型/精神病性/緊張病）を記録し治療方針を変える。</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl border-l-4 border-teal-600">
+          <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-gray-800 text-sm">心理教育を初診から薬物療法と並行で実施</div>
+            <p class="text-gray-600 text-xs mt-0.5">再発予防エビデンスが最も強い非薬物介入（強く推奨1A）。7項目ミニマム・エッセンスを毎回少しずつ伝える。IPSRT・集団心理教育・家族心理教育も組み合わせる。</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-700">
+          <div class="w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">5</div>
+          <div>
+            <div class="font-bold text-gray-800 text-sm">ラモトリギンは2週ごとに倍増・バルプロ酸併用時は半速</div>
+            <p class="text-gray-600 text-xs mt-0.5">SJS/TEN予防。25 mg→25 mg×2週→50 mg×2週→100 mg×2週→200 mg。バルプロ酸併用時は通常の半量・半速で漸増。発疹で即受診を患者指導。</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3 p-3.5 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border-l-4 border-green-700">
+          <div class="w-8 h-8 bg-green-700 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">6</div>
+          <div>
+            <div class="font-bold text-gray-800 text-sm">維持療法は継続が基本。自殺リスクにはリチウム</div>
+            <p class="text-gray-600 text-xs mt-0.5">ラモトリギン（うつ再発予防に特に有効）・炭酸リチウム（自殺予防エビデンス最強・維持目標0.6–0.8 mEq/L）・バルプロ酸（妊婦禁忌）。単剤安定中の中止は再発リスク↑。</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== 診断ツリー ========== -->
+    <div class="section-card" id="diagnosis-tree">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-purple-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">診断ツリー</h2>
+          <p class="text-gray-500 text-sm">DSM-5-TR / 日本うつ病学会GL2023</p>
+        </div>
+      </div>
+
+      <!-- 診断フロー -->
+      <div class="flex flex-col items-center gap-2 my-6">
+        <!-- 入口 -->
+        <div class="dx-node dx-node-start w-72 text-sm">
+          気分・行動・エネルギーの変化
+          <div class="text-xs opacity-80 mt-1">高揚感・易怒性・活動増加 <i>または</i> 抑うつ・希死念慮</div>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <!-- Q1: 躁・軽躁の既往 -->
+        <div class="dx-node dx-node-check w-80 text-sm">
+          過去に <strong>躁病 or 軽躁病エピソード</strong> の既往があるか？<br>
+          <span class="text-xs">"気分が異常に高揚・易怒的で、活動・エネルギーが増加"</span>
+        </div>
+
+        <!-- 分岐: YES/NO -->
+        <div class="flex gap-8 items-start mt-2 w-full justify-center">
+          <!-- YES: 躁/軽躁あり -->
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-green-700 font-bold text-sm">YES</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-green-600"></i>
+            <div class="dx-node dx-node-check w-52 text-sm">
+              躁病エピソードを満たすか？<br>
+              <span class="text-xs">≥1週間 + 著明機能障害/入院必要/精神病</span>
+            </div>
+            <!-- さらに分岐 -->
+            <div class="flex gap-4 items-start">
+              <div class="flex flex-col items-center gap-1">
+                <div class="text-green-700 font-bold text-xs">YES</div>
+                <i data-lucide="arrow-down" class="w-4 h-4 text-green-500"></i>
+                <div class="dx-node dx-node-manic w-32 text-xs text-center py-2">
+                  <strong>双極I型障害</strong><br>F31.1-F31.2
+                </div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="text-red-600 font-bold text-xs">NO（軽躁のみ）</div>
+                <i data-lucide="arrow-down" class="w-4 h-4 text-red-400"></i>
+                <div class="dx-node dx-node-depressive w-32 text-xs text-center py-2">
+                  <strong>双極II型障害</strong><br>F31.8
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- NO: 躁/軽躁なし -->
+          <div class="flex flex-col items-center gap-2">
+            <div class="text-red-700 font-bold text-sm">NO</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-red-500"></i>
+            <div class="dx-node dx-node-check w-52 text-sm">
+              2年間（成人）: 軽躁様＋うつ様の繰り返しがあるか？完全エピソードを満たさない
+            </div>
+            <div class="flex gap-4 items-start">
+              <div class="flex flex-col items-center gap-1">
+                <div class="text-green-700 font-bold text-xs">YES</div>
+                <i data-lucide="arrow-down" class="w-4 h-4 text-green-500"></i>
+                <div class="dx-node dx-node-cyclothymia w-32 text-xs text-center py-2">
+                  <strong>気分循環性障害</strong><br>F34.0
+                </div>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div class="text-red-600 font-bold text-xs">NO</div>
+                <i data-lucide="arrow-down" class="w-4 h-4 text-red-400"></i>
+                <div class="dx-node dx-node-no w-32 text-xs text-center py-2">
+                  うつ病 or 他疾患を再検討
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 器質性除外の注意 -->
+      <div class="warning-box mt-4">
+        <div class="font-bold text-yellow-800 mb-1 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          診断前に必ず除外：器質性・薬剤性躁病
+        </div>
+        <div class="text-sm text-gray-700 grid md:grid-cols-2 gap-2">
+          <div>・甲状腺機能亢進症（TSH↓, FT4↑）</div>
+          <div>・ステロイド、L-ドーパ誘発性躁状態</div>
+          <div>・40歳以上の初発躁病 → 脳器質性疾患を除外</div>
+          <div>・抗うつ薬誘発性躁状態（→ 抗うつ薬を中止）</div>
+        </div>
+        <div class="text-xs text-orange-700 bg-orange-50 rounded p-2 mt-2">
+          ⚠️ NSAIDsは躁病の直接原因ではなく、リチウム服用中に使用するとLi血中濃度が上昇しリチウム中毒を誘発（→ 相互作用の項参照）
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 診断基準 ========== -->
+    <div class="section-card" id="criteria">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">DSM-5-TR 診断基準</h2>
+          <p class="text-gray-500 text-sm">各エピソードの要点</p>
+        </div>
+      </div>
+
+      <!-- 躁病エピソード -->
+      <div class="manic-box mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="zap" class="w-5 h-5 text-purple-700"></i>
+          <span class="font-bold text-purple-800 text-lg">躁病エピソード（双極I型の核）</span>
+        </div>
+        <div class="mb-3">
+          <div class="font-bold text-gray-700 mb-1">A基準：<span class="text-purple-700">≥1週間</span>（入院・精神病があれば期間問わず）</div>
+          <div class="bg-white rounded-lg p-3 border border-purple-200 mb-2">
+            <div class="text-sm font-bold text-purple-800 mb-1">必須：①＋②の両方を確認</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li class="flex gap-2"><span class="text-purple-600 font-bold">①</span> 気分の異常な高揚 or 易怒性（ほぼ終日・ほぼ毎日）</li>
+              <li class="flex gap-2"><span class="text-purple-600 font-bold">②</span> 活動・エネルギーの異常な亢進（普段からの変化）</li>
+            </ul>
+          </div>
+          <div class="font-bold text-gray-700 mb-1">B基準：以下のうち<span class="text-red-600">≥3項目</span>（易怒性のみなら≥4項目）</div>
+          <div class="grid md:grid-cols-2 gap-1 text-sm text-gray-700">
+            <div class="flex gap-2 items-start"><span class="text-purple-500 font-bold w-4">1</span> 誇大感・自尊心の異常な高まり</div>
+            <div class="flex gap-2 items-start"><span class="text-purple-500 font-bold w-4">2</span> 睡眠欲求の減少（3-4時間でも元気）</div>
+            <div class="flex gap-2 items-start"><span class="text-purple-500 font-bold w-4">3</span> 多弁・話し続けたい圧迫感</div>
+            <div class="flex gap-2 items-start"><span class="text-purple-500 font-bold w-4">4</span> 思考奔逸・観念のレース</div>
+            <div class="flex gap-2 items-start"><span class="text-purple-500 font-bold w-4">5</span> 注意散漫（随伴性）</div>
+            <div class="flex gap-2 items-start"><span class="text-purple-500 font-bold w-4">6</span> 目的指向的活動/精神運動興奮の増加</div>
+            <div class="flex gap-2 items-start md:col-span-2"><span class="text-purple-500 font-bold w-4">7</span> 危険な行動への関与増加（浪費・性的逸脱・無謀な投資）</div>
+          </div>
+          <div class="text-xs text-purple-700 mt-2 font-bold">ニーモニック：<span class="bg-purple-100 px-2 py-0.5 rounded">DIG FAST</span>（Distractibility, Indiscretion, Grandiosity, Flight of ideas, Activity↑, Sleep↓, Talkativeness）</div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-2 text-sm">
+          <div class="bg-white rounded-lg p-2 border border-purple-200">
+            <span class="font-bold text-purple-700">C基準（重篤性）</span>
+            <p class="text-gray-600 mt-1">著明な機能障害 or 入院 or 精神病症状 → いずれか1つで躁病認定</p>
+          </div>
+          <div class="bg-white rounded-lg p-2 border border-purple-200">
+            <span class="font-bold text-purple-700">除外（D基準）</span>
+            <p class="text-gray-600 mt-1">物質・身体疾患・薬剤で説明しきれない；統合失調感情障害等でなく独立して存在</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 軽躁病エピソード vs 躁病 -->
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+          <div class="font-bold text-purple-800 mb-2 flex items-center gap-2">
+            <i data-lucide="minus-circle" class="w-4 h-4"></i>軽躁病エピソード（双極II型）
+          </div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>・症状はA+B基準と同様</li>
+            <li>・<strong>持続：≥4日間</strong>（躁病は≥1週間）</li>
+            <li>・<strong>著明な機能障害なし</strong>（入院不要）</li>
+            <li>・<strong>精神病症状なし</strong>（あれば躁病）</li>
+            <li>・気分の変化が客観的に観察可能</li>
+          </ul>
+        </div>
+        <div class="depressive-box py-3">
+          <div class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+            <i data-lucide="cloud-rain" class="w-4 h-4"></i>大うつ病エピソード（双極共通）
+          </div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>・<strong>≥2週間</strong>、ほぼ毎日・大半の時間</li>
+            <li>・<span class="font-bold text-blue-700">①②のいずれかを含む</span>≥5項目:</li>
+            <li class="ml-2">① 抑うつ気分　② 興味・喜びの喪失</li>
+            <li class="ml-2">③体重変化④睡眠障害⑤精神運動変化</li>
+            <li class="ml-2">⑥疲労⑦無価値感・罪責⑧集中低下⑨希死念慮</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 双極I型 vs II型の鑑別 -->
+      <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-700 mb-3">双極I型・II型・気分循環性障害の比較</div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="text-left p-2 font-bold text-gray-700">疾患</th>
+                <th class="text-left p-2 font-bold text-gray-700">躁病</th>
+                <th class="text-left p-2 font-bold text-gray-700">軽躁病</th>
+                <th class="text-left p-2 font-bold text-gray-700">大うつ</th>
+                <th class="text-left p-2 font-bold text-gray-700">ICD-10</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="bg-purple-50">
+                <td class="p-2 font-bold text-purple-700">双極I型</td>
+                <td class="p-2 text-green-700 font-bold">必須 ≥1回</td>
+                <td class="p-2 text-gray-400">不要</td>
+                <td class="p-2 text-gray-500">必須ではない</td>
+                <td class="p-2">F31.1-F31.2</td>
+              </tr>
+              <tr class="bg-blue-50">
+                <td class="p-2 font-bold text-blue-700">双極II型</td>
+                <td class="p-2 text-red-600 font-bold">なし（あればI型へ）</td>
+                <td class="p-2 text-green-700 font-bold">必須 ≥1回</td>
+                <td class="p-2 text-green-700 font-bold">必須 ≥1回</td>
+                <td class="p-2">F31.8</td>
+              </tr>
+              <tr class="bg-teal-50">
+                <td class="p-2 font-bold text-teal-700">気分循環性</td>
+                <td class="p-2 text-red-600">なし</td>
+                <td class="p-2 text-red-600">閾値下（≥2年間）</td>
+                <td class="p-2 text-red-600">閾値下（≥2年間）</td>
+                <td class="p-2">F34.0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== サブタイプ・Specifier ========== -->
+    <div class="section-card" id="subtypes">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="layers" class="w-6 h-6 text-purple-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">サブタイプ・Specifier</h2>
+          <p class="text-gray-500 text-sm">治療選択に影響するものを優先</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <!-- 治療方針を大きく変える -->
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="triangle-alert" class="w-4 h-4 text-red-600"></i>
+            <span class="font-bold text-red-800 text-sm">治療方針を大きく変える</span>
+          </div>
+          <div class="space-y-3 text-sm">
+            <div>
+              <span class="font-bold text-red-700">混合性の特徴を伴う ★最重要</span>
+              <p class="text-gray-600 mt-0.5">躁/軽躁中にうつ症状≥3項目、またはうつ中に躁症状≥3項目（躁・うつ双方に共通する症状＝精神運動興奮・集中力低下等はカウントから除外）。自殺リスク高・治療抵抗性。<span class="text-red-600 font-bold">抗うつ薬は増悪リスク</span></p>
+            </div>
+            <div>
+              <span class="font-bold text-red-700">精神病性の特徴を伴う</span>
+              <p class="text-gray-600 mt-0.5">幻覚・妄想が存在。統合失調症との鑑別必須。<span class="text-red-600 font-bold">抗精神病薬必須</span></p>
+            </div>
+            <div>
+              <span class="font-bold text-red-700">緊張病を伴う</span>
+              <p class="text-gray-600 mt-0.5">緊張病症状がほとんどの期間に存在。悪性症候群に発展注意。<span class="text-red-600 font-bold">BZD or ECT優先、抗精神病薬は慎重</span></p>
+            </div>
+            <div>
+              <span class="font-bold text-red-700">急速交代型</span>
+              <p class="text-gray-600 mt-0.5">12ヶ月で≥4回のエピソード。治療難渋例が多い。<span class="text-red-600 font-bold">抗うつ薬・BZPは急速交代化リスク</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 薬剤選択の参考 -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="info" class="w-4 h-4 text-blue-600"></i>
+            <span class="font-bold text-blue-800 text-sm">治療選択・配慮事項</span>
+          </div>
+          <div class="space-y-3 text-sm">
+            <div>
+              <span class="font-bold text-blue-700">不安性苦痛を伴う</span>
+              <p class="text-gray-600 mt-0.5">以下5症状のうち≥2項目：①緊張感 ②落ち着かなさ ③恐怖（悪いことが起きそう）④コントロール喪失感 ⑤心配による集中困難。自殺リスク↑・治療反応性↓。程度が強い例に慎重対応</p>
+            </div>
+            <div>
+              <span class="font-bold text-blue-700">メランコリアの特徴を伴う</span>
+              <p class="text-gray-600 mt-0.5">早朝覚醒、朝の不調、刺激への反応困難。重症うつ、積極的治療が必要</p>
+            </div>
+            <div>
+              <span class="font-bold text-blue-700">非定型の特徴を伴う</span>
+              <p class="text-gray-600 mt-0.5">出来事に反応し気分が明るくなる「気分反応性」＋過眠・過食・鉛様麻痺・拒絶過敏性。SSRIへの反応パターンが異なり、双極うつの鑑別でも重要な特徴</p>
+            </div>
+            <div>
+              <span class="font-bold text-blue-700">季節型</span>
+              <p class="text-gray-600 mt-0.5">エピソードが規則的に季節と関連。<span class="text-blue-600 font-bold">光療法の適応を検討</span>。季節の影響を心理教育に組み込む</p>
+            </div>
+            <div>
+              <span class="font-bold text-blue-700">周産期発症</span>
+              <p class="text-gray-600 mt-0.5">妊娠中または出産後4週以内。母児双方の安全確保。第6章参照（催奇形性）</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 重症度 -->
+      <div class="mt-4 bg-gray-50 border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-700 mb-2 text-sm">重症度の目安（評価スケール）</div>
+        <div class="grid md:grid-cols-3 gap-3 text-sm">
+          <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+            <div class="font-bold text-green-700">軽度</div>
+            <p class="text-gray-600 mt-1">診断に必要な症状が最小限。なんとか対応できる。社会機能障害は軽度</p>
+          </div>
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+            <div class="font-bold text-yellow-700">中等度</div>
+            <p class="text-gray-600 mt-1">症状数・強度・機能低下が軽度と重度の間</p>
+          </div>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+            <div class="font-bold text-red-700">重度</div>
+            <p class="text-gray-600 mt-1">症状が著明で手に負えない。機能を著しく損なう。入院検討</p>
+          </div>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-3 text-xs">
+          <div class="bg-white border rounded-lg px-3 py-2">
+            <span class="font-bold text-gray-700">YMRS</span>（Young Mania Rating Scale）<br>
+            <span class="text-gray-500">躁症状重症度: 0-60点。12点以下で寛解目標</span>
+          </div>
+          <div class="bg-white border rounded-lg px-3 py-2">
+            <span class="font-bold text-gray-700">MADRS</span>（Montgomery-Åsberg）<br>
+            <span class="text-gray-500">うつ症状評価: 0-60点。変化感受性高い</span>
+          </div>
+          <div class="bg-white border rounded-lg px-3 py-2">
+            <span class="font-bold text-gray-700">HAMD</span>（Hamilton Dep. Scale）<br>
+            <span class="text-gray-500">17/21/24項目版あり。睡眠・不安評価含む</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 鑑別診断 ========== -->
+    <div class="section-card" id="differential">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="alert-circle" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">鑑別診断</h2>
+          <p class="text-gray-500 text-sm">除外すべき疾患・状態</p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+            器質性・薬剤性（必須除外）
+          </div>
+          <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+            <div>・甲状腺機能亢進症（TSH, FT4確認）</div>
+            <div>・脳器質性疾患（特に40歳以上初発）→ CT/MRI</div>
+            <div>・ステロイド、L-ドーパ誘発性躁状態</div>
+            <div>・NSAIDs → リチウム血中濃度上昇</div>
+            <div>・乱用物質（覚醒剤、コカイン等）</div>
+            <div>・抗うつ薬誘発性躁状態 → 抗うつ薬中止</div>
+          </div>
+        </div>
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+            <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+            精神疾患の鑑別
+          </div>
+          <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+            <div>・<strong>統合失調症</strong>（気分エピソードと精神病症状の時間的関係を確認）</div>
+            <div>・<strong>うつ病</strong>（躁/軽躁歴の丁寧な問診。SSRI単剤開始前に必ず確認）</div>
+            <div>・<strong>ADHD・神経発達症</strong>（幼少期発達歴、持続的症状 vs エピソード性）</div>
+            <div>・<strong>パーソナリティ障害</strong>（特にBorderline: ストレス反応性、自傷行為）</div>
+          </div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 mb-2 text-sm flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4"></i>
+            うつ病 vs 双極うつ：鑑別ポイント
+          </div>
+          <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+            <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>躁/軽躁エピソードの既往（本人・家族から）</div>
+            <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>抗うつ薬無効・躁転歴</div>
+            <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>双極性障害の家族歴</div>
+            <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>若年発症（10代後半〜20代前半）</div>
+            <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>過眠・過食・非定型うつ症状</div>
+            <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>高い再発率・複数回のうつエピソード</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 保険適用薬一覧 ========== -->
+    <div class="section-card" id="approved-drugs">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="pill" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">保険適用薬一覧</h2>
+          <p class="text-gray-500 text-sm">2022年7月現在 / 日本うつ病学会GL2023掲載</p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+          <div class="font-bold text-purple-800 mb-2 flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            躁病および躁うつ病の躁状態・双極性障害の躁症状改善
+          </div>
+          <div class="flex flex-wrap gap-2 text-sm">
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">炭酸リチウム</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">バルプロ酸ナトリウム</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">カルバマゼピン</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">アリピプラゾール</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">オランザピン</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">クエチアピン（普通錠）</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">アセナピン</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium">ハロペリドール</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium text-gray-500">スルトプリド</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium text-gray-500">クロルプロマジン</span>
+            <span class="bg-white border border-purple-200 rounded-lg px-3 py-1 font-medium text-gray-500">レボメプロマジン</span>
+          </div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+            <i data-lucide="cloud-rain" class="w-4 h-4"></i>
+            双極性障害のうつ症状改善
+          </div>
+          <div class="flex flex-wrap gap-2 text-sm">
+            <span class="bg-white border border-blue-200 rounded-lg px-3 py-1 font-medium">オランザピン</span>
+            <span class="bg-white border border-blue-200 rounded-lg px-3 py-1 font-medium">クエチアピン徐放錠（XR）</span>
+            <span class="bg-white border border-blue-200 rounded-lg px-3 py-1 font-medium">ルラシドン</span>
+          </div>
+        </div>
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <div class="font-bold text-green-800 mb-2 flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            気分エピソードの再発・再燃抑制（維持療法）
+          </div>
+          <div class="flex flex-wrap gap-2 text-sm">
+            <span class="bg-white border border-green-200 rounded-lg px-3 py-1 font-medium">ラモトリギン</span>
+            <span class="bg-white border border-green-200 rounded-lg px-3 py-1 font-medium">アリピプラゾール持続性水懸筋注用 <span class="text-xs text-gray-500">（双極I型のみ）</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 躁病エピソード治療 ========== -->
+    <div class="section-card" id="treatment-manic">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-purple-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">躁病エピソード治療</h2>
+          <p class="text-gray-500 text-sm">CQ 2-3/2-4 ＜日本うつ病学会GL2023＞</p>
+        </div>
+      </div>
+
+      <!-- 推奨レベル表示 -->
+      <div class="manic-box mb-4">
+        <div class="font-bold text-purple-800 mb-2 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-5 h-5"></i>
+          第一選択（弱く推奨 2A）：<span class="text-purple-900">気分安定薬 + 第2世代抗精神病薬の併用</span>
+        </div>
+        <p class="text-sm text-gray-700">反応率・寛解率が単剤を上回る。忍容性が問題なければ併用を提案（CQ2-4.1, 2-4.2）。過去の反応性・副作用・維持療法との連続性・患者希望を考慮して選択する</p>
+      </div>
+
+      <!-- 治療ステップ -->
+      <div class="flex flex-col md:flex-row items-stretch gap-4 my-4">
+        <!-- Step 1: 第一選択 -->
+        <div class="flex-1 phase-manic rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+            <span class="font-bold text-purple-800">第一選択</span>
+            <span class="badge-level-a ml-auto">推奨 2A</span>
+          </div>
+          <div class="text-sm space-y-2">
+            <div class="bg-white rounded-lg p-2 border border-purple-200">
+              <div class="font-bold text-purple-700 mb-1">気分安定薬（いずれか）</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・<strong>バルプロ酸</strong>（血中濃度 50–125 μg/mL目標）</li>
+                <li>・<strong>炭酸リチウム</strong>（急性期: 0.8–1.2 mEq/L目標）</li>
+              </ul>
+            </div>
+            <div class="text-center font-bold text-purple-700">+</div>
+            <div class="bg-white rounded-lg p-2 border border-purple-200">
+              <div class="font-bold text-purple-700 mb-1">第2世代抗精神病薬（いずれか）</div>
+              <ul class="text-gray-700 space-y-0.5">
+                <li>・<strong>アリピプラゾール</strong> 15–30 mg/日 <span class="badge-approved ml-1">保険適用</span></li>
+                <li>・クエチアピン（普通錠）400–800 mg/日 <span class="badge-approved ml-1">保険適用</span></li>
+                <li>・アセナピン 10–20 mg/日 <span class="badge-approved ml-1">保険適用（I型躁状態）</span></li>
+                <li>・リスペリドン 4–6 mg/日 <span class="badge-offLabel ml-1">適応外</span></li>
+                <li>・パリペリドン 6–12 mg/日 <span class="badge-offLabel ml-1">適応外</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-400 self-center hidden md:block flex-shrink-0"></i>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400 self-center md:hidden"></i>
+
+        <!-- Step 2: セカンド -->
+        <div class="flex-1 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-yellow-600 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+            <span class="font-bold text-yellow-800">第一選択が無効・不耐</span>
+          </div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>・<strong>カルバマゼピン</strong>（目標: 4–12 μg/mL。肝CYP誘導→多薬物相互作用、ラモトリギン/経口避妊薬濃度低下。SJS・白血球減少モニタリング必須）</li>
+            <li>・<strong>オランザピン</strong> 10–20 mg/日 <span class="badge-approved ml-1">保険適用</span></li>
+            <li>・ハロペリドール 6–12 mg/日 <span class="badge-approved ml-1">保険適用</span></li>
+            <li>・ゾテピン <span class="badge-offLabel ml-1">適応外</span>（痙攣注意）</li>
+          </ul>
+          <div class="mt-2 text-xs text-gray-500">注意：ハロペリドールは錐体外路症状・うつ誘発リスク</div>
+        </div>
+
+        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-400 self-center hidden md:block flex-shrink-0"></i>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400 self-center md:hidden"></i>
+
+        <!-- Step 3: 重症例・薬物抵抗 -->
+        <div class="flex-1 bg-red-50 border border-red-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+            <span class="font-bold text-red-800">薬物療法抵抗性</span>
+            <span class="badge-level-a ml-auto">Level A</span>
+          </div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>・<strong>修正型電気けいれん療法（mECT）</strong></li>
+            <li>・精神運動興奮著明 → 筋注を考慮</li>
+            <li class="ml-3 text-xs text-gray-500">オランザピン筋注</li>
+            <li class="ml-3 text-xs text-gray-500">ハロペリドール筋注</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 緊急対応 -->
+      <div class="danger-box mt-4">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          精神運動焦燥・興奮への対応（CQ2-2）
+        </div>
+        <div class="text-sm text-gray-700 space-y-1">
+          <p><strong>①ディエスカレーション</strong>から開始。穏やかな環境・会話で自発的服薬・入院を目指す</p>
+          <p><strong>②経口投与</strong>優先（上記第一選択）。複数薬服用困難なら抗精神病薬を優先</p>
+          <p><strong>③筋肉内注射</strong>（経口困難時のみ）：オランザピン、ハロペリドール、ハロペリドール+プロメタジン</p>
+          <p><strong>④隔離・拘束</strong>は最後の手段。バイタルモニタリング必須。差し迫った危険消失後は速やかに解除</p>
+        </div>
+      </div>
+
+      <!-- 治療開始時の確認事項 -->
+      <div class="recommend-box mt-4">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          治療開始時の確認事項（CQ2-1）
+        </div>
+        <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+          <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5"></i>抗うつ薬は中止（躁病悪化リスク）</div>
+          <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5"></i>乱用物質・嗜好品の確認と中止</div>
+          <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5"></i>入院の必要性判断（リスク vs リソース評価）</div>
+          <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5"></i>刺激を減らした環境調整</div>
+          <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5"></i>家族への心理教育と早期介入</div>
+          <div class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5"></i>維持療法を念頭に薬剤選択（優勢極性を考慮）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 抑うつエピソード治療 ========== -->
+    <div class="section-card" id="treatment-depressive">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="cloud-rain" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">抑うつエピソード治療（双極うつ）</h2>
+          <p class="text-gray-500 text-sm">CQ 3-2〜3-5 ＜日本うつ病学会GL2023＞</p>
+        </div>
+      </div>
+
+      <!-- 重要な推奨 -->
+      <div class="danger-box mb-4">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>
+          気分安定薬・SGA への抗うつ薬の<strong>追加</strong>は行わないことを弱く推奨（CQ3-5 / 推奨 2C）
+        </div>
+        <p class="text-sm text-gray-700">気分安定薬または第2世代抗精神病薬への抗うつ薬<strong>追加</strong>は「行わないことを弱く推奨（2C）」。寛解率・躁転率に有意差なし。スコア改善は軽微（SMD=0.17）で効果量が小さい。抗うつ薬による躁転・急速交代化リスクと剤数増加のデメリットを勘案。<br><span class="text-gray-500 text-xs">※どうしても使用する場合は、気分安定薬/SGA下で短期・低用量・頻回エピソード評価が必須</span></p>
+      </div>
+
+      <!-- 標準薬物療法 -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span class="badge-first">双極うつ 標準薬物療法</span>
+      </h3>
+      <div class="overflow-x-auto mb-4">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-blue-100">
+              <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">薬剤名</th>
+              <th class="text-left p-3 font-bold text-gray-700">用量の目安</th>
+              <th class="text-left p-3 font-bold text-gray-700">特徴・適応</th>
+              <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">承認</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">クエチアピン徐放錠（XR）</td>
+              <td class="p-3">50→300 mg/日</td>
+              <td class="p-3 text-gray-600">RCTエビデンス厚い。不眠・不安にも有効。眠気・体重増加注意</td>
+              <td class="p-3"><span class="badge-approved">双極うつ承認</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">ルラシドン</td>
+              <td class="p-3">20→80 mg/日（食後）</td>
+              <td class="p-3 text-gray-600">体重・代謝への影響少ない。空腹時吸収低下に注意</td>
+              <td class="p-3"><span class="badge-approved">双極うつ承認</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">オランザピン</td>
+              <td class="p-3">5→10 mg/日</td>
+              <td class="p-3 text-gray-600">体重増加・高血糖リスク大。フルオキセチン併用（OFC）は本邦未承認</td>
+              <td class="p-3"><span class="badge-approved">双極うつ承認</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50 bg-green-50">
+              <td class="p-3 font-medium">ラモトリギン</td>
+              <td class="p-3">25 mg/日→<strong>2週ごとに</strong>倍増（超低速漸増必須）</td>
+              <td class="p-3 text-gray-600"><strong>うつ再発予防に強い</strong>。急性期効果は限定的。SJS予防のため必ず超低速漸増（詳細→副作用欄）</td>
+              <td class="p-3"><span class="badge-approved">再発予防承認</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">炭酸リチウム</td>
+              <td class="p-3">400→800 mg/日</td>
+              <td class="p-3 text-gray-600">自殺予防エビデンスが独立して強い。急性うつへの保険適用なし（適応外）</td>
+              <td class="p-3"><span class="badge-offLabel">躁病適用のみ</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 推奨まとめ（CQ） -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 mb-2 text-sm flex items-center gap-2">
+            <span class="badge-weak-yes">弱く推奨 2C</span>
+            SGA + 気分安定薬の併用（CQ3-4）
+          </div>
+          <p class="text-sm text-gray-700">単剤より寛解率・QOLが有意に高い（ただしエビデンスレベルC、研究数少）。有害事象出現頻度は高い。気分安定薬で寛解しない場合のSGA追加が対象</p>
+          <div class="mt-2 text-xs text-gray-500">例：ルラシドン+Li/VPA、オランザピン+VPA</div>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 text-sm flex items-center gap-2">
+            <span class="badge-level-c">推奨なし</span>
+            SGA単剤 vs 気分安定薬単剤（CQ3-3）
+          </div>
+          <p class="text-sm text-gray-700">クエチアピン vs リチウムの比較で有効性・安全性・忍容性に有意差なし。患者の希望・副作用プロファイル・過去の反応性で選択</p>
+          <div class="mt-2 text-xs text-gray-500">※リチウムは双極うつへの保険適用なし</div>
+        </div>
+      </div>
+
+      <!-- 特徴別治療 -->
+      <div class="mt-4 warning-box">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          特殊なエピソードへの対応（CQ3-8）
+        </div>
+        <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+          <div>
+            <div class="font-bold text-yellow-700">混合性の特徴を伴う（CQ3-8.2）</div>
+            <p class="mt-0.5">気分安定薬・SGA単剤または併用が基本。抗うつ薬は強く避ける。mECT有効な場合あり</p>
+          </div>
+          <div>
+            <div class="font-bold text-yellow-700">精神病症状を伴う（CQ3-8.3）</div>
+            <p class="mt-0.5">抗精神病薬（SGA）を優先選択。重症例はmECT検討</p>
+          </div>
+          <div>
+            <div class="font-bold text-yellow-700">不安症を伴う（CQ3-8.1）</div>
+            <p class="mt-0.5">自殺リスク・治療抵抗性に注意。クエチアピンが不安にも有効</p>
+          </div>
+          <div>
+            <div class="font-bold text-yellow-700">双極II型のうつ（CQ3-8.4）</div>
+            <p class="mt-0.5">ラモトリギン・クエチアピンXR・ルラシドンが選択肢。リチウムも有効</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 維持療法 ========== -->
+    <div class="section-card" id="maintenance">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-check" class="w-6 h-6 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">維持療法（再発予防）</h2>
+          <p class="text-gray-500 text-sm">CQ 4-1〜4-6 ＜日本うつ病学会GL2023＞</p>
+        </div>
+      </div>
+
+      <div class="recommend-box mb-4">
+        <div class="font-bold text-green-800 mb-1 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          維持療法の目的
+        </div>
+        <p class="text-sm text-gray-700">双極性障害では再発・再燃が生じやすく、適切な維持療法によりエピソードの抑制を目指す。単剤安定中の中止は再発リスクを高める（CQ4-3: 弱く推奨 継続維持）</p>
+      </div>
+
+      <h3 class="font-bold text-gray-700 mb-3">維持療法選択薬（CQ4-2）</h3>
+      <div class="overflow-x-auto mb-4">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-green-100">
+              <th class="text-left p-3 font-bold text-gray-700 rounded-tl-lg">薬剤</th>
+              <th class="text-left p-3 font-bold text-gray-700">目標血中濃度</th>
+              <th class="text-left p-3 font-bold text-gray-700">特徴</th>
+              <th class="text-left p-3 font-bold text-gray-700">主な注意事項</th>
+              <th class="text-left p-3 font-bold text-gray-700 rounded-tr-lg">承認</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">ラモトリギン</td>
+              <td class="p-3">—</td>
+              <td class="p-3 text-gray-600"><strong>うつ再発予防に特に有効</strong>。躁病単独予防はLiと比較して議論あり</td>
+              <td class="p-3 text-red-600">SJS/TEN（超低速漸増必須。VPA併用でさらに低速）</td>
+              <td class="p-3"><span class="badge-approved">再発予防承認</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">炭酸リチウム</td>
+              <td class="p-3">0.6–0.8 mEq/L（標準帯）<br><span class="text-xs text-gray-500">不耐:0.4–0.6 / 反応不足:0.8–1.0</span></td>
+              <td class="p-3 text-gray-600">自殺予防効果が独立して強い。長期エビデンス最も豊富</td>
+              <td class="p-3 text-orange-600">腎機能・甲状腺・Na管理。NSAIDs/ACE阻害薬で中毒</td>
+              <td class="p-3"><span class="badge-offLabel">維持は適応外（躁病適用）</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">バルプロ酸ナトリウム</td>
+              <td class="p-3">50–125 μg/mL</td>
+              <td class="p-3 text-gray-600">急性躁病から継続しやすい。急速交代例にも使用</td>
+              <td class="p-3 text-red-600"><strong>妊婦禁忌</strong>（神経管欠損・催奇形性）。肝機能・血算</td>
+              <td class="p-3"><span class="badge-offLabel">維持は適応外（躁病適用）</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">アリピプラゾール（持効性注射）</td>
+              <td class="p-3">400 mg/4週</td>
+              <td class="p-3 text-gray-600">双極I型の再発予防。服薬アドヒアランス向上に有効</td>
+              <td class="p-3 text-gray-600">錐体外路症状。静坐不能</td>
+              <td class="p-3"><span class="badge-approved">双極I型再発予防承認</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">クエチアピン XR / オランザピン</td>
+              <td class="p-3">—</td>
+              <td class="p-3 text-gray-600">維持試験のエビデンスあり。うつ相優位の場合に有用</td>
+              <td class="p-3 text-orange-600">代謝副作用（体重増加・高血糖・脂質異常）の定期確認</td>
+              <td class="p-3"><span class="badge-offLabel">維持は適応外</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 維持期の抗うつ薬 -->
+      <div class="warning-box">
+        <div class="font-bold text-yellow-800 mb-1 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          維持期の抗うつ薬（CQ4-5）
+        </div>
+        <p class="text-sm text-gray-700">維持期における抗うつ薬の単独使用は躁転・急速交代化リスクがあり原則避ける。どうしても使用する場合は気分安定薬/SGA下で短期使用とし、定期的なエピソード評価を行う</p>
+      </div>
+
+      <!-- 治療抵抗性 -->
+      <div class="mt-4 bg-purple-50 border border-purple-200 rounded-xl p-4">
+        <div class="font-bold text-purple-800 mb-2 flex items-center gap-2">
+          <i data-lucide="shield-alert" class="w-4 h-4"></i>
+          治療抵抗性双極症（CQ4-6）
+        </div>
+        <div class="text-sm text-gray-700 space-y-1">
+          <p>・<strong>クロザピン</strong>（適応外）：治療抵抗性でエビデンスあり。好中球モニタリング体制が必要</p>
+          <p>・<strong>mECT</strong>：治療抵抗性・重症・緊急（拒食・妊娠・自殺リスク高）に検討</p>
+          <p>・自殺リスク高い場合：<strong>リチウムの抗自殺効果</strong>が独立して強い。環境調整・入院も検討</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 非薬物治療 ========== -->
+    <div class="section-card" id="psychosocial">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="heart-handshake" class="w-6 h-6 text-rose-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">心理社会的支援・非薬物治療</h2>
+          <p class="text-gray-500 text-sm">CQ5 ＜日本うつ病学会GL2023＞</p>
+        </div>
+      </div>
+
+      <div class="recommend-box mb-4">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          心理教育（最重要・すべての病期で）
+          <span class="badge-level-a">Level A</span>
+        </div>
+        <p class="text-sm text-gray-700 mb-2">薬物療法と車の両輪の関係。再入院率・エピソード頻度の減少に最も強いエビデンス。治療導入期から継続して実施。ミニマム・エッセンス（CQ5-2）として以下を伝える：</p>
+        <div class="grid md:grid-cols-2 gap-2 text-sm">
+          <div class="bg-white rounded-lg p-2 border border-green-200">
+            <div class="font-bold text-green-700 mb-1">患者が最低限知るべき7項目</div>
+            <ul class="text-gray-600 space-y-0.5 text-xs">
+              <li>① 疾患の本質（慢性・再発性）</li>
+              <li>② 気分・行動・睡眠の自己モニタリング</li>
+              <li>③ 服薬継続の重要性</li>
+              <li>④ ストレスと再発の関連</li>
+              <li>⑤ 生活リズムの規則正しさ</li>
+              <li>⑥ 飲酒・乱用物質の回避</li>
+              <li>⑦ 早期警告サイン（前兆）への対処</li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-lg p-2 border border-green-200">
+            <div class="font-bold text-green-700 mb-1">生活習慣指導（CQ1-8）</div>
+            <ul class="text-gray-600 space-y-0.5 text-xs">
+              <li>・睡眠の規則正しさ（不規則は再発因子）</li>
+              <li>・有酸素運動（週3回×30分）</li>
+              <li>・飲酒・カフェイン制限</li>
+              <li>・地中海食などの食事習慣</li>
+              <li>・腹式呼吸などストレス緩和</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <!-- 専門的精神療法 -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            専門的精神療法（CQ5-1, 5-3）
+          </div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="flex items-start gap-3">
+              <span class="badge-level-a flex-shrink-0 mt-0.5">Level A</span>
+              <div class="text-sm">
+                <div class="font-bold text-gray-700">対人関係・社会リズム療法（IPSRT）</div>
+                <div class="text-gray-600">生活リズムと対人イベントを軸に再発を防ぐ。双極症に特化した治療法</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="badge-level-a flex-shrink-0 mt-0.5">Level A</span>
+              <div class="text-sm">
+                <div class="font-bold text-gray-700">集団心理教育</div>
+                <div class="text-gray-600">再入院・エピソード頻度・社会機能を改善。外来グループ形式で実施</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="badge-level-b flex-shrink-0 mt-0.5">Level B</span>
+              <div class="text-sm">
+                <div class="font-bold text-gray-700">認知行動療法（CBT）</div>
+                <div class="text-gray-600">再発管理・服薬アドヒアランス向上・社会機能改善に有効。専門家実施が必要</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="badge-level-b flex-shrink-0 mt-0.5">Level B</span>
+              <div class="text-sm">
+                <div class="font-bold text-gray-700">家族焦点療法（FFT）/ 家族心理教育（CQ5-5）</div>
+                <div class="text-gray-600">家族の高感情表出を低下させ再発を予防。ケアラーの負担軽減にも有効</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 物理的療法 -->
+        <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-xl p-4">
+          <div class="font-bold text-purple-800 mb-3 flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            物理的療法（重症・治療抵抗性）
+          </div>
+          <div class="grid md:grid-cols-2 gap-3 text-sm">
+            <div class="flex items-start gap-2">
+              <span class="badge-level-a flex-shrink-0">Level A</span>
+              <div>
+                <div class="font-bold text-gray-700">mECT（修正型電気けいれん療法）</div>
+                <div class="text-gray-600">重症躁病・重症うつ・緊張病・妊娠例・治療抵抗性・自殺リスク高に適応</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="badge-level-b flex-shrink-0">Level B</span>
+              <div>
+                <div class="font-bold text-gray-700">光療法</div>
+                <div class="text-gray-600">季節型・うつ相優位例。毎朝10,000 lux×30分程度</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 副作用・モニタリング ========== -->
+    <div class="section-card" id="monitoring">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">副作用・禁忌・モニタリング</h2>
+          <p class="text-gray-500 text-sm">第7章 ＜日本うつ病学会GL2023＞</p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <!-- リチウム -->
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+            <i data-lucide="activity" class="w-4 h-4 text-blue-600"></i>
+            炭酸リチウム（CQ7-1）
+          </div>
+          <div class="grid md:grid-cols-3 gap-3 text-sm">
+            <div>
+              <div class="font-bold text-blue-700 mb-1">血中濃度測定</div>
+              <ul class="text-gray-600 space-y-0.5">
+                <li>・前夜服後12±1時間後に採血</li>
+                <li>・急性期目標: 0.8–1.2 mEq/L</li>
+                <li>・維持目標: 0.6–0.8 mEq/L</li>
+                <li>・中毒域: ≥1.5 mEq/L（振戦・嘔気・意識障害）</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-blue-700 mb-1">定期モニタリング</div>
+              <ul class="text-gray-600 space-y-0.5">
+                <li>・腎機能（eGFR・Cr）：3〜6ヶ月毎</li>
+                <li>・甲状腺機能（TSH）：6ヶ月〜1年毎</li>
+                <li>・血中濃度：安定後3〜6ヶ月毎</li>
+                <li>・ECG（心疾患・合併症例）</li>
+              </ul>
+            </div>
+            <div>
+              <div class="font-bold text-red-700 mb-1">相互作用注意</div>
+              <ul class="text-gray-600 space-y-0.5">
+                <li>・NSAIDs → Li濃度↑↑</li>
+                <li>・ACE阻害薬/ARB → Li濃度↑</li>
+                <li>・サイアザイド系利尿薬 → Li濃度↑</li>
+                <li>・カフェイン・Na制限 → 変動注意</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- バルプロ酸 -->
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+          <div class="font-bold text-orange-800 mb-3 flex items-center gap-2">
+            <i data-lucide="triangle-alert" class="w-4 h-4 text-orange-600"></i>
+            バルプロ酸ナトリウム
+          </div>
+          <div class="grid md:grid-cols-2 gap-3 text-sm">
+            <div>
+              <ul class="text-gray-700 space-y-1">
+                <li>・肝酵素（AST/ALT）：定期確認</li>
+                <li>・血算（血小板）：定期確認</li>
+                <li>・血中濃度 50–125 μg/mL</li>
+              </ul>
+            </div>
+            <div class="bg-red-100 rounded-lg p-3">
+              <div class="font-bold text-red-700 mb-1">妊婦には原則禁忌</div>
+              <p class="text-xs text-gray-700">神経管閉鎖障害・先天性奇形・自閉症スペクトラム障害リスク。妊娠可能女性には事前に十分な説明を</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ラモトリギン -->
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+            ラモトリギン：SJS/TEN（スティーブンス・ジョンソン症候群）（CQ7-2）
+          </div>
+          <div class="text-sm text-gray-700 space-y-1">
+            <p>・<strong>超低速漸増が必須</strong>：週に2倍以上の増量は禁忌</p>
+            <p>・標準漸増：25 mg/日 → 25 mg×2週 → 50 mg×2週 → 100 mg×2週 → 200 mg（目標）</p>
+            <p>・<strong>バルプロ酸併用時</strong>：通常の半量・半速で漸増（バルプロ酸がラモトリギン濃度を2倍に上昇）</p>
+            <p>・発疹出現時は即座に受診・中止を患者に指導</p>
+          </div>
+        </div>
+
+        <!-- SGA代謝副作用 -->
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            第2世代抗精神病薬（特にオランザピン・クエチアピン）の代謝副作用（CQ7-3）
+          </div>
+          <div class="grid md:grid-cols-3 gap-2 text-sm text-gray-700">
+            <div>・体重・BMI：1〜3ヶ月毎</div>
+            <div>・血糖（HbA1c）：3〜6ヶ月毎</div>
+            <div>・脂質（LDL/TG）：3〜6ヶ月毎</div>
+            <div>・血圧：毎回</div>
+            <div>・腹囲：3〜6ヶ月毎</div>
+            <div>・生活指導（食事・運動）も並行</div>
+          </div>
+        </div>
+
+        <!-- 入院基準 -->
+        <div class="bg-red-50 border border-red-300 rounded-xl p-4">
+          <div class="font-bold text-red-800 mb-2 flex items-center gap-2">
+            <i data-lucide="hospital" class="w-4 h-4"></i>
+            入院を検討すべき状況（CQ1-6）
+          </div>
+          <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+            <div>・他人への危害リスクが高い</div>
+            <div>・自殺リスクが高い（混合状態は特に高リスク）</div>
+            <div>・重篤な身体的懸念（拒食・脱水）</div>
+            <div>・社会的支援が著しく乏しい</div>
+            <div>・外来での薬物療法が奏効しない</div>
+            <div>・精神病症状・緊張病の存在</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 外来ポイント ========== -->
+    <div class="section-card" id="quick-ref">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-700 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる5ポイント</h2>
+          <p class="text-gray-500 text-sm">双極症診療中に即座に確認すべき要点</p>
+        </div>
+      </div>
+
+      <div class="grid gap-4">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
+          <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">抗うつ薬の追加は安易にしない</div>
+            <p class="text-gray-600 text-sm">うつで来院した場合、必ず躁/軽躁の既往を確認。CQ3-5：気分安定薬またはSGAへの抗うつ薬<strong>追加</strong>は「行わないことを弱く推奨（2C）」。双極うつへの抗うつ薬追加は寛解率に有意差なく、躁転・急速交代化リスクあり</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-600">
+          <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">躁病急性期は気分安定薬+SGA併用が第一選択</div>
+            <p class="text-gray-600 text-sm">CQ2-4：弱く推奨（2A）。バルプロ酸/リチウム + アリピプラゾール等。維持療法の継続性も考慮して薬剤選択。患者の「優勢極性」（うつ優位 vs 躁優位）を把握する</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-l-4 border-orange-600">
+          <div class="w-10 h-10 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">混合状態・急速交代型を見逃さない</div>
+            <p class="text-gray-600 text-sm">混合性の特徴（躁+うつ同時）は自殺リスク高・治療抵抗性。抗うつ薬・BZPは急速交代化のリスク。特定子（Specifier）を記録し治療方針を変える</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl border-l-4 border-teal-600">
+          <div class="w-10 h-10 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">心理教育を初診から薬物療法と並行して実施</div>
+            <p class="text-gray-600 text-sm">再発予防に最もエビデンスが強い非薬物介入（Level A）。7項目ミニマム・エッセンスを毎回少しずつ伝える。家族も含めた心理教育で予後改善</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-600">
+          <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">5</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">ラモトリギンの漸増速度を厳守・バルプロ酸との相互作用に注意</div>
+            <p class="text-gray-600 text-sm">SJS/TEN予防のため週2倍以上の増量は禁忌。バルプロ酸併用時はさらに低速（通常の半速）。発疹出現時は即受診を患者に指導。うつ再発予防の主力薬として重要</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- フッター情報 -->
+      <div class="mt-6 p-4 bg-gray-100 rounded-xl text-xs text-gray-500">
+        <div class="flex items-center gap-2 mb-1">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span class="font-bold">参照ガイドライン</span>
+        </div>
+        <p>日本うつ病学会 診療ガイドライン 双極症2023（2023年3月1日）/ DSM-5-TR（APA 2022）/ ICD-10（WHO）</p>
+        <p class="mt-1">推奨はGRADE grid法・70%合意による。「強く推奨」「弱く推奨（提案）」の2段階で表現。（数字）はエビデンスレベル（A/B/C）</p>
+        <p class="mt-1 text-red-400">本資料は外来参照用の補助ツールです。最終的な治療決定は最新の添付文書・ガイドライン本文・患者状態に基づき主治医が判断してください。</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

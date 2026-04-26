@@ -101,7 +101,7 @@
         <a href="#guidelines"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 transition-colors text-xs font-medium text-emerald-800 whitespace-nowrap">
           📋 ガイドライン
-          <span class="bg-emerald-200 text-emerald-700 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+          <span class="bg-emerald-200 text-emerald-700 px-1.5 py-0.5 rounded-full text-xs leading-none">3</span>
         </a>
         <a href="#scales"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 transition-colors text-xs font-medium text-teal-800 whitespace-nowrap">
@@ -240,12 +240,6 @@
           <p class="text-xs text-gray-500 leading-relaxed">クレペリン/ブロイラーから、現象学・反精神医学・DSM/ICDの操作的診断、神経発達モデル、早期介入までを「世界×日本」並列タイムライン＋概念マップで整理。日本の改称（2002）と制度史のポイントも含めた外来参照用の歴史図解。</p>
           <div class="mt-3 text-xs link-violet font-medium">schizophrenia-history.html →</div>
         </a>
-        <a id="card-bipolar" href="bipolar-diagnosis-treatment.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">双極症 診断・治療</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">双極症 診断・治療選択ツリー — 日本うつ病学会 診療ガイドライン2023準拠</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">DSM-5-TR診断基準・Specifier分類・鑑別診断から、躁病急性期（気分安定薬+SGA 弱く推奨2A）・双極うつ（クエチアピンXR/ルラシドン/オランザピン/ラモトリギン・抗うつ薬追加は弱く推奨しない2C）・維持療法・心理教育・mECTまで網羅した外来即時参照ガイド。</p>
-          <div class="mt-3 text-xs link-violet font-medium">bipolar-diagnosis-treatment.html →</div>
-        </a>
         <a id="card-atypical-depression" href="atypical-depression.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">うつ病 亜型</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">非定型うつ病 — 概念・歴史・診断基準・治療アルゴリズム</h3>
@@ -280,6 +274,12 @@
           <h3 class="font-semibold text-gray-900 text-sm mb-1">うつ病 診断・治療選択ツリー — ガイドライン2025準拠</h3>
           <p class="text-xs text-gray-500 leading-relaxed">うつ病エピソードの重症度評価から初期薬物治療・増強療法・難治性うつへの対応まで治療フローを図解。双極性障害との鑑別ポイントも収録。</p>
           <div class="mt-3 text-xs link-emerald font-medium">depression-guideline2025.html →</div>
+        </a>
+        <a id="card-bipolar" href="bipolar-diagnosis-treatment.html" class="card card-recent block border border-emerald-100 rounded-xl p-4 border-emerald bg-emerald sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-emerald px-2 py-0.5 rounded-full">双極症 診断・治療</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">双極症 診断・治療選択ツリー — 日本うつ病学会 診療ガイドライン2023準拠</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">DSM-5-TR診断基準・Specifier分類・鑑別診断から、躁病急性期（気分安定薬+SGA 弱く推奨2A）・双極うつ（クエチアピンXR/ルラシドン/オランザピン/ラモトリギン・抗うつ薬追加は弱く推奨しない2C）・維持療法・心理教育・mECTまで網羅した外来即時参照ガイド。</p>
+          <div class="mt-3 text-xs link-emerald font-medium">bipolar-diagnosis-treatment.html →</div>
         </a>
       </div>
     </section>
@@ -421,7 +421,7 @@
     const SECTIONS = {
       icd:        ['card-icd10','card-icd11','card-icd10mini','card-icd10-quiz'],
       diseases:   ['card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
-      guidelines: ['card-schiz-algo','card-depression'],
+      guidelines: ['card-schiz-algo','card-depression','card-bipolar'],
       scales:     ['card-schiz-sheets','card-bprs-detailed','card-panss-detailed','card-bfcrs','card-anxiety-scales'],
       'scale-guide': ['card-schiz-scales','card-bprs-guide'],
       education:  ['card-terminology','card-shiteii'],
