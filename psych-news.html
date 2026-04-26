@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神医学ニュース — PsychFeed</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #4f46e5; }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; color: #1a202c; }
+
+    /* ヘッダー */
+    .glass-header {
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    /* カテゴリチップ */
+    .chip { transition: all 0.12s; cursor: pointer; user-select: none; }
+
+    /* ヒーローカード */
+    .hero-card { position: relative; overflow: hidden; }
+    .hero-grad { background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.28) 58%, transparent 100%); }
+    .hero-card:hover .hero-title { text-decoration: underline; text-decoration-color: rgba(255,255,255,.6); }
+
+    /* サイドストーリー */
+    .side-story { transition: background 0.1s; border-bottom: 1px solid #f3f4f6; }
+    .side-story:last-child { border-bottom: none; }
+    .side-story:hover { background: #f9fafb; }
+    .side-story:hover .side-title { color: var(--accent); }
+    .side-title { transition: color 0.12s; }
+
+    /* セクションタイトル */
+    .sec-title {
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #6b7280;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 8px; margin-bottom: 16px;
+    }
+    .sec-title .accent {
+      display: inline-block; color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 8px; margin-bottom: -10px;
+    }
+
+    /* 記事カード */
+    .news-card { transition: box-shadow 0.15s, transform 0.15s; }
+    .news-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.09); transform: translateY(-1px); }
+
+    /* ソースバッジ */
+    .lbl { display:inline-block; font-size:.6rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:2px 6px; border-radius:3px; }
+    .lbl-pm  { background:#dbeafe; color:#1d4ed8; }
+    .lbl-pre { background:#fef9c3; color:#854d0e; }
+    .lbl-gl  { background:#ede9fe; color:#5b21b6; }
+    .lbl-rct { background:#f1f5f9; color:#475569; }
+
+    /* カテゴリピル */
+    .pill { font-size:.62rem; font-weight:600; padding:2px 8px; border-radius:999px; border:1px solid currentColor; opacity:.8; }
+    .pill-sz  { color:#6d28d9; } .pill-dep  { color:#1e40af; } .pill-bip { color:#b45309; }
+    .pill-anx { color:#0f766e; } .pill-ndd  { color:#065f46; } .pill-sub { color:#991b1b; }
+    .pill-pharm { color:#3730a3; } .pill-psych { color:#0369a1; } .pill-neuro { color:#9d174d; }
+
+    /* ブックマーク */
+    .bm-btn { transition: color 0.1s, background 0.1s; border-radius: 6px; }
+    .bm-btn:hover { color: #d97706; background: #fef3c7; }
+    .bm-btn.saved { color: #d97706; }
+
+    /* スクロール */
+    .slim::-webkit-scrollbar { height: 3px; }
+    .slim::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 0.8s linear infinite; }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="glass-header sticky top-0 z-20">
+  <!-- 上段 -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+    <a href="top.html" class="flex items-center gap-2 shrink-0">
+      <div class="w-8 h-8 rounded-lg bg-indigo-700 flex items-center justify-center shadow-sm">
+        <span class="text-white font-bold text-sm">Ψ</span>
+      </div>
+      <div>
+        <div class="font-bold text-gray-900 text-sm tracking-tight leading-none">PsychFeed</div>
+        <div class="text-xs text-gray-400 leading-none mt-0.5">精神医学ニュース</div>
+      </div>
+    </a>
+
+    <div class="flex-1 max-w-lg relative">
+      <svg class="absolute left-3 top-2.5 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+      </svg>
+      <input id="searchInput" type="text" placeholder="キーワード検索（例: clozapine, PTSD, CBT）"
+        class="w-full pl-9 pr-4 py-2 text-xs bg-gray-100 border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white transition-all placeholder-gray-400">
+    </div>
+
+    <div class="flex items-center gap-2 shrink-0 ml-auto">
+      <span class="hidden sm:block text-xs text-gray-400">更新: 2026-04-26 17:30</span>
+      <button id="refreshBtn"
+        class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 active:scale-95 transition-all shadow-sm">
+        <svg id="refreshIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15-6.7M20 15a9 9 0 0 1-15 6.7"/>
+        </svg>
+        <span class="hidden sm:inline">更新</span>
+      </button>
+      <button id="bmBtn" class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+        </svg>
+        <span id="bmBadge" class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-amber-400 text-white text-xs font-bold rounded-full items-center justify-center hidden">0</span>
+      </button>
+      <a href="top.html" class="hidden sm:flex items-center gap-1 px-3 py-1.5 text-xs text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+        ← ポータル
+      </a>
+    </div>
+  </div>
+
+  <!-- カテゴリチップ -->
+  <div class="border-t border-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-1.5 overflow-x-auto slim">
+      <span class="text-xs text-gray-400 shrink-0 mr-1">カテゴリ</span>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shrink-0" data-cat="all">すべて</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 shrink-0" data-cat="sz">🧠 統合失調症</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 hover:bg-blue-200 shrink-0" data-cat="dep">😔 うつ病・気分障害</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 shrink-0" data-cat="bip">⚡ 双極性障害</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-100 text-teal-800 hover:bg-teal-200 shrink-0" data-cat="anx">😰 不安障害・PTSD</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 shrink-0" data-cat="ndd">🔬 神経発達症</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 hover:bg-red-200 shrink-0" data-cat="sub">🚫 依存症</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shrink-0" data-cat="pharm">💊 薬物治療</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-800 hover:bg-sky-200 shrink-0" data-cat="psych">🗣 精神療法</button>
+      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-pink-100 text-pink-800 hover:bg-pink-200 shrink-0" data-cat="neuro">⚡ 神経科学</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-6">
+
+  <!-- ステータスバー -->
+  <div class="flex items-center justify-between mb-5">
+    <div class="flex items-center gap-3">
+      <span id="countText" class="text-sm font-semibold text-gray-700">12 件</span>
+      <span class="text-xs text-gray-400">最終更新: 2026-04-26 17:30</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-xs text-gray-400">並び替え</span>
+      <select class="text-xs bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+        <option>新しい順</option>
+        <option>古い順</option>
+        <option>ジャーナル名</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="flex gap-5 items-start">
+
+    <!-- ===== フィード ===== -->
+    <div class="flex-1 min-w-0 space-y-6" id="feed">
+
+      <!-- ヒーローゾーン -->
+      <section>
+        <div class="sec-title"><span class="accent">トップ記事</span></div>
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 border border-gray-200 rounded-2xl overflow-hidden shadow-sm" id="heroZone">
+
+          <!-- メインヒーロー -->
+          <article class="hero-card lg:col-span-3 min-h-[220px] relative cursor-pointer" data-cats="dep pharm">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-800 to-slate-900"></div>
+            <div class="absolute inset-0 opacity-10" style="background:radial-gradient(circle at 30% 40%,#818cf8,transparent 50%),radial-gradient(circle at 80% 70%,#6366f1,transparent 40%);"></div>
+            <div class="absolute inset-0 hero-grad flex flex-col justify-end p-5 sm:p-7">
+              <div class="flex items-center gap-2 mb-2.5">
+                <span class="lbl lbl-pm">PubMed</span>
+                <span class="text-white/60 text-xs">NEJM · 2026-04-22</span>
+                <span class="ml-auto text-white/50 text-xs">Carhart-Harris R, et al.</span>
+              </div>
+              <h2 class="hero-title text-white font-bold text-sm sm:text-lg leading-snug mb-2">
+                <a href="#" target="_blank" rel="noopener">Psilocybin補助療法 vs エスシタロプラム：治療抵抗性うつ病の12ヵ月追跡RCT</a>
+              </h2>
+              <p class="text-white/65 text-xs leading-relaxed line-clamp-2">シロシビン群で抑うつ症状の持続的改善（HAMD-17差異 −4.2点, p=0.003）および寛解率の有意差を確認。12ヵ月時点でも効果が維持された。</p>
+              <div class="flex items-center gap-2 mt-3">
+                <span class="pill pill-dep" style="border-color:#1e40af;color:#1e40af;">うつ病</span>
+                <span class="pill pill-pharm" style="border-color:#3730a3;color:#3730a3;">薬物治療</span>
+                <button class="bm-btn saved ml-auto p-1.5 text-amber-400 bg-amber-400/10" data-uid="h1">
+                  <svg class="w-4 h-4" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                </button>
+                <a href="#" target="_blank" rel="noopener"
+                   class="flex items-center gap-1 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold rounded-lg transition-colors">
+                  PubMedで開く
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- サイド2記事 -->
+          <div class="lg:col-span-2 flex flex-col bg-white divide-y divide-gray-100">
+            <article class="side-story flex-1 p-4 sm:p-5 flex flex-col justify-between" data-cats="sz pharm">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="lbl lbl-pm">PubMed</span>
+                  <span class="text-gray-400 text-xs">Lancet Psychiatry · 04-24</span>
+                </div>
+                <h3 class="side-title font-bold text-sm text-gray-900 leading-snug">
+                  <a href="#" target="_blank" rel="noopener">治療抵抗性統合失調症における第二世代抗精神病薬の比較：48 RCTのネットワークメタ解析</a>
+                </h3>
+                <p class="text-xs text-gray-400 mt-1.5 line-clamp-2 leading-relaxed">クロザピンが全般的症状・再入院リスクで依然最優位（n=12,450）。</p>
+              </div>
+              <div class="flex items-center gap-1.5 mt-2">
+                <span class="pill pill-sz">統合失調症</span>
+                <span class="pill pill-pharm">薬物治療</span>
+                <button class="bm-btn ml-auto p-1 text-gray-300" data-uid="s1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                </button>
+              </div>
+            </article>
+            <article class="side-story flex-1 p-4 sm:p-5 flex flex-col justify-between" data-cats="bip neuro">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="lbl lbl-pre">medRxiv</span>
+                  <span class="text-gray-400 text-xs">preprint · 04-20</span>
+                  <span class="text-orange-500 text-xs font-semibold">査読前</span>
+                </div>
+                <h3 class="side-title font-bold text-sm text-gray-900 leading-snug">
+                  <a href="#" target="_blank" rel="noopener">双極性I型障害のリチウム反応性：多民族コホートを用いたポリジェニックスコア予測</a>
+                </h3>
+                <p class="text-xs text-gray-400 mt-1.5 line-clamp-2 leading-relaxed">n=6,200の多民族コホートでリチウム反応PGSが有効性を予測。</p>
+              </div>
+              <div class="flex items-center gap-1.5 mt-2">
+                <span class="pill pill-bip">双極性障害</span>
+                <span class="pill pill-neuro">神経科学</span>
+                <button class="bm-btn ml-auto p-1 text-gray-300" data-uid="s2">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                </button>
+              </div>
+            </article>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 最新論文セクション -->
+      <section>
+        <div class="sec-title"><span class="accent">最新論文</span>&emsp;論文・プレプリント</div>
+        <div class="space-y-3" id="articleList">
+
+          <!-- 記事1: PTSD -->
+          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="anx psych">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span class="lbl lbl-pm">PubMed</span>
+                <span class="text-gray-400 text-xs">JAMA Psychiatry · 2026-04-18</span>
+              </div>
+              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
+                <a href="#" target="_blank" rel="noopener">持続エクスポージャー法 vs EMDR：複合トラウマPTSDへの多施設RCT 18ヵ月追跡</a>
+              </h3>
+              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">両群で症状改善に有意差なし。コンプライアンス・脱落率はEMDR群で有意に良好（脱落率 12% vs 21%, p=0.04）。</p>
+              <div class="flex items-center gap-2 mt-2.5">
+                <span class="pill pill-anx">PTSD</span>
+                <span class="pill pill-psych">精神療法</span>
+                <span class="lbl lbl-rct ml-1">RCT</span>
+                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </article>
+
+          <!-- 記事2: ADHD -->
+          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="ndd pharm">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span class="lbl lbl-pm">PubMed</span>
+                <span class="text-gray-400 text-xs">Nature Medicine · 2026-04-12</span>
+              </div>
+              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
+                <a href="#" target="_blank" rel="noopener">ADHD成人における刺激薬の10年間心血管安全性：スウェーデン全国コホート研究（n=278,000）</a>
+              </h3>
+              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">通常用量での使用において主要心血管イベントリスクの有意な増加なし（aHR 1.04, 95%CI 0.97–1.12）。</p>
+              <div class="flex items-center gap-2 mt-2.5">
+                <span class="pill pill-ndd">ADHD</span>
+                <span class="pill pill-pharm">薬物治療</span>
+                <span class="lbl lbl-rct ml-1">コホート</span>
+                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </article>
+
+          <!-- 記事3: VR-CBT -->
+          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="anx psych">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span class="lbl lbl-pre">medRxiv</span>
+                <span class="text-gray-400 text-xs">preprint · 2026-04-10</span>
+                <span class="bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded-full font-semibold">査読前</span>
+              </div>
+              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
+                <a href="#" target="_blank" rel="noopener">VR-CBT vs 対面CBT：社交不安障害への単盲検パイロットRCT（12週）</a>
+              </h3>
+              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">VR-CBT群でLSAS得点が12週時点で対面群と同等の改善（差 −1.8点, 95%CI −5.2–1.6）。費用対効果でVRが優位。</p>
+              <div class="flex items-center gap-2 mt-2.5">
+                <span class="pill pill-anx">社交不安障害</span>
+                <span class="pill pill-psych">CBT</span>
+                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a3">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </article>
+
+          <!-- 記事4: GLP-1 -->
+          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="sub pharm">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span class="lbl lbl-pm">PubMed</span>
+                <span class="text-gray-400 text-xs">Am J Psychiatry · 2026-04-08</span>
+              </div>
+              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
+                <a href="#" target="_blank" rel="noopener">GLP-1受容体作動薬によるアルコール使用障害の飲酒量低減：二重盲検プラセボ対照試験</a>
+              </h3>
+              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">セマグルチド投与群（n=104）で週間飲酒量が24週時点で48%減少。重篤な副作用の有意差なし。</p>
+              <div class="flex items-center gap-2 mt-2.5">
+                <span class="pill pill-sub">依存症</span>
+                <span class="pill pill-pharm">薬物治療</span>
+                <span class="lbl lbl-rct ml-1">RCT</span>
+                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a4">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ガイドライン・声明セクション -->
+      <section>
+        <div class="sec-title"><span class="accent">ガイドライン・声明</span>&emsp;学会・機関</div>
+        <div class="space-y-3">
+
+          <!-- GL1: 統合失調症 -->
+          <article class="news-card bg-white rounded-2xl border border-gray-200 border-l-4 border-l-violet-400 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="sz pharm">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span class="lbl lbl-gl">ガイドライン</span>
+                <span class="text-gray-400 text-xs">日本神経精神薬理学会 · 2026-04-15</span>
+                <span class="bg-violet-100 text-violet-700 text-xs px-2 py-0.5 rounded-full font-bold">NEW</span>
+              </div>
+              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
+                <a href="#" target="_blank" rel="noopener">統合失調症薬物治療ガイドライン 2026年版（改訂第4版）— TRS定義・クロザピン導入基準・ECT適応の更新</a>
+              </h3>
+              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">治療抵抗性統合失調症の定義・評価基準を見直し。副作用モニタリング標準化フローを付録に新設。</p>
+              <div class="flex items-center gap-2 mt-2.5">
+                <span class="pill pill-sz">統合失調症</span>
+                <span class="pill pill-pharm">薬物治療</span>
+                <span class="bg-violet-50 text-violet-700 text-xs px-2 py-0.5 rounded font-semibold ml-1">日本語</span>
+                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="g1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </article>
+
+          <!-- GL2: APA うつ -->
+          <article class="news-card bg-white rounded-2xl border border-gray-200 border-l-4 border-l-blue-400 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="dep psych">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span class="lbl lbl-gl">ガイドライン</span>
+                <span class="text-gray-400 text-xs">APA · 2026-04-01</span>
+              </div>
+              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
+                <a href="#" target="_blank" rel="noopener">APA大うつ病性障害治療ガイドライン 第4版：精神療法の位置づけと薬物療法との比較推奨の改訂</a>
+              </h3>
+              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">CBT・IPTを軽〜中等度うつの第一選択として強化。抗うつ薬との初期併用に関する新たなエビデンスを統合。</p>
+              <div class="flex items-center gap-2 mt-2.5">
+                <span class="pill pill-dep">うつ病</span>
+                <span class="pill pill-psych">精神療法</span>
+                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+              </div>
+            </div>
+            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="g2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </article>
+
+        </div>
+      </section>
+
+    </div><!-- /feed -->
+
+    <!-- ===== サイドバー ===== -->
+    <aside class="hidden lg:flex flex-col gap-5 w-72 shrink-0">
+
+      <!-- 取得ソース -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">取得ソース</h3>
+        <div class="space-y-2.5">
+          <label class="flex items-center justify-between gap-2 cursor-pointer">
+            <div class="flex items-center gap-2">
+              <input type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-400">
+              <span class="text-xs font-medium text-gray-700">PubMed (精神科)</span>
+            </div>
+            <span class="lbl lbl-pm">ON</span>
+          </label>
+          <label class="flex items-center justify-between gap-2 cursor-pointer">
+            <div class="flex items-center gap-2">
+              <input type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-400">
+              <span class="text-xs font-medium text-gray-700">medRxiv</span>
+            </div>
+            <span class="lbl lbl-pre">ON</span>
+          </label>
+          <label class="flex items-center justify-between gap-2 cursor-pointer">
+            <div class="flex items-center gap-2">
+              <input type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-400">
+              <span class="text-xs font-medium text-gray-700">日精協ガイドライン</span>
+            </div>
+            <span class="lbl lbl-gl">ON</span>
+          </label>
+          <label class="flex items-center justify-between gap-2 cursor-pointer">
+            <div class="flex items-center gap-2">
+              <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-400">
+              <span class="text-xs font-medium text-gray-400">ClinicalTrials.gov</span>
+            </div>
+            <span class="bg-gray-100 text-gray-400 lbl">OFF</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 注目ジャーナル -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">注目ジャーナル</h3>
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Lancet Psychiatry</span><span class="text-gray-400">3 件</span></div>
+          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">JAMA Psychiatry</span><span class="text-gray-400">2 件</span></div>
+          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Schizophr Bull</span><span class="text-gray-400">2 件</span></div>
+          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Am J Psychiatry</span><span class="text-gray-400">2 件</span></div>
+          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Nature Medicine</span><span class="text-gray-400">1 件</span></div>
+          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">NEJM</span><span class="text-gray-400">1 件</span></div>
+          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">medRxiv</span><span class="text-gray-400">2 件</span></div>
+        </div>
+      </div>
+
+      <!-- 保存済み -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider">保存済み</h3>
+          <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">1</span>
+        </div>
+        <div id="savedList" class="space-y-2">
+          <div class="border-b border-gray-100 pb-2">
+            <a href="#" class="text-xs font-medium text-gray-800 hover:text-indigo-700 line-clamp-2 block">Psilocybin補助療法 vs エスシタロプラム：治療抵抗性うつ病の12ヵ月追跡RCT</a>
+            <p class="text-xs text-gray-400 mt-0.5">NEJM · 2026-04-22</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- キーワードアラート -->
+      <div class="bg-indigo-50 rounded-2xl border border-indigo-100 p-4">
+        <h3 class="text-xs font-bold text-indigo-800 mb-2 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.437L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          キーワードアラート
+        </h3>
+        <div class="flex flex-wrap gap-1.5 mb-3">
+          <span class="bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">clozapine</span>
+          <span class="bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">SSRI</span>
+          <span class="bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">治療抵抗性</span>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" placeholder="キーワード追加…"
+            class="flex-1 text-xs px-2.5 py-1.5 rounded-lg border border-indigo-200 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300">
+          <button class="px-3 py-1.5 bg-indigo-700 text-white text-xs font-semibold rounded-lg hover:bg-indigo-800">追加</button>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+</main>
+
+<!-- フッター -->
+<footer class="mt-10 border-t border-gray-200 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
+    <span>PsychFeed — 個人利用 / 情報は原著論文を必ず確認してください</span>
+    <span>デザインプロトタイプ v1</span>
+  </div>
+</footer>
+
+<!-- JS -->
+<script>
+  // カテゴリフィルター
+  const chips    = document.querySelectorAll('.chip');
+  const articles = document.querySelectorAll('[data-cats]');
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      // アクティブスタイルをリセット
+      chips.forEach(c => {
+        c.classList.remove('bg-indigo-600','text-white');
+        c.classList.add('opacity-80');
+      });
+      chip.classList.add('bg-indigo-600','text-white');
+      chip.classList.remove('opacity-80');
+
+      const cat = chip.dataset.cat;
+      let count = 0;
+      articles.forEach(art => {
+        const cats = art.dataset.cats?.split(' ') || [];
+        const show = cat === 'all' || cats.includes(cat);
+        art.style.display = show ? '' : 'none';
+        if (show) count++;
+      });
+      document.getElementById('countText').textContent = `${count} 件`;
+    });
+  });
+
+  // キーワード検索
+  let stimer;
+  document.getElementById('searchInput').addEventListener('input', function () {
+    clearTimeout(stimer);
+    const q = this.value.trim().toLowerCase();
+    stimer = setTimeout(() => {
+      articles.forEach(art => {
+        art.style.display = (!q || art.textContent.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    }, 200);
+  });
+
+  // ブックマーク（デモ）
+  document.querySelectorAll('.bm-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const isSaved = btn.classList.contains('saved');
+      const svg = btn.querySelector('svg');
+      if (isSaved) {
+        btn.classList.remove('saved','text-amber-400');
+        btn.classList.add('text-gray-300');
+        svg.setAttribute('fill','none');
+      } else {
+        btn.classList.add('saved','text-amber-400');
+        btn.classList.remove('text-gray-300');
+        svg.setAttribute('fill','currentColor');
+      }
+    });
+  });
+
+  // 更新ボタン（スピンのみ）
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    const icon = document.getElementById('refreshIcon');
+    icon.classList.add('spin');
+    setTimeout(() => icon.classList.remove('spin'), 1500);
+  });
+</script>
+</body>
+</html>

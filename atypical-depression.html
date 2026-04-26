@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>非定型うつ病 臨床ガイド - 精神科</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --level-a: #15803d;
+      --level-b: #1d4ed8;
+      --level-c: #6b7280;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-first {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-augment {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white; padding: 0.2rem 0.65rem;
+      border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
+    }
+    .dx-node {
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.75rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    .dx-node-start { background: #1e3a5f; color: white; }
+    .dx-node-check { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
+    .dx-node-yes { background: #dcfce7; border: 2px solid #15803d; color: #14532d; }
+    .dx-node-no { background: #fee2e2; border: 2px solid #dc2626; color: #7f1d1d; }
+    .dx-node-diagnosis { background: linear-gradient(135deg, #1e3a5f, #0f766e); color: white; }
+    .toc {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 50;
+      min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 1.5rem;
+      bottom: -1rem;
+      width: 2px;
+      background: #e5e7eb;
+    }
+    .timeline-item:last-child::before { display: none; }
+    .timeline-dot {
+      position: absolute;
+      left: 0;
+      top: 0.4rem;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      background: white;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- フローティング目次 -->
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#quickref" class="text-sm text-gray-600 hover:text-blue-700 block">クイックRef</a></li>
+      <li><a href="#history" class="text-sm text-gray-600 hover:text-blue-700 block">概念・歴史</a></li>
+      <li><a href="#diagnosis" class="text-sm text-gray-600 hover:text-blue-700 block">診断基準</a></li>
+      <li><a href="#core-features" class="text-sm text-gray-600 hover:text-blue-700 block">核心症状</a></li>
+      <li><a href="#dx-tree" class="text-sm text-gray-600 hover:text-blue-700 block">診断ツリー</a></li>
+      <li><a href="#differential" class="text-sm text-gray-600 hover:text-blue-700 block">鑑別診断</a></li>
+      <li><a href="#epidemiology" class="text-sm text-gray-600 hover:text-blue-700 block">疫学</a></li>
+      <li><a href="#treatment-pharma" class="text-sm text-gray-600 hover:text-blue-700 block">薬物治療</a></li>
+      <li><a href="#treatment-non-pharma" class="text-sm text-gray-600 hover:text-blue-700 block">非薬物治療</a></li>
+      <li><a href="#monitoring" class="text-sm text-gray-600 hover:text-blue-700 block">禁忌・安全</a></li>
+    </ul>
+  </nav>
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-10">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="brain" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold">非定型うつ病</h1>
+      <p class="mt-2 text-lg opacity-85">ICD-10: F32/F33 ／ DSM-5-TR: 大うつ病性障害「非定型の特徴を伴う」specifier</p>
+      <div class="flex gap-2 mt-4 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">概念・歴史</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">診断基準</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">核心症状</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">薬物治療</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">非薬物治療</span>
+      </div>
+      <div class="mt-4 bg-white/10 rounded-xl px-4 py-3 inline-block">
+        <p class="text-sm font-semibold opacity-90">記憶の鍵: <span class="font-bold text-yellow-200">R-A-I-L-S</span></p>
+        <p class="text-xs opacity-80 mt-1">
+          <span class="font-bold text-yellow-200">R</span>eactivity（気分反応性）・
+          <span class="font-bold text-yellow-200">A</span>ppetite増（過食）・
+          <span class="font-bold text-yellow-200">I</span>nterpersonal拒絶過敏・
+          <span class="font-bold text-yellow-200">L</span>eaden paralysis（鉛様麻痺）・
+          <span class="font-bold text-yellow-200">S</span>leep過眠
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- ① 外来クイックリファレンス -->
+    <div class="section-card" id="quickref">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-blue-600 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる3ポイント</h2>
+          <p class="text-gray-500 text-sm">診察中に即座に確認すべき要点</p>
+        </div>
+      </div>
+      <div class="grid gap-4">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
+          <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">気分反応性を必ず確認（A基準・必須）</div>
+            <p class="text-gray-600 text-sm">「良いことがあったとき、少しでも気分が明るくなれますか？」—— これが <span class="font-bold">Yes</span> ならば非定型の可能性。憂うつ性（melancholic）では気分不応性が主体で鑑別の鍵。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl border-l-4 border-amber-600">
+          <div class="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">双極スペクトラムのスクリーニングを忘れずに</div>
+            <p class="text-gray-600 text-sm">非定型の特徴は双極II型と高頻度で重なる。過去の軽躁・躁エピソード、家族歴、抗うつ薬での情動変調を必ず問診。安易なSSRI単剤投与に注意。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-l-4 border-purple-600">
+          <div class="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">拒絶過敏性は長年のパターン——治療の長期設計を</div>
+            <p class="text-gray-600 text-sm">拒絶過敏性はエピソード横断的な特質様パターン。BPDとの鑑別のみならず、心理療法（CBT/IPT）と薬物療法を組み合わせた長期維持戦略が必要。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 概念・歴史 -->
+    <div class="section-card" id="history">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="book-open" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">概念・歴史</h2>
+          <p class="text-gray-500 text-sm">非定型うつ病の成立史</p>
+        </div>
+      </div>
+
+      <div class="mb-4 bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+        <p class="text-sm text-gray-700">「非定型」という名称は、従来の<span class="font-bold text-indigo-700">典型的うつ（気分不応性・不眠・体重減少）</span>に対し、<span class="font-bold text-indigo-700">気分反応性・過眠・過食</span>を示す群が「典型ではない（not typical）」とされたことに由来。しかし実臨床ではうつ全体の<span class="font-bold">15〜40%</span>を占め、「稀な亜型」という誤解に注意。</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- 1950年代 -->
+        <div class="timeline-item">
+          <div class="timeline-dot text-indigo-500"></div>
+          <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-bold text-indigo-700 text-sm bg-indigo-100 px-2 py-0.5 rounded-full">1950年代</span>
+              <span class="font-bold text-gray-800">West & Dally ら — 「非定型」概念の萌芽</span>
+            </div>
+            <p class="text-sm text-gray-600">従来の内因性/憂うつ性うつ病像と合わない群（「reactive/atypical」）を記述。MAOIが一部の"非定型"なうつに有効であることを初めて報告。</p>
+          </div>
+        </div>
+
+        <!-- 1970年代 -->
+        <div class="timeline-item">
+          <div class="timeline-dot text-blue-500"></div>
+          <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-bold text-blue-700 text-sm bg-blue-100 px-2 py-0.5 rounded-full">1970年代</span>
+              <span class="font-bold text-gray-800">Donald Klein — Hysteroid Dysphoria 概念</span>
+            </div>
+            <p class="text-sm text-gray-600"><span class="font-bold">拒絶・対人刺激への過敏（hysteroid dysphoria）</span>に注目。食欲・睡眠の反転、軽躁様要素を特徴とする亜型を提唱。双極スペクトラム・境界例との関連を議論。</p>
+          </div>
+        </div>
+
+        <!-- 1980-90年代 Columbia -->
+        <div class="timeline-item">
+          <div class="timeline-dot text-teal-500"></div>
+          <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-bold text-teal-700 text-sm bg-teal-100 px-2 py-0.5 rounded-full">1980〜90年代</span>
+              <span class="font-bold text-gray-800">Columbia グループ — 診断基準の確立とRCT</span>
+            </div>
+            <p class="text-sm text-gray-600"><span class="font-bold">Klein, Quitkin, Stewart, McGrath</span> らが、<span class="font-bold">気分反応性＋2つ以上の随伴症状</span>で定義（Columbia Criteria）。複数RCTで<span class="font-bold text-teal-700">フェネルジン（MAOI）＞イミプラミン（TCA）＞プラセボ</span>という薬物反応差を示し、亜型の生物学的妥当性を主張。</p>
+            <div class="mt-2 text-xs text-gray-500">Quitkin et al., Br J Psychiatry 1993 Suppl</div>
+          </div>
+        </div>
+
+        <!-- DSM III-R → IV → 5-TR -->
+        <div class="timeline-item">
+          <div class="timeline-dot text-green-500"></div>
+          <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-bold text-green-700 text-sm bg-green-100 px-2 py-0.5 rounded-full">DSM-III-R → IV → 5-TR</span>
+              <span class="font-bold text-gray-800">Specifier として正式採用</span>
+            </div>
+            <p class="text-sm text-gray-600">DSM-III（1980）では「非定型感情障害（296.82）」という別カテゴリーにとどまった。<span class="font-bold">DSM-III-R（1987）でspecifier形式が導入</span>され、<span class="font-bold">DSM-IV（1994）で現在の診断基準（A気分反応性＋B2つ以上＋C除外）として確立</span>。DSM-5-TRも同趣旨を継承。大うつ病性障害・持続性うつ病性障害・双極I/IIのうつエピソードに適用可能。</p>
+          </div>
+        </div>
+
+        <!-- 2009以降 -->
+        <div>
+          <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-bold text-gray-600 text-sm bg-gray-100 px-2 py-0.5 rounded-full">2009年〜現在</span>
+              <span class="font-bold text-gray-800">概念の再検討</span>
+            </div>
+            <p class="text-sm text-gray-600"><span class="font-bold">Stewart et al. 2009 (Neuropsychopharmacology)</span> が気分反応性を必須とすることへの疑義を呈し、診断基準の改訂を議論。CANMAT等の現行ガイドラインは亜型特化のファーストライン薬剤推奨は行わず、安全性・入手性重視でSSRIを実質的ファーストラインとする。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 非定型 vs 憂うつ性 比較表 -->
+      <div class="mt-6">
+        <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+          <i data-lucide="git-branch" class="w-4 h-4 text-gray-500"></i>
+          非定型 vs 憂うつ性（Melancholic）うつ病の対比
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-gray-800 text-white">
+                <th class="p-3 text-left rounded-tl-lg">特徴</th>
+                <th class="p-3 text-left text-indigo-200">非定型</th>
+                <th class="p-3 text-left text-orange-200 rounded-tr-lg">憂うつ性（Melancholic）</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">気分</td>
+                <td class="p-3 text-indigo-700 font-medium">反応性あり（良いことで一時的に改善）</td>
+                <td class="p-3 text-orange-700 font-medium">不応性（何があっても改善しない）</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">睡眠</td>
+                <td class="p-3 text-indigo-700">過眠（10時間超・日中も眠い）</td>
+                <td class="p-3 text-orange-700">早朝覚醒・不眠が多い</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">食欲・体重</td>
+                <td class="p-3 text-indigo-700">過食・体重増加（特に炭水化物渇求）</td>
+                <td class="p-3 text-orange-700">食欲低下・体重減少</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">体性感覚</td>
+                <td class="p-3 text-indigo-700">鉛様麻痺感（手足が鉛のように重い）</td>
+                <td class="p-3 text-orange-700">精神運動興奮または制止</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">対人関係</td>
+                <td class="p-3 text-indigo-700">拒絶過敏性（長年のパターン）</td>
+                <td class="p-3 text-orange-700">特異的な対人過敏は少ない</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">日内変動</td>
+                <td class="p-3 text-indigo-700">明確な変動は少ない</td>
+                <td class="p-3 text-orange-700">朝方悪化（diurnal variation）</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">推奨薬剤</td>
+                <td class="p-3 text-indigo-700">SSRI優先、MAOI（海外）</td>
+                <td class="p-3 text-orange-700">SSRI/SNRI・積極的薬物療法</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="p-3 font-medium text-gray-700">DSM上の規定</td>
+                <td class="p-3 text-indigo-600 text-xs">同エピソードで憂うつ性と<span class="font-bold">共存不可</span></td>
+                <td class="p-3 text-orange-600 text-xs">同エピソードで非定型と<span class="font-bold">共存不可</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 診断基準 -->
+    <div class="section-card" id="diagnosis">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">診断基準</h2>
+          <p class="text-gray-500 text-sm">DSM-5-TR「With Atypical Features」specifier</p>
+        </div>
+      </div>
+
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-4">
+          <i data-lucide="clipboard-list" class="w-5 h-5 text-blue-700"></i>
+          <span class="font-bold text-blue-800 text-lg">DSM-5-TR「非定型の特徴を伴う（With Atypical Features）」</span>
+        </div>
+        <div class="bg-blue-100 border border-blue-200 rounded-lg p-3 mb-4 text-sm text-blue-800">
+          <span class="font-bold">適用条件：</span>エピソードの<span class="font-bold">大部分の日</span>において、以下の特徴が優位であること。大うつ病性障害、持続性うつ病性障害、双極I/IIのうつエピソードに適用可。
+        </div>
+
+        <!-- A基準（必須） -->
+        <div class="mb-5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">A基準（必須）</span>
+            <span class="font-bold text-gray-700">気分反応性（Mood Reactivity）</span>
+          </div>
+          <div class="bg-white rounded-xl p-4 border-l-4 border-red-400">
+            <div class="flex items-start gap-3">
+              <i data-lucide="sun" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>
+              <div>
+                <p class="text-sm text-gray-700">実際に生じた、または生じると予期される<span class="font-bold text-red-700">良い出来事に対して気分が明るくなる</span>（気分の反応性）</p>
+                <p class="text-xs text-gray-500 mt-1">※完全な快楽性の消失（アンヘドニア）とは区別。何か良いことが起きれば一時的に「普通に近く」なれる。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B基準（2つ以上） -->
+        <div class="mb-4">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">B基準（以下のうち2つ以上）</span>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="bg-white rounded-xl p-4 border border-blue-200">
+              <div class="flex items-start gap-3">
+                <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-indigo-700 font-bold text-sm">①</span>
+                </div>
+                <div>
+                  <div class="font-bold text-gray-700 text-sm">体重著増または食欲著増</div>
+                  <div class="text-xs text-gray-500 mt-1">特に炭水化物・甘いものへの渇求が特徴的</div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-blue-200">
+              <div class="flex items-start gap-3">
+                <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-indigo-700 font-bold text-sm">②</span>
+                </div>
+                <div>
+                  <div class="font-bold text-gray-700 text-sm">過眠（Hypersomnia）</div>
+                  <div class="text-xs text-gray-500 mt-1">24時間睡眠が10時間超、または正常時より2時間以上増加</div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-blue-200">
+              <div class="flex items-start gap-3">
+                <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-indigo-700 font-bold text-sm">③</span>
+                </div>
+                <div>
+                  <div class="font-bold text-gray-700 text-sm">鉛様麻痺感（Leaden Paralysis）</div>
+                  <div class="text-xs text-gray-500 mt-1">腕・脚が鉛のように重く感じる。通常の易疲労とは質が異なる重苦しさ</div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-blue-200">
+              <div class="flex items-start gap-3">
+                <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-indigo-700 font-bold text-sm">④</span>
+                </div>
+                <div>
+                  <div class="font-bold text-gray-700 text-sm">対人関係的拒絶過敏性（Rejection Sensitivity）</div>
+                  <div class="text-xs text-gray-500 mt-1"><span class="font-semibold text-orange-600">長年にわたるパターン</span>（気分エピソード時に限らない）。拒絶・批判への過剰な反応で社会的/職業的機能障害を招く</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C基準 -->
+        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-yellow-600 text-white text-xs font-bold px-2 py-1 rounded">C基準（除外）</span>
+          </div>
+          <p class="text-sm text-gray-700">同じエピソードで<span class="font-bold text-red-700">「憂うつ性の特徴を伴う（With Melancholic Features）」</span>または<span class="font-bold text-red-700">「緊張病を伴う（With Catatonia）」</span>を満たさないこと</p>
+        </div>
+      </div>
+
+      <!-- ICD-10との関係 -->
+      <div class="mt-4 bg-gray-50 border border-gray-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <i data-lucide="info" class="w-4 h-4 text-gray-600"></i>
+          <span class="font-bold text-gray-700 text-sm">ICD-10 / ICD-11 での位置づけ</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-600">
+          <div>
+            <span class="font-bold text-gray-700">ICD-10（臨床記述）：</span>うつ病エピソード（F32/F33）内での「反転した植物性徴候（過眠・過食）」として記述。DSM の specifier と1対1のコードはなし。
+          </div>
+          <div>
+            <span class="font-bold text-gray-700">ICD-10-CM（米国）：</span>F32.89（その他明記うつ）の Applicable To として "Atypical depression" が掲がる場合あり。ICD-11では同名のspecifierは設けられていない。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 核心症状の詳細 -->
+    <div class="section-card" id="core-features">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="target" class="w-6 h-6 text-purple-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">核心症状の臨床的特徴</h2>
+          <p class="text-gray-500 text-sm">RAILS — 5つの核心特徴の詳細</p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Reactivity -->
+        <div class="flex items-start gap-4 bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <div class="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">R</div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800">気分反応性（Mood Reactivity）— DSM A基準・必須</div>
+            <div class="text-sm text-gray-600 mt-1">良い出来事（褒められた、楽しい予定）に対し、一時的に「普通に近く」なれる。悲嘆・適応障害との鑑別点は、反応後の持続時間と機能回復の程度。<span class="font-bold text-amber-700">気分の完全なアンヘドニアではない点が重要。</span></div>
+            <div class="mt-2 text-xs text-gray-500">外来での確認：「嬉しいことや楽しいことがあったとき、一時的でも気分が上がりますか？」</div>
+          </div>
+        </div>
+
+        <!-- Appetite -->
+        <div class="flex items-start gap-4 bg-green-50 border border-green-200 rounded-xl p-4">
+          <div class="w-10 h-10 bg-green-600 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">A</div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800">過食・体重増加（Appetite/Weight Gain）— B基準①</div>
+            <div class="text-sm text-gray-600 mt-1">炭水化物・甘いものへの渇求（carbohydrate craving）が特徴的。感情調節的な食行動（binge eating様）を示すことも。憂うつ性では体重<span class="font-bold">減少</span>——この点が鑑別の鍵。</div>
+            <div class="mt-2 text-xs text-gray-500">季節性感情障害（SAD）・月経前不快気分障害（PMDD）との重なりに注意</div>
+          </div>
+        </div>
+
+        <!-- Interpersonal rejection -->
+        <div class="flex items-start gap-4 bg-rose-50 border border-rose-200 rounded-xl p-4">
+          <div class="w-10 h-10 bg-rose-600 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">I</div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800">対人関係的拒絶過敏性（Interpersonal Rejection Sensitivity）— B基準④</div>
+            <div class="text-sm text-gray-600 mt-1"><span class="font-bold text-rose-700">気分エピソードに限らない長年の特質様パターン。</span>拒絶・批判・見捨てられへの過剰な情動反応で、職業的・社会的機能障害を招く。恋愛関係・職場での「燃え尽き」パターンをくりかえしやすい。</div>
+            <div class="mt-2 bg-rose-100 rounded-lg p-2 text-xs text-rose-800">
+              <span class="font-bold">BPDとの鑑別ポイント：</span>非定型の拒絶過敏性は衝動的行動・自傷・慢性的空虚感・同一性不安が前景に出ない。DSM基準（A＋B2つ以上）の枠内で評価する。
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaden paralysis -->
+        <div class="flex items-start gap-4 bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <div class="w-10 h-10 bg-slate-600 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">L</div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800">鉛様麻痺感（Leaden Paralysis）— B基準③</div>
+            <div class="text-sm text-gray-600 mt-1">腕・脚が「鉛のように重い」「体が動かない」感覚。DSM-5-TRでは<span class="font-bold text-slate-700">通常1時間以上持続する</span>と定義される。一般的な疲労・倦怠感とは質が異なる重苦しさ。</div>
+            <div class="mt-2 bg-slate-100 rounded-lg p-2 text-xs text-slate-700">
+              <span class="font-bold">重要：</span>鉛様麻痺は<span class="font-bold text-red-700">気分反応性を示さない（mood-reactive ではない）</span>。良いことがあっても麻痺感は改善しない点が特徴。しばしばうつの罪責感や「やる気がない」と混同されやすい。
+            </div>
+            <div class="mt-2 text-xs text-gray-500">外来での確認：「腕や脚が鉛のように重く感じることがありますか？1時間以上続く体が動かない感覚です。」</div>
+          </div>
+        </div>
+
+        <!-- Sleep -->
+        <div class="flex items-start gap-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0">S</div>
+          <div class="flex-1">
+            <div class="font-bold text-gray-800">過眠（Sleep / Hypersomnia）— B基準②</div>
+            <div class="text-sm text-gray-600 mt-1">24時間の睡眠が10時間を超える、または平常時より2時間以上増加。日中の過度な眠気・長時間の昼寝。睡眠の質は悪い（熟睡感なし）ことも多い。<span class="font-bold text-blue-700">憂うつ性の早朝覚醒・不眠とは対照的。</span></div>
+            <div class="mt-2 text-xs text-gray-500">SADや遅相型睡眠相障害との鑑別。甲状腺機能低下症・薬剤性過眠の除外も</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ 診断ツリー -->
+    <div class="section-card" id="dx-tree">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">診断フロー</h2>
+          <p class="text-gray-500 text-sm">非定型の特徴を同定するステップ</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-2 my-4">
+        <!-- Step 1 -->
+        <div class="dx-node dx-node-start w-72 text-sm">うつ症状を主訴に来院</div>
+        <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400"></i>
+
+        <!-- Step 2 -->
+        <div class="dx-node dx-node-check w-80 text-sm">DSM-5-TR 大うつ病エピソードの基準（A〜E）を確認<br><span class="text-xs font-normal">2週間以上・機能障害あり</span></div>
+
+        <div class="flex gap-8 items-start mt-1 w-full max-w-lg">
+          <div class="flex flex-col items-center gap-1 flex-1">
+            <div class="text-green-700 font-bold text-xs">YES</div>
+            <i data-lucide="arrow-down" class="w-4 h-4 text-green-600"></i>
+            <div class="dx-node dx-node-yes w-full text-xs">MDD確認</div>
+          </div>
+          <div class="flex flex-col items-center gap-1 flex-1">
+            <div class="text-red-700 font-bold text-xs">NO</div>
+            <i data-lucide="arrow-down" class="w-4 h-4 text-red-500"></i>
+            <div class="dx-node dx-node-no w-full text-xs">適応障害・持続性うつ等を検討</div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 mt-2"></i>
+
+        <!-- Step 3 -->
+        <div class="dx-node dx-node-check w-80 text-sm">A基準：気分反応性はあるか？<br><span class="text-xs font-normal">「良いことがあれば一時的に気分が上がる？」</span></div>
+
+        <div class="flex gap-8 items-start mt-1 w-full max-w-lg">
+          <div class="flex flex-col items-center gap-1 flex-1">
+            <div class="text-green-700 font-bold text-xs">YES（気分反応性あり）</div>
+            <i data-lucide="arrow-down" class="w-4 h-4 text-green-600"></i>
+            <div class="dx-node dx-node-yes w-full text-xs">非定型の可能性 → B基準へ</div>
+          </div>
+          <div class="flex flex-col items-center gap-1 flex-1">
+            <div class="text-red-700 font-bold text-xs">NO（気分不応性）</div>
+            <i data-lucide="arrow-down" class="w-4 h-4 text-red-500"></i>
+            <div class="dx-node dx-node-no w-full text-xs">憂うつ性（melancholic）を検討</div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 mt-2"></i>
+
+        <!-- Step 4 -->
+        <div class="dx-node dx-node-check w-80 text-sm">B基準：以下の2つ以上に該当？<br><span class="text-xs font-normal">過食・過眠・鉛様麻痺・拒絶過敏</span></div>
+
+        <div class="flex gap-8 items-start mt-1 w-full max-w-lg">
+          <div class="flex flex-col items-center gap-1 flex-1">
+            <div class="text-green-700 font-bold text-xs">YES（2つ以上）</div>
+            <i data-lucide="arrow-down" class="w-4 h-4 text-green-600"></i>
+            <div class="dx-node dx-node-check w-full text-xs">憂うつ性/緊張病と共存しないか確認（C基準）</div>
+          </div>
+          <div class="flex flex-col items-center gap-1 flex-1">
+            <div class="text-red-700 font-bold text-xs">NO（1つ以下）</div>
+            <i data-lucide="arrow-down" class="w-4 h-4 text-red-500"></i>
+            <div class="dx-node dx-node-no w-full text-xs">非定型 specifier は不適用</div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 mt-2"></i>
+
+        <!-- 最終診断 -->
+        <div class="dx-node dx-node-diagnosis w-80 text-sm">
+          大うつ病性障害「非定型の特徴を伴う」<br>
+          <span class="text-xs font-normal opacity-80">（DSM-5-TR specifier 確定）</span>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400"></i>
+
+        <!-- 双極スクリーニング -->
+        <div class="dx-node dx-node-check w-80 text-sm bg-amber-100 border-amber-400 text-amber-800">
+          <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i>
+          双極スペクトラムのスクリーニング<br>
+          <span class="text-xs font-normal">過去の軽躁/躁エピソード・家族歴・抗うつ薬での変調</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑥ 疫学 -->
+    <div class="section-card" id="epidemiology">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="bar-chart-2" class="w-6 h-6 text-sky-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">疫学・臨床像</h2>
+          <p class="text-gray-500 text-sm">有病率・好発・双極スペクトラムとの関係</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="bg-sky-50 rounded-xl p-4 border border-sky-200 text-center">
+          <div class="text-3xl font-bold text-sky-700">15〜40%</div>
+          <div class="text-sm text-gray-600 mt-1">うつ病全体に占める割合</div>
+          <div class="text-xs text-gray-400 mt-1">定義・サンプルにより変動</div>
+        </div>
+        <div class="bg-rose-50 rounded-xl p-4 border border-rose-200 text-center">
+          <div class="text-3xl font-bold text-rose-600">女性 > 男性</div>
+          <div class="text-sm text-gray-600 mt-1">性差</div>
+          <div class="text-xs text-gray-400 mt-1">一貫した傾向</div>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200 text-center">
+          <div class="text-3xl font-bold text-amber-600">若年発症</div>
+          <div class="text-sm text-gray-600 mt-1">発症傾向</div>
+          <div class="text-xs text-gray-400 mt-1">思春期〜青年期に多い</div>
+        </div>
+      </div>
+      <div class="warning-box">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          双極スペクトラムとの重大な関連
+        </div>
+        <p class="text-sm text-gray-700">非定型の特徴は<span class="font-bold">双極II型・双極スペクトラム</span>と高頻度で重なる。初発うつとして受診した非定型像では、<span class="font-bold text-amber-700">抗うつ薬誘発の情動変調・躁転・急速交代化</span>に注意。必ず双極性障害のスクリーニングを実施する。</p>
+      </div>
+    </div>
+
+    <!-- ⑦ 鑑別診断 -->
+    <div class="section-card" id="differential">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="alert-circle" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">鑑別診断</h2>
+          <p class="text-gray-500 text-sm">除外すべき疾患・状態</p>
+        </div>
+      </div>
+
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>
+          必須除外（見逃し危険）
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="bg-white rounded-lg p-3 border border-red-200">
+            <div class="font-bold text-sm text-red-800 mb-1">双極性障害 II型 / 双極スペクトラム</div>
+            <p class="text-xs text-gray-600">過去の軽躁エピソード・家族歴・抗うつ薬使用歴。MDQ・HCL-32を活用。非定型うつ＋双極特性はSSRI単剤で躁転・急速交代化のリスク</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-red-200">
+            <div class="font-bold text-sm text-red-800 mb-1">甲状腺機能低下症</div>
+            <p class="text-xs text-gray-600">過眠・体重増加・倦怠感が類似。TSH（±fT4）を確認。橋本病含む自己免疫性甲状腺炎も念頭に</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-red-200">
+            <div class="font-bold text-sm text-red-800 mb-1">薬剤誘発性（ステロイド・βブロッカー等）</div>
+            <p class="text-xs text-gray-600">服薬歴の確認。経口避妊薬（プロゲスチン系）・抗ヒスタミン薬による過眠・気分変動も鑑別</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-red-200">
+            <div class="font-bold text-sm text-red-800 mb-1">睡眠障害（ナルコレプシー・遅相型睡眠相障害）</div>
+            <p class="text-xs text-gray-600">過眠が前景の場合はACSAS・睡眠ポリグラフを検討。遅相型は過眠と朝の不調が特徴的</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box mt-3">
+        <div class="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-4 h-4"></i>
+          精神疾患の鑑別
+        </div>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="bg-white rounded-lg p-3 border border-yellow-200">
+            <div class="font-bold text-sm text-yellow-800 mb-1">境界性パーソナリティ障害（BPD）</div>
+            <p class="text-xs text-gray-600">拒絶過敏性の重なりが最大の鑑別点。BPDでは<span class="font-bold">衝動的行動・自傷・慢性的空虚感・同一性の不安定</span>が前景。気分反応性の質（数時間の感情嵐 vs エピソード内の反応性）で区別</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-yellow-200">
+            <div class="font-bold text-sm text-yellow-800 mb-1">季節性感情障害（SAD）</div>
+            <p class="text-xs text-gray-600">秋〜冬に過眠・炭水化物渇求・抑うつが生じる点で重なる。非定型＝SADではないが併存・重なりは多い。季節性パターンの有無を確認。光療法適応</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-yellow-200">
+            <div class="font-bold text-sm text-yellow-800 mb-1">社交不安症 / 回避性パーソナリティ障害</div>
+            <p class="text-xs text-gray-600">拒絶・批判への過敏と対人回避が共通。恐怖の焦点（評価恐怖 vs 見捨てられ恐怖）、回避の状況特異性、児少期からの持続パターンで整理</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-yellow-200">
+            <div class="font-bold text-sm text-yellow-800 mb-1">持続性うつ病性障害（気分変調症）</div>
+            <p class="text-xs text-gray-600">2年以上の慢性経過・軽度症状。非定型の特徴を伴う持続性うつも存在（DSM-5-TR: 持続性うつ病性障害にも specifier 適用可）</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-yellow-200">
+            <div class="font-bold text-sm text-yellow-800 mb-1">成人ADHD — 拒絶感受性不快症（RSD）</div>
+            <p class="text-xs text-gray-600">ADHDの重要な随伴症状として<span class="font-bold">拒絶感受性不快症（Rejection Sensitive Dysphoria: RSD）</span>がある。鑑別ポイント：ADHDのRSDは<span class="font-bold">分単位〜時間単位</span>の感情嵐（非定型は日単位のエピソード内）、注意の問題・多動・衝動性が前景、小児期からの持続パターン</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-yellow-200">
+            <div class="font-bold text-sm text-yellow-800 mb-1">月経前不快気分障害（PMDD）</div>
+            <p class="text-xs text-gray-600">過食・過眠・拒絶過敏性が黄体期（月経前1〜2週）に周期的に出現。非定型うつは月経周期に拘束されない持続性が特徴。ただし非定型うつとPMDDは合併しうる</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑧ 薬物治療 -->
+    <div class="section-card" id="treatment-pharma">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="pill" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬物治療</h2>
+          <p class="text-gray-500 text-sm">非定型うつ病の薬物療法アルゴリズム</p>
+        </div>
+      </div>
+
+      <!-- 治療ステップフロー -->
+      <div class="flex flex-col md:flex-row items-stretch gap-4 mb-6">
+        <div class="flex-1 bg-red-50 border border-red-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+            <span class="font-bold text-red-800">ファーストライン</span>
+          </div>
+          <ul class="text-sm space-y-1 text-gray-700">
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-green-600 flex-shrink-0"></i> SSRI（エスシタロプラム・セルトラリン等）</li>
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-green-600 flex-shrink-0"></i> 心理教育</li>
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-green-600 flex-shrink-0"></i> CBT / 対人関係療法</li>
+          </ul>
+          <div class="mt-3"><span class="badge-level-a">Level A</span></div>
+        </div>
+
+        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-400 self-center hidden md:block flex-shrink-0"></i>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400 self-center md:hidden"></i>
+
+        <div class="flex-1 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-yellow-600 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+            <span class="font-bold text-yellow-800">セカンドライン</span>
+          </div>
+          <ul class="text-sm space-y-1 text-gray-700">
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-yellow-600 flex-shrink-0"></i> SNRI（ベンラファキシン）</li>
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-yellow-600 flex-shrink-0"></i> NaSSA（ミルタザピン）</li>
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-yellow-600 flex-shrink-0"></i> ボルチオキセチン</li>
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-yellow-600 flex-shrink-0"></i> 増強療法（SGA・リチウム）</li>
+          </ul>
+          <div class="mt-3"><span class="badge-level-b">Level B</span></div>
+        </div>
+
+        <i data-lucide="arrow-right" class="w-6 h-6 text-gray-400 self-center hidden md:block flex-shrink-0"></i>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400 self-center md:hidden"></i>
+
+        <div class="flex-1 bg-purple-50 border border-purple-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+            <span class="font-bold text-purple-800">第三線 / 治療抵抗性</span>
+          </div>
+          <ul class="text-sm space-y-1 text-gray-700">
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-purple-600 flex-shrink-0"></i> MAOI（海外: フェネルジン等）</li>
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-purple-600 flex-shrink-0"></i> rTMS</li>
+            <li class="flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-purple-600 flex-shrink-0"></i> mECT（重症・緊急）</li>
+          </ul>
+          <div class="mt-3"><span class="badge-level-a">Level A</span><span class="text-xs text-gray-500 ml-1">（mECT）</span></div>
+        </div>
+      </div>
+
+      <!-- ファーストライン詳細テーブル -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span class="badge-first">ファーストライン</span>
+        <span class="text-gray-500 text-sm font-normal">SSRI（日本での実質的第一選択）</span>
+      </h3>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="text-left p-3 rounded-tl-lg font-bold text-gray-700">薬剤名</th>
+              <th class="text-left p-3 font-bold text-gray-700">開始用量</th>
+              <th class="text-left p-3 font-bold text-gray-700">目標用量</th>
+              <th class="text-left p-3 font-bold text-gray-700">非定型での特徴・適応</th>
+              <th class="text-left p-3 rounded-tr-lg font-bold text-gray-700">エビデンス</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">エスシタロプラム</td>
+              <td class="p-3">5–10 mg/日</td>
+              <td class="p-3">10–20 mg/日</td>
+              <td class="p-3 text-gray-600">忍容性高・相互作用少。非定型全般に扱いやすい</td>
+              <td class="p-3"><span class="badge-level-a">Level A</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">セルトラリン</td>
+              <td class="p-3">25–50 mg/日</td>
+              <td class="p-3">100–200 mg/日</td>
+              <td class="p-3 text-gray-600">妊産婦・高齢者に比較的安全。非定型RCT（McGrath等）でTCA同等</td>
+              <td class="p-3"><span class="badge-level-a">Level A</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">フルオキセチン<span class="text-xs text-gray-400">（海外）</span></td>
+              <td class="p-3">10–20 mg/日</td>
+              <td class="p-3">20–60 mg/日</td>
+              <td class="p-3 text-gray-600">非定型RCT（McGrath 1992）でイミプラミン同等・プラセボ優越。半減期長い</td>
+              <td class="p-3"><span class="badge-level-a">Level A</span></td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="p-3 font-medium">パロキセチン</td>
+              <td class="p-3">10–20 mg/日</td>
+              <td class="p-3">20–40 mg/日</td>
+              <td class="p-3 text-gray-600">拒絶過敏性・社交不安症合併に検討。中止症状・体重増加・妊婦禁忌に注意</td>
+              <td class="p-3"><span class="badge-level-a">Level A</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- セカンドライン・増強詳細 -->
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <span class="badge-second">セカンドライン</span>
+        <span class="text-gray-500 text-sm font-normal">4〜8週で効果不十分時</span>
+      </h3>
+      <div class="grid md:grid-cols-2 gap-3 mb-6">
+        <div class="bg-gray-50 rounded-lg p-4 border">
+          <div class="font-bold text-sm text-gray-700 mb-2">クラス変更</div>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-start gap-2">
+              <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i>
+              <span><span class="font-medium">ベンラファキシン</span>（SNRI）75–225 mg/日 — 疼痛・疲労合併に <span class="badge-level-b">Level B</span></span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i>
+              <span><span class="font-medium">ミルタザピン</span>（NaSSA）15–45 mg/日 — 過眠・食欲亢進症状あり（副作用と症状の方向性に注意）<span class="badge-level-b">Level B</span></span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5"></i>
+              <span><span class="font-medium">ボルチオキセチン</span> 10–20 mg/日 — 認知症状改善。非定型特化のエビデンスは限定的 <span class="badge-level-c">Level C</span></span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4 border">
+          <div class="font-bold text-sm text-gray-700 mb-2">増強療法</div>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-start gap-2">
+              <i data-lucide="plus-circle" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span><span class="font-medium">アリピプラゾール</span> 2–15 mg/日 <span class="badge-level-a">Level A</span>（難治性MDD増強）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="plus-circle" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span><span class="font-medium">クエチアピン</span> 50–300 mg/日 <span class="badge-level-a">Level A</span>（難治性・不眠合併）</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="plus-circle" class="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5"></i>
+              <span><span class="font-medium">リチウム</span> 400–800 mg/日（血中濃度 0.6–1.0 mEq/L）<span class="badge-level-a">Level A</span></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- MAOI特別コーナー -->
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <i data-lucide="flask-conical" class="w-5 h-5 text-indigo-600"></i>
+          <span class="font-bold text-indigo-800">MAOI（モノアミン酸化酵素阻害薬）— 歴史的根拠と現代的位置づけ</span>
+          <span class="badge-augment">第三線</span>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <div class="font-bold text-gray-700 mb-1">古典RCTのエビデンス</div>
+            <ul class="text-gray-600 space-y-1">
+              <li>・<span class="font-bold">Quitkin等（Br J Psychiatry 1993）</span>：フェネルジン 71% vs イミプラミン 50% vs プラセボ 28%</li>
+              <li>・<span class="font-bold">Jarrett等（1999）</span>：フェネルジン ≒ CBT &gt; プラセボ</li>
+              <li>・古典RCTでは<span class="font-bold text-indigo-700">MAOI &gt; TCA</span>が一貫した結果</li>
+              <li>・ただし現代SSRIとの大規模優越データは限定的</li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-bold text-gray-700 mb-1">現実的な使用</div>
+            <ul class="text-gray-600 space-y-1">
+              <li>・<span class="font-bold text-red-700">日本では不可逆性MAOI（フェネルジン・トラニルシプロミン）は未承認</span></li>
+              <li>・CANMAT 2023: MAOI は相互作用・安全性で第三線</li>
+              <li>・可逆性MAOI（モクロベミド）は一部の国で入手可能</li>
+              <li>・海外専門施設での使用時：<span class="font-bold">フェネルジン 45–90 mg/日、漸増</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-3 text-xs text-gray-500">参照用量: フェネルジン 約0.8 mg/kg目標、研究では約60 mg/日前後。添付文書に従い漸増。</div>
+      </div>
+
+      <!-- TCAについて -->
+      <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <i data-lucide="x-circle" class="w-4 h-4 text-gray-500"></i>
+          <span class="font-bold text-gray-700 text-sm">TCA（三環系）— 非定型では原則非推奨</span>
+        </div>
+        <p class="text-sm text-gray-600">古典RCT（Columbia group）では<span class="font-bold">非定型うつにおいてTCAはMAOIより効果が劣る</span>ことが一貫して示されている。過食・過眠・体重増加の副作用プロフィールが非定型症状を悪化させる懸念もあり、現行ガイドラインでは非定型への優先使用の根拠は弱い。</p>
+      </div>
+    </div>
+
+    <!-- ⑨ 非薬物治療 -->
+    <div class="section-card" id="treatment-non-pharma">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="heart-handshake" class="w-6 h-6 text-rose-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">非薬物治療</h2>
+          <p class="text-gray-500 text-sm">心理療法・物理的療法・生活指導</p>
+        </div>
+      </div>
+
+      <div class="recommend-box mb-4">
+        <div class="font-bold text-green-800 mb-3 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          心理療法
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="flex items-start gap-3">
+            <span class="badge-level-a flex-shrink-0">Level A</span>
+            <div class="text-sm">
+              <div class="font-bold text-gray-700">認知行動療法（CBT）</div>
+              <div class="text-gray-600 mt-1">Jarrett 1999（Arch Gen Psych）: 非定型108例で<span class="font-bold">CT 58% ≒ フェネルジン 56% &gt; プラセボ 28%</span>。認知療法とMAOIが同等・ともにプラセボを有意に上回った非定型特化の高品質RCT。自動思考・活動スケジューリングに加え、<span class="font-bold">拒絶過敏性へのスキーマ療法的アプローチ</span>も有効。</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="badge-level-b flex-shrink-0">Level B</span>
+            <div class="text-sm">
+              <div class="font-bold text-gray-700">対人関係療法（IPT）</div>
+              <div class="text-gray-600 mt-1">拒絶・対人感受性の高さとIPTの理論的フィットは良好。役割転換・対人関係上の葛藤にフォーカス。非定型特化の大規模RCTは限定的だが、MDD一般での強いエビデンスあり。</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="badge-level-b flex-shrink-0">Level B</span>
+            <div class="text-sm">
+              <div class="font-bold text-gray-700">支持的精神療法（SPT）</div>
+              <div class="text-gray-600 mt-1">外来で毎回実施可能。傾聴・共感・心理教育・問題解決支援。拒絶過敏性をもつ患者には治療関係の安定性維持が特に重要。</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="badge-level-b flex-shrink-0">Level B</span>
+            <div class="text-sm">
+              <div class="font-bold text-gray-700">マインドフルネス認知療法（MBCT）</div>
+              <div class="text-gray-600 mt-1">再発予防（3回以上のエピソード既往）で特に有効。拒絶・批判への過剰反応パターンの観察と脱中心化に応用可能。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 物理的療法 -->
+      <div class="bg-purple-50 border-l-4 border-purple-500 rounded-r-xl p-4 mb-4">
+        <div class="font-bold text-purple-800 mb-3 flex items-center gap-2">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          物理的療法（治療抵抗性 / 重症時）
+        </div>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <div class="flex items-start gap-2">
+            <span class="badge-level-a flex-shrink-0">Level A</span>
+            <div>
+              <div class="font-bold text-gray-700">rTMS（反復経頭蓋磁気刺激）</div>
+              <div class="text-gray-600">治療抵抗性うつ病。左DLPFC刺激が標準。非定型それ自体の第一選択ではないが、SSRI無効例で検討。</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="badge-level-a flex-shrink-0">Level A</span>
+            <div>
+              <div class="font-bold text-gray-700">mECT（修正型電気けいれん療法）</div>
+              <div class="text-gray-600">緊急性高い重症うつ、自殺企図、栄養状態不良時。非定型それ自体の第一選択ではなく、緊急性・抵抗性の評価が前提。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 光療法 -->
+      <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-4 mb-4">
+        <div class="font-bold text-amber-800 mb-2 flex items-center gap-2">
+          <i data-lucide="sun" class="w-4 h-4"></i>
+          光療法（季節性を伴う場合）
+          <span class="badge-level-a">Level A</span>
+        </div>
+        <p class="text-sm text-gray-700">SAD（季節性感情障害）合併・秋冬悪化の非定型うつに特に有用。10,000 lux・朝30分が標準。SAD単独と非定型の重なりがある症例では光療法を早期から検討。非定型の全症例に一律推奨のエビデンスは限定的。</p>
+      </div>
+
+      <!-- 生活指導 -->
+      <div class="bg-blue-50 border-l-4 border-blue-400 rounded-r-xl p-4">
+        <div class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+          <i data-lucide="activity" class="w-4 h-4"></i>
+          生活指導・セルフケア
+        </div>
+        <div class="grid md:grid-cols-3 gap-3 text-sm text-gray-700">
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+            <span>有酸素運動（週3回×30分） <span class="text-xs text-gray-500">Level B</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+            <span>睡眠衛生指導（過眠の「適切化」） <span class="text-xs text-gray-500">Level B</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+            <span>食事・体重管理（炭水化物過食への対応） <span class="text-xs text-gray-500">Level C</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+            <span>社会リズム療法（生活リズムの安定化） <span class="text-xs text-gray-500">Level B</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+            <span>アルコール・カフェイン制限 <span class="text-xs text-gray-500">Level C</span></span>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+            <span>ストレス管理・問題解決スキル訓練 <span class="text-xs text-gray-500">Level B</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑩ 禁忌・安全・モニタリング -->
+    <div class="section-card" id="monitoring">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">禁忌・注意・モニタリング</h2>
+          <p class="text-gray-500 text-sm">安全管理と定期評価</p>
+        </div>
+      </div>
+
+      <!-- MAOI関連の特別警告 -->
+      <div class="danger-box mb-4">
+        <div class="font-bold text-red-800 mb-3 flex items-center gap-2">
+          <i data-lucide="triangle-alert" class="w-5 h-5"></i>
+          MAOI使用時の重大注意（日本では原則未適用だが知識として重要）
+        </div>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <div class="font-bold text-red-700 text-sm mb-2">MAOI ⇄ SSRI/SNRI 切り替え</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li class="flex items-start gap-2">
+                <i data-lucide="x-circle" class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5"></i>
+                <span><span class="font-bold">絶対禁忌：</span>MAOI + SSRI/SNRI 同時使用（セロトニン症候群）</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+                <span>MAOI 中止 → SSRI開始まで<span class="font-bold text-red-700">最低14日間</span></span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+                <span>フルオキセチン（norfluoxetine）中止 → MAOI開始まで<span class="font-bold text-red-700">最低5週間</span></span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="clock" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+                <span>他のSSRI中止 → MAOI開始まで最低2週間</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-bold text-red-700 text-sm mb-2">チラミン食事制限（不可逆性MAOI使用時）</div>
+            <ul class="text-sm text-gray-700 space-y-1">
+              <li class="flex items-start gap-2">
+                <i data-lucide="x-circle" class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5"></i>
+                <span>チーズ（特に熟成）、ワイン・ビール、燻製肉・魚</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="x-circle" class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5"></i>
+                <span>発酵食品・濃縮イーストエキス（Marmite）・ファバ豆・過熟バナナ・アボカド</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="x-circle" class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5"></i>
+                <span>醤油・味噌は大量摂取に注意（少量は許容範囲内との見解もあり）</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="triangle-alert" class="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5"></i>
+                <span>摂取時：<span class="font-bold text-red-700">高血圧クリーゼ</span>（頭痛・動悸・血圧急上昇）のリスク</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- 追加の薬物相互作用 -->
+        <div class="bg-red-100 rounded-xl p-3">
+          <div class="font-bold text-red-800 text-sm mb-2 flex items-center gap-2">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+            その他の重大薬物相互作用（MAOI使用時・絶対禁忌または高リスク）
+          </div>
+          <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
+            <div class="flex items-start gap-2">
+              <i data-lucide="x-circle" class="w-3 h-3 text-red-600 flex-shrink-0 mt-1"></i>
+              <span><span class="font-bold">メペリジン（ペチジン）：</span>致死的セロトニン症候群。手術・処置時に必ず申告を</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="x-circle" class="w-3 h-3 text-red-600 flex-shrink-0 mt-1"></i>
+              <span><span class="font-bold">トラマドール：</span>セロトニン症候群リスク</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="x-circle" class="w-3 h-3 text-red-600 flex-shrink-0 mt-1"></i>
+              <span><span class="font-bold">シュードエフェドリン・エフェドリン</span>（市販感冒薬含む）：高血圧クリーゼ</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <i data-lucide="x-circle" class="w-3 h-3 text-red-600 flex-shrink-0 mt-1"></i>
+              <span><span class="font-bold">デキストロメトルファン</span>（鎮咳薬・OTC）：セロトニン症候群リスク</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SSRI禁忌・注意 -->
+      <div class="warning-box mb-4">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          SSRI使用時の主な注意事項
+        </div>
+        <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+          <div>
+            <ul class="space-y-1">
+              <li class="flex items-start gap-2"><i data-lucide="alert-circle" class="w-3 h-3 text-orange-500 flex-shrink-0 mt-0.5"></i><span>賦活症候群：開始後1〜2週（特に若年者）</span></li>
+              <li class="flex items-start gap-2"><i data-lucide="alert-circle" class="w-3 h-3 text-orange-500 flex-shrink-0 mt-0.5"></i><span>自殺念慮増強リスク：25歳以下で特に注意</span></li>
+              <li class="flex items-start gap-2"><i data-lucide="alert-circle" class="w-3 h-3 text-orange-500 flex-shrink-0 mt-0.5"></i><span>エスシタロプラム高用量：QTc延長</span></li>
+            </ul>
+          </div>
+          <div>
+            <ul class="space-y-1">
+              <li class="flex items-start gap-2"><i data-lucide="alert-circle" class="w-3 h-3 text-orange-500 flex-shrink-0 mt-0.5"></i><span>パロキセチン：妊娠初期（心奇形リスク）禁忌</span></li>
+              <li class="flex items-start gap-2"><i data-lucide="alert-circle" class="w-3 h-3 text-orange-500 flex-shrink-0 mt-0.5"></i><span>双極性障害：SSRI単剤 → 躁転・急速交代化リスク</span></li>
+              <li class="flex items-start gap-2"><i data-lucide="alert-circle" class="w-3 h-3 text-orange-500 flex-shrink-0 mt-0.5"></i><span>過食・体重増加（パロキセチン・フルボキサミン）</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- モニタリング -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-gray-600"></i>
+            定期モニタリング
+          </div>
+          <ul class="text-sm space-y-2 text-gray-600">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">自殺リスク評価：</span>開始初期2週間・4週後</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">効果判定：</span>4〜6週後にPHQ-9等で評価</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">体重・BMI：</span>過食傾向ある症例で定期測定</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">双極スクリーニング：</span>抗うつ薬開始後も継続評価</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-teal-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">維持期間：</span>初発6〜12ヶ月、再発歴あり2年以上</span></li>
+          </ul>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-600"></i>
+            推奨評価ツール
+          </div>
+          <ul class="text-sm space-y-2 text-gray-700">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">PHQ-9：</span>うつ重症度の定期モニタリング</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">MDQ / HCL-32：</span>双極スペクトラムのスクリーニング</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">HAMD-atypical subscale：</span>非定型症状の重症度</span></li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5"></i><span><span class="font-medium">SASB / IIP：</span>拒絶過敏性・対人パターンの評価</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 参照ガイドライン -->
+    <div class="section-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="book-open" class="w-6 h-6 text-gray-600"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">参照ガイドライン・主要文献</h2>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-3 text-sm">
+        <div class="bg-gray-50 rounded-lg p-3 border">
+          <div class="font-bold text-gray-700">DSM-5-TR</div>
+          <p class="text-gray-500 mt-1">「With Atypical Features」specifierの公式定義</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border">
+          <div class="font-bold text-gray-700">CANMAT 2023（Can J Psychiatry）</div>
+          <p class="text-gray-500 mt-1">亜型特化推奨なし。MAOI第三線。SSRIが実質ファーストライン</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border">
+          <div class="font-bold text-gray-700">Quitkin et al. 1993 (Br J Psychiatry)</div>
+          <p class="text-gray-500 mt-1">Columbia RCT集計：フェネルジン &gt; イミプラミン &gt; プラセボ</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border">
+          <div class="font-bold text-gray-700">Jarrett et al. 1999 (Arch Gen Psychiatry)</div>
+          <p class="text-gray-500 mt-1">非定型108例: CBT = フェネルジン &gt; プラセボ（各58% vs 28%）</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border">
+          <div class="font-bold text-gray-700">McGrath et al. 1992 (Arch Gen Psychiatry)</div>
+          <p class="text-gray-500 mt-1">フルオキセチン = イミプラミン &gt; プラセボ（非定型）</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-3 border">
+          <div class="font-bold text-gray-700">Stewart et al. 2009 (Neuropsychopharmacology)</div>
+          <p class="text-gray-500 mt-1">非定型診断基準の妥当性・改訂に関する批判的再検討</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- フッター -->
+    <div class="text-center text-xs text-gray-400 py-4">
+      非定型うつ病 臨床ガイド ／ 精神科臨床参照用 ／ DSM-5-TR・CANMAT 2023準拠<br>
+      本資料は臨床参照用であり、個別診療の代替ではありません。最新の添付文書・ガイドラインを必ず参照してください。
+    </div>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
