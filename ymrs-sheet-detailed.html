@@ -10,7 +10,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root { --ymrs-gradient: linear-gradient(135deg, #78350f, #c2410c); }
-    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; scroll-behavior: smooth; }
+
+    /* ジャンプバー */
+    #jump-bar { position:sticky; top:0; z-index:40; background:white; border-bottom:1px solid #e5e7eb; box-shadow:0 1px 6px rgba(0,0,0,0.07); }
+    #jump-bar .inner { max-width:56rem; margin:0 auto; padding:0 1rem; display:flex; align-items:center; gap:0.3rem; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #jump-bar .inner::-webkit-scrollbar { display:none; }
+    .jbtn { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f9fafb; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s,color 0.12s; flex-shrink:0; }
+    .jbtn:hover { background:#fff7ed; color:#c2410c; border-color:#fed7aa; }
+    .jbtn.dbl { background:#fff1f2; color:#be123c; border-color:#fecdd3; }
+    .jbtn.dbl:hover { background:#ffe4e6; color:#9f1239; }
+    .jbtn-home { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s; flex-shrink:0; }
+    .jbtn-home:hover { background:#e5e7eb; }
 
     /* スコアボタン */
     .score-btn {
@@ -91,7 +102,7 @@
     /* 印刷 */
     @media print {
       body { background:white; }
-      .no-print, .sticky-footer { display:none !important; }
+      .no-print, .sticky-footer, #jump-bar { display:none !important; }
       .item-body { display:block !important; }
       .item-card { box-shadow:none; border:1px solid #e5e7eb; margin-bottom:0.4rem; page-break-inside:avoid; }
       #print-summary { display:block !important; }
@@ -135,6 +146,27 @@
     </div>
   </div>
 </header>
+
+<!-- ジャンプバー -->
+<div id="jump-bar" class="no-print">
+  <div class="inner" style="padding-top:0.4rem;padding-bottom:0.4rem;">
+    <a class="jbtn" href="#global-tips-card">評価ポイント</a>
+    <span style="color:#d1d5db;font-size:0.7rem;flex-shrink:0;">|</span>
+    <a class="jbtn" href="#card-1">1 気分の高揚</a>
+    <a class="jbtn" href="#card-2">2 活動性</a>
+    <a class="jbtn" href="#card-3">3 性的関心</a>
+    <a class="jbtn" href="#card-4">4 睡眠</a>
+    <a class="jbtn dbl" href="#card-5">5 過敏性 ×2</a>
+    <a class="jbtn" href="#card-6">6 発語</a>
+    <a class="jbtn dbl" href="#card-7">7 言語思考 ×2</a>
+    <a class="jbtn" href="#card-8">8 思考内容</a>
+    <a class="jbtn dbl" href="#card-9">9 攻撃的行動 ×2</a>
+    <a class="jbtn" href="#card-10">10 外見</a>
+    <a class="jbtn" href="#card-11">11 病識</a>
+    <span style="flex:1;min-width:0.5rem;"></span>
+    <a class="jbtn-home" href="top.html"><i data-lucide="home" class="w-3 h-3"></i>TOP</a>
+  </div>
+</div>
 
 <main class="max-w-4xl mx-auto px-4 py-4 pb-32">
 
@@ -520,9 +552,6 @@
         <button onclick="window.print()" class="flex items-center gap-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
         <button onclick="compactPrint()" class="flex items-center gap-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-semibold px-3 py-2 rounded-lg" title="記入欄・項目・点数のみを最小ページで印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
         <button onclick="resetAll()" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
-        <a href="bprs-sheet-detailed.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg no-underline"><i data-lucide="arrow-left" class="w-3 h-3"></i>BPRS</a>
-        <a href="panss-sheet-detailed.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg no-underline"><i data-lucide="arrow-left" class="w-3 h-3"></i>PANSS</a>
-        <a href="top.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg no-underline"><i data-lucide="home" class="w-3 h-3"></i>TOP</a>
       </div>
     </div>
   </div>
