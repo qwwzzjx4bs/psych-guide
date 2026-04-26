@@ -97,6 +97,28 @@
       body.compact-print .point-card { padding:0.3rem 0.6rem !important; margin-bottom:0.2rem !important; }
       body.compact-print #print-summary { display:block !important; }
     }
+    /* Jump bar */
+    #jump-bar { position:sticky; top:0; z-index:40; background:white; border-bottom:1px solid #e5e7eb; box-shadow:0 1px 6px rgba(0,0,0,0.07); }
+    #jump-bar .inner { max-width:56rem; margin:0 auto; padding:0 1rem; display:flex; align-items:center; gap:0.3rem; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #jump-bar .inner::-webkit-scrollbar { display:none; }
+    .jbtn { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f9fafb; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s,color 0.12s; flex-shrink:0; }
+    .jbtn:hover { background:#f5f3ff; color:#7c3aed; border-color:#ddd6fe; }
+    .jbtn-home { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s; flex-shrink:0; }
+    .jbtn-home:hover { background:#e5e7eb; }
+    /* Mobile score table */
+    @media (max-width: 600px) {
+      .score-table { display:block; }
+      .score-table thead { display:none; }
+      .score-table tbody { display:flex; flex-direction:column; }
+      .score-table tbody tr { display:flex; flex-direction:column; }
+      .score-table tbody td { display:flex; align-items:flex-start; gap:0.5rem; border-right:none !important; white-space:normal !important; padding:0.45rem 0.5rem; border-bottom:1px solid #f3f4f6 !important; line-height:1.5; }
+      .score-table tbody tr:last-child td:last-child { border-bottom:none !important; }
+      .score-table tbody td::before { content:""; flex-shrink:0; width:1.6rem; height:1.6rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:0.68rem; margin-top:0.05rem; }
+      .score-table tbody .sc0::before { content:"0"; background:#dcfce7; color:#15803d; }
+      .score-table tbody .sc1::before { content:"1"; background:#fef9c3; color:#854d0e; }
+      .score-table tbody .sc2::before { content:"2"; background:#ffedd5; color:#c2410c; }
+      .score-table tbody .sc3::before { content:"3"; background:#fecaca; color:#7f1d1d; }
+    }
   </style>
 </head>
 <body>
@@ -120,6 +142,37 @@
     </div>
   </div>
 </header>
+
+<div id="jump-bar" class="no-print">
+  <div class="inner">
+    <a class="jbtn" href="#global-tips-card">評価ポイント</a>
+    <a class="jbtn" href="#card-1">1 興奮</a>
+    <a class="jbtn" href="#card-2">2 不動</a>
+    <a class="jbtn" href="#card-3">3 緘黙</a>
+    <a class="jbtn" href="#card-4">4 凝視</a>
+    <a class="jbtn" href="#card-5">5 姿勢固持</a>
+    <a class="jbtn" href="#card-6">6 扮相</a>
+    <a class="jbtn" href="#card-7">7 反響動作</a>
+    <a class="jbtn" href="#card-8">8 常同症</a>
+    <a class="jbtn" href="#card-9">9 衒奇症</a>
+    <a class="jbtn" href="#card-10">10 語保続</a>
+    <a class="jbtn" href="#card-11">11 固縮</a>
+    <a class="jbtn" href="#card-12">12 拒絶症</a>
+    <a class="jbtn" href="#card-13">13 蝋屈症</a>
+    <a class="jbtn" href="#card-14">14 引きこもり</a>
+    <a class="jbtn" href="#card-15">15 衝動性</a>
+    <a class="jbtn" href="#card-16">16 自動服従</a>
+    <a class="jbtn" href="#card-17">17 誘導随伴</a>
+    <a class="jbtn" href="#card-18">18 拮抗保持</a>
+    <a class="jbtn" href="#card-19">19 相反動作</a>
+    <a class="jbtn" href="#card-20">20 把握反射</a>
+    <a class="jbtn" href="#card-21">21 保続</a>
+    <a class="jbtn" href="#card-22">22 攻撃性</a>
+    <a class="jbtn" href="#card-23">23 自律神経</a>
+    <span style="flex:1;min-width:0.5rem;"></span>
+    <a class="jbtn-home" href="top.html"><i data-lucide="home" class="w-3 h-3"></i>TOP</a>
+  </div>
+</div>
 
 <main class="max-w-5xl mx-auto px-4 py-4 pb-36">
 

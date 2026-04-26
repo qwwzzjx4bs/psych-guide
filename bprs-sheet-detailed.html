@@ -116,6 +116,31 @@
     .item-card.open { border-left: 3px solid #6366f1; }
     @media print { .toggle-pill { display:none !important; } }
     body.compact-print .toggle-pill { display:none !important; }
+    /* Jump bar */
+    #jump-bar { position:sticky; top:0; z-index:40; background:white; border-bottom:1px solid #e5e7eb; box-shadow:0 1px 6px rgba(0,0,0,0.07); }
+    #jump-bar .inner { max-width:56rem; margin:0 auto; padding:0 1rem; display:flex; align-items:center; gap:0.3rem; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #jump-bar .inner::-webkit-scrollbar { display:none; }
+    .jbtn { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f9fafb; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s,color 0.12s; flex-shrink:0; }
+    .jbtn:hover { background:#eff6ff; color:#4f46e5; border-color:#c7d2fe; }
+    .jbtn-home { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s; flex-shrink:0; }
+    .jbtn-home:hover { background:#e5e7eb; }
+    /* Mobile score table */
+    @media (max-width: 600px) {
+      .score-table { display:block; }
+      .score-table thead { display:none; }
+      .score-table tbody { display:flex; flex-direction:column; }
+      .score-table tbody tr { display:flex; flex-direction:column; }
+      .score-table tbody td { display:flex; align-items:flex-start; gap:0.5rem; border-right:none !important; white-space:normal !important; padding:0.45rem 0.5rem; border-bottom:1px solid #f3f4f6 !important; line-height:1.5; }
+      .score-table tbody tr:last-child td:last-child { border-bottom:none !important; }
+      .score-table tbody td::before { content:""; flex-shrink:0; width:1.6rem; height:1.6rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:0.68rem; margin-top:0.05rem; }
+      .score-table tbody .sc1::before { content:"1"; background:#e0f2fe; color:#0369a1; }
+      .score-table tbody .sc2::before { content:"2"; background:#dcfce7; color:#15803d; }
+      .score-table tbody .sc3::before { content:"3"; background:#d1fae5; color:#047857; }
+      .score-table tbody .sc4::before { content:"4"; background:#fef9c3; color:#854d0e; }
+      .score-table tbody .sc5::before { content:"5"; background:#ffedd5; color:#c2410c; }
+      .score-table tbody .sc6::before { content:"6"; background:#fee2e2; color:#b91c1c; }
+      .score-table tbody .sc7::before { content:"7"; background:#fecaca; color:#7f1d1d; }
+    }
   </style>
 </head>
 <body>
@@ -148,6 +173,32 @@
     </div>
   </div>
 </header>
+
+<div id="jump-bar" class="no-print">
+  <div class="inner">
+    <a class="jbtn" href="#global-tips-card">評価ポイント</a>
+    <a class="jbtn" href="#card-1">1 心気症</a>
+    <a class="jbtn" href="#card-2">2 不安</a>
+    <a class="jbtn" href="#card-5">5 罪責感</a>
+    <a class="jbtn" href="#card-8">8 誇大性</a>
+    <a class="jbtn" href="#card-9">9 抑うつ</a>
+    <a class="jbtn" href="#card-11">11 猜疑心</a>
+    <a class="jbtn" href="#card-12">12 幻覚</a>
+    <a class="jbtn" href="#card-15">15 思考内容</a>
+    <a class="jbtn" href="#card-18">18 見当識</a>
+    <a class="jbtn" href="#card-10">10 敵意</a>
+    <a class="jbtn" href="#card-3">3 情動引きこもり</a>
+    <a class="jbtn" href="#card-4">4 概念混乱</a>
+    <a class="jbtn" href="#card-6">6 緊張</a>
+    <a class="jbtn" href="#card-7">7 衒奇症</a>
+    <a class="jbtn" href="#card-13">13 運動抑制</a>
+    <a class="jbtn" href="#card-14">14 非協調性</a>
+    <a class="jbtn" href="#card-16">16 情動平板化</a>
+    <a class="jbtn" href="#card-17">17 興奮</a>
+    <span style="flex:1;min-width:0.5rem;"></span>
+    <a class="jbtn-home" href="top.html"><i data-lucide="home" class="w-3 h-3"></i>TOP</a>
+  </div>
+</div>
 
 <main class="max-w-4xl mx-auto px-4 py-4 pb-32">
 
@@ -1028,6 +1079,9 @@
       const itemId = icon.id.slice(5);
       const header = icon.closest('.item-header');
       if (!header) return;
+      // カードにIDを付与（ジャンプバー用）
+      const card = header.closest('.item-card');
+      if (card) card.id = 'card-' + itemId;
       const infoCol = header.children[1];
       if (!infoCol) return;
       const pill = document.createElement('span');
