@@ -35,6 +35,12 @@
     .sec-slate  { background: #475569; } .bg-slate  { background: #f8fafc; }
     .border-slate  { border-top: 3px solid #94a3b8; } .tag-slate  { background: #e2e8f0; color: #475569; }
     .link-slate { color: #64748b; } .row-slate  { background: #f8fafc; }
+    .sec-emerald { background: #059669; } .bg-emerald { background: #ecfdf5; }
+    .border-emerald { border-top: 3px solid #10b981; } .tag-emerald { background: #d1fae5; color: #065f46; }
+    .link-emerald { color: #059669; } .row-emerald { background: #ecfdf5; }
+    .sec-sky { background: #0369a1; } .bg-sky { background: #f0f9ff; }
+    .border-sky { border-top: 3px solid #38bdf8; } .tag-sky { background: #e0f2fe; color: #0369a1; }
+    .link-sky { color: #0284c7; } .row-sky { background: #f0f9ff; }
     a { text-decoration: none; }
     @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
     .sec-header {
@@ -107,12 +113,22 @@
         <a href="#diseases"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors text-xs font-medium text-violet-800 whitespace-nowrap">
           🧠 疾患別診断・治療
-          <span class="bg-violet-200 text-violet-700 px-1.5 py-0.5 rounded-full text-xs leading-none">6</span>
+          <span class="bg-violet-200 text-violet-700 px-1.5 py-0.5 rounded-full text-xs leading-none">5</span>
+        </a>
+        <a href="#guidelines"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 transition-colors text-xs font-medium text-emerald-800 whitespace-nowrap">
+          📋 ガイドライン準拠
+          <span class="bg-emerald-200 text-emerald-700 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
         </a>
         <a href="#scales"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 transition-colors text-xs font-medium text-teal-800 whitespace-nowrap">
           📊 評価スケール
-          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">7</span>
+          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">5</span>
+        </a>
+        <a href="#scale-guide"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 transition-colors text-xs font-medium text-sky-800 whitespace-nowrap">
+          📖 評価スケール解説
+          <span class="bg-sky-200 text-sky-700 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
         </a>
         <a href="#education"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-800 whitespace-nowrap">
@@ -218,11 +234,11 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
+            <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-26</td><td class="px-4 py-2.5"><a href="atypical-depression.html" class="link-violet hover:underline font-medium">非定型うつ病 — 概念・診断・治療アルゴリズム</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">West & Dallyから Columbia Group・DSM-5-TRまでの歴史、RAILS記憶法、気分反応性・鉛様麻痺・拒絶過敏性の詳細、MAOI vs SSRI エビデンス、CBT（Jarrett 1999）を網羅した図解</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-26</td><td class="px-4 py-2.5"><a href="schizophrenia-history.html" class="link-violet hover:underline font-medium">統合失調症の捉え方の歴史（世界×日本）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">クレペリン/ブロイラーからDSM/ICD、反精神医学、神経発達モデル、早期介入、名称変更（2002）までを「世界×日本」並列タイムライン＋概念マップで図解</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="schizophrenia-diagnosis.html" class="link-violet hover:underline font-medium">統合失調症 診断プロセス完全ガイド</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">古典的診断（クレペリン/ブロイラー/シュナイダー）vs 操作的基準（DSM-5-TR/ICD-10）比較・鑑別診断・除外検査・自己免疫性脳炎との鑑別を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
-            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="bfcrs-sheet.html" class="link-teal hover:underline font-medium">BFCRS 採点シート（Bush-Francis 緊張病評価尺度）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">23項目詳細版・BFCSSBFCRS スクリーニング・バイナリ項目・Lz反応試験ガイド付き</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="bfcrs-sheet.html" class="link-teal hover:underline font-medium">BFCRS 採点シート（Bush-Francis 緊張病評価尺度）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">23項目詳細版・BFCSS スクリーニング・バイナリ項目・Lz反応試験ガイド付き</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
             <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="panss-sheet-detailed.html" class="link-teal hover:underline font-medium">PANSS 採点シート（詳細版）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">30項目インタラクティブ採点・P/N/G/複合スコア・7段階アンカーポイント詳細版を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
-            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="bprs-sheet-detailed.html" class="link-teal hover:underline font-medium">BPRS 採点シート（詳細版・ガイド）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">18項目インタラクティブ採点・各7段階の具体例付き詳細版・解説ガイドを新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -272,12 +288,6 @@
         <span class="sec-count" id="cnt-diseases"></span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3" id="grid-diseases">
-        <a id="card-schiz-algo" href="schizophrenia-algorithm.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
-          <div class="flex items-start justify-between mb-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">統合失調症</span><span class="text-xs text-gray-400 tabular-nums">2026-04-23 更新</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 薬物治療アルゴリズム 図解版</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">統合失調症治療ガイドライン2022準拠。急性期・維持期の薬物選択・用量調整・切り替え戦略をフローチャートで図解。</p>
-          <div class="mt-3 text-xs link-violet font-medium">schizophrenia-algorithm.html →</div>
-        </a>
         <a id="card-antipsychotics" href="antipsychotics-japan.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">薬物治療</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">抗精神病薬 選択ガイド（日本承認薬）</h3>
@@ -289,12 +299,6 @@
           <h3 class="font-semibold text-gray-900 text-sm mb-1">不安症群 — 診断ツリー＆治療アルゴリズム</h3>
           <p class="text-xs text-gray-500 leading-relaxed">パニック症・社交不安症・全般不安症・特定の恐怖症・OCD の ICD-10/DSM-5-TR 診断ツリーと薬物・非薬物治療選択。</p>
           <div class="mt-3 text-xs link-violet font-medium">anxiety-disorders.html →</div>
-        </a>
-        <a id="card-depression" href="depression-guideline2025.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
-          <div class="flex items-start justify-between mb-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">うつ病・双極性障害</span><span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">うつ病 診断・治療選択ツリー — ガイドライン2025準拠</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">うつ病エピソードの重症度評価から初期薬物治療・増強療法・難治性うつへの対応まで治療フローを図解。双極性障害との鑑別ポイントも収録。</p>
-          <div class="mt-3 text-xs link-violet font-medium">depression-guideline2025.html →</div>
         </a>
         <a id="card-schiz-diagnosis" href="schizophrenia-diagnosis.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">統合失調症 診断</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
@@ -308,10 +312,45 @@
           <p class="text-xs text-gray-500 leading-relaxed">クレペリン/ブロイラーから、現象学・反精神医学・DSM/ICDの操作的診断、神経発達モデル、早期介入までを「世界×日本」並列タイムライン＋概念マップで整理。日本の改称（2002）と制度史のポイントも含めた外来参照用の歴史図解。</p>
           <div class="mt-3 text-xs link-violet font-medium">schizophrenia-history.html →</div>
         </a>
+        <a id="card-atypical-depression" href="atypical-depression.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">うつ病 亜型</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">非定型うつ病 — 概念・歴史・診断基準・治療アルゴリズム</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">West &amp; Dally（1950年代）から Columbia Group・DSM-5-TRへの歴史的変遷。RAILS記憶法（気分反応性・過食・拒絶過敏・鉛様麻痺・過眠）による核心症状解説。MAOI vs SSRI エビデンス・CBT（Jarrett 1999: CT≒フェネルジン&gt;プラセボ）・成人ADHD（RSD）との鑑別・MAOIの禁忌薬剤一覧を収録。</p>
+          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+            <span class="text-violet-700 bg-violet-50 border border-violet-200 rounded px-1.5 py-0.5">DSM-5-TR specifier</span>
+            <span class="text-violet-700 bg-violet-50 border border-violet-200 rounded px-1.5 py-0.5">RAILS記憶法</span>
+            <span class="text-violet-700 bg-violet-50 border border-violet-200 rounded px-1.5 py-0.5">Columbia Group RCT</span>
+            <span class="text-violet-700 bg-violet-50 border border-violet-200 rounded px-1.5 py-0.5">MAOI 禁忌・Washout</span>
+          </div>
+          <div class="mt-2 text-xs link-violet font-medium">atypical-depression.html →</div>
+        </a>
       </div>
     </section>
 
-    <!-- ③ 評価スケール -->
+    <!-- ③ ガイドライン準拠 -->
+    <section id="guidelines" class="mb-12">
+      <div class="sec-header sec-emerald">
+        <div class="sec-icon">📋</div>
+        <span>ガイドライン準拠 治療アルゴリズム</span>
+        <span class="sec-count" id="cnt-guidelines"></span>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-3" id="grid-guidelines">
+        <a id="card-schiz-algo" href="schizophrenia-algorithm.html" class="card card-recent block border border-emerald-100 rounded-xl p-4 border-emerald bg-emerald">
+          <div class="flex items-start justify-between mb-2"><span class="text-xs font-medium tag-emerald px-2 py-0.5 rounded-full">統合失調症</span><span class="text-xs text-gray-400 tabular-nums">2026-04-23 更新</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 薬物治療アルゴリズム 図解版</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">統合失調症治療ガイドライン2022準拠。急性期・維持期の薬物選択・用量調整・切り替え戦略をフローチャートで図解。</p>
+          <div class="mt-3 text-xs link-emerald font-medium">schizophrenia-algorithm.html →</div>
+        </a>
+        <a id="card-depression" href="depression-guideline2025.html" class="card block border border-emerald-100 rounded-xl p-4 border-emerald bg-emerald">
+          <div class="flex items-start justify-between mb-2"><span class="text-xs font-medium tag-emerald px-2 py-0.5 rounded-full">うつ病・双極性障害</span><span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">うつ病 診断・治療選択ツリー — ガイドライン2025準拠</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">うつ病エピソードの重症度評価から初期薬物治療・増強療法・難治性うつへの対応まで治療フローを図解。双極性障害との鑑別ポイントも収録。</p>
+          <div class="mt-3 text-xs link-emerald font-medium">depression-guideline2025.html →</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ④ 評価スケール -->
     <section id="scales" class="mb-12">
       <div class="sec-header sec-teal">
         <div class="sec-icon">📊</div>
@@ -319,23 +358,11 @@
         <span class="sec-count" id="cnt-scales"></span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3" id="grid-scales">
-        <a id="card-schiz-scales" href="schizophrenia-scales.html" class="card card-recent block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">統合失調症</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 精神症状評価スケール集</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">PANSS・BPRS・CGI・SAPS/SANS 等の評価スケールを収録した臨床リファレンス。スコア基準・判定方法付き。</p>
-          <div class="mt-3 text-xs link-teal font-medium">schizophrenia-scales.html →</div>
-        </a>
         <a id="card-schiz-sheets" href="schizophrenia-assessment-sheets.html" class="card card-recent block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">統合失調症 印刷用</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 評価スケール集（外来用印刷様式）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">外来診察での記入・印刷に最適化されたアセスメントシート集。評価記録・経過追跡に使用可能。</p>
           <div class="mt-3 text-xs link-teal font-medium">schizophrenia-assessment-sheets.html →</div>
-        </a>
-        <a id="card-bprs-guide" href="bprs-guide.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">BPRS 解説</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">BPRS 解説ガイド</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">日本語版BPRS解説書をHTMLで図解。18項目の定義・評価ポイント・質問例・採点基準・面接手順・FAQを収録した外来参照ガイド。</p>
-          <div class="mt-3 text-xs link-teal font-medium">bprs-guide.html →</div>
         </a>
         <a id="card-bprs-detailed" href="bprs-sheet-detailed.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">BPRS 詳細</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
@@ -370,7 +397,30 @@
       </div>
     </section>
 
-    <!-- ④ 教育・資格 -->
+    <!-- ⑥ 評価スケール解説 -->
+    <section id="scale-guide" class="mb-12">
+      <div class="sec-header sec-sky">
+        <div class="sec-icon">📖</div>
+        <span>評価スケール 解説ガイド</span>
+        <span class="sec-count" id="cnt-scale-guide"></span>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-3" id="grid-scale-guide">
+        <a id="card-schiz-scales" href="schizophrenia-scales.html" class="card card-recent block border border-sky-100 rounded-xl p-4 border-sky bg-sky">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-sky px-2 py-0.5 rounded-full">統合失調症</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 精神症状評価スケール集</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">PANSS・BPRS・CGI・SAPS/SANS 等の評価スケールを収録した臨床リファレンス。スコア基準・判定方法付き。</p>
+          <div class="mt-3 text-xs link-sky font-medium">schizophrenia-scales.html →</div>
+        </a>
+        <a id="card-bprs-guide" href="bprs-guide.html" class="card block border border-sky-100 rounded-xl p-4 border-sky bg-sky">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-sky px-2 py-0.5 rounded-full">BPRS 解説</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">BPRS 解説ガイド</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">日本語版BPRS解説書をHTMLで図解。18項目の定義・評価ポイント・質問例・採点基準・面接手順・FAQを収録した外来参照ガイド。</p>
+          <div class="mt-3 text-xs link-sky font-medium">bprs-guide.html →</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ⑦ 教育・資格 -->
     <section id="education" class="mb-12">
       <div class="sec-header sec-amber">
         <div class="sec-icon">📚</div>
@@ -435,11 +485,13 @@
   <script>
     // カードID → セクションIDのマッピング
     const SECTIONS = {
-      icd:       ['card-icd10','card-icd11','card-icd10mini','card-icd10-quiz'],
-      diseases:  ['card-schiz-algo','card-antipsychotics','card-anxiety','card-depression','card-schiz-diagnosis','card-schiz-history'],
-      scales:    ['card-schiz-scales','card-schiz-sheets','card-bprs-guide','card-bprs-detailed','card-panss-detailed','card-bfcrs','card-anxiety-scales'],
-      education: ['card-terminology','card-shiteii'],
-      others:    ['card-context','card-cursor']
+      icd:        ['card-icd10','card-icd11','card-icd10mini','card-icd10-quiz'],
+      diseases:   ['card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
+      guidelines: ['card-schiz-algo','card-depression'],
+      scales:     ['card-schiz-sheets','card-bprs-detailed','card-panss-detailed','card-bfcrs','card-anxiety-scales'],
+      'scale-guide': ['card-schiz-scales','card-bprs-guide'],
+      education:  ['card-terminology','card-shiteii'],
+      others:     ['card-context','card-cursor']
     };
 
     function applyVisibility() {
