@@ -1184,9 +1184,32 @@
   }
 
   function compactPrint() {
+    // インラインstyle !important で @media print の display:block !important を確実に上書き
+    const saved = [];
+    function forceHide(el) {
+      if (!el) return;
+      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
+      el.style.setProperty('display', 'none', 'important');
+    }
+    function forceShow(el, disp) {
+      if (!el) return;
+      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
+      el.style.setProperty('display', disp || 'block', 'important');
+    }
+    document.querySelectorAll('.item-body').forEach(forceHide);
+    forceHide(document.getElementById('global-tips-card'));
+    forceShow(document.getElementById('print-summary'));
     document.body.classList.add('compact-print');
-    window.print();
-    window.addEventListener('afterprint', () => document.body.classList.remove('compact-print'), { once: true });
+    setTimeout(() => {
+      window.print();
+      window.addEventListener('afterprint', () => {
+        saved.forEach(({ el, val, pri }) => {
+          if (val) el.style.setProperty('display', val, pri);
+          else el.style.removeProperty('display');
+        });
+        document.body.classList.remove('compact-print');
+      }, { once: true });
+    }, 100);
   }
 
   function toggleItem(id) {
