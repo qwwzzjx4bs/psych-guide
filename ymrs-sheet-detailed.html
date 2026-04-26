@@ -758,6 +758,14 @@ span.desc{color:#6b7280;font-size:7px;}
 </div>
 <table>${rows}</table>
 <div class="sumwrap">${summaryHtml}</div>
+<script>
+  window.addEventListener('load', function() {
+    setTimeout(function() { window.print(); }, 300);
+    window.addEventListener('afterprint', function() {
+      setTimeout(function() { window.close(); }, 100);
+    }, { once: true });
+  });
+<\/script>
 </body></html>`;
 
     const w = window.open('', '_blank');
@@ -767,10 +775,6 @@ span.desc{color:#6b7280;font-size:7px;}
     }
     w.document.write(html);
     w.document.close();
-    setTimeout(function() {
-      w.print();
-      w.addEventListener('afterprint', function() { w.close(); }, { once: true });
-    }, 600);
   }
 
   function toggleItem(id) {
