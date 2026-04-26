@@ -423,7 +423,21 @@
             <span class="ml-2 text-xs text-gray-400 hidden sm:inline">外来参照ポータル</span>
           </div>
         </div>
-        <span class="text-xs text-gray-400 font-medium tracking-wide select-none">©︎ Psych-tool.Lab</span>
+        <div class="flex items-center gap-2">
+          <button type="button" id="compact-toggle" onclick="toggleCompact()"
+            title="コンパクト表示の切替（一覧を1行表示にします）"
+            class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 font-medium px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200">
+            <svg id="compact-icon-card" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <rect x="2" y="3" width="7" height="6" rx="1"/><rect x="11" y="3" width="7" height="6" rx="1"/>
+              <rect x="2" y="11" width="7" height="6" rx="1"/><rect x="11" y="11" width="7" height="6" rx="1"/>
+            </svg>
+            <svg id="compact-icon-list" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0 hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <rect x="2" y="4" width="16" height="2.5" rx="1"/><rect x="2" y="8.75" width="16" height="2.5" rx="1"/><rect x="2" y="13.5" width="16" height="2.5" rx="1"/>
+            </svg>
+            <span id="compact-label" class="hidden sm:inline">コンパクト</span>
+          </button>
+          <span class="text-xs text-gray-400 font-medium tracking-wide select-none">©︎ Psych-tool.Lab</span>
+        </div>
       </div>
     </div>
     <!-- ジャンプバー（折り返し複数段） -->
@@ -477,7 +491,7 @@
           ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドをまとめた外来即時参照ポータルです。
         </p>
         <p class="text-gray-400 text-xs leading-relaxed max-w-2xl mt-2">
-          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。
+          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。
         </p>
         <div class="color-legend mt-4 flex flex-wrap gap-2 text-xs">
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>ICD分類・診断</span>
@@ -818,10 +832,11 @@
     }
 
     function applyCompactUI(isCompact) {
-      const btn   = document.getElementById('compact-toggle');
+      const btn = document.getElementById('compact-toggle');
       const label = document.getElementById('compact-label');
       const iconCard = document.getElementById('compact-icon-card');
       const iconList = document.getElementById('compact-icon-list');
+      if (!btn || !iconCard || !iconList) return;
       if (isCompact) {
         btn.classList.add('active');
         iconCard.classList.add('hidden');
