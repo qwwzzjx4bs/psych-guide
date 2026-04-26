@@ -8,48 +8,183 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f8fafc; color: #1a202c; }
-    .card { transition: box-shadow 0.18s, transform 0.18s; position: relative; }
-    .card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
-    .badge-new     { background: #16a34a; color: #fff; font-weight: 700; letter-spacing: 0.04em; }
-    .badge-updated { background: #dcfce7; color: #15803d; }
-    /* 今週更新カード */
-    .card-recent { position: relative; }
-    .card-recent:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
-    .card-recent::before { content: '今週'; position: absolute; top: -1px; right: 12px; background: #f97316; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 0 0 6px 6px; letter-spacing: 0.06em; z-index: 1; }
-    /* 強調カード */
-    .card-highlighted { outline: 2.5px solid #eab308; outline-offset: 1px; }
-    .card-highlighted::after { content: '★'; position: absolute; bottom: 9px; right: 12px; font-size: 12px; color: #ca8a04; line-height: 1; z-index: 1; }
-    .sec-blue   { background: #1d4ed8; } .bg-blue   { background: #eff6ff; }
-    .border-blue   { border-top: 3px solid #3b82f6; } .tag-blue   { background: #dbeafe; color: #1e40af; }
-    .link-blue  { color: #2563eb; } .row-blue   { background: #eff6ff; }
-    .sec-violet { background: #6d28d9; } .bg-violet { background: #f5f3ff; }
-    .border-violet { border-top: 3px solid #7c3aed; } .tag-violet { background: #ede9fe; color: #5b21b6; }
-    .link-violet{ color: #7c3aed; } .row-violet { background: #f5f3ff; }
-    .sec-teal   { background: #0f766e; } .bg-teal   { background: #f0fdfa; }
-    .border-teal   { border-top: 3px solid #14b8a6; } .tag-teal   { background: #ccfbf1; color: #0f766e; }
-    .link-teal  { color: #0d9488; } .row-teal   { background: #f0fdfa; }
-    .sec-amber  { background: #b45309; } .bg-amber  { background: #fffbeb; }
-    .border-amber  { border-top: 3px solid #f59e0b; } .tag-amber  { background: #fef3c7; color: #92400e; }
-    .link-amber { color: #d97706; } .row-amber  { background: #fffbeb; }
-    .sec-slate  { background: #475569; } .bg-slate  { background: #f8fafc; }
-    .border-slate  { border-top: 3px solid #94a3b8; } .tag-slate  { background: #e2e8f0; color: #475569; }
-    .link-slate { color: #64748b; } .row-slate  { background: #f8fafc; }
-    .sec-emerald { background: #059669; } .bg-emerald { background: #ecfdf5; }
-    .border-emerald { border-top: 3px solid #10b981; } .tag-emerald { background: #d1fae5; color: #065f46; }
-    .link-emerald { color: #059669; } .row-emerald { background: #ecfdf5; }
-    .sec-sky { background: #0369a1; } .bg-sky { background: #f0f9ff; }
-    .border-sky { border-top: 3px solid #38bdf8; } .tag-sky { background: #e0f2fe; color: #0369a1; }
-    .link-sky { color: #0284c7; } .row-sky { background: #f0f9ff; }
+    /* === Base === */
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background: #f4f2ef;
+      color: #232323;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'palt';
+    }
     a { text-decoration: none; }
     @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+    /* === Card base === */
+    .card { transition: box-shadow 0.18s, transform 0.18s; position: relative; }
+    .card:hover { box-shadow: 0 6px 22px rgba(0,0,0,0.09); transform: translateY(-2px); }
+    /* カード見出し：太く・字間を整える */
+    .card h3 { font-weight: 700; letter-spacing: 0.015em; }
+    /* カード本文：温かみのある文字色・行間を広げる */
+    .card p { color: #505050; line-height: 1.8; }
+
+    /* === バッジ === */
+    .badge-new     { background: #3d7852; color: #fff; font-weight: 700; letter-spacing: 0.04em; }
+    .badge-updated { background: #ccdfd5; color: #2a5c3e; }
+
+    /* 今週バッジ（くすみオレンジ） */
+    .card-recent { position: relative; }
+    .card-recent:hover { box-shadow: 0 6px 22px rgba(0,0,0,0.09); transform: translateY(-2px); }
+    .card-recent::before {
+      content: '今週'; position: absolute; top: -1px; right: 12px;
+      background: #b86830; color: #fff; font-size: 10px; font-weight: 700;
+      padding: 2px 9px; border-radius: 0 0 6px 6px; letter-spacing: 0.06em; z-index: 1;
+    }
+
+    /* 強調カード（くすみゴールド） */
+    .card-highlighted { outline: 2px solid #b89830; outline-offset: 1px; }
+    .card-highlighted::after {
+      content: '★'; position: absolute; bottom: 9px; right: 12px;
+      font-size: 12px; color: #987820; line-height: 1; z-index: 1;
+    }
+
+    /* === セクションヘッダー === */
     .sec-header {
       display: flex; align-items: center; gap: 10px;
       padding: 10px 16px; border-radius: 10px;
       margin-bottom: 16px; color: #fff; font-weight: 600; font-size: 0.9rem;
+      letter-spacing: 0.025em;
     }
-    .sec-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-    .sec-count { margin-left: auto; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 500; }
+    .sec-icon {
+      width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+    }
+    .sec-count {
+      margin-left: auto; background: rgba(255,255,255,0.25);
+      padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 500;
+    }
+
+    /* ===================================
+       カラーパレット — くすみカラー版
+       =================================== */
+
+    /* Blue（ICD・ガイドライン） */
+    .sec-blue    { background: #4c6e9c; }
+    .bg-blue     { background: #ecf2f8; border: 1.5px solid #90b2d2; }
+    .border-blue { border-top: 3px solid #6490be; }
+    .tag-blue    { background: #cde0f0; color: #284470; }
+    .link-blue   { color: #385e96; }
+    .row-blue    { background: #ecf2f8; }
+
+    /* Violet（疾患別） */
+    .sec-violet  { background: #6b5e9c; }
+    .bg-violet   { background: #eeeaf8; border: 1.5px solid #a496cc; }
+    .border-violet { border-top: 3px solid #8878bc; }
+    .tag-violet  { background: #d8d2ee; color: #443688; }
+    .link-violet { color: #5c4e98; }
+    .row-violet  { background: #eeeaf8; }
+
+    /* Teal（評価スケール） */
+    .sec-teal    { background: #3c7e76; }
+    .bg-teal     { background: #ecf4f2; border: 1.5px solid #7ab8b2; }
+    .border-teal { border-top: 3px solid #52a09a; }
+    .tag-teal    { background: #c6e0dc; color: #24625e; }
+    .link-teal   { color: #2e7870; }
+    .row-teal    { background: #ecf4f2; }
+
+    /* Amber（教育・資格） */
+    .sec-amber   { background: #8e6e2e; }
+    .bg-amber    { background: #f8f2e4; border: 1.5px solid #be9a56; }
+    .border-amber { border-top: 3px solid #a67e2c; }
+    .tag-amber   { background: #ead8a8; color: #6a4a18; }
+    .link-amber  { color: #78581e; }
+    .row-amber   { background: #f8f2e4; }
+
+    /* Emerald（スケール解説） */
+    .sec-emerald { background: #3a7c58; }
+    .bg-emerald  { background: #ecf5ee; border: 1.5px solid #78b696; }
+    .border-emerald { border-top: 3px solid #4e9c74; }
+    .tag-emerald { background: #c6e0d4; color: #225a3e; }
+    .link-emerald { color: #2c7050; }
+    .row-emerald { background: #ecf5ee; }
+
+    /* Slate（その他） */
+    .sec-slate   { background: #526078; }
+    .bg-slate    { background: #f2f3f5; border: 1.5px solid #9eacbc; }
+    .border-slate { border-top: 3px solid #7488a0; }
+    .tag-slate   { background: #d4dae4; color: #384458; }
+    .link-slate  { color: #526078; }
+    .row-slate   { background: #f2f3f5; }
+
+    /* Sky（予備） */
+    .sec-sky    { background: #33689c; }
+    .bg-sky     { background: #ecf2f8; border: 1.5px solid #88b2d2; }
+    .border-sky { border-top: 3px solid #5290be; }
+    .tag-sky    { background: #ccdcf0; color: #225280; }
+    .link-sky   { color: #2a6290; }
+    .row-sky    { background: #ecf2f8; }
+
+    /* ===================================
+       ヘッダーアイコン（くすみ青）
+       =================================== */
+    #site-icon { background: #4c6e9c !important; }
+
+    /* ===================================
+       ジャンプバー — くすみカラー上書き
+       =================================== */
+    a[href="#icd"]               { background: #d8e8f4 !important; color: #284470 !important; }
+    a[href="#icd"]:hover         { background: #c4daec !important; }
+    a[href="#icd"] span          { background: #b2cce4 !important; color: #284470 !important; }
+
+    a[href="#diseases"]          { background: #e6e0f6 !important; color: #443688 !important; }
+    a[href="#diseases"]:hover    { background: #d6ccee !important; }
+    a[href="#diseases"] span     { background: #c4b8e0 !important; color: #443688 !important; }
+
+    a[href="#guidelines"]        { background: #d8e8f4 !important; color: #284470 !important; }
+    a[href="#guidelines"]:hover  { background: #c4daec !important; }
+    a[href="#guidelines"] span   { background: #b2cce4 !important; color: #284470 !important; }
+
+    a[href="#scales"]            { background: #d6ecea !important; color: #24625e !important; }
+    a[href="#scales"]:hover      { background: #c2e2de !important; }
+    a[href="#scales"] span       { background: #aed4d0 !important; color: #24625e !important; }
+
+    a[href="#scale-guide"]       { background: #d4ecde !important; color: #225a3e !important; }
+    a[href="#scale-guide"]:hover { background: #c0e2ce !important; }
+    a[href="#scale-guide"] span  { background: #acd4bc !important; color: #225a3e !important; }
+
+    a[href="#education"]         { background: #f2eada !important; color: #6a4a18 !important; }
+    a[href="#education"]:hover   { background: #e8deca !important; }
+    a[href="#education"] span    { background: #d8ccb2 !important; color: #6a4a18 !important; }
+
+    /* ===================================
+       凡例バッジ — くすみカラー上書き
+       =================================== */
+    .color-legend span { border-width: 1.5px !important; font-size: 0.72rem; }
+    .color-legend span:nth-child(1),
+    .color-legend span:nth-child(3) {
+      background: #d8e8f4 !important; border-color: #90b2d2 !important; color: #284470 !important;
+    }
+    .color-legend span:nth-child(1) span,
+    .color-legend span:nth-child(3) span { background: #4c6e9c !important; }
+    .color-legend span:nth-child(2) {
+      background: #e6e0f6 !important; border-color: #a496cc !important; color: #443688 !important;
+    }
+    .color-legend span:nth-child(2) span { background: #6b5e9c !important; }
+    .color-legend span:nth-child(4) {
+      background: #d6ecea !important; border-color: #7ab8b2 !important; color: #24625e !important;
+    }
+    .color-legend span:nth-child(4) span { background: #3c7e76 !important; }
+    .color-legend span:nth-child(5) {
+      background: #d4ecde !important; border-color: #78b696 !important; color: #225a3e !important;
+    }
+    .color-legend span:nth-child(5) span { background: #3a7c58 !important; }
+    .color-legend span:nth-child(6) {
+      background: #f2eada !important; border-color: #be9a56 !important; color: #6a4a18 !important;
+    }
+    .color-legend span:nth-child(6) span { background: #8e6e2e !important; }
+
+    /* ===================================
+       モバイル
+       =================================== */
     @media (max-width: 640px) {
       .card { padding: 14px !important; border-radius: 14px; }
       .card h3 { font-size: 0.95rem; line-height: 1.45; }
@@ -71,7 +206,7 @@
     <div class="border-b border-gray-200">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center shadow-sm">
+          <div id="site-icon" class="w-8 h-8 rounded-lg bg-blue-700 flex items-center justify-center shadow-sm">
             <span class="text-white text-sm font-bold">Ψ</span>
           </div>
           <div>
@@ -126,7 +261,7 @@
         <p class="text-gray-500 text-sm leading-relaxed max-w-2xl">
           ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドをまとめた外来即時参照ポータルです。
         </p>
-        <div class="mt-4 flex flex-wrap gap-2 text-xs">
+        <div class="color-legend mt-4 flex flex-wrap gap-2 text-xs">
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>ICD分類・診断</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-violet-200 bg-violet-50 text-violet-700 font-medium"><span class="w-2 h-2 rounded-full bg-violet-600 inline-block"></span>疾患別 診断・治療</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>ガイドライン準拠</span>
