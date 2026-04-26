@@ -123,6 +123,14 @@
     .link-sky   { color: #2a6290; }
     .row-sky    { background: #ecf2f8; }
 
+    /* Rose（採点シート WEB入力） */
+    .sec-rose   { background: #8a4858; }
+    .bg-rose    { background: #f8edf0; border: 1.5px solid #c898a8; }
+    .border-rose { border-top: 3px solid #a86878; }
+    .tag-rose   { background: #ecd0d8; color: #682838; }
+    .link-rose  { color: #7a3848; }
+    .row-rose   { background: #f8edf0; }
+
     /* ===================================
        ヘッダーアイコン（くすみ青）
        =================================== */
@@ -146,6 +154,14 @@
     a[href="#scales"]            { background: #d6ecea !important; color: #24625e !important; }
     a[href="#scales"]:hover      { background: #c2e2de !important; }
     a[href="#scales"] span       { background: #aed4d0 !important; color: #24625e !important; }
+
+    a[href="#scale-sheets"]            { background: #d6ecea !important; color: #24625e !important; }
+    a[href="#scale-sheets"]:hover      { background: #c2e2de !important; }
+    a[href="#scale-sheets"] span       { background: #aed4d0 !important; color: #24625e !important; }
+
+    a[href="#score-sheets"]            { background: #f4dde4 !important; color: #682838 !important; }
+    a[href="#score-sheets"]:hover      { background: #eaccd4 !important; }
+    a[href="#score-sheets"] span       { background: #d8b8c4 !important; color: #682838 !important; }
 
     a[href="#scale-guide"]       { background: #d4ecde !important; color: #225a3e !important; }
     a[href="#scale-guide"]:hover { background: #c0e2ce !important; }
@@ -235,10 +251,15 @@
           📋 ガイドライン
           <span class="bg-blue-200 text-blue-700 px-1.5 py-0.5 rounded-full text-xs leading-none">3</span>
         </a>
-        <a href="#scales"
+        <a href="#scale-sheets"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 transition-colors text-xs font-medium text-teal-800 whitespace-nowrap">
-          📊 評価スケール
-          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">5</span>
+          📋 スケール集
+          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+        </a>
+        <a href="#score-sheets"
+           class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 transition-colors text-xs font-medium text-rose-800 whitespace-nowrap">
+          🖊 採点シート
+          <span class="bg-rose-200 text-rose-700 px-1.5 py-0.5 rounded-full text-xs leading-none">4</span>
         </a>
         <a href="#scale-guide"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 transition-colors text-xs font-medium text-emerald-800 whitespace-nowrap">
@@ -266,7 +287,8 @@
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>ICD分類・診断</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-violet-200 bg-violet-50 text-violet-700 font-medium"><span class="w-2 h-2 rounded-full bg-violet-600 inline-block"></span>疾患別 診断・治療</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>ガイドライン準拠</span>
-          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 font-medium"><span class="w-2 h-2 rounded-full bg-teal-600 inline-block"></span>評価スケール</span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 font-medium"><span class="w-2 h-2 rounded-full bg-teal-600 inline-block"></span>スケール集（印刷）</span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-rose-200 bg-rose-50 text-rose-700 font-medium"><span class="w-2 h-2 rounded-full bg-rose-600 inline-block"></span>採点シート（WEB）</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 font-medium"><span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span>スケール解説</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-700 font-medium"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>教育・資格</span>
         </div>
@@ -414,55 +436,66 @@
       </div>
     </section>
 
-    <!-- ④ 評価スケール -->
-    <section id="scales" class="mb-12">
+    <!-- ④ 評価スケール集（印刷用） -->
+    <section id="scale-sheets" class="mb-12">
       <div class="sec-header sec-teal">
-        <div class="sec-icon">📊</div>
-        <span>評価スケール・アセスメントシート</span>
-        <span class="sec-count" id="cnt-scales"></span>
+        <div class="sec-icon">📋</div>
+        <span>評価スケール集 — 印刷用様式</span>
+        <span class="sec-count" id="cnt-scale-sheets"></span>
       </div>
-      <div class="grid sm:grid-cols-2 gap-3" id="grid-scales">
+      <div class="grid sm:grid-cols-2 gap-3" id="grid-scale-sheets">
         <a id="card-schiz-sheets" href="schizophrenia-assessment-sheets.html" class="card card-recent block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">統合失調症 印刷用</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">統合失調症</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 評価スケール集（外来用印刷様式）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">外来診察での記入・印刷に最適化されたアセスメントシート集。評価記録・経過追跡に使用可能。</p>
           <div class="mt-3 text-xs link-teal font-medium">schizophrenia-assessment-sheets.html →</div>
         </a>
-        <a id="card-bprs-detailed" href="bprs-sheet-detailed.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">BPRS 詳細</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">BPRS 採点シート — 詳細版（7段階アンカーポイント）</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">18項目×7段階の具体的な臨床記述を収録。評価基準・質問例・定義の折りたたみ表示付き。アンカーポイントを参照しながら採点できる精緻版。</p>
-          <div class="mt-3 text-xs link-teal font-medium">bprs-sheet-detailed.html →</div>
-        </a>
-        <a id="card-panss-detailed" href="panss-sheet-detailed.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">PANSS 詳細</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">PANSS 採点シート — 詳細版（アンカーポイント）</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">30項目×7段階のアンカーポイントを収録。PANSSの一般的基準・寛解基準（Andreasen 2005）・BPRS対応関係を随所に明記した精緻版採点シート。</p>
-          <div class="mt-3 text-xs link-teal font-medium">panss-sheet-detailed.html →</div>
-        </a>
-        <a id="card-bfcrs" href="bfcrs-sheet.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">BFCRS</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">BFCRS 採点シート — Bush-Francis 緊張病評価尺度（詳細版）</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">緊張病（カタトニア）の標準評価尺度・全23項目の詳細採点シート。BFCSS スクリーニング判定（≥2項目陽性）・バイナリ項目（蝋様固縮・ミットゲーエン等6項目）・ベンゾジアゼピン反応試験ガイド・悪性緊張病アラートを収録。</p>
-          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
-            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">BFCSS スクリーニング（1〜14項目）</span>
-            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">バイナリ項目対応</span>
-            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">悪性緊張病アラート</span>
-            <span class="text-teal-700 bg-teal-50 border border-teal-200 rounded px-1.5 py-0.5">Lz反応試験ガイド</span>
-          </div>
-          <div class="mt-2 text-xs link-teal font-medium">bfcrs-sheet.html →</div>
-        </a>
-        <a id="card-ymrs" href="ymrs-sheet-detailed.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">YMRS 躁状態</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">YMRS 採点シート — Young 躁状態評価尺度（詳細版）</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">11項目の躁状態評価尺度。通常項目（0〜4点）と倍点項目（0〜8点：過敏性・言語思考障害・攻撃的行動）を区別して採点。重症度判定・アンカーポイント・質問例付き。</p>
-          <div class="mt-3 text-xs link-teal font-medium">ymrs-sheet-detailed.html →</div>
-        </a>
-        <a id="card-anxiety-scales" href="anxiety-assessment-scales.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal sm:col-span-2">
+        <a id="card-anxiety-scales" href="anxiety-assessment-scales.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal">
           <div class="flex items-start justify-between mb-2"><span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">不安症群</span><span class="text-xs text-gray-400 tabular-nums">2026-04-05 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">不安症群 重症度評価スケール集 — 外来用様式</h3>
           <p class="text-xs text-gray-500 leading-relaxed">GAD-7・HAM-A・LSAS・Y-BOCS・PHQ-9 等の重症度評価スケールを外来用印刷様式として収録。エビデンスレベルバッジ付き。</p>
           <div class="mt-3 text-xs link-teal font-medium">anxiety-assessment-scales.html →</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ④b 採点シート（WEB入力） -->
+    <section id="score-sheets" class="mb-12">
+      <div class="sec-header sec-rose">
+        <div class="sec-icon">🖊</div>
+        <span>採点シート — WEB 入力・参照</span>
+        <span class="sec-count" id="cnt-score-sheets"></span>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-3" id="grid-score-sheets">
+        <a id="card-bprs-detailed" href="bprs-sheet-detailed.html" class="card block border border-rose-100 rounded-xl p-4 border-rose bg-rose">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-rose px-2 py-0.5 rounded-full">BPRS 詳細</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">BPRS 採点シート — 詳細版（7段階アンカーポイント）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">18項目×7段階の具体的な臨床記述を収録。評価基準・質問例・定義の折りたたみ表示付き。アンカーポイントを参照しながら採点できる精緻版。</p>
+          <div class="mt-3 text-xs link-rose font-medium">bprs-sheet-detailed.html →</div>
+        </a>
+        <a id="card-panss-detailed" href="panss-sheet-detailed.html" class="card block border border-rose-100 rounded-xl p-4 border-rose bg-rose">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-rose px-2 py-0.5 rounded-full">PANSS 詳細</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">PANSS 採点シート — 詳細版（アンカーポイント）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">30項目×7段階のアンカーポイントを収録。PANSSの一般的基準・寛解基準（Andreasen 2005）・BPRS対応関係を随所に明記した精緻版採点シート。</p>
+          <div class="mt-3 text-xs link-rose font-medium">panss-sheet-detailed.html →</div>
+        </a>
+        <a id="card-bfcrs" href="bfcrs-sheet.html" class="card block border border-rose-100 rounded-xl p-4 border-rose bg-rose sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-rose px-2 py-0.5 rounded-full">BFCRS</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">BFCRS 採点シート — Bush-Francis 緊張病評価尺度（詳細版）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">緊張病（カタトニア）の標準評価尺度・全23項目の詳細採点シート。BFCSS スクリーニング判定（≥2項目陽性）・バイナリ項目（蝋様固縮・ミットゲーエン等6項目）・ベンゾジアゼピン反応試験ガイド・悪性緊張病アラートを収録。</p>
+          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+            <span class="text-rose-700 bg-rose-50 border border-rose-200 rounded px-1.5 py-0.5">BFCSS スクリーニング（1〜14項目）</span>
+            <span class="text-rose-700 bg-rose-50 border border-rose-200 rounded px-1.5 py-0.5">バイナリ項目対応</span>
+            <span class="text-rose-700 bg-rose-50 border border-rose-200 rounded px-1.5 py-0.5">悪性緊張病アラート</span>
+            <span class="text-rose-700 bg-rose-50 border border-rose-200 rounded px-1.5 py-0.5">Lz反応試験ガイド</span>
+          </div>
+          <div class="mt-2 text-xs link-rose font-medium">bfcrs-sheet.html →</div>
+        </a>
+        <a id="card-ymrs" href="ymrs-sheet-detailed.html" class="card block border border-rose-100 rounded-xl p-4 border-rose bg-rose">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-rose px-2 py-0.5 rounded-full">YMRS 躁状態</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">YMRS 採点シート — Young 躁状態評価尺度（詳細版）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">11項目の躁状態評価尺度。通常項目（0〜4点）と倍点項目（0〜8点：過敏性・言語思考障害・攻撃的行動）を区別して採点。重症度判定・アンカーポイント・質問例付き。</p>
+          <div class="mt-3 text-xs link-rose font-medium">ymrs-sheet-detailed.html →</div>
         </a>
       </div>
     </section>
@@ -558,7 +591,8 @@
       icd:        ['card-icd10','card-icd11','card-icd10mini','card-icd10-quiz'],
       diseases:   ['card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
       guidelines: ['card-schiz-algo','card-depression','card-bipolar'],
-      scales:     ['card-schiz-sheets','card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs','card-anxiety-scales'],
+      'scale-sheets': ['card-schiz-sheets','card-anxiety-scales'],
+      'score-sheets': ['card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs'],
       'scale-guide': ['card-schiz-scales','card-bprs-guide'],
       education:  ['card-terminology','card-shiteii'],
       others:     ['card-context','card-cursor']
