@@ -41,6 +41,31 @@
     }
     .sec-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
     .sec-count { margin-left: auto; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 500; }
+    .quick-card {
+      display: flex; align-items: center; gap: 12px;
+      min-height: 64px; border-radius: 14px; padding: 12px 14px;
+      border: 1px solid rgba(148,163,184,0.28); background: #fff;
+      box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    }
+    .quick-card:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(15,23,42,0.10); border-color: rgba(59,130,246,0.35); }
+    .quick-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; }
+    .quick-title { font-size: 0.92rem; line-height: 1.35; font-weight: 700; color: #0f172a; }
+    .quick-sub { margin-top: 2px; font-size: 0.72rem; color: #64748b; }
+    @media (max-width: 640px) {
+      .card { padding: 14px !important; border-radius: 14px; }
+      .card h3 { font-size: 0.95rem; line-height: 1.45; }
+      .card p {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .card-recent::before { right: 10px; font-size: 9px; padding: 2px 7px; }
+      .sec-header { margin-bottom: 10px; border-radius: 12px; }
+      .quick-card { min-height: 68px; padding: 13px 14px; }
+      .quick-title { font-size: 0.95rem; }
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -67,10 +92,14 @@
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-xs font-medium text-gray-700 whitespace-nowrap">
           📋 更新情報
         </a>
+        <a href="#quick"
+           class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 transition-colors text-xs font-medium text-rose-800 whitespace-nowrap">
+          ⭐ よく使う
+        </a>
         <a href="#icd"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-100 hover:bg-blue-200 transition-colors text-xs font-medium text-blue-800 whitespace-nowrap">
           🗂 ICD分類・診断
-          <span class="bg-blue-200 text-blue-700 px-1.5 py-0.5 rounded-full text-xs leading-none">6</span>
+          <span class="bg-blue-200 text-blue-700 px-1.5 py-0.5 rounded-full text-xs leading-none">4</span>
         </a>
         <a href="#diseases"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors text-xs font-medium text-violet-800 whitespace-nowrap">
@@ -80,7 +109,7 @@
         <a href="#scales"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 transition-colors text-xs font-medium text-teal-800 whitespace-nowrap">
           📊 評価スケール
-          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">9</span>
+          <span class="bg-teal-200 text-teal-700 px-1.5 py-0.5 rounded-full text-xs leading-none">7</span>
         </a>
         <a href="#education"
            class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-800 whitespace-nowrap">
@@ -96,10 +125,10 @@
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-5 sm:py-8">
 
-    <section class="mb-10">
-      <div class="bg-white rounded-2xl border border-gray-200 px-6 py-6 shadow-sm">
+    <section class="mb-6 sm:mb-10">
+      <div class="bg-white rounded-2xl border border-gray-200 px-5 sm:px-6 py-5 sm:py-6 shadow-sm">
         <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 tracking-tight">精神科臨床ガイド</h1>
         <p class="text-gray-500 text-sm leading-relaxed max-w-2xl">
           ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドをまとめた外来即時参照ポータルです。
@@ -110,6 +139,54 @@
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 font-medium"><span class="w-2 h-2 rounded-full bg-teal-600 inline-block"></span>評価スケール</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-700 font-medium"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>教育・資格</span>
         </div>
+      </div>
+    </section>
+
+    <!-- よく使うページ -->
+    <section id="quick" class="mb-8 sm:mb-12">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-base font-bold text-gray-900">よく使うページ</h2>
+          <p class="text-xs text-gray-500 mt-1">スマホでもすぐ開ける主要リンク</p>
+        </div>
+        <span class="text-[11px] font-medium text-rose-700 bg-rose-50 border border-rose-100 px-2.5 py-1 rounded-full">Quick access</span>
+      </div>
+      <div class="grid gap-2.5 sm:grid-cols-2">
+        <a href="icd10.html" class="quick-card" data-card-target="card-icd10">
+          <span class="quick-icon bg-blue-100 text-blue-700">F</span>
+          <span class="min-w-0">
+            <span class="quick-title block">ICD-10 精神科疾患分類</span>
+            <span class="quick-sub block truncate">診断基準・鑑別・関連治療薬</span>
+          </span>
+        </a>
+        <a href="schizophrenia-diagnosis.html" class="quick-card" data-card-target="card-schiz-diagnosis">
+          <span class="quick-icon bg-violet-100 text-violet-700">診</span>
+          <span class="min-w-0">
+            <span class="quick-title block">統合失調症 診断ガイド</span>
+            <span class="quick-sub block truncate">診断プロセス・鑑別・除外検査</span>
+          </span>
+        </a>
+        <a href="antipsychotics-japan.html" class="quick-card" data-card-target="card-antipsychotics">
+          <span class="quick-icon bg-violet-100 text-violet-700">薬</span>
+          <span class="min-w-0">
+            <span class="quick-title block">抗精神病薬 選択ガイド</span>
+            <span class="quick-sub block truncate">日本承認薬の比較・使い分け</span>
+          </span>
+        </a>
+        <a href="bprs-sheet-detailed.html" class="quick-card" data-card-target="card-bprs-detailed">
+          <span class="quick-icon bg-teal-100 text-teal-700">評</span>
+          <span class="min-w-0">
+            <span class="quick-title block">BPRS 採点シート</span>
+            <span class="quick-sub block truncate">18項目・7段階アンカー</span>
+          </span>
+        </a>
+        <a href="shiteii-guide.html" class="quick-card sm:col-span-2" data-card-target="card-shiteii">
+          <span class="quick-icon bg-amber-100 text-amber-700">資</span>
+          <span class="min-w-0">
+            <span class="quick-title block">精神保健指定医 資格取得ガイド</span>
+            <span class="quick-sub block truncate">症例レポート・口頭試問・申請ロードマップ</span>
+          </span>
+        </a>
       </div>
     </section>
 
@@ -362,6 +439,9 @@
         });
         const cnt = document.getElementById('cnt-' + sec);
         if (cnt) cnt.textContent = visible + 'ページ';
+      });
+      document.querySelectorAll('[data-card-target]').forEach(link => {
+        link.style.display = hidden.includes(link.dataset.cardTarget) ? 'none' : '';
       });
     }
 
