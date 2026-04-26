@@ -199,8 +199,6 @@
     .color-legend span:nth-child(6) span { background: #8e6e2e !important; }
 
     /* ===================================
-<<<<<<< HEAD
-=======
        コンパクトモード
        =================================== */
     body.compact-mode .card {
@@ -291,7 +289,7 @@
       position: fixed;
       z-index: 9999;
       width: min(420px, calc(100vw - 24px));
-      max-height: min(340px, 52vh);
+      max-height: min(520px, 72vh);
       overflow-y: auto;
       background: #faf9f7;
       border-radius: 14px;
@@ -303,7 +301,7 @@
     .card-preview-pop.is-visible { display: block; }
     .card-preview-pop.is-touch {
       width: min(440px, calc(100vw - 32px));
-      max-height: min(52vh, 440px);
+      max-height: min(72vh, 520px);
       left: 50% !important;
       top: 50% !important;
       transform: translate(-50%, -50%);
@@ -353,8 +351,47 @@
       gap: 6px 12px;
     }
 
+    .card-preview-section-label {
+      font-size: 0.64rem;
+      font-weight: 700;
+      color: #444;
+      margin: 10px 0 5px;
+      letter-spacing: 0.02em;
+    }
+    .card-preview-updates {
+      border: 1px solid #e0dcd4;
+      border-radius: 8px;
+      background: #fff;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .card-preview-up-row {
+      display: grid;
+      grid-template-columns: 4.6rem 2.5rem minmax(0, 1fr);
+      gap: 4px 6px;
+      align-items: start;
+      padding: 6px 8px;
+      font-size: 0.64rem;
+      line-height: 1.45;
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+    .card-preview-up-row:last-child { border-bottom: none; }
+    .card-preview-up-date { color: #666; font-variant-numeric: tabular-nums; }
+    .card-preview-up-kind {
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 1px 4px;
+      border-radius: 4px;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .card-preview-up-kind.kind-new { background: #dcfce7; color: #166534; }
+    .card-preview-up-kind.kind-upd { background: #e0e7ff; color: #3730a3; }
+    .card-preview-up-kind.kind-fix { background: #fef3c7; color: #92400e; }
+    .card-preview-up-kind.kind-opt { background: #e5e7eb; color: #374151; }
+
     /* ===================================
->>>>>>> 2a4a7f2 (MADRS詳細採点シートを追加)
        モバイル
        =================================== */
     @media (max-width: 640px) {
@@ -745,6 +782,10 @@
     <button type="button" class="card-preview-close" id="card-preview-close" aria-label="プレビューを閉じる">×</button>
     <div id="card-preview-title" class="card-preview-title"></div>
     <p id="card-preview-body" class="card-preview-body"></p>
+    <div id="card-preview-updates-wrap">
+      <div class="card-preview-section-label">更新履歴（最新5件）</div>
+      <div id="card-preview-updates" class="card-preview-updates"></div>
+    </div>
     <div id="card-preview-meta" class="card-preview-meta"></div>
   </div>
 
@@ -794,8 +835,6 @@
     }
 
     applyVisibility();
-<<<<<<< HEAD
-=======
 
     // === コンパクトモード ===
     function toggleCompact() {
@@ -850,6 +889,7 @@
       'card-bfcrs':            ['💻 WEB入力', '📊 採点', '🚨 緊張病'],
       'card-ymrs':             ['💻 WEB入力', '📊 採点', '⚡ 躁状態'],
       'card-hamd':             ['💻 WEB入力', '📊 採点', '📉 HAM-D'],
+      'card-madrs':            ['💻 WEB入力', '📊 採点', '📉 MADRS'],
       'card-schiz-scales':     ['📖 解説', '🏥 外来参照'],
       'card-bprs-guide':       ['📖 解説', '🏥 外来参照'],
       'card-terminology':      ['📚 用語集', '🏥 外来参照'],
@@ -877,15 +917,172 @@
       });
     })();
 
+    /** プレビュー用：各カードの更新履歴（新しい順・最大5件表示） */
+    const CARD_UPDATE_HISTORY = {
+      'card-icd10': [
+        { date: '2026-04-24', kind: '更新', text: 'F章コード・鑑別・治療薬注記の体裁を外来参照向けに整備' },
+        { date: '2026-04-18', kind: '更新', text: '内部アンカーと折りたたみ初期状態を調整' },
+        { date: '2026-04-10', kind: '修正', text: 'モバイル表示での表組みの横スクロールを改善' },
+        { date: '2026-04-02', kind: '更新', text: '関連疾患リンクの相互参照を追加' },
+        { date: '2026-03-22', kind: '新規', text: 'ICD-10 精神科疾患分類（詳細版）として初版公開' },
+      ],
+      'card-icd11': [
+        { date: '2026-04-05', kind: '新規', text: 'ICD-11 / DSM-5-TR 並置マップ・対照表として初版公開' },
+        { date: '2026-04-01', kind: '更新', text: '用語・コード対応の注記を追記' },
+        { date: '2026-03-28', kind: '修正', text: '印刷時の改ページずれを調整' },
+      ],
+      'card-icd10mini': [
+        { date: '2026-04-13', kind: '新規', text: 'ICD-10 ミニ版（軽量参照・印刷向け）として初版公開' },
+        { date: '2026-04-08', kind: '更新', text: 'F章一覧の可読性を改善' },
+      ],
+      'card-icd10-quiz': [
+        { date: '2026-04-13', kind: '新規', text: '疾患定義からコードを当てるインタラクティブ問題集として初版公開' },
+        { date: '2026-04-10', kind: '更新', text: '問題文の表現と正解解説を調整' },
+      ],
+      'card-antipsychotics': [
+        { date: '2026-04-23', kind: '新規', text: '日本における抗精神病薬選択ガイドとして初版公開' },
+        { date: '2026-04-20', kind: '更新', text: '添付文書・エビデンスへの注記を整理' },
+      ],
+      'card-anxiety': [
+        { date: '2026-04-05', kind: '新規', text: '不安症群の診断・治療フローとして初版公開' },
+        { date: '2026-03-30', kind: '更新', text: '薬物療法・心理療法の推奨表記を調整' },
+      ],
+      'card-schiz-diagnosis': [
+        { date: '2026-04-25', kind: '新規', text: '古典的診断とDSM-5-TR/ICD-10操作的基準の比較・鑑別・除外検査を網羅' },
+        { date: '2026-04-22', kind: '更新', text: '自己免疫性脳炎鑑別の節を追記' },
+      ],
+      'card-schiz-history': [
+        { date: '2026-04-26', kind: '新規', text: 'クレペリン〜現代まで「世界×日本」並列タイムライン・概念マップで図解' },
+        { date: '2026-04-24', kind: '更新', text: '名称変更（2002）と早期介入の記述を補強' },
+      ],
+      'card-atypical-depression': [
+        { date: '2026-04-26', kind: '新規', text: 'Columbia Group・DSM-5-TR・RAILS記憶法・MAOI/SSRIエビデンス・CBTを網羅した図解' },
+        { date: '2026-04-24', kind: '更新', text: '気分反応性・拒絶過敏性の臨床記載例を追加' },
+      ],
+      'card-schiz-algo': [
+        { date: '2026-04-23', kind: '更新', text: '統合失調症治療ガイドライン2022準拠のフローを最新化' },
+        { date: '2026-04-15', kind: '更新', text: '急性期〜維持期の切り替え注記を整理' },
+        { date: '2026-04-01', kind: '新規', text: '薬物治療アルゴリズム図解版として初版公開' },
+      ],
+      'card-depression': [
+        { date: '2026-04-05', kind: '新規', text: 'うつ病ガイドライン2025準拠の診断・治療選択ツリーとして初版公開' },
+        { date: '2026-03-28', kind: '更新', text: '難治性うつ・増強療法の分岐を調整' },
+      ],
+      'card-bipolar': [
+        { date: '2026-04-26', kind: '新規', text: '日本うつ病学会診療ガイドライン2023準拠の診断・治療ツリーとして初版公開' },
+        { date: '2026-04-24', kind: '更新', text: '躁病急性期・双極うつの推奨表記（2A/2C等）を明確化' },
+      ],
+      'card-schiz-sheets': [
+        { date: '2026-04-23', kind: '新規', text: '外来用印刷様式の評価スケール集として初版公開' },
+        { date: '2026-04-18', kind: '更新', text: '記入欄レイアウトを印刷前提で調整' },
+      ],
+      'card-anxiety-scales': [
+        { date: '2026-04-05', kind: '新規', text: 'GAD-7・HAM-A・LSAS・Y-BOCS等の印刷様式として初版公開' },
+        { date: '2026-03-30', kind: '更新', text: 'エビデンスバッジの表記を整理' },
+      ],
+      'card-bprs-detailed': [
+        { date: '2026-04-26', kind: '修正', text: 'Android Chrome：印刷PDFでスコア表レイアウトが崩れる問題を修正（@media screen 等）' },
+        { date: '2026-04-26', kind: '修正', text: '簡易印刷を beforeprint/afterprint + Android遅延復帰に変更' },
+        { date: '2026-04-25', kind: '新規', text: '18項目×7段階アンカー・折りたたみ解説付き詳細採点シートとして初版公開' },
+      ],
+      'card-panss-detailed': [
+        { date: '2026-04-26', kind: '修正', text: 'Android PDF印刷・簡易印刷の挙動をBFCRS等と同様に修正' },
+        { date: '2026-04-25', kind: '新規', text: '30項目インタラクティブ採点・P/N/Gスコア・寛解基準注記付き初版' },
+      ],
+      'card-bfcrs': [
+        { date: '2026-04-26', kind: '修正', text: 'Android：モバイル用CSSが印刷に干渉しないよう screen メディアに限定' },
+        { date: '2026-04-26', kind: '修正', text: '簡易印刷のDOM復帰タイミングをAndroid向けに遅延' },
+        { date: '2026-04-25', kind: '新規', text: '23項目・BFCSS・バイナリ項目・Lz反応試験・悪性緊張病アラートを収録' },
+      ],
+      'card-ymrs': [
+        { date: '2026-04-26', kind: '修正', text: 'Android PDF印刷・簡易印刷対応を他採点シートと統一' },
+        { date: '2026-04-26', kind: '新規', text: '11項目・通常/倍点・アンカーポイント付き詳細版として公開' },
+      ],
+      'card-hamd': [
+        { date: '2026-04-26', kind: '新規', text: 'HAM-D 詳細採点シート（WEB入力・印刷）として初版公開' },
+        { date: '2026-04-25', kind: '更新', text: '項目定義・アンカー整合をレビュー' },
+      ],
+      'card-madrs': [
+        { date: '2026-04-26', kind: '新規', text: 'MADRS 詳細採点シートとして初版公開' },
+        { date: '2026-04-25', kind: '更新', text: '総点・重症度区分の表示を調整' },
+      ],
+      'card-schiz-scales': [
+        { date: '2026-04-23', kind: '新規', text: 'PANSS・BPRS・CGI・SAPS/SANS 等のリファレンスとして初版公開' },
+        { date: '2026-04-18', kind: '更新', text: 'スコア解釈の注記を追記' },
+      ],
+      'card-bprs-guide': [
+        { date: '2026-04-25', kind: '新規', text: '日本語版BPRS解説のHTML図解（項目定義・面接・FAQ）として初版公開' },
+        { date: '2026-04-22', kind: '更新', text: '質問例・採点のすり合わせ節を拡充' },
+      ],
+      'card-terminology': [
+        { date: '2026-04-08', kind: '更新', text: '用語マップ拡張版：症候学・精神分析用語を追加' },
+        { date: '2026-04-01', kind: '更新', text: '相互リンクと見出し階層を整理' },
+        { date: '2026-03-20', kind: '新規', text: '精神医学用語マップとして初版公開' },
+      ],
+      'card-shiteii': [
+        { date: '2026-04-23', kind: '新規', text: '精神保健指定医資格取得のロードマップ・症例・口試対策として初版公開' },
+        { date: '2026-04-18', kind: '更新', text: '申請タイムラインとチェックリストを更新' },
+      ],
+      'card-context': [
+        { date: '2026-04-18', kind: '新規', text: 'Anthropic コンテキストエンジニアリング記事の日本語解説として初版公開' },
+      ],
+      'card-cursor': [
+        { date: '2026-04-23', kind: '新規', text: 'Cursor AIエージェント比較ガイドとして初版公開' },
+        { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
+      ],
+    };
+
     // === カードプレビューポップアップ ===
     (function initCardPreview() {
       const backdrop = document.getElementById('card-preview-backdrop');
       const pop      = document.getElementById('card-preview-pop');
       const elTitle  = document.getElementById('card-preview-title');
       const elBody   = document.getElementById('card-preview-body');
+      const elUpdates = document.getElementById('card-preview-updates');
       const elMeta   = document.getElementById('card-preview-meta');
       const btnClose = document.getElementById('card-preview-close');
-      if (!backdrop || !pop || !elTitle || !elBody || !elMeta) return;
+      if (!backdrop || !pop || !elTitle || !elBody || !elUpdates || !elMeta) return;
+
+      function kindToClass(kind) {
+        if (kind === '新規') return 'kind-new';
+        if (kind === '修正') return 'kind-fix';
+        if (kind === '最適化' || kind === '表示') return 'kind-opt';
+        return 'kind-upd';
+      }
+
+      function getHistoryRows(cardId, card) {
+        let rows = CARD_UPDATE_HISTORY[cardId];
+        if (rows && rows.length) return rows.slice(0, 5);
+        const dateEl = card.querySelector('[class~="tabular-nums"]');
+        const raw = dateEl ? dateEl.textContent.trim() : '';
+        const m = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+        return [{
+          date: m ? m[1] : '—',
+          kind: '表示',
+          text: 'ポータル掲載日（カード表記）。詳細な改訂履歴は今後ここに追記できます。',
+        }];
+      }
+
+      function renderHistory(cardId, card) {
+        elUpdates.innerHTML = '';
+        const rows = getHistoryRows(cardId, card);
+        rows.forEach(r => {
+          const row = document.createElement('div');
+          row.className = 'card-preview-up-row';
+          const d = document.createElement('span');
+          d.className = 'card-preview-up-date';
+          d.textContent = r.date;
+          const k = document.createElement('span');
+          k.className = 'card-preview-up-kind ' + kindToClass(r.kind);
+          k.textContent = r.kind;
+          const t = document.createElement('span');
+          t.textContent = r.text;
+          row.appendChild(d);
+          row.appendChild(k);
+          row.appendChild(t);
+          elUpdates.appendChild(row);
+        });
+      }
 
       const HOVER_DELAY_MS = 360;
       const HIDE_DELAY_MS  = 280;
@@ -906,6 +1103,8 @@
         if (!title && !body) return false;
         elTitle.textContent = title || '（無題）';
         elBody.textContent  = body  || '（説明文なし）';
+
+        renderHistory(card.id, card);
 
         const href = card.getAttribute('href') || '';
         const file = href.split('/').pop() || href;
@@ -1041,7 +1240,6 @@
         if (openMode === 'hover') hide();
       }, { passive: true });
     })();
->>>>>>> 2a4a7f2 (MADRS詳細採点シートを追加)
   </script>
 </body>
 </html>
