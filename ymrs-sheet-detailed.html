@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YMRS 詳細採点シート｜Young 躁状態評価尺度</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ymrs-gradient: linear-gradient(135deg, #78350f, #c2410c); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; }
+
+    /* スコアボタン */
+    .score-btn {
+      min-width: 2rem; height: 2rem; border-radius: 0.375rem;
+      border: 1.5px solid #d1d5db; background: white;
+      font-size: 0.8rem; font-weight: 700; cursor: pointer;
+      padding: 0 0.4rem;
+      transition: all 0.12s; display: flex; align-items: center;
+      justify-content: center; color: #6b7280; flex-shrink: 0;
+      user-select: none;
+    }
+    .score-btn:hover { border-color: #f97316; color: #f97316; background: #fff7ed; }
+    .score-btn.sv0 { background:#dcfce7; border-color:#16a34a; color:#15803d; }
+    .score-btn.sv1 { background:#e0f2fe; border-color:#0284c7; color:#0369a1; }
+    .score-btn.sv2 { background:#fef9c3; border-color:#ca8a04; color:#854d0e; }
+    .score-btn.sv3 { background:#fef3c7; border-color:#b45309; color:#92400e; }
+    .score-btn.sv4 { background:#ffedd5; border-color:#ea580c; color:#c2410c; }
+    .score-btn.sv6 { background:#fee2e2; border-color:#dc2626; color:#b91c1c; }
+    .score-btn.sv8 { background:#fecaca; border-color:#b91c1c; color:#7f1d1d; }
+
+    /* スコア表示バッジ */
+    .score-disp {
+      width: 2.2rem; height: 2rem; border-radius: 0.375rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; font-weight: 700; flex-shrink: 0;
+    }
+    .sd-none { background:#f1f5f9; color:#cbd5e1; }
+    .sdv0 { background:#dcfce7; color:#15803d; border: 1.5px solid #16a34a; }
+    .sdv1 { background:#e0f2fe; color:#0284c7; }
+    .sdv2 { background:#fef9c3; color:#854d0e; }
+    .sdv3 { background:#fef3c7; color:#b45309; }
+    .sdv4 { background:#ffedd5; color:#c2410c; }
+    .sdv6 { background:#fee2e2; color:#dc2626; }
+    .sdv8 { background:#fecaca; color:#7f1d1d; }
+
+    /* アイテムカード */
+    .item-card { background: white; border-radius: 1rem; margin-bottom: 0.75rem; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .item-header { display: grid; grid-template-columns: 1.75rem 1fr auto auto; align-items: center; gap: 0.625rem; padding: 0.75rem 1rem; cursor: pointer; transition: background 0.1s; user-select:none; }
+    .item-header:hover { background: #fff7ed; }
+    .item-card.open { border-left: 3px solid #f97316; }
+
+    .num-badge { width: 1.65rem; height: 1.65rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; }
+    .na  { background:#fef3c7; color:#92400e; }  /* 通常項目 (0-4) */
+    .nd  { background:#ffe4e6; color:#be123c; }  /* 倍点項目 (0-8) */
+
+    .item-body { border-top: 1px solid #f1f5f9; padding: 0 1rem 1rem; }
+
+    .eval-box { background:#fff7ed; border-left:3px solid #f97316; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.625rem; line-height:1.55; }
+    .q-box    { background:#fefce8; border-left:3px solid #ca8a04; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; line-height:1.55; }
+    .warn-box { background:#fffbeb; border-left:3px solid #d97706; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+    .double-box { background:#fff1f2; border-left:3px solid #f43f5e; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+
+    .score-table { width:100%; border-collapse:collapse; font-size:0.72rem; margin-top:0.75rem; }
+    .score-table th { padding:0.4rem 0.6rem; font-weight:700; text-align:center; font-size:0.68rem; }
+    .score-table td { padding:0.4rem 0.6rem; border-bottom:1px solid #f3f4f6; vertical-align:top; line-height:1.45; }
+    .score-table tr:last-child td { border-bottom:none; }
+    .score-table tr:hover td { background:#fafafa; }
+    .sc0{background:#dcfce7;color:#15803d;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #bbf7d0;}
+    .sc1{background:#e0f2fe;color:#0369a1;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #bae6fd;}
+    .sc2{background:#fef9c3;color:#854d0e;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #fde68a;}
+    .sc3{background:#fef3c7;color:#92400e;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #fde68a;}
+    .sc4{background:#ffedd5;color:#c2410c;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #fed7aa;}
+    .sc6{background:#fee2e2;color:#b91c1c;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #fecaca;}
+    .sc8{background:#fecaca;color:#7f1d1d;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #fca5a5;}
+
+    .sec-div { padding:0.4rem 0.875rem; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; display:flex; align-items:center; gap:0.5rem; border-radius:0.75rem; }
+    .point-card { background:white; border-radius:1rem; padding:0.875rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.06); margin-bottom:0.75rem; }
+    .sticky-footer { position:fixed; bottom:0; left:0; right:0; z-index:50; background:white; border-top:1px solid #e2e8f0; padding:0.625rem 1.25rem; box-shadow:0 -4px 12px rgba(0,0,0,0.08); }
+    .chevron-icon { transition:transform 0.2s; flex-shrink:0; }
+    .chevron-open { transform:rotate(180deg); }
+    .item-body[hidden] { display:none; }
+
+    /* Toggle pill */
+    .toggle-pill { display:inline-flex; align-items:center; gap:0.2rem; background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; border-radius:9999px; padding:0.18rem 0.55rem; font-size:0.7rem; font-weight:600; white-space:nowrap; transition:background 0.15s,border-color 0.15s; margin-top:0.25rem; pointer-events:none; user-select:none; }
+    .toggle-pill.open { background:#ffedd5; border-color:#fb923c; color:#9a3412; }
+    .toggle-pill .tpill-label { font-size:0.7rem; }
+
+    /* 印刷 */
+    @media print {
+      body { background:white; }
+      .no-print, .sticky-footer { display:none !important; }
+      .item-body { display:block !important; }
+      .item-card { box-shadow:none; border:1px solid #e5e7eb; margin-bottom:0.4rem; page-break-inside:avoid; }
+      #print-summary { display:block !important; }
+      .toggle-pill { display:none !important; }
+    }
+    body.compact-print .item-body { display:none !important; }
+    body.compact-print #global-tips-card { display:none !important; }
+    body.compact-print .item-card { margin-bottom:0.08rem !important; border-radius:0.2rem !important; }
+    body.compact-print .item-header { padding:0.18rem 0.5rem !important; }
+    body.compact-print #print-summary { display:block !important; }
+    body.compact-print .toggle-pill { display:none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header class="no-print text-white py-3" style="background:var(--ymrs-gradient);">
+  <div class="max-w-4xl mx-auto px-4 flex items-center justify-between">
+    <div style="color:white;">
+      <div class="flex items-center gap-2">
+        <i data-lucide="trending-up" class="w-5 h-5 opacity-80" style="color:white;"></i>
+        <span class="text-sm font-bold" style="color:white;">YMRS 詳細採点シート</span>
+        <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full" style="color:white;">アンカーポイント付き</span>
+      </div>
+      <p class="text-xs opacity-60 mt-0.5" style="color:white;">Young Mania Rating Scale — 躁状態評価尺度（日本語版）</p>
+    </div>
+    <div class="flex gap-2 flex-wrap justify-end">
+      <button onclick="expandAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;">
+        <i data-lucide="chevrons-down" class="w-3 h-3"></i>すべて展開
+      </button>
+      <button onclick="collapseAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;">
+        <i data-lucide="chevrons-up" class="w-3 h-3"></i>すべて折りたたむ
+      </button>
+      <button onclick="resetAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;">
+        <i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット
+      </button>
+      <button onclick="window.print()" class="flex items-center gap-1 bg-white text-amber-900 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition hover:bg-gray-100">
+        <i data-lucide="printer" class="w-3 h-3"></i>印刷
+      </button>
+      <button onclick="compactPrint()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition" style="color:white;" title="記入欄・項目・点数のみを最小ページで印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-4 pb-32">
+
+  <!-- 患者情報 -->
+  <div class="point-card mb-3">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">患者ID / イニシャル</label>
+        <input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-amber-400" id="patientId" placeholder="例：A.T.">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価日</label>
+        <input type="date" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-amber-400" id="evalDate">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価者</label>
+        <input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-amber-400" id="evaluator" placeholder="氏名・職種">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価回数</label>
+        <select class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-amber-400" id="evalNum">
+          <option>第1回</option><option>第2回</option><option>第3回</option><option>第4回</option><option>第5回以降</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 全体的な評価ポイント -->
+  <div class="point-card mb-4" id="global-tips-card">
+    <button class="w-full flex items-center justify-between text-left" onclick="toggleSection('global-body', this)">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-700"></i>
+        </div>
+        <div>
+          <div class="text-sm font-bold text-gray-800">全体的な評価ポイント</div>
+          <div class="text-xs text-gray-400">YMRS実施前に必ず確認</div>
+        </div>
+      </div>
+      <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon"></i>
+    </button>
+    <div id="global-body" class="mt-3" hidden>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="space-y-2">
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="text-xs font-bold text-amber-800 mb-1.5 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>評価の基本原則</p>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li>・<strong>評価期間：最近1週間</strong>の状態を基に評価。入院中は過去48時間でもよい</li>
+              <li>・患者の<strong>自己報告と行動観察の両方</strong>を組み合わせて評価する</li>
+              <li>・5段階のアンカーポイントを参照し、最も当てはまる段階を選ぶ</li>
+              <li>・中間点（例：1と2の中間）は選べない。最も近い番号を選択</li>
+            </ul>
+          </div>
+          <div class="bg-orange-50 rounded-lg p-3">
+            <p class="text-xs font-bold text-orange-800 mb-1.5 flex items-center gap-1"><i data-lucide="triangle-alert" class="w-3 h-3"></i>倍点項目（0〜8点）</p>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li>・<strong>項目5（過敏性）・7（言語思考障害）・9（攻撃的行動）</strong>は倍点項目</li>
+              <li>・スコアは 0, 2, 4, 6, 8 のみ（奇数は選べない）</li>
+              <li>・躁状態の重症度を反映する重要な3項目</li>
+            </ul>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="bg-rose-50 rounded-lg p-3">
+            <p class="text-xs font-bold text-rose-800 mb-1.5 flex items-center gap-1"><i data-lucide="activity" class="w-3 h-3"></i>重症度の目安（合計 0〜60点）</p>
+            <div class="text-xs text-gray-700 space-y-1">
+              <div class="flex justify-between"><span>≤ 12点</span><span class="text-green-700 font-semibold">寛解 / 軽症圏</span></div>
+              <div class="flex justify-between"><span>13〜19点</span><span class="text-yellow-700 font-semibold">軽度躁状態</span></div>
+              <div class="flex justify-between"><span>20〜25点</span><span class="text-orange-600 font-semibold">中等度躁状態</span></div>
+              <div class="flex justify-between"><span>26〜37点</span><span class="text-red-600 font-semibold">重度躁状態</span></div>
+              <div class="flex justify-between"><span>≥ 38点</span><span class="text-red-900 font-semibold">最重度</span></div>
+            </div>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3">
+            <p class="text-xs font-bold text-blue-800 mb-1.5 flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i>注意事項</p>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li>・躁病エピソード診断の目安：YMRS <strong>≥ 20点</span></li>
+              <li>・混合状態では<strong>YMRS + HDRS（うつ評価）</strong>の併用が有用</li>
+              <li>・薬物・物質による気分の変化も評価に含める</li>
+              <li>・文化的背景や通常の性格傾向を考慮する</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━ 通常項目群（0〜4点） ━━━━━━━━━━━━━━━ -->
+  <div class="sec-div mb-2 no-print" style="background:#fef3c7; color:#92400e;">
+    <i data-lucide="circle-dot" class="w-3.5 h-3.5"></i>通常項目（0〜4点）：項目 1〜4, 6, 8, 10, 11
+  </div>
+
+  <!-- #1 気分の高揚 -->
+  <div class="item-card" id="card-1">
+    <div class="item-header" onclick="toggleItem(1)">
+      <div class="num-badge na">1</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">気分の高揚 <span class="text-gray-400 font-normal text-xs ml-1">Elevated Mood</span></div>
+        <div class="text-xs text-gray-400">気分の上昇・多幸感・陽気さの程度</div>
+      </div>
+      <div class="flex gap-1" id="btns-1"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-1">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-1"></i></div>
+    </div>
+    <div class="item-body" id="body-1" hidden>
+      <div class="eval-box"><strong>定義：</strong>患者の気分の高揚感・多幸感・過度の楽観性・陽気さの程度を評価する。患者の自己報告と面接中の観察の両方を考慮する。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0" style="white-space:nowrap">なし</td><td class="sc1">軽度に亢進。質問しなければ訴えない</td><td class="sc2">主観的に気分亢進を認める。楽観的・自信過剰・陽気な様子。内容的には適切</td><td class="sc3">高揚している。面接中に不適切な冗談や笑いが多い。気分と状況が一致しない</td><td class="sc4">多幸的。不適切な笑い。歌う。あるいは明らかに不自然な高揚した様子</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近、気分はどうですか？以前と比べていつもより元気に感じることや、気分が高まっている感じはありますか？」「自分でも、いつもより陽気だとか、楽観的になっていると感じますか？」</div>
+    </div>
+  </div>
+
+  <!-- #2 活動性・エネルギーの増大 -->
+  <div class="item-card" id="card-2">
+    <div class="item-header" onclick="toggleItem(2)">
+      <div class="num-badge na">2</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">活動性・エネルギーの増大 <span class="text-gray-400 font-normal text-xs ml-1">Increased Motor Activity-Energy</span></div>
+        <div class="text-xs text-gray-400">行動・エネルギーレベルの増大</div>
+      </div>
+      <div class="flex gap-1" id="btns-2"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-2">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-2"></i></div>
+    </div>
+    <div class="item-body" id="body-2" hidden>
+      <div class="eval-box"><strong>定義：</strong>活動性・エネルギーの客観的・主観的増大を評価する。患者の行動観察を重視する。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0">なし</td><td class="sc1">主観的に活動性の増大を認める</td><td class="sc2">活気があり、落ち着きがない（行動的に）</td><td class="sc3">精力的に動いており、素早い動作や躁的行動がみられる（間欠的）</td><td class="sc4">常に運動活動が亢進している。時に興奮状態。面接はかろうじて可能</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近、活動量が増えていますか？以前より精力的に動いていると感じますか？」「眠れなくても疲れを感じませんか？いつもより多くのことをしようとしていますか？」</div>
+    </div>
+  </div>
+
+  <!-- #3 性的関心 -->
+  <div class="item-card" id="card-3">
+    <div class="item-header" onclick="toggleItem(3)">
+      <div class="num-badge na">3</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">性的関心 <span class="text-gray-400 font-normal text-xs ml-1">Sexual Interest</span></div>
+        <div class="text-xs text-gray-400">性的関心・衝動・行動の増大</div>
+      </div>
+      <div class="flex gap-1" id="btns-3"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-3">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-3"></i></div>
+    </div>
+    <div class="item-body" id="body-3" hidden>
+      <div class="eval-box"><strong>定義：</strong>性的欲求・関心・行動の増大を評価する。患者の自己報告および観察された行動を考慮する。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0">なし（正常範囲）</td><td class="sc1">軽度に増大している（本人の訴え）</td><td class="sc2">明らかに増大している。面接中に性的な話題が多い</td><td class="sc3">自発的に性的な内容を語る。不適切な性的発言や行動がみられる</td><td class="sc4">あからさまな性的行動（不適切な身体接触・暴露行為など）</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近、性的な関心やエネルギーが以前より増していますか？」「性的な行動や空想が増えていると感じますか？」</div>
+      <div class="warn-box"><strong>注意：</strong>「性的関心」については文化的・個人的背景を考慮する。患者が話しにくいと感じている場合は間接的な質問で確認する。</div>
+    </div>
+  </div>
+
+  <!-- #4 睡眠 -->
+  <div class="item-card" id="card-4">
+    <div class="item-header" onclick="toggleItem(4)">
+      <div class="num-badge na">4</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">睡眠 <span class="text-gray-400 font-normal text-xs ml-1">Sleep</span></div>
+        <div class="text-xs text-gray-400">最近1週間の平均睡眠時間の変化</div>
+      </div>
+      <div class="flex gap-1" id="btns-4"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-4">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-4"></i></div>
+    </div>
+    <div class="item-body" id="body-4" hidden>
+      <div class="eval-box"><strong>定義：</strong>通常の睡眠時間に比べた睡眠の短縮を評価する。主として患者の自己報告に基づく。「眠れない」のではなく「眠る必要を感じない」という躁状態特有の訴えに注意する。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0">睡眠時間の短縮なし</td><td class="sc1">通常より1時間以内の短縮</td><td class="sc2">通常より2時間以内の短縮</td><td class="sc3">睡眠の必要性を主観的に感じていないと述べる</td><td class="sc4">睡眠をとっていないと全否定する</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近の睡眠時間はどのくらいですか？いつもより少なくなっていますか？」「睡眠が少なくても疲れを感じませんか？眠らなくてもやっていける、という感覚はありますか？」</div>
+      <div class="warn-box"><strong>注意：</strong>躁状態では不眠ではなく「睡眠必要量の減少」が特徴。「眠れない（不眠）」と「眠る必要がない（睡眠減少）」を区別すること。うつでも不眠はあるので鑑別が重要。</div>
+    </div>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━ 倍点項目群（0〜8点） ━━━━━━━━━━━━━━━ -->
+  <div class="sec-div mb-2 mt-3 no-print" style="background:#ffe4e6; color:#be123c;">
+    <i data-lucide="circle-dot" class="w-3.5 h-3.5"></i>倍点項目（0〜8点）：項目 5, 7, 9　※スコアは 0, 2, 4, 6, 8 のみ
+  </div>
+
+  <!-- #5 過敏性・易刺激性（倍点） -->
+  <div class="item-card" id="card-5">
+    <div class="item-header" onclick="toggleItem(5)">
+      <div class="num-badge nd">5</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">過敏性・易刺激性 <span class="text-gray-400 font-normal text-xs ml-1">Irritability</span> <span class="text-rose-500 font-bold text-xs">×2</span></div>
+        <div class="text-xs text-gray-400">苛立ちやすさ・怒りっぽさ・易刺激性（0, 2, 4, 6, 8点）</div>
+      </div>
+      <div class="flex gap-1" id="btns-5"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-5">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-5"></i></div>
+    </div>
+    <div class="item-body" id="body-5" hidden>
+      <div class="double-box"><strong>⚠ 倍点項目：</strong>この項目は 0, 2, 4, 6, 8 の5段階で評価します（1, 3, 5, 7 は選択できません）。躁状態における過敏性・易刺激性・怒りっぽさを評価します。</div>
+      <div class="eval-box"><strong>定義：</strong>過敏性・易刺激性の程度を、患者の自己報告および面接中の観察から評価する。気分の亢進（高揚）が過敏性として現れることがある。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc2">2</th><th class="sc4">4</th><th class="sc6">6</th><th class="sc8">8</th></tr></thead><tbody>
+        <tr><td class="sc0">なし</td><td class="sc2">主観的に過敏性・易刺激性の増大がある</td><td class="sc4">面接でしばしば苛立ちを示す。最近、怒りっぽい出来事がある</td><td class="sc6">強く易刺激性・怒りっぽさが目立つ。面接は短時間のみ可能</td><td class="sc8">著しく敵意的・非協力的。面接は不可能</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近、些細なことでイライラしたり、腹を立てたりすることが増えましたか？」「怒りを抑えるのが難しいと感じることがありますか？周囲の人とぶつかることが増えていますか？」</div>
+    </div>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━ 通常項目群（続き） ━━━━━━━━━━━━━━━ -->
+  <div class="sec-div mb-2 mt-3 no-print" style="background:#fef3c7; color:#92400e;">
+    <i data-lucide="circle-dot" class="w-3.5 h-3.5"></i>通常項目（続き）：項目 6, 8, 10, 11
+  </div>
+
+  <!-- #6 発語（速度・量） -->
+  <div class="item-card" id="card-6">
+    <div class="item-header" onclick="toggleItem(6)">
+      <div class="num-badge na">6</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">発語（速度・量） <span class="text-gray-400 font-normal text-xs ml-1">Speech — Rate and Amount</span></div>
+        <div class="text-xs text-gray-400">発話速度の増加・多弁・圧迫発語の程度</div>
+      </div>
+      <div class="flex gap-1" id="btns-6"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-6">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-6"></i></div>
+    </div>
+    <div class="item-body" id="body-6" hidden>
+      <div class="eval-box"><strong>定義：</strong>発話の速さ・量・流暢性の増大を評価する。「圧迫発語（押しかけ言葉）」は躁状態の特徴的な症状であり、話を中断しようとしても続く傾向がある。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0">増加なし</td><td class="sc1">軽度に増加している感覚がある（本人の訴え）</td><td class="sc2">発語量の増大または発話速度の増加がみられる（一部）</td><td class="sc3">圧迫発語（押しかけ言葉）。中断は困難だが可能</td><td class="sc4">圧迫発語が持続。中断は不可能</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>観察ポイント：</strong>患者が話し始めたら割り込んで話を止められるか確認する。止められない場合は圧迫発語（3〜4点）を疑う。発話速度・発話量・話の途切れにくさを観察する。</div>
+    </div>
+  </div>
+
+  <!-- #7 言語思考障害（倍点） -->
+  <div class="item-card" id="card-7">
+    <div class="item-header" onclick="toggleItem(7)">
+      <div class="num-badge nd">7</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">言語思考障害 <span class="text-gray-400 font-normal text-xs ml-1">Language — Thought Disorder</span> <span class="text-rose-500 font-bold text-xs">×2</span></div>
+        <div class="text-xs text-gray-400">連合弛緩・観念奔逸・まとまりのない言語（0, 2, 4, 6, 8点）</div>
+      </div>
+      <div class="flex gap-1" id="btns-7"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-7">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-7"></i></div>
+    </div>
+    <div class="item-body" id="body-7" hidden>
+      <div class="double-box"><strong>⚠ 倍点項目：</strong>この項目は 0, 2, 4, 6, 8 の5段階で評価します（1, 3, 5, 7 は選択できません）。形式的思考障害の程度を評価します。</div>
+      <div class="eval-box"><strong>定義：</strong>思考の論理的なつながりの障害（形式的思考障害）を評価する。観念奔逸（flight of ideas）は躁状態の典型的な症状で、考えが次々に飛び移る状態。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc2">2</th><th class="sc4">4</th><th class="sc6">6</th><th class="sc8">8</th></tr></thead><tbody>
+        <tr><td class="sc0">なし</td><td class="sc2">状況的（circumstantial）。思考の転換が速い。話が脱線しやすい</td><td class="sc4">観念奔逸または顕著な思考の転換がみられる。発語の圧迫感は目立たない</td><td class="sc6">観念奔逸が著明。音連合（clang association）・駄洒落・脱線が混在する</td><td class="sc8">理解不能。滅裂言語</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>観察ポイント：</strong>・「状況的」：話が遠回りだが最終的には的に戻る / ・「観念奔逸」：考えが次々と飛び移り戻ってこない / ・「音連合」：音の類似で話がつながる（意味ではなく音で連想） / ・「滅裂」：全く意味が通じない</div>
+    </div>
+  </div>
+
+  <!-- #8 思考内容 -->
+  <div class="item-card" id="card-8">
+    <div class="item-header" onclick="toggleItem(8)">
+      <div class="num-badge na">8</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">思考内容 <span class="text-gray-400 font-normal text-xs ml-1">Thought Content</span></div>
+        <div class="text-xs text-gray-400">誇大観念・誇大妄想・被害妄想の程度</div>
+      </div>
+      <div class="flex gap-1" id="btns-8"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-8">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-8"></i></div>
+    </div>
+    <div class="item-body" id="body-8" hidden>
+      <div class="eval-box"><strong>定義：</strong>思考の内容を評価する。誇大感（grandiosity）は躁状態の中核症状で、誇大観念から誇大妄想まで連続するスペクトルで捉える。被害的な内容も躁状態に伴うことがある。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0">正常</td><td class="sc1">疑わしい計画、誇大感の可能性（「最近、自分は何でもできる気がする」など）</td><td class="sc2">特別な計画や使命感。誇大的・宗教的な思考が主体</td><td class="sc3">誇大妄想または被害妄想がみられる。誇大観念が支配的</td><td class="sc4">系統化された誇大妄想・被害妄想</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近、自分が特別な使命や能力を持っているとか、特別な存在だと感じることはありますか？」「特別な力や影響力があると感じますか？誰かに狙われているとか、見張られている感じはありますか？」</div>
+    </div>
+  </div>
+
+  <!-- #9 攻撃的行動（倍点） -->
+  <div class="item-card" id="card-9">
+    <div class="item-header" onclick="toggleItem(9)">
+      <div class="num-badge nd">9</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">攻撃的行動 <span class="text-gray-400 font-normal text-xs ml-1">Disruptive-Aggressive Behavior</span> <span class="text-rose-500 font-bold text-xs">×2</span></div>
+        <div class="text-xs text-gray-400">暴言・暴力・秩序乱行の程度（0, 2, 4, 6, 8点）</div>
+      </div>
+      <div class="flex gap-1" id="btns-9"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-9">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-9"></i></div>
+    </div>
+    <div class="item-body" id="body-9" hidden>
+      <div class="double-box"><strong>⚠ 倍点項目：</strong>この項目は 0, 2, 4, 6, 8 の5段階で評価します（1, 3, 5, 7 は選択できません）。破壊的・攻撃的行動の程度を評価します。</div>
+      <div class="eval-box"><strong>定義：</strong>面接の妨害・破壊的言動・身体的攻撃性を評価する。患者の行動観察が主となる。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc2">2</th><th class="sc4">4</th><th class="sc6">6</th><th class="sc8">8</th></tr></thead><tbody>
+        <tr><td class="sc0">なし。協力的</td><td class="sc2">発声が大きい（大声）。面接を困難にするが直接的な問題行動なし</td><td class="sc4">脅し・あからさまな言語的攻撃。面接に支障をきたす</td><td class="sc6">物品を破壊・投げつける。制御が困難（わめく・暴れる）</td><td class="sc8">危険な暴力的行動。身体拘束が必要</td></tr>
+      </tbody></table>
+      <div class="warn-box"><strong>注意：</strong>この項目が高い場合は安全確保を優先する。面接を中断し、必要に応じて複数のスタッフで対応する。</div>
+    </div>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━ 通常項目群（続き） ━━━━━━━━━━━━━━━ -->
+  <div class="sec-div mb-2 mt-3 no-print" style="background:#fef3c7; color:#92400e;">
+    <i data-lucide="circle-dot" class="w-3.5 h-3.5"></i>通常項目（続き）：項目 10, 11
+  </div>
+
+  <!-- #10 外見 -->
+  <div class="item-card" id="card-10">
+    <div class="item-header" onclick="toggleItem(10)">
+      <div class="num-badge na">10</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">外見 <span class="text-gray-400 font-normal text-xs ml-1">Appearance</span></div>
+        <div class="text-xs text-gray-400">着衣・身だしなみ・外見の適切さ</div>
+      </div>
+      <div class="flex gap-1" id="btns-10"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-10">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-10"></i></div>
+    </div>
+    <div class="item-body" id="body-10" hidden>
+      <div class="eval-box"><strong>定義：</strong>患者の着衣・身だしなみ・外見の適切さを評価する。躁状態では派手な着衣・不適切な化粧・奇妙な装飾などがみられることがある。観察によって評価する。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0">適切な着衣・身だしなみ</td><td class="sc1">軽微な乱れ（ボタンの掛け違い・わずかな服の乱れなど）</td><td class="sc2">衣服の乱れ、不釣合いな色使いや着方</td><td class="sc3">不適切な着飾り・奇妙な装飾。明らかに場違いな外見</td><td class="sc4">完全に不適切または著しく奇妙な着衣・化粧</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>観察ポイント：</strong>面接中の着衣・化粧・アクセサリーの派手さ・奇妙さを観察する。患者の通常の装いと比較する（家族・医療記録から情報を得る）。</div>
+    </div>
+  </div>
+
+  <!-- #11 病識 -->
+  <div class="item-card" id="card-11">
+    <div class="item-header" onclick="toggleItem(11)">
+      <div class="num-badge na">11</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">病識 <span class="text-gray-400 font-normal text-xs ml-1">Insight</span></div>
+        <div class="text-xs text-gray-400">自分の病的状態・治療必要性に関する認識</div>
+      </div>
+      <div class="flex gap-1" id="btns-11"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-11">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-11"></i></div>
+    </div>
+    <div class="item-body" id="body-11" hidden>
+      <div class="eval-box"><strong>定義：</strong>患者が自分の変化した状態および治療の必要性を認識している程度を評価する。躁状態では病識の欠如が治療抵抗の大きな原因となる。</div>
+      <table class="score-table"><thead><tr><th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th></tr></thead><tbody>
+        <tr><td class="sc0">病識あり。変化していることを認め、治療の必要性を認める</td><td class="sc1">気分が多少亢進していることは認めるが治療の必要性を否定する</td><td class="sc2">行動の変化は認めるが、躁状態（または躁エピソード）とは認めない</td><td class="sc3">行動の変化はわずかに認めるが、躁状態に関する病識が乏しい</td><td class="sc4">完全に病識欠如。変化を全否定</td></tr>
+      </tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近、精神的に何か変化があると思いますか？」「今の状態は普段の自分と比べていかがですか？」「治療（薬・入院）が必要だと思いますか？」</div>
+      <div class="warn-box"><strong>注意：</strong>病識欠如は躁状態の中核症状。病識のなさを「否定・拒否」と誤解しないよう注意。病識評価は治療関係の構築にも影響するため慎重に行う。</div>
+    </div>
+  </div>
+
+  <!-- 印刷サマリー（簡易印刷時のみ表示） -->
+  <div id="print-summary" style="display:none;margin-top:0.6rem;border:2px solid #c2410c;border-radius:0.5rem;padding:0.6rem 0.875rem;background:white;page-break-inside:avoid;">
+    <div style="font-size:0.65rem;font-weight:800;color:#7c2d12;letter-spacing:0.05em;border-bottom:1px solid #fed7aa;padding-bottom:0.25rem;margin-bottom:0.4rem;">▌ YMRS スコアサマリー</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;">
+      <div style="background:#fef3c7;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#92400e;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">通常項目 (1-4,6,8,10,11)</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-normal">0</span> / 32点</div>
+      </div>
+      <div style="background:#ffe4e6;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#be123c;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">倍点項目 (5,7,9)</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-double">0</span> / 24点</div>
+      </div>
+      <div style="background:#fff7ed;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#c2410c;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">採点済み</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-count">0</span> / 11項目</div>
+      </div>
+      <div style="background:#f0fdf4;padding:0.3rem 0.5rem;border-radius:0.25rem;border:1.5px solid #16a34a;">
+        <div style="color:#15803d;font-weight:700;font-size:0.6rem;margin-bottom:0.1rem;">YMRS 合計</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-total">0</span> / 60点　<span id="ps-severity" style="font-size:0.7rem;font-weight:600;color:#374151;"></span></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- フッター（スコア表示・ナビゲーション） -->
+<div class="sticky-footer no-print">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex items-center gap-3 mb-1.5">
+      <div class="flex-1">
+        <div class="flex justify-between text-xs mb-0.5">
+          <span class="text-gray-500">YMRS合計</span>
+          <span class="font-bold text-gray-800"><span id="total-score">0</span> / 60点</span>
+        </div>
+        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-300" style="width:0%; background:linear-gradient(90deg,#4ade80,#f97316,#dc2626);" id="score-bar"></div>
+        </div>
+      </div>
+      <div class="text-right flex-shrink-0">
+        <div id="severity-label" class="font-semibold text-gray-400 text-xs"></div>
+        <div class="text-xs text-gray-400" id="scored-count">0項目採点済み</div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex gap-3 text-xs">
+        <span class="text-gray-500">通常 <span class="font-bold text-gray-800" id="sub-normal">0</span></span>
+        <span class="text-gray-500">倍点 <span class="font-bold text-gray-800" id="sub-double">0</span></span>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="window.print()" class="flex items-center gap-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+        <button onclick="compactPrint()" class="flex items-center gap-1 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-semibold px-3 py-2 rounded-lg" title="記入欄・項目・点数のみを最小ページで印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
+        <button onclick="resetAll()" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+        <a href="bprs-sheet-detailed.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg no-underline"><i data-lucide="arrow-left" class="w-3 h-3"></i>BPRS</a>
+        <a href="panss-sheet-detailed.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg no-underline"><i data-lucide="arrow-left" class="w-3 h-3"></i>PANSS</a>
+        <a href="top.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg no-underline"><i data-lucide="home" class="w-3 h-3"></i>TOP</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  function initTogglePills() {
+    document.querySelectorAll('[id^="chev-"]').forEach(icon => {
+      const itemId = icon.id.slice(5);
+      const header = icon.closest('.item-header');
+      if (!header) return;
+      const infoCol = header.children[1];
+      if (!infoCol) return;
+      const pill = document.createElement('span');
+      pill.className = 'toggle-pill';
+      pill.id = 'pill-' + itemId;
+      const label = document.createElement('span');
+      label.className = 'tpill-label';
+      label.textContent = '解説';
+      pill.appendChild(label);
+      infoCol.appendChild(pill);
+    });
+  }
+  initTogglePills();
+
+  const REGULAR_ITEMS = [1, 2, 3, 4, 6, 8, 10, 11];
+  const DOUBLE_ITEMS  = [5, 7, 9];
+  const ALL_ITEMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+  const scores = {};
+
+  function buildButtons() {
+    REGULAR_ITEMS.forEach(id => {
+      const c = document.getElementById(`btns-${id}`);
+      if (!c) return;
+      for (let v = 0; v <= 4; v++) {
+        const btn = document.createElement('button');
+        btn.className = 'score-btn';
+        btn.textContent = v;
+        btn.addEventListener('click', e => { e.stopPropagation(); setScore(id, v); });
+        c.appendChild(btn);
+      }
+    });
+    DOUBLE_ITEMS.forEach(id => {
+      const c = document.getElementById(`btns-${id}`);
+      if (!c) return;
+      [0, 2, 4, 6, 8].forEach(v => {
+        const btn = document.createElement('button');
+        btn.className = 'score-btn';
+        btn.textContent = v;
+        btn.addEventListener('click', e => { e.stopPropagation(); setScore(id, v); });
+        c.appendChild(btn);
+      });
+    });
+  }
+
+  function setScore(id, val) { scores[id] = val; updateDisplay(id); updateTotal(); }
+
+  function updateDisplay(id) {
+    const val = scores[id];
+    const disp = document.getElementById(`disp-${id}`);
+    if (disp) {
+      disp.textContent = val !== undefined ? val : '－';
+      disp.className = `score-disp ${val !== undefined ? `sdv${val}` : 'sd-none'}`;
+    }
+    const btns = document.querySelectorAll(`#btns-${id} .score-btn`);
+    btns.forEach(btn => {
+      const v = parseInt(btn.textContent, 10);
+      btn.className = `score-btn${v === val ? ` sv${v}` : ''}`;
+    });
+  }
+
+  function updateTotal() {
+    let total = 0, normalSum = 0, doubleSum = 0, count = 0;
+    ALL_ITEMS.forEach(id => {
+      const v = scores[id];
+      if (v !== undefined) {
+        count++;
+        total += v;
+        if (REGULAR_ITEMS.includes(id)) normalSum += v;
+        else doubleSum += v;
+      }
+    });
+    document.getElementById('total-score').textContent = total;
+    document.getElementById('scored-count').textContent = `${count}項目採点済み`;
+    document.getElementById('sub-normal').textContent = normalSum;
+    document.getElementById('sub-double').textContent = doubleSum;
+    const pct = Math.min(100, (total / 60) * 100);
+    document.getElementById('score-bar').style.width = `${pct}%`;
+    const lel = document.getElementById('severity-label');
+    let _sevText = '';
+    if (count < 11) { lel.textContent = `残り${11-count}項目`; lel.className = 'font-semibold text-gray-400 text-xs'; }
+    else {
+      const map = [
+        [12, '寛解/軽症圏', 'text-green-600'],
+        [19, '軽度躁状態', 'text-yellow-600'],
+        [25, '中等度躁状態', 'text-orange-600'],
+        [37, '重度躁状態', 'text-red-600'],
+        [999, '最重度', 'text-red-900']
+      ];
+      const found = map.find(m => total <= m[0]);
+      lel.textContent = found[1]; lel.className = `font-semibold ${found[2]} text-xs`; _sevText = found[1];
+    }
+    // 印刷サマリー更新
+    const _psN  = document.getElementById('ps-normal');  if (_psN)  _psN.textContent  = normalSum;
+    const _psD  = document.getElementById('ps-double');  if (_psD)  _psD.textContent  = doubleSum;
+    const _psCt = document.getElementById('ps-count');   if (_psCt) _psCt.textContent = count;
+    const _psT  = document.getElementById('ps-total');   if (_psT)  _psT.textContent  = total;
+    const _psS  = document.getElementById('ps-severity');if (_psS)  _psS.textContent  = _sevText ? `（${_sevText}）` : '';
+  }
+
+  function compactPrint() {
+    document.body.classList.add('compact-print');
+    window.print();
+    window.addEventListener('afterprint', () => document.body.classList.remove('compact-print'), { once: true });
+  }
+
+  function toggleItem(id) {
+    const body = document.getElementById(`body-${id}`);
+    const chev = document.getElementById(`chev-${id}`);
+    const pill = document.getElementById(`pill-${id}`);
+    const card = document.getElementById(`card-${id}`);
+    const label = pill?.querySelector('.tpill-label');
+    if (!body) return;
+    const hidden = body.hasAttribute('hidden');
+    if (hidden) {
+      body.removeAttribute('hidden');
+      chev && chev.classList.add('chevron-open');
+      pill && pill.classList.add('open');
+      if (label) label.textContent = '閉じる';
+      card && card.classList.add('open');
+    } else {
+      body.setAttribute('hidden', '');
+      chev && chev.classList.remove('chevron-open');
+      pill && pill.classList.remove('open');
+      if (label) label.textContent = '解説';
+      card && card.classList.remove('open');
+    }
+  }
+
+  function toggleSection(id, btn) {
+    const body = document.getElementById(id);
+    if (!body) return;
+    const hidden = body.hasAttribute('hidden');
+    const chev = btn.querySelector('.chevron-icon');
+    if (hidden) { body.removeAttribute('hidden'); chev && chev.classList.add('chevron-open'); }
+    else { body.setAttribute('hidden', ''); chev && chev.classList.remove('chevron-open'); }
+  }
+
+  function expandAll() {
+    ALL_ITEMS.forEach(id => {
+      const body = document.getElementById(`body-${id}`);
+      const chev = document.getElementById(`chev-${id}`);
+      const pill = document.getElementById(`pill-${id}`);
+      const card = document.getElementById(`card-${id}`);
+      if (body) body.removeAttribute('hidden');
+      if (chev) chev.classList.add('chevron-open');
+      if (pill) { pill.classList.add('open'); const l = pill.querySelector('.tpill-label'); if (l) l.textContent = '閉じる'; }
+      if (card) card.classList.add('open');
+    });
+    const gb = document.getElementById('global-body');
+    if (gb) gb.removeAttribute('hidden');
+  }
+
+  function collapseAll() {
+    ALL_ITEMS.forEach(id => {
+      const body = document.getElementById(`body-${id}`);
+      const chev = document.getElementById(`chev-${id}`);
+      const pill = document.getElementById(`pill-${id}`);
+      const card = document.getElementById(`card-${id}`);
+      if (body) body.setAttribute('hidden', '');
+      if (chev) chev.classList.remove('chevron-open');
+      if (pill) { pill.classList.remove('open'); const l = pill.querySelector('.tpill-label'); if (l) l.textContent = '解説'; }
+      if (card) card.classList.remove('open');
+    });
+  }
+
+  function resetAll() {
+    if (!confirm('すべての採点をリセットしますか？')) return;
+    ALL_ITEMS.forEach(id => { delete scores[id]; updateDisplay(id); });
+    updateTotal();
+  }
+
+  // 今日の日付
+  const t = new Date();
+  document.getElementById('evalDate').value = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+
+  buildButtons();
+  updateTotal();
+</script>
+</body>
+</html>
