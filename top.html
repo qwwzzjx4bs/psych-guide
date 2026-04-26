@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>精神科臨床ガイド — ポータル</title>
+  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/top.html">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -151,10 +152,6 @@
     a[href="#guidelines"]:hover  { background: #c4daec !important; }
     a[href="#guidelines"] span   { background: #b2cce4 !important; color: #284470 !important; }
 
-    a[href="#scales"]            { background: #d6ecea !important; color: #24625e !important; }
-    a[href="#scales"]:hover      { background: #c2e2de !important; }
-    a[href="#scales"] span       { background: #aed4d0 !important; color: #24625e !important; }
-
     a[href="#scale-sheets"]            { background: #d6ecea !important; color: #24625e !important; }
     a[href="#scale-sheets"]:hover      { background: #c2e2de !important; }
     a[href="#scale-sheets"] span       { background: #aed4d0 !important; color: #24625e !important; }
@@ -170,6 +167,10 @@
     a[href="#education"]         { background: #f2eada !important; color: #6a4a18 !important; }
     a[href="#education"]:hover   { background: #e8deca !important; }
     a[href="#education"] span    { background: #d8ccb2 !important; color: #6a4a18 !important; }
+
+    a[href="#others"]            { background: #e2e6ec !important; color: #384458 !important; }
+    a[href="#others"]:hover      { background: #d4dae4 !important; }
+    a[href="#others"] span       { background: #c4ccd8 !important; color: #384458 !important; }
 
     /* ===================================
        凡例バッジ — くすみカラー上書き
@@ -466,7 +467,7 @@
         <a href="#score-sheets"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 transition-colors text-xs font-medium text-rose-800 whitespace-nowrap">
           🖊 採点シート
-          <span class="bg-rose-200 text-rose-700 px-1.5 py-0.5 rounded-full text-xs leading-none">4</span>
+          <span class="bg-rose-200 text-rose-700 px-1.5 py-0.5 rounded-full text-xs leading-none">6</span>
         </a>
         <a href="#scale-guide"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 transition-colors text-xs font-medium text-emerald-800 whitespace-nowrap">
@@ -477,6 +478,11 @@
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-800 whitespace-nowrap">
           📚 教育・資格
           <span class="bg-amber-200 text-amber-700 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+        </a>
+        <a href="#others"
+           class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
+          💡 その他
+          <span class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
         </a>
       </div>
     </div>
@@ -492,6 +498,11 @@
         </p>
         <p class="text-gray-400 text-xs leading-relaxed max-w-2xl mt-2">
           更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。
+        </p>
+        <p class="text-gray-500 text-xs leading-relaxed max-w-2xl mt-2">
+          本番URL（共有・ブックマーク用）: <a href="https://psych-clinical-guide.surge.sh/top.html" class="text-blue-700 hover:underline font-medium">https://psych-clinical-guide.surge.sh/top.html</a>
+          <span class="text-gray-400"> ／ </span>
+          トップ（ICD-10 全体像・F0–F9）: <a href="https://psych-clinical-guide.surge.sh/index.html" class="text-blue-700 hover:underline font-medium">index.html</a>
         </p>
         <div class="color-legend mt-4 flex flex-wrap gap-2 text-xs">
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>ICD分類・診断</span>
@@ -573,7 +584,7 @@
           <p class="text-xs text-gray-500 leading-relaxed">クレペリン/ブロイラーから、現象学・反精神医学・DSM/ICDの操作的診断、神経発達モデル、早期介入までを「世界×日本」並列タイムライン＋概念マップで整理。日本の改称（2002）と制度史のポイントも含めた外来参照用の歴史図解。</p>
           <div class="mt-3 text-xs link-violet font-medium">schizophrenia-history.html →</div>
         </a>
-        <a id="card-atypical-depression" href="atypical-depression.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
+        <a id="card-atypical-depression" href="https://psych-clinical-guide.surge.sh/atypical-depression.html" target="_blank" rel="noopener noreferrer" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">うつ病 亜型</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">非定型うつ病 — 概念・歴史・診断基準・治療アルゴリズム</h3>
           <p class="text-xs text-gray-500 leading-relaxed">West &amp; Dally（1950年代）から Columbia Group・DSM-5-TRへの歴史的変遷。RAILS記憶法（気分反応性・過食・拒絶過敏・鉛様麻痺・過眠）による核心症状解説。MAOI vs SSRI エビデンス・CBT（Jarrett 1999: CT≒フェネルジン&gt;プラセボ）・成人ADHD（RSD）との鑑別・MAOIの禁忌薬剤一覧を収録。</p>
@@ -583,7 +594,7 @@
             <span class="text-violet-700 bg-violet-50 border border-violet-200 rounded px-1.5 py-0.5">Columbia Group RCT</span>
             <span class="text-violet-700 bg-violet-50 border border-violet-200 rounded px-1.5 py-0.5">MAOI 禁忌・Washout</span>
           </div>
-          <div class="mt-2 text-xs link-violet font-medium">atypical-depression.html →</div>
+          <div class="mt-2 text-xs link-violet font-medium">psych-clinical-guide.surge.sh/atypical-depression.html →</div>
         </a>
       </div>
     </section>
