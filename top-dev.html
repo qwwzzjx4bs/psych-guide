@@ -199,6 +199,8 @@
     .color-legend span:nth-child(6) span { background: #8e6e2e !important; }
 
     /* ===================================
+<<<<<<< HEAD
+=======
        コンパクトモード
        =================================== */
     body.compact-mode .card {
@@ -271,6 +273,88 @@
     body.compact-mode .shortcut-tags { display: none !important; }
 
     /* ===================================
+       カードプレビューポップアップ
+       =================================== */
+    .card-preview-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      background: rgba(0,0,0,0.38);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+    }
+    .card-preview-backdrop.is-visible { display: block; }
+
+    .card-preview-pop {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      width: min(420px, calc(100vw - 24px));
+      max-height: min(340px, 52vh);
+      overflow-y: auto;
+      background: #faf9f7;
+      border-radius: 14px;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.2);
+      border: 1.5px solid #d4d0c8;
+      padding: 14px 16px 12px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card-preview-pop.is-visible { display: block; }
+    .card-preview-pop.is-touch {
+      width: min(440px, calc(100vw - 32px));
+      max-height: min(52vh, 440px);
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%);
+    }
+    .card-preview-pop.is-desktop { transform: none; }
+    .card-preview-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.06);
+      color: #555;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-preview-close:hover { background: rgba(0,0,0,0.1); }
+    .card-preview-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      padding-right: 32px;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      letter-spacing: 0.01em;
+    }
+    .card-preview-body {
+      font-size: 0.78rem;
+      line-height: 1.75;
+      color: #444;
+      margin: 0;
+    }
+    .card-preview-meta {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #e8e4dc;
+      font-size: 0.65rem;
+      color: #777;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+    }
+
+    /* ===================================
+>>>>>>> 2a4a7f2 (MADRS詳細採点シートを追加)
        モバイル
        =================================== */
     @media (max-width: 640px) {
@@ -302,21 +386,7 @@
             <span class="ml-2 text-xs text-gray-400 hidden sm:inline">外来参照ポータル</span>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button id="compact-toggle" onclick="toggleCompact()"
-            title="コンパクト表示切替"
-            class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 font-medium px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200">
-            <svg id="compact-icon-card" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-              <rect x="2" y="3" width="7" height="6" rx="1"/><rect x="11" y="3" width="7" height="6" rx="1"/>
-              <rect x="2" y="11" width="7" height="6" rx="1"/><rect x="11" y="11" width="7" height="6" rx="1"/>
-            </svg>
-            <svg id="compact-icon-list" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 hidden" viewBox="0 0 20 20" fill="currentColor">
-              <rect x="2" y="4" width="16" height="2.5" rx="1"/><rect x="2" y="8.75" width="16" height="2.5" rx="1"/><rect x="2" y="13.5" width="16" height="2.5" rx="1"/>
-            </svg>
-            <span id="compact-label" class="hidden sm:inline">コンパクト</span>
-          </button>
-          <span class="text-xs text-gray-400 font-medium tracking-wide select-none">©︎ Psych-tool.Lab</span>
-        </div>
+        <span class="text-xs text-gray-400 font-medium tracking-wide select-none">©︎ Psych-tool.Lab</span>
       </div>
     </div>
     <!-- ジャンプバー（折り返し複数段） -->
@@ -378,6 +448,35 @@
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 font-medium"><span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span>スケール解説</span>
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-700 font-medium"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>教育・資格</span>
         </div>
+      </div>
+    </section>
+
+    <!-- 最新更新情報 -->
+    <section id="updates" class="mb-12">
+      <div class="sec-header" style="background:#334155;">
+        <div class="sec-icon">📋</div>
+        <span>更新情報一覧</span>
+        <span class="sec-count">最新5件</span>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-4 py-2.5 font-medium text-gray-600 w-28">日付</th>
+              <th class="text-left px-4 py-2.5 font-medium text-gray-600">ページ</th>
+              <th class="text-left px-4 py-2.5 font-medium text-gray-600 hidden sm:table-cell">内容</th>
+              <th class="text-left px-4 py-2.5 font-medium text-gray-600 w-20">種別</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-26</td><td class="px-4 py-2.5"><a href="atypical-depression.html" class="link-violet hover:underline font-medium">非定型うつ病 — 概念・診断・治療アルゴリズム</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">West & Dallyから Columbia Group・DSM-5-TRまでの歴史、RAILS記憶法、気分反応性・鉛様麻痺・拒絶過敏性の詳細、MAOI vs SSRI エビデンス、CBT（Jarrett 1999）を網羅した図解</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+            <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-26</td><td class="px-4 py-2.5"><a href="schizophrenia-history.html" class="link-violet hover:underline font-medium">統合失調症の捉え方の歴史（世界×日本）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">クレペリン/ブロイラーからDSM/ICD、反精神医学、神経発達モデル、早期介入、名称変更（2002）までを「世界×日本」並列タイムライン＋概念マップで図解</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+            <tr class="hover:brightness-95 row-violet"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="schizophrenia-diagnosis.html" class="link-violet hover:underline font-medium">統合失調症 診断プロセス完全ガイド</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">古典的診断（クレペリン/ブロイラー/シュナイダー）vs 操作的基準（DSM-5-TR/ICD-10）比較・鑑別診断・除外検査・自己免疫性脳炎との鑑別を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-26</td><td class="px-4 py-2.5"><a href="ymrs-sheet-detailed.html" class="link-teal hover:underline font-medium">YMRS 採点シート（Young 躁状態評価尺度）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">11項目・通常/倍点区別採点・重症度判定・アンカーポイント詳細版を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="bfcrs-sheet.html" class="link-teal hover:underline font-medium">BFCRS 採点シート（Bush-Francis 緊張病評価尺度）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">23項目詳細版・BFCSS スクリーニング・バイナリ項目・Lz反応試験ガイド付き</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+            <tr class="hover:brightness-95 row-teal"><td class="px-4 py-2.5 text-gray-500 tabular-nums text-xs">2026-04-25</td><td class="px-4 py-2.5"><a href="panss-sheet-detailed.html" class="link-teal hover:underline font-medium">PANSS 採点シート（詳細版）</a></td><td class="px-4 py-2.5 text-gray-500 hidden sm:table-cell text-xs">30項目インタラクティブ採点・P/N/G/複合スコア・7段階アンカーポイント詳細版を新規作成</td><td class="px-4 py-2.5"><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -560,6 +659,12 @@
           <p class="text-xs text-gray-500 leading-relaxed">17項目のうつ病重症度評価の世界標準。気分・罪責感・自殺念慮・睡眠・精神運動・不安・身体症状・病識を網羅。0-4点項目・0-2点項目を自動判別して採点。重症度判定（正常〜最重度）・アンカーポイント・質問例・臨床コメント付き。</p>
           <div class="mt-3 text-xs font-medium" style="color:#2563eb;">hamd-sheet-detailed.html →</div>
         </a>
+        <a id="card-madrs" href="madrs-sheet-detailed.html" class="card block border border-teal-100 rounded-xl p-4" style="background:#f0fdfa;border-color:#99f6e4;">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:#ccfbf1;color:#0f766e;">MADRS うつ</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">MADRS 採点シート — Montgomery–Åsberg うつ病評価尺度（詳細版）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">10項目・各0〜6点（合計0〜60点）。治験をはじめ抗うつ薬効果判定に頻用。外見的悲しさ・睡眠・食欲・集中・自殺念慮等を7段階で評価。サブスコア表示・寛解・軽中重度の目安付き。簡易印刷は子ウィンドウ自己印刷方式（Android対応）。</p>
+          <div class="mt-3 text-xs font-medium" style="color:#0d9488;">madrs-sheet-detailed.html →</div>
+        </a>
       </div>
     </section>
 
@@ -634,6 +739,15 @@
 
   </main>
 
+  <!-- カードプレビュー（ホバー / 長押し） -->
+  <div id="card-preview-backdrop" class="card-preview-backdrop" aria-hidden="true"></div>
+  <div id="card-preview-pop" class="card-preview-pop is-desktop" role="dialog" aria-modal="true" aria-labelledby="card-preview-title" aria-hidden="true">
+    <button type="button" class="card-preview-close" id="card-preview-close" aria-label="プレビューを閉じる">×</button>
+    <div id="card-preview-title" class="card-preview-title"></div>
+    <p id="card-preview-body" class="card-preview-body"></p>
+    <div id="card-preview-meta" class="card-preview-meta"></div>
+  </div>
+
   <footer class="border-t border-gray-200 bg-white mt-4">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center gap-2">
@@ -655,7 +769,7 @@
       diseases:   ['card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
       guidelines: ['card-schiz-algo','card-depression','card-bipolar'],
       'scale-sheets': ['card-schiz-sheets','card-anxiety-scales'],
-      'score-sheets': ['card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs','card-hamd'],
+      'score-sheets': ['card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs','card-hamd','card-madrs'],
       'scale-guide': ['card-schiz-scales','card-bprs-guide'],
       education:  ['card-terminology','card-shiteii'],
       others:     ['card-context','card-cursor']
@@ -680,6 +794,8 @@
     }
 
     applyVisibility();
+<<<<<<< HEAD
+=======
 
     // === コンパクトモード ===
     function toggleCompact() {
@@ -733,6 +849,7 @@
       'card-panss-detailed':   ['💻 WEB入力', '📊 採点'],
       'card-bfcrs':            ['💻 WEB入力', '📊 採点', '🚨 緊張病'],
       'card-ymrs':             ['💻 WEB入力', '📊 採点', '⚡ 躁状態'],
+      'card-hamd':             ['💻 WEB入力', '📊 採点', '📉 HAM-D'],
       'card-schiz-scales':     ['📖 解説', '🏥 外来参照'],
       'card-bprs-guide':       ['📖 解説', '🏥 外来参照'],
       'card-terminology':      ['📚 用語集', '🏥 外来参照'],
@@ -759,6 +876,172 @@
         else card.appendChild(row);
       });
     })();
+
+    // === カードプレビューポップアップ ===
+    (function initCardPreview() {
+      const backdrop = document.getElementById('card-preview-backdrop');
+      const pop      = document.getElementById('card-preview-pop');
+      const elTitle  = document.getElementById('card-preview-title');
+      const elBody   = document.getElementById('card-preview-body');
+      const elMeta   = document.getElementById('card-preview-meta');
+      const btnClose = document.getElementById('card-preview-close');
+      if (!backdrop || !pop || !elTitle || !elBody || !elMeta) return;
+
+      const HOVER_DELAY_MS = 360;
+      const HIDE_DELAY_MS  = 280;
+      const LONGPRESS_MS   = 520;
+      let showTimer = null;
+      let hideTimer = null;
+      let pressTimer = null;
+      let blockNavUntil = 0;
+      let openMode = null; // 'hover' | 'touch'
+
+      const supportsHover = () => window.matchMedia('(hover: hover)').matches;
+
+      function fillPreview(card) {
+        const h3 = card.querySelector('h3');
+        const p  = card.querySelector('p');
+        const title = h3 ? h3.textContent.trim() : '';
+        const body  = p  ? p.textContent.trim() : '';
+        if (!title && !body) return false;
+        elTitle.textContent = title || '（無題）';
+        elBody.textContent  = body  || '（説明文なし）';
+
+        const href = card.getAttribute('href') || '';
+        const file = href.split('/').pop() || href;
+        const dateEl = card.querySelector('[class~="tabular-nums"]');
+        const dateStr = dateEl ? dateEl.textContent.trim() : '';
+        elMeta.innerHTML = '';
+        const f = document.createElement('span');
+        f.textContent = '📄 ' + file;
+        elMeta.appendChild(f);
+        if (dateStr) {
+          const d = document.createElement('span');
+          d.textContent = '📅 ' + dateStr;
+          elMeta.appendChild(d);
+        }
+        return true;
+      }
+
+      function positionDesktop(card) {
+        pop.classList.remove('is-touch');
+        pop.classList.add('is-desktop');
+        backdrop.classList.remove('is-visible');
+        const r = card.getBoundingClientRect();
+        pop.style.visibility = 'hidden';
+        pop.classList.add('is-visible');
+        const pw = pop.offsetWidth;
+        const ph = pop.offsetHeight;
+        pop.style.visibility = '';
+        let left = r.left + (r.width - pw) / 2;
+        let top  = r.bottom + 8;
+        if (left < 10) left = 10;
+        if (left + pw > window.innerWidth - 10) left = window.innerWidth - pw - 10;
+        if (top + ph > window.innerHeight - 12) top = r.top - ph - 8;
+        if (top < 10) top = 10;
+        pop.style.left = left + 'px';
+        pop.style.top  = top + 'px';
+      }
+
+      function positionTouch() {
+        pop.classList.remove('is-desktop');
+        pop.classList.add('is-touch');
+        backdrop.classList.add('is-visible');
+        pop.style.left = '';
+        pop.style.top  = '';
+        pop.classList.add('is-visible');
+      }
+
+      function show(card, mode) {
+        if (!fillPreview(card)) return;
+        clearTimeout(showTimer);
+        clearTimeout(hideTimer);
+        openMode = mode;
+        if (mode === 'touch') positionTouch();
+        else positionDesktop(card);
+        pop.setAttribute('aria-hidden', 'false');
+        backdrop.setAttribute('aria-hidden', mode === 'touch' ? 'false' : 'true');
+        if (mode === 'touch') btnClose.focus({ preventScroll: true });
+      }
+
+      function hide() {
+        clearTimeout(showTimer);
+        clearTimeout(hideTimer);
+        pop.classList.remove('is-visible', 'is-touch');
+        pop.classList.add('is-desktop');
+        pop.style.left = '';
+        pop.style.top = '';
+        backdrop.classList.remove('is-visible');
+        pop.setAttribute('aria-hidden', 'true');
+        backdrop.setAttribute('aria-hidden', 'true');
+        openMode = null;
+      }
+
+      function scheduleHide() {
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(hide, HIDE_DELAY_MS);
+      }
+
+      function cancelHide() {
+        clearTimeout(hideTimer);
+      }
+
+      document.querySelectorAll('main a.card[id]').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          if (!supportsHover()) return;
+          clearTimeout(showTimer);
+          showTimer = setTimeout(() => show(card, 'hover'), HOVER_DELAY_MS);
+        });
+        card.addEventListener('mouseleave', () => {
+          if (!supportsHover()) return;
+          clearTimeout(showTimer);
+          scheduleHide();
+        });
+
+        let touchStart = 0;
+        let touchMoved = false;
+        card.addEventListener('touchstart', (e) => {
+          if (e.touches.length !== 1) return;
+          touchStart = Date.now();
+          touchMoved = false;
+          clearTimeout(pressTimer);
+          pressTimer = setTimeout(() => {
+            show(card, 'touch');
+            blockNavUntil = Date.now() + 650;
+          }, LONGPRESS_MS);
+        }, { passive: true });
+        card.addEventListener('touchmove', () => {
+          touchMoved = true;
+          clearTimeout(pressTimer);
+        }, { passive: true });
+        card.addEventListener('touchend', () => {
+          clearTimeout(pressTimer);
+        }, { passive: true });
+        card.addEventListener('click', (e) => {
+          if (Date.now() < blockNavUntil) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }, true);
+      });
+
+      pop.addEventListener('mouseenter', cancelHide);
+      pop.addEventListener('mouseleave', () => {
+        if (openMode === 'hover') scheduleHide();
+      });
+
+      btnClose.addEventListener('click', hide);
+      backdrop.addEventListener('click', hide);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && pop.classList.contains('is-visible')) hide();
+      });
+
+      window.addEventListener('scroll', () => {
+        if (openMode === 'hover') hide();
+      }, { passive: true });
+    })();
+>>>>>>> 2a4a7f2 (MADRS詳細採点シートを追加)
   </script>
 </body>
 </html>
