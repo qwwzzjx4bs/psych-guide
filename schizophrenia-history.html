@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症の捉え方の歴史（世界×日本）- 図解リファレンス</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --level-a: #15803d;
+      --level-b: #1d4ed8;
+      --level-c: #6b7280;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .info-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .toc {
+      position: fixed; right: 1.5rem; top: 50%;
+      transform: translateY(-50%); background: white;
+      padding: 1rem; border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh; overflow-y: auto; z-index: 50; min-width: 200px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .toc a { display: block; padding: 0.4rem 0.5rem; border-radius: 0.5rem; color: #0f172a; font-size: 0.9rem; }
+    .toc a:hover { background: #f1f5f9; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      border: 1px solid #e5e7eb; background: #f8fafc;
+      padding: 0.25rem 0.6rem; border-radius: 9999px;
+      font-size: 0.8rem; font-weight: 600; color: #0f172a;
+    }
+    .timeline {
+      position: relative;
+    }
+    .timeline:before {
+      content: "";
+      position: absolute;
+      left: 1.1rem;
+      top: 0.2rem;
+      bottom: 0.2rem;
+      width: 2px;
+      background: linear-gradient(to bottom, #cbd5e1, #94a3b8, #cbd5e1);
+    }
+    .t-item {
+      position: relative;
+      padding-left: 3.2rem;
+      margin: 1rem 0;
+    }
+    .t-dot {
+      position: absolute;
+      left: 0.75rem;
+      top: 0.25rem;
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 9999px;
+      background: var(--psych-secondary);
+      border: 3px solid #e2e8f0;
+    }
+    .t-card {
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      border-radius: 0.9rem;
+      padding: 1rem 1.1rem;
+    }
+    .t-year {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      color: var(--psych-primary);
+    }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid;
+      margin-right: 0.35rem;
+      margin-top: 0.25rem;
+    }
+    .chip-nosology { color: #1d4ed8; border-color: #93c5fd; background: #eff6ff; }
+    .chip-etiology { color: #0f766e; border-color: #99f6e4; background: #f0fdfa; }
+    .chip-psychopath { color: #7c3aed; border-color: #ddd6fe; background: #f5f3ff; }
+    .chip-society { color: #b45309; border-color: #fde68a; background: #fffbeb; }
+    .chip-treatment { color: #15803d; border-color: #bbf7d0; background: #f0fdf4; }
+    .chip-politics { color: #be123c; border-color: #fecdd3; background: #fff1f2; }
+    .map-node {
+      border-radius: 1rem;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: 1.1rem 1.2rem;
+    }
+    .map-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .map-title h3 {
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.01em;
+    }
+    .small {
+      font-size: 0.9rem;
+      color: #334155;
+      line-height: 1.55;
+    }
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.85rem;
+      padding: 0.12rem 0.35rem;
+      background: #0f172a;
+      color: white;
+      border-radius: 0.35rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- 目次 -->
+  <nav class="toc" aria-label="目次">
+    <div class="flex items-center gap-2 mb-2">
+      <i data-lucide="list" class="w-4 h-4 text-slate-700"></i>
+      <div class="font-bold text-slate-800">目次</div>
+    </div>
+    <a href="#overview">全体像</a>
+    <a href="#timeline">世界×日本 タイムライン</a>
+    <a href="#schools">思想・学派・モデル（概念マップ）</a>
+    <a href="#nosology">診断体系（ICD/DSM）と「統合失調症」</a>
+    <a href="#japan">日本の特徴（名称・制度・臨床文化）</a>
+    <a href="#takeaways">臨床での使い分け（要点）</a>
+  </nav>
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-8">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="history" class="w-8 h-8 opacity-90"></i>
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">統合失調症の「捉え方」の歴史（世界×日本）</h1>
+      </div>
+      <p class="text-white/90 text-sm md:text-base leading-relaxed">
+        診断概念（ノソロジー）・病因仮説（モデル）・臨床技法（治療/評価）・社会制度（スティグマ/法/福祉）の相互作用として図解。
+      </p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <span class="pill"><i data-lucide="globe" class="w-4 h-4"></i>世界精神医学</span>
+        <span class="pill"><i data-lucide="map" class="w-4 h-4"></i>日本精神医学</span>
+        <span class="pill"><i data-lucide="layers" class="w-4 h-4"></i>思想・学派</span>
+        <span class="pill"><i data-lucide="book-open" class="w-4 h-4"></i>診断体系</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+
+    <!-- 概要 -->
+    <section id="overview" class="section-card">
+      <div class="flex items-center gap-2 mb-2">
+        <i data-lucide="compass" class="w-5 h-5 text-slate-700"></i>
+        <h2 class="text-xl font-bold text-slate-900">全体像：何が「変わってきた」のか</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+        <div class="info-box">
+          <div class="flex items-start gap-3">
+            <i data-lucide="target" class="w-5 h-5 text-blue-700 mt-0.5"></i>
+            <div>
+              <div class="font-bold text-slate-900 mb-1">4つの軸（同時に動く）</div>
+              <ul class="text-sm text-slate-700 leading-relaxed space-y-1">
+                <li><span class="font-semibold">ノソロジー</span>：疾患単位の切り方（症候群 vs カテゴリー vs スペクトラム）</li>
+                <li><span class="font-semibold">病因モデル</span>：心理・社会・生物のどこに重心を置くか</li>
+                <li><span class="font-semibold">測定と技法</span>：症状評価、面接、観察、治療（薬・心理社会）</li>
+                <li><span class="font-semibold">制度と文化</span>：入院/地域ケア、診断名の社会的意味、当事者運動</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <div class="flex items-start gap-3">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-700 mt-0.5"></i>
+            <div>
+              <div class="font-bold text-slate-900 mb-1">読み方の注意（重要）</div>
+              <ul class="text-sm text-slate-700 leading-relaxed space-y-1">
+                <li><span class="font-semibold">同じ時代に複数モデルが併存</span>（例：生物学的治療の進展と、精神病理学/現象学の深化は同時進行）</li>
+                <li><span class="font-semibold">診断名は科学だけでなく社会の産物</span>（スティグマ、制度、政策、言語）</li>
+                <li><span class="font-semibold">「統合失調症」は単一病因の名前ではない</span>（ヘテロな症候群としての操作的カテゴリー、という整理が主流）</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- タイムライン -->
+    <section id="timeline" class="section-card">
+      <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="timeline" class="w-5 h-5 text-slate-700"></i>
+        <h2 class="text-xl font-bold text-slate-900">世界×日本 タイムライン（概念・思想・制度）</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- World -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-extrabold text-slate-900 flex items-center gap-2">
+              <i data-lucide="globe" class="w-5 h-5 text-slate-700"></i>世界精神医学（主に欧米）
+            </div>
+            <div class="text-xs text-slate-500">概念の更新点を太字で記載</div>
+          </div>
+
+          <div class="timeline">
+            <div class="t-item">
+              <div class="t-dot"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1890s</span> Kraepelin</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  <span class="font-bold text-slate-900">dementia praecox（早発性痴呆）</span>として、経過（慢性化・荒廃）を重視する「疾患単位」化。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-nosology">ノソロジー</span>
+                  <span class="chip chip-psychopath">精神病理</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#7c3aed;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1911</span> Bleuler</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  <span class="font-bold text-slate-900">schizophrenia</span>（統合の障害）へ。予後の多様性を認め、症状を「基本（基底）症状」と「付随症状」に整理。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-nosology">ノソロジー</span>
+                  <span class="chip chip-psychopath">精神病理</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#1d4ed8;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1930s–1950s</span> 現象学・記述精神病理</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  Jaspers以降の枠組みで、体験・意味・記述の精度を高める。<span class="font-bold text-slate-900">Schneiderの一級症状</span>が診断の実用性を押し上げる。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-psychopath">精神病理</span>
+                  <span class="chip chip-nosology">ノソロジー</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#15803d;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1952–</span> 抗精神病薬の登場</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  chlorpromazine以降、<span class="font-bold text-slate-900">治療可能性</span>が概念に逆流（入院中心→地域ケア、リハビリ、早期介入の論理へ）。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-treatment">治療</span>
+                  <span class="chip chip-society">社会</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#b45309;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1960s–1970s</span> 反精神医学・社会精神医学</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  Laing、Szaszなど。<span class="font-bold text-slate-900">「病い」概念の批判</span>や、家族・制度・権力の視点が強調される（同時に地域精神医療も進む）。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-society">社会</span>
+                  <span class="chip chip-politics">政治/制度</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#0f766e;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1980</span> DSM-III（操作的診断）</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  <span class="font-bold text-slate-900">信頼性（reliability）</span>を中心に、症状基準・期間・除外でカテゴリー化。精神分析優位の米国精神医学からの大転換。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-nosology">ノソロジー</span>
+                  <span class="chip chip-society">制度</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#334155;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1990s–</span> 神経科学・画像・遺伝</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  ドパミン仮説の洗練、グルタミン酸、<span class="font-bold text-slate-900">神経発達モデル</span>、コネクトーム/ディスコネクティビティ、認知機能、炎症・免疫など多因子モデルへ。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-etiology">病因モデル</span>
+                  <span class="chip chip-treatment">治療</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#1e3a5f;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">2000s–</span> 早期精神病・CHRs</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  DUP短縮、初回エピソード精神病（FEP）、臨床的高リスク（CHR-P）など。<span class="font-bold text-slate-900">スペクトラム/段階（staging）</span>の発想が強化される。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-treatment">治療/早期介入</span>
+                  <span class="chip chip-nosology">スペクトラム</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Japan -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-extrabold text-slate-900 flex items-center gap-2">
+              <i data-lucide="map" class="w-5 h-5 text-slate-700"></i>日本精神医学（概念・制度・言語）
+            </div>
+            <div class="text-xs text-slate-500">世界潮流の受容と固有の制度史</div>
+          </div>
+
+          <div class="timeline">
+            <div class="t-item">
+              <div class="t-dot"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">20世紀前半</span> 欧州精神病理学の受容</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  Kraepelin/bleuler流の概念が輸入され、<span class="font-bold text-slate-900">精神病理学・臨床観察</span>が重視される系譜が形成。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-psychopath">精神病理</span>
+                  <span class="chip chip-nosology">ノソロジー</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#b45309;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1950s–</span> 長期入院と病院中心体制</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  抗精神病薬の普及と並行して、<span class="font-bold text-slate-900">制度としての長期入院</span>が定着しやすい条件（社会資源、政策、家族負担）が重なる。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-society">社会/制度</span>
+                  <span class="chip chip-treatment">治療</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#1d4ed8;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">1980s–1990s</span> DSM/ICDの臨床浸透</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  操作的診断が研究・臨床に拡がり、<span class="font-bold text-slate-900">国際共通語としての診断</span>が強化。精神病理学的理解と併存しつつ、場面で使い分けが進む。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-nosology">診断体系</span>
+                  <span class="chip chip-psychopath">精神病理</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#be123c;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">2002</span> 「精神分裂病」→「統合失調症」</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  診断名の社会的影響（スティグマ、告知、治療同盟）を踏まえた改称。<span class="font-bold text-slate-900">言語が臨床行為に介入</span>する代表例。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-society">スティグマ/告知</span>
+                  <span class="chip chip-politics">制度/学会</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#15803d;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">2000s–</span> 地域移行・リカバリー</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  社会資源の整備とともに、<span class="font-bold text-slate-900">リカバリー志向</span>（当事者中心、就労、SST、家族心理教育、ACT等）が臨床の中心へ。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-treatment">心理社会</span>
+                  <span class="chip chip-society">地域ケア</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-dot" style="background:#0f766e;"></div>
+              <div class="t-card">
+                <div class="t-year"><span class="kbd">2010s–</span> 早期介入と多職種</div>
+                <div class="mt-2 text-sm text-slate-700 leading-relaxed">
+                  初回エピソード・若年支援、認知機能/社会機能アウトカム重視。<span class="font-bold text-slate-900">「症状」から「生活機能」へ</span>重心が移る。
+                </div>
+                <div class="mt-2">
+                  <span class="chip chip-treatment">早期介入</span>
+                  <span class="chip chip-society">多職種</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 概念マップ -->
+    <section id="schools" class="section-card">
+      <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="network" class="w-5 h-5 text-slate-700"></i>
+        <h2 class="text-xl font-bold text-slate-900">思想・学派・モデル（概念マップ）</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="map-node">
+          <div class="map-title">
+            <h3>記述・現象学 / 精神病理学</h3>
+            <i data-lucide="pen-tool" class="w-5 h-5 text-violet-700"></i>
+          </div>
+          <div class="small">
+            体験の質・意味・時間性・自己感（ipseity）など、<span class="font-semibold">「何が起きているか」</span>を精緻に記述して概念を磨く。
+            診断の信頼性だけでなく、面接・関係性・病態理解の足場になる。
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="chip chip-psychopath">Jaspers</span>
+            <span class="chip chip-psychopath">Bleuler</span>
+            <span class="chip chip-psychopath">Schneider</span>
+          </div>
+        </div>
+
+        <div class="map-node">
+          <div class="map-title">
+            <h3>操作的診断 / 分類学</h3>
+            <i data-lucide="check-square" class="w-5 h-5 text-blue-700"></i>
+          </div>
+          <div class="small">
+            研究・行政・医療制度・多職種連携のために、<span class="font-semibold">再現可能な基準</span>（症状・期間・除外）でまとめる。
+            一方で「疾患単位＝単一病因」という含意は弱く、ヘテロ性を前提に運用される。
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="chip chip-nosology">DSM</span>
+            <span class="chip chip-nosology">ICD</span>
+            <span class="chip chip-nosology">スペクトラム</span>
+          </div>
+        </div>
+
+        <div class="map-node">
+          <div class="map-title">
+            <h3>生物学・神経科学モデル</h3>
+            <i data-lucide="dna" class="w-5 h-5 text-emerald-700"></i>
+          </div>
+          <div class="small">
+            遺伝・発達・シナプス・神経回路・免疫などの多層因子から、<span class="font-semibold">病態を「ネットワーク障害」として</span>捉える。
+            症状だけでなく、認知・社会機能・段階（staging）を重視しやすい。
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="chip chip-etiology">神経発達</span>
+            <span class="chip chip-etiology">ディスコネクティビティ</span>
+            <span class="chip chip-etiology">免疫/炎症</span>
+          </div>
+        </div>
+
+        <div class="map-node">
+          <div class="map-title">
+            <h3>心理力動 / 関係論（歴史的影響）</h3>
+            <i data-lucide="users" class="w-5 h-5 text-slate-700"></i>
+          </div>
+          <div class="small">
+            「意味」や発達、対人関係の文脈から理解しようとする潮流。特に米国では20世紀中盤に影響が大きく、
+            その後の操作的診断への反動（DSM-III）を生んだ面もある。
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="chip chip-psychopath">力動</span>
+            <span class="chip chip-society">家族</span>
+            <span class="chip chip-society">治療同盟</span>
+          </div>
+        </div>
+
+        <div class="map-node">
+          <div class="map-title">
+            <h3>社会精神医学 / リカバリー</h3>
+            <i data-lucide="building-2" class="w-5 h-5 text-amber-700"></i>
+          </div>
+          <div class="small">
+            病態だけでなく、住まい・就労・家族・地域資源・差別といった環境要因がアウトカムを規定する、という視点。
+            <span class="font-semibold">「症状の軽減」から「生活の回復」へ</span>焦点が移る。
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="chip chip-society">SST</span>
+            <span class="chip chip-society">心理教育</span>
+            <span class="chip chip-society">ACT/訪問</span>
+          </div>
+        </div>
+
+        <div class="map-node">
+          <div class="map-title">
+            <h3>反精神医学（批判の遺産）</h3>
+            <i data-lucide="scale" class="w-5 h-5 text-rose-700"></i>
+          </div>
+          <div class="small">
+            「診断」「強制」「施設」が持ちうる暴力性や、社会的ラベリングを問う視点。
+            今日のインフォームド・コンセント、権利擁護、当事者参画の議論にも影響を残す。
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="chip chip-politics">権利</span>
+            <span class="chip chip-politics">制度批判</span>
+            <span class="chip chip-society">当事者</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 診断体系 -->
+    <section id="nosology" class="section-card">
+      <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="book-open-check" class="w-5 h-5 text-slate-700"></i>
+        <h2 class="text-xl font-bold text-slate-900">診断体系（ICD/DSM）と「統合失調症」</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="border rounded-2xl p-5 bg-slate-50 border-slate-200">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="route" class="w-5 h-5 text-slate-700"></i>歴史的な焦点の移動
+          </div>
+          <ul class="mt-3 text-sm text-slate-700 leading-relaxed space-y-2">
+            <li><span class="font-semibold">経過中心（Kraepelin）</span>：慢性化/荒廃の想定</li>
+            <li><span class="font-semibold">症状構造（Bleuler/精神病理学）</span>：基本症状・体験の質</li>
+            <li><span class="font-semibold">実用診断（Schneider等）</span>：臨床で見分ける指標</li>
+            <li><span class="font-semibold">操作的基準（DSM/ICD）</span>：研究・制度・多職種連携の共通語</li>
+            <li><span class="font-semibold">スペクトラム/段階</span>：FEP/CHR、機能アウトカム、早期介入</li>
+          </ul>
+        </div>
+
+        <div class="border rounded-2xl p-5 bg-white border-slate-200">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="split" class="w-5 h-5 text-slate-700"></i>臨床での“二重言語”
+          </div>
+          <div class="mt-3 text-sm text-slate-700 leading-relaxed">
+            <div class="font-semibold text-slate-900 mb-1">使い分けの要点</div>
+            <ul class="space-y-2">
+              <li><span class="font-semibold">DSM/ICD</span>：診断・説明責任・統計・連携・研究のための共通語</li>
+              <li><span class="font-semibold">精神病理/現象学</span>：面接での理解、介入の焦点化、治療同盟のための“内的地図”</li>
+              <li><span class="font-semibold">社会モデル</span>：生活機能・地域支援・家族支援の設計言語</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 日本の特徴 -->
+    <section id="japan" class="section-card">
+      <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="flag" class="w-5 h-5 text-slate-700"></i>
+        <h2 class="text-xl font-bold text-slate-900">日本の特徴（名称・制度・臨床文化）</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="map-node">
+          <div class="map-title">
+            <h3>名称変更（2002）の意味</h3>
+            <i data-lucide="type" class="w-5 h-5 text-rose-700"></i>
+          </div>
+          <div class="small">
+            「精神分裂病」は強い否定的含意を帯びやすく、告知・治療同盟・受診行動に影響した。
+            改称は、<span class="font-semibold">言語・社会・臨床の接点</span>を可視化した出来事。
+          </div>
+        </div>
+
+        <div class="map-node">
+          <div class="map-title">
+            <h3>制度史（入院中心→地域へ）</h3>
+            <i data-lucide="hospital" class="w-5 h-5 text-amber-700"></i>
+          </div>
+          <div class="small">
+            長期入院が生まれやすい制度条件と、地域資源の整備が遅れていた時代背景が、診断名の「運用」のされ方にも影響。
+            近年は地域移行とリカバリー志向が主流。
+          </div>
+        </div>
+
+        <div class="map-node">
+          <div class="map-title">
+            <h3>精神病理学の持続的影響</h3>
+            <i data-lucide="microscope" class="w-5 h-5 text-violet-700"></i>
+          </div>
+          <div class="small">
+            欧州系の精神病理学・現象学の影響が臨床文化として残りやすく、操作的診断の普及後も、
+            <span class="font-semibold">「症状をどう聞き、どう意味づけるか」</span>を重視する教育・実践が併存しやすい。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 要点 -->
+    <section id="takeaways" class="section-card">
+      <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="sparkles" class="w-5 h-5 text-slate-700"></i>
+        <h2 class="text-xl font-bold text-slate-900">臨床での使い分け（要点だけ）</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="border rounded-2xl p-5 bg-white border-slate-200">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="message-circle" class="w-5 h-5 text-slate-700"></i>患者説明・治療同盟に効く視点
+          </div>
+          <ul class="mt-3 text-sm text-slate-700 leading-relaxed space-y-2">
+            <li><span class="font-semibold">「統合失調症＝単一の壊れ」ではなく</span>、体調・睡眠・ストレス・認知・対人環境が絡む状態像として説明しやすい</li>
+            <li><span class="font-semibold">症状だけでなく機能</span>（学業/就労/対人/セルフケア）を共同目標にする</li>
+            <li><span class="font-semibold">言葉の選び方</span>（告知のしかた、負担の見立て）が長期転帰に効く</li>
+          </ul>
+        </div>
+
+        <div class="border rounded-2xl p-5 bg-slate-50 border-slate-200">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="clipboard-check" class="w-5 h-5 text-slate-700"></i>診断・チーム医療に効く視点
+          </div>
+          <ul class="mt-3 text-sm text-slate-700 leading-relaxed space-y-2">
+            <li><span class="font-semibold">DSM/ICD</span>：共有のための“ラベル”として厳密に運用</li>
+            <li><span class="font-semibold">精神病理</span>：面接での理解を深め、介入の焦点（不安、自己感、対人困難など）を定める</li>
+            <li><span class="font-semibold">社会精神医学</span>：退院・地域生活・家族支援の設計図を作る</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-6 text-xs text-slate-500 leading-relaxed">
+        注：この図は「歴史的な見取り図」です。各人物・学派・制度の詳細は国/地域・学会・時代により差があり、また同時代に複数の流れが併存します。
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-10 text-center text-sm text-slate-500">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex items-center justify-center gap-2">
+        <i data-lucide="brain" class="w-4 h-4"></i>
+        <span>統合失調症の捉え方：世界×日本 図解リファレンス</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
+
