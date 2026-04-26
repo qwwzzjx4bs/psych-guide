@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADRS 詳細採点シート｜Montgomery–Åsberg うつ病評価尺度</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --madrs-gradient: linear-gradient(135deg, #0f766e, #0d9488); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f0fdfa; scroll-behavior: smooth; }
+
+    #jump-bar { position:sticky; top:0; z-index:40; background:white; border-bottom:1px solid #e5e7eb; box-shadow:0 1px 6px rgba(0,0,0,0.07); }
+    #jump-bar .inner { max-width:56rem; margin:0 auto; padding:0 1rem; display:flex; align-items:center; gap:0.3rem; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #jump-bar .inner::-webkit-scrollbar { display:none; }
+    .jbtn { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f9fafb; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s,color 0.12s; flex-shrink:0; }
+    .jbtn:hover { background:#ccfbf1; color:#0d9488; border-color:#99f6e4; }
+    .jbtn-home { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; text-decoration:none; }
+    .jbtn-home:hover { background:#e5e7eb; }
+
+    .score-btn {
+      min-width:1.7rem; height:2rem; border-radius:0.375rem; border:1.5px solid #d1d5db; background:white;
+      font-size:0.75rem; font-weight:700; cursor:pointer; padding:0 0.25rem; transition:all 0.12s;
+      display:flex; align-items:center; justify-content:center; color:#6b7280; flex-shrink:0; user-select:none;
+    }
+    .score-btn:hover { border-color:#14b8a6; color:#0d9488; background:#f0fdfa; }
+    .score-btn.sv0{background:#dcfce7;border-color:#16a34a;color:#15803d;}
+    .score-btn.sv1{background:#e0f2fe;border-color:#0284c7;color:#0369a1;}
+    .score-btn.sv2{background:#d1fae5;border-color:#059669;color:#047857;}
+    .score-btn.sv3{background:#fef9c3;border-color:#ca8a04;color:#854d0e;}
+    .score-btn.sv4{background:#ffedd5;border-color:#ea580c;color:#c2410c;}
+    .score-btn.sv5{background:#fee2e2;border-color:#ef4444;color:#b91c1c;}
+    .score-btn.sv6{background:#fecaca;border-color:#b91c1c;color:#7f1d1d;}
+
+    .score-disp { width:2.2rem; height:2rem; border-radius:0.375rem; display:flex; align-items:center; justify-content:center; font-size:0.95rem; font-weight:700; flex-shrink:0; }
+    .sd-none { background:#f1f5f9; color:#cbd5e1; }
+    .sdv0{background:#dcfce7;color:#15803d;border:1.5px solid #16a34a;}
+    .sdv1{background:#e0f2fe;color:#0284c7;}
+    .sdv2{background:#d1fae5;color:#047857;}
+    .sdv3{background:#fef9c3;color:#854d0e;}
+    .sdv4{background:#ffedd5;color:#c2410c;}
+    .sdv5{background:#fee2e2;color:#b91c1c;}
+    .sdv6{background:#fecaca;color:#7f1d1d;border:1.5px solid #b91c1c;}
+
+    .item-card { background:white; border-radius:1rem; margin-bottom:0.75rem; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+    .item-header { display:grid; grid-template-columns:1.75rem 1fr auto auto; align-items:center; gap:0.625rem; padding:0.75rem 1rem; cursor:pointer; user-select:none; }
+    .item-header:hover { background:#f0fdfa; }
+    .item-card.open { border-left:3px solid #0d9488; }
+    .num-badge { width:1.65rem; height:1.65rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; flex-shrink:0; background:#ccfbf1; color:#0f766e; }
+    .item-body { border-top:1px solid #f1f5f9; padding:0 1rem 1rem; }
+    .eval-box { background:#f0fdfa; border-left:3px solid #0d9488; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.625rem; line-height:1.55; }
+    .q-box { background:#fefce8; border-left:3px solid #ca8a04; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; line-height:1.55; }
+    .warn-box { background:#fef2f2; border-left:3px solid #ef4444; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
+
+    .score-table { width:100%; border-collapse:collapse; font-size:0.7rem; margin-top:0.75rem; table-layout:fixed; }
+    .score-table th { padding:0.3rem 0.35rem; font-weight:700; text-align:center; font-size:0.6rem; }
+    .score-table td { padding:0.3rem 0.35rem; border-bottom:1px solid #f3f4f6; vertical-align:top; line-height:1.4; }
+    .score-table tr:last-child td { border-bottom:none; }
+    .score-table tr:hover td { background:#fafafa; }
+    .score-table tbody td { white-space:normal; text-align:left; }
+    .sc0{background:#dcfce7;color:#15803d;font-weight:600;text-align:center;white-space:nowrap;border-right:1px solid #bbf7d0;}
+    .sc1{background:#e0f2fe;color:#0369a1;font-weight:600;text-align:center;white-space:nowrap;border-right:1px solid #bae6fd;}
+    .sc2{background:#d1fae5;color:#047857;font-weight:600;text-align:center;white-space:nowrap;border-right:1px solid #a7f3d0;}
+    .sc3{background:#fef9c3;color:#854d0e;font-weight:600;text-align:center;white-space:nowrap;border-right:1px solid #fef08a;}
+    .sc4{background:#ffedd5;color:#c2410c;font-weight:600;text-align:center;white-space:nowrap;border-right:1px solid #fed7aa;}
+    .sc5{background:#fee2e2;color:#b91c1c;font-weight:600;text-align:center;white-space:nowrap;border-right:1px solid #fecaca;}
+    .sc6{background:#fecaca;color:#7f1d1d;font-weight:600;text-align:center;white-space:nowrap;}
+
+    .sec-div { padding:0.4rem 0.875rem; font-size:0.65rem; font-weight:700; letter-spacing:0.05em; display:flex; align-items:center; gap:0.5rem; border-radius:0.75rem; }
+    .point-card { background:white; border-radius:1rem; padding:0.875rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.06); margin-bottom:0.75rem; }
+    .toggle-pill { display:inline-flex; align-items:center; gap:0.2rem; padding:0.15rem 0.5rem; border-radius:9999px; font-size:0.6rem; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; margin-top:0.2rem; user-select:none; }
+    .toggle-pill.open { background:#ccfbf1; color:#0d9488; border-color:#99f6e4; }
+    .chevron-icon { transition:transform 0.2s; flex-shrink:0; }
+    .chevron-open { transform:rotate(180deg); }
+    .sticky-footer { position:fixed; bottom:0; left:0; right:0; background:white; border-top:1px solid #e5e7eb; box-shadow:0 -2px 12px rgba(0,0,0,0.08); padding:0.5rem 1rem 0.625rem; z-index:30; }
+
+    @media screen and (max-width: 540px) {
+      .score-table { display:block; }
+      .score-table thead { display:none; }
+      .score-table tbody { display:flex; flex-direction:column; }
+      .score-table tbody tr { display:flex; flex-direction:column; }
+      .score-table tbody td { display:flex; align-items:flex-start; gap:0.5rem; border-right:none !important; white-space:normal !important; padding:0.4rem 0.5rem; border-bottom:1px solid #f3f4f6 !important; line-height:1.5; }
+      .score-table tbody tr:last-child td:last-child { border-bottom:none !important; }
+      .score-table tbody td::before { content:""; flex-shrink:0; width:1.5rem; height:1.5rem; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:0.65rem; margin-top:0.05rem; }
+      .score-table tbody .sc0::before { content:"0"; background:#dcfce7; color:#15803d; }
+      .score-table tbody .sc1::before { content:"1"; background:#e0f2fe; color:#0369a1; }
+      .score-table tbody .sc2::before { content:"2"; background:#d1fae5; color:#047857; }
+      .score-table tbody .sc3::before { content:"3"; background:#fef9c3; color:#854d0e; }
+      .score-table tbody .sc4::before { content:"4"; background:#ffedd5; color:#c2410c; }
+      .score-table tbody .sc5::before { content:"5"; background:#fee2e2; color:#b91c1c; }
+      .score-table tbody .sc6::before { content:"6"; background:#fecaca; color:#7f1d1d; }
+    }
+
+    @media print {
+      body { background:white; }
+      .no-print { display:none !important; }
+      .sticky-footer { display:none !important; }
+      .item-body { display:block !important; }
+      .item-card { box-shadow:none; border:1px solid #e5e7eb; margin-bottom:0.4rem; page-break-inside:avoid; }
+      .score-btn { display:none !important; }
+      main { padding-bottom:0 !important; }
+      .score-table { display:table !important; table-layout:fixed; }
+      .score-table thead { display:table-header-group !important; }
+      .score-table tbody { display:table-row-group !important; }
+      .score-table tbody tr { display:table-row !important; }
+      .score-table tbody td { display:table-cell !important; white-space:normal !important; }
+      .score-table tbody td::before { display:none !important; }
+      * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="no-print text-white py-1.5" style="background:var(--madrs-gradient);">
+  <div class="max-w-4xl mx-auto px-4 flex items-center justify-between">
+    <div class="flex items-center gap-2 flex-shrink-0" style="color:white;">
+      <i data-lucide="activity" class="w-4 h-4 opacity-80" style="color:white;"></i>
+      <span class="text-sm font-bold" style="color:white;">MADRS採点シート</span>
+      <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full hidden sm:inline" style="color:white;">0〜6点（10項目）</span>
+    </div>
+    <div class="flex gap-2 flex-wrap justify-end">
+      <button type="button" onclick="expandAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="chevrons-down" class="w-3 h-3"></i>すべて展開</button>
+      <button type="button" onclick="collapseAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="chevrons-up" class="w-3 h-3"></i>すべて折りたたむ</button>
+      <button type="button" onclick="resetAll()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+      <button type="button" onclick="window.print()" class="flex items-center gap-1 bg-white text-teal-900 text-xs font-semibold px-2.5 py-1.5 rounded-lg hover:bg-gray-100"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+      <button type="button" onclick="compactPrint()" class="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg" style="color:white;" title="記入欄・項目・点数のみを最小ページで印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
+    </div>
+  </div>
+</header>
+
+<div id="jump-bar" class="no-print">
+  <div class="inner" style="padding-top:0.4rem;padding-bottom:0.4rem;">
+    <a class="jbtn" href="#global-tips-card">ポイント</a>
+    <span style="color:#d1d5db;font-size:0.7rem;flex-shrink:0;">|</span>
+    <a class="jbtn" href="#card-1">1</a><a class="jbtn" href="#card-2">2</a><a class="jbtn" href="#card-3">3</a>
+    <a class="jbtn" href="#card-4">4</a><a class="jbtn" href="#card-5">5</a><a class="jbtn" href="#card-6">6</a>
+    <a class="jbtn" href="#card-7">7</a><a class="jbtn" href="#card-8">8</a><a class="jbtn" href="#card-9">9</a>
+    <a class="jbtn" href="#card-10">10</a>
+    <span style="flex:1;min-width:0.5rem;"></span>
+    <a class="jbtn-home" href="top.html"><i data-lucide="home" class="w-3 h-3"></i>TOP</a>
+  </div>
+</div>
+
+<main class="max-w-4xl mx-auto px-4 py-4 pb-32">
+  <div class="point-card mb-3">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">患者ID / イニシャル</label>
+        <input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-teal-400" id="patientId" placeholder="例：A.T.">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価日</label>
+        <input type="date" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-teal-400" id="evalDate">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価者</label>
+        <input type="text" class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-teal-400" id="evaluator" placeholder="氏名・職種">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">評価回数</label>
+        <select class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-teal-400" id="evalNum">
+          <option>第1回</option><option>第2回</option><option>第3回</option><option>第4回</option><option>第5回以降</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="point-card mb-4" id="global-tips-card">
+    <button type="button" class="w-full flex items-center justify-between text-left" onclick="toggleSection('global-body', this)">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-teal-700"></i>
+        </div>
+        <div>
+          <div class="text-sm font-bold text-gray-800">全体的な評価ポイント</div>
+          <div class="text-xs text-gray-400">MADRS 実施前に確認</div>
+        </div>
+      </div>
+      <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon"></i>
+    </button>
+    <div id="global-body" class="mt-3" hidden>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="space-y-2">
+          <div class="bg-teal-50 rounded-lg p-3">
+            <p class="text-xs font-bold text-teal-800 mb-1.5">評価の基本原則</p>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li>・<strong>評価期間：過去3日間</strong>を主に、必要に応じて<strong>1週間前後</strong>の状態を踏まえて採点する</li>
+              <li>・各項目は<strong>0（なし）〜6（最重度）</strong>の7段階。0・2・4・6 のみではなく、中間の<strong>1・3・5 も有効</strong>に使用する</li>
+              <li>・面接者（臨床家）の<strong>臨床的判断</strong>に基づき、下記の数字はアンカー（目安）として用いる</li>
+            </ul>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="bg-rose-50 rounded-lg p-3">
+            <p class="text-xs font-bold text-rose-800 mb-1.5">重症度の目安（合計 0〜60点）</p>
+            <div class="text-xs text-gray-700 space-y-1">
+              <div class="flex justify-between"><span>0〜6点</span><span class="text-green-700 font-semibold">寛解圏 / 治験反応</span></div>
+              <div class="flex justify-between"><span>7〜19点</span><span class="text-yellow-700 font-semibold">軽度うつ</span></div>
+              <div class="flex justify-between"><span>20〜34点</span><span class="text-orange-600 font-semibold">中等度うつ</span></div>
+              <div class="flex justify-between"><span>35〜60点</span><span class="text-red-600 font-semibold">重度うつ</span></div>
+            </div>
+            <p class="text-[10px] text-gray-500 mt-1.5">治験等では 50% 以上のスコア減少率を有効性の指標とすることが多い。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-div mb-2 no-print" style="background:#ccfbf1;color:#0f766e;">
+    <i data-lucide="heart" class="w-3.5 h-3.5"></i>A. 気分・緊張（1〜3）・各0〜6点
+  </div>
+
+  <div class="item-card" id="card-1">
+    <div class="item-header" onclick="toggleItem(1)">
+      <div class="num-badge">1</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">外見的悲しさ <span class="text-gray-400 font-normal text-xs ml-1">Apparent Sadness</span></div>
+        <div class="text-xs text-gray-400">面接中に観察される悲しみ・陰鬱な様子</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-1"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-1">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-1"></i></div>
+    </div>
+    <div class="item-body" id="body-1" hidden>
+      <div class="eval-box"><strong>定義：</strong>面接中の表情・姿勢・声のトーン・涙等から、悲しさ・陰鬱さが観察される程度を評価する。患者の言葉（項目2）より外見を重視する。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">面接中に悲しさは全く感じられない</td>
+        <td class="sc1">悲しさは主に認めないが、時折沈んだ表情がみられる</td>
+        <td class="sc2">面接中に明らかに悲しさが表れている</td>
+        <td class="sc3">面接中の多くの時間、悲しさが観察される</td>
+        <td class="sc4">面接中の大部分で深い悲しさが一貫してみられる</td>
+        <td class="sc5">面接中、ほぼ一貫して重い落ち込みと落涙等がみられる</td>
+        <td class="sc6">面接中、慰め難い絶望的な外見的悲しさ（著しい落涙等）</td>
+      </tr></tbody></table>
+      <div class="q-box"><strong>観察例：</strong>入退室の様子、座位・視線、表情の硬直、声の小ささ、会話中の涙、沈黙の多さなど。</div>
+    </div>
+  </div>
+
+  <div class="item-card" id="card-2">
+    <div class="item-header" onclick="toggleItem(2)">
+      <div class="num-badge">2</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">報告された悲しさ <span class="text-gray-400 font-normal text-xs ml-1">Reported Sadness</span></div>
+        <div class="text-xs text-gray-400">主観的な落ち込み・悲しみの訴え</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-2"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-2">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-2"></i></div>
+    </div>
+    <div class="item-body" id="body-2" hidden>
+      <div class="eval-box"><strong>定義：</strong>患者が言語的に自己報告する、悲しさ・落ち込み・絶望感の程度。項目1（外見）と併せて判断するが、<strong>言葉</strong>に重点を置く。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">自己報告する悲しさはない</td>
+        <td class="sc1">「少し憂鬱」程度の自覚的悲しさ</td>
+        <td class="sc2">自覚的に明らかな悲しさ・落ち込み</td>
+        <td class="sc3">悲しさが一日の多くの時間意識される</td>
+        <td class="sc4">常に心が重い・悲しさに支配されやすい</td>
+        <td class="sc5">圧倒的な悲しさ。日常が著しく制限される</td>
+        <td class="sc6">自己報告が絶望的。生活維持が極度に困難</td>
+      </tr></tbody></table>
+      <div class="q-box"><strong>質問例：</strong>「最近、気分はいかがですか？心が重い・落ち込む・悲しいと感じる時間はどのくらいありますか？」</div>
+    </div>
+  </div>
+
+  <div class="item-card" id="card-3">
+    <div class="item-header" onclick="toggleItem(3)">
+      <div class="num-badge">3</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">内圧的な不快感 <span class="text-gray-400 font-normal text-xs ml-1">Inner Tension</span></div>
+        <div class="text-xs text-gray-400">内的緊張感・神経症様の焦燥</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-3"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-3">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-3"></i></div>
+    </div>
+    <div class="item-body" id="body-3" hidden>
+      <div class="eval-box"><strong>定義：</strong>明確な外的不安表出（興奮等）以前の、<strong>内的</strong>焦燥感・ざわざわ感・居心地の悪さ・神経痛様の不快感。パニック発作の本態とは区別しうる。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">内圧感なし。落ち着いている</td>
+        <td class="sc1">軽度の心もちのざわつき、軽い緊張</td>
+        <td class="sc2">中程度の心もちのざわつき</td>
+        <td class="sc3">明らかな不快感。リラックスが困難</td>
+        <td class="sc4">持続的な不快感。集中・休息が難しい</td>
+        <td class="sc5">不快感が強い。日常動作の妨げになる</td>
+        <td class="sc6">内圧感が圧倒的。耐え難いレベル</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="sec-div mb-2 mt-1 no-print" style="background:#99f6e4;color:#115e59;">
+    <i data-lucide="moon" class="w-3.5 h-3.5"></i>B. 睡眠・食欲・集中（4〜6）
+  </div>
+
+  <div class="item-card" id="card-4">
+    <div class="item-header" onclick="toggleItem(4)">
+      <div class="num-badge">4</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">睡眠 <span class="text-gray-400 font-normal text-xs ml-1">Sleep</span></div>
+        <div class="text-xs text-gray-400">入眠・持続・早朝覚醒を含めた全般的な睡眠障害</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-4"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-4">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-4"></i></div>
+    </div>
+    <div class="item-body" id="body-4" hidden>
+      <div class="eval-box"><strong>定義：</strong>主観的訴えを中心に、観察・睡眠日誌等があれば併用。服薬効果（睡眠導入剤等）も考慮する意見もあるが、<strong>現時点の睡眠の実態</strong>を採点する。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">睡眠に問題を感じない</td>
+        <td class="sc1">軽度の障害。入眠遅延や中途覚醒は時々</td>
+        <td class="sc2">中程度。睡眠の質・量の低下を明確に自覚</td>
+        <td class="sc3">毎晩、著しい睡眠困難</td>
+        <td class="sc4">就床後も多く目覚め、可及的睡眠量が大きく減少</td>
+        <td class="sc5">ほぼ徹夜に近い、極度の睡眠不足</td>
+        <td class="sc6">徹夜に近い／睡眠感覚の著しい障害。日中機能に重大な影響</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="item-card" id="card-5">
+    <div class="item-header" onclick="toggleItem(5)">
+      <div class="num-badge">5</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">食欲 <span class="text-gray-400 font-normal text-xs ml-1">Appetite</span></div>
+        <div class="text-xs text-gray-400">食欲・摂食の減少（または反すうの亢進の場合の異常食行動も含め評価）</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-5"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-5">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-5"></i></div>
+    </div>
+    <div class="item-body" id="body-5" hidden>
+      <div class="eval-box"><strong>定義：</strong>通常の食事量・食への関心の変化。うつ病では減少が多い。体重減少はあれば参考に、本項目は主に<strong>食欲</strong>の主観を評価する。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">正常または軽度の食欲変化なし</td>
+        <td class="sc1">食があまり進まない日がある</td>
+        <td class="sc2">明らかに食が進まない</td>
+        <td class="sc3">毎食、明らかに減量</td>
+        <td class="sc4">固体食物を取る量が明らかに減少</td>
+        <td class="sc5">事実上ほとんど食べていない。摂食に動機づけが極度に低い</td>
+        <td class="sc6">摂食拒否に近い。栄養補助が考慮されるレベル</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="item-card" id="card-6">
+    <div class="item-header" onclick="toggleItem(6)">
+      <div class="num-badge">6</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">集中 <span class="text-gray-400 font-normal text-xs ml-1">Concentration</span></div>
+        <div class="text-xs text-gray-400">注意・集中力・作業持続力の低下</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-6"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-6">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-6"></i></div>
+    </div>
+    <div class="item-body" id="body-6" hidden>
+      <div class="eval-box"><strong>定義：</strong>会話内容の追跡、読み継ぎ、テレビ等への集中、作業能率の低下。うつ病の認知症状として中核的。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">会話の追従等に支障を感じない</td>
+        <td class="sc1">時折、気が散る・会話の一部が抜ける</td>
+        <td class="sc2">中程度。読書・会話持続に困難</td>
+        <td class="sc3">会話中に多く飛躍。短時間の会話課題も困難</td>
+        <td class="sc4">著しい。簡単な面接指示の理解に時間を要する</td>
+        <td class="sc5">極度の注意散漫。数分の集中も困難</td>
+        <td class="sc6">著しい。コミュニケーションの成立が著しく難しい</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="sec-div mb-2 mt-1 no-print" style="background:#a7f3d0;color:#14532d;">
+    <i data-lucide="battery-warning" class="w-3.5 h-3.5"></i>C. 情動・認知（7〜10）
+  </div>
+
+  <div class="item-card" id="card-7">
+    <div class="item-header" onclick="toggleItem(7)">
+      <div class="num-badge">7</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">倦怠感 <span class="text-gray-400 font-normal text-xs ml-1">Lassitude</span></div>
+        <div class="text-xs text-gray-400">活動性・起き上がる気力の低下、疲労感</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-7"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-7">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-7"></i></div>
+    </div>
+    <div class="item-body" id="body-7" hidden>
+      <div class="eval-box"><strong>定義：</strong>主観的疲労・脱力、活動の仕方・歩行の遅延等を含めた<strong>全般的な活気の喪失</strong>。精神運動性制止（HAM-D8）に近接する面もあるがMADRSでは活力低下を問う。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">活気の低下を感じない</td>
+        <td class="sc1">やや元気がない。努力すれば日課をこなせる</td>
+        <td class="sc2">中程度。家事・仕事に著しい遅延</td>
+        <td class="sc3">著しい。起床・身支度に多大な労力</td>
+        <td class="sc4">多くの時間を布団の上で消耗</td>
+        <td class="sc5">著しく動けない。介助が要る日もある</td>
+        <td class="sc6">臥床中心。自発的な行動はほぼゼロ</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="item-card" id="card-8">
+    <div class="item-header" onclick="toggleItem(8)">
+      <div class="num-badge">8</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">感受性の鈍麻 <span class="text-gray-400 font-normal text-xs ml-1">Inability to Feel</span></div>
+        <div class="text-xs text-gray-400">情動的欣快・情動的共鳴の欠如</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-8"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-8">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-8"></i></div>
+    </div>
+    <div class="item-body" id="body-8" hidden>
+      <div class="eval-box"><strong>定義：</strong>喜びを感じられない、家族への愛着が薄れる、<strong>情動の平坦化</strong>に近い。うつ病の陰性様症状として重要。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">情動的共鳴に問題を感じない</td>
+        <td class="sc1">喜びが薄い。趣味があまり楽しめない</td>
+        <td class="sc2">快・不快の鮮度が下がる。情動体験の乏しさ</td>
+        <td class="sc3">多くの感情が「麻痺」したように感じる</td>
+        <td class="sc4">著しい鈍麻。愛着・情動的関与が大きく低下</td>
+        <td class="sc5">事実上、情動的な体験がほぼゼロ</td>
+        <td class="sc6">情動的真空。誰に対しても心が動かない</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="item-card" id="card-9">
+    <div class="item-header" onclick="toggleItem(9)">
+      <div class="num-badge">9</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">悲観的思考 <span class="text-gray-400 font-normal text-xs ml-1">Pessimistic Thoughts</span></div>
+        <div class="text-xs text-gray-400">先が見えない、無価値感、自責、絶望</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-9"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-9">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-9"></i></div>
+    </div>
+    <div class="item-body" id="body-9" hidden>
+      <div class="eval-box"><strong>定義：</strong>将来への断念、失敗感、罪責、無力。妄想レベルまでは行かない一般的な内容から、<strong>抑うつ妄想・罪業念慮</strong>の手前手後まで含む。項目10（自殺）の直接的内容は10で評価し、9では思考の陰鬱さ・絶望感を主に問う。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">悲観的思考なし。将来展望は保たれている</td>
+        <td class="sc1">時折、物事の悪い方へ考えが行く</td>
+        <td class="sc2">中程度。見通しの悪さ、自信喪失</td>
+        <td class="sc3">多くの時間、将来が暗く感じる。無価値感</td>
+        <td class="sc4">着実に絶望的考え。著しい自責·無能感</td>
+        <td class="sc5">事実的に生きる意味を見出せないレベル</td>
+        <td class="sc6">自殺直前段階の極度の断念感（自殺の具体的計画は項目10で）</td>
+      </tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="item-card" id="card-10">
+    <div class="item-header" onclick="toggleItem(10)">
+      <div class="num-badge">10</div>
+      <div>
+        <div class="text-sm font-bold text-gray-800">自殺念慮 <span class="text-gray-400 font-normal text-xs ml-1">Suicidal Thoughts</span></div>
+        <div class="text-xs text-gray-400">希死念慮・自殺計画の程度</div>
+      </div>
+      <div class="flex gap-0.5 flex-wrap justify-end max-w-[11rem] sm:max-w-none" id="btns-10"></div>
+      <div class="flex items-center gap-1.5"><div class="score-disp sd-none" id="disp-10">－</div><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 chevron-icon" id="chev-10"></i></div>
+    </div>
+    <div class="item-body" id="body-10" hidden>
+      <div class="eval-box"><strong>定義：</strong>生きることの否定、死への希求、具体的方法の検討、試みの有無。ハミルトン・項目3と同様、<strong>高得点は緊急度を示唆</strong>する。</div>
+      <table class="score-table"><thead><tr>
+        <th class="sc0">0</th><th class="sc1">1</th><th class="sc2">2</th><th class="sc3">3</th><th class="sc4">4</th><th class="sc5">5</th><th class="sc6">6</th>
+      </tr></thead><tbody><tr>
+        <td class="sc0">自殺念慮なし。死にたいという発言がない</td>
+        <td class="sc1">人生に意味を見出しにくい。希死念慮は消極的</td>
+        <td class="sc2">中程度。生きることの苦痛を自覚</td>
+        <td class="sc3">能動的に消えたい、死のイメージが頻回</td>
+        <td class="sc4">自殺の方法を考える。衝動が強まる事がある</td>
+        <td class="sc5">明確な計画。実行の意図が高い日がある</td>
+        <td class="sc6">積極的な自殺企図・予告、または直近の試み</td>
+      </tr></tbody></table>
+      <div class="warn-box"><strong>高得点時：</strong>自傷他害リスクの再評価、入院の検討、家族の安全な関与。自殺リスクの構造化評価（C-SSRS 等）と併用推奨。</div>
+    </div>
+  </div>
+
+  <div class="point-card mt-3">
+    <label class="text-sm font-bold text-gray-700 flex items-center gap-2 mb-2"><i data-lucide="file-text" class="w-4 h-4 text-gray-400 no-print"></i>備考・特記事項</label>
+    <textarea class="w-full border border-gray-200 rounded-lg p-3 text-sm text-gray-700 resize-none focus:outline-none focus:border-teal-400" rows="3" placeholder="前回MADRS/HAM-Dとの比較・併用薬・面接上の制約など..."></textarea>
+  </div>
+
+  <div id="print-summary" style="display:none;margin-top:0.6rem;border:2px solid #0d9488;border-radius:0.5rem;padding:0.6rem 0.875rem;background:white;page-break-inside:avoid;">
+    <div style="font-size:0.65rem;font-weight:800;color:#0f766e;letter-spacing:0.05em;border-bottom:1px solid #99f6e4;padding-bottom:0.25rem;margin-bottom:0.4rem;">▌ MADRS スコアサマリー</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.4rem;">
+      <div style="background:#ccfbf1;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#0f766e;font-weight:700;font-size:0.6rem;">気分 (1–3) / 18点</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-a">0</span> / 18</div>
+      </div>
+      <div style="background:#d1fae5;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#047857;font-weight:700;font-size:0.6rem;">生活 (4–6) / 18点</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-b">0</span> / 18</div>
+      </div>
+      <div style="background:#a7f3d0;padding:0.3rem 0.5rem;border-radius:0.25rem;">
+        <div style="color:#14532d;font-weight:700;font-size:0.6rem;">情動 (7–10) / 24点</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-c">0</span> / 24</div>
+      </div>
+      <div style="background:#f0fdfa;padding:0.3rem 0.5rem;border-radius:0.25rem;border:1.5px solid #0d9488;grid-column:1/-1;">
+        <div style="color:#0d9488;font-weight:700;font-size:0.6rem;">MADRS 合計</div>
+        <div style="font-size:0.92rem;font-weight:800;color:#1f2937;"><span id="ps-total">0</span> / 60点　<span id="ps-sev" style="font-size:0.7rem;font-weight:600;color:#374151;"></span></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="sticky-footer no-print">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex items-center gap-3 mb-1.5">
+      <div class="flex-1">
+        <div class="flex justify-between text-xs mb-0.5">
+          <span class="text-gray-500">MADRS合計</span>
+          <span class="font-bold text-gray-800"><span id="total-score">0</span> / 60点</span>
+        </div>
+        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-300" id="score-bar" style="width:0%;background:linear-gradient(90deg,#4ade80,#facc15,#f97316,#dc2626);"></div>
+        </div>
+      </div>
+      <div class="text-right flex-shrink-0">
+        <div id="severity-label" class="font-semibold text-gray-400 text-xs"></div>
+        <div class="text-xs text-gray-400" id="scored-count">0項目採点済み</div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between gap-2 flex-wrap">
+      <div class="flex gap-2 text-xs flex-wrap">
+        <span class="text-gray-500">1–3 <span class="font-bold text-gray-800" id="sub-a">0</span></span>
+        <span class="text-gray-500">4–6 <span class="font-bold text-gray-800" id="sub-b">0</span></span>
+        <span class="text-gray-500">7–10 <span class="font-bold text-gray-800" id="sub-c">0</span></span>
+      </div>
+      <div class="flex gap-2">
+        <button type="button" onclick="window.print()" class="flex items-center gap-1 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="printer" class="w-3 h-3"></i>印刷</button>
+        <button type="button" onclick="compactPrint()" class="flex items-center gap-1 bg-teal-100 hover:bg-teal-200 text-teal-900 text-xs font-semibold px-3 py-2 rounded-lg" title="簡易印刷"><i data-lucide="layout-list" class="w-3 h-3"></i>簡易印刷</button>
+        <button type="button" onclick="resetAll()" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold px-3 py-2 rounded-lg"><i data-lucide="refresh-cw" class="w-3 h-3"></i>リセット</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+const ALL_IDS = [1,2,3,4,5,6,7,8,9,10];
+const MAX_TOTAL = 60;
+const scores = {};
+
+function initTogglePills() {
+  document.querySelectorAll('[id^="chev-"]').forEach(icon => {
+    const itemId = icon.id.replace('chev-','');
+    const header = icon.closest('.item-header');
+    if (!header) return;
+    const infoCol = header.children[1];
+    if (!infoCol) return;
+    const pill = document.createElement('span');
+    pill.className = 'toggle-pill';
+    pill.id = 'pill-' + itemId;
+    const label = document.createElement('span');
+    label.className = 'tpill-label';
+    label.textContent = '解説';
+    pill.appendChild(label);
+    infoCol.appendChild(pill);
+  });
+}
+initTogglePills();
+
+function svCls(v) { return ['sv0','sv1','sv2','sv3','sv4','sv5','sv6'][v] || ''; }
+function sdvCls(v) { return ['sdv0','sdv1','sdv2','sdv3','sdv4','sdv5','sdv6'][v] || ''; }
+
+function buildButtons() {
+  ALL_IDS.forEach(id => {
+    const c = document.getElementById('btns-' + id);
+    if (!c) return;
+    for (let v = 0; v <= 6; v++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'score-btn';
+      btn.textContent = v;
+      btn.addEventListener('click', function(e) { e.stopPropagation(); setScore(id, v); });
+      c.appendChild(btn);
+    }
+  });
+}
+
+function setScore(id, val) { scores[id] = val; updateDisplay(id); updateTotal(); }
+
+function updateDisplay(id) {
+  const val = scores[id];
+  const disp = document.getElementById('disp-' + id);
+  if (disp) {
+    if (val !== undefined) { disp.textContent = val; disp.className = 'score-disp ' + sdvCls(val); }
+    else { disp.textContent = '－'; disp.className = 'score-disp sd-none'; }
+  }
+  document.querySelectorAll('#btns-' + id + ' .score-btn').forEach(function(btn) {
+    var v = parseInt(btn.textContent, 10);
+    var on = (val !== undefined && v === val);
+    btn.className = 'score-btn' + (on ? ' ' + svCls(v) : '');
+  });
+}
+
+function updateTotal() {
+  var total = 0, a = 0, b = 0, c = 0, count = 0;
+  ALL_IDS.forEach(function(id) {
+    var v = scores[id];
+    if (v !== undefined) {
+      count++; total += v;
+      if (id <= 3) a += v;
+      else if (id <= 6) b += v;
+      else c += v;
+    }
+  });
+  document.getElementById('total-score').textContent = total;
+  document.getElementById('scored-count').textContent = count + '項目採点済み';
+  document.getElementById('sub-a').textContent = a;
+  document.getElementById('sub-b').textContent = b;
+  document.getElementById('sub-c').textContent = c;
+  document.getElementById('ps-a').textContent = a;
+  document.getElementById('ps-b').textContent = b;
+  document.getElementById('ps-c').textContent = c;
+  document.getElementById('ps-total').textContent = total;
+  document.getElementById('score-bar').style.width = Math.min(100, (total/MAX_TOTAL)*100) + '%';
+  var label = '', col = '#9ca3af';
+  if (count === 0) { label = ''; }
+  else if (total <= 6) { label = '寛解圏'; col = '#16a34a'; }
+  else if (total <= 19) { label = '軽度うつ'; col = '#ca8a04'; }
+  else if (total <= 34) { label = '中等度うつ'; col = '#ea580c'; }
+  else { label = '重度うつ'; col = '#dc2626'; }
+  var sl = document.getElementById('severity-label');
+  sl.textContent = label;
+  sl.style.color = col;
+  document.getElementById('ps-sev').textContent = count ? label : '';
+}
+buildButtons();
+
+function toggleItem(id) {
+  var body = document.getElementById('body-' + id);
+  var chev = document.getElementById('chev-' + id);
+  var pill = document.getElementById('pill-' + id);
+  var card = document.getElementById('card-' + id);
+  var label = pill && pill.querySelector('.tpill-label');
+  if (!body) return;
+  if (body.hasAttribute('hidden')) {
+    body.removeAttribute('hidden');
+    chev && chev.classList.add('chevron-open');
+    pill && pill.classList.add('open');
+    if (label) label.textContent = '閉じる';
+    card && card.classList.add('open');
+  } else {
+    body.setAttribute('hidden','');
+    chev && chev.classList.remove('chevron-open');
+    pill && pill.classList.remove('open');
+    if (label) label.textContent = '解説';
+    card && card.classList.remove('open');
+  }
+}
+function toggleSection(id, btn) {
+  var body = document.getElementById(id);
+  if (!body) return;
+  var chev = btn.querySelector('.chevron-icon');
+  if (body.hasAttribute('hidden')) { body.removeAttribute('hidden'); chev && chev.classList.add('chevron-open'); }
+  else { body.setAttribute('hidden',''); chev && chev.classList.remove('chevron-open'); }
+}
+function expandAll() {
+  ALL_IDS.forEach(function(id) {
+    var body = document.getElementById('body-' + id);
+    if (body) { body.removeAttribute('hidden'); document.getElementById('chev-' + id) && document.getElementById('chev-' + id).classList.add('chevron-open'); }
+    var pill = document.getElementById('pill-' + id);
+    if (pill) { pill.classList.add('open'); var l = pill.querySelector('.tpill-label'); if (l) l.textContent = '閉じる'; }
+    var card = document.getElementById('card-' + id); if (card) card.classList.add('open');
+  });
+}
+function collapseAll() {
+  ALL_IDS.forEach(function(id) {
+    var body = document.getElementById('body-' + id);
+    if (body) { body.setAttribute('hidden',''); document.getElementById('chev-' + id) && document.getElementById('chev-' + id).classList.remove('chevron-open'); }
+    var pill = document.getElementById('pill-' + id);
+    if (pill) { pill.classList.remove('open'); var l = pill.querySelector('.tpill-label'); if (l) l.textContent = '解説'; }
+    var card = document.getElementById('card-' + id); if (card) card.classList.remove('open');
+  });
+}
+function resetAll() {
+  if (!confirm('すべての採点をリセットしますか？')) return;
+  ALL_IDS.forEach(function(id) { delete scores[id]; updateDisplay(id); });
+  updateTotal();
+  collapseAll();
+  document.getElementById('print-summary').style.display = 'none';
+}
+
+var t = new Date();
+document.getElementById('evalDate').value = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+
+function addScoreTableClasses() {
+  document.querySelectorAll('.score-table').forEach(function(table) {
+    var scClasses = Array.from(table.querySelectorAll('thead th')).map(function(th) {
+      return Array.from(th.classList).find(function(c) { return /^sc\d+$/.test(c); }) || null;
+    });
+    table.querySelectorAll('tbody tr').forEach(function(row) {
+      Array.from(row.querySelectorAll('td')).forEach(function(td, i) {
+        if (scClasses[i]) td.classList.add(scClasses[i]);
+      });
+    });
+  });
+}
+addScoreTableClasses();
+
+function compactPrint() {
+  var pId = document.getElementById('patientId') && document.getElementById('patientId').value || '—';
+  var pDate = document.getElementById('evalDate') && document.getElementById('evalDate').value || '—';
+  var pEval = document.getElementById('evaluator') && document.getElementById('evaluator').value || '—';
+  var pNum = document.getElementById('evalNum') && document.getElementById('evalNum').value || '';
+  var pNotes = (document.querySelector('textarea') && document.querySelector('textarea').value) || '';
+  var rows = '';
+  document.querySelectorAll('.sec-div, .item-card').forEach(function(el) {
+    if (el.classList.contains('sec-div')) { rows += '<tr class="sec"><td colspan="3">' + el.textContent.trim() + '</td></tr>'; }
+    else if (el.classList.contains('item-card')) {
+      var hdr = el.querySelector('.item-header'); if (!hdr) return;
+      var badge = hdr.querySelector('.num-badge') && hdr.querySelector('.num-badge').textContent.trim() || '';
+      var nameEl = hdr.querySelector('.text-sm.font-bold');
+      var jpName = nameEl ? Array.from(nameEl.childNodes).filter(function(n) { return n.nodeType === 3; }).map(function(n) { return n.textContent; }).join('').trim() : '';
+      var enName = nameEl && nameEl.querySelector('span') && nameEl.querySelector('span').textContent.trim() || '';
+      var desc = hdr.querySelector('.text-xs.text-gray-400') && hdr.querySelector('.text-xs.text-gray-400').textContent.trim() || '';
+      var score = hdr.querySelector('[id^="disp-"]') && hdr.querySelector('[id^="disp-"]').textContent.trim() || '－';
+      rows += '<tr><td class="bd">' + badge + '</td><td class="nm">' + jpName + '<span class="en"> ' + enName + '</span><br><span class="ds">' + desc + '</span></td><td class="sc">' + score + '</td></tr>';
+    }
+  });
+  var summaryHtml = document.getElementById('print-summary') && document.getElementById('print-summary').innerHTML || '';
+  var notesHtml = pNotes
+    ? '<div class="nb"><div class="nl">備考</div><div class="nt">' + pNotes.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div></div>'
+    : '';
+  var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>MADRS採点（簡易印刷）</title><style>' +
+    'body{font-family:Noto Sans JP,Hiragino Sans,sans-serif;font-size:8.5px;margin:0;padding:0.6cm 0.9cm;color:#111;}' +
+    'h1{font-size:10px;font-weight:800;margin:0 0 0.35rem;color:#0f766e;}' +
+    '.info{display:grid;grid-template-columns:repeat(4,1fr);gap:0.2rem;padding:0.3rem 0.5rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px;margin-bottom:0.35rem;}' +
+    '.info label{font-size:7px;color:#9ca3af;display:block;}.info span{font-size:8.5px;font-weight:600;}' +
+    'table{width:100%;border-collapse:collapse;}' +
+    'tr.sec td{background:#ccfbf1;color:#0f766e;font-weight:800;font-size:7.5px;padding:2px 6px;}' +
+    'td{padding:1.5px 4px;border-bottom:0.5px solid #f3f4f6;vertical-align:top;}' +
+    'td.bd{text-align:center;font-weight:800;color:#0d9488;width:2rem;}' + 'td.sc{text-align:right;font-weight:800;font-size:9px;}' + '.en{color:#9ca3af;font-size:7px;}.ds{color:#6b7280;font-size:7px;}' +
+    '.nb{margin-top:0.35rem;border:1px solid #e5e7eb;border-radius:4px;padding:0.3rem 0.5rem;}.nl{font-size:7.5px;font-weight:700;}.nt{font-size:8px;}' +
+    '.sw{margin-top:0.35rem;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}' +
+    '</style></head><body><h1>MADRS採点シート</h1><div class="info">' +
+    '<div><label>患者ID</label><span>' + pId + '</span></div>' +
+    '<div><label>評価日</label><span>' + pDate + '</span></div>' +
+    '<div><label>評価者</label><span>' + pEval + '</span></div>' +
+    '<div><label>評価回数</label><span>' + pNum + '</span></div></div><table>' + rows + '</table>' + notesHtml + '<div class="sw">' + summaryHtml + '</div>' +
+    '<script>window.addEventListener("load",function(){setTimeout(function(){window.print();},300);window.addEventListener("afterprint",function(){setTimeout(function(){window.close();},100);},{once:true});});<' + '/script></body></html>';
+  var w = window.open('', '_blank');
+  if (!w) { alert('ポップアップを許可してから再試行してください。'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+
+window.addEventListener('beforeprint', function() { updateTotal(); var ps = document.getElementById('print-summary'); if (ps) ps.style.display = 'block'; });
+window.addEventListener('afterprint', function() { var ps = document.getElementById('print-summary'); if (ps) ps.style.display = 'none'; });
+</script>
+</body>
+</html>
