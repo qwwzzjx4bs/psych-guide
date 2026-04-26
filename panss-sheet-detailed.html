@@ -760,6 +760,21 @@
 <script>
   lucide.createIcons();
 
+  // スコア表のtdにth由来のsc*クラスを付与（モバイルバッジ表示用）
+  function addScoreTableClasses() {
+    document.querySelectorAll('.score-table').forEach(table => {
+      const scClasses = Array.from(table.querySelectorAll('thead th')).map(th =>
+        Array.from(th.classList).find(c => /^sc\d+$/.test(c)) || null
+      );
+      table.querySelectorAll('tbody tr').forEach(row => {
+        Array.from(row.querySelectorAll('td')).forEach((td, i) => {
+          if (scClasses[i]) td.classList.add(scClasses[i]);
+        });
+      });
+    });
+  }
+  addScoreTableClasses();
+
   function initTogglePills() {
     document.querySelectorAll('[id^="chev-"]').forEach(icon => {
       const itemId = icon.id.slice(5);
