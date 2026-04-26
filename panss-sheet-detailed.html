@@ -93,6 +93,15 @@
       body.compact-print .sec-div { padding:0.15rem 0.5rem !important; margin-top:0.2rem !important; margin-bottom:0.04rem !important; font-size:0.58rem !important; }
       body.compact-print .point-card { padding:0.3rem 0.6rem !important; margin-bottom:0.2rem !important; }
       body.compact-print #print-summary { display:block !important; }
+      /* モバイルCSSのスコアテーブル変換を印刷時にリセット（Android対策） */
+      .score-table { display:table !important; }
+      .score-table thead { display:table-header-group !important; }
+      .score-table tbody { display:table-row-group !important; }
+      .score-table tbody tr { display:table-row !important; }
+      .score-table tbody td { display:table-cell !important; white-space:nowrap !important; }
+      .score-table tbody td::before { display:none !important; }
+      /* 背景色を強制印刷（Android Chrome対策） */
+      * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
     }
     /* Jump bar */
     #jump-bar { position:sticky; top:0; z-index:40; background:white; border-bottom:1px solid #e5e7eb; box-shadow:0 1px 6px rgba(0,0,0,0.07); }
@@ -103,7 +112,7 @@
     .jbtn-home { display:inline-flex; align-items:center; gap:0.2rem; white-space:nowrap; padding:0.3rem 0.55rem; border-radius:9999px; font-size:0.68rem; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; text-decoration:none; transition:background 0.12s; flex-shrink:0; }
     .jbtn-home:hover { background:#e5e7eb; }
     /* Mobile score table */
-    @media (max-width: 600px) {
+    @media screen and (max-width: 600px) {
       .score-table { display:block; }
       .score-table thead { display:none; }
       .score-table tbody { display:flex; flex-direction:column; }
@@ -873,32 +882,25 @@
     const _psS = document.getElementById('ps-severity'); if (_psS) _psS.textContent = _sevText ? `（${_sevText}）` : '';
   }
 
-  function compactPrint() {
-    const saved = [];
-    function forceHide(el) {
-      if (!el) return;
-      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
-      el.style.setProperty('display', 'none', 'important');
-    }
-    function forceShow(el, disp) {
-      if (!el) return;
-      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
-      el.style.setProperty('display', disp || 'block', 'important');
-    }
-    document.querySelectorAll('.item-body').forEach(forceHide);
-    forceHide(document.getElementById('global-tips-card'));
-    forceShow(document.getElementById('print-summary'));
-    document.body.classList.add('compact-print');
+  // コンパクト印刷：beforeprint/afterprint フックで制御（Android対応）
+  let _compactPending = false;
+
+  window.addEventListener('beforeprint', function () {
+    if (_compactPending) document.body.classList.add('compact-print');
+  });
+
+  window.addEventListener('afterprint', function () {
+    if (!_compactPending) return;
+    const isAndroid = /Android/i.test(navigator.userAgent);
     setTimeout(() => {
-      window.print();
-      window.addEventListener('afterprint', () => {
-        saved.forEach(({ el, val, pri }) => {
-          if (val) el.style.setProperty('display', val, pri);
-          else el.style.removeProperty('display');
-        });
-        document.body.classList.remove('compact-print');
-      }, { once: true });
-    }, 100);
+      document.body.classList.remove('compact-print');
+      _compactPending = false;
+    }, isAndroid ? 10000 : 0);
+  });
+
+  function compactPrint() {
+    _compactPending = true;
+    window.print();
   }
 
   function toggleItem(id) {

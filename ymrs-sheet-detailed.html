@@ -81,7 +81,7 @@
     .score-table tr:hover td { background:#fafafa; }
 
     /* スマホ：縦並びレイアウトに切り替え */
-    @media (max-width: 600px) {
+    @media screen and (max-width: 600px) {
       .score-table { display:block; }
       .score-table thead { display:none; }
       .score-table tbody { display:flex; flex-direction:column; }
@@ -135,6 +135,15 @@
       .item-card { box-shadow:none; border:1px solid #e5e7eb; margin-bottom:0.4rem; page-break-inside:avoid; }
       #print-summary { display:block !important; }
       .toggle-pill { display:none !important; }
+      /* モバイルCSSのスコアテーブル変換を印刷時にリセット（Android対策） */
+      .score-table { display:table !important; }
+      .score-table thead { display:table-header-group !important; }
+      .score-table tbody { display:table-row-group !important; }
+      .score-table tbody tr { display:table-row !important; }
+      .score-table tbody td { display:table-cell !important; white-space:nowrap !important; }
+      .score-table tbody td::before { display:none !important; }
+      /* 背景色を強制印刷（Android Chrome対策） */
+      * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
     }
     body.compact-print .item-body { display:none !important; }
     body.compact-print #global-tips-card { display:none !important; }
@@ -693,32 +702,25 @@
     const _psS  = document.getElementById('ps-severity');if (_psS)  _psS.textContent  = _sevText ? `（${_sevText}）` : '';
   }
 
-  function compactPrint() {
-    const saved = [];
-    function forceHide(el) {
-      if (!el) return;
-      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
-      el.style.setProperty('display', 'none', 'important');
-    }
-    function forceShow(el, disp) {
-      if (!el) return;
-      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
-      el.style.setProperty('display', disp || 'block', 'important');
-    }
-    document.querySelectorAll('.item-body').forEach(forceHide);
-    forceHide(document.getElementById('global-tips-card'));
-    forceShow(document.getElementById('print-summary'));
-    document.body.classList.add('compact-print');
+  // コンパクト印刷：beforeprint/afterprint フックで制御（Android対応）
+  let _compactPending = false;
+
+  window.addEventListener('beforeprint', function () {
+    if (_compactPending) document.body.classList.add('compact-print');
+  });
+
+  window.addEventListener('afterprint', function () {
+    if (!_compactPending) return;
+    const isAndroid = /Android/i.test(navigator.userAgent);
     setTimeout(() => {
-      window.print();
-      window.addEventListener('afterprint', () => {
-        saved.forEach(({ el, val, pri }) => {
-          if (val) el.style.setProperty('display', val, pri);
-          else el.style.removeProperty('display');
-        });
-        document.body.classList.remove('compact-print');
-      }, { once: true });
-    }, 100);
+      document.body.classList.remove('compact-print');
+      _compactPending = false;
+    }, isAndroid ? 10000 : 0);
+  });
+
+  function compactPrint() {
+    _compactPending = true;
+    window.print();
   }
 
   function toggleItem(id) {
