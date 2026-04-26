@@ -79,6 +79,34 @@
     .score-table td { padding:0.4rem 0.6rem; border-bottom:1px solid #f3f4f6; vertical-align:top; line-height:1.45; }
     .score-table tr:last-child td { border-bottom:none; }
     .score-table tr:hover td { background:#fafafa; }
+
+    /* スマホ：縦並びレイアウトに切り替え */
+    @media (max-width: 600px) {
+      .score-table { display:block; }
+      .score-table thead { display:none; }
+      .score-table tbody { display:flex; flex-direction:column; }
+      .score-table tbody tr { display:flex; flex-direction:column; gap:0; }
+      .score-table tbody td {
+        display:flex; align-items:flex-start; gap:0.5rem;
+        border-right:none !important; white-space:normal !important;
+        padding:0.45rem 0.5rem; border-bottom:1px solid #f3f4f6 !important;
+        line-height:1.5;
+      }
+      .score-table tbody tr:last-child td:last-child { border-bottom:none !important; }
+      .score-table tbody td::before {
+        content:""; flex-shrink:0;
+        width:1.6rem; height:1.6rem; border-radius:50%;
+        display:inline-flex; align-items:center; justify-content:center;
+        font-weight:800; font-size:0.68rem; margin-top:0.05rem;
+      }
+      .score-table tbody .sc0::before { content:"0"; background:#dcfce7; color:#15803d; }
+      .score-table tbody .sc1::before { content:"1"; background:#e0f2fe; color:#0369a1; }
+      .score-table tbody .sc2::before { content:"2"; background:#fef9c3; color:#854d0e; }
+      .score-table tbody .sc3::before { content:"3"; background:#fef3c7; color:#92400e; }
+      .score-table tbody .sc4::before { content:"4"; background:#ffedd5; color:#c2410c; }
+      .score-table tbody .sc6::before { content:"6"; background:#fee2e2; color:#b91c1c; }
+      .score-table tbody .sc8::before { content:"8"; background:#fecaca; color:#7f1d1d; }
+    }
     .sc0{background:#dcfce7;color:#15803d;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #bbf7d0;}
     .sc1{background:#e0f2fe;color:#0369a1;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #bae6fd;}
     .sc2{background:#fef9c3;color:#854d0e;font-weight:700;text-align:center;white-space:nowrap;border-right:1px solid #fde68a;}
