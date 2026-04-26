@@ -703,24 +703,73 @@
   }
 
   // コンパクト印刷：beforeprint/afterprint フックで制御（Android対応）
-  let _compactPending = false;
-
-  window.addEventListener('beforeprint', function () {
-    if (_compactPending) document.body.classList.add('compact-print');
-  });
-
-  window.addEventListener('afterprint', function () {
-    if (!_compactPending) return;
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    setTimeout(() => {
-      document.body.classList.remove('compact-print');
-      _compactPending = false;
-    }, isAndroid ? 10000 : 0);
-  });
-
+  // コンパクト印刷：新規ウィンドウに最小限HTMLを生成して印刷（Android Chrome対応）
   function compactPrint() {
-    _compactPending = true;
-    window.print();
+    const pId   = document.getElementById('patientId')?.value  || '—';
+    const pDate = document.getElementById('evalDate')?.value   || '—';
+    const pEval = document.getElementById('evaluator')?.value  || '—';
+    const pNum  = document.getElementById('evalNum')?.value    || '';
+
+    let rows = '';
+    document.querySelectorAll('.sec-div, .item-card').forEach(el => {
+      if (el.classList.contains('sec-div')) {
+        rows += `<tr class="sec"><td colspan="3">${el.textContent.trim()}</td></tr>`;
+      } else if (el.classList.contains('item-card')) {
+        const hdr    = el.querySelector('.item-header');
+        if (!hdr) return;
+        const badge  = hdr.querySelector('.num-badge')?.textContent?.trim() || '';
+        const nameEl = hdr.querySelector('.text-sm.font-bold');
+        const jpName = nameEl ? [...nameEl.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join('').trim() : '';
+        const enName = nameEl?.querySelector('span')?.textContent?.trim() || '';
+        const desc   = hdr.querySelector('.text-xs.text-gray-400')?.textContent?.trim() || '';
+        const score  = hdr.querySelector('[id^="disp-"]')?.textContent?.trim() || '－';
+        rows += `<tr><td class="badge">${badge}</td><td class="name">${jpName}<span class="en"> ${enName}</span><br><span class="desc">${desc}</span></td><td class="sc">${score}</td></tr>`;
+      }
+    });
+
+    const summaryHtml = document.getElementById('print-summary')?.innerHTML || '';
+
+    const html = `<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<title>YMRS採点シート（簡易印刷）</title>
+<style>
+body{font-family:'Noto Sans JP','Hiragino Sans',sans-serif;font-size:8.5px;margin:0;padding:0.7cm 1cm 0.5cm;color:#111;}
+h1{font-size:10px;font-weight:800;margin:0 0 0.35rem;color:#7c2d12;}
+.info{display:grid;grid-template-columns:repeat(4,1fr);gap:0.2rem 0.4rem;margin-bottom:0.4rem;padding:0.3rem 0.5rem;background:#f9fafb;border-radius:4px;border:1px solid #e5e7eb;}
+.info label{font-size:7px;color:#9ca3af;display:block;}
+.info span{font-size:8.5px;font-weight:600;}
+table{width:100%;border-collapse:collapse;}
+tr.sec td{background:#fed7aa;color:#7c2d12;font-weight:800;font-size:7.5px;padding:2px 6px;letter-spacing:0.04em;}
+td{padding:1.5px 4px;border-bottom:0.5px solid #f3f4f6;vertical-align:middle;}
+td.badge{white-space:nowrap;font-size:7.5px;font-weight:800;color:#c2410c;width:2.2rem;text-align:center;}
+td.sc{white-space:nowrap;font-size:10px;font-weight:800;text-align:right;width:2rem;}
+span.en{color:#9ca3af;font-size:7px;}
+span.desc{color:#6b7280;font-size:7px;}
+.sumwrap{margin-top:0.4rem;}
+@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:0.5cm 0.8cm 0.3cm;}}
+</style></head><body>
+<h1>YMRS採点シート</h1>
+<div class="info">
+  <div><label>患者ID</label><span>${pId}</span></div>
+  <div><label>評価日</label><span>${pDate}</span></div>
+  <div><label>評価者</label><span>${pEval}</span></div>
+  <div><label>評価回数</label><span>${pNum}</span></div>
+</div>
+<table>${rows}</table>
+<div class="sumwrap">${summaryHtml}</div>
+</body></html>`;
+
+    const w = window.open('', '_blank');
+    if (!w) {
+      alert('ポップアップがブロックされています。このサイトのポップアップを許可してから再試行してください。');
+      return;
+    }
+    w.document.write(html);
+    w.document.close();
+    setTimeout(function() {
+      w.print();
+      w.addEventListener('afterprint', function() { w.close(); }, { once: true });
+    }, 600);
   }
 
   function toggleItem(id) {
