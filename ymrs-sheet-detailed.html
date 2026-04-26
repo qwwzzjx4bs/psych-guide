@@ -74,11 +74,12 @@
     .warn-box { background:#fffbeb; border-left:3px solid #d97706; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
     .double-box { background:#fff1f2; border-left:3px solid #f43f5e; padding:0.5rem 0.75rem; border-radius:0 0.5rem 0.5rem 0; font-size:0.72rem; color:#374151; margin-top:0.5rem; }
 
-    .score-table { width:100%; border-collapse:collapse; font-size:0.72rem; margin-top:0.75rem; }
+    .score-table { width:100%; border-collapse:collapse; font-size:0.72rem; margin-top:0.75rem; table-layout:fixed; }
     .score-table th { padding:0.4rem 0.6rem; font-weight:700; text-align:center; font-size:0.68rem; }
     .score-table td { padding:0.4rem 0.6rem; border-bottom:1px solid #f3f4f6; vertical-align:top; line-height:1.45; }
     .score-table tr:last-child td { border-bottom:none; }
     .score-table tr:hover td { background:#fafafa; }
+    .score-table tbody td { white-space:normal; text-align:left; }
 
     /* スマホ：縦並びレイアウトに切り替え */
     @media screen and (max-width: 600px) {
