@@ -38,6 +38,7 @@
     .dot-slate   { background: #64748b; }
     .dot-emerald { background: #10b981; }
     .dot-sky     { background: #0284c7; }
+    .dot-rose    { background: #be4a62; }
 
     /* 行の状態 */
     .row-hidden { opacity: 0.45; }
@@ -277,18 +278,18 @@
         </div>
       </div>
 
-      <!-- 評価スケール -->
+      <!-- 評価スケール集（印刷用） -->
       <div class="cat-header flex items-center gap-2">
         <span class="w-2 h-2 rounded-full dot-teal inline-block"></span>
-        評価スケール・アセスメントシート
-        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-scales"></span>
+        評価スケール集 — 印刷用様式
+        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-scale-sheets"></span>
         <div class="flex items-center gap-2 ml-3">
           <span class="text-[10px] text-amber-500 font-semibold normal-case tracking-normal w-[44px] text-center">強調</span>
           <span class="text-[10px] text-green-600 font-semibold normal-case tracking-normal w-[44px] text-center">表示</span>
         </div>
       </div>
       <div class="divide-y divide-gray-100">
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-sheets" data-cat="scales">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-sheets" data-cat="scale-sheets">
           <div class="w-2 h-2 rounded-full dot-teal flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">統合失調症 評価スケール集（外来用印刷様式）</div>
@@ -299,8 +300,32 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-bprs-detailed" data-cat="scales">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-anxiety-scales" data-cat="scale-sheets">
           <div class="w-2 h-2 rounded-full dot-teal flex-shrink-0"></div>
+          <div class="flex-1 min-w-0">
+            <div class="page-title text-sm font-medium text-gray-900 truncate">不安症群 重症度評価スケール集</div>
+            <div class="text-xs text-gray-400 truncate">anxiety-assessment-scales.html</div>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <label class="toggle-wrap toggle-hl"><input type="checkbox" onchange="onHighlight(this)"><span class="toggle-slider"></span></label>
+            <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 採点シート（WEB入力） -->
+      <div class="cat-header flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full dot-rose inline-block"></span>
+        採点シート — WEB 入力・参照
+        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-score-sheets"></span>
+        <div class="flex items-center gap-2 ml-3">
+          <span class="text-[10px] text-amber-500 font-semibold normal-case tracking-normal w-[44px] text-center">強調</span>
+          <span class="text-[10px] text-green-600 font-semibold normal-case tracking-normal w-[44px] text-center">表示</span>
+        </div>
+      </div>
+      <div class="divide-y divide-gray-100">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-bprs-detailed" data-cat="score-sheets">
+          <div class="w-2 h-2 rounded-full dot-rose flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">BPRS 採点シート（詳細版・7段階アンカー）</div>
             <div class="text-xs text-gray-400 truncate">bprs-sheet-detailed.html</div>
@@ -310,8 +335,8 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-panss-detailed" data-cat="scales">
-          <div class="w-2 h-2 rounded-full dot-teal flex-shrink-0"></div>
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-panss-detailed" data-cat="score-sheets">
+          <div class="w-2 h-2 rounded-full dot-rose flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">PANSS 採点シート（詳細版・アンカーポイント）</div>
             <div class="text-xs text-gray-400 truncate">panss-sheet-detailed.html</div>
@@ -321,8 +346,8 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-bfcrs" data-cat="scales">
-          <div class="w-2 h-2 rounded-full dot-teal flex-shrink-0"></div>
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-bfcrs" data-cat="score-sheets">
+          <div class="w-2 h-2 rounded-full dot-rose flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">BFCRS 採点シート（緊張病評価尺度・詳細版）</div>
             <div class="text-xs text-gray-400 truncate">bfcrs-sheet.html</div>
@@ -332,22 +357,11 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-ymrs" data-cat="scales">
-          <div class="w-2 h-2 rounded-full dot-teal flex-shrink-0"></div>
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-ymrs" data-cat="score-sheets">
+          <div class="w-2 h-2 rounded-full dot-rose flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">YMRS 採点シート（Young 躁状態評価尺度・詳細版）</div>
             <div class="text-xs text-gray-400 truncate">ymrs-sheet-detailed.html</div>
-          </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <label class="toggle-wrap toggle-hl"><input type="checkbox" onchange="onHighlight(this)"><span class="toggle-slider"></span></label>
-            <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-anxiety-scales" data-cat="scales">
-          <div class="w-2 h-2 rounded-full dot-teal flex-shrink-0"></div>
-          <div class="flex-1 min-w-0">
-            <div class="page-title text-sm font-medium text-gray-900 truncate">不安症群 重症度評価スケール集</div>
-            <div class="text-xs text-gray-400 truncate">anxiety-assessment-scales.html</div>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
             <label class="toggle-wrap toggle-hl"><input type="checkbox" onchange="onHighlight(this)"><span class="toggle-slider"></span></label>
