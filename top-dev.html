@@ -199,6 +199,53 @@
     .color-legend span:nth-child(6) span { background: #8e6e2e !important; }
 
     /* ===================================
+       コンパクトモード
+       =================================== */
+    body.compact-mode .card {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      padding: 7px 12px !important;
+      border-radius: 8px !important;
+      gap: 8px;
+      overflow: hidden;
+    }
+    /* タグ+日付行 → 横並びに、日付は非表示 */
+    body.compact-mode .card > div:first-child {
+      flex-direction: row !important;
+      align-items: center !important;
+      margin-bottom: 0 !important;
+      justify-content: flex-start !important;
+      flex-shrink: 0;
+      gap: 4px;
+    }
+    body.compact-mode .card [class~="tabular-nums"],
+    body.compact-mode .card .badge-new { display: none !important; }
+    /* タイトル：1行に収める */
+    body.compact-mode .card h3 {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.78rem !important;
+      margin: 0 !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* 説明文・リンク・追加タグ行を非表示 */
+    body.compact-mode .card p { display: none !important; }
+    body.compact-mode .card > div:not(:first-child) { display: none !important; }
+    /* グリッド詰め・セクション間隔を縮小 */
+    body.compact-mode .grid { gap: 3px !important; }
+    body.compact-mode section.mb-12 { margin-bottom: 1.25rem !important; }
+    /* 今週バッジ・ワイドカードのspan2を解除 */
+    body.compact-mode .card-recent::before { display: none !important; }
+    body.compact-mode .sm\:col-span-2 { grid-column: span 1 !important; }
+    /* コンパクト時のホバー */
+    body.compact-mode .card:hover { transform: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    /* トグルボタン：アクティブ状態 */
+    #compact-toggle.active { background: #e8eef6 !important; color: #2a4070 !important; }
+
+    /* ===================================
        モバイル
        =================================== */
     @media (max-width: 640px) {
@@ -230,7 +277,21 @@
             <span class="ml-2 text-xs text-gray-400 hidden sm:inline">外来参照ポータル</span>
           </div>
         </div>
-        <span class="text-xs text-gray-400 font-medium tracking-wide select-none">©︎ Psych-tool.Lab</span>
+        <div class="flex items-center gap-2">
+          <button id="compact-toggle" onclick="toggleCompact()"
+            title="コンパクト表示切替"
+            class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 font-medium px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200">
+            <svg id="compact-icon-card" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+              <rect x="2" y="3" width="7" height="6" rx="1"/><rect x="11" y="3" width="7" height="6" rx="1"/>
+              <rect x="2" y="11" width="7" height="6" rx="1"/><rect x="11" y="11" width="7" height="6" rx="1"/>
+            </svg>
+            <svg id="compact-icon-list" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 hidden" viewBox="0 0 20 20" fill="currentColor">
+              <rect x="2" y="4" width="16" height="2.5" rx="1"/><rect x="2" y="8.75" width="16" height="2.5" rx="1"/><rect x="2" y="13.5" width="16" height="2.5" rx="1"/>
+            </svg>
+            <span id="compact-label" class="hidden sm:inline">コンパクト</span>
+          </button>
+          <span class="text-xs text-gray-400 font-medium tracking-wide select-none">©︎ Psych-tool.Lab</span>
+        </div>
       </div>
     </div>
     <!-- ジャンプバー（折り返し複数段） -->
@@ -492,10 +553,16 @@
           <div class="mt-2 text-xs link-rose font-medium">bfcrs-sheet.html →</div>
         </a>
         <a id="card-ymrs" href="ymrs-sheet-detailed.html" class="card block border border-rose-100 rounded-xl p-4 border-rose bg-rose">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-rose px-2 py-0.5 rounded-full">YMRS 躁状態</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-rose px-2 py-0.5 rounded-full">YMRS 躁状態</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">YMRS 採点シート — Young 躁状態評価尺度（詳細版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">11項目の躁状態評価尺度。通常項目（0〜4点）と倍点項目（0〜8点：過敏性・言語思考障害・攻撃的行動）を区別して採点。重症度判定・アンカーポイント・質問例付き。</p>
           <div class="mt-3 text-xs link-rose font-medium">ymrs-sheet-detailed.html →</div>
+        </a>
+        <a id="card-hamd" href="hamd-sheet-detailed.html" class="card block border border-blue-100 rounded-xl p-4" style="background:#f0f7ff;border-color:#bfdbfe;">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:#dbeafe;color:#1d4ed8;">HAM-D うつ</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-26 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">HAM-D 採点シート — ハミルトンうつ病評価尺度（詳細版）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">17項目のうつ病重症度評価の世界標準。気分・罪責感・自殺念慮・睡眠・精神運動・不安・身体症状・病識を網羅。0-4点項目・0-2点項目を自動判別して採点。重症度判定（正常〜最重度）・アンカーポイント・質問例・臨床コメント付き。</p>
+          <div class="mt-3 text-xs font-medium" style="color:#2563eb;">hamd-sheet-detailed.html →</div>
         </a>
       </div>
     </section>
@@ -592,7 +659,7 @@
       diseases:   ['card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
       guidelines: ['card-schiz-algo','card-depression','card-bipolar'],
       'scale-sheets': ['card-schiz-sheets','card-anxiety-scales'],
-      'score-sheets': ['card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs'],
+      'score-sheets': ['card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs','card-hamd'],
       'scale-guide': ['card-schiz-scales','card-bprs-guide'],
       education:  ['card-terminology','card-shiteii'],
       others:     ['card-context','card-cursor']
@@ -617,6 +684,38 @@
     }
 
     applyVisibility();
+
+    // === コンパクトモード ===
+    function toggleCompact() {
+      const isCompact = document.body.classList.toggle('compact-mode');
+      localStorage.setItem('portalCompact', isCompact ? '1' : '0');
+      applyCompactUI(isCompact);
+    }
+
+    function applyCompactUI(isCompact) {
+      const btn   = document.getElementById('compact-toggle');
+      const label = document.getElementById('compact-label');
+      const iconCard = document.getElementById('compact-icon-card');
+      const iconList = document.getElementById('compact-icon-list');
+      if (isCompact) {
+        btn.classList.add('active');
+        iconCard.classList.add('hidden');
+        iconList.classList.remove('hidden');
+        if (label) label.textContent = '標準表示';
+      } else {
+        btn.classList.remove('active');
+        iconCard.classList.remove('hidden');
+        iconList.classList.add('hidden');
+        if (label) label.textContent = 'コンパクト';
+      }
+    }
+
+    // ページ読み込み時に設定を復元
+    const savedCompact = localStorage.getItem('portalCompact') === '1';
+    if (savedCompact) {
+      document.body.classList.add('compact-mode');
+      applyCompactUI(true);
+    }
   </script>
 </body>
 </html>
