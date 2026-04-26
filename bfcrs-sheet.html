@@ -968,32 +968,30 @@
     }
   }
 
-  function compactPrint() {
-    const saved = [];
-    function forceHide(el) {
-      if (!el) return;
-      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
-      el.style.setProperty('display', 'none', 'important');
-    }
-    function forceShow(el, disp) {
-      if (!el) return;
-      saved.push({ el, val: el.style.getPropertyValue('display'), pri: el.style.getPropertyPriority('display') });
-      el.style.setProperty('display', disp || 'block', 'important');
-    }
-    document.querySelectorAll('.item-body').forEach(forceHide);
-    forceHide(document.getElementById('global-tips-card'));
-    forceShow(document.getElementById('print-summary'));
-    document.body.classList.add('compact-print');
+  // コンパクト印刷：beforeprint/afterprint フックで制御
+  // Android Chrome では afterprint がダイアログ表示直後に発火するため
+  // forceHide/forceShow による inline style 操作は使わず、
+  // beforeprint で CSS クラスを付与し、CSS @media print ルールに表示制御を委任する
+  let _compactPending = false;
+
+  window.addEventListener('beforeprint', function () {
+    if (_compactPending) document.body.classList.add('compact-print');
+  });
+
+  window.addEventListener('afterprint', function () {
+    if (!_compactPending) return;
+    // Android Chrome では afterprint が PDF 生成前に早期発火するため
+    // クリーンアップを遅延させる（その間もスクリーン表示には影響なし）
+    const isAndroid = /Android/i.test(navigator.userAgent);
     setTimeout(() => {
-      window.print();
-      window.addEventListener('afterprint', () => {
-        saved.forEach(({ el, val, pri }) => {
-          if (val) el.style.setProperty('display', val, pri);
-          else el.style.removeProperty('display');
-        });
-        document.body.classList.remove('compact-print');
-      }, { once: true });
-    }, 100);
+      document.body.classList.remove('compact-print');
+      _compactPending = false;
+    }, isAndroid ? 10000 : 0);
+  });
+
+  function compactPrint() {
+    _compactPending = true;
+    window.print();
   }
 
   function toggleItem(id) {
