@@ -888,7 +888,8 @@
             const hay = norm(el.textContent + ' ' + (el.getAttribute('href') || ''));
             show = hay.includes(q);
           }
-          el.style.display = show ? '' : 'none';
+          if (show) el.style.removeProperty('display');
+          else el.style.setProperty('display', 'none', 'important');
           if (show) visible++;
         });
         const cnt = document.getElementById('cnt-' + sec);
