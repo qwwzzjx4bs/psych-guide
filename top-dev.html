@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精神科臨床ガイド — ポータル（開発版・検索試作）</title>
+  <title>精神科臨床ガイド — ポータル</title>
+  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/top.html">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -151,10 +152,6 @@
     a[href="#guidelines"]:hover  { background: #c4daec !important; }
     a[href="#guidelines"] span   { background: #b2cce4 !important; color: #284470 !important; }
 
-    a[href="#scales"]            { background: #d6ecea !important; color: #24625e !important; }
-    a[href="#scales"]:hover      { background: #c2e2de !important; }
-    a[href="#scales"] span       { background: #aed4d0 !important; color: #24625e !important; }
-
     a[href="#scale-sheets"]            { background: #d6ecea !important; color: #24625e !important; }
     a[href="#scale-sheets"]:hover      { background: #c2e2de !important; }
     a[href="#scale-sheets"] span       { background: #aed4d0 !important; color: #24625e !important; }
@@ -170,6 +167,10 @@
     a[href="#education"]         { background: #f2eada !important; color: #6a4a18 !important; }
     a[href="#education"]:hover   { background: #e8deca !important; }
     a[href="#education"] span    { background: #d8ccb2 !important; color: #6a4a18 !important; }
+
+    a[href="#others"]            { background: #e2e6ec !important; color: #384458 !important; }
+    a[href="#others"]:hover      { background: #d4dae4 !important; }
+    a[href="#others"] span       { background: #c4ccd8 !important; color: #384458 !important; }
 
     /* ===================================
        凡例バッジ — くすみカラー上書き
@@ -502,7 +503,7 @@
         <a href="#score-sheets"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 transition-colors text-xs font-medium text-rose-800 whitespace-nowrap">
           🖊 採点シート
-          <span class="bg-rose-200 text-rose-700 px-1.5 py-0.5 rounded-full text-xs leading-none">4</span>
+          <span class="bg-rose-200 text-rose-700 px-1.5 py-0.5 rounded-full text-xs leading-none">6</span>
         </a>
         <a href="#scale-guide"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 transition-colors text-xs font-medium text-emerald-800 whitespace-nowrap">
@@ -514,9 +515,13 @@
           📚 教育・資格
           <span class="bg-amber-200 text-amber-700 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
         </a>
+        <a href="#others"
+           class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
+          💡 その他
+          <span class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+        </a>
       </div>
     </div>
-    <!-- 開発版試作：スティッキー検索（カード絞り込み） -->
     <div class="portal-search-wrap">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-2">
         <label for="portal-card-search" class="sr-only">ページを検索してカードを絞り込み</label>
@@ -538,10 +543,12 @@
           ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドをまとめた外来即時参照ポータルです。
         </p>
         <p class="text-gray-400 text-xs leading-relaxed max-w-2xl mt-2">
-          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。
+          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。<span class="text-gray-500">ヘッダー下の検索バーでページ名・タグ・リンク先・説明文からカードをリアルタイム絞り込みできます。</span>
         </p>
-        <p class="text-amber-900/85 text-xs leading-relaxed max-w-2xl mt-3 border border-amber-200/80 bg-amber-50/80 rounded-lg px-3 py-2">
-          <strong class="font-semibold">開発版（top-dev）</strong>：ヘッダー最下行の検索バーでカードをリアルタイム絞り込みできます（試作）。本番ポータル（top.html）には未反映です。
+        <p class="text-gray-500 text-xs leading-relaxed max-w-2xl mt-2">
+          本番URL（共有・ブックマーク用）: <a href="https://psych-clinical-guide.surge.sh/top.html" class="text-blue-700 hover:underline font-medium">https://psych-clinical-guide.surge.sh/top.html</a>
+          <span class="text-gray-400"> ／ </span>
+          トップ（ICD-10 全体像・F0–F9）: <a href="https://psych-clinical-guide.surge.sh/index.html" class="text-blue-700 hover:underline font-medium">index.html</a>
         </p>
         <div class="color-legend mt-4 flex flex-wrap gap-2 text-xs">
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-medium"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>ICD分類・診断</span>
@@ -599,6 +606,12 @@
         <span class="sec-count" id="cnt-diseases"></span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3" id="grid-diseases">
+        <a id="card-cp-calc" href="cp-calculator.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">計算ツール</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-02 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">抗精神病薬 CP換算計算機</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">世代別（第1世代・第2世代）に分類された抗精神病薬のクロルプロマジン等価換算（稲垣・稲田版）をリアルタイムで計算。経口・持効性注射剤・速効性注射剤に対応。スマホ最適化。</p>
+          <div class="mt-3 text-xs link-violet font-medium">cp-calculator.html →</div>
+        </a>
         <a id="card-antipsychotics" href="antipsychotics-japan.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">薬物治療</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">抗精神病薬 選択ガイド（日本承認薬）</h3>
@@ -845,7 +858,7 @@
     // カードID → セクションIDのマッピング
     const SECTIONS = {
       icd:        ['card-icd10','card-icd11','card-icd10mini','card-icd10-quiz'],
-      diseases:   ['card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
+      diseases:   ['card-cp-calc','card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
       guidelines: ['card-schiz-algo','card-depression','card-bipolar'],
       'scale-sheets': ['card-schiz-sheets','card-anxiety-scales'],
       'score-sheets': ['card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs','card-hamd','card-madrs'],
@@ -941,6 +954,7 @@
       'card-icd11':            ['🏥 外来参照', '📖 ICD-11'],
       'card-icd10mini':        ['🏥 外来参照', '⚡ 軽量版'],
       'card-icd10-quiz':       ['🎓 学習・確認'],
+      'card-cp-calc':          ['🏥 外来参照', '🧮 CP換算', '💊 薬剤選択'],
       'card-antipsychotics':   ['🏥 外来参照', '💊 薬剤選択'],
       'card-anxiety':          ['🏥 外来参照', '📋 診断・治療'],
       'card-schiz-diagnosis':  ['🏥 外来参照', '📋 診断フロー'],
@@ -1005,6 +1019,9 @@
       'card-icd10-quiz': [
         { date: '2026-04-13', kind: '新規', text: '疾患定義からコードを当てるインタラクティブ問題集として初版公開' },
         { date: '2026-04-10', kind: '更新', text: '問題文の表現と正解解説を調整' },
+      ],
+      'card-cp-calc': [
+        { date: '2026-05-02', kind: '新規', text: '抗精神病薬CP換算計算機（稲垣・稲田版）として初版公開。世代別分類・LAI・速効性注射剤対応' },
       ],
       'card-antipsychotics': [
         { date: '2026-04-23', kind: '新規', text: '日本における抗精神病薬選択ガイドとして初版公開' },

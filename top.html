@@ -246,6 +246,42 @@
     /* トグルボタン：アクティブ状態 */
     #compact-toggle.active { background: #e8eef6 !important; color: #2a4070 !important; }
 
+    .portal-search-wrap {
+      border-top: 1px solid #ebe8e4;
+      background: rgba(252, 251, 249, 0.94);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
+    #portal-card-search {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.8125rem;
+      padding: 0.45rem 0.75rem;
+      border: 1px solid #d4d0c8;
+      border-radius: 0.5rem;
+      background: #fff;
+      color: #1a1a1a;
+    }
+    #portal-card-search::placeholder { color: #9ca3af; }
+    #portal-card-search:focus {
+      outline: none;
+      border-color: #4c6e9c;
+      box-shadow: 0 0 0 2px rgba(76, 110, 156, 0.22);
+    }
+    #portal-search-clear {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.4rem 0.65rem;
+      border-radius: 0.375rem;
+      border: 1px solid #d4d0c8;
+      background: #fff;
+      color: #555;
+      cursor: pointer;
+    }
+    #portal-search-clear:hover { background: #f0eeea; }
+    section.portal-section-empty { display: none !important; }
+
     /* ===================================
        カード日付バッジ
        =================================== */
@@ -486,6 +522,16 @@
         </a>
       </div>
     </div>
+    <div class="portal-search-wrap">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-2">
+        <label for="portal-card-search" class="sr-only">ページを検索してカードを絞り込み</label>
+        <span class="text-sm opacity-70 shrink-0" aria-hidden="true">🔍</span>
+        <input type="search" id="portal-card-search" enterkeyhint="search"
+          placeholder="ページ名・タグ・ファイル名・説明文で検索…"
+          autocomplete="off" autocapitalize="off">
+        <button type="button" id="portal-search-clear" title="検索をクリア">クリア</button>
+      </div>
+    </div>
   </header>
 
   <main class="max-w-5xl mx-auto px-4 sm:px-6 py-5 sm:py-8">
@@ -497,7 +543,7 @@
           ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドをまとめた外来即時参照ポータルです。
         </p>
         <p class="text-gray-400 text-xs leading-relaxed max-w-2xl mt-2">
-          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。
+          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。<span class="text-gray-500">ヘッダー下の検索バーでページ名・タグ・リンク先・説明文からカードをリアルタイム絞り込みできます。</span>
         </p>
         <p class="text-gray-500 text-xs leading-relaxed max-w-2xl mt-2">
           本番URL（共有・ブックマーク用）: <a href="https://psych-clinical-guide.surge.sh/top.html" class="text-blue-700 hover:underline font-medium">https://psych-clinical-guide.surge.sh/top.html</a>
@@ -560,6 +606,12 @@
         <span class="sec-count" id="cnt-diseases"></span>
       </div>
       <div class="grid sm:grid-cols-2 gap-3" id="grid-diseases">
+        <a id="card-cp-calc" href="cp-calculator.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">計算ツール</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-02 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">抗精神病薬 CP換算計算機</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">世代別（第1世代・第2世代）に分類された抗精神病薬のクロルプロマジン等価換算（稲垣・稲田版）をリアルタイムで計算。経口・持効性注射剤・速効性注射剤に対応。スマホ最適化。</p>
+          <div class="mt-3 text-xs link-violet font-medium">cp-calculator.html →</div>
+        </a>
         <a id="card-antipsychotics" href="antipsychotics-japan.html" class="card card-recent block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">薬物治療</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">抗精神病薬 選択ガイド（日本承認薬）</h3>
@@ -806,7 +858,7 @@
     // カードID → セクションIDのマッピング
     const SECTIONS = {
       icd:        ['card-icd10','card-icd11','card-icd10mini','card-icd10-quiz'],
-      diseases:   ['card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
+      diseases:   ['card-cp-calc','card-antipsychotics','card-anxiety','card-schiz-diagnosis','card-schiz-history','card-atypical-depression'],
       guidelines: ['card-schiz-algo','card-depression','card-bipolar'],
       'scale-sheets': ['card-schiz-sheets','card-anxiety-scales'],
       'score-sheets': ['card-bprs-detailed','card-panss-detailed','card-bfcrs','card-ymrs','card-hamd','card-madrs'],
@@ -815,25 +867,53 @@
       others:     ['card-context','card-cursor']
     };
 
-    function applyVisibility() {
+    function refreshCardDisplay() {
       const hidden      = JSON.parse(localStorage.getItem('portalHidden')      || '[]');
       const highlighted = JSON.parse(localStorage.getItem('portalHighlighted') || '[]');
+      const searchEl = document.getElementById('portal-card-search');
+      const qRaw = (searchEl && searchEl.value) ? searchEl.value.trim() : '';
+      const norm = (s) => (s || '').toLowerCase().normalize('NFKC');
+      const q = norm(qRaw);
+
       Object.entries(SECTIONS).forEach(([sec, ids]) => {
         let visible = 0;
         ids.forEach(id => {
           const el = document.getElementById(id);
           if (!el) return;
-          const isHidden = hidden.includes(id);
-          el.style.display = isHidden ? 'none' : '';
+          const adminHidden = hidden.includes(id);
           el.classList.toggle('card-highlighted', highlighted.includes(id));
-          if (!isHidden) visible++;
+
+          let show = !adminHidden;
+          if (show && q) {
+            const hay = norm(el.textContent + ' ' + (el.getAttribute('href') || ''));
+            show = hay.includes(q);
+          }
+          el.style.display = show ? '' : 'none';
+          if (show) visible++;
         });
         const cnt = document.getElementById('cnt-' + sec);
         if (cnt) cnt.textContent = visible + 'ページ';
+        const sectionEl = document.getElementById(sec);
+        if (sectionEl) {
+          sectionEl.classList.toggle('portal-section-empty', Boolean(q) && visible === 0);
+        }
       });
     }
 
+    function applyVisibility() {
+      refreshCardDisplay();
+    }
+
     applyVisibility();
+
+    document.getElementById('portal-card-search')?.addEventListener('input', () => {
+      refreshCardDisplay();
+    });
+    document.getElementById('portal-search-clear')?.addEventListener('click', () => {
+      const inp = document.getElementById('portal-card-search');
+      if (inp) { inp.value = ''; inp.focus(); }
+      refreshCardDisplay();
+    });
 
     // === コンパクトモード ===
     function toggleCompact() {
@@ -874,6 +954,7 @@
       'card-icd11':            ['🏥 外来参照', '📖 ICD-11'],
       'card-icd10mini':        ['🏥 外来参照', '⚡ 軽量版'],
       'card-icd10-quiz':       ['🎓 学習・確認'],
+      'card-cp-calc':          ['🏥 外来参照', '🧮 CP換算', '💊 薬剤選択'],
       'card-antipsychotics':   ['🏥 外来参照', '💊 薬剤選択'],
       'card-anxiety':          ['🏥 外来参照', '📋 診断・治療'],
       'card-schiz-diagnosis':  ['🏥 外来参照', '📋 診断フロー'],
@@ -938,6 +1019,9 @@
       'card-icd10-quiz': [
         { date: '2026-04-13', kind: '新規', text: '疾患定義からコードを当てるインタラクティブ問題集として初版公開' },
         { date: '2026-04-10', kind: '更新', text: '問題文の表現と正解解説を調整' },
+      ],
+      'card-cp-calc': [
+        { date: '2026-05-02', kind: '新規', text: '抗精神病薬CP換算計算機（稲垣・稲田版）として初版公開。世代別分類・LAI・速効性注射剤対応' },
       ],
       'card-antipsychotics': [
         { date: '2026-04-23', kind: '新規', text: '日本における抗精神病薬選択ガイドとして初版公開' },
