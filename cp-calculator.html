@@ -236,9 +236,96 @@
     }
 
     /* タブコンテナ：横幅いっぱいに均等分割 */
-    .tab-scroll {
-      /* スクロール不要 */
+
+    /* 検索バー */
+    .search-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 35;
+      background: #f9fafb;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
     }
+    .search-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-icon {
+      position: absolute;
+      left: 0.65rem;
+      color: #9ca3af;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.5rem 2.2rem 0.5rem 2.1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 0.625rem;
+      font-size: 0.875rem;
+      background: white;
+      color: #111827;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15,118,110,0.1);
+    }
+    .search-clear {
+      position: absolute;
+      right: 0.6rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0.1rem 0.2rem;
+      border-radius: 9999px;
+      display: none;
+    }
+    .search-clear:hover { color: #6b7280; }
+    .search-clear.visible { display: block; }
+
+    /* 検索中の結果セクションヘッダー */
+    .search-section-hdr {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #f1f5f9;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #475569;
+    }
+    .search-mode .search-section-hdr { display: flex; }
+
+    /* 検索モード中はタブの見た目を無効化 */
+    .search-mode .tab-btn { opacity: 0.4; pointer-events: none; }
+
+    /* 件数バッジ */
+    .result-count {
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 9999px;
+    }
+    .result-count.has-result { background: #ccfbf1; color: #0f766e; }
+
+    /* 検索ヒットなしメッセージ */
+    .no-results-msg {
+      display: none;
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+    .no-results-msg.visible { display: block; }
 
     /* 注意ボックス */
     .notice-box {
@@ -324,6 +411,24 @@
       </div>
     </div>
 
+    <!-- 検索バー -->
+    <div class="search-wrap">
+      <div class="search-inner">
+        <i data-lucide="search" class="search-icon w-4 h-4"></i>
+        <input
+          type="search"
+          id="drug-search"
+          class="search-input"
+          placeholder="薬剤名・商品名で検索..."
+          oninput="filterDrugs(this.value)"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        >
+        <button class="search-clear" id="search-clear-btn" onclick="clearSearch()" aria-label="クリア">✕</button>
+      </div>
+    </div>
+
     <!-- 注意事項 -->
     <div class="px-4 mb-2">
       <div class="notice-box">
@@ -338,6 +443,11 @@
 
     <!-- 経口製剤タブ -->
     <div id="panel-oral" class="px-4">
+      <div class="search-section-hdr" id="search-hdr-oral">
+        <i data-lucide="tablet" class="w-3.5 h-3.5 text-teal-600"></i>
+        経口製剤・貼付剤
+        <span class="result-count ml-1" id="count-oral">0</span>
+      </div>
 
       <!-- 第2世代 非定型 -->
       <div class="section-card" id="sec-gen2">
@@ -365,25 +475,23 @@
         <div class="accordion-content expanded" id="content-gen2">
 
           <!-- SDA -->
-          <div class="subsection-label flex items-center gap-1.5">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-sda">
             <span class="w-2 h-2 rounded-full bg-teal-500 inline-block"></span>
             SDA（セロトニン・ドパミン拮抗薬）
           </div>
-          <div id="drugs-sda">
-            <!-- rows injected by JS -->
-          </div>
-          <div class="divider"></div>
+          <div id="drugs-sda"></div>
+          <div class="divider" data-divider-for="drugs-sda"></div>
 
           <!-- MARTA -->
-          <div class="subsection-label flex items-center gap-1.5">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-marta">
             <span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
             MARTA（多受容体作用）
           </div>
           <div id="drugs-marta"></div>
-          <div class="divider"></div>
+          <div class="divider" data-divider-for="drugs-marta"></div>
 
           <!-- DPA -->
-          <div class="subsection-label flex items-center gap-1.5">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-dpa">
             <span class="w-2 h-2 rounded-full bg-indigo-500 inline-block"></span>
             DPA（ドパミン部分作動薬）
           </div>
@@ -422,31 +530,31 @@
         <div class="accordion-content expanded" id="content-gen1">
 
           <!-- フェノチアジン系 -->
-          <div class="subsection-label flex items-center gap-1.5">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-phenothiazine">
             <span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>
             フェノチアジン系
           </div>
           <div id="drugs-phenothiazine"></div>
-          <div class="divider"></div>
+          <div class="divider" data-divider-for="drugs-phenothiazine"></div>
 
           <!-- ブチロフェノン系 -->
-          <div class="subsection-label flex items-center gap-1.5">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-butyrophenone">
             <span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>
             ブチロフェノン系
           </div>
           <div id="drugs-butyrophenone"></div>
-          <div class="divider"></div>
+          <div class="divider" data-divider-for="drugs-butyrophenone"></div>
 
           <!-- ベンズアミド系 -->
-          <div class="subsection-label flex items-center gap-1.5">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-benzamide">
             <span class="w-2 h-2 rounded-full bg-orange-400 inline-block"></span>
             ベンズアミド系
           </div>
           <div id="drugs-benzamide"></div>
-          <div class="divider"></div>
+          <div class="divider" data-divider-for="drugs-benzamide"></div>
 
           <!-- その他第1世代 -->
-          <div class="subsection-label flex items-center gap-1.5">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-other-gen1">
             <span class="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
             その他・チオキサンテン系ほか
           </div>
@@ -463,6 +571,11 @@
 
     <!-- 持効性注射剤タブ -->
     <div id="panel-lai" class="px-4 hidden">
+      <div class="search-section-hdr" id="search-hdr-lai">
+        <i data-lucide="syringe" class="w-3.5 h-3.5 text-purple-600"></i>
+        持効性注射剤（LAI）
+        <span class="result-count ml-1" id="count-lai">0</span>
+      </div>
       <div class="section-card">
         <div class="px-4 py-3 bg-purple-50 border-b border-purple-100 flex items-center gap-2">
           <i data-lucide="syringe" class="w-4 h-4 text-purple-600"></i>
@@ -483,6 +596,11 @@
 
     <!-- 速効性注射剤タブ -->
     <div id="panel-inject" class="px-4 hidden">
+      <div class="search-section-hdr" id="search-hdr-inject">
+        <i data-lucide="activity" class="w-3.5 h-3.5 text-rose-600"></i>
+        速効性注射剤
+        <span class="result-count ml-1" id="count-inject">0</span>
+      </div>
       <div class="section-card">
         <div class="px-4 py-3 bg-rose-50 border-b border-rose-100 flex items-center gap-2">
           <i data-lucide="activity" class="w-4 h-4 text-rose-600"></i>
@@ -494,6 +612,12 @@
           <span class="subtotal-value" id="subtotal-inject">0 mg</span>
         </div>
       </div>
+    </div>
+
+    <!-- 検索結果なし -->
+    <div class="no-results-msg px-4" id="no-results-msg">
+      <i data-lucide="search-x" class="w-8 h-8 mx-auto mb-2 text-gray-300"></i>
+      <p>「<span id="no-results-query"></span>」に一致する薬剤が見つかりません</p>
     </div>
 
     <!-- リセットボタン -->
@@ -646,6 +770,7 @@ function buildDrugRow(drug, containerId, type = 'oral') {
   const row = document.createElement('div');
   row.className = 'drug-row' + (drug.disc ? ' discontinued' : '');
   row.id = 'row-' + drug.id;
+  row.dataset.search = (drug.name + ' ' + drug.brand + (drug.note ? ' ' + drug.note : '')).toLowerCase();
 
   const noteHtml  = drug.note ? `<span class="text-xs text-gray-400">(${drug.note})</span>` : '';
   const discBadge = drug.disc ? `<span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">販売中止</span>` : '';
@@ -697,6 +822,7 @@ function buildLAIRow(drug) {
   const row = document.createElement('div');
   row.className = 'p-3' + (drug.disc ? ' opacity-50' : '');
   row.id = 'row-' + drug.id;
+  row.dataset.search = (drug.name + ' ' + drug.brand).toLowerCase();
 
   const laiBtns = buildQtyBtns(drug.tabs, drug.id, 'lai');
 
@@ -748,6 +874,7 @@ function buildInjectRow(drug) {
   row.className = 'drug-row';
   row.id = 'row-' + drug.id;
 
+  row.dataset.search = (drug.name + ' ' + drug.brand).toLowerCase();
   const injBtns = buildQtyBtns(drug.tabs, drug.id, 'inject');
 
   row.innerHTML = `
@@ -1019,6 +1146,96 @@ function formatCP(val) {
 }
 
 // ============================================================
+// 検索
+// ============================================================
+
+function filterDrugs(query) {
+  const q = query.trim().toLowerCase();
+  const clearBtn = document.getElementById('search-clear-btn');
+  clearBtn.classList.toggle('visible', q.length > 0);
+
+  if (q.length === 0) {
+    // 検索解除 → 通常タブ表示に戻す
+    document.querySelector('main').classList.remove('search-mode');
+    switchTab(currentTab);
+    document.querySelectorAll('[data-search]').forEach(r => r.style.display = '');
+    document.querySelectorAll('[data-subsection-for]').forEach(el => el.style.display = '');
+    document.querySelectorAll('[data-divider-for]').forEach(el => el.style.display = '');
+    document.getElementById('no-results-msg').classList.remove('visible');
+    return;
+  }
+
+  // 検索モードON
+  document.querySelector('main').classList.add('search-mode');
+
+  // 全パネルを表示
+  ['oral', 'lai', 'inject'].forEach(t => {
+    document.getElementById('panel-' + t).classList.remove('hidden');
+  });
+
+  // アコーディオンを展開
+  ['gen1', 'gen2'].forEach(key => {
+    if (!sectionStates[key]) {
+      sectionStates[key] = true;
+      document.getElementById('content-' + key).classList.replace('collapsed', 'expanded');
+      document.getElementById('chevron-' + key).style.transform = '';
+    }
+  });
+
+  // 行フィルタリング
+  const counts = { oral: 0, lai: 0, inject: 0 };
+  document.querySelectorAll('[data-search]').forEach(row => {
+    const match = row.dataset.search.includes(q);
+    row.style.display = match ? '' : 'none';
+    if (match) {
+      const panel = row.closest('[id^="panel-"]');
+      if (panel) {
+        const key = panel.id.replace('panel-', '');
+        if (counts[key] !== undefined) counts[key]++;
+      }
+    }
+  });
+
+  // サブセクションラベル・区切り線の表示制御
+  document.querySelectorAll('[data-subsection-for]').forEach(label => {
+    const cid = label.dataset.subsectionFor;
+    const container = document.getElementById(cid);
+    const hasVisible = container && Array.from(container.children).some(c => c.style.display !== 'none');
+    label.style.display = hasVisible ? '' : 'none';
+    // 対応するdividerも制御
+    const divider = document.querySelector(`[data-divider-for="${cid}"]`);
+    if (divider) divider.style.display = hasVisible ? '' : 'none';
+  });
+
+  // パネル表示・件数バッジ更新
+  ['oral', 'lai', 'inject'].forEach(t => {
+    const panel = document.getElementById('panel-' + t);
+    const cnt = counts[t];
+    panel.classList.toggle('hidden', cnt === 0);
+    const badge = document.getElementById('count-' + t);
+    if (badge) {
+      badge.textContent = cnt + '件';
+      badge.classList.toggle('has-result', cnt > 0);
+    }
+  });
+
+  // ヒットなしメッセージ
+  const total = counts.oral + counts.lai + counts.inject;
+  const noMsg = document.getElementById('no-results-msg');
+  noMsg.classList.toggle('visible', total === 0);
+  if (total === 0) {
+    document.getElementById('no-results-query').textContent = query.trim();
+  }
+}
+
+function clearSearch() {
+  const input = document.getElementById('drug-search');
+  input.value = '';
+  filterDrugs('');
+  input.focus();
+}
+
+// ============================================================
 // タブ切替
 // ============================================================
 
@@ -1028,6 +1245,7 @@ function getCurrentTab() { return currentTab; }
 
 function switchTab(tab) {
   currentTab = tab;
+  // 検索中はタブ切替でクリアしない（タブボタンはdisabledなので通常は呼ばれない）
   ['oral', 'lai', 'inject'].forEach(t => {
     document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
     const btn = document.getElementById('tab-' + t);
