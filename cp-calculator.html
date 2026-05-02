@@ -23,14 +23,16 @@
 
     /* タブ */
     .tab-btn {
-      padding: 0.6rem 1.2rem;
-      border-radius: 9999px;
+      flex: 1;
+      padding: 0.55rem 0.25rem;
+      border-radius: 0.5rem;
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.78rem;
       cursor: pointer;
       transition: all 0.2s;
       border: 2px solid transparent;
       white-space: nowrap;
+      text-align: center;
     }
     .tab-btn.active-oral {
       background: #1e3a5f;
@@ -233,13 +235,10 @@
       box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
     }
 
-    /* スクロール非表示のスクロール可能コンテナ */
+    /* タブコンテナ：横幅いっぱいに均等分割 */
     .tab-scroll {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      /* スクロール不要 */
     }
-    .tab-scroll::-webkit-scrollbar { display: none; }
-    .tab-scroll { scrollbar-width: none; }
 
     /* 注意ボックス */
     .notice-box {
@@ -302,21 +301,24 @@
   <main class="max-w-2xl mx-auto pb-24">
 
     <!-- タブナビ -->
-    <div class="tab-scroll px-4 pt-4 pb-2">
-      <div class="flex gap-2" style="width: max-content;">
+    <div class="px-4 pt-4 pb-2">
+      <div class="flex gap-1.5 w-full">
         <button class="tab-btn active-oral" id="tab-oral" onclick="switchTab('oral')">
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="tablet" class="w-3.5 h-3.5"></i>経口製剤・貼付剤
+          <span class="flex flex-col items-center gap-0.5">
+            <i data-lucide="tablet" class="w-4 h-4"></i>
+            <span>経口・貼付剤</span>
           </span>
         </button>
         <button class="tab-btn inactive" id="tab-lai" onclick="switchTab('lai')">
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="syringe" class="w-3.5 h-3.5"></i>持効性注射剤
+          <span class="flex flex-col items-center gap-0.5">
+            <i data-lucide="syringe" class="w-4 h-4"></i>
+            <span>持効性注射剤</span>
           </span>
         </button>
         <button class="tab-btn inactive" id="tab-inject" onclick="switchTab('inject')">
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="activity" class="w-3.5 h-3.5"></i>速効性注射剤
+          <span class="flex flex-col items-center gap-0.5">
+            <i data-lucide="activity" class="w-4 h-4"></i>
+            <span>速効性注射剤</span>
           </span>
         </button>
       </div>
