@@ -718,12 +718,10 @@
 
     <section id="portal-news-section" class="mb-6 sm:mb-10 hidden" aria-labelledby="portal-news-heading">
       <div class="bg-white rounded-2xl border border-gray-200 px-5 sm:px-6 py-4 sm:py-5 shadow-sm">
-        <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
-          <h2 id="portal-news-heading" class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-            <span aria-hidden="true">📣</span> 更新情報
-          </h2>
-          <a href="portal-news-edit.html" class="text-xs text-gray-500 hover:text-blue-700 hover:underline shrink-0">編集</a>
-        </div>
+        <h2 id="portal-news-heading" class="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+          <span aria-hidden="true">📣</span> 更新情報
+        </h2>
+        <p class="text-xs text-gray-400 mb-3 leading-relaxed">各ページの更新履歴データから、新しい順に最大5件を自動表示します（ポータル管理で非表示のカードは除きます）。</p>
         <ul id="portal-news-list" class="list-none m-0 p-0"></ul>
       </div>
     </section>
@@ -1050,17 +1048,56 @@
       return (s || '').toLowerCase().normalize('NFKC');
     }
 
-    const PORTAL_NEWS_KEY = 'portalNewsItems';
-
-    function getPortalNewsItems() {
-      try {
-        const raw = localStorage.getItem(PORTAL_NEWS_KEY);
-        const arr = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(arr)) return [];
-        return arr.slice(0, 5).filter(it => it && String(it.text || '').trim());
-      } catch (e) {
-        return [];
+    function buildAutoPortalNewsFromHistory(history) {
+      if (!history || typeof history !== 'object') return [];
+      const hidden = JSON.parse(localStorage.getItem('portalHidden') || '[]');
+      const flat = [];
+      for (const [cardId, rows] of Object.entries(history)) {
+        if (!Array.isArray(rows)) continue;
+        if (cardId === '_portal') {
+          for (const row of rows) {
+            if (!row || !String(row.text || '').trim()) continue;
+            const kindJa = String(row.kind || '').trim();
+            let kindPortal = '';
+            if (kindJa === '新規') kindPortal = 'card';
+            else if (kindJa === '更新' || kindJa === '修正' || kindJa === '最適化' || kindJa === '表示') kindPortal = 'feature';
+            flat.push({
+              date: String(row.date || '').trim(),
+              kind: kindPortal,
+              text: String(row.text || '').trim(),
+              href: sanitizePortalNewsHref(row.href || 'top.html'),
+            });
+          }
+          continue;
+        }
+        if (hidden.includes(cardId)) continue;
+        const card = document.getElementById(cardId);
+        const href = card ? sanitizePortalNewsHref(card.getAttribute('href') || '') : '';
+        const h3 = card && card.querySelector('h3');
+        const pageTitle = h3 ? h3.textContent.trim() : '';
+        for (const row of rows) {
+          if (!row || !String(row.text || '').trim()) continue;
+          const kindJa = String(row.kind || '').trim();
+          let kindPortal = '';
+          if (kindJa === '新規') kindPortal = 'card';
+          else if (kindJa === '更新' || kindJa === '修正' || kindJa === '最適化' || kindJa === '表示') kindPortal = 'feature';
+          const line = pageTitle ? `【${pageTitle}】 ${row.text}` : row.text;
+          flat.push({
+            date: String(row.date || '').trim(),
+            kind: kindPortal,
+            text: line,
+            href,
+          });
+        }
       }
+      flat.sort((a, b) => {
+        const parse = (d) => {
+          const x = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+          return x ? new Date(+x[1], +x[2] - 1, +x[3]).getTime() : 0;
+        };
+        return parse(b.date) - parse(a.date);
+      });
+      return flat.slice(0, 5);
     }
 
     function sanitizePortalNewsHref(href) {
@@ -1077,7 +1114,9 @@
       const wrap = document.getElementById('portal-news-section');
       const list = document.getElementById('portal-news-list');
       if (!wrap || !list) return;
-      const items = getPortalNewsItems();
+      const history = window.__CARD_UPDATE_HISTORY;
+      if (!history) return;
+      const items = buildAutoPortalNewsFromHistory(history);
       if (items.length === 0) {
         wrap.classList.add('hidden');
         list.innerHTML = '';
@@ -1157,6 +1196,7 @@
           sectionEl.classList.toggle('portal-section-empty', Boolean(q) && visible === 0);
         }
       });
+      renderPortalNews();
     }
 
     function applyVisibility() {
@@ -1380,11 +1420,6 @@
       });
     })();
 
-    renderPortalNews();
-    window.addEventListener('storage', (e) => {
-      if (e.key === PORTAL_NEWS_KEY) renderPortalNews();
-    });
-
     applyVisibility();
 
     /** プレビュー用：各カードの更新履歴（新しい順・最大5件表示） */
@@ -1503,7 +1538,17 @@
         { date: '2026-04-23', kind: '新規', text: 'Cursor AIエージェント比較ガイドとして初版公開' },
         { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
       ],
+      _portal: [
+        { date: '2026-05-03', kind: '更新', text: 'ポータルに検索バー（候補表示・決定/Enterで一覧絞り込み）を追加', href: 'top.html' },
+        { date: '2026-05-03', kind: '更新', text: '更新情報を各ページの改訂履歴から自動反映するよう変更', href: 'top.html' },
+      ],
     };
+
+    window.__CARD_UPDATE_HISTORY = CARD_UPDATE_HISTORY;
+    renderPortalNews();
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'portalHidden') renderPortalNews();
+    });
 
     // === カードプレビューポップアップ ===
     (function initCardPreview() {

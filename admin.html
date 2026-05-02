@@ -75,7 +75,6 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <a href="portal-news-edit.html" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">更新情報</a>
         <a href="top.html" target="_blank" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-1.5">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
           ポータルを開く
@@ -90,7 +89,7 @@
     <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
       <p class="text-sm text-gray-600 leading-relaxed mb-4">
         各カードの <strong class="text-gray-900">表示 / 非表示</strong> と
-        <strong class="text-amber-600">★ 強調</strong> をスイッチで切り替えます。設定はこのブラウザの localStorage に保存されます。ポータル先頭のお知らせは <a href="portal-news-edit.html" class="text-blue-700 hover:underline font-medium">更新情報の編集</a> から変えられます。
+        <strong class="text-amber-600">★ 強調</strong> をスイッチで切り替えます。設定はこのブラウザの localStorage に保存されます。ポータル先頭の更新情報は <code class="text-xs bg-gray-100 px-1 rounded">top.html</code> 内の <code class="text-xs bg-gray-100 px-1 rounded">CARD_UPDATE_HISTORY</code> から自動表示されます。
       </p>
       <div class="flex items-center gap-2 mb-2">
         <button onclick="showAll()" class="flex-1 px-3 py-2 text-sm font-medium bg-green-50 text-green-700 border border-green-200 rounded-lg hover:bg-green-100 transition-colors">
