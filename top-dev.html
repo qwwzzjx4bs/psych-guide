@@ -718,9 +718,12 @@
 
     <section id="portal-news-section" class="mb-6 sm:mb-10 hidden" aria-labelledby="portal-news-heading">
       <div class="bg-white rounded-2xl border border-gray-200 px-5 sm:px-6 py-4 sm:py-5 shadow-sm">
-        <h2 id="portal-news-heading" class="text-base sm:text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <span aria-hidden="true">📣</span> 更新情報
-        </h2>
+        <div class="flex flex-wrap items-start justify-between gap-2 mb-3">
+          <h2 id="portal-news-heading" class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+            <span aria-hidden="true">📣</span> 更新情報
+          </h2>
+          <a href="portal-news-edit.html" class="text-xs text-gray-500 hover:text-blue-700 hover:underline shrink-0">編集</a>
+        </div>
         <ul id="portal-news-list" class="list-none m-0 p-0"></ul>
       </div>
     </section>
@@ -1089,10 +1092,21 @@
         dateEl.className = 'text-gray-400 tabular-nums shrink-0 w-[5.5rem] sm:w-24 text-xs sm:text-sm pt-0.5';
         const d = String(it.date || '').trim();
         dateEl.textContent = d || '—';
-        const body = document.createElement('div');
-        body.className = 'min-w-0 flex-1 leading-relaxed';
+        const mid = document.createElement('div');
+        mid.className = 'min-w-0 flex-1 flex flex-col gap-1';
+        const kindRaw = String(it.kind || '').trim();
+        if (kindRaw === 'card' || kindRaw === 'feature') {
+          const badge = document.createElement('span');
+          badge.className = kindRaw === 'card'
+            ? 'self-start text-[10px] font-semibold px-1.5 py-0.5 rounded border border-violet-200 bg-violet-50 text-violet-800'
+            : 'self-start text-[10px] font-semibold px-1.5 py-0.5 rounded border border-teal-200 bg-teal-50 text-teal-900';
+          badge.textContent = kindRaw === 'card' ? '新規カード' : '機能';
+          mid.appendChild(badge);
+        }
         const text = String(it.text || '').trim();
         const href = sanitizePortalNewsHref(it.href);
+        const textWrap = document.createElement('div');
+        textWrap.className = 'leading-relaxed';
         if (href) {
           const a = document.createElement('a');
           a.href = href;
@@ -1102,12 +1116,13 @@
             a.rel = 'noopener noreferrer';
           }
           a.textContent = text;
-          body.appendChild(a);
+          textWrap.appendChild(a);
         } else {
-          body.textContent = text;
+          textWrap.textContent = text;
         }
+        mid.appendChild(textWrap);
         li.appendChild(dateEl);
-        li.appendChild(body);
+        li.appendChild(mid);
         list.appendChild(li);
       });
     }

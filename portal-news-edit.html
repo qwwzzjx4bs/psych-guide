@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>更新情報の編集 — 精神科臨床ガイド</title>
+  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/portal-news-edit.html">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f8fafc; }
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: white;
+      padding: 10px 18px; border-radius: 8px; font-size: 0.8rem; font-weight: 500;
+      transform: translateY(80px); opacity: 0; transition: all 0.25s; z-index: 50; pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <header class="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <a href="top.html" class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" title="ポータルに戻る">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+        </a>
+        <div>
+          <span class="font-bold text-gray-900 text-sm">更新情報の編集</span>
+          <span class="ml-2 text-xs text-gray-400">ポータル先頭のお知らせ（最大5件）</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="admin.html" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">ポータル管理</a>
+        <a href="top.html" target="_blank" class="text-xs px-3 py-1.5 rounded-lg border border-blue-200 text-blue-800 bg-blue-50 hover:bg-blue-100 transition-colors">ポータルを開く</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-4 sm:px-6 py-6">
+
+    <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
+      <p class="text-sm text-gray-700 leading-relaxed mb-3">
+        ポータル「精神科臨床ガイド」直下の <strong class="text-gray-900">更新情報</strong> に載せる一文です。
+        <strong class="text-gray-800">新規カードの追加</strong>・<strong class="text-gray-800">機能の追加・改善</strong>など、利用者に伝えたい改診を書きます（このブラウザの localStorage に保存）。
+      </p>
+      <ul class="text-xs text-gray-500 space-y-1.5 list-disc pl-4 mb-3">
+        <li>例：<span class="text-gray-700">『抗精神病薬 CP換算計算機』を計算ツールに追加</span></li>
+        <li>例：<span class="text-gray-700">ポータルに検索バー（候補表示・決定で絞り込み）を追加</span></li>
+        <li>例：<span class="text-gray-700">評価スケール区分を印刷用／WEB採点に整理</span></li>
+      </ul>
+      <p class="text-xs text-gray-500"><strong class="text-gray-700">種別</strong>を付けると、ポータルで「新規カード」「機能」のバッジが付きます（任意）。</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
+      <h2 class="text-sm font-bold text-gray-900 mb-3">登録（上から新しい順に表示）</h2>
+      <div class="space-y-3 text-xs">
+        <div class="hidden sm:grid sm:grid-cols-[5.5rem_7rem_1fr_1fr] gap-2 text-[10px] font-semibold text-gray-400 uppercase tracking-wide px-1">
+          <span>日付</span><span>種別</span><span>本文</span><span>リンク（任意）</span>
+        </div>
+        <div id="portal-news-rows" class="space-y-3">
+          <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[5.5rem_7rem_1fr_1fr] sm:items-stretch">
+            <input type="text" id="news-date-0" maxlength="32" placeholder="2026-05-03" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="1行目 日付">
+            <select id="news-kind-0" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full bg-white" aria-label="1行目 種別">
+              <option value="">（種別なし）</option>
+              <option value="card">新規カード</option>
+              <option value="feature">機能追加・改善</option>
+            </select>
+            <input type="text" id="news-text-0" maxlength="400" placeholder="例：『CP換算計算機』を追加" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="1行目 本文">
+            <input type="text" id="news-href-0" maxlength="500" placeholder="https://… または cp-calculator.html" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="1行目 リンク">
+          </div>
+          <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[5.5rem_7rem_1fr_1fr] sm:items-stretch">
+            <input type="text" id="news-date-1" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="2行目 日付">
+            <select id="news-kind-1" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full bg-white" aria-label="2行目 種別">
+              <option value="">（種別なし）</option>
+              <option value="card">新規カード</option>
+              <option value="feature">機能追加・改善</option>
+            </select>
+            <input type="text" id="news-text-1" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="2行目 本文">
+            <input type="text" id="news-href-1" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="2行目 リンク">
+          </div>
+          <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[5.5rem_7rem_1fr_1fr] sm:items-stretch">
+            <input type="text" id="news-date-2" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="3行目 日付">
+            <select id="news-kind-2" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full bg-white" aria-label="3行目 種別">
+              <option value="">（種別なし）</option>
+              <option value="card">新規カード</option>
+              <option value="feature">機能追加・改善</option>
+            </select>
+            <input type="text" id="news-text-2" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="3行目 本文">
+            <input type="text" id="news-href-2" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="3行目 リンク">
+          </div>
+          <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[5.5rem_7rem_1fr_1fr] sm:items-stretch">
+            <input type="text" id="news-date-3" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="4行目 日付">
+            <select id="news-kind-3" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full bg-white" aria-label="4行目 種別">
+              <option value="">（種別なし）</option>
+              <option value="card">新規カード</option>
+              <option value="feature">機能追加・改善</option>
+            </select>
+            <input type="text" id="news-text-3" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="4行目 本文">
+            <input type="text" id="news-href-3" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="4行目 リンク">
+          </div>
+          <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[5.5rem_7rem_1fr_1fr] sm:items-stretch">
+            <input type="text" id="news-date-4" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="5行目 日付">
+            <select id="news-kind-4" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full bg-white" aria-label="5行目 種別">
+              <option value="">（種別なし）</option>
+              <option value="card">新規カード</option>
+              <option value="feature">機能追加・改善</option>
+            </select>
+            <input type="text" id="news-text-4" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="5行目 本文">
+            <input type="text" id="news-href-4" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="5行目 リンク">
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <button type="button" onclick="savePortalNews()" class="px-3 py-2 text-sm font-medium bg-blue-50 text-blue-800 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
+          保存してポータルに反映
+        </button>
+        <button type="button" onclick="clearPortalNews()" class="px-3 py-2 text-sm font-medium bg-gray-50 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
+          すべて消去
+        </button>
+      </div>
+    </div>
+
+    <p class="text-xs text-gray-400 text-center">別タブでポータルを開いている場合は、保存後に再読み込みするか、タブを切り替えると更新されます。</p>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const PORTAL_NEWS_KEY = 'portalNewsItems';
+    const PORTAL_NEWS_MAX = 5;
+
+    function getPortalNewsStored() {
+      try {
+        const raw = localStorage.getItem(PORTAL_NEWS_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function loadPortalNewsEditor() {
+      const arr = getPortalNewsStored().slice(0, PORTAL_NEWS_MAX);
+      for (let i = 0; i < PORTAL_NEWS_MAX; i++) {
+        const it = arr[i] || {};
+        const d = document.getElementById('news-date-' + i);
+        const k = document.getElementById('news-kind-' + i);
+        const t = document.getElementById('news-text-' + i);
+        const h = document.getElementById('news-href-' + i);
+        if (d) d.value = (it.date != null ? String(it.date) : '') || '';
+        if (k) k.value = (it.kind === 'card' || it.kind === 'feature') ? it.kind : '';
+        if (t) t.value = (it.text != null ? String(it.text) : '') || '';
+        if (h) h.value = (it.href != null ? String(it.href) : '') || '';
+      }
+    }
+
+    function savePortalNews() {
+      const out = [];
+      for (let i = 0; i < PORTAL_NEWS_MAX; i++) {
+        const dateEl = document.getElementById('news-date-' + i);
+        const kindEl = document.getElementById('news-kind-' + i);
+        const textEl = document.getElementById('news-text-' + i);
+        const hrefEl = document.getElementById('news-href-' + i);
+        const date = dateEl ? dateEl.value.trim() : '';
+        const kind = kindEl ? kindEl.value.trim() : '';
+        const text = textEl ? textEl.value.trim() : '';
+        const href = hrefEl ? hrefEl.value.trim() : '';
+        if (!text) continue;
+        const row = { text };
+        if (date) row.date = date;
+        if (kind === 'card' || kind === 'feature') row.kind = kind;
+        if (href) row.href = href;
+        out.push(row);
+      }
+      localStorage.setItem(PORTAL_NEWS_KEY, JSON.stringify(out.slice(0, PORTAL_NEWS_MAX)));
+      showToast('保存しました');
+    }
+
+    function clearPortalNews() {
+      localStorage.removeItem(PORTAL_NEWS_KEY);
+      loadPortalNewsEditor();
+      showToast('消去しました');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    loadPortalNewsEditor();
+  </script>
+</body>
+</html>

@@ -74,10 +74,13 @@
           <span class="ml-2 text-xs text-gray-400">表示・強調の管理</span>
         </div>
       </div>
-      <a href="top.html" target="_blank" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-1.5">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
-        ポータルを開く
-      </a>
+      <div class="flex items-center gap-2">
+        <a href="portal-news-edit.html" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors">更新情報</a>
+        <a href="top.html" target="_blank" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+          ポータルを開く
+        </a>
+      </div>
     </div>
   </header>
 
@@ -87,7 +90,7 @@
     <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
       <p class="text-sm text-gray-600 leading-relaxed mb-4">
         各カードの <strong class="text-gray-900">表示 / 非表示</strong> と
-        <strong class="text-amber-600">★ 強調</strong> をスイッチで切り替えます。その下のフォームではポータル先頭の <strong class="text-gray-900">更新情報</strong>（最大5件）を編集できます。設定はいずれもこのブラウザに保存されます。
+        <strong class="text-amber-600">★ 強調</strong> をスイッチで切り替えます。設定はこのブラウザの localStorage に保存されます。ポータル先頭のお知らせは <a href="portal-news-edit.html" class="text-blue-700 hover:underline font-medium">更新情報の編集</a> から変えられます。
       </p>
       <div class="flex items-center gap-2 mb-2">
         <button onclick="showAll()" class="flex-1 px-3 py-2 text-sm font-medium bg-green-50 text-green-700 border border-green-200 rounded-lg hover:bg-green-100 transition-colors">
@@ -103,54 +106,6 @@
       <button onclick="clearAllHighlights()" class="w-full px-3 py-2 text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-lg hover:bg-amber-100 transition-colors">
         ☆ 強調をすべて解除
       </button>
-    </div>
-
-    <!-- 更新情報（ポータル上部・最大5件） -->
-    <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
-      <h2 class="text-sm font-bold text-gray-900 mb-1">更新情報（ポータル・最大5件）</h2>
-      <p class="text-xs text-gray-500 leading-relaxed mb-4">
-        「精神科臨床ガイド」紹介ブロックの直下に表示します。<strong class="text-gray-700">本文</strong>がある行だけが掲載されます（日付・リンクは任意）。上から順に最大5行まで保存されます。
-      </p>
-      <div class="space-y-3 text-xs">
-        <div class="hidden sm:grid grid-cols-[5.5rem_1fr_1fr] gap-2 text-[10px] font-semibold text-gray-400 uppercase tracking-wide px-1">
-          <span>日付</span><span>本文</span><span>リンク（任意）</span>
-        </div>
-        <div id="portal-news-rows" class="space-y-2">
-          <div class="flex flex-col sm:grid sm:grid-cols-[5.5rem_1fr_1fr] gap-2 items-stretch">
-            <input type="text" id="news-date-0" maxlength="32" placeholder="2026-04-26" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="更新情報1 日付">
-            <input type="text" id="news-text-0" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="更新情報1 本文">
-            <input type="text" id="news-href-0" maxlength="500" placeholder="https://… または page.html" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="更新情報1 リンク">
-          </div>
-          <div class="flex flex-col sm:grid sm:grid-cols-[5.5rem_1fr_1fr] gap-2 items-stretch">
-            <input type="text" id="news-date-1" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="更新情報2 日付">
-            <input type="text" id="news-text-1" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="更新情報2 本文">
-            <input type="text" id="news-href-1" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="更新情報2 リンク">
-          </div>
-          <div class="flex flex-col sm:grid sm:grid-cols-[5.5rem_1fr_1fr] gap-2 items-stretch">
-            <input type="text" id="news-date-2" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="更新情報3 日付">
-            <input type="text" id="news-text-2" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="更新情報3 本文">
-            <input type="text" id="news-href-2" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="更新情報3 リンク">
-          </div>
-          <div class="flex flex-col sm:grid sm:grid-cols-[5.5rem_1fr_1fr] gap-2 items-stretch">
-            <input type="text" id="news-date-3" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="更新情報4 日付">
-            <input type="text" id="news-text-3" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="更新情報4 本文">
-            <input type="text" id="news-href-3" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="更新情報4 リンク">
-          </div>
-          <div class="flex flex-col sm:grid sm:grid-cols-[5.5rem_1fr_1fr] gap-2 items-stretch">
-            <input type="text" id="news-date-4" maxlength="32" placeholder="日付" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full tabular-nums" autocomplete="off" aria-label="更新情報5 日付">
-            <input type="text" id="news-text-4" maxlength="400" placeholder="本文" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full" autocomplete="off" aria-label="更新情報5 本文">
-            <input type="text" id="news-href-4" maxlength="500" placeholder="リンク任意" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm w-full font-mono" autocomplete="off" aria-label="更新情報5 リンク">
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-wrap gap-2 mt-4">
-        <button type="button" onclick="savePortalNews()" class="px-3 py-2 text-sm font-medium bg-blue-50 text-blue-800 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
-          更新情報を保存
-        </button>
-        <button type="button" onclick="clearPortalNews()" class="px-3 py-2 text-sm font-medium bg-gray-50 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
-          更新情報をすべて消去
-        </button>
-      </div>
     </div>
 
     <!-- カード一覧 -->
@@ -562,58 +517,6 @@
     function getHighlighted()     { return JSON.parse(localStorage.getItem('portalHighlighted') || '[]'); }
     function setHighlighted(arr)  { localStorage.setItem('portalHighlighted', JSON.stringify(arr)); }
 
-    // === ポータル更新情報（最大5件・top / top-dev と共有） ===
-    const PORTAL_NEWS_KEY = 'portalNewsItems';
-    const PORTAL_NEWS_MAX = 5;
-
-    function getPortalNewsStored() {
-      try {
-        const raw = localStorage.getItem(PORTAL_NEWS_KEY);
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function loadPortalNewsEditor() {
-      const arr = getPortalNewsStored().slice(0, PORTAL_NEWS_MAX);
-      for (let i = 0; i < PORTAL_NEWS_MAX; i++) {
-        const it = arr[i] || {};
-        const d = document.getElementById('news-date-' + i);
-        const t = document.getElementById('news-text-' + i);
-        const h = document.getElementById('news-href-' + i);
-        if (d) d.value = (it.date != null ? String(it.date) : '') || '';
-        if (t) t.value = (it.text != null ? String(it.text) : '') || '';
-        if (h) h.value = (it.href != null ? String(it.href) : '') || '';
-      }
-    }
-
-    function savePortalNews() {
-      const out = [];
-      for (let i = 0; i < PORTAL_NEWS_MAX; i++) {
-        const dateEl = document.getElementById('news-date-' + i);
-        const textEl = document.getElementById('news-text-' + i);
-        const hrefEl = document.getElementById('news-href-' + i);
-        const date = dateEl ? dateEl.value.trim() : '';
-        const text = textEl ? textEl.value.trim() : '';
-        const href = hrefEl ? hrefEl.value.trim() : '';
-        if (!text) continue;
-        const row = { text };
-        if (date) row.date = date;
-        if (href) row.href = href;
-        out.push(row);
-      }
-      localStorage.setItem(PORTAL_NEWS_KEY, JSON.stringify(out.slice(0, PORTAL_NEWS_MAX)));
-      showToast('更新情報を保存しました（ポータルを再読み込みで反映）');
-    }
-
-    function clearPortalNews() {
-      localStorage.removeItem(PORTAL_NEWS_KEY);
-      loadPortalNewsEditor();
-      showToast('更新情報を消去しました');
-    }
-
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -722,7 +625,6 @@
         updateRowHighlight(row,  highlighted.includes(row.dataset.id));
       });
       updateStats();
-      loadPortalNewsEditor();
     })();
   </script>
 </body>
