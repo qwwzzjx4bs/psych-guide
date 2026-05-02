@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>抗精神病薬 CP換算計算機</title>
+  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/cp-calculator.html">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --gen1-color: #7c3aed;
+      --gen2-color: #0f766e;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+
+    .header-gradient { background: var(--psych-gradient); }
+
+    /* タブ */
+    .tab-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab-btn.active-oral {
+      background: #1e3a5f;
+      color: white;
+    }
+    .tab-btn.active-lai {
+      background: #7c3aed;
+      color: white;
+    }
+    .tab-btn.active-inject {
+      background: #be123c;
+      color: white;
+    }
+    .tab-btn.inactive {
+      background: white;
+      color: #6b7280;
+      border-color: #e5e7eb;
+    }
+    .tab-btn.inactive:hover {
+      border-color: #9ca3af;
+      color: #374151;
+    }
+
+    /* 世代バッジ */
+    .gen1-badge {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white;
+      padding: 0.15rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .gen2-badge {
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      color: white;
+      padding: 0.15rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* 薬剤行 */
+    .drug-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.5rem;
+      transition: background 0.15s;
+    }
+    .drug-row:hover { background: #f9fafb; }
+    .drug-row.discontinued { opacity: 0.5; }
+
+    /* クイック入力ボタン */
+    .qty-btn {
+      height: 28px;
+      min-width: 32px;
+      padding: 0 6px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1.5px solid #e2e8f0;
+      cursor: pointer;
+      transition: background 0.1s, border-color 0.1s, transform 0.1s;
+      white-space: nowrap;
+      flex-shrink: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    .qty-btn:hover  { background: #e2e8f0; border-color: #cbd5e1; }
+    .qty-btn:active { background: #0f766e; color: #fff; border-color: #0f766e; transform: scale(0.93); }
+    .qty-btn.lai    { border-color: #c4b5fd; color: #6d28d9; background: #f5f3ff; }
+    .qty-btn.lai:hover  { background: #ede9fe; }
+    .qty-btn.lai:active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+    .qty-btn.inj    { border-color: #fca5a5; color: #b91c1c; background: #fff1f2; }
+    .qty-btn.inj:hover  { background: #fee2e2; }
+    .qty-btn.inj:active { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .qty-btn.clear-btn  { color: #9ca3af; border-color: #e5e7eb; background: #f9fafb; min-width: 26px; padding: 0 5px; }
+    .qty-btn.clear-btn:hover  { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+    .qty-btn.clear-btn:active { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+    /* 入力欄 */
+    .dose-input {
+      width: 4.5rem;
+      padding: 0.35rem 0.5rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      text-align: right;
+      color: #111827;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -moz-appearance: textfield;
+    }
+    .dose-input::-webkit-outer-spin-button,
+    .dose-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .dose-input:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+    .dose-input.has-value {
+      border-color: #0f766e;
+      background: #f0fdfa;
+    }
+
+    /* CP出力 */
+    .cp-output {
+      min-width: 4rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #0f766e;
+      text-align: right;
+    }
+
+    /* 合計カード */
+    .total-card {
+      background: var(--psych-gradient);
+      border-radius: 1rem;
+      color: white;
+      padding: 1.25rem 1.5rem;
+    }
+
+    /* セクションカード */
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    /* セクションヘッダー */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .section-header:hover { background: #f9fafb; }
+
+    /* アコーディオン */
+    .accordion-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .accordion-content.collapsed { max-height: 0; }
+    .accordion-content.expanded { max-height: 9999px; }
+
+    /* サブセクション */
+    .subsection-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      padding: 0.5rem 0.75rem 0.25rem;
+    }
+
+    /* 区切り線 */
+    .divider { border-top: 1px solid #f3f4f6; margin: 0.25rem 0; }
+
+    /* サブトータル */
+    .subtotal-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .subtotal-value {
+      font-weight: 700;
+      color: #1e3a5f;
+      font-size: 0.9rem;
+    }
+
+    /* LAI行 */
+    .lai-interval-input {
+      width: 3.5rem;
+      padding: 0.35rem 0.5rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      text-align: right;
+      -moz-appearance: textfield;
+    }
+    .lai-interval-input::-webkit-outer-spin-button,
+    .lai-interval-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .lai-interval-input:focus {
+      outline: none;
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+
+    /* スクロール非表示のスクロール可能コンテナ */
+    .tab-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab-scroll::-webkit-scrollbar { display: none; }
+    .tab-scroll { scrollbar-width: none; }
+
+    /* 注意ボックス */
+    .notice-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 0.875rem 1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    /* アニメーション */
+    @keyframes pulse-green {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .updated { animation: pulse-green 0.3s ease; }
+
+    /* フローティング合計 */
+    .sticky-total {
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+      background: var(--psych-gradient);
+      color: white;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* スマホ対応 */
+    @media (max-width: 640px) {
+      .drug-name { font-size: 0.8rem; }
+      .brand-name { font-size: 0.7rem; }
+      .dose-input { width: 3.8rem; font-size: 0.8rem; }
+      .cp-output { min-width: 3.5rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white pt-6 pb-5 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-2 mb-1">
+        <i data-lucide="pill" class="w-5 h-5 opacity-70"></i>
+        <span class="text-xs font-medium opacity-70 uppercase tracking-wider">抗精神病薬 臨床ツール</span>
+      </div>
+      <h1 class="text-2xl font-bold leading-tight">CP換算計算機</h1>
+      <p class="text-sm opacity-80 mt-1">クロルプロマジン等価換算（稲垣・稲田版）</p>
+      <p class="text-xs opacity-80 mt-3">
+        <a href="top.html" class="text-white hover:underline font-medium">← 精神科臨床ガイド・ポータルへ</a>
+      </p>
+    </div>
+  </header>
+
+  <!-- メイン -->
+  <main class="max-w-2xl mx-auto pb-24">
+
+    <!-- タブナビ -->
+    <div class="tab-scroll px-4 pt-4 pb-2">
+      <div class="flex gap-2" style="width: max-content;">
+        <button class="tab-btn active-oral" id="tab-oral" onclick="switchTab('oral')">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="tablet" class="w-3.5 h-3.5"></i>経口製剤・貼付剤
+          </span>
+        </button>
+        <button class="tab-btn inactive" id="tab-lai" onclick="switchTab('lai')">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="syringe" class="w-3.5 h-3.5"></i>持効性注射剤
+          </span>
+        </button>
+        <button class="tab-btn inactive" id="tab-inject" onclick="switchTab('inject')">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="activity" class="w-3.5 h-3.5"></i>速効性注射剤
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 注意事項 -->
+    <div class="px-4 mb-2">
+      <div class="notice-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+          <div class="text-xs text-amber-800">
+            <span class="font-bold">留意事項：</span>CP換算値は抗精神病作用のみを評価したものです。鎮静作用等は含まれません。あくまで投与量の目安としてお使いください。©稲垣中, 稲田俊也
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 経口製剤タブ -->
+    <div id="panel-oral" class="px-4">
+
+      <!-- 第2世代 非定型 -->
+      <div class="section-card" id="sec-gen2">
+        <div class="section-header" onclick="toggleSection('gen2')">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="layers" class="w-4 h-4 text-teal-700"></i>
+            </div>
+            <div>
+              <div class="font-bold text-gray-800 text-sm flex items-center gap-1.5">
+                <span class="gen2-badge">第2世代</span>
+                非定型抗精神病薬
+              </div>
+              <div class="text-xs text-gray-500">SDA / MARTA / DPA</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <div class="text-xs text-gray-400">小計</div>
+              <div class="font-bold text-teal-700 text-sm" id="subtotal-gen2">0 mg</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" id="chevron-gen2"></i>
+          </div>
+        </div>
+        <div class="accordion-content expanded" id="content-gen2">
+
+          <!-- SDA -->
+          <div class="subsection-label flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-teal-500 inline-block"></span>
+            SDA（セロトニン・ドパミン拮抗薬）
+          </div>
+          <div id="drugs-sda">
+            <!-- rows injected by JS -->
+          </div>
+          <div class="divider"></div>
+
+          <!-- MARTA -->
+          <div class="subsection-label flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+            MARTA（多受容体作用）
+          </div>
+          <div id="drugs-marta"></div>
+          <div class="divider"></div>
+
+          <!-- DPA -->
+          <div class="subsection-label flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-indigo-500 inline-block"></span>
+            DPA（ドパミン部分作動薬）
+          </div>
+          <div id="drugs-dpa"></div>
+
+          <div class="subtotal-row">
+            <span>第2世代 合計</span>
+            <span class="subtotal-value" id="subtotal-gen2-footer">0 mg</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第1世代 定型 -->
+      <div class="section-card" id="sec-gen1">
+        <div class="section-header" onclick="toggleSection('gen1')">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="layers" class="w-4 h-4 text-purple-700"></i>
+            </div>
+            <div>
+              <div class="font-bold text-gray-800 text-sm flex items-center gap-1.5">
+                <span class="gen1-badge">第1世代</span>
+                定型抗精神病薬
+              </div>
+              <div class="text-xs text-gray-500">フェノチアジン系 / ブチロフェノン系 / ほか</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <div class="text-xs text-gray-400">小計</div>
+              <div class="font-bold text-purple-700 text-sm" id="subtotal-gen1">0 mg</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" id="chevron-gen1"></i>
+          </div>
+        </div>
+        <div class="accordion-content expanded" id="content-gen1">
+
+          <!-- フェノチアジン系 -->
+          <div class="subsection-label flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>
+            フェノチアジン系
+          </div>
+          <div id="drugs-phenothiazine"></div>
+          <div class="divider"></div>
+
+          <!-- ブチロフェノン系 -->
+          <div class="subsection-label flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>
+            ブチロフェノン系
+          </div>
+          <div id="drugs-butyrophenone"></div>
+          <div class="divider"></div>
+
+          <!-- ベンズアミド系 -->
+          <div class="subsection-label flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-orange-400 inline-block"></span>
+            ベンズアミド系
+          </div>
+          <div id="drugs-benzamide"></div>
+          <div class="divider"></div>
+
+          <!-- その他第1世代 -->
+          <div class="subsection-label flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
+            その他・チオキサンテン系ほか
+          </div>
+          <div id="drugs-other-gen1"></div>
+
+          <div class="subtotal-row">
+            <span>第1世代 合計</span>
+            <span class="subtotal-value" id="subtotal-gen1-footer">0 mg</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-oral -->
+
+    <!-- 持効性注射剤タブ -->
+    <div id="panel-lai" class="px-4 hidden">
+      <div class="section-card">
+        <div class="px-4 py-3 bg-purple-50 border-b border-purple-100 flex items-center gap-2">
+          <i data-lucide="syringe" class="w-4 h-4 text-purple-600"></i>
+          <span class="text-sm font-bold text-purple-800">持効性注射剤（LAI）</span>
+          <span class="text-xs text-purple-600 ml-auto">CP換算 mg/日 = 投与量 ÷ (間隔週 × 7)</span>
+        </div>
+        <div class="p-3 bg-amber-50 border-b border-amber-100 text-xs text-amber-800">
+          <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i>
+          各薬の換算値は「経口CP100mg相当量 ÷ (標準間隔日数) × 投与量 / 基準量」で算出します。投与間隔（週）は変更可能です。
+        </div>
+        <div id="drugs-lai" class="divide-y divide-gray-50"></div>
+        <div class="subtotal-row">
+          <span>LAI 合計</span>
+          <span class="subtotal-value" id="subtotal-lai">0 mg/日</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 速効性注射剤タブ -->
+    <div id="panel-inject" class="px-4 hidden">
+      <div class="section-card">
+        <div class="px-4 py-3 bg-rose-50 border-b border-rose-100 flex items-center gap-2">
+          <i data-lucide="activity" class="w-4 h-4 text-rose-600"></i>
+          <span class="text-sm font-bold text-rose-800">速効性注射剤（筋注・静注）</span>
+        </div>
+        <div id="drugs-rapid-inject" class="divide-y divide-gray-50"></div>
+        <div class="subtotal-row">
+          <span>速効性注射 合計</span>
+          <span class="subtotal-value" id="subtotal-inject">0 mg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- リセットボタン -->
+    <div class="px-4 pt-2 pb-4">
+      <button onclick="resetAll()" class="w-full py-2.5 rounded-xl border-2 border-gray-200 text-gray-500 text-sm font-medium flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors active:bg-gray-200">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        すべてリセット
+      </button>
+    </div>
+
+  </main>
+
+  <!-- スティッキー合計バー -->
+  <div class="sticky-total">
+    <div class="flex items-center gap-2">
+      <i data-lucide="calculator" class="w-5 h-5 opacity-80"></i>
+      <div>
+        <div class="text-xs opacity-70">CP換算 合計</div>
+        <div class="font-bold text-lg leading-tight" id="grand-total">0 mg</div>
+      </div>
+    </div>
+    <div class="text-right">
+      <div class="text-xs opacity-70">目安</div>
+      <div class="font-medium text-sm" id="dose-guide">—</div>
+    </div>
+  </div>
+
+<script>
+// ============================================================
+// データ定義
+// ============================================================
+
+// 経口製剤
+// tabs: 国内販売の錠剤規格（1錠のmg）。押すたびに加算。最大4つ
+const ORAL_DRUGS = {
+  sda: [
+    { id: 'risperidone',       name: 'リスペリドン',        brand: 'リスパダール',      factor: 1,    disc: false, tabs: [0.5, 1, 2, 3]   },
+    { id: 'paliperidone',      name: 'パリペリドン',        brand: 'インヴェガ',        factor: 1.5,  disc: false, tabs: [3, 6, 9]         },
+    { id: 'blonanserin',       name: 'ブロナンセリン',      brand: 'ロナセン (錠・散)', factor: 4,    disc: false, tabs: [2, 4, 8]         },
+    { id: 'blonanserin_patch', name: 'ブロナンセリン',      brand: 'ロナセンテープ',    factor: 20,   disc: false, note: '貼付剤', tabs: [20, 40, 80] },
+    { id: 'perospirone',       name: 'ペロスピロン',        brand: 'ルーラン',          factor: 8,    disc: false, tabs: [4, 8]            },
+    { id: 'lurasidone',        name: 'ルラシドン',          brand: 'ラツーダ',          factor: 10,   disc: false, tabs: [20, 40, 60, 80]  },
+    { id: 'asenapine',         name: 'アセナピン',          brand: 'シクレスト',        factor: 2.5,  disc: false, tabs: [5, 10]           },
+  ],
+  marta: [
+    { id: 'clozapine',         name: 'クロザピン',          brand: 'クロザリル',        factor: 50,   disc: false, tabs: [25, 100]         },
+    { id: 'olanzapine',        name: 'オランザピン',        brand: 'ジプレキサ',        factor: 2.5,  disc: false, tabs: [2.5, 5, 10]      },
+    { id: 'quetiapine',        name: 'クエチアピン',        brand: 'セロクエル',        factor: 66,   disc: false, tabs: [25, 50, 100, 200]},
+    { id: 'zotepine',          name: 'ゾテピン',            brand: 'ロドピン',          factor: 66,   disc: false, tabs: [25, 50, 100]     },
+  ],
+  dpa: [
+    { id: 'aripiprazole',      name: 'アリピプラゾール',    brand: 'エビリファイ',      factor: 4,    disc: false, tabs: [3, 6, 12, 24]    },
+    { id: 'brexpiprazole',     name: 'ブレクスピプラゾール',brand: 'レキサルティ',      factor: 0.5,  disc: false, tabs: [0.5, 1, 2]       },
+  ],
+};
+
+const ORAL_GEN1 = {
+  phenothiazine: [
+    { id: 'chlorpromazine',    name: 'クロルプロマジン',    brand: 'コントミン/ウインタミン', factor: 100, disc: false, tabs: [12.5, 25, 50, 100] },
+    { id: 'levomepromazine',   name: 'レボメプロマジン',    brand: 'ヒルナミン/レボトミン',   factor: 100, disc: false, tabs: [5, 25, 50]          },
+    { id: 'prochlorperazine',  name: 'プロクロルペラジン',  brand: 'ノバミン',               factor: 15,  disc: false, tabs: [5]                  },
+    { id: 'perphenazine',      name: 'ペルフェナジン',      brand: 'ピーゼットシー',         factor: 10,  disc: false, tabs: [2, 4, 8]            },
+    { id: 'fluphenazine',      name: 'フルフェナジン',      brand: 'フルメジン',             factor: 2,   disc: false, tabs: [0.25, 0.5, 1]      },
+    { id: 'propericiazine',    name: 'プロペリシアジン',    brand: 'ニューレプチル',         factor: 20,  disc: false, tabs: [5, 10]              },
+    { id: 'thioridazine',      name: 'チオリダジン',        brand: 'メレリル',               factor: 100, disc: true,  tabs: []                   },
+    { id: 'trifluoperazine',   name: 'トリフロペラジン',    brand: 'トリフロペラジン',       factor: 5,   disc: true,  tabs: []                   },
+    { id: 'perazine',          name: 'ぺラジン',            brand: 'プシトミン',             factor: 100, disc: true,  tabs: []                   },
+  ],
+  butyrophenone: [
+    { id: 'haloperidol',       name: 'ハロペリドール',      brand: 'セレネース',             factor: 2,   disc: false, tabs: [0.75, 1, 1.5, 3]   },
+    { id: 'bromperidol',       name: 'ブロムペリドール',    brand: 'インプロメン',           factor: 2,   disc: false, tabs: [1, 3]               },
+    { id: 'spiperone',         name: 'スピペロン',          brand: 'スピロピタン',           factor: 1,   disc: false, tabs: [0.25, 0.5, 1]      },
+    { id: 'timiperone',        name: 'チミペロン',          brand: 'トロペロン',             factor: 1.3, disc: false, tabs: [0.5, 1]             },
+    { id: 'pipamperone',       name: 'ピパンペロン',        brand: 'プロピタン',             factor: 200, disc: false, tabs: [40]                 },
+    { id: 'pimozide',          name: 'ピモジド',            brand: 'オーラップ',             factor: 4,   disc: true,  tabs: []                   },
+  ],
+  benzamide: [
+    { id: 'sulpiride',         name: 'スルピリド',          brand: 'ドグマチール',           factor: 200, disc: false, tabs: [50, 100, 200]       },
+    { id: 'sultopride',        name: 'スルトプリド',        brand: 'バルネチール',           factor: 200, disc: false, tabs: [50, 100, 200]       },
+    { id: 'tiapride',          name: 'チアプリド',          brand: 'グラマリール',           factor: 100, disc: false, tabs: [25, 50]             },
+    { id: 'nemonapride',       name: 'ネモナプリド',        brand: 'エミレース',             factor: 4.5, disc: false, tabs: [3, 6]               },
+  ],
+  other: [
+    { id: 'clotiapine',        name: 'クロチアピン',        brand: 'デリトン',               factor: 40,  disc: true,  tabs: []                   },
+    { id: 'thiothixene',       name: 'チオチキセン',        brand: 'ナーベン',               factor: 3.3, disc: true,  tabs: []                   },
+    { id: 'clocapramine',      name: 'クロカプラミン',      brand: 'クロフェクトン',         factor: 40,  disc: false, tabs: [10, 25, 50]         },
+    { id: 'carpipramine',      name: 'カルピプラミン',      brand: 'デフェクトン',           factor: 100, disc: true,  tabs: []                   },
+    { id: 'mosapramine',       name: 'モサプラミン',        brand: 'クレミン',               factor: 33,  disc: false, tabs: [10, 25, 50]         },
+    { id: 'moperone',          name: 'モペロン',            brand: 'ルバトレン',             factor: 12.5,disc: true,  tabs: []                   },
+    { id: 'oxyperine',         name: 'オキシペルチン',      brand: 'ホーリット',             factor: 80,  disc: false, tabs: [10]                 },
+    { id: 'reserpine',         name: 'レセルピン',          brand: 'アポプロン',             factor: 0.15,disc: false, tabs: [0.1, 0.25]          },
+  ],
+};
+
+// 持効性注射剤
+// tabs: バイアル・シリンジの規格（mg）
+const LAI_DRUGS = [
+  { id: 'aripiprazole_lai',   name: 'アリピプラゾール',              brand: 'エビリファイ持続性水懸筋注',    gen: 2,
+    base_dose: 100, base_period_days: 28, cp_per_day: 100/28, tabs: [300, 400] },
+  { id: 'paliperidone_lai',   name: 'パリペリドンパルミチン酸エステル', brand: 'ゼプリオン水懸筋注',           gen: 2,
+    base_dose: 18.75, base_period_days: 28, cp_per_day: 100/28, tabs: [25, 50, 75, 100] },
+  { id: 'risperidone_lai',    name: 'リスペリドン',                  brand: 'リスパダールコンスタ筋注',       gen: 2,
+    base_dose: 10, base_period_days: 14, cp_per_day: 100/14, tabs: [12.5, 25, 37.5, 50] },
+  { id: 'haloperidol_lai',    name: 'ハロペリドールデカン酸エステル', brand: 'ハロマンス/ネオペリドール注',   gen: 1,
+    base_dose: 30, base_period_days: 28, cp_per_day: 100/28, tabs: [50, 100] },
+  { id: 'fluphenazine_dec',   name: 'フルフェナジンデカン酸エステル', brand: 'フルデカシン筋注',             gen: 1,
+    base_dose: 15, base_period_days: 28, cp_per_day: 100/28, tabs: [25] },
+  { id: 'fluphenazine_ena',   name: 'フルフェナジンエナント酸エステル', brand: 'アナテンゾールデポー',        gen: 1,
+    base_dose: 7.5, base_period_days: 14, cp_per_day: 100/14, disc: true, tabs: [25] },
+];
+
+// 速効性注射剤
+// tabs: アンプル規格（mg）
+const RAPID_INJECT_DRUGS = [
+  { id: 'haloperidol_inj',      name: 'ハロペリドール',     brand: 'セレネース (筋注/静注)',      factor: 1,    tabs: [5]       },
+  { id: 'olanzapine_inj',       name: 'オランザピン',       brand: 'ジプレキサ (筋注)',           factor: 2.25, tabs: [10]      },
+  { id: 'chlorpromazine_inj',   name: 'クロルプロマジン',   brand: 'コントミン (筋注)',           factor: 33,   tabs: [25, 50]  },
+  { id: 'sulpiride_inj',        name: 'スルピリド',         brand: 'ドグマチール (筋注)',         factor: 50,   tabs: [100]     },
+  { id: 'timiperone_inj',       name: 'チミペロン',         brand: 'トロペロン (筋注/静注)',      factor: 0.19, tabs: [5]       },
+  { id: 'prochlorperazine_inj', name: 'プロクロルペラジン', brand: 'ノバミン (筋注)',             factor: 2.14, tabs: [5]       },
+  { id: 'perphenazine_inj',     name: 'ペルフェナジン',     brand: 'ピーゼットシー (筋注)',       factor: 2,    tabs: [5]       },
+  { id: 'levomepromazine_inj',  name: 'レボメプロマジン',   brand: 'ヒルナミン/レボトミン (筋注)',factor: 25,   tabs: [25]      },
+];
+
+// ============================================================
+// 状態
+// ============================================================
+const doses = {};
+const laiDoses = {};
+const laiIntervals = {};  // 週単位
+const injectDoses = {};
+
+// ============================================================
+// DOM構築
+// ============================================================
+
+function buildQtyBtns(tabs, id, type = 'oral') {
+  const cls = type === 'lai' ? 'lai' : type === 'inject' ? 'inj' : '';
+  const tabBtns = (tabs && tabs.length > 0)
+    ? tabs.map(v => `<button type="button" class="qty-btn ${cls}" onclick="addToDose('${id}','${type}',${v})">${v}</button>`).join('')
+    : '';
+  const clearBtn = `<button type="button" class="qty-btn clear-btn" onclick="clearDose('${id}','${type}')" title="クリア">✕</button>`;
+  return tabBtns + clearBtn;
+}
+
+function buildDrugRow(drug, containerId, type = 'oral') {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const row = document.createElement('div');
+  row.className = 'drug-row' + (drug.disc ? ' discontinued' : '');
+  row.id = 'row-' + drug.id;
+
+  const noteHtml  = drug.note ? `<span class="text-xs text-gray-400">(${drug.note})</span>` : '';
+  const discBadge = drug.disc ? `<span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">販売中止</span>` : '';
+  const btns      = buildQtyBtns(drug.tabs, drug.id, type);
+
+  row.innerHTML = `
+    <div class="flex items-start justify-between gap-1 min-w-0">
+      <div class="min-w-0">
+        <div class="flex items-center flex-wrap gap-1">
+          <span class="drug-name font-medium text-gray-800 text-sm">${drug.name}</span>
+          ${noteHtml}${discBadge}
+        </div>
+        <div class="brand-name text-xs text-gray-400">${drug.brand}</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-1 min-w-0">
+      <div class="flex items-center gap-1 flex-wrap flex-shrink-0">
+        ${btns}
+      </div>
+      <div class="flex items-center gap-1 ml-auto flex-shrink-0">
+        <input
+          type="number" min="0" step="any" placeholder="mg"
+          class="dose-input" id="input-${drug.id}"
+          oninput="onDoseInput('${drug.id}', this.value, '${type}')"
+          onblur="onDoseBlur('${drug.id}', this.value)"
+          inputmode="decimal"
+        >
+        <span class="text-gray-300 text-xs">=</span>
+        <div class="cp-output" id="cp-${drug.id}">—</div>
+        <span class="text-xs text-gray-400">mg</span>
+      </div>
+    </div>
+  `;
+  container.appendChild(row);
+}
+
+function buildLAIRow(drug) {
+  const container = document.getElementById('drugs-lai');
+  if (!container) return;
+
+  const defaultWeeks = drug.base_period_days / 7;
+  laiIntervals[drug.id] = defaultWeeks;
+
+  const genBadge = drug.gen === 2
+    ? `<span class="gen2-badge">第2世代</span>`
+    : `<span class="gen1-badge">第1世代</span>`;
+  const discBadge = drug.disc ? `<span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">販売中止</span>` : '';
+
+  const row = document.createElement('div');
+  row.className = 'p-3' + (drug.disc ? ' opacity-50' : '');
+  row.id = 'row-' + drug.id;
+
+  const laiBtns = buildQtyBtns(drug.tabs, drug.id, 'lai');
+
+  row.innerHTML = `
+    <div class="flex items-start gap-2 mb-1.5">
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center flex-wrap gap-1">
+          ${genBadge}
+          <span class="font-medium text-gray-800 text-sm">${drug.name}</span>
+          ${discBadge}
+        </div>
+        <div class="text-xs text-gray-400">${drug.brand}</div>
+        <div class="text-xs text-gray-500 mt-0.5">
+          基準: ${drug.base_dose}mg / ${drug.base_period_days}日
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-1 flex-wrap mb-1.5">
+      ${laiBtns}
+    </div>
+    <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1">
+        <span class="text-xs text-gray-500">投与量</span>
+        <input type="number" min="0" step="any" placeholder="mg" class="dose-input" id="input-${drug.id}"
+          oninput="onLAIDoseInput('${drug.id}')" inputmode="decimal">
+        <span class="text-xs text-gray-400">mg</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="text-xs text-gray-500">間隔</span>
+        <input type="number" min="1" step="1" value="${defaultWeeks}" class="lai-interval-input" id="interval-${drug.id}"
+          oninput="onLAIIntervalInput('${drug.id}')" inputmode="numeric">
+        <span class="text-xs text-gray-400">週</span>
+      </div>
+      <div class="flex items-center gap-1 ml-auto">
+        <span class="text-gray-300 text-xs">=</span>
+        <div class="cp-output text-purple-700" id="cp-${drug.id}">—</div>
+        <span class="text-xs text-gray-400">mg/日</span>
+      </div>
+    </div>
+  `;
+  container.appendChild(row);
+}
+
+function buildInjectRow(drug) {
+  const container = document.getElementById('drugs-rapid-inject');
+  if (!container) return;
+
+  const row = document.createElement('div');
+  row.className = 'drug-row';
+  row.id = 'row-' + drug.id;
+
+  const injBtns = buildQtyBtns(drug.tabs, drug.id, 'inject');
+
+  row.innerHTML = `
+    <div class="flex items-start justify-between gap-1 min-w-0">
+      <div>
+        <div class="font-medium text-gray-800 text-sm">${drug.name}</div>
+        <div class="text-xs text-gray-400">${drug.brand}</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-1 min-w-0">
+      <div class="flex items-center gap-1 flex-wrap flex-shrink-0">
+        ${injBtns}
+      </div>
+      <div class="flex items-center gap-1 ml-auto flex-shrink-0">
+        <input type="number" min="0" step="any" placeholder="mg" class="dose-input" id="input-${drug.id}"
+          oninput="onInjectInput('${drug.id}', this.value)" inputmode="decimal">
+        <span class="text-gray-300 text-xs">=</span>
+        <div class="cp-output text-rose-600" id="cp-${drug.id}">—</div>
+        <span class="text-xs text-gray-400">mg</span>
+      </div>
+    </div>
+  `;
+  container.appendChild(row);
+}
+
+// ============================================================
+// クイック入力ボタン — 押すたびに加算
+// ============================================================
+
+function clearDose(id, type) {
+  const el = document.getElementById('input-' + id);
+  if (!el) return;
+  el.value = '';
+  el.classList.remove('has-value');
+  if (type === 'lai') {
+    laiDoses[id] = 0;
+    document.getElementById('cp-' + id).textContent = '—';
+  } else if (type === 'inject') {
+    injectDoses[id] = 0;
+    document.getElementById('cp-' + id).textContent = '—';
+  } else {
+    doses[id] = 0;
+    document.getElementById('cp-' + id).textContent = '—';
+  }
+  updateTotals();
+}
+
+function addToDose(id, type, amount) {
+  const el = document.getElementById('input-' + id);
+  if (!el) return;
+  const current = parseFloat(el.value) || 0;
+  const next = parseFloat((current + amount).toFixed(4));
+  el.value = next;
+  el.classList.add('has-value');
+
+  if (type === 'lai') {
+    laiDoses[id] = next;
+    updateLAICP(id);
+  } else if (type === 'inject') {
+    injectDoses[id] = next;
+    updateInjectCP(id);
+  } else {
+    doses[id] = next;
+    updateOralCP(id);
+  }
+  updateTotals();
+
+  // ボタンフラッシュ
+  el.classList.remove('updated');
+  void el.offsetWidth;
+  el.classList.add('updated');
+}
+
+// ============================================================
+// イベントハンドラ
+// ============================================================
+
+function onDoseInput(id, value, type) {
+  const v = parseFloat(value);
+  const el = document.getElementById('input-' + id);
+  if (!isNaN(v) && v > 0) {
+    el.classList.add('has-value');
+  } else {
+    el.classList.remove('has-value');
+  }
+  doses[id] = isNaN(v) || v <= 0 ? 0 : v;
+  updateOralCP(id);
+  updateTotals();
+}
+
+function onDoseBlur(id, value) {
+  const el = document.getElementById('input-' + id);
+  if (!value || parseFloat(value) <= 0) {
+    el.classList.remove('has-value');
+  }
+}
+
+function onLAIDoseInput(id) {
+  const v = parseFloat(document.getElementById('input-' + id).value);
+  laiDoses[id] = isNaN(v) || v <= 0 ? 0 : v;
+  updateLAICP(id);
+  updateTotals();
+}
+
+function onLAIIntervalInput(id) {
+  const v = parseFloat(document.getElementById('interval-' + id).value);
+  laiIntervals[id] = isNaN(v) || v <= 0 ? 1 : v;
+  updateLAICP(id);
+  updateTotals();
+}
+
+function onInjectInput(id, value) {
+  const v = parseFloat(value);
+  injectDoses[id] = isNaN(v) || v <= 0 ? 0 : v;
+  updateInjectCP(id);
+  updateTotals();
+}
+
+// ============================================================
+// CP計算
+// ============================================================
+
+function findDrug(id) {
+  const allGroups = [
+    ...ORAL_DRUGS.sda, ...ORAL_DRUGS.marta, ...ORAL_DRUGS.dpa,
+    ...ORAL_GEN1.phenothiazine, ...ORAL_GEN1.butyrophenone,
+    ...ORAL_GEN1.benzamide, ...ORAL_GEN1.other
+  ];
+  return allGroups.find(d => d.id === id);
+}
+
+function updateOralCP(id) {
+  const drug = findDrug(id);
+  if (!drug) return;
+  const dose = doses[id] || 0;
+  const cpEl = document.getElementById('cp-' + id);
+  if (dose > 0) {
+    const cp = (dose / drug.factor) * 100;
+    cpEl.textContent = formatCP(cp);
+  } else {
+    cpEl.textContent = '—';
+  }
+}
+
+function updateLAICP(id) {
+  const drug = LAI_DRUGS.find(d => d.id === id);
+  if (!drug) return;
+  const dose = laiDoses[id] || 0;
+  const intervalWeeks = laiIntervals[id] || (drug.base_period_days / 7);
+  const intervalDays = intervalWeeks * 7;
+  const cpEl = document.getElementById('cp-' + id);
+  if (dose > 0) {
+    // cp/day = dose × (100/base_dose) × (base_period_days/interval_days)
+    const cpFinal = dose * (100 / drug.base_dose) * (drug.base_period_days / intervalDays);
+    cpEl.textContent = formatCP(cpFinal);
+  } else {
+    cpEl.textContent = '—';
+  }
+}
+
+function updateInjectCP(id) {
+  const drug = RAPID_INJECT_DRUGS.find(d => d.id === id);
+  if (!drug) return;
+  const dose = injectDoses[id] || 0;
+  const cpEl = document.getElementById('cp-' + id);
+  if (dose > 0) {
+    const cp = (dose / drug.factor) * 100;
+    cpEl.textContent = formatCP(cp);
+  } else {
+    cpEl.textContent = '—';
+  }
+}
+
+function getLAICP(id) {
+  const drug = LAI_DRUGS.find(d => d.id === id);
+  if (!drug) return 0;
+  const dose = laiDoses[id] || 0;
+  if (dose <= 0) return 0;
+  const intervalWeeks = laiIntervals[id] || (drug.base_period_days / 7);
+  const intervalDays = intervalWeeks * 7;
+  return dose * (100 / drug.base_dose) * (drug.base_period_days / intervalDays);
+}
+
+function getOralCP(id) {
+  const drug = findDrug(id);
+  if (!drug) return 0;
+  const dose = doses[id] || 0;
+  if (dose <= 0) return 0;
+  return (dose / drug.factor) * 100;
+}
+
+function getInjectCP(id) {
+  const drug = RAPID_INJECT_DRUGS.find(d => d.id === id);
+  if (!drug) return 0;
+  const dose = injectDoses[id] || 0;
+  if (dose <= 0) return 0;
+  return (dose / drug.factor) * 100;
+}
+
+// ============================================================
+// 合計更新
+// ============================================================
+
+function updateTotals() {
+  // 第2世代
+  const gen2Drugs = [...ORAL_DRUGS.sda, ...ORAL_DRUGS.marta, ...ORAL_DRUGS.dpa];
+  let gen2Total = gen2Drugs.reduce((s, d) => s + getOralCP(d.id), 0);
+
+  // 第1世代
+  const gen1Drugs = [...ORAL_GEN1.phenothiazine, ...ORAL_GEN1.butyrophenone,
+                     ...ORAL_GEN1.benzamide, ...ORAL_GEN1.other];
+  let gen1Total = gen1Drugs.reduce((s, d) => s + getOralCP(d.id), 0);
+
+  // LAI
+  let laiTotal = LAI_DRUGS.reduce((s, d) => s + getLAICP(d.id), 0);
+
+  // 速効性
+  let injectTotal = RAPID_INJECT_DRUGS.reduce((s, d) => s + getInjectCP(d.id), 0);
+
+  document.getElementById('subtotal-gen2').textContent = gen2Total > 0 ? formatCP(gen2Total) + ' mg' : '0 mg';
+  document.getElementById('subtotal-gen2-footer').textContent = gen2Total > 0 ? formatCP(gen2Total) + ' mg' : '0 mg';
+  document.getElementById('subtotal-gen1').textContent = gen1Total > 0 ? formatCP(gen1Total) + ' mg' : '0 mg';
+  document.getElementById('subtotal-gen1-footer').textContent = gen1Total > 0 ? formatCP(gen1Total) + ' mg' : '0 mg';
+  document.getElementById('subtotal-lai').textContent = laiTotal > 0 ? formatCP(laiTotal) + ' mg/日' : '0 mg/日';
+  document.getElementById('subtotal-inject').textContent = injectTotal > 0 ? formatCP(injectTotal) + ' mg' : '0 mg';
+
+  const currentTab = getCurrentTab();
+  let grandTotal = 0;
+  let unit = '';
+  if (currentTab === 'oral') {
+    grandTotal = gen2Total + gen1Total;
+    unit = 'mg/日';
+  } else if (currentTab === 'lai') {
+    grandTotal = laiTotal;
+    unit = 'mg/日（換算）';
+  } else {
+    grandTotal = injectTotal;
+    unit = 'mg（単回換算）';
+  }
+
+  const totalEl = document.getElementById('grand-total');
+  totalEl.textContent = grandTotal > 0 ? formatCP(grandTotal) + ' mg' : '0 mg';
+
+  // 目安
+  const guideEl = document.getElementById('dose-guide');
+  if (grandTotal <= 0) {
+    guideEl.textContent = '—';
+  } else if (grandTotal < 200) {
+    guideEl.textContent = '低用量';
+  } else if (grandTotal < 600) {
+    guideEl.textContent = '中等量';
+  } else if (grandTotal < 1000) {
+    guideEl.textContent = '高用量';
+  } else {
+    guideEl.textContent = '超高用量';
+  }
+
+  // アニメ
+  totalEl.classList.remove('updated');
+  void totalEl.offsetWidth;
+  totalEl.classList.add('updated');
+}
+
+function formatCP(val) {
+  if (val === 0) return '0';
+  if (val < 10) return parseFloat(val.toFixed(2)).toString();
+  if (val < 100) return parseFloat(val.toFixed(1)).toString();
+  return Math.round(val).toString();
+}
+
+// ============================================================
+// タブ切替
+// ============================================================
+
+let currentTab = 'oral';
+
+function getCurrentTab() { return currentTab; }
+
+function switchTab(tab) {
+  currentTab = tab;
+  ['oral', 'lai', 'inject'].forEach(t => {
+    document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
+    const btn = document.getElementById('tab-' + t);
+    const activeClass = t === 'oral' ? 'active-oral' : t === 'lai' ? 'active-lai' : 'active-inject';
+    btn.className = 'tab-btn ' + (t === tab ? activeClass : 'inactive');
+  });
+  updateTotals();
+}
+
+// ============================================================
+// アコーディオン
+// ============================================================
+
+const sectionStates = { gen1: true, gen2: true };
+
+function toggleSection(key) {
+  sectionStates[key] = !sectionStates[key];
+  const content = document.getElementById('content-' + key);
+  const chevron = document.getElementById('chevron-' + key);
+  if (sectionStates[key]) {
+    content.classList.remove('collapsed');
+    content.classList.add('expanded');
+    chevron.style.transform = '';
+  } else {
+    content.classList.remove('expanded');
+    content.classList.add('collapsed');
+    chevron.style.transform = 'rotate(-90deg)';
+  }
+}
+
+// ============================================================
+// リセット
+// ============================================================
+
+function resetAll() {
+  document.querySelectorAll('.dose-input, .lai-interval-input').forEach(el => {
+    if (el.classList.contains('lai-interval-input')) {
+      // restore default
+      const id = el.id.replace('interval-', '');
+      const drug = LAI_DRUGS.find(d => d.id === id);
+      if (drug) el.value = drug.base_period_days / 7;
+    } else {
+      el.value = '';
+      el.classList.remove('has-value');
+    }
+  });
+  document.querySelectorAll('.cp-output').forEach(el => el.textContent = '—');
+  Object.keys(doses).forEach(k => delete doses[k]);
+  Object.keys(laiDoses).forEach(k => delete laiDoses[k]);
+  Object.keys(injectDoses).forEach(k => delete injectDoses[k]);
+  LAI_DRUGS.forEach(d => { laiIntervals[d.id] = d.base_period_days / 7; });
+  updateTotals();
+}
+
+// ============================================================
+// 初期化
+// ============================================================
+
+function init() {
+  // 経口 第2世代
+  ORAL_DRUGS.sda.forEach(d => buildDrugRow(d, 'drugs-sda'));
+  ORAL_DRUGS.marta.forEach(d => buildDrugRow(d, 'drugs-marta'));
+  ORAL_DRUGS.dpa.forEach(d => buildDrugRow(d, 'drugs-dpa'));
+
+  // 経口 第1世代
+  ORAL_GEN1.phenothiazine.forEach(d => buildDrugRow(d, 'drugs-phenothiazine'));
+  ORAL_GEN1.butyrophenone.forEach(d => buildDrugRow(d, 'drugs-butyrophenone'));
+  ORAL_GEN1.benzamide.forEach(d => buildDrugRow(d, 'drugs-benzamide'));
+  ORAL_GEN1.other.forEach(d => buildDrugRow(d, 'drugs-other-gen1'));
+
+  // LAI
+  LAI_DRUGS.forEach(d => buildLAIRow(d));
+
+  // 速効性
+  RAPID_INJECT_DRUGS.forEach(d => buildInjectRow(d));
+
+  lucide.createIcons();
+  updateTotals();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
