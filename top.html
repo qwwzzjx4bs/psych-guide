@@ -280,6 +280,59 @@
       cursor: pointer;
     }
     #portal-search-clear:hover { background: #f0eeea; }
+    #portal-search-apply {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.4rem 0.72rem;
+      border-radius: 0.375rem;
+      border: 1px solid #4c6e9c;
+      background: #eef3f9;
+      color: #284470;
+      cursor: pointer;
+    }
+    #portal-search-apply:hover { background: #e2eaf5; }
+    .portal-search-suggest {
+      margin-top: 6px;
+      max-height: min(280px, 42vh);
+      overflow-y: auto;
+      border: 1px solid #d4d0c8;
+      border-radius: 0.5rem;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+    }
+    .portal-search-suggest[hidden] { display: none !important; }
+    .portal-search-suggest-item {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+      font-size: 0.78rem;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      border-bottom: 1px solid #f0eeea;
+      background: #fff;
+      color: #1a1a1a;
+      cursor: pointer;
+    }
+    .portal-search-suggest-item:last-child { border-bottom: none; }
+    .portal-search-suggest-item:hover,
+    .portal-search-suggest-item:focus-visible {
+      background: #f4f7fb;
+      outline: none;
+    }
+    .portal-search-suggest-empty {
+      padding: 0.6rem 0.75rem;
+      font-size: 0.72rem;
+      color: #6b7280;
+    }
+    .portal-search-suggest-meta {
+      margin-left: auto;
+      font-size: 0.65rem;
+      color: #9ca3af;
+      flex-shrink: 0;
+    }
     section.portal-section-empty { display: none !important; }
 
     /* ===================================
@@ -523,13 +576,18 @@
       </div>
     </div>
     <div class="portal-search-wrap">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-2">
-        <label for="portal-card-search" class="sr-only">ページを検索してカードを絞り込み</label>
-        <span class="text-sm opacity-70 shrink-0" aria-hidden="true">🔍</span>
-        <input type="search" id="portal-card-search" enterkeyhint="search"
-          placeholder="ページ名・タグ・ファイル名・説明文で検索…"
-          autocomplete="off" autocapitalize="off">
-        <button type="button" id="portal-search-clear" title="検索をクリア">クリア</button>
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2" id="portal-search-field-wrap">
+        <div class="flex items-center gap-2">
+          <label for="portal-card-search" class="sr-only">検索語を入力（候補表示）。決定で一覧を絞り込みます。</label>
+          <span class="text-sm opacity-70 shrink-0" aria-hidden="true">🔍</span>
+          <input type="search" id="portal-card-search" enterkeyhint="search"
+            placeholder="入力で候補 →「決定」で絞り込み"
+            autocomplete="off" autocapitalize="off"
+            aria-autocomplete="list" aria-controls="portal-search-suggest" aria-expanded="false">
+          <button type="button" id="portal-search-apply" title="入力内容で一覧を絞り込む">決定</button>
+          <button type="button" id="portal-search-clear" title="検索をクリア">クリア</button>
+        </div>
+        <div id="portal-search-suggest" class="portal-search-suggest" role="listbox" aria-label="検索候補" hidden></div>
       </div>
     </div>
   </header>
@@ -543,7 +601,7 @@
           ICD-10 / ICD-11 / DSM-5-TR に基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドをまとめた外来即時参照ポータルです。
         </p>
         <p class="text-gray-400 text-xs leading-relaxed max-w-2xl mt-2">
-          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。<span class="text-gray-500">ヘッダー下の検索バーでページ名・タグ・リンク先・説明文からカードをリアルタイム絞り込みできます。</span>
+          更新日は各カード右上のバッジ（NEW・今週 など）で確認できます。直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。<span class="text-gray-500">ヘッダー下の検索では入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</span>
         </p>
         <p class="text-gray-500 text-xs leading-relaxed max-w-2xl mt-2">
           本番URL（共有・ブックマーク用）: <a href="https://psych-clinical-guide.surge.sh/top.html" class="text-blue-700 hover:underline font-medium">https://psych-clinical-guide.surge.sh/top.html</a>
@@ -867,13 +925,17 @@
       others:     ['card-context','card-cursor']
     };
 
+    let portalSearchCommittedQuery = '';
+
+    function normSearchText(s) {
+      return (s || '').toLowerCase().normalize('NFKC');
+    }
+
     function refreshCardDisplay() {
       const hidden      = JSON.parse(localStorage.getItem('portalHidden')      || '[]');
       const highlighted = JSON.parse(localStorage.getItem('portalHighlighted') || '[]');
-      const searchEl = document.getElementById('portal-card-search');
-      const qRaw = (searchEl && searchEl.value) ? searchEl.value.trim() : '';
-      const norm = (s) => (s || '').toLowerCase().normalize('NFKC');
-      const q = norm(qRaw);
+      const qRaw = portalSearchCommittedQuery.trim();
+      const q = normSearchText(qRaw);
 
       Object.entries(SECTIONS).forEach(([sec, ids]) => {
         let visible = 0;
@@ -885,7 +947,7 @@
 
           let show = !adminHidden;
           if (show && q) {
-            const hay = norm(el.textContent + ' ' + (el.getAttribute('href') || ''));
+            const hay = normSearchText(el.textContent + ' ' + (el.getAttribute('href') || ''));
             show = hay.includes(q);
           }
           if (show) el.style.removeProperty('display');
@@ -905,15 +967,138 @@
       refreshCardDisplay();
     }
 
-    applyVisibility();
+    const SEC_SHORT = {
+      icd: 'ICD', diseases: '疾患別', guidelines: 'GL', 'scale-sheets': 'スケール集',
+      'score-sheets': '採点', 'scale-guide': '解説', education: '教育', others: 'その他'
+    };
+
+    function sectionForCardId(cardId) {
+      for (const [sec, ids] of Object.entries(SECTIONS)) {
+        if (ids.includes(cardId)) return SEC_SHORT[sec] || sec;
+      }
+      return '';
+    }
+
+    function getSuggestMatches() {
+      const searchEl = document.getElementById('portal-card-search');
+      const qRaw = searchEl ? searchEl.value.trim() : '';
+      const q = normSearchText(qRaw);
+      if (!q) return { q: '', items: [] };
+      const hidden = JSON.parse(localStorage.getItem('portalHidden') || '[]');
+      const items = [];
+      for (const ids of Object.values(SECTIONS)) {
+        for (const id of ids) {
+          if (hidden.includes(id)) continue;
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const hay = normSearchText(el.textContent + ' ' + (el.getAttribute('href') || ''));
+          if (!hay.includes(q)) continue;
+          const h3 = el.querySelector('h3');
+          const title = h3 ? h3.textContent.trim() : id;
+          items.push({ id, title, sec: sectionForCardId(id) });
+        }
+      }
+      items.sort((a, b) => {
+        const at = normSearchText(a.title);
+        const bt = normSearchText(b.title);
+        const ap = at.startsWith(q) ? 0 : 1;
+        const bp = bt.startsWith(q) ? 0 : 1;
+        if (ap !== bp) return ap - bp;
+        return at.localeCompare(bt, 'ja');
+      });
+      return { q, items: items.slice(0, 10) };
+    }
+
+    function closeSearchSuggestPanel() {
+      const panel = document.getElementById('portal-search-suggest');
+      const input = document.getElementById('portal-card-search');
+      if (panel) {
+        panel.hidden = true;
+        panel.innerHTML = '';
+      }
+      if (input) input.setAttribute('aria-expanded', 'false');
+    }
+
+    function renderSearchSuggestions() {
+      const panel = document.getElementById('portal-search-suggest');
+      const input = document.getElementById('portal-card-search');
+      if (!panel || !input) return;
+      const { q, items } = getSuggestMatches();
+      panel.innerHTML = '';
+      if (!q) {
+        panel.hidden = true;
+        input.setAttribute('aria-expanded', 'false');
+        return;
+      }
+      input.setAttribute('aria-expanded', 'true');
+      panel.hidden = false;
+      if (items.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'portal-search-suggest-empty';
+        empty.setAttribute('role', 'option');
+        empty.textContent = '一致するページがありません';
+        panel.appendChild(empty);
+        return;
+      }
+      for (const { id, title, sec } of items) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'portal-search-suggest-item';
+        btn.setAttribute('role', 'option');
+        btn.id = 'portal-suggest-' + id;
+        const span = document.createElement('span');
+        span.className = 'min-w-0 truncate';
+        span.textContent = title;
+        btn.appendChild(span);
+        if (sec) {
+          const meta = document.createElement('span');
+          meta.className = 'portal-search-suggest-meta';
+          meta.textContent = sec;
+          btn.appendChild(meta);
+        }
+        btn.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          input.value = title;
+          commitPortalSearch();
+        });
+        panel.appendChild(btn);
+      }
+    }
+
+    function commitPortalSearch() {
+      const searchEl = document.getElementById('portal-card-search');
+      portalSearchCommittedQuery = searchEl ? searchEl.value : '';
+      refreshCardDisplay();
+      closeSearchSuggestPanel();
+    }
 
     document.getElementById('portal-card-search')?.addEventListener('input', () => {
-      refreshCardDisplay();
+      renderSearchSuggestions();
+    });
+    document.getElementById('portal-card-search')?.addEventListener('focus', () => {
+      renderSearchSuggestions();
+    });
+    document.getElementById('portal-card-search')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        commitPortalSearch();
+      } else if (e.key === 'Escape') {
+        closeSearchSuggestPanel();
+      }
+    });
+    document.getElementById('portal-search-apply')?.addEventListener('click', () => {
+      commitPortalSearch();
     });
     document.getElementById('portal-search-clear')?.addEventListener('click', () => {
       const inp = document.getElementById('portal-card-search');
       if (inp) { inp.value = ''; inp.focus(); }
+      portalSearchCommittedQuery = '';
+      closeSearchSuggestPanel();
       refreshCardDisplay();
+    });
+    document.addEventListener('click', (e) => {
+      const wrap = document.getElementById('portal-search-field-wrap');
+      if (wrap && !wrap.contains(e.target)) closeSearchSuggestPanel();
     });
 
     // === コンパクトモード ===
@@ -998,6 +1183,8 @@
         else card.appendChild(row);
       });
     })();
+
+    applyVisibility();
 
     /** プレビュー用：各カードの更新履歴（新しい順・最大5件表示） */
     const CARD_UPDATE_HISTORY = {
