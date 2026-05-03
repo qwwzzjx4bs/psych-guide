@@ -18,6 +18,13 @@
       font-feature-settings: 'palt';
     }
     a { text-decoration: none; }
+    /* スティッキーヘッダー（タイトル＋ジャンプバー＋検索）下に区分タイトルが隠れないようアンカー余白 */
+    html {
+      scroll-padding-top: max(13rem, min(20vh, 17rem));
+    }
+    @media (max-width: 640px) {
+      html { scroll-padding-top: max(15rem, min(28vh, 19rem)); }
+    }
     @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
     /* === Card base === */
