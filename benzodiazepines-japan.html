@@ -151,6 +151,11 @@
     }
     .th-drug, .td-drug { white-space: nowrap; vertical-align: middle; }
     table.data-table { width: max-content; min-width: 100%; }
+    table.data-table tbody tr:not(:has(td[colspan])) { cursor: pointer; }
+    table.data-table tbody tr.table-row-focus > td {
+      background-color: rgba(191, 219, 254, 0.82) !important;
+      box-shadow: inset 4px 0 0 #2563eb;
+    }
     .x-scroll__hint {
       display: flex;
       align-items: center;
@@ -708,6 +713,24 @@
     <p class="mt-1">参照：PMDA医薬品医療機器総合機構 添付文書 / 2026年5月現在</p>
   </footer>
 
+  <script>
+  (function () {
+    document.querySelectorAll('table.data-table').forEach(function (table) {
+      table.querySelectorAll('tbody tr').forEach(function (tr) {
+        var first = tr.querySelector('td');
+        if (!first || first.hasAttribute('colspan')) return;
+        tr.addEventListener('click', function (e) {
+          if (e.target.closest('a, button, label, input, select, textarea')) return;
+          var was = tr.classList.contains('table-row-focus');
+          table.querySelectorAll('tbody tr.table-row-focus').forEach(function (r) {
+            r.classList.remove('table-row-focus');
+          });
+          if (!was) tr.classList.add('table-row-focus');
+        });
+      });
+    });
+  })();
+  </script>
   <script>lucide.createIcons();</script>
 </body>
 </html>
