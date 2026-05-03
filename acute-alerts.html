@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>急性期クイック｜QTc・電解質・アルコール離脱要約</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .tab-main {
+      flex: 1;
+      padding: 0.65rem 0.5rem;
+      border-radius: 0.5rem;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      text-align: center;
+    }
+    .tab-main.active {
+      background: #1e3a5f;
+      color: white;
+      border-color: #1e3a5f;
+    }
+    .tab-main.inactive {
+      background: white;
+      color: #6b7280;
+      border-color: #e5e7eb;
+    }
+    .tab-main.inactive:hover { border-color: #9ca3af; color: #374151; }
+    .num-in {
+      width: 100%;
+      max-width: 8rem;
+      padding: 0.5rem 0.65rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      text-align: right;
+      color: #111827;
+    }
+    .num-in:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+    .num-in::-webkit-outer-spin-button,
+    .num-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .num-in { -moz-appearance: textfield; }
+    .panel-hidden { display: none !important; }
+    .alert-strip {
+      border-radius: 0.75rem;
+      padding: 1rem 1.15rem;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .strip-ok { background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; }
+    .strip-warn { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+    .strip-risk { background: #fff7ed; border: 1px solid #fdba74; color: #9a3412; }
+    .strip-high { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+    .strip-muted { background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; }
+    .ciwa-select {
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border-radius: 0.45rem;
+      border: 1px solid #d1d5db;
+      font-size: 0.85rem;
+      background: white;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <header class="header-gradient text-white py-7 shadow-md">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-teal-100 text-sm font-medium mb-1">数値・閾値参照（教育用）</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">急性期クイック</h1>
+      <p class="text-teal-100/90 mt-2 text-sm sm:text-base max-w-2xl">
+        QTc計算・電解質アラート・アルコール離脱要約スコアを1画面にまとめました。採点は原著の正式手順・施設プロトコルに従ってください。
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 -mt-4 relative z-10">
+    <!-- 免責 -->
+    <div class="bg-white rounded-xl shadow-sm border border-amber-200/80 p-4 mb-4 text-sm text-amber-950 bg-amber-50/90">
+      <strong class="font-bold">注意</strong>：本ページは補助的な計算・整理のみを目的とし、診断・治療方針を代替しません。閾値は文献・ガイドラインの一般的目安であり、患者個別状況・施設基準・器械仕様で異なります。
+    </div>
+
+    <!-- メインタブ -->
+    <div class="flex gap-2 mb-4 bg-white p-1.5 rounded-xl shadow-sm border border-gray-100">
+      <button type="button" class="tab-main active" data-tab="qtc" id="tab-qtc">QTc</button>
+      <button type="button" class="tab-main inactive" data-tab="lytes" id="tab-lytes">電解質</button>
+      <button type="button" class="tab-main inactive" data-tab="ciwa" id="tab-ciwa">離脱要約</button>
+    </div>
+
+    <!-- QTc -->
+    <section id="panel-qtc" class="bg-white rounded-xl shadow-md border border-gray-100 p-5 sm:p-6 mb-4">
+      <div class="flex items-start gap-2 mb-4">
+        <i data-lucide="activity" class="w-6 h-6 text-teal-700 shrink-0 mt-0.5"></i>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">QT / QTc</h2>
+          <p class="text-xs text-slate-500 mt-0.5">洞調律・平均心拍を前提。QTはミリ秒。Bazettは頻脈で過大評価されがちです。</p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <label class="block text-sm font-semibold text-slate-700">心率（bpm）
+          <input type="number" id="qtc-hr" class="num-in mt-1" inputmode="decimal" min="30" max="220" step="1" placeholder="例: 72">
+        </label>
+        <label class="block text-sm font-semibold text-slate-700">QT 間隔（ms）
+          <input type="number" id="qtc-qt" class="num-in mt-1" inputmode="decimal" min="200" max="700" step="1" placeholder="例: 400">
+        </label>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <fieldset class="text-sm">
+          <legend class="font-semibold text-slate-700 mb-2">補正式</legend>
+          <label class="flex items-center gap-2 mb-1.5 cursor-pointer">
+            <input type="radio" name="qtc-form" value="bazett" id="qtc-bazett" checked class="accent-teal-700">
+            <span>Bazett（√RR）— 臨床で最もよく引用</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="qtc-form" value="fridericia" id="qtc-fri" class="accent-teal-700">
+            <span>Fridericia（RR<sup>1/3</sup>）— 頻脈時はこちらも参照</span>
+          </label>
+        </fieldset>
+        <fieldset class="text-sm">
+          <legend class="font-semibold text-slate-700 mb-2">性（ prolong 目安）</legend>
+          <label class="flex items-center gap-2 mb-1.5 cursor-pointer">
+            <input type="radio" name="qtc-sex" value="male" id="qtc-male" checked class="accent-teal-700">
+            <span>男性（目安 ≥470 ms で延長寄り）</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="qtc-sex" value="female" id="qtc-female" class="accent-teal-700">
+            <span>女性（目安 ≥480 ms で延長寄り）</span>
+          </label>
+        </fieldset>
+      </div>
+
+      <div id="qtc-out-wrap" class="space-y-3"></div>
+
+      <div class="mt-4 text-xs text-slate-500 leading-relaxed border-t border-slate-100 pt-3">
+        式: Bazett QTc = QT × √(HR/60)、Fridericia QTc = QT × ∛(HR/60)（QT ms・HR bpm）。同一患者での<strong>前回値からの変化</strong>も併せて評価してください。
+      </div>
+    </section>
+
+    <!-- 電解質 -->
+    <section id="panel-lytes" class="bg-white rounded-xl shadow-md border border-gray-100 p-5 sm:p-6 mb-4 panel-hidden">
+      <div class="flex items-start gap-2 mb-4">
+        <i data-lucide="flask-conical" class="w-6 h-6 text-teal-700 shrink-0 mt-0.5"></i>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">電解質アラート</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Na/K は mEq/L（≒ mmol/L）、Mg は血清でよく出る単位を選択。</p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-4 mb-4">
+        <label class="block text-sm font-semibold text-slate-700">Na（mEq/L）
+          <input type="number" id="na-val" class="num-in mt-1" inputmode="decimal" min="100" max="180" step="0.1" placeholder="—">
+        </label>
+        <label class="block text-sm font-semibold text-slate-700">K（mEq/L）
+          <input type="number" id="k-val" class="num-in mt-1" inputmode="decimal" min="1" max="8" step="0.1" placeholder="—">
+        </label>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700">Mg</label>
+          <select id="mg-unit" class="ciwa-select mt-1 mb-2">
+            <option value="mgdl">mg/dL</option>
+            <option value="mmol">mmol/L</option>
+          </select>
+          <input type="number" id="mg-val" class="num-in" inputmode="decimal" min="0" max="5" step="0.01" placeholder="—">
+        </div>
+      </div>
+
+      <div id="lytes-out-wrap" class="space-y-3"></div>
+
+      <ul class="mt-4 text-xs text-slate-600 list-disc pl-5 space-y-1 border-t border-slate-100 pt-3">
+        <li>低K・低Mg は <strong>QT延長・不整脈リスク</strong>。精神科薬・吐き気・下痢・利尿剤を思い出す。</li>
+        <li>低Na の急速補正は <strong>ODSM</strong> のリスク。補正速度は施設・腎内科指示に従う。</li>
+      </ul>
+    </section>
+
+    <!-- CIWA 要約 -->
+    <section id="panel-ciwa" class="bg-white rounded-xl shadow-md border border-gray-100 p-5 sm:p-6 mb-4 panel-hidden">
+      <div class="flex items-start gap-2 mb-3">
+        <i data-lucide="wine" class="w-6 h-6 text-teal-700 shrink-0 mt-0.5"></i>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">アルコール離脱 — 要約スコア（CIWA-Ar 型）</h2>
+          <p class="text-xs text-slate-500 mt-0.5">各項目 0〜7点、時間・場所の見当のみ 0〜4点。正式な CIWA-Ar 運用はオリジナル文献・院内手順に従ってください。</p>
+        </div>
+      </div>
+
+      <p class="text-sm text-slate-600 mb-3">採点の目安: <strong>0</strong> なし／最小、<strong>4</strong> 中程度、<strong>7</strong> 極重（除く見当）。頻回バイタル・ベンゾジアゼピン漸減・禁忌確認はプロトコルで。</p>
+
+      <div id="ciwa-items" class="space-y-3 mb-4"></div>
+
+      <div class="flex flex-wrap items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
+        <span class="text-sm font-semibold text-slate-700">合計</span>
+        <span id="ciwa-total" class="text-2xl font-bold text-teal-800 tabular-nums">0</span>
+        <span class="text-slate-400">/ 67</span>
+        <button type="button" id="ciwa-reset" class="ml-auto text-sm font-semibold text-slate-600 hover:text-red-700 px-2 py-1 rounded border border-slate-200 bg-white">リセット</button>
+      </div>
+
+      <div id="ciwa-out-wrap" class="mt-3 space-y-2"></div>
+    </section>
+
+    <div class="text-center text-sm text-slate-500 mb-8">
+      関連: <a href="cp-calculator.html" class="text-teal-700 font-semibold hover:underline">CP換算計算機</a>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      lucide.createIcons();
+
+      var tabs = document.querySelectorAll('.tab-main');
+      function showTab(name) {
+        tabs.forEach(function (t) {
+          var on = t.getAttribute('data-tab') === name;
+          t.classList.toggle('active', on);
+          t.classList.toggle('inactive', !on);
+        });
+        ['qtc', 'lytes', 'ciwa'].forEach(function (id) {
+          var el = document.getElementById('panel-' + id);
+          if (!el) return;
+          el.classList.toggle('panel-hidden', id !== name);
+        });
+      }
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          showTab(t.getAttribute('data-tab'));
+        });
+      });
+
+      /* ----- QTc ----- */
+      function parseNum(id) {
+        var el = document.getElementById(id);
+        if (!el || el.value === '' || el.value === null) return null;
+        var n = parseFloat(String(el.value).replace(',', '.'), 10);
+        return Number.isFinite(n) ? n : null;
+      }
+
+      function renderQtc() {
+        var wrap = document.getElementById('qtc-out-wrap');
+        var hr = parseNum('qtc-hr');
+        var qt = parseNum('qtc-qt');
+        var baz = document.getElementById('qtc-bazett').checked;
+        var female = document.getElementById('qtc-female').checked;
+        var threshold = female ? 480 : 470;
+        var borderLow = female ? 460 : 450;
+
+        if (hr === null || qt === null || hr <= 0) {
+          wrap.innerHTML = '<div class="alert-strip strip-muted">心拍とQTを入力するとQTcを表示します。</div>';
+          return;
+        }
+
+        var hrClamped = Math.min(220, Math.max(30, hr));
+        var ratio = hrClamped / 60;
+        var qtc = baz
+          ? qt * Math.sqrt(ratio)
+          : qt * Math.cbrt(ratio);
+        qtc = Math.round(qtc);
+
+        var band = 'ok';
+        var title = '延長の心配は低い目安';
+        if (qtc >= threshold + 30) { band = 'high'; title = 'QTc 明らかに延長域（至急確認）'; }
+        else if (qtc >= threshold) { band = 'risk'; title = 'QTc 延長域 — 薬剤・電解質・他誘因を確認'; }
+        else if (qtc >= borderLow) { band = 'warn'; title = '境界域 — 経過・併用薬・電解質を確認'; }
+
+        var stripClass = band === 'ok' ? 'strip-ok' : band === 'warn' ? 'strip-warn' : band === 'risk' ? 'strip-risk' : 'strip-high';
+        var rrMs = Math.round(60000 / hrClamped);
+        wrap.innerHTML =
+          '<div class="alert-strip ' + stripClass + '">' +
+          '<div class="font-bold text-base mb-1">' + title + '</div>' +
+          '<div>QTc（' + (baz ? 'Bazett' : 'Fridericia') + '）: <strong class="text-lg tabular-nums">' + qtc + '</strong> ms ' +
+          '（閾値の目安: ' + threshold + ' ms' + (female ? '・女性' : '・男性') + '）</div>' +
+          '<div class="mt-1 text-sm opacity-95">推定 RR 間隔: ' + rrMs + ' ms／補正式を切り替えると数値が変わります。</div>' +
+          '</div>' +
+          '<div class="alert-strip strip-muted text-sm">多剤併用・電解質異常・女性・基礎心疾患ではリスク増。計測器の自動QTと手測定のQTがずれることがあります。</div>';
+      }
+
+      ['qtc-hr', 'qtc-qt', 'qtc-bazett', 'qtc-fri', 'qtc-male', 'qtc-female'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', renderQtc);
+        if (el) el.addEventListener('change', renderQtc);
+      });
+      document.querySelectorAll('input[name="qtc-form"]').forEach(function (r) {
+        r.addEventListener('change', renderQtc);
+      });
+      document.querySelectorAll('input[name="qtc-sex"]').forEach(function (r) {
+        r.addEventListener('change', renderQtc);
+      });
+      renderQtc();
+
+      /* ----- Electrolytes ----- */
+      function mgToMmol(mgdl) {
+        return mgdl / 2.431; /* approx */
+      }
+
+      function renderLytes() {
+        var wrap = document.getElementById('lytes-out-wrap');
+        var na = parseNum('na-val');
+        var k = parseNum('k-val');
+        var mgInput = parseNum('mg-val');
+        var mgUnit = document.getElementById('mg-unit').value;
+        var hasAny = na !== null || k !== null || mgInput !== null;
+
+        if (!hasAny) {
+          wrap.innerHTML = '<div class="alert-strip strip-muted">値を入力すると解釈の目安を表示します（空欄はスキップ扱い）。</div>';
+          return;
+        }
+
+        var blocks = [];
+        function addStrip(cls, html) {
+          blocks.push('<div class="alert-strip ' + cls + '">' + html + '</div>');
+        }
+
+        if (na !== null) {
+          if (na < 125) {
+            addStrip('strip-high', '<strong>低Na（重症域の目安）</strong><br>原因・補正速度・神経症状を評価。急速補正は脳橋中心髄鞘崩壊などのリスク。');
+          } else if (na < 130) {
+            addStrip('strip-risk', '<strong>低Na（要フォロー）</strong><br>SIADH・利尿薬・polydipsia・SSRIs/SNRIs などを考慮。');
+          } else if (na < 135) {
+            addStrip('strip-warn', '<strong>軽度低Na傾向</strong><br>経過・水分・原疾患を確認。');
+          } else if (na > 155) {
+            addStrip('strip-high', '<strong>高Na傾向（重症域に近いことあり）</strong><br>脱水・尿濃縮・意識評価。補液は専門指示で。');
+          } else if (na > 150) {
+            addStrip('strip-warn', '<strong>高Na傾向</strong><br>水分バランス・浸透圧症状を確認。');
+          } else {
+            addStrip('strip-ok', '<strong>Na:</strong> 一般的レンジ内の目安（135–145 mEq/L 付近）。個別基準値に留意。');
+          }
+        }
+
+        var qtrisk = false;
+        if (k !== null) {
+          if (k < 2.5) {
+            addStrip('strip-high', '<strong>低K（重症）</strong><br>U波・不整脈・QT延長リスク。補正と原因（嘔吐・下痢・利尿等）。');
+            qtrisk = true;
+          } else if (k < 3.0) {
+            addStrip('strip-risk', '<strong>低K（中〜重）</strong><br>心電図・症状・補正を検討。精神科薬併用で注意。');
+            qtrisk = true;
+          } else if (k < 3.5) {
+            addStrip('strip-warn', '<strong>軽度低K</strong><br>食事・胃腸・利尿・嘔吐を確認。');
+            if (k < 3.2) qtrisk = true;
+          } else if (k > 6.0) {
+            addStrip('strip-high', '<strong>高K（緊急域のことがある）</strong><br>T波高尖・腎機能・医師報告。');
+          } else if (k > 5.2) {
+            addStrip('strip-warn', '<strong>高K傾向</strong><br>腎機能・薬剤（ACE阻害等）を確認。');
+          } else {
+            addStrip('strip-ok', '<strong>K:</strong> 一般的レンジ内の目安。');
+          }
+        }
+
+        var mgMmol = null;
+        if (mgInput !== null) {
+          mgMmol = mgUnit === 'mmol' ? mgInput : mgToMmol(mgInput);
+          var mgdlDisp = mgUnit === 'mgdl' ? mgInput : mgInput * 2.431;
+          if (mgMmol < 0.4) {
+            addStrip('strip-high', '<strong>低Mg（重症域の目安）</strong><br>不整脈・攣縮・低Kと合併しやすい。補正検討。');
+            qtrisk = true;
+          } else if (mgMmol < 0.65) {
+            addStrip('strip-risk', '<strong>低Mg</strong><br>QT延長・振戦の鑑別。アルコール・下痢・PPI 等。');
+            qtrisk = true;
+          } else if (mgUnit === 'mgdl' && mgInput < 1.8) {
+            addStrip('strip-warn', '<strong>Mg 下限付近</strong><br>再検・症状。');
+            qtrisk = true;
+          } else if (mgUnit === 'mmol' && mgMmol < 0.75) {
+            addStrip('strip-warn', '<strong>Mg 下限付近（mmol/L）</strong><br>施設の基準値と照合。症状・QTを確認。');
+            qtrisk = true;
+          } else if (mgMmol > 1.2) {
+            addStrip('strip-warn', '<strong>高Mg傾向（稀）</strong><br>腎機能・制酸薬・便秘薬。');
+          } else {
+            addStrip('strip-ok', '<strong>Mg:</strong> 一般的レンジの目安（表示 ' + (mgUnit === 'mgdl' ? mgdlDisp.toFixed(2) + ' mg/dL' : mgMmol.toFixed(2) + ' mmol/L') + '）。');
+          }
+        }
+
+        if (qtrisk) {
+          addStrip('strip-muted', '低K・低Mg 併存時は <strong>QT延長リスクが相乗</strong> しやすいです。QT / QTc タブと併用してください。');
+        }
+
+        wrap.innerHTML = blocks.join('');
+      }
+
+      ['na-val', 'k-val', 'mg-val', 'mg-unit'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', renderLytes);
+        el.addEventListener('change', renderLytes);
+      });
+      renderLytes();
+
+      /* ----- CIWA abbreviated ----- */
+      var ciwaDefs = [
+        { id: 'nausea', label: '悪心・嘔吐', max: 7, hint: '0 なし〜7 絶え間なし' },
+        { id: 'tremor', label: '振戦（手の伸展時）', max: 7, hint: '0 なし〜7 安静時も強い' },
+        { id: 'sweat', label: '発汗（発作性）', max: 7, hint: '0 なし〜7 びしょ濡れ' },
+        { id: 'anxiety', label: '不安', max: 7, hint: '0 なし〜7 激しいパニック様' },
+        { id: 'agitation', label: '焦燥・落ち着きのなさ', max: 7, hint: '0 協力的〜7 暴行のおそれ' },
+        { id: 'tactile', label: '触覚の歪み（虫感・灼熱など）', max: 7, hint: '0 なし〜7 持続かつ激しい' },
+        { id: 'auditory', label: '聴覚の歪み（音の過敏・幻聴）', max: 7, hint: '0 なし〜7 持続かつ激しい' },
+        { id: 'visual', label: '視覚の歪み（光過敏・幻視）', max: 7, hint: '0 なし〜7 持続かつ激しい' },
+        { id: 'headache', label: '頭痛（後頭部〜全心窩）', max: 7, hint: '0 なし〜7 とても強い' },
+        { id: 'orient', label: '時間・場所の見当', max: 4, hint: '0 正しい〜4 人物も不明' }
+      ];
+
+      var ciwaContainer = document.getElementById('ciwa-items');
+      ciwaDefs.forEach(function (def, i) {
+        var row = document.createElement('div');
+        row.className = 'border border-slate-100 rounded-lg p-3 bg-slate-50/80';
+        var opts = [];
+        for (var s = 0; s <= def.max; s++) opts.push('<option value="' + s + '">' + s + '</option>');
+        row.innerHTML =
+          '<div class="flex flex-col sm:flex-row sm:items-center gap-2">' +
+          '<div class="flex-1 min-w-0">' +
+          '<span class="font-semibold text-slate-800 text-sm">' + (i + 1) + '. ' + def.label + '</span>' +
+          '<span class="block text-xs text-slate-500 mt-0.5">' + def.hint + '</span></div>' +
+          '<select class="ciwa-select ciwa-score shrink-0" data-max="' + def.max + '" id="ciwa-' + def.id + '" style="max-width:6rem">' + opts.join('') + '</select>' +
+          '</div>';
+        ciwaContainer.appendChild(row);
+      });
+
+      function ciwaTotal() {
+        var t = 0;
+        ciwaDefs.forEach(function (def) {
+          var sel = document.getElementById('ciwa-' + def.id);
+          if (!sel) return;
+          t += parseInt(sel.value, 10) || 0;
+        });
+        return t;
+      }
+
+      function renderCiwa() {
+        var total = ciwaTotal();
+        document.getElementById('ciwa-total').textContent = String(total);
+        var out = document.getElementById('ciwa-out-wrap');
+        var band, cls, extra;
+        if (total >= 31) {
+          band = '極めて高値（31以上）';
+          cls = 'strip-high';
+          extra = 'ICU・頻回評価・専門医連携を強く検討。自己判断での鎮静のみに頼らない。';
+        } else if (total >= 20) {
+          band = '高値（20以上）';
+          cls = 'strip-high';
+          extra = '積極的治療・連続モニタ・ベンゾ漸増のプロトコール順守。';
+        } else if (total >= 15) {
+          band = '中〜高（15–19）';
+          cls = 'strip-risk';
+          extra = '数時間おきの再評価。離脱が進行していないか注意。';
+        } else if (total >= 8) {
+          band = '軽〜中等度（8–14）';
+          cls = 'strip-warn';
+          extra = '定期的再スコア。水分・電解質・他の離脱（ベンゾ）も考慮。';
+        } else {
+          band = '低値（〜7）';
+          cls = 'strip-ok';
+          extra = 'それでも離脱は変動しうるため、臨床所見とセットで判断。';
+        }
+        out.innerHTML =
+          '<div class="alert-strip ' + cls + '"><strong>' + band + '</strong>（合計 ' + total + ' / 67）<br><span class="text-sm">' + extra + '</span></div>';
+      }
+
+      ciwaDefs.forEach(function (def) {
+        var sel = document.getElementById('ciwa-' + def.id);
+        if (sel) {
+          sel.addEventListener('change', renderCiwa);
+        }
+      });
+      document.getElementById('ciwa-reset').addEventListener('click', function () {
+        ciwaDefs.forEach(function (def) {
+          var sel = document.getElementById('ciwa-' + def.id);
+          if (sel) sel.value = '0';
+        });
+        renderCiwa();
+      });
+      renderCiwa();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrCl計算 × 向精神薬 腎障害時の目安（日本）</title>
+  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/crcl-psychotropics.html">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --p1: #1e3a5f;
+      --p2: #0f766e;
+      --grad: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f4f2ef; }
+    .header-bar { background: var(--grad); }
+    .tier-pill { font-variant-numeric: tabular-nums; }
+    .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .data-table th, .data-table td { font-size: 0.72rem; vertical-align: top; }
+    @media (min-width: 640px) {
+      .data-table th, .data-table td { font-size: 0.78rem; }
+    }
+    .data-table th { background: #f1f5f9; font-weight: 600; white-space: nowrap; }
+    .data-table td { border-bottom: 1px solid #e5e7eb; }
+    .col-cat { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cell-active { box-shadow: inset 0 0 0 2px #0f766e; background: #ecfdf5 !important; }
+    .cell-warn { background: #fffbeb; }
+    .cell-danger { background: #fef2f2; color: #991b1b; }
+    .kbd { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="text-gray-900 min-h-screen pb-10">
+  <header class="header-bar text-white shadow-lg">
+    <div class="max-w-5xl mx-auto px-4 py-4 sm:py-5">
+      <p class="text-xs text-teal-100/90 mb-1">精神科外来 · 腎機能と向精神薬</p>
+      <h1 class="text-lg sm:text-xl font-bold tracking-tight">クレアチニンクリアランス推定 × 向精神薬の目安</h1>
+      <p class="text-xs sm:text-sm text-teal-100/85 mt-2 max-w-3xl leading-relaxed">Cockcroft–Gault 式による推算 CrCl（mL/min）を算出し、日本の添付文書・interview form・日本精神神経学会「腎機能低下時に最も注意の必要な薬剤投与量一覧」に基づく<strong class="text-white">日量の目安・禁忌・慎重投与</strong>を区分別に表示します。</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 -mt-2 sm:mt-0 pt-4 space-y-5">
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-950 leading-relaxed">
+      <strong class="font-semibold">必読：</strong>本ページは教育・参照用の要約です。実際の処方上限は製品ごとの最新<strong>添付文書</strong>および禁忌・相互作用が正です。eGFR と CrCl は同一ではありませんが、多くの向精神薬の腎障害区分は添付上「CCr または推算 CCr」で示されるため、本ツールは推算 CrCl を入力の手掛かりにしています（学会一覧でも推算 CCr と個別化 eGFR の読み替えが言及されています）。
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-4">
+      <section class="bg-white rounded-xl shadow-md border border-gray-100 p-4 sm:p-5">
+        <h2 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center text-xs font-black">1</span>
+          患者データ
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm">
+          <label class="block sm:col-span-1">
+            <span class="text-gray-600 text-xs font-medium">年齢（歳）</span>
+            <input id="in-age" type="number" min="18" max="120" value="70" inputmode="numeric" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 kbd focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+          </label>
+          <label class="block sm:col-span-1">
+            <span class="text-gray-600 text-xs font-medium">性別</span>
+            <select id="in-sex" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500">
+              <option value="f">女性（×0.85）</option>
+              <option value="m">男性</option>
+            </select>
+          </label>
+          <label class="block sm:col-span-1">
+            <span class="text-gray-600 text-xs font-medium">体重（kg）</span>
+            <input id="in-wt" type="number" min="20" max="250" value="55" step="0.1" inputmode="decimal" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 kbd focus:ring-2 focus:ring-teal-500">
+          </label>
+          <label class="block sm:col-span-1">
+            <span class="text-gray-600 text-xs font-medium">身長（cm・任意）</span>
+            <input id="in-ht" type="number" min="120" max="220" value="" placeholder="肥満補正用" inputmode="numeric" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 kbd focus:ring-2 focus:ring-teal-500">
+          </label>
+          <label class="block sm:col-span-1">
+            <span class="text-gray-600 text-xs font-medium">血清 Cr</span>
+            <input id="in-cr" type="number" min="0.1" max="50" value="1.0" step="0.01" inputmode="decimal" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 kbd focus:ring-2 focus:ring-teal-500">
+          </label>
+          <label class="block sm:col-span-1">
+            <span class="text-gray-600 text-xs font-medium">Cr 単位</span>
+            <select id="in-crunit" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500">
+              <option value="mgdl">mg/dL</option>
+              <option value="umol">μmol/L</option>
+            </select>
+          </label>
+        </div>
+        <label class="mt-3 flex items-start gap-2 text-xs text-gray-700 cursor-pointer select-none">
+          <input id="in-adj" type="checkbox" class="mt-0.5 rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+          <span>BMI≥30 のとき Devine 式理想体重＋調整体重（IBW＋0.4×(BW−IBW)）で CrCl の体重を補正する（身長必須）</span>
+        </label>
+        <p class="mt-2 text-[11px] text-gray-500 leading-relaxed">推算式：CrCl = (140−年齢)×体重 / (72×Cr<sub>mg/dL</sub>) ，女性は×0.85。μmol/L は ÷88.4 で mg/dL に換算。</p>
+      </section>
+
+      <section class="rounded-xl shadow-md text-white p-4 sm:p-5" style="background: var(--grad);">
+        <h2 class="text-sm font-bold mb-3 flex items-center gap-2 opacity-95">
+          <span class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-xs font-black">2</span>
+          推算結果
+        </h2>
+        <div class="flex flex-wrap items-end gap-3 sm:gap-6">
+          <div>
+            <p class="text-xs text-teal-100/90">推算 CrCl</p>
+            <p class="text-3xl sm:text-4xl font-black tier-pill tracking-tight"><span id="out-crcl">—</span> <span class="text-lg font-semibold">mL/min</span></p>
+          </div>
+          <div>
+            <p class="text-xs text-teal-100/90">使用体重</p>
+            <p class="text-lg font-bold tier-pill"><span id="out-weight-used">—</span> kg</p>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span id="tier-badge" class="tier-pill text-sm font-bold px-3 py-1.5 rounded-full bg-white/20 hidden"></span>
+          <span id="tier-desc" class="text-xs sm:text-sm text-teal-50 max-w-xl leading-relaxed"></span>
+        </div>
+        <p id="out-bmi-note" class="mt-2 text-[11px] text-teal-100/80 hidden"></p>
+      </section>
+    </div>
+
+    <section class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+      <div class="px-4 py-3 border-b border-gray-100 flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-sm font-bold text-gray-800">向精神薬・関連薬（区分別の目安）</h2>
+        <span class="text-[11px] text-gray-500">列のハイライト＝現在の推算 CrCl 区分</span>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data-table w-full min-w-[720px] text-left border-collapse">
+          <thead>
+            <tr>
+              <th class="p-2 pl-3 w-32">分類</th>
+              <th class="p-2 w-40">薬剤（一般名・代表品）</th>
+              <th class="p-2 text-center bg-emerald-50/80">CrCl<br><span class="font-normal">≥80</span></th>
+              <th class="p-2 text-center">50〜79</th>
+              <th class="p-2 text-center">30〜49</th>
+              <th class="p-2 text-center">15〜29</th>
+              <th class="p-2 text-center pr-3">&lt;15<br><span class="font-normal text-[10px]">透析含</span></th>
+            </tr>
+          </thead>
+          <tbody id="drug-tbody"></tbody>
+        </table>
+      </div>
+      <p class="px-4 py-3 text-[11px] text-gray-500 border-t border-gray-100 leading-relaxed">
+        表の「禁忌」は添付文書上の腎障害・透析に関する禁忌・投与不可例、「慎重」は同一または関連条の注意。製品・改訂年で文言が異なる場合があります。
+      </p>
+    </section>
+
+    <section class="text-xs text-gray-600 space-y-2 px-1">
+      <p><strong class="text-gray-800">主要出典（抜粋）：</strong>日本精神神経学会 腎機能低下時に最も注意の必要な薬剤投与量一覧（2025年改訂 38版）、各医薬品添付文書・インタビューフォーム。パリペリドン経口・リスペリドン等の数値は学会一覧の CrCl 区分に整合させています。</p>
+      <p><a href="top.html" class="text-teal-700 font-medium hover:underline">← ポータルへ</a> · <a href="cp-calculator.html" class="text-teal-700 font-medium hover:underline">CP換算</a></p>
+    </section>
+  </main>
+
+  <script>
+(function () {
+  'use strict';
+
+  const TIERS = [
+    { key: 'g80', label: '≥80', min: 80, max: Infinity, desc: '添付文書上「CCr 80 mL/min 以上」区分に相当しやすい域。' },
+    { key: 'g50', label: '50〜79', min: 50, max: 79.999, desc: '「50 以上 80 未満」の減量・開始量区分が適用されやすい域。' },
+    { key: 'g30', label: '30〜49', min: 30, max: 49.999, desc: '中等度腎障害域。多くの薬で開始量・上限が引き下げられるか、禁忌となる。' },
+    { key: 'g15', label: '15〜29', min: 15, max: 29.999, desc: '重度腎障害域。禁忌・大幅減量が多い。' },
+    { key: 'glt', label: '<15', min: -Infinity, max: 14.999, desc: '末期腎・透析考量域。投与可否は添付文書・透析スキーム確認が必須。' },
+  ];
+
+  const COL_ORDER = ['g80', 'g50', 'g30', 'g15', 'glt'];
+
+  /**
+   * 日本市販向精神薬中心。各セルは処方上の「1日上限の目安」または禁忌・慎重の要約（断定上限ではない）。
+   */
+  const ROWS = [
+    { cat: '抗精神病', name: 'パリペリドン（経口・インベガ等）', g80: '最大12mg/日（6mg開始・漸増）', g50: '最大6mg/日（3mg開始）', g30: '禁忌（排泄遅延）', g15: '禁忌', glt: '禁忌', dangerFrom: 'g30' },
+    { cat: '抗精神病', name: 'リスペリドン（経口・リスパダール等）', g80: '最大12mg/日（適応内）', g50: '慎重。活性代謝物↑—低用量開始（学会EOでは維持1〜6mg目安等）', g30: '慎重。さらに低用量（例：FDA参考 0.5mg×2/日開始）', g15: '同上（モニタ強化）', glt: '透析データ限定的—添付必読', dangerFrom: null },
+    { cat: '抗精神病', name: 'リスペリドン（持効IM・コンスタ等）', g80: '25mg/2W 開始、最大50mg/2W', g50: '添付：血中濃度持続に注意', g30: '同上・腎障害では原則回避寄り', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗精神病', name: 'パリペリドンパルミチン（持効IM・ゼプリオン等）', g80: '添付の CrCl 区分用量（初回量あり）', g50: '添付：初回・維持量ともに減量区分', g30: '禁忌', g15: '禁忌', glt: '禁忌', dangerFrom: 'g30' },
+    { cat: '抗精神病', name: 'パリペリドンパルミチン（3ヶ月IM・TRI 等）', g80: '切替時の基準量あり', g50: '最大350mg/12W など区分', g30: '禁忌', g15: '禁忌', glt: '禁忌', dangerFrom: 'g30' },
+    { cat: '抗精神病', name: 'アリピプラゾール（経口・注射）', g80: '常用上限例：統合失調症30mg/日等（適応による）', g50: '腎障害：慎重（添付—CL低下報告）', g30: '同上・低用量開始推奨', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗精神病', name: 'オランザピン（ゼプレックス等）', g80: '常用上限例：20mg/日（適応内）', g50: '腎障害：慎重（データ限定的）', g30: '同上', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗精神病', name: 'クエチアピン（セロケル等）', g80: '常用上限例：750〜800mg/日（適応内）', g50: '腎障害：慎重', g30: '同上', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗精神病', name: 'クロザピン（クロザリル等）', g80: '最大600mg/日（CPMS・血算）', g50: '腎障害：腎悪化報告—慎重', g30: '重度域は禁忌（添付）。軽中等でも実臨床は低用量', g15: '禁忌に近い—原則回避', glt: '禁忌に準ずる—原則回避', dangerFrom: 'g15' },
+    { cat: '抗精神病', name: 'ブロナンセリン（ロナセン）', g80: '添付常用量内', g50: '腎障害：慎重', g30: '同上', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗精神病', name: 'ペロスピロン（ルーラット）', g80: '添付常用量内', g50: '腎障害：慎重', g30: '同上', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗精神病', name: 'ハロペリドール（ドマリン等）', g80: '常用（筋注は適応に応じ量）', g50: '排泄遅延に注意（添付）', g30: '低用量・間隔調整', g15: 'さらに慎重', glt: '慎重（透析タイミング考慮）', dangerFrom: null },
+    { cat: '抗精神病', name: 'スルピライド（ドグマチール等）', g80: '1日最大例：統合失調症1200mg等', g50: '腎障害：投与間隔延長の記載—添付', g30: '同上', g15: '末期は7〜10日間隔案（学会EO）', glt: '透析後投与など個別', dangerFrom: null },
+    { cat: '気分安定', name: '炭酸リチウム（リチウム）', g80: '低用量開始・TDM。NSAIDs等注意', g50: '蓄積↑—減量・密モニター', g30: '原則避ける〜著減量＋TDM', g15: '禁忌に近い（透析・重度に禁忌記載例）', glt: '多く禁忌—原則回避', dangerFrom: 'g15' },
+    { cat: '気分安定', name: 'バルプロ酸（デパケン等）', g80: '常用量（適応内）', g50: '腎障害：Free 分率変化—TDM解釈に注意', g30: '同上', g15: '同上', glt: '透析で除去—補充要否は添付', dangerFrom: null },
+    { cat: '抗うつ', name: 'デュロキセチン（サインバルタ）', g80: '添付常用（腎正常〜軽度）', g50: '中等度障害では禁忌（添付）。この域は個別に添付確認', g30: '禁忌', g15: '禁忌', glt: '禁忌', dangerFrom: 'g30' },
+    { cat: '抗うつ', name: 'ベンラファキシン（イフェクサーSR）', g80: '最大225mg/日まで（漸増）', g50: 'CL低下・血中濃度↑—慎重、低用量開始（添付）', g30: 'さらに慎重（AUC増報告）', g15: '透析患者等は投与回避（学会表・添付）', glt: '禁忌〜投与不可例', dangerFrom: 'g15' },
+    { cat: '抗うつ', name: 'ミルナシプラン（製品名は各添付）', g80: '添付常用（漸増）', g50: '軽度低下は定量的記載に乏しい—慎重', g30: '重度腎障害：禁忌（添付）', g15: '禁忌', glt: '禁忌', dangerFrom: 'g30' },
+    { cat: '抗うつ', name: 'ミルタザピン（レメロン等）', g80: '最大45mg/日', g50: 'CL低下—低用量開始（FDAでは50〜75%減参考）', g30: 'さらに減量', g15: '透析：禁忌（学会表）', glt: '禁忌', dangerFrom: 'g15' },
+    { cat: '抗うつ', name: 'パロキセチン（パキシルCR等）', g80: '最大50mg/日（製剤による）', g50: '重度未満は多く常用域', g30: 'CrCl<30でAUC↑—慎重・低用量', g15: '同上', glt: '透析・慎重', dangerFrom: null },
+    { cat: '抗うつ', name: 'セルトラリン（ジェイゾロフト等）', g80: '添付常用', g50: '腎障害：データ少—慎重', g30: '同上', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗うつ', name: 'エスシタロプラム（レクサプロ）', g80: '最大20mg/日', g50: '軽度腎障害でAUC増—10mg維持案（学会・添付系）', g30: 'さらに慎重', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗うつ', name: 'フルボキサミン（ルボックス）', g80: '添付常用', g50: '腎障害：慎重', g30: '同上', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗うつ', name: 'ボルチオキセチン（トリンチコ）', g80: '20mg/日目安', g50: '腎障害：慎重', g30: '同上', g15: '同上', glt: '同上', dangerFrom: null },
+    { cat: '抗不安・睡眠', name: 'ブロマゼパム・エチゾラム等（ベンゾ系）', g80: '適応量', g50: '活性代謝物—腎障害で持続（学会表）', g30: '減量', g15: '減量・呼吸抑制注意', glt: '透析・慎重', dangerFrom: null },
+    { cat: '抗不安・睡眠', name: 'ゾルピデム・エスゾピクロン（非ベンゾ）', g80: '添付常用', g50: '腎障害：慎重', g30: '低用量', g15: '低用量', glt: '透析後補充要否は製品ごと', dangerFrom: null },
+    { cat: 'ADHD', name: 'リスデキサンフェタミン（ビバンセ）', g80: '最大70mg/日（成人）', g50: '腎正常と同量が多い（添付）', g30: '最大50mg/日（添付例）', g15: '透析・<15：最大30mg/日（添付・FDA例）', glt: '同上', dangerFrom: null },
+    { cat: '認知症', name: 'メマンチン（メマリー）', g80: '20mg/日まで漸増', g50: '多く10〜20mg域で調整（AUC↑報告）', g30: '維持10mg/日が上限目安（学会・海外）', g15: '10mg/日または5mg（添付版による）', glt: '5mg/日または禁止—要添付', dangerFrom: null },
+    { cat: '神経因性疼痛併用', name: 'ガバペンチン（ネイロントリン等）', g80: '最大3600mg/日（適応・漸増）', g50: '減量（添付の Cr 区分表）', g30: 'さらに減量', g15: '低用量〜隔日', glt: '透析後補充など—表必読', dangerFrom: null },
+    { cat: '神経因性疼痛併用', name: 'プレガバリン（リリカ等）', g80: '最高600mg/日（適応による）', g50: '区分表：維持量減（例150〜300mg域）', g30: '25〜150mg/日域', g15: '25〜75mg/日域', glt: '補充＋表必読', dangerFrom: null },
+  ];
+
+  function devineIbW_kg(sex, heightCm) {
+    const inches = heightCm / 2.54;
+    if (sex === 'm') return 50 + 2.3 * Math.max(0, inches - 60);
+    return 45.5 + 2.3 * Math.max(0, inches - 60);
+  }
+
+  function crClCockcroft(age, sex, weightKg, crMgDl) {
+    if (!age || age < 18 || !weightKg || weightKg <= 0 || !crMgDl || crMgDl <= 0) return null;
+    let crcl = (140 - age) * weightKg / (72 * crMgDl);
+    if (sex === 'f') crcl *= 0.85;
+    return crcl;
+  }
+
+  function tierForCrcl(crcl) {
+    if (crcl == null || !isFinite(crcl)) return null;
+    for (const t of TIERS) {
+      if (crcl >= t.min && crcl <= t.max) return t;
+    }
+    return TIERS[TIERS.length - 1];
+  }
+
+  function tierKeyIndex(key) {
+    return COL_ORDER.indexOf(key);
+  }
+
+  function isDangerCell(row, colKey) {
+    if (row.banAllLow && colKey !== 'g80') return true;
+    if (!row.dangerFrom) return false;
+    const i = tierKeyIndex(colKey);
+    const j = tierKeyIndex(row.dangerFrom);
+    return i >= j;
+  }
+
+  function renderTable(activeTier) {
+    const tb = document.getElementById('drug-tbody');
+    tb.textContent = '';
+    const activeKey = activeTier ? activeTier.key : null;
+
+    for (const row of ROWS) {
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-gray-50/80';
+
+      const tdCat = document.createElement('td');
+      tdCat.className = 'p-2 pl-3 col-cat';
+      tdCat.textContent = row.cat;
+      tr.appendChild(tdCat);
+
+      const tdName = document.createElement('td');
+      tdName.className = 'p-2 font-medium text-gray-800';
+      tdName.textContent = row.name;
+      tr.appendChild(tdName);
+
+      for (const ck of COL_ORDER) {
+        const td = document.createElement('td');
+        td.className = 'p-2';
+        let text = row[ck];
+        if (row.banAllLow && ck !== 'g80') {
+          td.classList.add('cell-danger');
+          text = '禁忌';
+        } else if (isDangerCell(row, ck) && ck !== 'g80') {
+          td.classList.add('cell-warn');
+        }
+        if (activeKey === ck) td.classList.add('cell-active');
+        td.textContent = text;
+        tr.appendChild(td);
+      }
+      tb.appendChild(tr);
+    }
+  }
+
+  function compute() {
+    const age = parseFloat(document.getElementById('in-age').value);
+    const sex = document.getElementById('in-sex').value;
+    let wt = parseFloat(document.getElementById('in-wt').value);
+    const htStr = document.getElementById('in-ht').value;
+    const ht = htStr === '' ? NaN : parseFloat(htStr);
+    let cr = parseFloat(document.getElementById('in-cr').value);
+    const crU = document.getElementById('in-crunit').value;
+    const adj = document.getElementById('in-adj').checked;
+
+    if (crU === 'umol') cr = cr / 88.4;
+
+    let wtUsed = wt;
+    let bmiNote = '';
+    if (adj && ht > 0 && wt > 0) {
+      const ibw = devineIbW_kg(sex, ht);
+      const bmi = wt / ((ht / 100) * (ht / 100));
+      if (bmi >= 30) {
+        wtUsed = ibw + 0.4 * (wt - ibw);
+        bmiNote = 'BMI ' + bmi.toFixed(1) + '：調整体重 ' + wtUsed.toFixed(1) + ' kg（IBW ' + ibw.toFixed(1) + ' kg）で算出。';
+      } else {
+        bmiNote = 'BMI ' + bmi.toFixed(1) + '（<30）—実測体重で算出。';
+      }
+    } else if (adj && (!ht || ht <= 0)) {
+      bmiNote = '補正チェックあり：身長を入力してください。';
+    }
+
+    const crcl = crClCockcroft(age, sex, wtUsed, cr);
+    const elCrcl = document.getElementById('out-crcl');
+    const elWt = document.getElementById('out-weight-used');
+    const badge = document.getElementById('tier-badge');
+    const tdesc = document.getElementById('tier-desc');
+    const bmiEl = document.getElementById('out-bmi-note');
+
+    if (crcl == null || !isFinite(crcl)) {
+      elCrcl.textContent = '—';
+      elWt.textContent = '—';
+      badge.classList.add('hidden');
+      tdesc.textContent = '数値を入力してください。';
+      bmiEl.classList.add('hidden');
+      renderTable(null);
+      return;
+    }
+
+    elCrcl.textContent = crcl.toFixed(1);
+    elWt.textContent = wtUsed.toFixed(1);
+    const tier = tierForCrcl(crcl);
+    badge.textContent = '区分 ' + tier.label + ' mL/min';
+    badge.classList.remove('hidden');
+    tdesc.textContent = tier.desc;
+    if (bmiNote) {
+      bmiEl.textContent = bmiNote;
+      bmiEl.classList.remove('hidden');
+    } else bmiEl.classList.add('hidden');
+
+    renderTable(tier);
+  }
+
+  ['in-age', 'in-sex', 'in-wt', 'in-ht', 'in-cr', 'in-crunit', 'in-adj'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', compute);
+    el.addEventListener('change', compute);
+  });
+
+  compute();
+})();
+  </script>
+</body>
+</html>
