@@ -11,20 +11,17 @@
     :root { --accent: #4f46e5; }
     body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; color: #1a202c; }
 
-    /* ヘッダー */
     .glass-header {
       background: rgba(255,255,255,0.90);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(0,0,0,0.07);
     }
-
-    /* カテゴリチップ */
     .chip { transition: all 0.12s; cursor: pointer; user-select: none; }
 
-    /* ヒーローカード */
+    /* ヒーロー */
     .hero-card { position: relative; overflow: hidden; }
-    .hero-grad { background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.28) 58%, transparent 100%); }
+    .hero-grad { background: linear-gradient(to top, rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.28) 58%, transparent 100%); }
     .hero-card:hover .hero-title { text-decoration: underline; text-decoration-color: rgba(255,255,255,.6); }
 
     /* サイドストーリー */
@@ -38,8 +35,7 @@
     .sec-title {
       font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em;
       text-transform: uppercase; color: #6b7280;
-      border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 8px; margin-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 16px;
     }
     .sec-title .accent {
       display: inline-block; color: var(--accent);
@@ -50,6 +46,8 @@
     /* 記事カード */
     .news-card { transition: box-shadow 0.15s, transform 0.15s; }
     .news-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.09); transform: translateY(-1px); }
+    .news-card:hover .card-title { color: var(--accent); }
+    .card-title { transition: color 0.12s; }
 
     /* ソースバッジ */
     .lbl { display:inline-block; font-size:.6rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:2px 6px; border-radius:3px; }
@@ -57,11 +55,12 @@
     .lbl-pre { background:#fef9c3; color:#854d0e; }
     .lbl-gl  { background:#ede9fe; color:#5b21b6; }
     .lbl-rct { background:#f1f5f9; color:#475569; }
+    .lbl-news { background:#dcfce7; color:#065f46; }
 
     /* カテゴリピル */
     .pill { font-size:.62rem; font-weight:600; padding:2px 8px; border-radius:999px; border:1px solid currentColor; opacity:.8; }
-    .pill-sz  { color:#6d28d9; } .pill-dep  { color:#1e40af; } .pill-bip { color:#b45309; }
-    .pill-anx { color:#0f766e; } .pill-ndd  { color:#065f46; } .pill-sub { color:#991b1b; }
+    .pill-sz    { color:#6d28d9; } .pill-dep   { color:#1e40af; } .pill-bip { color:#b45309; }
+    .pill-anx   { color:#0f766e; } .pill-ndd   { color:#065f46; } .pill-sub { color:#991b1b; }
     .pill-pharm { color:#3730a3; } .pill-psych { color:#0369a1; } .pill-neuro { color:#9d174d; }
 
     /* ブックマーク */
@@ -69,20 +68,41 @@
     .bm-btn:hover { color: #d97706; background: #fef3c7; }
     .bm-btn.saved { color: #d97706; }
 
-    /* スクロール */
-    .slim::-webkit-scrollbar { height: 3px; }
-    .slim::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+    /* スケルトン */
+    @keyframes shimmer { 0%{background-position:-600px 0} 100%{background-position:600px 0} }
+    .sk {
+      background: linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);
+      background-size: 1200px 100%; animation: shimmer 1.5s infinite; border-radius: 5px;
+    }
+    /* ヒーロー用暗いスケルトン */
+    .sk-dark {
+      background: linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);
+      background-size: 1200px 100%; animation: shimmer 1.5s infinite; border-radius: 5px;
+    }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spin { animation: spin 0.8s linear infinite; }
-    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+    /* アブストラクト折りたたみ */
+    .abs-txt { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .abs-txt.open { display:block; -webkit-line-clamp:unset; }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spin{animation:spin .8s linear infinite;}
+    .slim::-webkit-scrollbar{height:3px;}
+    .slim::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px;}
+    @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+    /* 言語切り替え */
+    .lang-toggle { background: #f3f4f6; }
+    .lang-btn { color: #9ca3af; font-size: .7rem; font-weight: 600; }
+    .lang-btn.active-lang { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .translating { opacity: .45; }
+    @keyframes tl-pulse { 0%,100%{opacity:.4} 50%{opacity:.8} }
+    .tl-loading { animation: tl-pulse 1.2s ease-in-out infinite; }
   </style>
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
 <header class="glass-header sticky top-0 z-20">
-  <!-- 上段 -->
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
     <a href="top.html" class="flex items-center gap-2 shrink-0">
       <div class="w-8 h-8 rounded-lg bg-indigo-700 flex items-center justify-center shadow-sm">
@@ -98,12 +118,12 @@
       <svg class="absolute left-3 top-2.5 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
       </svg>
-      <input id="searchInput" type="text" placeholder="キーワード検索（例: clozapine, PTSD, CBT）"
+      <input id="searchInput" type="text" placeholder="ページ内キーワード検索…"
         class="w-full pl-9 pr-4 py-2 text-xs bg-gray-100 border border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white transition-all placeholder-gray-400">
     </div>
 
     <div class="flex items-center gap-2 shrink-0 ml-auto">
-      <span class="hidden sm:block text-xs text-gray-400">更新: 2026-04-26 17:30</span>
+      <span id="lastUpdated" class="hidden sm:block text-xs text-gray-400"></span>
       <button id="refreshBtn"
         class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 active:scale-95 transition-all shadow-sm">
         <svg id="refreshIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,15 +131,18 @@
         </svg>
         <span class="hidden sm:inline">更新</span>
       </button>
+      <!-- 言語切り替え -->
+      <div class="lang-toggle flex rounded-lg p-0.5 shrink-0 gap-0">
+        <button class="lang-btn active-lang px-2.5 py-1.5 rounded-md transition-all" data-lang="ja">🇯🇵 日本語</button>
+        <button class="lang-btn px-2.5 py-1.5 rounded-md transition-all" data-lang="en">🇺🇸 原文</button>
+      </div>
       <button id="bmBtn" class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
         </svg>
         <span id="bmBadge" class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-amber-400 text-white text-xs font-bold rounded-full items-center justify-center hidden">0</span>
       </button>
-      <a href="top.html" class="hidden sm:flex items-center gap-1 px-3 py-1.5 text-xs text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-        ← ポータル
-      </a>
+      <a href="top.html" class="hidden sm:flex items-center gap-1 px-3 py-1.5 text-xs text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">← ポータル</a>
     </div>
   </div>
 
@@ -127,16 +150,16 @@
   <div class="border-t border-gray-100">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-1.5 overflow-x-auto slim">
       <span class="text-xs text-gray-400 shrink-0 mr-1">カテゴリ</span>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shrink-0" data-cat="all">すべて</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 shrink-0" data-cat="sz">🧠 統合失調症</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 hover:bg-blue-200 shrink-0" data-cat="dep">😔 うつ病・気分障害</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 hover:bg-amber-200 shrink-0" data-cat="bip">⚡ 双極性障害</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-100 text-teal-800 hover:bg-teal-200 shrink-0" data-cat="anx">😰 不安障害・PTSD</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 shrink-0" data-cat="ndd">🔬 神経発達症</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 hover:bg-red-200 shrink-0" data-cat="sub">🚫 依存症</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shrink-0" data-cat="pharm">💊 薬物治療</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-800 hover:bg-sky-200 shrink-0" data-cat="psych">🗣 精神療法</button>
-      <button class="chip flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-pink-100 text-pink-800 hover:bg-pink-200 shrink-0" data-cat="neuro">⚡ 神経科学</button>
+      <button class="chip active px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shrink-0" data-cat="all" data-orig="bg-gray-100 text-gray-700">すべて</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 shrink-0" data-cat="sz"    data-orig="bg-violet-100 text-violet-800">🧠 統合失調症</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-100   text-blue-800   hover:bg-blue-200   shrink-0" data-cat="dep"   data-orig="bg-blue-100 text-blue-800">😔 うつ病・気分障害</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100  text-amber-800  hover:bg-amber-200  shrink-0" data-cat="bip"   data-orig="bg-amber-100 text-amber-800">⚡ 双極性障害</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-100   text-teal-800   hover:bg-teal-200   shrink-0" data-cat="anx"   data-orig="bg-teal-100 text-teal-800">😰 不安障害・PTSD</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 shrink-0" data-cat="ndd"  data-orig="bg-emerald-100 text-emerald-800">🔬 神経発達症</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100    text-red-800    hover:bg-red-200    shrink-0" data-cat="sub"   data-orig="bg-red-100 text-red-800">🚫 依存症</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shrink-0" data-cat="pharm" data-orig="bg-indigo-100 text-indigo-800">💊 薬物治療</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-sky-100    text-sky-800    hover:bg-sky-200    shrink-0" data-cat="psych" data-orig="bg-sky-100 text-sky-800">🗣 精神療法</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-pink-100   text-pink-800   hover:bg-pink-200   shrink-0" data-cat="neuro" data-orig="bg-pink-100 text-pink-800">⚡ 神経科学</button>
     </div>
   </div>
 </header>
@@ -147,15 +170,18 @@
   <!-- ステータスバー -->
   <div class="flex items-center justify-between mb-5">
     <div class="flex items-center gap-3">
-      <span id="countText" class="text-sm font-semibold text-gray-700">12 件</span>
-      <span class="text-xs text-gray-400">最終更新: 2026-04-26 17:30</span>
+      <span id="countText" class="text-sm font-semibold text-gray-700">—</span>
+      <span id="lastUpdatedMain" class="text-xs text-gray-400"></span>
+      <span id="loadingBadge" class="flex items-center gap-1 text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded-full">
+        <svg class="w-3 h-3 spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+        取得中
+      </span>
     </div>
     <div class="flex items-center gap-2">
       <span class="text-xs text-gray-400">並び替え</span>
-      <select class="text-xs bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
-        <option>新しい順</option>
-        <option>古い順</option>
-        <option>ジャーナル名</option>
+      <select id="sortSelect" class="text-xs bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+        <option value="pub+date">新しい順</option>
+        <option value="relevance">関連度順</option>
       </select>
     </div>
   </div>
@@ -163,251 +189,76 @@
   <div class="flex gap-5 items-start">
 
     <!-- ===== フィード ===== -->
-    <div class="flex-1 min-w-0 space-y-6" id="feed">
+    <div class="flex-1 min-w-0 space-y-6">
 
       <!-- ヒーローゾーン -->
       <section>
         <div class="sec-title"><span class="accent">トップ記事</span></div>
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 border border-gray-200 rounded-2xl overflow-hidden shadow-sm" id="heroZone">
-
-          <!-- メインヒーロー -->
-          <article class="hero-card lg:col-span-3 min-h-[220px] relative cursor-pointer" data-cats="dep pharm">
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-800 to-slate-900"></div>
-            <div class="absolute inset-0 opacity-10" style="background:radial-gradient(circle at 30% 40%,#818cf8,transparent 50%),radial-gradient(circle at 80% 70%,#6366f1,transparent 40%);"></div>
-            <div class="absolute inset-0 hero-grad flex flex-col justify-end p-5 sm:p-7">
-              <div class="flex items-center gap-2 mb-2.5">
-                <span class="lbl lbl-pm">PubMed</span>
-                <span class="text-white/60 text-xs">NEJM · 2026-04-22</span>
-                <span class="ml-auto text-white/50 text-xs">Carhart-Harris R, et al.</span>
-              </div>
-              <h2 class="hero-title text-white font-bold text-sm sm:text-lg leading-snug mb-2">
-                <a href="#" target="_blank" rel="noopener">Psilocybin補助療法 vs エスシタロプラム：治療抵抗性うつ病の12ヵ月追跡RCT</a>
-              </h2>
-              <p class="text-white/65 text-xs leading-relaxed line-clamp-2">シロシビン群で抑うつ症状の持続的改善（HAMD-17差異 −4.2点, p=0.003）および寛解率の有意差を確認。12ヵ月時点でも効果が維持された。</p>
-              <div class="flex items-center gap-2 mt-3">
-                <span class="pill pill-dep" style="border-color:#1e40af;color:#1e40af;">うつ病</span>
-                <span class="pill pill-pharm" style="border-color:#3730a3;color:#3730a3;">薬物治療</span>
-                <button class="bm-btn saved ml-auto p-1.5 text-amber-400 bg-amber-400/10" data-uid="h1">
-                  <svg class="w-4 h-4" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-                </button>
-                <a href="#" target="_blank" rel="noopener"
-                   class="flex items-center gap-1 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold rounded-lg transition-colors">
-                  PubMedで開く
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-              </div>
+        <div id="heroZone">
+          <!-- スケルトン -->
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 border border-gray-200 rounded-2xl overflow-hidden shadow-sm" style="min-height:220px;">
+            <div class="lg:col-span-3 bg-slate-800 p-6 flex flex-col justify-end gap-2">
+              <div class="sk-dark h-3 w-24 mb-1"></div>
+              <div class="sk-dark h-5 w-full"></div>
+              <div class="sk-dark h-5 w-4/5"></div>
+              <div class="sk-dark h-3 w-full mt-2"></div>
+              <div class="sk-dark h-3 w-3/4"></div>
             </div>
-          </article>
-
-          <!-- サイド2記事 -->
-          <div class="lg:col-span-2 flex flex-col bg-white divide-y divide-gray-100">
-            <article class="side-story flex-1 p-4 sm:p-5 flex flex-col justify-between" data-cats="sz pharm">
-              <div>
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="lbl lbl-pm">PubMed</span>
-                  <span class="text-gray-400 text-xs">Lancet Psychiatry · 04-24</span>
-                </div>
-                <h3 class="side-title font-bold text-sm text-gray-900 leading-snug">
-                  <a href="#" target="_blank" rel="noopener">治療抵抗性統合失調症における第二世代抗精神病薬の比較：48 RCTのネットワークメタ解析</a>
-                </h3>
-                <p class="text-xs text-gray-400 mt-1.5 line-clamp-2 leading-relaxed">クロザピンが全般的症状・再入院リスクで依然最優位（n=12,450）。</p>
-              </div>
-              <div class="flex items-center gap-1.5 mt-2">
-                <span class="pill pill-sz">統合失調症</span>
-                <span class="pill pill-pharm">薬物治療</span>
-                <button class="bm-btn ml-auto p-1 text-gray-300" data-uid="s1">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-                </button>
-              </div>
-            </article>
-            <article class="side-story flex-1 p-4 sm:p-5 flex flex-col justify-between" data-cats="bip neuro">
-              <div>
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="lbl lbl-pre">medRxiv</span>
-                  <span class="text-gray-400 text-xs">preprint · 04-20</span>
-                  <span class="text-orange-500 text-xs font-semibold">査読前</span>
-                </div>
-                <h3 class="side-title font-bold text-sm text-gray-900 leading-snug">
-                  <a href="#" target="_blank" rel="noopener">双極性I型障害のリチウム反応性：多民族コホートを用いたポリジェニックスコア予測</a>
-                </h3>
-                <p class="text-xs text-gray-400 mt-1.5 line-clamp-2 leading-relaxed">n=6,200の多民族コホートでリチウム反応PGSが有効性を予測。</p>
-              </div>
-              <div class="flex items-center gap-1.5 mt-2">
-                <span class="pill pill-bip">双極性障害</span>
-                <span class="pill pill-neuro">神経科学</span>
-                <button class="bm-btn ml-auto p-1 text-gray-300" data-uid="s2">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-                </button>
-              </div>
-            </article>
+            <div class="lg:col-span-2 bg-white divide-y divide-gray-100 flex flex-col">
+              <div class="flex-1 p-4 space-y-2"><div class="sk h-3 w-20 mb-2"></div><div class="sk h-4 w-full"></div><div class="sk h-4 w-4/5"></div></div>
+              <div class="flex-1 p-4 space-y-2"><div class="sk h-3 w-20 mb-2"></div><div class="sk h-4 w-full"></div><div class="sk h-4 w-3/4"></div></div>
+            </div>
           </div>
-
         </div>
       </section>
 
-      <!-- 最新論文セクション -->
+      <!-- 最新論文 -->
       <section>
-        <div class="sec-title"><span class="accent">最新論文</span>&emsp;論文・プレプリント</div>
-        <div class="space-y-3" id="articleList">
-
-          <!-- 記事1: PTSD -->
-          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="anx psych">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span class="lbl lbl-pm">PubMed</span>
-                <span class="text-gray-400 text-xs">JAMA Psychiatry · 2026-04-18</span>
-              </div>
-              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
-                <a href="#" target="_blank" rel="noopener">持続エクスポージャー法 vs EMDR：複合トラウマPTSDへの多施設RCT 18ヵ月追跡</a>
-              </h3>
-              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">両群で症状改善に有意差なし。コンプライアンス・脱落率はEMDR群で有意に良好（脱落率 12% vs 21%, p=0.04）。</p>
-              <div class="flex items-center gap-2 mt-2.5">
-                <span class="pill pill-anx">PTSD</span>
-                <span class="pill pill-psych">精神療法</span>
-                <span class="lbl lbl-rct ml-1">RCT</span>
-                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-              </div>
-            </div>
-            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-            </button>
-          </article>
-
-          <!-- 記事2: ADHD -->
-          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="ndd pharm">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span class="lbl lbl-pm">PubMed</span>
-                <span class="text-gray-400 text-xs">Nature Medicine · 2026-04-12</span>
-              </div>
-              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
-                <a href="#" target="_blank" rel="noopener">ADHD成人における刺激薬の10年間心血管安全性：スウェーデン全国コホート研究（n=278,000）</a>
-              </h3>
-              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">通常用量での使用において主要心血管イベントリスクの有意な増加なし（aHR 1.04, 95%CI 0.97–1.12）。</p>
-              <div class="flex items-center gap-2 mt-2.5">
-                <span class="pill pill-ndd">ADHD</span>
-                <span class="pill pill-pharm">薬物治療</span>
-                <span class="lbl lbl-rct ml-1">コホート</span>
-                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-              </div>
-            </div>
-            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-            </button>
-          </article>
-
-          <!-- 記事3: VR-CBT -->
-          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="anx psych">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span class="lbl lbl-pre">medRxiv</span>
-                <span class="text-gray-400 text-xs">preprint · 2026-04-10</span>
-                <span class="bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded-full font-semibold">査読前</span>
-              </div>
-              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
-                <a href="#" target="_blank" rel="noopener">VR-CBT vs 対面CBT：社交不安障害への単盲検パイロットRCT（12週）</a>
-              </h3>
-              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">VR-CBT群でLSAS得点が12週時点で対面群と同等の改善（差 −1.8点, 95%CI −5.2–1.6）。費用対効果でVRが優位。</p>
-              <div class="flex items-center gap-2 mt-2.5">
-                <span class="pill pill-anx">社交不安障害</span>
-                <span class="pill pill-psych">CBT</span>
-                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-              </div>
-            </div>
-            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a3">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-            </button>
-          </article>
-
-          <!-- 記事4: GLP-1 -->
-          <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="sub pharm">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span class="lbl lbl-pm">PubMed</span>
-                <span class="text-gray-400 text-xs">Am J Psychiatry · 2026-04-08</span>
-              </div>
-              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
-                <a href="#" target="_blank" rel="noopener">GLP-1受容体作動薬によるアルコール使用障害の飲酒量低減：二重盲検プラセボ対照試験</a>
-              </h3>
-              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">セマグルチド投与群（n=104）で週間飲酒量が24週時点で48%減少。重篤な副作用の有意差なし。</p>
-              <div class="flex items-center gap-2 mt-2.5">
-                <span class="pill pill-sub">依存症</span>
-                <span class="pill pill-pharm">薬物治療</span>
-                <span class="lbl lbl-rct ml-1">RCT</span>
-                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-              </div>
-            </div>
-            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="a4">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-            </button>
-          </article>
-
+        <div class="sec-title"><span class="accent">最新論文</span>&emsp;<span id="articleSubtitle" class="font-normal text-gray-400 normal-case tracking-normal">論文・プレプリント</span></div>
+        <div id="articleList" class="space-y-3">
+          <!-- スケルトン -->
+          <div class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+            <div class="sk h-3 w-32 mb-3"></div><div class="sk h-4 w-full mb-1"></div><div class="sk h-4 w-4/5 mb-3"></div>
+            <div class="sk h-3 w-full mb-1"></div><div class="sk h-3 w-3/4"></div>
+          </div>
+          <div class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+            <div class="sk h-3 w-32 mb-3"></div><div class="sk h-4 w-full mb-1"></div><div class="sk h-4 w-3/5 mb-3"></div>
+            <div class="sk h-3 w-full mb-1"></div><div class="sk h-3 w-5/6"></div>
+          </div>
+          <div class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+            <div class="sk h-3 w-32 mb-3"></div><div class="sk h-4 w-5/6 mb-1"></div><div class="sk h-4 w-3/4 mb-3"></div>
+            <div class="sk h-3 w-full mb-1"></div><div class="sk h-3 w-2/3"></div>
+          </div>
         </div>
       </section>
 
-      <!-- ガイドライン・声明セクション -->
-      <section>
-        <div class="sec-title"><span class="accent">ガイドライン・声明</span>&emsp;学会・機関</div>
-        <div class="space-y-3">
+      <!-- ガイドライン -->
+      <section id="glSection">
+        <div class="sec-title"><span class="accent">ガイドライン・声明</span>&emsp;<span class="font-normal text-gray-400 normal-case tracking-normal">学会・機関</span></div>
+        <div id="glList" class="space-y-3">
+          <div class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+            <div class="sk h-3 w-32 mb-3"></div><div class="sk h-4 w-full mb-1"></div><div class="sk h-4 w-4/5 mb-3"></div>
+            <div class="sk h-3 w-3/4"></div>
+          </div>
+        </div>
+      </section>
 
-          <!-- GL1: 統合失調症 -->
-          <article class="news-card bg-white rounded-2xl border border-gray-200 border-l-4 border-l-violet-400 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="sz pharm">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span class="lbl lbl-gl">ガイドライン</span>
-                <span class="text-gray-400 text-xs">日本神経精神薬理学会 · 2026-04-15</span>
-                <span class="bg-violet-100 text-violet-700 text-xs px-2 py-0.5 rounded-full font-bold">NEW</span>
-              </div>
-              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
-                <a href="#" target="_blank" rel="noopener">統合失調症薬物治療ガイドライン 2026年版（改訂第4版）— TRS定義・クロザピン導入基準・ECT適応の更新</a>
-              </h3>
-              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">治療抵抗性統合失調症の定義・評価基準を見直し。副作用モニタリング標準化フローを付録に新設。</p>
-              <div class="flex items-center gap-2 mt-2.5">
-                <span class="pill pill-sz">統合失調症</span>
-                <span class="pill pill-pharm">薬物治療</span>
-                <span class="bg-violet-50 text-violet-700 text-xs px-2 py-0.5 rounded font-semibold ml-1">日本語</span>
-                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-              </div>
-            </div>
-            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="g1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-            </button>
-          </article>
-
-          <!-- GL2: APA うつ -->
-          <article class="news-card bg-white rounded-2xl border border-gray-200 border-l-4 border-l-blue-400 p-4 sm:p-5 shadow-sm flex gap-4" data-cats="dep psych">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span class="lbl lbl-gl">ガイドライン</span>
-                <span class="text-gray-400 text-xs">APA · 2026-04-01</span>
-              </div>
-              <h3 class="font-bold text-sm text-gray-900 leading-snug mb-1.5 hover:text-indigo-700 transition-colors">
-                <a href="#" target="_blank" rel="noopener">APA大うつ病性障害治療ガイドライン 第4版：精神療法の位置づけと薬物療法との比較推奨の改訂</a>
-              </h3>
-              <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">CBT・IPTを軽〜中等度うつの第一選択として強化。抗うつ薬との初期併用に関する新たなエビデンスを統合。</p>
-              <div class="flex items-center gap-2 mt-2.5">
-                <span class="pill pill-dep">うつ病</span>
-                <span class="pill pill-psych">精神療法</span>
-                <a href="#" class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                  全文 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </a>
-              </div>
-            </div>
-            <button class="bm-btn shrink-0 p-1.5 text-gray-300 self-start mt-0.5" data-uid="g2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-            </button>
-          </article>
-
+      <!-- 国内ニュース -->
+      <section id="newsSection">
+        <div class="sec-title">
+          <span class="accent">国内ニュース</span>&emsp;
+          <span id="newsSubtitle" class="font-normal text-gray-400 normal-case tracking-normal">Google News · 国内精神科・メンタルヘルス情報</span>
+        </div>
+        <div id="newsList" class="space-y-3">
+          <!-- スケルトン -->
+          <div class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+            <div class="sk h-3 w-32 mb-3"></div><div class="sk h-4 w-full mb-1"></div><div class="sk h-4 w-4/5 mb-3"></div>
+            <div class="sk h-3 w-full mb-1"></div><div class="sk h-3 w-3/4"></div>
+          </div>
+          <div class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm">
+            <div class="sk h-3 w-32 mb-3"></div><div class="sk h-4 w-full mb-1"></div><div class="sk h-4 w-3/5 mb-3"></div>
+            <div class="sk h-3 w-full mb-1"></div><div class="sk h-3 w-5/6"></div>
+          </div>
         </div>
       </section>
 
@@ -420,81 +271,66 @@
       <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
         <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">取得ソース</h3>
         <div class="space-y-2.5">
-          <label class="flex items-center justify-between gap-2 cursor-pointer">
+          <div class="flex items-center justify-between text-xs">
             <div class="flex items-center gap-2">
-              <input type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-400">
-              <span class="text-xs font-medium text-gray-700">PubMed (精神科)</span>
+              <span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+              <span class="font-medium text-gray-700">PubMed E-utilities</span>
             </div>
-            <span class="lbl lbl-pm">ON</span>
-          </label>
-          <label class="flex items-center justify-between gap-2 cursor-pointer">
+            <span class="lbl lbl-pm">LIVE</span>
+          </div>
+          <div class="flex items-center justify-between text-xs">
             <div class="flex items-center gap-2">
-              <input type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-400">
-              <span class="text-xs font-medium text-gray-700">medRxiv</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+              <span class="font-medium text-gray-700">Google News RSS</span>
             </div>
-            <span class="lbl lbl-pre">ON</span>
-          </label>
-          <label class="flex items-center justify-between gap-2 cursor-pointer">
+            <span class="lbl lbl-news">LIVE</span>
+          </div>
+          <div class="flex items-center justify-between text-xs">
             <div class="flex items-center gap-2">
-              <input type="checkbox" checked class="rounded text-indigo-600 focus:ring-indigo-400">
-              <span class="text-xs font-medium text-gray-700">日精協ガイドライン</span>
+              <span class="w-2 h-2 rounded-full bg-violet-400 inline-block"></span>
+              <span class="font-medium text-gray-700">Google Translate</span>
             </div>
-            <span class="lbl lbl-gl">ON</span>
-          </label>
-          <label class="flex items-center justify-between gap-2 cursor-pointer">
-            <div class="flex items-center gap-2">
-              <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-400">
-              <span class="text-xs font-medium text-gray-400">ClinicalTrials.gov</span>
-            </div>
-            <span class="bg-gray-100 text-gray-400 lbl">OFF</span>
-          </label>
+            <span class="lbl lbl-gl">翻訳</span>
+          </div>
         </div>
       </div>
 
-      <!-- 注目ジャーナル -->
+      <!-- 今回の取得結果 -->
       <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
-        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">注目ジャーナル</h3>
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Lancet Psychiatry</span><span class="text-gray-400">3 件</span></div>
-          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">JAMA Psychiatry</span><span class="text-gray-400">2 件</span></div>
-          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Schizophr Bull</span><span class="text-gray-400">2 件</span></div>
-          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Am J Psychiatry</span><span class="text-gray-400">2 件</span></div>
-          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">Nature Medicine</span><span class="text-gray-400">1 件</span></div>
-          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">NEJM</span><span class="text-gray-400">1 件</span></div>
-          <div class="flex justify-between text-xs"><span class="font-medium text-gray-700">medRxiv</span><span class="text-gray-400">2 件</span></div>
-        </div>
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">取得結果</h3>
+        <div id="statList" class="space-y-1.5 text-xs text-gray-400">—</div>
       </div>
 
       <!-- 保存済み -->
       <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider">保存済み</h3>
-          <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">1</span>
+          <span id="bmCountBadge" class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
         </div>
-        <div id="savedList" class="space-y-2">
-          <div class="border-b border-gray-100 pb-2">
-            <a href="#" class="text-xs font-medium text-gray-800 hover:text-indigo-700 line-clamp-2 block">Psilocybin補助療法 vs エスシタロプラム：治療抵抗性うつ病の12ヵ月追跡RCT</a>
-            <p class="text-xs text-gray-400 mt-0.5">NEJM · 2026-04-22</p>
-          </div>
-        </div>
+        <div id="savedList" class="text-xs text-gray-400 italic">保存された記事はありません</div>
       </div>
 
       <!-- キーワードアラート -->
       <div class="bg-indigo-50 rounded-2xl border border-indigo-100 p-4">
         <h3 class="text-xs font-bold text-indigo-800 mb-2 flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.437L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-          キーワードアラート
+          ハイライトキーワード
         </h3>
-        <div class="flex flex-wrap gap-1.5 mb-3">
-          <span class="bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">clozapine</span>
-          <span class="bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">SSRI</span>
-          <span class="bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">治療抵抗性</span>
-        </div>
+        <div id="alertPills" class="flex flex-wrap gap-1.5 mb-3"></div>
         <div class="flex gap-2">
-          <input type="text" placeholder="キーワード追加…"
+          <input id="alertInput" type="text" placeholder="キーワード追加…"
             class="flex-1 text-xs px-2.5 py-1.5 rounded-lg border border-indigo-200 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300">
-          <button class="px-3 py-1.5 bg-indigo-700 text-white text-xs font-semibold rounded-lg hover:bg-indigo-800">追加</button>
+          <button id="alertAdd" class="px-3 py-1.5 bg-indigo-700 text-white text-xs font-semibold rounded-lg hover:bg-indigo-800">追加</button>
         </div>
+      </div>
+
+      <!-- ログ -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider">取得ログ</h3>
+          <button onclick="document.getElementById('logEl').innerHTML=''" class="text-xs text-gray-400 hover:text-gray-600">クリア</button>
+        </div>
+        <div id="logEl" class="text-xs font-mono text-gray-400 max-h-40 overflow-y-auto space-y-0.5 bg-gray-50 rounded p-2"></div>
       </div>
 
     </aside>
@@ -506,74 +342,785 @@
 <footer class="mt-10 border-t border-gray-200 bg-white">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
     <span>PsychFeed — 個人利用 / 情報は原著論文を必ず確認してください</span>
-    <span>デザインプロトタイプ v1</span>
+    <span>PubMed E-utilities API · Google News RSS · NCBI 2026</span>
   </div>
 </footer>
 
-<!-- JS -->
+<!-- ===== SCRIPT ===== -->
 <script>
-  // カテゴリフィルター
-  const chips    = document.querySelectorAll('.chip');
-  const articles = document.querySelectorAll('[data-cats]');
+// ============================================================
+// CONFIG
+// ============================================================
+const EUTILS = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
+const PROXIES = [
+  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+];
+const CACHE_TTL   = 15 * 60 * 1000; // 15分
+const RETMAX_ART  = 10; // 記事件数
+const RETMAX_GL   = 3;  // ガイドライン件数
+const RETMAX_NEWS = 10; // 国内ニュース件数
 
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      // アクティブスタイルをリセット
-      chips.forEach(c => {
-        c.classList.remove('bg-indigo-600','text-white');
-        c.classList.add('opacity-80');
-      });
-      chip.classList.add('bg-indigo-600','text-white');
-      chip.classList.remove('opacity-80');
+// カテゴリ → Google News RSS 検索クエリ（日本語）
+const GNEWS_QUERIES = {
+  all:   '精神科 OR 精神医学 OR メンタルヘルス',
+  sz:    '統合失調症',
+  dep:   'うつ病 OR 気分障害 OR 抑うつ',
+  bip:   '双極性障害 OR 双極症',
+  anx:   '不安障害 OR PTSD OR パニック障害',
+  ndd:   '発達障害 OR ADHD OR 自閉スペクトラム症',
+  sub:   '依存症 OR アルコール依存 OR 薬物依存',
+  pharm: '向精神薬 OR 精神科 薬物療法',
+  psych: '認知行動療法 OR 精神療法',
+  neuro: '脳科学 精神 OR 神経科学 精神医学',
+};
+function gnewsUrl(q) {
+  return `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=ja&gl=JP&ceid=JP:ja`;
+}
 
-      const cat = chip.dataset.cat;
-      let count = 0;
-      articles.forEach(art => {
-        const cats = art.dataset.cats?.split(' ') || [];
-        const show = cat === 'all' || cats.includes(cat);
-        art.style.display = show ? '' : 'none';
-        if (show) count++;
-      });
-      document.getElementById('countText').textContent = `${count} 件`;
+// カテゴリ → PubMedクエリ
+const QUERIES = {
+  all:   '"Lancet Psychiatry"[Journal] OR "JAMA Psychiatry"[Journal] OR "World Psychiatry"[Journal] OR "American Journal of Psychiatry"[Journal] OR "Psychological Medicine"[Journal]',
+  sz:    'schizophrenia[MeSH Terms]',
+  dep:   '"depressive disorder"[MeSH Terms]',
+  bip:   '"bipolar disorder"[MeSH Terms]',
+  anx:   '"anxiety disorders"[MeSH Terms]',
+  ndd:   '("attention deficit disorder with hyperactivity"[MeSH Terms] OR "autism spectrum disorder"[MeSH Terms])',
+  sub:   '"substance-related disorders"[MeSH Terms]',
+  pharm: 'psychopharmacology[MeSH Terms]',
+  psych: 'psychotherapy[MeSH Terms]',
+  neuro: '(neuroimaging[MeSH Terms] OR "neural circuits"[MeSH Terms]) AND psychiatry[Title/Abstract]',
+};
+
+// カテゴリ表示名
+const CAT_LABEL = {
+  all:'トップジャーナル', sz:'統合失調症', dep:'うつ病・気分障害',
+  bip:'双極性障害', anx:'不安障害・PTSD', ndd:'神経発達症',
+  sub:'依存症', pharm:'薬物治療', psych:'精神療法', neuro:'神経科学',
+};
+
+// キーワード → ピルクラス自動検出（英語 + 日本語）
+const CAT_KW = {
+  sz:    ['schizophrenia','psychosis','antipsychotic','clozapine','olanzapine','risperidone','quetiapine',
+          '統合失調症','精神病','抗精神病薬','クロザピン','オランザピン'],
+  dep:   ['depression','depressive','antidepressant','ssri','snri','mdd','sertraline','fluoxetine','escitalopram',
+          'うつ病','抑うつ','気分障害','抗うつ薬'],
+  bip:   ['bipolar','mania','manic','mood stabilizer','lithium','valproate','lamotrigine',
+          '双極性障害','双極症','躁病','気分安定薬','リチウム'],
+  anx:   ['anxiety','ptsd','panic','phobia','ocd','gad','trauma','emdr',
+          '不安障害','パニック障害','強迫症','恐怖症','PTSD'],
+  ndd:   ['adhd','autism','asd','neurodevelopmental','methylphenidate','amphetamine','atomoxetine',
+          '発達障害','ADHD','自閉スペクトラム症','注意欠如多動症'],
+  sub:   ['substance','addiction','alcohol','opioid','cannabis','dependence','withdrawal',
+          '依存症','アルコール依存','薬物依存','アディクション'],
+  pharm: ['pharmacotherapy','pharmacology','drug','medication','placebo','trial','dose',
+          '薬物療法','向精神薬','処方','治療薬'],
+  psych: ['psychotherapy','cbt','cognitive','behavioral','therapy','mindfulness','dbt',
+          '精神療法','認知行動療法','マインドフルネス','カウンセリング'],
+  neuro: ['neuroscience','neuroimaging','brain','neural','fmri','eeg','dopamine','serotonin',
+          '神経科学','脳科学','神経画像','ドパミン','セロトニン'],
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentCat  = 'all';
+let currentSort = 'pub+date';
+let langMode    = 'ja'; // 'ja' | 'en'  デフォルト日本語翻訳
+let alertKws    = JSON.parse(localStorage.getItem('pf_alerts') || '["clozapine","SSRI","治療抵抗性"]');
+let saved       = JSON.parse(localStorage.getItem('pf_saved')  || '{}');
+
+// ============================================================
+// LOG
+// ============================================================
+function log(msg, type='info') {
+  const el = document.getElementById('logEl');
+  if (!el) return;
+  const clr = {info:'#9ca3af', ok:'#6ee7b7', warn:'#fbbf24', err:'#f87171'}[type];
+  const t = new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  el.innerHTML += `<span style="color:${clr}">[${t}] ${esc(msg)}</span>\n`;
+  el.scrollTop = el.scrollHeight;
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function decodeHtml(s) {
+  const el = document.createElement('textarea'); el.innerHTML = s; return el.value;
+}
+function stripHtml(h) {
+  const d = document.createElement('div'); d.innerHTML = h; return d.textContent || '';
+}
+function fmtDate(s) {
+  if (!s) return '';
+  const d = new Date(s);
+  if (!isNaN(d)) return d.toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'});
+  const mon = {Jan:'1月',Feb:'2月',Mar:'3月',Apr:'4月',May:'5月',Jun:'6月',Jul:'7月',Aug:'8月',Sep:'9月',Oct:'10月',Nov:'11月',Dec:'12月'};
+  const m = s.match(/(\d{4})\s+(\w+)/);
+  return m ? `${m[1]}年${mon[m[2]]||m[2]}` : s;
+}
+function fmtAuthor(authors) {
+  if (!authors?.length) return '';
+  return authors.length > 1 ? `${authors[0].name} et al.` : authors[0].name;
+}
+function pmUrl(uid)  { return `https://pubmed.ncbi.nlm.nih.gov/${uid}/`; }
+function artUrl(art) { return art.type==='news' ? (art.link||'#') : pmUrl(art.uid); }
+function artDate(art){ return art.type==='news' ? fmtDate(art.pubDate) : fmtDate(art.pubdate); }
+function artSrc(art) { return art.type==='news' ? (art.newsSource||'Google News') : (art.source||'PubMed'); }
+function artDesc(art){ return art.type==='news' ? (art.description||'') : (art.abstract||''); }
+function artId(art)  { return art.uid || art.link || ''; }
+
+function detectPills(title, abstract) {
+  const txt = (title + ' ' + abstract).toLowerCase();
+  return Object.entries(CAT_KW).filter(([,kws]) => kws.some(kw=>txt.includes(kw))).map(([k])=>k);
+}
+
+function hl(text) {
+  if (!alertKws.length) return esc(text);
+  let out = esc(text);
+  alertKws.forEach(kw => {
+    const re = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+    out = out.replace(re, m => `<mark class="bg-yellow-100 text-yellow-800 rounded px-0.5">${m}</mark>`);
+  });
+  return out;
+}
+
+const BM_OFF = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>`;
+const BM_ON  = `<svg class="w-4 h-4" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>`;
+
+// ============================================================
+// TRANSLATION UTILS
+// ============================================================
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function isJapanese(text) {
+  return /[\u3040-\u30ff\u4e00-\u9fff]/.test(text || '');
+}
+
+async function translateText(text) {
+  if (!text || !text.trim() || isJapanese(text)) return text;
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ja&dt=t&q=${encodeURIComponent(text)}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`translate HTTP ${r.status}`);
+  const data = await r.json();
+  return data[0].map(chunk => chunk[0]).join('').replace(/\s+/g,' ').trim();
+}
+
+function tlCacheKey(text) { return 'tl_' + btoa(encodeURIComponent(text.slice(0,120))); }
+function tlCacheGet(text) {
+  try { return sessionStorage.getItem(tlCacheKey(text)); } catch { return null; }
+}
+function tlCacheSet(text, translated) {
+  try { sessionStorage.setItem(tlCacheKey(text), translated); } catch {}
+}
+
+// ============================================================
+// APPLY TRANSLATED / ORIGINAL TEXT TO A DOM ELEMENT
+// ============================================================
+function applyTextToElement(el, text) {
+  const withEllipsis = el.dataset.ellipsis === '1';
+  el.innerHTML = hl(text) + (withEllipsis ? '…' : '');
+}
+
+// ============================================================
+// TRANSLATE ALL VISIBLE [data-orig] ELEMENTS
+// ============================================================
+async function translateAllVisible() {
+  if (langMode !== 'ja') return;
+  const elements = [...document.querySelectorAll('[data-orig]')];
+  let count = 0;
+  for (const el of elements) {
+    const orig = el.dataset.orig || '';
+    if (!orig) continue;
+    // Already translated
+    if (el.dataset.ja) { applyTextToElement(el, el.dataset.ja); continue; }
+    // Japanese source — no translation needed
+    if (isJapanese(orig)) { el.dataset.ja = orig; continue; }
+    // Check session cache
+    const cached = tlCacheGet(orig);
+    if (cached) { el.dataset.ja = cached; applyTextToElement(el, cached); continue; }
+    // Show loading state
+    el.classList.add('tl-loading');
+    try {
+      const translated = await translateText(orig);
+      tlCacheSet(orig, translated);
+      el.dataset.ja = translated;
+      if (langMode === 'ja') applyTextToElement(el, translated);
+      count++;
+    } catch (e) {
+      el.dataset.ja = orig; // fallback
+      log(`翻訳失敗: ${e.message}`, 'warn');
+    }
+    el.classList.remove('tl-loading');
+    await sleep(120); // rate-limit guard
+  }
+  if (count > 0) log(`翻訳完了: ${count}件`, 'ok');
+}
+
+// ============================================================
+// SWITCH DISPLAY LANGUAGE
+// ============================================================
+function applyLang(mode) {
+  langMode = mode;
+  // Update toggle button styles
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    if (b.dataset.lang === mode) {
+      b.classList.add('active-lang');
+    } else {
+      b.classList.remove('active-lang');
+    }
+  });
+  // Apply to all translatable elements
+  document.querySelectorAll('[data-orig]').forEach(el => {
+    const text = mode === 'ja' ? (el.dataset.ja || el.dataset.orig || '') : (el.dataset.orig || '');
+    applyTextToElement(el, text);
+  });
+  // If switching to Japanese, kick off any remaining untranslated elements
+  if (mode === 'ja') translateAllVisible();
+}
+
+// ============================================================
+// RSS FETCH (Google News 国内ニュース)
+// ============================================================
+function parseRSS(raw, max=10) {
+  let xmlText = raw;
+  // allorigins.win は JSON で返す場合がある
+  try { const j = JSON.parse(raw); xmlText = j.contents || raw; } catch {}
+  const xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+  // パース失敗チェック
+  if (xml.querySelector('parsererror')) return [];
+  const items = [...xml.querySelectorAll('channel > item')].slice(0, max);
+  return items.map(item => {
+    const title   = decodeHtml(item.querySelector('title')?.textContent?.trim() || '');
+    // Google News の <link> は次のテキストノードに入る場合がある
+    const link    = item.querySelector('link')?.nextSibling?.nodeValue?.trim()
+                 || item.querySelector('guid')?.textContent?.trim() || '#';
+    const pubDate = item.querySelector('pubDate')?.textContent?.trim() || '';
+    const rawDesc = item.querySelector('description')?.textContent || '';
+    const desc    = stripHtml(decodeHtml(rawDesc)).replace(/\s+/g,' ').slice(0, 300);
+    const src     = item.querySelector('source')?.textContent?.trim() || 'Google News';
+    const uid     = item.querySelector('guid')?.textContent?.trim() || link;
+    return { type:'news', uid, title, link, pubDate, description:desc, newsSource:src, abstract:desc };
+  }).filter(a => a.title);
+}
+
+async function fetchRSS(url, max=10) {
+  for (const mkProxy of PROXIES) {
+    try {
+      const proxyUrl = mkProxy(url);
+      log(`RSS: ${decodeURIComponent(url).slice(0,60)}…`);
+      const r = await fetch(proxyUrl);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const text = await r.text();
+      const arts = parseRSS(text, max);
+      if (arts.length) { log(`→ ${arts.length}件`, 'ok'); return arts; }
+      log('RSS: 0件 → 次のproxyへ', 'warn');
+    } catch (e) { log(`RSS proxy失敗: ${e.message}`, 'warn'); }
+  }
+  log('RSS取得失敗（全proxy）', 'err');
+  return [];
+}
+
+// ============================================================
+// PUBMED API
+// ============================================================
+async function pmSearch(query, retmax, sort='pub+date') {
+  const url = `${EUTILS}esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&sort=${sort}&retmax=${retmax}&retmode=json`;
+  log(`esearch: ${query.slice(0,55)}…`);
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`esearch HTTP ${r.status}`);
+  const d = await r.json();
+  log(`→ 総${d.esearchresult.count}件 取得${d.esearchresult.idlist.length}件`, 'ok');
+  return { ids: d.esearchresult.idlist, total: +d.esearchresult.count };
+}
+
+async function pmSummary(ids) {
+  if (!ids.length) return {};
+  log(`esummary: ${ids.length}件`);
+  const r = await fetch(`${EUTILS}esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json`);
+  if (!r.ok) throw new Error(`esummary HTTP ${r.status}`);
+  return (await r.json()).result;
+}
+
+async function pmAbstracts(ids) {
+  if (!ids.length) return {};
+  log(`efetch abstract: ${ids.length}件`);
+  const r = await fetch(`${EUTILS}efetch.fcgi?db=pubmed&id=${ids.join(',')}&rettype=abstract&retmode=xml`);
+  if (!r.ok) throw new Error(`efetch HTTP ${r.status}`);
+  const xml = new DOMParser().parseFromString(await r.text(), 'text/xml');
+  const out = {};
+  xml.querySelectorAll('PubmedArticle').forEach(art => {
+    const pmid = art.querySelector('PMID')?.textContent?.trim();
+    if (!pmid) return;
+    const parts = [];
+    art.querySelectorAll('AbstractText').forEach(el => {
+      const label = el.getAttribute('Label');
+      const txt = el.textContent.replace(/\s+/g,' ').trim();
+      if (txt) parts.push(label ? `[${label}] ${txt}` : txt);
     });
+    if (parts.length) out[pmid] = parts.join(' ');
   });
+  log(`→ abstract取得: ${Object.keys(out).length}件`, 'ok');
+  return out;
+}
 
-  // キーワード検索
-  let stimer;
-  document.getElementById('searchInput').addEventListener('input', function () {
-    clearTimeout(stimer);
-    const q = this.value.trim().toLowerCase();
-    stimer = setTimeout(() => {
-      articles.forEach(art => {
-        art.style.display = (!q || art.textContent.toLowerCase().includes(q)) ? '' : 'none';
-      });
-    }, 200);
-  });
+async function pmFetch(query, retmax) {
+  const { ids } = await pmSearch(query + ' AND ("2023"[PDat]:"3000"[PDat])', retmax, currentSort);
+  if (!ids.length) return [];
+  const [sums, absts] = await Promise.all([pmSummary(ids), pmAbstracts(ids)]);
+  return ids.map(id => ({
+    ...(sums[id] || { uid:id }),
+    abstract: absts[id] || '',
+    type: 'pubmed',
+  }));
+}
 
-  // ブックマーク（デモ）
-  document.querySelectorAll('.bm-btn').forEach(btn => {
+// ============================================================
+// CACHE
+// ============================================================
+function cGet(key) {
+  try { const {ts,data}=JSON.parse(sessionStorage.getItem(key)||'null'||'{}'); if(Date.now()-ts<CACHE_TTL) return data; } catch {}
+  return null;
+}
+function cSet(key, data) {
+  try { sessionStorage.setItem(key, JSON.stringify({ts:Date.now(), data})); } catch {}
+}
+
+// ============================================================
+// RENDER: ヒーローゾーン
+// ============================================================
+function renderHeroZone(arts) {
+  const el = document.getElementById('heroZone');
+  if (!arts.length) { el.innerHTML = '<p class="py-8 text-center text-sm text-gray-400">記事が見つかりませんでした</p>'; return; }
+
+  const main = arts[0], s1 = arts[1]||null, s2 = arts[2]||null;
+  const mainId = artId(main); const isBmMain = !!saved[mainId];
+
+  el.innerHTML = `
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-0 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+    <!-- メイン -->
+    <article class="hero-card lg:col-span-3 relative cursor-pointer" style="min-height:230px;" data-id="${esc(mainId)}">
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-800 to-slate-900"></div>
+      <div class="absolute inset-0 opacity-10" style="background:radial-gradient(circle at 30% 40%,#818cf8,transparent 50%),radial-gradient(circle at 80% 70%,#6366f1,transparent 40%);"></div>
+      <div class="absolute inset-0 hero-grad flex flex-col justify-end p-5 sm:p-7">
+        <div class="flex items-center gap-2 mb-2 flex-wrap">
+          ${main.type==='news' ? '<span class="lbl lbl-news">NEWS</span>' : '<span class="lbl lbl-pm">PubMed</span>'}
+          <span class="text-white/60 text-xs">${esc(artSrc(main))} · ${esc(artDate(main))}</span>
+          <span class="ml-auto text-white/50 text-xs">${esc(fmtAuthor(main.authors||[]))}</span>
+        </div>
+        <h2 class="hero-title text-white font-bold text-sm sm:text-lg leading-snug mb-2">
+          <a href="${esc(artUrl(main))}" target="_blank" rel="noopener"
+             data-orig="${esc(decodeHtml(main.title||''))}">${hl(decodeHtml(main.title||''))}</a>
+        </h2>
+        ${artDesc(main) ? `<p class="text-white/65 text-xs leading-relaxed line-clamp-2" data-orig="${esc(artDesc(main).slice(0,180))}" data-ellipsis="1">${hl(artDesc(main).slice(0,180))}…</p>` : ''}
+        <div class="flex items-center gap-2 mt-3">
+          ${renderPills(detectPills(main.title||'', artDesc(main)), 'white')}
+          <button class="bm-btn${isBmMain?' saved':''} ml-auto p-1.5 ${isBmMain?'text-amber-400 bg-amber-400/10':'text-white/40 bg-white/10'}"
+            data-id="${esc(mainId)}" data-title="${esc(decodeHtml(main.title||''))}" data-src="${esc(artSrc(main))}">
+            ${isBmMain?BM_ON:BM_OFF}
+          </button>
+          <a href="${esc(artUrl(main))}" target="_blank" rel="noopener"
+             class="flex items-center gap-1 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold rounded-lg transition-colors">
+            開く <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+    <!-- サイド -->
+    <div class="lg:col-span-2 bg-white flex flex-col divide-y divide-gray-100">
+      ${[s1,s2].filter(Boolean).map(a => renderSideStory(a)).join('')}
+      ${!s1 ? '<div class="flex-1 p-4 text-xs text-gray-300 flex items-center justify-center">—</div>' : ''}
+    </div>
+  </div>`;
+
+  attachBm(el);
+}
+
+function renderSideStory(art) {
+  const id = artId(art); const isBm = !!saved[id];
+  const pills = detectPills(art.title||'', artDesc(art));
+  return `
+  <article class="side-story flex-1 p-4 sm:p-5 flex flex-col justify-between" data-id="${esc(id)}">
+    <div>
+      <div class="flex items-center gap-2 mb-2">
+        ${art.type==='news' ? '<span class="lbl lbl-news">NEWS</span>' : '<span class="lbl lbl-pm">PubMed</span>'}
+        <span class="text-gray-400 text-xs">${esc(artSrc(art))} · ${esc(artDate(art))}</span>
+      </div>
+      <h3 class="side-title font-bold text-sm text-gray-900 leading-snug mb-1.5">
+        <a href="${esc(artUrl(art))}" target="_blank" rel="noopener"
+           data-orig="${esc(decodeHtml(art.title||''))}">${hl(decodeHtml(art.title||''))}</a>
+      </h3>
+      <p class="text-xs text-gray-400 leading-relaxed line-clamp-2"
+         data-orig="${esc(artDesc(art).slice(0,100))}" data-ellipsis="1">${esc(artDesc(art).slice(0,100))}…</p>
+    </div>
+    <div class="flex items-center gap-1.5 mt-2">
+      ${renderPills(pills)}
+      <button class="bm-btn${isBm?' saved':''} ml-auto p-1 ${isBm?'text-amber-400':'text-gray-300'}"
+        data-id="${esc(id)}" data-title="${esc(decodeHtml(art.title||''))}" data-src="${esc(artSrc(art))}">
+        <svg class="w-3.5 h-3.5" fill="${isBm?'currentColor':'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+      </button>
+    </div>
+  </article>`;
+}
+
+// ============================================================
+// RENDER: 記事カード
+// ============================================================
+function renderArticleCard(art, isGL=false) {
+  const id = artId(art); const isBm = !!saved[id];
+  const pills = detectPills(art.title||'', artDesc(art));
+  const desc = artDesc(art);
+  const absId = `abs-${CSS.escape(id).slice(0,20)}`;
+  const borderLeft = isGL ? 'border-l-4 border-l-indigo-400' : '';
+
+  return `
+  <article class="news-card bg-white rounded-2xl border border-gray-200 ${borderLeft} p-4 sm:p-5 shadow-sm flex gap-4" data-id="${esc(id)}">
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+        ${art.type==='news' ? '<span class="lbl lbl-news">NEWS</span>' : '<span class="lbl lbl-pm">PubMed</span>'}
+        <span class="text-gray-400 text-xs">${esc(artSrc(art))} · ${esc(artDate(art))}</span>
+        ${isGL ? '<span class="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded font-semibold">ガイドライン</span>' : ''}
+      </div>
+      <h3 class="card-title font-bold text-sm text-gray-900 leading-snug mb-1.5">
+        <a href="${esc(artUrl(art))}" target="_blank" rel="noopener"
+           data-orig="${esc(decodeHtml(art.title||''))}">${hl(decodeHtml(art.title||''))}</a>
+      </h3>
+      ${desc ? `
+        <p id="${absId}" class="text-xs text-gray-500 leading-relaxed abs-txt"
+           data-orig="${esc(desc)}">${hl(desc)}</p>
+        <button class="text-indigo-500 hover:text-indigo-700 text-xs mt-0.5 transition-colors" onclick="toggleAbs('${absId}',this)">続きを読む ▾</button>
+      ` : ''}
+      ${art.authors?.length ? `<p class="text-xs text-gray-300 mt-1">${esc(fmtAuthor(art.authors))}</p>` : ''}
+      <div class="flex items-center gap-2 mt-2.5">
+        ${renderPills(pills)}
+        <a href="${esc(artUrl(art))}" target="_blank" rel="noopener"
+           class="ml-auto text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 shrink-0">
+          ${art.type==='news'?'記事を開く':'全文'}
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+      </div>
+    </div>
+    <button class="bm-btn${isBm?' saved':''} shrink-0 p-1.5 ${isBm?'text-amber-400':'text-gray-300'} self-start mt-0.5"
+      data-id="${esc(id)}" data-title="${esc(decodeHtml(art.title||''))}" data-src="${esc(artSrc(art))}">
+      ${isBm?BM_ON:BM_OFF}
+    </button>
+  </article>`;
+}
+
+// ============================================================
+// RENDER: 国内ニュースカード（Google News RSS）
+// ============================================================
+function renderNewsCard(art) {
+  const id = artId(art); const isBm = !!saved[id];
+  const pills = detectPills(art.title||'', art.description||'');
+  const desc = art.description || '';
+  const absId = `abs-${CSS.escape(id).slice(0,20)}`;
+
+  return `
+  <article class="news-card bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 shadow-sm flex gap-4"
+           style="border-left:4px solid #34d399;" data-id="${esc(id)}">
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+        <span class="lbl lbl-news">NEWS</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+        <span class="text-gray-500 text-xs font-medium">${esc(art.newsSource||'Google News')}</span>
+        <span class="text-gray-300 text-xs">·</span>
+        <span class="text-gray-400 text-xs">${esc(fmtDate(art.pubDate))}</span>
+      </div>
+      <h3 class="card-title font-bold text-sm text-gray-900 leading-snug mb-1.5">
+        <a href="${esc(art.link||'#')}" target="_blank" rel="noopener"
+           data-orig="${esc(art.title||'')}">${hl(art.title||'')}</a>
+      </h3>
+      ${desc ? `
+        <p id="${absId}" class="text-xs text-gray-500 leading-relaxed abs-txt"
+           data-orig="${esc(desc)}">${hl(desc)}</p>
+        ${desc.length > 80 ? `<button class="text-emerald-600 hover:text-emerald-800 text-xs mt-0.5 transition-colors" onclick="toggleAbs('${absId}',this)">続きを読む ▾</button>` : ''}
+      ` : ''}
+      <div class="flex items-center gap-2 mt-2.5">
+        ${renderPills(pills)}
+        <a href="${esc(art.link||'#')}" target="_blank" rel="noopener"
+           class="ml-auto text-xs font-semibold text-emerald-600 hover:text-emerald-800 flex items-center gap-1 shrink-0">
+          記事を開く
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+      </div>
+    </div>
+    <button class="bm-btn${isBm?' saved':''} shrink-0 p-1.5 ${isBm?'text-amber-400':'text-gray-300'} self-start mt-0.5"
+      data-id="${esc(id)}" data-title="${esc(art.title||'')}" data-src="${esc(art.newsSource||'Google News')}">
+      ${isBm?BM_ON:BM_OFF}
+    </button>
+  </article>`;
+}
+
+function renderPills(cats, theme='normal') {
+  const MAP = { sz:'pill-sz',dep:'pill-dep',bip:'pill-bip',anx:'pill-anx',ndd:'pill-ndd',sub:'pill-sub',pharm:'pill-pharm',psych:'pill-psych',neuro:'pill-neuro' };
+  const LABEL = { sz:'統合失調症',dep:'うつ病',bip:'双極性',anx:'不安/PTSD',ndd:'神経発達',sub:'依存症',pharm:'薬物治療',psych:'精神療法',neuro:'神経科学' };
+  if (!cats.length) return '';
+  return cats.slice(0,3).map(c =>
+    MAP[c] ? `<span class="pill ${MAP[c]}" style="${theme==='white'?'border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8);opacity:1;':''}">${LABEL[c]||c}</span>` : ''
+  ).join('');
+}
+
+function emptyCard(msg) {
+  return `<div class="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
+    <div class="text-2xl mb-2">📭</div>
+    <p class="text-xs text-gray-400">${esc(msg)}</p>
+  </div>`;
+}
+function errCard(msg) {
+  return `<div class="bg-white rounded-2xl border border-red-100 p-6 text-center shadow-sm">
+    <div class="text-xl mb-2">⚠️</div>
+    <p class="text-xs text-red-500 font-medium">${esc(msg)}</p>
+    <p class="text-xs text-gray-400 mt-1">取得ログで詳細を確認</p>
+  </div>`;
+}
+
+// ============================================================
+// MAIN FETCH
+// ============================================================
+async function loadFeed(force=false) {
+  setLoading(true);
+  const cKey     = `pf_${currentCat}_${currentSort}`;
+  const cKeyGL   = `pf_gl_${currentCat}`;
+  const cKeyNews = `pf_news_${currentCat}`;
+
+  if (force) { [cKey, cKeyGL, cKeyNews].forEach(k => sessionStorage.removeItem(k)); }
+
+  document.getElementById('articleSubtitle').textContent = CAT_LABEL[currentCat] || currentCat;
+  document.getElementById('newsSubtitle').textContent =
+    (GNEWS_QUERIES[currentCat] ? `「${GNEWS_QUERIES[currentCat]}」` : '') + ' — Google News 国内';
+
+  // スケルトン維持のままフィードを空にしない（レンダリング前）
+  try {
+    let arts     = cGet(cKey);
+    let glArts   = cGet(cKeyGL);
+    let newsArts = cGet(cKeyNews);
+
+    const glQ  = `(${QUERIES[currentCat]}) AND (guideline[pt] OR practice guideline[pt] OR "clinical practice guideline"[Title/Abstract])`;
+    const gnRss = gnewsUrl(GNEWS_QUERIES[currentCat] || GNEWS_QUERIES.all);
+
+    // ① PubMed メイン・ガイドライン・国内ニュース を並列取得
+    const tasks = [];
+    if (!arts)     tasks.push(pmFetch(QUERIES[currentCat], RETMAX_ART + 3)
+                    .then(r => { arts = r; cSet(cKey, r); })
+                    .catch(e => { log(`メイン取得失敗: ${e.message}`,'err'); arts = []; }));
+    else           log(`[${currentCat}] cache hit`, 'ok');
+
+    if (!glArts)   tasks.push(pmFetch(glQ, RETMAX_GL)
+                    .then(r => { glArts = r; cSet(cKeyGL, r); })
+                    .catch(e => { log(`GL取得失敗: ${e.message}`,'warn'); glArts = []; }));
+    else           log(`GL cache hit`, 'ok');
+
+    if (!newsArts) tasks.push(fetchRSS(gnRss, RETMAX_NEWS)
+                    .then(r => { newsArts = r; cSet(cKeyNews, r); })
+                    .catch(e => { log(`NEWS取得失敗: ${e.message}`,'warn'); newsArts = []; }));
+    else           log(`NEWS cache hit`, 'ok');
+
+    await Promise.allSettled(tasks);
+
+    arts     = arts     || [];
+    glArts   = glArts   || [];
+    newsArts = newsArts || [];
+
+    // ② レンダリング
+    renderHeroZone(arts.slice(0,3));
+    const feedArts = arts.slice(3);
+
+    document.getElementById('articleList').innerHTML =
+      feedArts.length ? feedArts.map(a => renderArticleCard(a)).join('') : emptyCard('論文が見つかりませんでした');
+    document.getElementById('glList').innerHTML =
+      glArts.length ? glArts.map(a => renderArticleCard(a, true)).join('') : emptyCard('ガイドライン記事が見つかりませんでした');
+    document.getElementById('newsList').innerHTML =
+      newsArts.length ? newsArts.map(a => renderNewsCard(a)).join('') : emptyCard('国内ニュースが見つかりませんでした（CORSプロキシを確認）');
+
+    // ブックマーク
+    ['heroZone','articleList','glList','newsList'].forEach(id => attachBm(document.getElementById(id)));
+
+    // ③ ステータス更新
+    const total = feedArts.length + glArts.length + newsArts.length;
+    document.getElementById('countText').textContent = `${total} 件`;
+    document.getElementById('statList').innerHTML = `
+      <div class="flex justify-between"><span>最新論文</span><span class="font-semibold text-gray-600">${feedArts.length} 件</span></div>
+      <div class="flex justify-between"><span>ガイドライン</span><span class="font-semibold text-gray-600">${glArts.length} 件</span></div>
+      <div class="flex justify-between"><span class="text-emerald-700 font-medium">国内ニュース</span><span class="font-semibold text-emerald-600">${newsArts.length} 件</span></div>
+      <div class="flex justify-between border-t border-gray-100 pt-1.5 mt-1">
+        <span class="font-medium text-gray-700">合計</span><span class="font-semibold text-gray-800">${total} 件</span>
+      </div>`;
+
+    updateTimestamp();
+    log('完了', 'ok');
+
+    // 翻訳を非同期で開始（デフォルト日本語モード）
+    translateAllVisible();
+
+  } catch (err) {
+    log(`ERROR: ${err.message}`, 'err');
+    document.getElementById('heroZone').innerHTML    = errCard(err.message);
+    document.getElementById('articleList').innerHTML = errCard(err.message);
+    document.getElementById('glList').innerHTML      = '';
+    document.getElementById('newsList').innerHTML    = '';
+  }
+
+  setLoading(false);
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function setLoading(on) {
+  const b = document.getElementById('loadingBadge');
+  const i = document.getElementById('refreshIcon');
+  on ? (b.classList.remove('hidden'), i.classList.add('spin'))
+     : (b.classList.add('hidden'),    i.classList.remove('spin'));
+}
+function updateTimestamp() {
+  const now = new Date();
+  const s = `更新: ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  document.getElementById('lastUpdated').textContent = s;
+  document.getElementById('lastUpdatedMain').textContent = s;
+}
+
+function toggleAbs(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+  btn.textContent = el.classList.contains('open') ? '折りたたむ ▴' : '続きを読む ▾';
+}
+
+// ============================================================
+// BOOKMARK
+// ============================================================
+function attachBm(parent) {
+  parent?.querySelectorAll('.bm-btn[data-id]').forEach(btn => {
     btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const isSaved = btn.classList.contains('saved');
-      const svg = btn.querySelector('svg');
-      if (isSaved) {
-        btn.classList.remove('saved','text-amber-400');
-        btn.classList.add('text-gray-300');
-        svg.setAttribute('fill','none');
+      e.stopPropagation(); e.preventDefault();
+      const id = btn.dataset.id;
+      if (saved[id]) {
+        delete saved[id]; btn.classList.remove('saved'); btn.innerHTML = BM_OFF;
+        btn.classList.remove('text-amber-400'); btn.classList.add('text-gray-300','text-white/40');
       } else {
-        btn.classList.add('saved','text-amber-400');
-        btn.classList.remove('text-gray-300');
-        svg.setAttribute('fill','currentColor');
+        saved[id] = {id, title:btn.dataset.title, src:btn.dataset.src};
+        btn.classList.add('saved'); btn.innerHTML = BM_ON;
+        btn.classList.add('text-amber-400'); btn.classList.remove('text-gray-300','text-white/40');
       }
+      localStorage.setItem('pf_saved', JSON.stringify(saved));
+      updateBmBadge(); renderSaved();
     });
   });
+}
+function updateBmBadge() {
+  const n = Object.keys(saved).length;
+  const b = document.getElementById('bmBadge');
+  const b2 = document.getElementById('bmCountBadge');
+  if (n > 0) {
+    b.textContent = n; b.classList.remove('hidden'); b.classList.add('flex');
+    b2.textContent = n; b2.classList.remove('hidden');
+  } else {
+    b.classList.add('hidden'); b.classList.remove('flex');
+    b2.classList.add('hidden');
+  }
+}
+function renderSaved() {
+  const el = document.getElementById('savedList');
+  const entries = Object.values(saved);
+  el.innerHTML = entries.length
+    ? entries.map(e => `
+        <div class="border-b border-gray-100 pb-2 mb-2 last:border-0 last:mb-0 last:pb-0">
+          <p class="text-xs font-medium text-gray-800 line-clamp-2">${esc(e.title)}</p>
+          <p class="text-xs text-gray-400 mt-0.5">${esc(e.src)}</p>
+        </div>`).join('')
+    : '<p class="text-xs text-gray-400 italic">保存された記事はありません</p>';
+}
 
-  // 更新ボタン（スピンのみ）
-  document.getElementById('refreshBtn').addEventListener('click', () => {
-    const icon = document.getElementById('refreshIcon');
-    icon.classList.add('spin');
-    setTimeout(() => icon.classList.remove('spin'), 1500);
+// ============================================================
+// KEYWORD ALERTS
+// ============================================================
+function renderAlertPills() {
+  document.getElementById('alertPills').innerHTML = alertKws.map(kw =>
+    `<span class="flex items-center gap-1 bg-white border border-indigo-200 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">
+      ${esc(kw)}
+      <button onclick="removeAlert('${esc(kw)}')" class="text-indigo-300 hover:text-red-400 leading-none">×</button>
+    </span>`).join('');
+}
+function removeAlert(kw) {
+  alertKws = alertKws.filter(k => k !== kw);
+  localStorage.setItem('pf_alerts', JSON.stringify(alertKws));
+  renderAlertPills();
+}
+document.getElementById('alertAdd').addEventListener('click', () => {
+  const kw = document.getElementById('alertInput').value.trim();
+  if (kw && !alertKws.includes(kw)) {
+    alertKws.push(kw); localStorage.setItem('pf_alerts', JSON.stringify(alertKws));
+    renderAlertPills(); document.getElementById('alertInput').value = '';
+  }
+});
+document.getElementById('alertInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('alertAdd').click();
+});
+
+// ============================================================
+// CATEGORY CHIPS
+// ============================================================
+document.querySelectorAll('.chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => {
+      const orig = c.dataset.orig || '';
+      c.className = `chip px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 ${orig}`;
+      c.classList.add('hover:opacity-90');
+    });
+    btn.className = 'chip active px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shrink-0';
+
+    currentCat = btn.dataset.cat;
+    loadFeed();
   });
+});
+
+// ============================================================
+// SORT
+// ============================================================
+document.getElementById('sortSelect').addEventListener('change', function() {
+  currentSort = this.value;
+  loadFeed(true);
+});
+
+// ============================================================
+// SEARCH (クライアント側)
+// ============================================================
+let stimer;
+document.getElementById('searchInput').addEventListener('input', function() {
+  clearTimeout(stimer);
+  const q = this.value.trim().toLowerCase();
+  stimer = setTimeout(() => {
+    document.querySelectorAll('[data-id]').forEach(el => {
+      el.style.display = (!q || el.textContent.toLowerCase().includes(q)) ? '' : 'none';
+    });
+  }, 200);
+});
+
+// ============================================================
+// REFRESH
+// ============================================================
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  sessionStorage.clear();
+  loadFeed(true);
+});
+
+// ============================================================
+// LANGUAGE TOGGLE
+// ============================================================
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+// ============================================================
+// INIT
+// ============================================================
+updateBmBadge(); renderSaved(); renderAlertPills();
+log('PsychFeed 起動 — PubMed API接続');
+loadFeed();
 </script>
 </body>
 </html>
