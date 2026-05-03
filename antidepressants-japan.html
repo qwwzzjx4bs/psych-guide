@@ -123,9 +123,16 @@
     .th-drug, .td-drug { white-space: nowrap; vertical-align: middle; }
     table.data-table { width: max-content; min-width: 100%; }
     table.data-table tbody tr:not(:has(td[colspan])) { cursor: pointer; }
+    /* 選択行：背景なし・青枠のみ（各セル境界で矩形に近づける） */
     table.data-table tbody tr.table-row-focus > td {
-      background-color: rgba(191, 219, 254, 0.82) !important;
-      box-shadow: inset 4px 0 0 #2563eb;
+      border-top: 2px solid #2563eb !important;
+      border-bottom: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child {
+      border-left: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:last-child {
+      border-right: 2px solid #2563eb !important;
     }
     @media (max-width: 767px) {
       .x-scroll__rail {
