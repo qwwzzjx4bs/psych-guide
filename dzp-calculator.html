@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ベンゾジアゼピン系 ジアゼパム換算計算機</title>
+  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/dzp-calculator.html">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0369a1;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0369a1);
+      --tab2-color: #7c3aed;
+      --tab3-color: #be123c;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+
+    .header-gradient { background: var(--psych-gradient); }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.55rem 0.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      white-space: nowrap;
+      text-align: center;
+    }
+    .tab-btn.active-oral {
+      background: #1e3a5f;
+      color: white;
+    }
+    .tab-btn.active-er {
+      background: #7c3aed;
+      color: white;
+    }
+    .tab-btn.active-inject {
+      background: #be123c;
+      color: white;
+    }
+    .tab-btn.inactive {
+      background: white;
+      color: #6b7280;
+      border-color: #e5e7eb;
+    }
+    .tab-btn.inactive:hover {
+      border-color: #9ca3af;
+      color: #374151;
+    }
+
+    .class-long-badge {
+      background: linear-gradient(135deg, #0369a1, #0284c7);
+      color: white;
+      padding: 0.15rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .class-mid-badge {
+      background: linear-gradient(135deg, #0d9488, #14b8a6);
+      color: white;
+      padding: 0.15rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .class-short-badge {
+      background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+      color: white;
+      padding: 0.15rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .drug-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.5rem;
+      transition: background 0.15s;
+    }
+    .drug-row:hover { background: #f9fafb; }
+    .drug-row.discontinued { opacity: 0.5; }
+
+    .drug-max-wrap {
+      flex-shrink: 0;
+      text-align: right;
+      max-width: 52%;
+      line-height: 1.35;
+    }
+    .drug-max-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: #92400e;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 0.35rem;
+      padding: 0.18rem 0.4rem;
+    }
+    .drug-max-label {
+      font-weight: 700;
+      color: #b45309;
+      margin-right: 0.2rem;
+    }
+
+    .qty-btn {
+      height: 28px;
+      min-width: 32px;
+      padding: 0 6px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1.5px solid #e2e8f0;
+      cursor: pointer;
+      transition: background 0.1s, border-color 0.1s, transform 0.1s;
+      white-space: nowrap;
+      flex-shrink: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    .qty-btn:hover  { background: #e2e8f0; border-color: #cbd5e1; }
+    .qty-btn:active { background: #0369a1; color: #fff; border-color: #0369a1; transform: scale(0.93); }
+    .qty-btn.er    { border-color: #c4b5fd; color: #6d28d9; background: #f5f3ff; }
+    .qty-btn.er:hover  { background: #ede9fe; }
+    .qty-btn.er:active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+    .qty-btn.inj    { border-color: #fca5a5; color: #b91c1c; background: #fff1f2; }
+    .qty-btn.inj:hover  { background: #fee2e2; }
+    .qty-btn.inj:active { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .qty-btn.clear-btn  { color: #9ca3af; border-color: #e5e7eb; background: #f9fafb; min-width: 26px; padding: 0 5px; }
+    .qty-btn.clear-btn:hover  { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+    .qty-btn.clear-btn:active { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+    .dose-input {
+      width: 4.5rem;
+      padding: 0.35rem 0.5rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      text-align: right;
+      color: #111827;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -moz-appearance: textfield;
+    }
+    .dose-input::-webkit-outer-spin-button,
+    .dose-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .dose-input:focus {
+      outline: none;
+      border-color: #0369a1;
+      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.1);
+    }
+    .dose-input.has-value {
+      border-color: #0369a1;
+      background: #f0f9ff;
+    }
+
+    .dzp-output {
+      min-width: 4rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #0369a1;
+      text-align: right;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .section-header:hover { background: #f9fafb; }
+
+    .accordion-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .accordion-content.collapsed { max-height: 0; }
+    .accordion-content.expanded { max-height: 9999px; }
+
+    .subsection-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      padding: 0.5rem 0.75rem 0.25rem;
+    }
+
+    .divider { border-top: 1px solid #f3f4f6; margin: 0.25rem 0; }
+
+    .subtotal-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .subtotal-value {
+      font-weight: 700;
+      color: #1e3a5f;
+      font-size: 0.9rem;
+    }
+
+    .search-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 36;
+      background: #f9fafb;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .search-row {
+      display: flex;
+      align-items: stretch;
+      gap: 0.45rem;
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+
+    .search-field {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+    }
+
+    .search-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.5rem 5.2rem 0.5rem 2.1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 0.625rem;
+      font-size: 0.875rem;
+      background: white;
+      color: #111827;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .search-submit-btn {
+      flex-shrink: 0;
+      align-self: stretch;
+      padding: 0 0.75rem;
+      border-radius: 0.625rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #1e3a5f, #0369a1);
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .search-submit-btn:hover { opacity: 0.92; }
+    .search-submit-btn:active { transform: scale(0.97); }
+
+    .search-suggestions {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 4px);
+      max-height: min(42vh, 260px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 0.625rem;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+      z-index: 55;
+    }
+    .search-suggestions.visible { display: block; }
+
+    .suggest-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.8rem;
+      border: none;
+      border-bottom: 1px solid #f1f5f9;
+      background: none;
+      cursor: pointer;
+      color: #1e293b;
+    }
+    .suggest-item:last-child { border-bottom: none; }
+    .suggest-item:hover,
+    .suggest-item.is-active { background: #f0f9ff; }
+
+    .suggest-name { font-weight: 600; }
+    .suggest-brand { font-size: 0.7rem; color: #64748b; margin-top: 0.1rem; }
+
+    .suggest-route {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #0369a1;
+      background: #e0f2fe;
+      padding: 0.05rem 0.35rem;
+      border-radius: 0.25rem;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    .search-hint {
+      font-size: 0.7rem;
+      color: #dc2626;
+      margin-top: 0.35rem;
+      max-width: 42rem;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 0.15rem;
+    }
+    .search-hint:empty { display: none; }
+
+    .search-icon {
+      position: absolute;
+      left: 0.65rem;
+      color: #9ca3af;
+      pointer-events: none;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: #0369a1;
+      box-shadow: 0 0 0 3px rgba(3,105,161,0.1);
+    }
+    .search-clear {
+      position: absolute;
+      right: 0.6rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0.1rem 0.2rem;
+      border-radius: 9999px;
+      display: none;
+      z-index: 2;
+    }
+    .search-clear:hover { color: #6b7280; }
+    .search-clear.visible { display: block; }
+
+    .search-section-hdr {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #f1f5f9;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #475569;
+    }
+    .search-mode .search-section-hdr { display: flex; }
+
+    .search-mode .tab-btn { opacity: 0.4; pointer-events: none; }
+
+    .result-count {
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 9999px;
+    }
+    .result-count.has-result { background: #e0f2fe; color: #0369a1; }
+
+    .no-results-msg {
+      display: none;
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+    .no-results-msg.visible { display: block; }
+
+    .notice-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 0.875rem 1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .dz-ref-panel {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .dz-ref-panel > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.65rem 0.875rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1e293b;
+      border-bottom: 1px solid transparent;
+    }
+    .dz-ref-panel[open] > summary {
+      border-bottom-color: #e2e8f0;
+      background: #f8fafc;
+    }
+    .dz-ref-panel > summary::-webkit-details-marker { display: none; }
+    .dz-ref-panel summary::after {
+      content: '';
+      flex-shrink: 0;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-right: 2px solid #64748b;
+      border-bottom: 2px solid #64748b;
+      transform: rotate(-45deg);
+      margin-top: -0.2rem;
+      transition: transform 0.2s ease;
+      opacity: 0.85;
+    }
+    .dz-ref-panel[open] summary::after {
+      transform: rotate(135deg);
+      margin-top: 0.15rem;
+    }
+
+    .dz-ref-body {
+      padding: 0.65rem 0.85rem 0.85rem;
+    }
+    .dz-ref-intro {
+      font-size: 0.65rem;
+      line-height: 1.55;
+      color: #64748b;
+      margin-bottom: 0.6rem;
+    }
+    .dz-ref-sub {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #475569;
+      margin: 0.5rem 0 0.3rem;
+    }
+    .dz-ref-scroll { overflow-x: auto; margin-bottom: 0.35rem; -webkit-overflow-scrolling: touch; }
+    .dz-ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.65rem;
+    }
+    .dz-ref-table th {
+      text-align: left;
+      padding: 0.35rem 0.35rem;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 700;
+    }
+    .dz-ref-table td {
+      padding: 0.3rem 0.35rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+      vertical-align: top;
+    }
+    .dz-ref-table tr:last-child td { border-bottom: none; }
+    .dz-ref-table .col-num {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .dz-ref-table .col-maxJp {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #92400e;
+      max-width: 9rem;
+      white-space: normal;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+    .dz-ref-disc { opacity: 0.55; }
+    .dz-ref-muted { font-size: 0.62rem; font-weight: 400; color: #94a3b8; }
+    .dz-ref-footnote { font-size: 0.62rem; color: #64748b; line-height: 1.55; margin-top: 0.45rem; }
+
+    @keyframes pulse-blue {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .updated { animation: pulse-blue 0.3s ease; }
+
+    @keyframes jumpPulseDz {
+      0% { box-shadow: inset 0 0 0 2px #0369a1; background: rgba(240, 249, 255, 0.95); }
+      100% { box-shadow: inset 0 0 0 0 transparent; background: transparent; }
+    }
+    .jump-flash { animation: jumpPulseDz 0.85s ease-out 2; border-radius: 0.5rem; }
+
+    .sticky-total {
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+      color: #fff;
+      padding: 0.65rem 0.875rem;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+      transition: background 0.35s ease;
+    }
+
+    .sticky-dzp-neutral {
+      background: linear-gradient(135deg, #1e3a5f, #0369a1);
+    }
+    .sticky-dzp-low {
+      background: linear-gradient(135deg, #047857, #059669);
+    }
+    .sticky-dzp-mid {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    }
+    .sticky-dzp-high {
+      background: linear-gradient(135deg, #b45309, #ea580c);
+    }
+    .sticky-dzp-xhigh {
+      background: linear-gradient(135deg, #991b1b, #dc2626);
+    }
+
+    .sticky-total-inner {
+      width: 100%;
+      max-width: 42rem;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem 0.75rem;
+    }
+
+    .sticky-clear-btn {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.4rem 0.55rem;
+      border-radius: 0.375rem;
+      border: 1.5px solid rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .sticky-clear-btn:hover { background: rgba(255,255,255,0.28); }
+    .sticky-clear-btn:active { transform: scale(0.96); }
+
+    .dz-guide-panel {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 0.75rem 0.875rem;
+      margin: 0 1rem 0.625rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .dz-guide-panel h2 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.35rem;
+    }
+    .dz-guide-panel p,
+    .dz-guide-panel ul { font-size: 0.7rem; line-height: 1.65; color: #64748b; }
+    .dz-guide-panel ul { margin-top: 0.25rem; padding-left: 1rem; margin-bottom: 0.5rem; }
+    .dz-guide-panel li { margin-bottom: 0.2rem; }
+    .dz-guide-panel p:last-child { margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+      .drug-name { font-size: 0.8rem; }
+      .brand-name { font-size: 0.7rem; }
+      .dose-input { width: 3.8rem; font-size: 0.8rem; }
+      .dzp-output { min-width: 3.5rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <header class="header-gradient text-white pt-6 pb-5 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-2 mb-1">
+        <i data-lucide="pill" class="w-5 h-5 opacity-70"></i>
+        <span class="text-xs font-medium opacity-70 uppercase tracking-wider">向精神薬 臨床ツール</span>
+      </div>
+      <h1 class="text-2xl font-bold leading-tight">ジアゼパム換算計算機</h1>
+      <p class="text-sm opacity-80 mt-1">ベンゾジアゼピン系薬のジアゼパム等価量（概算）</p>
+      <p class="text-xs opacity-80 mt-2 flex flex-wrap gap-x-3 gap-y-1">
+        <a href="top.html" class="text-white hover:underline font-medium">← 精神科臨床ガイド・ポータルへ</a>
+        <a href="cp-calculator.html" class="text-white/90 hover:underline font-medium">CP換算計算機 →</a>
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto pb-24">
+
+    <div class="px-4 pt-4 pb-2">
+      <div class="flex gap-1.5 w-full">
+        <button class="tab-btn active-oral" id="tab-oral" type="button" onclick="switchTab('oral')">
+          <span class="flex flex-col items-center gap-0.5">
+            <i data-lucide="tablet" class="w-4 h-4"></i>
+            <span>経口・舌下</span>
+          </span>
+        </button>
+        <button class="tab-btn inactive" id="tab-er" type="button" onclick="switchTab('er')">
+          <span class="flex flex-col items-center gap-0.5">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+            <span>徐放・ODT</span>
+          </span>
+        </button>
+        <button class="tab-btn inactive" id="tab-inject" type="button" onclick="switchTab('inject')">
+          <span class="flex flex-col items-center gap-0.5">
+            <i data-lucide="syringe" class="w-4 h-4"></i>
+            <span>注射剤</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-row">
+        <div class="search-field">
+          <div class="search-inner">
+            <i data-lucide="search" class="search-icon w-4 h-4" aria-hidden="true"></i>
+            <input
+              type="text"
+              id="drug-search"
+              class="search-input"
+              placeholder="薬剤名・商品名..."
+              autocomplete="off"
+              autocorrect="off"
+              spellcheck="false"
+              aria-autocomplete="list"
+              aria-controls="search-suggestions"
+              aria-expanded="false"
+              oninput="onSearchInput(this.value)"
+              onfocus="onSearchInput(this.value)"
+              onkeydown="onSearchKeydown(event)"
+            >
+            <button type="button" class="search-clear" id="search-clear-btn" onclick="clearSearch()" aria-label="入力をクリア">✕</button>
+          </div>
+          <div id="search-suggestions" class="search-suggestions" role="listbox" aria-label="検索候補"></div>
+        </div>
+        <button type="button" class="search-submit-btn" id="search-submit-btn" onclick="confirmSearchJump()">検索</button>
+      </div>
+      <p id="search-hint" class="search-hint" role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="dz-guide-panel max-w-2xl mx-auto">
+      <h2>ジアゼパム換算とは</h2>
+      <p>各ベンゾジアゼピン系薬の投与量を、基準となる<strong>ジアゼパム（DZP）</strong>の<strong>mg</strong>に概算換算した値です。併用時の<strong>総ベンゾ負荷のおおまかな把握</strong>や漸減計画の<strong>目安</strong>に使えます。作用時間・活性代謝物・患者個々の感受性は反映されません。</p>
+      <h2 class="mt-3">操作方法</h2>
+      <ul>
+        <li>上部タブで<strong>経口・舌下</strong>／<strong>徐放・ODT</strong>／<strong>注射剤</strong>を切り替えます。</li>
+        <li>各行の<strong>数値ボタン</strong>は、押すたびに入力欄へその mg が<strong>加算</strong>されます。</li>
+        <li><strong>直接入力</strong>も可能です。行末の<strong>✕</strong>でその薬のみクリア。<strong>全てクリア</strong>は下のバーまたは<strong>すべてリセット</strong>です。</li>
+        <li><strong>検索</strong>は候補表示・Enter・「検索」ボタンで<strong>行へジャンプ</strong>します（一覧は狭めません）。</li>
+      </ul>
+      <p>合計の背景色・「目安」は<strong>同一タブ内での参考</strong>です。<strong>処方確定は添付文書・施設ルールで行ってください。</strong></p>
+    </div>
+
+    <div class="px-4 mb-2">
+      <div class="notice-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+          <div class="text-xs text-amber-800">
+            <span class="font-bold">留意事項：</span>換算係数は文献・ガイドラインで<strong>ばらつきがあります</strong>。本ページは日本でよく用いられる処方量帯を想定した<strong>簡便な概算</strong>です。クロバザムや一部薬は受容体特性が異なります。依存・離脱・呼吸抑制・高齢者では<strong>さらに慎重に</strong>。各行の<strong>「上限」</strong>は添付<strong>用法・用量の簡記</strong>であり適応・年齢で異なります。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 mb-2" id="dz-reference-mount" aria-live="polite"></div>
+
+    <div id="panel-oral" class="px-4">
+      <div class="search-section-hdr" id="search-hdr-oral">
+        <i data-lucide="tablet" class="w-3.5 h-3.5 text-sky-600"></i>
+        経口・舌下剤
+        <span class="result-count ml-1" id="count-oral">0</span>
+      </div>
+
+      <div class="section-card" id="sec-long">
+        <div class="section-header" onclick="toggleSection('long')">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-sky-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="timer" class="w-4 h-4 text-sky-700"></i>
+            </div>
+            <div>
+              <div class="font-bold text-gray-800 text-sm flex items-center gap-1.5">
+                <span class="class-long-badge">長時間型</span>
+                ジアニオン・長半減期型
+              </div>
+              <div class="text-xs text-gray-500">ジアゼパム・デメチル代謝物型・長時間睡眠薬 ほか</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <div class="text-xs text-gray-400">小計</div>
+              <div class="font-bold text-sky-700 text-sm" id="subtotal-long">0 mg</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" id="chevron-long"></i>
+          </div>
+        </div>
+        <div class="accordion-content expanded" id="content-long">
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-long-core">
+            <span class="w-2 h-2 rounded-full bg-sky-500 inline-block"></span>
+            主成分
+          </div>
+          <div id="drugs-long-core"></div>
+          <div class="divider" data-divider-for="drugs-long-core"></div>
+          <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-long-other">
+            <span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+            その他
+          </div>
+          <div id="drugs-long-other"></div>
+          <div class="subtotal-row">
+            <span>長時間型 合計</span>
+            <span class="subtotal-value" id="subtotal-long-footer">0 mg</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card" id="sec-mid">
+        <div class="section-header" onclick="toggleSection('mid')">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="activity" class="w-4 h-4 text-teal-700"></i>
+            </div>
+            <div>
+              <div class="font-bold text-gray-800 text-sm flex items-center gap-1.5">
+                <span class="class-mid-badge">中間型</span>
+                抗不安・睡眠（中間）
+              </div>
+              <div class="text-xs text-gray-500">クロナゼパム・ロラゼパム・アルプラゾラム・エチゾラム ほか</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <div class="text-xs text-gray-400">小計</div>
+              <div class="font-bold text-teal-700 text-sm" id="subtotal-mid">0 mg</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" id="chevron-mid"></i>
+          </div>
+        </div>
+        <div class="accordion-content expanded" id="content-mid">
+          <div id="drugs-mid"></div>
+          <div class="subtotal-row">
+            <span>中間型 合計</span>
+            <span class="subtotal-value" id="subtotal-mid-footer">0 mg</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card" id="sec-short">
+        <div class="section-header" onclick="toggleSection('short')">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="zap" class="w-4 h-4 text-violet-700"></i>
+            </div>
+            <div>
+              <div class="font-bold text-gray-800 text-sm flex items-center gap-1.5">
+                <span class="class-short-badge">短時間型</span>
+                超短時間・導入
+              </div>
+              <div class="text-xs text-gray-500">トリアゾラム系・ブロチゾラム・ロフラゼプ酸エチル ほか</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <div class="text-xs text-gray-400">小計</div>
+              <div class="font-bold text-violet-700 text-sm" id="subtotal-short">0 mg</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" id="chevron-short"></i>
+          </div>
+        </div>
+        <div class="accordion-content expanded" id="content-short">
+          <div id="drugs-short"></div>
+          <div class="subtotal-row">
+            <span>短時間型 合計</span>
+            <span class="subtotal-value" id="subtotal-short-footer">0 mg</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-er" class="px-4 hidden">
+      <div class="search-section-hdr" id="search-hdr-er">
+        <i data-lucide="layers" class="w-3.5 h-3.5 text-purple-600"></i>
+        徐放・ODT など
+        <span class="result-count ml-1" id="count-er">0</span>
+      </div>
+      <div class="section-card">
+        <div class="px-4 py-3 bg-purple-50 border-b border-purple-100 flex items-center gap-2">
+          <i data-lucide="package" class="w-4 h-4 text-purple-600"></i>
+          <span class="text-sm font-bold text-purple-800">徐放製剤・口崩壊錠（ODT）・経口懸濁等</span>
+        </div>
+        <div class="p-3 bg-amber-50 border-b border-amber-100 text-xs text-amber-800">
+          <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i>
+          換算係数は即放の成分と<strong>同一母量</strong>として計算しています。製剤ごとの吸収差は含みません。
+        </div>
+        <div id="drugs-er" class="divide-y divide-gray-50"></div>
+        <div class="subtotal-row">
+          <span>本タブ 合計</span>
+          <span class="subtotal-value" id="subtotal-er">0 mg</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-inject" class="px-4 hidden">
+      <div class="search-section-hdr" id="search-hdr-inject">
+        <i data-lucide="syringe" class="w-3.5 h-3.5 text-rose-600"></i>
+        注射剤
+        <span class="result-count ml-1" id="count-inject">0</span>
+      </div>
+      <div class="section-card">
+        <div class="px-4 py-3 bg-rose-50 border-b border-rose-100 flex items-center gap-2">
+          <i data-lucide="syringe" class="w-4 h-4 text-rose-600"></i>
+          <span class="text-sm font-bold text-rose-800">筋注・静注（単回投与量の換算）</span>
+        </div>
+        <div id="drugs-inject" class="divide-y divide-gray-50"></div>
+        <div class="subtotal-row">
+          <span>注射 合計</span>
+          <span class="subtotal-value" id="subtotal-inject">0 mg</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 pt-2 pb-4">
+      <button type="button" onclick="resetAll()" class="w-full py-2.5 rounded-xl border-2 border-gray-200 text-gray-500 text-sm font-medium flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors active:bg-gray-200">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        すべてリセット
+      </button>
+    </div>
+
+  </main>
+
+  <div class="sticky-total sticky-dzp-neutral" id="sticky-total-bar" role="region" aria-label="ジアゼパム換算合計">
+    <div class="sticky-total-inner">
+      <div class="flex items-center gap-2 min-w-0">
+        <i data-lucide="calculator" class="w-5 h-5 opacity-90 flex-shrink-0" aria-hidden="true"></i>
+        <div class="min-w-0">
+          <div class="text-xs opacity-80">ジアゼパム換算 合計</div>
+          <div class="font-bold text-lg leading-tight" id="grand-total">0 mg</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 ml-auto">
+        <div class="text-right">
+          <div class="text-xs opacity-80">目安</div>
+          <div class="font-medium text-sm" id="dose-guide">—</div>
+        </div>
+        <button type="button" class="sticky-clear-btn" onclick="resetAll()" title="全入力をクリアします">全てクリア</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// factor = ジアゼパム 1 mg に相当する本剤の mg（小さいほど強い）
+// ジアゼパム換算 mg = 投与 mg ÷ factor
+
+const ORAL_LONG_CORE = [
+  { id: 'diazepam', name: 'ジアゼパム', brand: 'セルシン・ホリゾン', factor: 1, disc: false, tabs: [2, 5, 10], maxJp: '30 mg/日（主適応・製剤依存）' },
+  { id: 'chlordiazepoxide', name: 'クロルジアゼポキシド', brand: 'チョコビー', factor: 2, disc: false, tabs: [5, 10], maxJp: '40〜50 mg/日級（製品準拠）' },
+  { id: 'prazepam', name: 'プラゼパム', brand: 'プラジタール', factor: 1.5, disc: false, tabs: [5, 10], maxJp: '60 mg/日' },
+  { id: 'flurazepam', name: 'フルラゼパム', brand: 'ダルメートほか', factor: 1.5, disc: false, tabs: [15], maxJp: '30 mg/就寝前級' },
+  { id: 'nitrazepam', name: 'ニトラゼパム', brand: 'イノゲン・ベンジリン', factor: 1, disc: false, tabs: [5, 10], maxJp: '10 mg/日級（主に睡眠）' },
+  { id: 'clorazepate', name: 'クロラゼペート二カリウム', brand: 'トランセーネ', factor: 1.25, disc: false, tabs: [3.75], maxJp: '15 mg/日級' },
+];
+
+const ORAL_LONG_OTHER = [
+  { id: 'medazepam', name: 'メダゼパム', brand: 'ノーブス', factor: 1.2, disc: false, tabs: [5, 10], maxJp: '30 mg/日' },
+  { id: 'oxazolam', name: 'オキサゾラム', brand: 'セランナ・コンスタン', factor: 2, disc: false, tabs: [10], maxJp: '40 mg/日' },
+  { id: 'clobazam', name: 'クロバザム', brand: 'フリスビーム', factor: 2, disc: false, note: '受容体特性は通常BZDと異なる', tabs: [5, 10], maxJp: '30 mg/日（主適応により異なる）' },
+];
+
+const ORAL_MID = [
+  { id: 'oxazepam', name: 'オキサゼパム', brand: 'セラックス等', factor: 2, disc: false, tabs: [10], maxJp: '120 mg/日' },
+  { id: 'lorazepam', name: 'ロラゼパム', brand: 'ワイパックス', factor: 0.1, disc: false, tabs: [0.5, 1, 2], maxJp: '10 mg/日級' },
+  { id: 'clonazepam', name: 'クロナゼパム', brand: 'リボトリール', factor: 0.05, disc: false, tabs: [0.5, 1, 2], maxJp: '睡眠4 mg/日まで級' },
+  { id: 'alprazolam', name: 'アルプラゾラム', brand: 'コンスタン', factor: 0.05, disc: false, tabs: [0.4, 0.8], maxJp: '1.6〜3.2 mg/日（適応準拠）' },
+  { id: 'bromazepam', name: 'ブロマゼパム', brand: 'レキソタン', factor: 0.25, disc: false, tabs: [2, 5], maxJp: '25 mg/日' },
+  { id: 'etizolam', name: 'エチゾラム', brand: 'デパス', factor: 0.1, disc: false, tabs: [0.5, 1], maxJp: '3 mg/日' },
+  { id: 'estazolam', name: 'エスタゾラム', brand: 'ユーロジン', factor: 0.2, disc: false, tabs: [1, 2], maxJp: '4 mg/日' },
+  { id: 'flunitrazepam', name: 'フルニトラゼパム', brand: 'ロヒプノール', factor: 0.1, disc: false, tabs: [1, 2], maxJp: '2 mg/就寝前' },
+  { id: 'clotiazepam', name: 'クロチアゼパム', brand: 'リドルミン・セネリル', factor: 0.2, disc: false, tabs: [5, 10], maxJp: '40 mg/日' },
+  { id: 'mexazolam', name: 'メキサゾラム', brand: 'メレックス', factor: 0.2, disc: false, tabs: [0.5, 1, 1.5], maxJp: '3 mg/日' },
+  { id: 'cloxazolam', name: 'クロキサゾラム', brand: 'セパゾン', factor: 0.2, disc: false, tabs: [2, 5], maxJp: '20 mg/日' },
+  { id: 'loflazepateethyl', name: 'ロフラゼプ酸エチル', brand: 'エメラルド', factor: 0.1, disc: false, tabs: [1, 2], maxJp: '4 mg/日' },
+  { id: 'haloxazolam', name: 'ハロキサゾラム', brand: 'ソムリン', factor: 0.2, disc: false, tabs: [5, 10], maxJp: '40 mg/日' },
+  { id: 'temazepam', name: 'テマゼパム', brand: 'メソピークン ほか', factor: 2, disc: true, tabs: [], maxJp: '—（主剤販売中止・製品確認）' },
+];
+
+const ORAL_SHORT = [
+  { id: 'triazolam', name: 'トリアゾラム', brand: 'ハルシオン', factor: 0.05, disc: false, tabs: [0.125, 0.25], maxJp: '0.5 mg/日' },
+  { id: 'brotizolam', name: 'ブロチゾラム', brand: 'ランドルミン・レビューミン', factor: 0.05, disc: false, tabs: [0.125, 0.25], maxJp: '0.75 mg/日' },
+  { id: 'midazolamPO', name: 'ミダゾラム（経口）', brand: 'ドルミカム経口ゼリー等', factor: 0.4, disc: false, note: '吸入・静注は別欄', tabs: [10], maxJp: '15 mg/日級' },
+];
+
+const ER_ODT = [
+  { id: 'alprazolamODT', name: 'アルプラゾラム', brand: 'コンスタン OD', factor: 0.05, disc: false, note: '口崩壊錠', tabs: [0.4, 0.8], maxJp: '即放と同上限目安' },
+  { id: 'alprazolamXR', name: 'アルプラゾラム徐放型', brand: 'ザニックス SR', factor: 0.05, disc: false, note: '徐放', tabs: [1, 2], maxJp: '製品添付に準拠' },
+  { id: 'lorazepamSL', name: 'ロラゼパム', brand: 'ワイパックス SL', factor: 0.1, disc: false, note: '舌下・口腔内崩壊', tabs: [0.5, 1], maxJp: '即放と同上限目安' },
+  { id: 'clonazepamODT', name: 'クロナゼパム', brand: 'リボトリール OD', factor: 0.05, disc: false, note: '口崩壊錠', tabs: [0.5, 1], maxJp: '即放と同上限目安' },
+  { id: 'diazepamOJ', name: 'ジアゼパム', brand: '経口液・懸濁等（製品名は添付で確認）', factor: 1, disc: false, note: '経口液・懸濁は製品ごとに確認', tabs: [2, 5, 10], maxJp: '製品添付に準拠' },
+];
+
+const INJECT = [
+  { id: 'diazepam_inj', name: 'ジアゼパム', brand: 'ホリゾン・セルシン 注', factor: 1, disc: false, tabs: [10], maxJp: '20 mg／回級（静注速度注意）' },
+  { id: 'lorazepam_inj', name: 'ロラゼパム', brand: 'ワイパックス 注', factor: 0.1, disc: false, tabs: [1, 2, 4], maxJp: '4 mg/回級' },
+  { id: 'midazolam_inj', name: 'ミダゾラム', brand: 'ドルミカム 注', factor: 0.4, disc: false, tabs: [1, 5, 15], maxJp: '10 mg/回級（施設・適応準拠）' },
+  { id: 'flunitrazepam_inj', name: 'フルニトラゼパム', brand: 'ロヒプノール 注', factor: 0.1, disc: false, tabs: [2], maxJp: '4 mg／日' },
+];
+
+const doses = {};
+const erDoses = {};
+const injectDoses = {};
+
+const ORAL_ID_SET = new Set([
+  ...ORAL_LONG_CORE,
+  ...ORAL_LONG_OTHER,
+  ...ORAL_MID,
+  ...ORAL_SHORT,
+].map(d => d.id));
+
+function buildQtyBtns(tabs, id, type = 'oral') {
+  const cls = type === 'er' ? 'er' : type === 'inject' ? 'inj' : '';
+  const tabBtns = (tabs && tabs.length > 0)
+    ? tabs.map(v => `<button type="button" class="qty-btn ${cls}" onclick="addToDose('${id}','${type}',${v})">${v}</button>`).join('')
+    : '';
+  const clearBtn = `<button type="button" class="qty-btn clear-btn" onclick="clearDose('${id}','${type}')" title="クリア">✕</button>`;
+  return tabBtns + clearBtn;
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+const MAX_JP_BADGE_TITLE = '国内販売医薬品の用法・用量（主に成人）に基づく上限の簡記。適応・年齢・製剤により異なるため、現行の添付文書で必ず確認してください。';
+
+function maxJpBadgeHtml(drug) {
+  const t = drug.maxJp;
+  if (!t) return '';
+  return `<div class="drug-max-wrap"><span class="drug-max-badge" title="${escapeHtml(MAX_JP_BADGE_TITLE)}"><span class="drug-max-label">上限</span>${escapeHtml(t)}</span></div>`;
+}
+
+function buildDrugRow(drug, containerId, type = 'oral') {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'drug-row' + (drug.disc ? ' discontinued' : '');
+  row.id = 'row-' + drug.id;
+  const mj = drug.maxJp ? ' ' + String(drug.maxJp) : '';
+  row.dataset.search = (drug.name + ' ' + drug.brand + (drug.note ? ' ' + drug.note : '') + mj).toLowerCase();
+  const noteHtml  = drug.note ? `<span class="text-xs text-gray-400">(${drug.note})</span>` : '';
+  const discBadge = drug.disc ? `<span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">販売中止</span>` : '';
+  const btns = buildQtyBtns(drug.tabs, drug.id, type);
+  row.innerHTML = `
+    <div class="flex items-start justify-between gap-2 min-w-0">
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center flex-wrap gap-1">
+          <span class="drug-name font-medium text-gray-800 text-sm">${drug.name}</span>
+          ${noteHtml}${discBadge}
+        </div>
+        <div class="brand-name text-xs text-gray-400">${drug.brand}</div>
+      </div>
+      ${maxJpBadgeHtml(drug)}
+    </div>
+    <div class="flex items-center gap-1 min-w-0">
+      <div class="flex items-center gap-1 flex-wrap flex-shrink-0">${btns}</div>
+      <div class="flex items-center gap-1 ml-auto flex-shrink-0">
+        <input type="number" min="0" step="any" placeholder="mg" class="dose-input" id="input-${drug.id}"
+          oninput="onDoseInput('${drug.id}', this.value, '${type}')" onblur="onDoseBlur('${drug.id}', this.value)" inputmode="decimal">
+        <span class="text-gray-300 text-xs">=</span>
+        <div class="dzp-output" id="dzp-${drug.id}">—</div>
+        <span class="text-xs text-gray-400">mg</span>
+      </div>
+    </div>`;
+  container.appendChild(row);
+}
+
+function clearDose(id, type) {
+  const el = document.getElementById('input-' + id);
+  if (!el) return;
+  el.value = '';
+  el.classList.remove('has-value');
+  const out = document.getElementById('dzp-' + id);
+  if (out) out.textContent = '—';
+  if (type === 'er') delete erDoses[id];
+  else if (type === 'inject') delete injectDoses[id];
+  else delete doses[id];
+  updateTotals();
+}
+
+function addToDose(id, type, amount) {
+  const el = document.getElementById('input-' + id);
+  if (!el) return;
+  const current = parseFloat(el.value) || 0;
+  const next = parseFloat((current + amount).toFixed(4));
+  el.value = next;
+  el.classList.add('has-value');
+  if (type === 'er') erDoses[id] = next;
+  else if (type === 'inject') injectDoses[id] = next;
+  else doses[id] = next;
+  updateRowDzp(id, type);
+  updateTotals();
+  el.classList.remove('updated');
+  void el.offsetWidth;
+  el.classList.add('updated');
+}
+
+function onDoseInput(id, value, type) {
+  const el = document.getElementById('input-' + id);
+  const v = parseFloat(value);
+  if (!isNaN(v) && v > 0) el.classList.add('has-value');
+  else el.classList.remove('has-value');
+  if (type === 'er') erDoses[id] = isNaN(v) || v <= 0 ? 0 : v;
+  else if (type === 'inject') injectDoses[id] = isNaN(v) || v <= 0 ? 0 : v;
+  else doses[id] = isNaN(v) || v <= 0 ? 0 : v;
+  updateRowDzp(id, type);
+  updateTotals();
+}
+
+function onDoseBlur(id, value) {
+  const el = document.getElementById('input-' + id);
+  if (!value || parseFloat(value) <= 0) el.classList.remove('has-value');
+}
+
+function findDrug(id) {
+  const all = [
+    ...ORAL_LONG_CORE, ...ORAL_LONG_OTHER, ...ORAL_MID, ...ORAL_SHORT,
+    ...ER_ODT, ...INJECT
+  ];
+  return all.find(d => d.id === id);
+}
+
+function updateRowDzp(id, type) {
+  const drug = findDrug(id);
+  if (!drug) return;
+  const dose = type === 'er' ? (erDoses[id] || 0) : type === 'inject' ? (injectDoses[id] || 0) : (doses[id] || 0);
+  const dzpEl = document.getElementById('dzp-' + id);
+  if (!dzpEl) return;
+  if (dose > 0 && drug.factor > 0) dzpEl.textContent = formatDzp(dose / drug.factor);
+  else dzpEl.textContent = '—';
+}
+
+function getOralDzp(id) {
+  if (!ORAL_ID_SET.has(id)) return 0;
+  const drug = findDrug(id);
+  if (!drug) return 0;
+  const dose = doses[id] || 0;
+  if (dose <= 0 || !drug.factor) return 0;
+  return dose / drug.factor;
+}
+
+function getErDzp(id) {
+  const drug = ER_ODT.find(d => d.id === id);
+  if (!drug) return 0;
+  const dose = erDoses[id] || 0;
+  if (dose <= 0 || !drug.factor) return 0;
+  return dose / drug.factor;
+}
+
+function getInjectDzp(id) {
+  const drug = INJECT.find(d => d.id === id);
+  if (!drug) return 0;
+  const dose = injectDoses[id] || 0;
+  if (dose <= 0 || !drug.factor) return 0;
+  return dose / drug.factor;
+}
+
+const STICKY_DZ_CLASSES = ['sticky-dzp-neutral', 'sticky-dzp-low', 'sticky-dzp-mid', 'sticky-dzp-high', 'sticky-dzp-xhigh'];
+
+function applyStickyBarTheme(grandTotal) {
+  const bar = document.getElementById('sticky-total-bar');
+  if (!bar) return;
+  STICKY_DZ_CLASSES.forEach(c => bar.classList.remove(c));
+  if (grandTotal <= 0) bar.classList.add('sticky-dzp-neutral');
+  else if (grandTotal < 15) bar.classList.add('sticky-dzp-low');
+  else if (grandTotal < 30) bar.classList.add('sticky-dzp-mid');
+  else if (grandTotal < 50) bar.classList.add('sticky-dzp-high');
+  else bar.classList.add('sticky-dzp-xhigh');
+}
+
+function updateTotals() {
+  const longDrugs = [...ORAL_LONG_CORE, ...ORAL_LONG_OTHER];
+  let longTotal = longDrugs.reduce((s, d) => s + getOralDzp(d.id), 0);
+  let midTotal = ORAL_MID.reduce((s, d) => s + getOralDzp(d.id), 0);
+  let shortTotal = ORAL_SHORT.reduce((s, d) => s + getOralDzp(d.id), 0);
+  let erTotal = ER_ODT.reduce((s, d) => s + getErDzp(d.id), 0);
+  let injectTotal = INJECT.reduce((s, d) => s + getInjectDzp(d.id), 0);
+
+  document.getElementById('subtotal-long').textContent = longTotal > 0 ? formatDzp(longTotal) + ' mg' : '0 mg';
+  document.getElementById('subtotal-long-footer').textContent = longTotal > 0 ? formatDzp(longTotal) + ' mg' : '0 mg';
+  document.getElementById('subtotal-mid').textContent = midTotal > 0 ? formatDzp(midTotal) + ' mg' : '0 mg';
+  document.getElementById('subtotal-mid-footer').textContent = midTotal > 0 ? formatDzp(midTotal) + ' mg' : '0 mg';
+  document.getElementById('subtotal-short').textContent = shortTotal > 0 ? formatDzp(shortTotal) + ' mg' : '0 mg';
+  document.getElementById('subtotal-short-footer').textContent = shortTotal > 0 ? formatDzp(shortTotal) + ' mg' : '0 mg';
+  document.getElementById('subtotal-er').textContent = erTotal > 0 ? formatDzp(erTotal) + ' mg' : '0 mg';
+  document.getElementById('subtotal-inject').textContent = injectTotal > 0 ? formatDzp(injectTotal) + ' mg' : '0 mg';
+
+  const tab = getCurrentTab();
+  let grandTotal = 0;
+  let unitHint = '';
+  if (tab === 'oral') {
+    grandTotal = longTotal + midTotal + shortTotal;
+    unitHint = 'mg/日';
+  } else if (tab === 'er') {
+    grandTotal = erTotal;
+    unitHint = 'mg/日';
+  } else {
+    grandTotal = injectTotal;
+    unitHint = 'mg（単回換算）';
+  }
+
+  const totalEl = document.getElementById('grand-total');
+  totalEl.textContent = grandTotal > 0 ? formatDzp(grandTotal) + ' mg' : '0 mg';
+
+  const guideEl = document.getElementById('dose-guide');
+  if (grandTotal <= 0) guideEl.textContent = '—';
+  else if (grandTotal < 15) guideEl.textContent = '低用量（' + unitHint + '）';
+  else if (grandTotal < 30) guideEl.textContent = '中用量（' + unitHint + '）';
+  else if (grandTotal < 50) guideEl.textContent = '高用量（' + unitHint + '）';
+  else guideEl.textContent = '超高用量（' + unitHint + '）';
+
+  applyStickyBarTheme(grandTotal);
+  totalEl.classList.remove('updated');
+  void totalEl.offsetWidth;
+  totalEl.classList.add('updated');
+}
+
+function formatDzp(val) {
+  if (val === 0) return '0';
+  if (val < 10) return parseFloat(val.toFixed(2)).toString();
+  if (val < 100) return parseFloat(val.toFixed(1)).toString();
+  return Math.round(val).toString();
+}
+
+function formatFactor(n) {
+  if (!Number.isFinite(n)) return '—';
+  const t = Number(n.toPrecision(12));
+  if (Math.abs(t - Math.round(t)) < 1e-8) return String(Math.round(t));
+  return parseFloat(String(t)).toString();
+}
+
+let DRUG_SEARCH_INDEX = [];
+
+function buildDrugSearchIndex() {
+  DRUG_SEARCH_INDEX = [];
+  const push = (d, tab, routeLabel) => {
+    const note = (d.note || '').trim();
+    const mj = (d.maxJp || '').trim();
+    const searchStr = `${d.name} ${d.brand} ${note} ${mj}`.trim().toLowerCase();
+    DRUG_SEARCH_INDEX.push({ id: d.id, name: d.name, brand: d.brand, tab, routeLabel, searchStr });
+  };
+  ORAL_LONG_CORE.forEach(d => push(d, 'oral', '経口'));
+  ORAL_LONG_OTHER.forEach(d => push(d, 'oral', '経口'));
+  ORAL_MID.forEach(d => push(d, 'oral', '経口'));
+  ORAL_SHORT.forEach(d => push(d, 'oral', '経口'));
+  ER_ODT.forEach(d => push(d, 'er', '徐放等'));
+  INJECT.forEach(d => push(d, 'inject', '注射'));
+}
+
+function renderDzConversionReference() {
+  const mount = document.getElementById('dz-reference-mount');
+  if (!mount) return;
+  const oralGroups = [
+    ['長時間型（主成分）', ORAL_LONG_CORE],
+    ['長時間型（その他）', ORAL_LONG_OTHER],
+    ['中間型', ORAL_MID],
+    ['短時間型', ORAL_SHORT],
+  ];
+  let oralHtml = '';
+  oralGroups.forEach(([title, drugs]) => {
+    if (!drugs.length) return;
+    const rows = drugs.map(d => {
+      const disc = d.disc ? ' dz-ref-disc' : '';
+      const note = d.note ? ' <span class="dz-ref-muted">（' + escapeHtml(d.note) + '）</span>' : '';
+      const discLbl = d.disc ? ' <span class="dz-ref-muted">（販売中止）</span>' : '';
+      const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
+      return `<tr class="${disc}">
+        <td>${escapeHtml(d.name)}${note}<div class="dz-ref-muted">${escapeHtml(d.brand)}${discLbl}</div></td>
+        <td class="col-num">${formatFactor(d.factor)}</td>
+        <td class="col-maxJp">${maxJp}</td>
+      </tr>`;
+    }).join('');
+    oralHtml += `<div class="dz-ref-sub">${escapeHtml(title)}</div>
+      <div class="dz-ref-scroll"><table class="dz-ref-table">
+        <thead><tr><th scope="col">一般名・商品名</th><th scope="col">因子 mg<sup>※</sup></th><th scope="col">国内上限（簡記）<sup>†</sup></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  });
+  const erRows = ER_ODT.map(d => {
+    const note = d.note ? ' <span class="dz-ref-muted">（' + escapeHtml(d.note) + '）</span>' : '';
+    const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
+    return `<tr><td>${escapeHtml(d.name)}${note}<div class="dz-ref-muted">${escapeHtml(d.brand)}</div></td>
+      <td class="col-num">${formatFactor(d.factor)}</td><td class="col-maxJp">${maxJp}</td></tr>`;
+  }).join('');
+  const injRows = INJECT.map(d => {
+    const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
+    return `<tr><td>${escapeHtml(d.name)}<div class="dz-ref-muted">${escapeHtml(d.brand)}</div></td>
+      <td class="col-num">${formatFactor(d.factor)}</td><td class="col-maxJp">${maxJp}</td></tr>`;
+  }).join('');
+
+  mount.innerHTML = `
+<details class="dz-ref-panel">
+  <summary>計算に使用している換算因子の一覧（開く）</summary>
+  <div class="dz-ref-body">
+    <p class="dz-ref-intro">※ <strong>因子（mg）</strong>＝ジアゼパム <strong>1 mg</strong> に相当する各薬の投与 mg。計算式は<strong>ジアゼパム換算 mg ＝ 投与 mg ÷ 因子</strong>です。文献・Clinical Practical Guidelines 等で示される等価表の比に基づく<strong>概算</strong>であり、施設・診療科で用いる表があればそちらを優先してください。</p>
+    ${oralHtml}
+    <div class="dz-ref-sub">徐放・ODT など</div>
+    <div class="dz-ref-scroll"><table class="dz-ref-table"><thead><tr><th scope="col">一般名・商品名</th><th scope="col">因子 mg</th><th scope="col">上限（簡記）<sup>†</sup></th></tr></thead><tbody>${erRows}</tbody></table></div>
+    <div class="dz-ref-sub">注射剤</div>
+    <div class="dz-ref-scroll"><table class="dz-ref-table"><thead><tr><th scope="col">一般名・商品名</th><th scope="col">因子 mg</th><th scope="col">上限（簡記）<sup>†</sup></th></tr></thead><tbody>${injRows}</tbody></table></div>
+    <p class="dz-ref-footnote">† 用法・用量の簡記。精神神経科以外の適応や小児・高齢では大きく異なります。</p>
+  </div>
+</details>`;
+}
+
+let searchMatches = [];
+let searchSelectedIdx = 0;
+
+function setSearchHint(msg) {
+  const el = document.getElementById('search-hint');
+  if (el) el.textContent = msg || '';
+}
+
+function setSuggestionsVisible(show) {
+  const box = document.getElementById('search-suggestions');
+  const input = document.getElementById('drug-search');
+  if (box) box.classList.toggle('visible', !!show);
+  if (input) input.setAttribute('aria-expanded', show ? 'true' : 'false');
+}
+
+function onSearchInput(raw) {
+  const clearBtn = document.getElementById('search-clear-btn');
+  if (clearBtn) clearBtn.classList.toggle('visible', raw.length > 0);
+  setSearchHint('');
+  const q = raw.trim().toLowerCase();
+  if (q.length === 0) {
+    searchMatches = [];
+    searchSelectedIdx = 0;
+    const box = document.getElementById('search-suggestions');
+    if (box) box.innerHTML = '';
+    setSuggestionsVisible(false);
+    return;
+  }
+  searchMatches = DRUG_SEARCH_INDEX.filter(item => item.searchStr.includes(q)).slice(0, 10);
+  searchSelectedIdx = 0;
+  renderSearchSuggestions();
+  setSuggestionsVisible(searchMatches.length > 0);
+}
+
+function renderSearchSuggestions() {
+  const box = document.getElementById('search-suggestions');
+  if (!box) return;
+  box.innerHTML = searchMatches.map((item, i) => `
+    <button type="button" role="option" class="suggest-item${i === searchSelectedIdx ? ' is-active' : ''}" data-idx="${i}" onclick="event.stopPropagation(); pickSearchMatch(${i});">
+      <div><span class="suggest-route">${escapeHtml(item.routeLabel)}</span><span class="suggest-name">${escapeHtml(item.name)}</span></div>
+      <div class="suggest-brand">${escapeHtml(item.brand)}</div>
+    </button>
+  `).join('');
+}
+
+function refreshSuggestActive() {
+  const box = document.getElementById('search-suggestions');
+  if (!box) return;
+  box.querySelectorAll('.suggest-item').forEach((btn, i) => {
+    btn.classList.toggle('is-active', i === searchSelectedIdx);
+  });
+}
+
+function onSearchKeydown(e) {
+  const sug = document.getElementById('search-suggestions');
+  if (!sug.classList.contains('visible') || searchMatches.length === 0) {
+    if (e.key === 'Enter') { e.preventDefault(); confirmSearchJump(); }
+    return;
+  }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    searchSelectedIdx = (searchSelectedIdx + 1) % searchMatches.length;
+    refreshSuggestActive();
+    return;
+  }
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    searchSelectedIdx = (searchSelectedIdx + searchMatches.length - 1) % searchMatches.length;
+    refreshSuggestActive();
+    return;
+  }
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    pickSearchMatch(searchSelectedIdx);
+  }
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    setSuggestionsVisible(false);
+  }
+}
+
+function pickSearchMatch(idx) {
+  if (idx < 0 || idx >= searchMatches.length) return;
+  jumpToDrugById(searchMatches[idx].id);
+  setSuggestionsVisible(false);
+}
+
+function confirmSearchJump() {
+  const q = document.getElementById('drug-search').value.trim().toLowerCase();
+  setSearchHint('');
+  if (!q.length) {
+    setSearchHint('検索語を入力してください');
+    return;
+  }
+  const matches = DRUG_SEARCH_INDEX.filter(item => item.searchStr.includes(q)).slice(0, 10);
+  if (matches.length === 0) {
+    setSearchHint('該当する薬剤がありません');
+    searchMatches = [];
+    searchSelectedIdx = 0;
+    document.getElementById('search-suggestions').innerHTML = '';
+    setSuggestionsVisible(false);
+    return;
+  }
+  searchMatches = matches;
+  if (searchSelectedIdx >= searchMatches.length) searchSelectedIdx = 0;
+  jumpToDrugById(searchMatches[searchSelectedIdx].id);
+  setSuggestionsVisible(false);
+}
+
+function ensureSectionExpanded(key) {
+  if (!sectionStates[key]) {
+    sectionStates[key] = true;
+    const content = document.getElementById('content-' + key);
+    const chevron = document.getElementById('chevron-' + key);
+    if (content) {
+      content.classList.remove('collapsed');
+      content.classList.add('expanded');
+    }
+    if (chevron) chevron.style.transform = '';
+  }
+}
+
+let jumpFlashTimer = null;
+
+function jumpToDrugById(id) {
+  const el = document.getElementById('row-' + id);
+  if (!el) {
+    setSearchHint('該当行が見つかりません');
+    return;
+  }
+  let tab = 'oral';
+  if (el.closest('#panel-er')) tab = 'er';
+  else if (el.closest('#panel-inject')) tab = 'inject';
+  switchTab(tab);
+  if (tab === 'oral') {
+    if (el.closest('#content-long')) ensureSectionExpanded('long');
+    if (el.closest('#content-mid')) ensureSectionExpanded('mid');
+    if (el.closest('#content-short')) ensureSectionExpanded('short');
+  }
+  requestAnimationFrame(() => {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.remove('jump-flash');
+    void el.offsetWidth;
+    el.classList.add('jump-flash');
+    if (jumpFlashTimer) clearTimeout(jumpFlashTimer);
+    jumpFlashTimer = setTimeout(() => el.classList.remove('jump-flash'), 2000);
+  });
+}
+
+function clearSearch() {
+  const input = document.getElementById('drug-search');
+  input.value = '';
+  searchMatches = [];
+  searchSelectedIdx = 0;
+  document.getElementById('search-suggestions').innerHTML = '';
+  setSuggestionsVisible(false);
+  setSearchHint('');
+  document.getElementById('search-clear-btn').classList.remove('visible');
+  input.focus();
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-wrap')) setSuggestionsVisible(false);
+});
+
+let currentTab = 'oral';
+
+function getCurrentTab() { return currentTab; }
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('panel-oral').classList.toggle('hidden', tab !== 'oral');
+  document.getElementById('panel-er').classList.toggle('hidden', tab !== 'er');
+  document.getElementById('panel-inject').classList.toggle('hidden', tab !== 'inject');
+  ['oral', 'er', 'inject'].forEach(t => {
+    const btn = document.getElementById('tab-' + t);
+    const activeClass = t === 'oral' ? 'active-oral' : t === 'er' ? 'active-er' : 'active-inject';
+    btn.className = 'tab-btn ' + (t === tab ? activeClass : 'inactive');
+  });
+  updateTotals();
+}
+
+const sectionStates = { long: true, mid: true, short: true };
+
+function toggleSection(key) {
+  sectionStates[key] = !sectionStates[key];
+  const content = document.getElementById('content-' + key);
+  const chevron = document.getElementById('chevron-' + key);
+  if (sectionStates[key]) {
+    content.classList.remove('collapsed');
+    content.classList.add('expanded');
+    if (chevron) chevron.style.transform = '';
+  } else {
+    content.classList.remove('expanded');
+    content.classList.add('collapsed');
+    if (chevron) chevron.style.transform = 'rotate(-90deg)';
+  }
+}
+
+function resetAll() {
+  document.querySelectorAll('.dose-input').forEach(el => {
+    el.value = '';
+    el.classList.remove('has-value');
+  });
+  document.querySelectorAll('[id^="dzp-"]').forEach(el => { el.textContent = '—'; });
+  Object.keys(doses).forEach(k => delete doses[k]);
+  Object.keys(erDoses).forEach(k => delete erDoses[k]);
+  Object.keys(injectDoses).forEach(k => delete injectDoses[k]);
+  updateTotals();
+}
+
+function init() {
+  buildDrugSearchIndex();
+  renderDzConversionReference();
+  ORAL_LONG_CORE.forEach(d => buildDrugRow(d, 'drugs-long-core'));
+  ORAL_LONG_OTHER.forEach(d => buildDrugRow(d, 'drugs-long-other'));
+  ORAL_MID.forEach(d => buildDrugRow(d, 'drugs-mid'));
+  ORAL_SHORT.forEach(d => buildDrugRow(d, 'drugs-short'));
+  ER_ODT.forEach(d => buildDrugRow(d, 'drugs-er', 'er'));
+  INJECT.forEach(d => buildDrugRow(d, 'drugs-inject', 'inject'));
+
+  lucide.createIcons();
+  updateTotals();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
