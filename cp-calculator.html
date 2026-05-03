@@ -86,6 +86,28 @@
     .drug-row:hover { background: #f9fafb; }
     .drug-row.discontinued { opacity: 0.5; }
 
+    .drug-max-wrap {
+      flex-shrink: 0;
+      text-align: right;
+      max-width: 52%;
+      line-height: 1.35;
+    }
+    .drug-max-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: #92400e;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 0.35rem;
+      padding: 0.18rem 0.4rem;
+    }
+    .drug-max-label {
+      font-weight: 700;
+      color: #b45309;
+      margin-right: 0.2rem;
+    }
+
     /* クイック入力ボタン */
     .qty-btn {
       height: 28px;
@@ -431,6 +453,104 @@
       margin-bottom: 1rem;
     }
 
+    /* CP換算係数一覧（開閉） */
+    .cp-ref-panel {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .cp-ref-panel > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.65rem 0.875rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1e293b;
+      border-bottom: 1px solid transparent;
+    }
+    .cp-ref-panel[open] > summary {
+      border-bottom-color: #e2e8f0;
+      background: #f8fafc;
+    }
+    .cp-ref-panel > summary::-webkit-details-marker { display: none; }
+    .cp-ref-panel summary::after {
+      content: '';
+      flex-shrink: 0;
+      width: 0.55rem;
+      height: 0.55rem;
+      border-right: 2px solid #64748b;
+      border-bottom: 2px solid #64748b;
+      transform: rotate(-45deg);
+      margin-top: -0.2rem;
+      transition: transform 0.2s ease;
+      opacity: 0.85;
+    }
+    .cp-ref-panel[open] summary::after {
+      transform: rotate(135deg);
+      margin-top: 0.15rem;
+    }
+
+    .cp-ref-body {
+      padding: 0.65rem 0.85rem 0.85rem;
+    }
+    .cp-ref-intro {
+      font-size: 0.65rem;
+      line-height: 1.55;
+      color: #64748b;
+      margin-bottom: 0.6rem;
+    }
+    .cp-ref-sub {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #475569;
+      margin: 0.5rem 0 0.3rem;
+    }
+    .cp-ref-scroll { overflow-x: auto; margin-bottom: 0.35rem; -webkit-overflow-scrolling: touch; }
+    .cp-ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.65rem;
+    }
+    .cp-ref-table th {
+      text-align: left;
+      padding: 0.35rem 0.35rem;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 700;
+    }
+    .cp-ref-table td {
+      padding: 0.3rem 0.35rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+      vertical-align: top;
+    }
+    .cp-ref-table tr:last-child td { border-bottom: none; }
+    .cp-ref-table .col-num {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .cp-ref-table .col-maxJp {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #92400e;
+      max-width: 9rem;
+      white-space: normal;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+    .cp-ref-disc { opacity: 0.55; }
+    .cp-ref-muted { font-size: 0.62rem; font-weight: 400; color: #94a3b8; }
+    .cp-ref-footnote { font-size: 0.62rem; color: #64748b; line-height: 1.55; margin-top: 0.45rem; }
+
     /* アニメーション */
     @keyframes pulse-green {
       0% { transform: scale(1); }
@@ -626,11 +746,14 @@
         <div class="flex items-start gap-2">
           <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
           <div class="text-xs text-amber-800">
-            <span class="font-bold">留意事項：</span>CP換算値は抗精神病作用のみを評価したものです。鎮静作用等は含まれません。あくまで投与量の目安としてお使いください。©稲垣中, 稲田俊也
+            <span class="font-bold">留意事項：</span>CP換算値は抗精神病作用のみを評価したものです。鎮静作用等は含まれません。あくまで投与量の目安としてお使いください。各行の<strong>「上限」</strong>は国内添付における<strong>用量の簡記</strong>であり、適応・年齢・製品・増量規定により変わります。<strong>臨床上は現行添付・施設規程で確認</strong>してください。©稲垣中, 稲田俊也
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 計算で使用しているCP換算値の一覧（開閉） -->
+    <div class="px-4 mb-2" id="cp-reference-mount" aria-live="polite"></div>
 
     <!-- 経口製剤タブ -->
     <div id="panel-oral" class="px-4">
@@ -844,61 +967,61 @@
 // tabs: 国内販売の錠剤規格（1錠のmg）。押すたびに加算。最大4つ
 const ORAL_DRUGS = {
   sda: [
-    { id: 'risperidone',       name: 'リスペリドン',        brand: 'リスパダール',      factor: 1,    disc: false, tabs: [0.5, 1, 2, 3]   },
-    { id: 'paliperidone',      name: 'パリペリドン',        brand: 'インヴェガ',        factor: 1.5,  disc: false, tabs: [3, 6, 9]         },
-    { id: 'blonanserin',       name: 'ブロナンセリン',      brand: 'ロナセン (錠・散)', factor: 4,    disc: false, tabs: [2, 4, 8]         },
-    { id: 'blonanserin_patch', name: 'ブロナンセリン',      brand: 'ロナセンテープ',    factor: 20,   disc: false, note: '貼付剤', tabs: [20, 40, 80] },
-    { id: 'perospirone',       name: 'ペロスピロン',        brand: 'ルーラン',          factor: 8,    disc: false, tabs: [4, 8]            },
-    { id: 'lurasidone',        name: 'ルラシドン',          brand: 'ラツーダ',          factor: 10,   disc: false, tabs: [20, 40, 60, 80]  },
-    { id: 'asenapine',         name: 'アセナピン',          brand: 'シクレスト',        factor: 2.5,  disc: false, tabs: [5, 10]           },
+    { id: 'risperidone',       name: 'リスペリドン',        brand: 'リスパダール',      factor: 1,    disc: false, tabs: [0.5, 1, 2, 3],   maxJp: '16 mg/日' },
+    { id: 'paliperidone',      name: 'パリペリドン',        brand: 'インヴェガ',        factor: 1.5,  disc: false, tabs: [3, 6, 9],         maxJp: '18 mg/日' },
+    { id: 'blonanserin',       name: 'ブロナンセリン',      brand: 'ロナセン (錠・散)', factor: 4,    disc: false, tabs: [2, 4, 8],         maxJp: '24 mg/日' },
+    { id: 'blonanserin_patch', name: 'ブロナンセリン',      brand: 'ロナセンテープ',    factor: 20,   disc: false, note: '貼付剤', tabs: [20, 40, 80], maxJp: '80 mg／貼付24h' },
+    { id: 'perospirone',       name: 'ペロスピロン',        brand: 'ルーラン',          factor: 8,    disc: false, tabs: [4, 8],            maxJp: '48 mg/日' },
+    { id: 'lurasidone',        name: 'ルラシドン',          brand: 'ラツーダ',          factor: 10,   disc: false, tabs: [20, 40, 60, 80],  maxJp: '120 mg/日' },
+    { id: 'asenapine',         name: 'アセナピン',          brand: 'シクレスト',        factor: 2.5,  disc: false, tabs: [5, 10],           maxJp: '20 mg/日（舌下）' },
   ],
   marta: [
-    { id: 'clozapine',         name: 'クロザピン',          brand: 'クロザリル',        factor: 50,   disc: false, tabs: [25, 100]         },
-    { id: 'olanzapine',        name: 'オランザピン',        brand: 'ジプレキサ',        factor: 2.5,  disc: false, tabs: [2.5, 5, 10]      },
-    { id: 'quetiapine',        name: 'クエチアピン',        brand: 'セロクエル',        factor: 66,   disc: false, tabs: [25, 50, 100, 200]},
-    { id: 'zotepine',          name: 'ゾテピン',            brand: 'ロドピン',          factor: 66,   disc: false, tabs: [25, 50, 100]     },
+    { id: 'clozapine',         name: 'クロザピン',          brand: 'クロザリル',        factor: 50,   disc: false, tabs: [25, 100],         maxJp: '600 mg/日' },
+    { id: 'olanzapine',        name: 'オランザピン',        brand: 'ジプレキサ',        factor: 2.5,  disc: false, tabs: [2.5, 5, 10],      maxJp: '20 mg/日' },
+    { id: 'quetiapine',        name: 'クエチアピン',        brand: 'セロクエル',        factor: 66,   disc: false, tabs: [25, 50, 100, 200], maxJp: '800 mg／即放・製剤依存' },
+    { id: 'zotepine',          name: 'ゾテピン',            brand: 'ロドピン',          factor: 66,   disc: false, tabs: [25, 50, 100],     maxJp: '150 mg/日' },
   ],
   dpa: [
-    { id: 'aripiprazole',      name: 'アリピプラゾール',    brand: 'エビリファイ',      factor: 4,    disc: false, tabs: [3, 6, 12, 24]    },
-    { id: 'brexpiprazole',     name: 'ブレクスピプラゾール',brand: 'レキサルティ',      factor: 0.5,  disc: false, tabs: [0.5, 1, 2]       },
+    { id: 'aripiprazole',      name: 'アリピプラゾール',    brand: 'エビリファイ',      factor: 4,    disc: false, tabs: [3, 6, 12, 24],    maxJp: '30 mg/日' },
+    { id: 'brexpiprazole',     name: 'ブレクスピプラゾール',brand: 'レキサルティ',      factor: 0.5,  disc: false, tabs: [0.5, 1, 2],       maxJp: '4 mg/日' },
   ],
 };
 
 const ORAL_GEN1 = {
   phenothiazine: [
-    { id: 'chlorpromazine',    name: 'クロルプロマジン',    brand: 'コントミン/ウインタミン', factor: 100, disc: false, tabs: [12.5, 25, 50, 100] },
-    { id: 'levomepromazine',   name: 'レボメプロマジン',    brand: 'ヒルナミン/レボトミン',   factor: 100, disc: false, tabs: [5, 25, 50]          },
-    { id: 'prochlorperazine',  name: 'プロクロルペラジン',  brand: 'ノバミン',               factor: 15,  disc: false, tabs: [5]                  },
-    { id: 'perphenazine',      name: 'ペルフェナジン',      brand: 'ピーゼットシー',         factor: 10,  disc: false, tabs: [2, 4, 8]            },
-    { id: 'fluphenazine',      name: 'フルフェナジン',      brand: 'フルメジン',             factor: 2,   disc: false, tabs: [0.25, 0.5, 1]      },
-    { id: 'propericiazine',    name: 'プロペリシアジン',    brand: 'ニューレプチル',         factor: 20,  disc: false, tabs: [5, 10]              },
-    { id: 'thioridazine',      name: 'チオリダジン',        brand: 'メレリル',               factor: 100, disc: true,  tabs: []                   },
-    { id: 'trifluoperazine',   name: 'トリフロペラジン',    brand: 'トリフロペラジン',       factor: 5,   disc: true,  tabs: []                   },
-    { id: 'perazine',          name: 'ぺラジン',            brand: 'プシトミン',             factor: 100, disc: true,  tabs: []                   },
+    { id: 'chlorpromazine',    name: 'クロルプロマジン',    brand: 'コントミン/ウインタミン', factor: 100, disc: false, tabs: [12.5, 25, 50, 100], maxJp: '600 mg/日（製品依存）' },
+    { id: 'levomepromazine',   name: 'レボメプロマジン',    brand: 'ヒルナミン/レボトミン',   factor: 100, disc: false, tabs: [5, 25, 50],          maxJp: '600 mg/日（増量規定あり）' },
+    { id: 'prochlorperazine',  name: 'プロクロルペラジン',  brand: 'ノバミン',               factor: 15,  disc: false, tabs: [5],                  maxJp: '45 mg/日（主適応注意）' },
+    { id: 'perphenazine',      name: 'ペルフェナジン',      brand: 'ピーゼットシー',         factor: 10,  disc: false, tabs: [2, 4, 8],            maxJp: '48 mg/日' },
+    { id: 'fluphenazine',      name: 'フルフェナジン',      brand: 'フルメジン',             factor: 2,   disc: false, tabs: [0.25, 0.5, 1],      maxJp: '10 mg/日' },
+    { id: 'propericiazine',    name: 'プロペリシアジン',    brand: 'ニューレプチル',         factor: 20,  disc: false, tabs: [5, 10],              maxJp: '90 mg/日' },
+    { id: 'thioridazine',      name: 'チオリダジン',        brand: 'メレリル',               factor: 100, disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
+    { id: 'trifluoperazine',   name: 'トリフロペラジン',    brand: 'トリフロペラジン',       factor: 5,   disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
+    { id: 'perazine',          name: 'ぺラジン',            brand: 'プシトミン',             factor: 100, disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
   ],
   butyrophenone: [
-    { id: 'haloperidol',       name: 'ハロペリドール',      brand: 'セレネース',             factor: 2,   disc: false, tabs: [0.75, 1, 1.5, 3]   },
-    { id: 'bromperidol',       name: 'ブロムペリドール',    brand: 'インプロメン',           factor: 2,   disc: false, tabs: [1, 3]               },
-    { id: 'spiperone',         name: 'スピペロン',          brand: 'スピロピタン',           factor: 1,   disc: false, tabs: [0.25, 0.5, 1]      },
-    { id: 'timiperone',        name: 'チミペロン',          brand: 'トロペロン',             factor: 1.3, disc: false, tabs: [0.5, 1]             },
-    { id: 'pipamperone',       name: 'ピパンペロン',        brand: 'プロピタン',             factor: 200, disc: false, tabs: [40]                 },
-    { id: 'pimozide',          name: 'ピモジド',            brand: 'オーラップ',             factor: 4,   disc: true,  tabs: []                   },
+    { id: 'haloperidol',       name: 'ハロペリドール',      brand: 'セレネース',             factor: 2,   disc: false, tabs: [0.75, 1, 1.5, 3],   maxJp: '30 mg/日' },
+    { id: 'bromperidol',       name: 'ブロムペリドール',    brand: 'インプロメン',           factor: 2,   disc: false, tabs: [1, 3],               maxJp: '30 mg/日' },
+    { id: 'spiperone',         name: 'スピペロン',          brand: 'スピロピタン',           factor: 1,   disc: false, tabs: [0.25, 0.5, 1],      maxJp: '12 mg/日' },
+    { id: 'timiperone',        name: 'チミペロン',          brand: 'トロペロン',             factor: 1.3, disc: false, tabs: [0.5, 1],             maxJp: '36 mg/日' },
+    { id: 'pipamperone',       name: 'ピパンペロン',        brand: 'プロピタン',             factor: 200, disc: false, tabs: [40],                 maxJp: '360 mg/日' },
+    { id: 'pimozide',          name: 'ピモジド',            brand: 'オーラップ',             factor: 4,   disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
   ],
   benzamide: [
-    { id: 'sulpiride',         name: 'スルピリド',          brand: 'ドグマチール',           factor: 200, disc: false, tabs: [50, 100, 200]       },
-    { id: 'sultopride',        name: 'スルトプリド',        brand: 'バルネチール',           factor: 200, disc: false, tabs: [50, 100, 200]       },
-    { id: 'tiapride',          name: 'チアプリド',          brand: 'グラマリール',           factor: 100, disc: false, tabs: [25, 50]             },
-    { id: 'nemonapride',       name: 'ネモナプリド',        brand: 'エミレース',             factor: 4.5, disc: false, tabs: [3, 6]               },
+    { id: 'sulpiride',         name: 'スルピリド',          brand: 'ドグマチール',           factor: 200, disc: false, tabs: [50, 100, 200],       maxJp: '2400 mg／適応増量規定あり' },
+    { id: 'sultopride',        name: 'スルトプリド',        brand: 'バルネチール',           factor: 200, disc: false, tabs: [50, 100, 200],       maxJp: '1200〜1600 mg／増量規定あり' },
+    { id: 'tiapride',          name: 'チアプリド',          brand: 'グラマリール',           factor: 100, disc: false, tabs: [25, 50],             maxJp: '1200 mg/日（増量規定あり）' },
+    { id: 'nemonapride',       name: 'ネモナプリド',        brand: 'エミレース',             factor: 4.5, disc: false, tabs: [3, 6],               maxJp: '27 mg/日' },
   ],
   other: [
-    { id: 'clotiapine',        name: 'クロチアピン',        brand: 'デリトン',               factor: 40,  disc: true,  tabs: []                   },
-    { id: 'thiothixene',       name: 'チオチキセン',        brand: 'ナーベン',               factor: 3.3, disc: true,  tabs: []                   },
-    { id: 'clocapramine',      name: 'クロカプラミン',      brand: 'クロフェクトン',         factor: 40,  disc: false, tabs: [10, 25, 50]         },
-    { id: 'carpipramine',      name: 'カルピプラミン',      brand: 'デフェクトン',           factor: 100, disc: true,  tabs: []                   },
-    { id: 'mosapramine',       name: 'モサプラミン',        brand: 'クレミン',               factor: 33,  disc: false, tabs: [10, 25, 50]         },
-    { id: 'moperone',          name: 'モペロン',            brand: 'ルバトレン',             factor: 12.5,disc: true,  tabs: []                   },
-    { id: 'oxyperine',         name: 'オキシペルチン',      brand: 'ホーリット',             factor: 80,  disc: false, tabs: [10]                 },
-    { id: 'reserpine',         name: 'レセルピン',          brand: 'アポプロン',             factor: 0.15,disc: false, tabs: [0.1, 0.25]          },
+    { id: 'clotiapine',        name: 'クロチアピン',        brand: 'デリトン',               factor: 40,  disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
+    { id: 'thiothixene',       name: 'チオチキセン',        brand: 'ナーベン',               factor: 3.3, disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
+    { id: 'clocapramine',      name: 'クロカプラミン',      brand: 'クロフェクトン',         factor: 40,  disc: false, tabs: [10, 25, 50],         maxJp: '300 mg/日' },
+    { id: 'carpipramine',      name: 'カルピプラミン',      brand: 'デフェクトン',           factor: 100, disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
+    { id: 'mosapramine',       name: 'モサプラミン',        brand: 'クレミン',               factor: 33,  disc: false, tabs: [10, 25, 50],         maxJp: '150 mg/日' },
+    { id: 'moperone',          name: 'モペロン',            brand: 'ルバトレン',             factor: 12.5,disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
+    { id: 'oxyperine',         name: 'オキシペルチン',      brand: 'ホーリット',             factor: 80,  disc: false, tabs: [10],                 maxJp: '48 mg/日' },
+    { id: 'reserpine',         name: 'レセルピン',          brand: 'アポプロン',             factor: 0.15,disc: false, tabs: [0.1, 0.25],          maxJp: '0.5 mg/日（適応確認）' },
   ],
 };
 
@@ -906,30 +1029,30 @@ const ORAL_GEN1 = {
 // tabs: バイアル・シリンジの規格（mg）
 const LAI_DRUGS = [
   { id: 'aripiprazole_lai',   name: 'アリピプラゾール',              brand: 'エビリファイ持続性水懸筋注',    gen: 2,
-    base_dose: 100, base_period_days: 28, cp_per_day: 100/28, tabs: [300, 400] },
+    base_dose: 100, base_period_days: 28, cp_per_day: 100/28, tabs: [300, 400], maxJp: '400 mg／単回（製品規定あり）' },
   { id: 'paliperidone_lai',   name: 'パリペリドンパルミチン酸エステル', brand: 'ゼプリオン水懸筋注',           gen: 2,
-    base_dose: 18.75, base_period_days: 28, cp_per_day: 100/28, tabs: [25, 50, 75, 100] },
+    base_dose: 18.75, base_period_days: 28, cp_per_day: 100/28, tabs: [25, 50, 75, 100], maxJp: '100 mg／単回製品規定／間隔準拠' },
   { id: 'risperidone_lai',    name: 'リスペリドン',                  brand: 'リスパダールコンスタ筋注',       gen: 2,
-    base_dose: 10, base_period_days: 14, cp_per_day: 100/14, tabs: [12.5, 25, 37.5, 50] },
+    base_dose: 10, base_period_days: 14, cp_per_day: 100/14, tabs: [12.5, 25, 37.5, 50], maxJp: '50 mg／2週サイクル' },
   { id: 'haloperidol_lai',    name: 'ハロペリドールデカン酸エステル', brand: 'ハロマンス/ネオペリドール注',   gen: 1,
-    base_dose: 30, base_period_days: 28, cp_per_day: 100/28, tabs: [50, 100] },
+    base_dose: 30, base_period_days: 28, cp_per_day: 100/28, tabs: [50, 100], maxJp: '〜300 mg単回／増量添付評価' },
   { id: 'fluphenazine_dec',   name: 'フルフェナジンデカン酸エステル', brand: 'フルデカシン筋注',             gen: 1,
-    base_dose: 15, base_period_days: 28, cp_per_day: 100/28, tabs: [25] },
+    base_dose: 15, base_period_days: 28, cp_per_day: 100/28, tabs: [25], maxJp: '50〜100 mg級／増量準拠' },
   { id: 'fluphenazine_ena',   name: 'フルフェナジンエナント酸エステル', brand: 'アナテンゾールデポー',        gen: 1,
-    base_dose: 7.5, base_period_days: 14, cp_per_day: 100/14, disc: true, tabs: [25] },
+    base_dose: 7.5, base_period_days: 14, cp_per_day: 100/14, disc: true, tabs: [25], maxJp: '—（販売中止）' },
 ];
 
 // 速効性注射剤
 // tabs: アンプル規格（mg）
 const RAPID_INJECT_DRUGS = [
-  { id: 'haloperidol_inj',      name: 'ハロペリドール',     brand: 'セレネース (筋注/静注)',      factor: 1,    tabs: [5]       },
-  { id: 'olanzapine_inj',       name: 'オランザピン',       brand: 'ジプレキサ (筋注)',           factor: 2.25, tabs: [10]      },
-  { id: 'chlorpromazine_inj',   name: 'クロルプロマジン',   brand: 'コントミン (筋注)',           factor: 33,   tabs: [25, 50]  },
-  { id: 'sulpiride_inj',        name: 'スルピリド',         brand: 'ドグマチール (筋注)',         factor: 50,   tabs: [100]     },
-  { id: 'timiperone_inj',       name: 'チミペロン',         brand: 'トロペロン (筋注/静注)',      factor: 0.19, tabs: [5]       },
-  { id: 'prochlorperazine_inj', name: 'プロクロルペラジン', brand: 'ノバミン (筋注)',             factor: 2.14, tabs: [5]       },
-  { id: 'perphenazine_inj',     name: 'ペルフェナジン',     brand: 'ピーゼットシー (筋注)',       factor: 2,    tabs: [5]       },
-  { id: 'levomepromazine_inj',  name: 'レボメプロマジン',   brand: 'ヒルナミン/レボトミン (筋注)',factor: 25,   tabs: [25]      },
+  { id: 'haloperidol_inj',      name: 'ハロペリドール',     brand: 'セレネース (筋注/静注)',      factor: 1,    tabs: [5],       maxJp: '15 mg／筋注／回・症状準拠' },
+  { id: 'olanzapine_inj',       name: 'オランザピン',       brand: 'ジプレキサ (筋注)',           factor: 2.25, tabs: [10],      maxJp: '10 mg／筋注／回' },
+  { id: 'chlorpromazine_inj',   name: 'クロルプロマジン',   brand: 'コントミン (筋注)',           factor: 33,   tabs: [25, 50],  maxJp: '100 mg／筋注／回級' },
+  { id: 'sulpiride_inj',        name: 'スルピリド',         brand: 'ドグマチール (筋注)',         factor: 50,   tabs: [100],     maxJp: '200 mg／注射／回' },
+  { id: 'timiperone_inj',       name: 'チミペロン',         brand: 'トロペロン (筋注/静注)',      factor: 0.19, tabs: [5],       maxJp: '10〜20 mg／回（添付準拠）' },
+  { id: 'prochlorperazine_inj', name: 'プロクロルペラジン', brand: 'ノバミン (筋注)',             factor: 2.14, tabs: [5],       maxJp: '10 mg／注射／回' },
+  { id: 'perphenazine_inj',     name: 'ペルフェナジン',     brand: 'ピーゼットシー (筋注)',       factor: 2,    tabs: [5],       maxJp: '10 mg／注射／回' },
+  { id: 'levomepromazine_inj',  name: 'レボメプロマジン',   brand: 'ヒルナミン/レボトミン (筋注)',factor: 25,   tabs: [25],      maxJp: '50 mg／注射／回級' },
 ];
 
 // ============================================================
@@ -953,6 +1076,22 @@ function buildQtyBtns(tabs, id, type = 'oral') {
   return tabBtns + clearBtn;
 }
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+const MAX_JP_BADGE_TITLE = '国内販売医薬品の用法・用量（主に成人）に基づく上限の簡記。適応・年齢・製剤により異なるため、現行の添付文書で必ず確認してください。';
+
+function maxJpBadgeHtml(drug) {
+  const t = drug.maxJp;
+  if (!t) return '';
+  return `<div class="drug-max-wrap"><span class="drug-max-badge" title="${escapeHtml(MAX_JP_BADGE_TITLE)}"><span class="drug-max-label">上限</span>${escapeHtml(t)}</span></div>`;
+}
+
 function buildDrugRow(drug, containerId, type = 'oral') {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -960,21 +1099,23 @@ function buildDrugRow(drug, containerId, type = 'oral') {
   const row = document.createElement('div');
   row.className = 'drug-row' + (drug.disc ? ' discontinued' : '');
   row.id = 'row-' + drug.id;
-  row.dataset.search = (drug.name + ' ' + drug.brand + (drug.note ? ' ' + drug.note : '')).toLowerCase();
+  const mj = drug.maxJp ? ' ' + String(drug.maxJp) : '';
+  row.dataset.search = (drug.name + ' ' + drug.brand + (drug.note ? ' ' + drug.note : '') + mj).toLowerCase();
 
   const noteHtml  = drug.note ? `<span class="text-xs text-gray-400">(${drug.note})</span>` : '';
   const discBadge = drug.disc ? `<span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">販売中止</span>` : '';
   const btns      = buildQtyBtns(drug.tabs, drug.id, type);
 
   row.innerHTML = `
-    <div class="flex items-start justify-between gap-1 min-w-0">
-      <div class="min-w-0">
+    <div class="flex items-start justify-between gap-2 min-w-0">
+      <div class="min-w-0 flex-1">
         <div class="flex items-center flex-wrap gap-1">
           <span class="drug-name font-medium text-gray-800 text-sm">${drug.name}</span>
           ${noteHtml}${discBadge}
         </div>
         <div class="brand-name text-xs text-gray-400">${drug.brand}</div>
       </div>
+      ${maxJpBadgeHtml(drug)}
     </div>
     <div class="flex items-center gap-1 min-w-0">
       <div class="flex items-center gap-1 flex-wrap flex-shrink-0">
@@ -1012,12 +1153,13 @@ function buildLAIRow(drug) {
   const row = document.createElement('div');
   row.className = 'p-3' + (drug.disc ? ' opacity-50' : '');
   row.id = 'row-' + drug.id;
-  row.dataset.search = (drug.name + ' ' + drug.brand).toLowerCase();
+  const mj = drug.maxJp ? ' ' + String(drug.maxJp) : '';
+  row.dataset.search = (drug.name + ' ' + drug.brand + mj).toLowerCase();
 
   const laiBtns = buildQtyBtns(drug.tabs, drug.id, 'lai');
 
   row.innerHTML = `
-    <div class="flex items-start gap-2 mb-1.5">
+    <div class="flex items-start gap-2 mb-1.5 justify-between">
       <div class="flex-1 min-w-0">
         <div class="flex items-center flex-wrap gap-1">
           ${genBadge}
@@ -1029,6 +1171,7 @@ function buildLAIRow(drug) {
           基準: ${drug.base_dose}mg / ${drug.base_period_days}日
         </div>
       </div>
+      ${maxJpBadgeHtml(drug)}
     </div>
     <div class="flex items-center gap-1 flex-wrap mb-1.5">
       ${laiBtns}
@@ -1064,15 +1207,17 @@ function buildInjectRow(drug) {
   row.className = 'drug-row';
   row.id = 'row-' + drug.id;
 
-  row.dataset.search = (drug.name + ' ' + drug.brand).toLowerCase();
+  const mj = drug.maxJp ? ' ' + String(drug.maxJp) : '';
+  row.dataset.search = (drug.name + ' ' + drug.brand + mj).toLowerCase();
   const injBtns = buildQtyBtns(drug.tabs, drug.id, 'inject');
 
   row.innerHTML = `
-    <div class="flex items-start justify-between gap-1 min-w-0">
-      <div>
+    <div class="flex items-start justify-between gap-2 min-w-0">
+      <div class="min-w-0 flex-1">
         <div class="font-medium text-gray-800 text-sm">${drug.name}</div>
         <div class="text-xs text-gray-400">${drug.brand}</div>
       </div>
+      ${maxJpBadgeHtml(drug)}
     </div>
     <div class="flex items-center gap-1 min-w-0">
       <div class="flex items-center gap-1 flex-wrap flex-shrink-0">
@@ -1364,7 +1509,8 @@ function buildDrugSearchIndex() {
   DRUG_SEARCH_INDEX = [];
   const push = (d, tab, routeLabel) => {
     const note = (d.note || '').trim();
-    const searchStr = `${d.name} ${d.brand} ${note}`.trim().toLowerCase();
+    const mj = (d.maxJp || '').trim();
+    const searchStr = `${d.name} ${d.brand} ${note} ${mj}`.trim().toLowerCase();
     DRUG_SEARCH_INDEX.push({ id: d.id, name: d.name, brand: d.brand, tab, routeLabel, searchStr });
   };
   [
@@ -1383,12 +1529,100 @@ function buildDrugSearchIndex() {
 let searchMatches = [];
 let searchSelectedIdx = 0;
 
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+/** 係数一覧用の数字表示（丸めすぎ防止） */
+function formatCpCoefficient(n) {
+  if (!Number.isFinite(n)) return '—';
+  const t = Number(n.toPrecision(12));
+  if (Math.abs(t - Math.round(t)) < 1e-8) return String(Math.round(t));
+  return parseFloat(String(t)).toString();
+}
+
+/** 留意事項の下・開閉式の換算係数一覧（データ定数から生成） */
+function renderCpConversionReference() {
+  const mount = document.getElementById('cp-reference-mount');
+  if (!mount) return;
+
+  const oralGroups = [
+    ['第2世代 SDA（セロトニン・ドパミン拮抗薬）', ORAL_DRUGS.sda],
+    ['第2世代 MARTA（多受容体作用）', ORAL_DRUGS.marta],
+    ['第2世代 DPA（ドパミン部分作動薬）', ORAL_DRUGS.dpa],
+    ['第1世代 フェノチアジン系', ORAL_GEN1.phenothiazine],
+    ['第1世代 ブチロフェノン系', ORAL_GEN1.butyrophenone],
+    ['第1世代 ベンズアミド系', ORAL_GEN1.benzamide],
+    ['その他・チオキサンテン系ほか', ORAL_GEN1.other],
+  ];
+
+  let oralHtml = '';
+  oralGroups.forEach(([title, drugs]) => {
+    if (!drugs || !drugs.length) return;
+    const rows = drugs.map(d => {
+      const disc = d.disc ? ' cp-ref-disc' : '';
+      const note = d.note ? ' <span class="cp-ref-muted">（' + escapeHtml(d.note) + '）</span>' : '';
+      const discLbl = d.disc ? ' <span class="cp-ref-muted">（販売中止）</span>' : '';
+      const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
+      return `<tr class="${disc}">
+        <td>${escapeHtml(d.name)}${note}<div class="cp-ref-muted">${escapeHtml(d.brand)}${discLbl}</div></td>
+        <td class="col-num">${formatCpCoefficient(d.factor)}</td>
+        <td class="col-maxJp">${maxJp}</td>
+      </tr>`;
+    }).join('');
+    oralHtml += `<div class="cp-ref-sub">${escapeHtml(title)}</div>
+      <div class="cp-ref-scroll"><table class="cp-ref-table">
+        <thead><tr><th scope="col">一般名・商品名</th><th scope="col">換算係数<sup>※</sup></th><th scope="col">国内上限（簡記）<sup>†</sup></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  });
+
+  const laiRows = LAI_DRUGS.map(d => {
+    const disc = d.disc ? ' cp-ref-disc' : '';
+    const wk = (d.base_period_days / 7);
+    const wkDisp = Number.isInteger(wk) ? String(wk) : formatCpCoefficient(wk);
+    const discLbl = d.disc ? ' <span class="cp-ref-muted">（販売中止）</span>' : '';
+    const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
+    return `<tr class="${disc}">
+      <td>${escapeHtml(d.name)}<div class="cp-ref-muted">${escapeHtml(d.brand)}${discLbl}</div></td>
+      <td class="col-num">${formatCpCoefficient(d.base_dose)}</td>
+      <td class="col-num">${formatCpCoefficient(d.base_period_days)}</td>
+      <td class="col-num">${wkDisp}</td>
+      <td class="col-maxJp">${maxJp}</td>
+    </tr>`;
+  }).join('');
+
+  const injRows = RAPID_INJECT_DRUGS.map(d => {
+    const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
+    return `<tr>
+      <td>${escapeHtml(d.name)}<div class="cp-ref-muted">${escapeHtml(d.brand)}</div></td>
+      <td class="col-num">${formatCpCoefficient(d.factor)}</td>
+      <td class="col-maxJp">${maxJp}</td>
+    </tr>`;
+  }).join('');
+
+  mount.innerHTML = `
+<details class="cp-ref-panel">
+  <summary>計算に使用しているCP換算係数・基準値の一覧（開く）</summary>
+  <div class="cp-ref-body">
+    <p class="cp-ref-intro">本ページの自動計算に使っている数値は、クロルプロマジン換算における<strong>稲垣・稲田版</strong>（日本精神薬学会サイト掲載表と対応する係数／基準量）です。©稲垣中, 稲田俊也</p>
+    <p class="cp-ref-intro"><strong>経口・貼付剤・速効性注射剤</strong><br>
+    <span style="white-space:normal">CP換算 mg＝（投与 mg ÷ 換算係数）×100</span></p>
+    <p class="cp-ref-intro"><strong>持効性注射剤</strong><br>
+    CP換算 mg／日＝投与 mg ×（100÷基準投与量 mg）×（基準間隔（日）÷実際の投与間隔（日））。初期表示の間隔は基準間隔です。</p>
+    <div class="cp-ref-sub">経口製剤・貼付剤（換算係数）</div>
+    ${oralHtml}
+    <div class="cp-ref-sub">持効性注射剤（基準投与量・基準間隔）</div>
+    <div class="cp-ref-scroll"><table class="cp-ref-table">
+      <thead>
+        <tr>
+          <th scope="col">一般名・商品名</th>
+          <th scope="col">基準量<br>(mg)</th>
+          <th scope="col">基準間隔<br>(日)</th>
+          <th scope="col">基準間隔<br>(週)</th>
+          <th scope="col">単回など<br><span class="cp-ref-muted" style="font-weight:600">上限（簡記）<sup>†</sup></span></th>
+        </tr>
+      </thead><tbody>${laiRows}</tbody></table></div>
+    <div class="cp-ref-sub">速効性注射剤（換算係数）</div>
+    <div class="cp-ref-scroll"><table class="cp-ref-table"><thead><tr><th scope="col">一般名・商品名</th><th scope="col">換算係数<sup>※</sup></th><th scope="col">単回など<br><span class="cp-ref-muted" style="font-weight:600">上限（簡記）<sup>†</sup></span></th></tr></thead><tbody>${injRows}</tbody></table></div>
+    <p id="cp-ref-fn" class="cp-ref-footnote">※ 「換算係数」は、<a href="https://js-pp.or.jp/cp/" target="_blank" rel="noopener noreferrer" class="text-teal-700 underline underline-offset-2 hover:text-teal-900">日本精神薬学会の CP 換算ページ</a>にある<strong>経口・速効注射</strong>表の係数値と対応しています。この計算機では CP mg＝（投与 mg÷係数）×100 と代入しています。持効性注射は表の<strong>基準投与 mg と基準間隔</strong>として同様に使用しています。</p>
+    <p class="cp-ref-footnote">† 「国内上限（簡記）」は各製品<strong>電子添付（用法・用量）</strong>の<strong>概要</strong>です。精神科の主適応を想定した記載でも、実際には疾患・経路・年齢・併症・増量規定で異なる場合があります。処方確定には添付記載および施設内ルールで必ず確認してください。</p>
+  </div>
+</details>`;
 }
 
 function setSearchHint(msg) {
@@ -1626,6 +1860,7 @@ function resetAll() {
 
 function init() {
   buildDrugSearchIndex();
+  renderCpConversionReference();
   // 経口 第2世代
   ORAL_DRUGS.sda.forEach(d => buildDrugRow(d, 'drugs-sda'));
   ORAL_DRUGS.marta.forEach(d => buildDrugRow(d, 'drugs-marta'));
