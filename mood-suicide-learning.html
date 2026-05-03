@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>気分障害 × 自殺リスク — 学習ハブ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ms-gradient: linear-gradient(135deg, #1e3a5f 0%, #7c3aed 45%, #be185d 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--ms-gradient); }
+    .ms-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      border: 1px solid #f1f5f9;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .ms-link {
+      color: #0f766e;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .ms-link:hover { color: #115e59; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5.5rem; }
+    }
+    .quiz-opt { accent-color: #7c3aed; }
+    .drill-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #6b21a8;
+      background: #f3e8ff;
+      border: 1px solid #ddd6fe;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    .case-prose { line-height: 1.75; }
+    .drill-open summary { cursor: pointer; list-style: none; }
+    .drill-open summary::-webkit-details-marker { display: none; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">学習用（教育コンテンツ）</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">気分障害 × 自殺リスク</h1>
+      <p class="text-white/85 mt-2 text-sm leading-relaxed max-w-2xl">
+        うつ病と双極性障害の気分エピソードでは、評価の順序・鑑別・薬物療法と自殺リスクが常に結びつきます。構造化の要点・<strong class="font-semibold text-white">症例ドライループ</strong>・ミニチェックまで1ページで回せます。
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 -mt-3 relative z-10">
+
+    <div class="rounded-xl border border-amber-200 bg-amber-50/90 p-4 mb-6 text-sm text-amber-950">
+      <strong class="font-bold">重要</strong>：本ページは医学教育のためのまとめです。実際の診療では、最新ガイドライン・施設プロトコル・法的枠組みに従ってください。危機的状況は所属施設の手順に従い、必要に応じて救急・精神保健の連携を行ってください。
+    </div>
+
+    <!-- 学習の順番 -->
+    <section id="path" class="ms-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center">
+          <i data-lucide="route" class="w-5 h-5 text-violet-700"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">おすすめの学習順（能動的想起用）</h2>
+          <p class="text-xs text-slate-500">各ステップで「言語化できるか」を確認しながら進めてください。</p>
+        </div>
+      </div>
+      <ol class="list-decimal list-inside space-y-2.5 text-sm text-slate-700 leading-relaxed">
+        <li><strong class="text-slate-900">枠の決定</strong>：うつ病エピソードか、双極性障害のうつ相か。躁・軽躁・混合の手掛かり（既往・時期・家族歴・薬歴）。 → <a class="ms-link" href="bipolar-diagnosis-treatment.html">双極症 診断・治療ツリー</a></li>
+        <li><strong class="text-slate-900">重症度・タイプ</strong>：非定型うつ・精神病性・緊張病・季節性などSpecifierで介入が変わる点を言えるか。 → <a class="ms-link" href="atypical-depression.html">非定型うつ病</a>／<a class="ms-link" href="depression-guideline2025.html">うつ病ツリー全体</a></li>
+        <li><strong class="text-slate-900">自殺リスクの構造化</strong>：念慮の強度、計画具体性、手段、既往、物質、入院・退院時期などを漏れなく。 → 下記「構造化アセス」／<a class="ms-link" href="cssrs-procedure-memo.html">C-SSRS 手順メモ</a>／<a class="ms-link" href="depression-guideline2025.html#suicide">ガイドライン2025節（自殺リスク）</a></li>
+        <li><strong class="text-slate-900">計測</strong>：うつ重症度（<a class="ms-link" href="hamd-sheet-detailed.html">HAM-D</a>／<a class="ms-link" href="madrs-sheet-detailed.html">MADRS</a>）、躁様症状（<a class="ms-link" href="ymrs-sheet-detailed.html">YMRS</a>）。</li>
+        <li><strong class="text-slate-900">薬物と安全</strong>：双極うつでの抗うつ薬の位置づけ、若年者のSSRI、QTや併用薬。 → <a class="ms-link" href="antidepressants-japan.html">抗うつ薬ガイド</a>／<a class="ms-link" href="acute-alerts.html">急性期クイック（QTc 等）</a></li>
+        <li><strong class="text-slate-900">症例で回す</strong>：下の <a class="ms-link" href="#drill">症例ドライループ</a>で、鑑別→リスク→次の一手を毎症例口頭化してから開示。</li>
+      </ol>
+    </section>
+
+    <!-- 構造化アセス -->
+    <section id="assess" class="ms-card border-l-4 border-l-rose-500">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="clipboard-check" class="w-6 h-6 text-rose-600"></i>
+        <h2 class="text-lg font-bold text-slate-800">自・他害リスク：構造化の芯</h2>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">
+        詳細は施設で用いる記録様式・C-SSRS等の公式訓練資料に従ってください。<a class="ms-link" href="cssrs-procedure-memo.html">C-SSRS 手順メモ（面接・記録・連携）</a>で実施前後の流れを確認できます。ここでは<strong>学習のためのチェック観点</strong>のみを列挙します。
+      </p>
+      <ul class="grid sm:grid-cols-2 gap-2 text-sm text-slate-700">
+        <li class="flex gap-2 bg-rose-50/80 rounded-lg px-3 py-2 border border-rose-100"><span class="text-rose-600 font-bold">1</span>希死念慮の有無・頻度・持続</li>
+        <li class="flex gap-2 bg-rose-50/80 rounded-lg px-3 py-2 border border-rose-100"><span class="text-rose-600 font-bold">2</span>意図・計画の具体性（方法・時期・場所）</li>
+        <li class="flex gap-2 bg-rose-50/80 rounded-lg px-3 py-2 border border-rose-100"><span class="text-rose-600 font-bold">3</span>手段へのアクセス（薬・刃物・高所など）</li>
+        <li class="flex gap-2 bg-rose-50/80 rounded-lg px-3 py-2 border border-rose-100"><span class="text-rose-600 font-bold">4</span>過去の自殺企図・自傷（強いリスク因子）</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">5</span>絶望感・衝動性・命令幻聴など</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">6</span>アルコール・薬物・睡眠障害</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">7</span>社会的孤立・急性ストレス</li>
+        <li class="flex gap-2 bg-amber-50 rounded-lg px-3 py-2 border border-amber-100"><span class="text-amber-700 font-bold">8</span>入院直後・退院直後（再リスクに注意）</li>
+      </ul>
+      <p class="text-xs text-slate-500 mt-3">
+        <strong>C-SSRS</strong>（Columbia）：自殺関連行動の有無・念慮〜意図の段階を標準的に拾うためのスクリーニング／評価ツールとして広く用いられます。質問の全文・採点は許諾版を使用し、<a class="ms-link" href="cssrs-procedure-memo.html">手順メモ</a>で前後の流れを補完してください。
+      </p>
+    </section>
+
+    <!-- 交差点 -->
+    <section id="cross" class="ms-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="git-merge" class="w-6 h-6 text-violet-600"></i>
+        <h2 class="text-lg font-bold text-slate-800">治療とリスクの「交差点」（よく問われる）</h2>
+      </div>
+      <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+        <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
+          <div class="font-bold text-violet-900 text-sm mb-1">双極スペクトラム・混合特徴</div>
+          <p>うつ主訴でも躁様・混合様を見逃すと、抗うつ薬中心の治療が不適切になり、転相や自殺リスクの評価も歪みます。混合状態は自殺リスクが高くなりやすい、と整理されることが多いです（エビデンス・定義はガイドライン参照）。</p>
+        </div>
+        <div class="rounded-lg bg-teal-50 border border-teal-100 p-3">
+          <div class="font-bold text-teal-900 text-sm mb-1">抗うつ薬開始初期（アクティベーション）</div>
+          <p>エネルギーが先に戻り、抑うつが残る時期は計画遂行の「エネルギー」が変化しうる、という教科書的留意があります。焦燥・不眠増強時は、単純増量よりリスク再評価と用量調整・頻回フォローを検討する訓練をしておくとよいです。</p>
+        </div>
+        <div class="rounded-lg bg-sky-50 border border-sky-100 p-3">
+          <div class="font-bold text-sky-900 text-sm mb-1">若年者と SSRI／SNRI（FDA 黒枠警告の要点）</div>
+          <p>治療開始・増量後は自殺念慮・行動の監視が推奨されます。一方で未治療のうつ自体のリスクとも秤にかける、という説明の型を身につけます。詳細は <a class="ms-link" href="depression-guideline2025.html#suicide">うつ病ツリーの自殺節</a> と <a class="ms-link" href="anxiety-disorders.html">不安障害ページ等の注記</a> を参照。</p>
+        </div>
+        <div class="rounded-lg bg-slate-100 border border-slate-200 p-3">
+          <div class="font-bold text-slate-800 text-sm mb-1">リチウムと自殺予防（双極の維持・長期像）</div>
+          <p>双極性障害の教材では、炭酸リチウムの抗自殺効果が繰り返し強調されます。血中濃度管理・腎・甲状腺・妊娠・相互作用は別途必須知識です。 → <a class="ms-link" href="bipolar-diagnosis-treatment.html">双極症ツリー</a></p>
+        </div>
+        <div class="rounded-lg bg-red-50 border border-red-100 p-3">
+          <div class="font-bold text-red-900 text-sm mb-1">より介入が強くなりうる場面（例）</div>
+          <p class="text-xs sm:text-sm">計画が具体化、手段が手元、命令幻聴、暴力的衝動併存、物質依存の急性期、直近の自殺企図など。入院・環境調整・多職種連絡の判断は施設プロトコルに従います。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 症例ドライループ -->
+    <section id="drill" class="ms-card ring-2 ring-purple-200/90 border-purple-100">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center shrink-0">
+            <i data-lucide="repeat" class="w-5 h-5 text-purple-700"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">症例ドライループ</h2>
+            <p class="text-xs text-slate-500 mt-0.5">架空の教育症例です。各症例で <span class="drill-pill inline-block mt-1">READ → RECALL → REVEAL</span> を1周してから次へ。</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+          <button type="button" id="drill-prev" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50">前の症例</button>
+          <button type="button" id="drill-next" class="px-3 py-2 rounded-lg bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 shadow-sm">次の症例</button>
+        </div>
+      </div>
+
+      <div class="rounded-xl bg-indigo-50/80 border border-indigo-100 p-3 mb-4 text-xs text-indigo-950 leading-relaxed">
+        <strong class="font-bold">回し方（おすすめ）</strong>：症例文だけ読む → 声に出さなくてもよいので <em>①診断の枠（単極／双極・混合の疑い）</em> <em>②自殺リスクで必ず触れる要素</em> <em>③次の評価または治療の方向性（一般論）</em> を一文ずつ言語化 → その後、下の3つの開示を開いて漏れを確認 → 最後にミニチェックへ。<span class="block mt-1.5 text-indigo-900/95">全<strong>15症例</strong>：周産期・精神病性うつ・アルコール・急速交代・非定型・複雑性悲嘆に加え、<strong>身体疾患併存</strong>・<strong>向精神薬誘発性</strong>・<strong>統合失調感情障害</strong>の型も含みます。</span>
+      </div>
+
+      <p class="text-sm font-bold text-purple-900 mb-2 tabular-nums" id="drill-index" aria-live="polite">症例 1 / 15</p>
+
+      <div class="rounded-xl border border-slate-200 bg-white p-4 mb-4 shadow-sm">
+        <h3 class="text-base font-bold text-slate-900 mb-2 leading-snug" id="drill-title"></h3>
+        <div class="case-prose text-sm text-slate-700 whitespace-pre-line" id="drill-vignette"></div>
+      </div>
+
+      <div class="space-y-2 text-sm" id="drill-reveals"></div>
+
+      <p class="text-xs text-slate-400 mt-4">症例は学習用に単純化しています。実患者では情報不足・併存障害・文化的背景を必ず考慮してください。</p>
+    </section>
+
+    <!-- ミニクイズ -->
+    <section id="quiz" class="ms-card ring-2 ring-violet-200/80">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="help-circle" class="w-6 h-6 text-violet-600"></i>
+        <h2 class="text-lg font-bold text-slate-800">ミニチェック（10問）</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">選択後、「採点する」を押すと正答数が表示されます。間違えた設問は本文を再読すると効率がよいです。</p>
+
+      <div id="quiz-items" class="space-y-5 text-sm"></div>
+
+      <div class="flex flex-wrap items-center gap-3 mt-6">
+        <button type="button" id="quiz-grade" class="px-5 py-2.5 rounded-xl bg-violet-600 text-white font-bold text-sm hover:bg-violet-700 shadow-md">
+          採点する
+        </button>
+        <button type="button" id="quiz-reset" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">
+          選択をクリア
+        </button>
+        <p id="quiz-result" class="text-sm font-bold text-slate-700 tabular-nums" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 mt-8 mb-6">更新目安：学習用まとめ · 参照は各リンク先ページの出典表記に従ってください</p>
+  </main>
+
+  <script>
+    const CASE_DRILL = [
+      {
+        title: '症例1：SSRI 開始直後の焦燥と希死念慮（22歳・男性）',
+        vignette: '会社員。単極性うつ病として初診よりSSRIを開始した。身体問題なし、物質なし。2週検診で「焦って落ち着かない」「眠れない」と不満が強い。「死んだほうが楽なのかも」と口走るが、具体的な計画は述べない。\n平日は出勤継続。過去に自殺企図はない。家族との同居なし。',
+        blocks: [
+          { label: '鑑別・枠', body: '治療初期の<strong>アクティベーション</strong>様相を疑う。併せて若年層でのSSRI開始後の<strong>念慮・行動の監視</strong>（黒枠警告の趣旨）を頭に置く。身体面が軽快し気力が先に戻りうつ気分が残る局面とも区別が必要。必要に応じ<strong>YMRS</strong>等で躁様症状の増悪がないか確認。' },
+          { label: '自殺リスク', body: '念慮の<strong>強度・頻度</strong>、<strong>計画の具体性</strong>、<strong>手段へのアクセス</strong>、<strong>孤立</strong>、飲酒の有無を改めて聴取。安心させつつ具体的な安全網（連絡経路・頻回フォロー）を設定。' },
+          { label: '次の一手（教育用）', body: '焦燥が強ければ<strong>用量の一時的な調整や頻回外来</strong>を検討する訓練が典型。単純な増量だけでなくリスク再評価。双極が強く疑われる所見が出たら<strong>治療ラインの見直し</strong>（ガイドライン・鑑別ツリー参照）。' },
+        ],
+      },
+      {
+        title: '症例2：うつ主訴だが「昔に短い躁様期」あり（35歳・女性）',
+        vignette: '家事育児あり。主訴は気分の落ち込み・興味低下で2か月。25歳のとき、届け出のない頃に「4〜5日ほとんど眠らずに掃除と買い物ばかりしていた」エピソードがあると本人談。当時は病院受診せず。その後は長らく安定。母方祖母に双極の治療歴あり。\n今は入眠困難・食欲低下。「家族を幸せにできない」と泣く。自殺計画は否定。',
+        blocks: [
+          { label: '鑑別・枠', body: 'うつ病様でも<strong>躁・軽躁の既往</strong>があれば<strong>双極性障害</strong>のうつ相を強く疑う。家族歴も手掛かり。単極うつとしてSSRI<strong>単剤</strong>へ直行しない思考訓練。' },
+          { label: '自殺リスク', body: '現時点で計画はないが、絶望感・罪責感、睡眠障害、ストレスが重なり<strong>急性期に変動</strong>しうる。希念の変化を毎回聴取。' },
+          { label: '次の一手（教育用）', body: '気分安定薬やSGA等、<strong>ガイドラインで推奨される双極うつの第一線</strong>を念頭に組み立てる（抗うつ薬は単剤中心を避ける方向が教材で強調）。評価はYMRS・うつ重症度尺度も併用。' },
+        ],
+      },
+      {
+        title: '症例3：抑うつ気分＋内側からの焦燥・衝動（28歳・性別不明）',
+        vignette: '抑うつとして当院ウォークイン。気分は落ち込み続きだが、話すスピードが速く、椅子にじっとしていられない。昨夜は2時間しか眠れず、今日は無駄遣いをしかけたと自責。「こんな自分は消えたい」と述べる。アルコールは週末のみ。\n2年前に短時間の興奮期を「たぶん躁じゃない」と自己判断していたとのこと。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>混合特徴</strong>や双極スペクトラムのうつ相を疑う整理が教科書的。うつと興奮・衝動が同時に立ち上がると治療が難しく<strong>リスク評価が複雑</strong>になる点を押さえる。' },
+          { label: '自殺リスク', body: '衝動性の増大、睡眠減少、希念の内容。具体的手順・手段の有無、防御崩壊時の行動。混合様では<strong>自殺リスクが高く言及される</strong>ことが多い（ガイドライン参照）。' },
+          { label: '次の一手（教育用）', body: '抗うつ薬を増量するだけに走らず、<strong>気分安定治療やSGA</strong>など治療軸の見直しを検討する型。環境調整・入院の必要性は施設判断。' },
+        ],
+      },
+      {
+        title: '症例4：退院直後の再診（45歳・男性）',
+        vignette: '単極性うつで2週間前に入院し先週退院。SSRIと睡眠薬は概ね内服している。独居。退院後から飲酒が増え、「また入院みたいに家族に迷惑かけたくない」と述べる。1年前に定量過服で救急搬送歴あり（当時は別施設）。\n「死ねばみんな楽になるかも」などと雑談調に言うことがある。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>移行期</strong>のうつ病再燃・適応ストレス。物質（アルコール）の影響。既往の<strong>自殺企図</strong>は強いリスク因子。' },
+          { label: '自殺リスク', body: '念慮と冗談の区切りがつきにくい発言も真摯に聴取。計画・手段、アルコール、独居、依頼できる支援者、退院後イベントを整理。<strong>構造化ツール</strong>の活用を習慣化。' },
+          { label: '次の一手（教育用）', body: '頻回フォロー、減酒支援、家族・ケアマネと連絡。必要なら精神科救急・入院ラインを早期に検討。<strong>安全計画</strong>の更新。' },
+        ],
+      },
+      {
+        title: '症例5：高齢・併用薬多数での新規抗うつ薬（76歳・女性）',
+        vignette: '心疾患と甲状腺治療あり。新患でうつ病として抗うつ薬追加の相談。フレイルはないが肥満。内科からの手紙に三環系抗不整脈薬とパロキセチン併用の記載あり（量は不明瞭）。\n気分は低下、食欲あり。希死念慮は「たまに頭をよぎる」と程度。自宅では一人暮らし、週3回訪問看護。',
+        blocks: [
+          { label: '鑑別・枠', body: '器質・薬源性・認知症併存は常に考慮。ここでは教育上<strong>QT延長・薬物相互作用</strong>が焦点。' },
+          { label: '自殺リスク', body: '高齢でも念慮・計画・手段・既往は同様に評価。<strong>転倒・誤薬・突然死リスク</strong>と玉突きで整理する訓練。' },
+          { label: '次の一手（教育用）', body: '<strong>ECG・電解質・併用薬の見直し</strong>。可能ならQTcの把握（参照：<a class="ms-link" href="acute-alerts.html">急性期クイック</a>）。精神科単科だけで完結せず内科と調整。' },
+        ],
+      },
+      {
+        title: '症例6：双極維持療法中のサブシンドローマルうつ（41歳・女性）',
+        vignette: '双極性障害で炭酸リチウムとSGAで外来維持中。血中リチウムは0.52 mEq/L前後で推移。最近の職場トラブルで気分が落ち込み、「生きてる意味がない」という言葉が増えた。躁エピソードは2年前まで。\n自殺企図歴はなく、飲酒はなし。夫と二人暮らし。',
+        blocks: [
+          { label: '鑑別・枠', body: '安定薬下の<strong>うつ症状残存</strong>。リチウム血中濃度が治療域下限付近なら<strong>濃度・効果・副作用</strong>の再検討が教材で出やすい。うつ病への誤診ではなく双極うつの持続像として捉える。' },
+          { label: '自殺リスク', body: '言葉の増加が一時的ストレスか、希念の強度が上がっているかを時系列で聴取。計画・手段・リチウムの内服状況、睡眠。' },
+          { label: '次の一手（教育用）', body: '主治医判断のもと<strong>濃度最適化・併用の検討・心理教育</strong>。リチウムは<strong>抗自殺効果が言及されやすい</strong>薬剤の一つだが腎・甲状腺・相互作用は必須確認（<a class="ms-link" href="bipolar-diagnosis-treatment.html">双極ツリー</a>）。' },
+        ],
+      },
+      {
+        title: '症例7：周産期・産後の抑うつと急な念慮（32歳・女性）',
+        vignette: '出産から約6週。授乳で睡眠はまとまらないが、赤ちゃんが寝たあとも眠れない日が続く。育児への関心が薄く、「私がいなければこの子も夫も楽なのでは」と閃くことがあると正直に話す。具体的な方法は考えていないという。\n夫は協力的。周産期までうつ病の治療歴はない。血液像・甲状腺は産後検査で異常なし。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>周産期気分障害</strong>として単極うつを念頭に、併せて<strong>甲状腺・貧血</strong>等の器質除外（済／未済を確認）。双極の既往がなければ鑑別の軸はやや単極側に寄りやすいが、睡眠不足で<strong>軽躁様</strong>を装うこともありYMRSの印象も取る。' },
+          { label: '自殺リスク', body: '産後は<strong>衝動的な行動</strong>や母子双方へのリスクが問われる場面がある。念慮の具体性、幻覚・命令症状の有無（産後精神病の除外）、支援者の有無、<strong>乳児</strong>への愛着・育児実態を丁寧に聴取。' },
+          { label: '次の一手（教育用）', body: '授乳希望と治療の両立を説明しつつ、重症度に応じて<strong>心理教育・心理療法・薬物</strong>を検討。緊急性があれば入院・一時支援。<strong>多職種（助産・小児科など）連携</strong>。ガイドライン・施設プロトコルに沿って実施。' },
+        ],
+      },
+      {
+        title: '症例8：精神病性うつ — 罪責妄想と摂食低下（58歳・男性）',
+        vignette: '主訴は妻の同席での食欲低下と消瘦。本人は無表情で「話すことはない」と繰り返す。妻いわく、ここ1か月で「昔の仕事のミスで多くの人を死なせた」「自分は罰を受けるべき」と独り言のような発言が増え、朝食をほとんど摂らない。\n希死念慮を直接は語らない。不眠。既存の身体疾患は軽度高血圧のみ。過去の躁様期は聴取上では否定的。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>精神病性うつ病</strong>（気分調和性妄想など）を疑う。統合失調症・器質性・認知症・薬物も念頭に置きつつ、エピソードの時系列で整理。' },
+          { label: '自殺リスク', body: '妄想内容が<strong>罰・死</strong>に結びつく場合、行動化のリスクを過小評価しない。言語化されない念慮もあるため、行動・栄養・介助状況から推定。手段（過服・飢餓など）の有無。' },
+          { label: '次の一手（教育用）', body: '通常の「待って様子見」は限界があり、<strong>抗うつ薬＋抗精神病薬</strong>や、重症・緊急では<strong>mECT</strong>の検討が教材に頻出。栄養・脱水評価。入院適応の判断（<a class="ms-link" href="depression-guideline2025.html">うつ病ツリー</a>）。' },
+        ],
+      },
+      {
+        title: '症例9：うつ主訴だが日中や「やめた日」に手振戦（50歳・男性）',
+        vignette: '主訴は気分の落ち込みと不安。「ビールを1リットル弱は毎日。休みの日はもう少し」と自認。飲まない日は夕方から手が震え、汗をかき眠れないことがある。仕事は継続。\n「このままだと人生終わりだ」と希死念慮を認めることがあるが、手段は考えていないという。',
+        blocks: [
+          { label: '鑑別・枠', body: '大うつ病の素因に加え、<strong>アルコール依存・離脱</strong>の評価が必須。単に抗うつ薬を足すだけでは改善しない典型例。うつ病のみの診断で片づけない訓練。' },
+          { label: '自殺リスク', body: '飲酒時の判断力低下、<strong>絶望感の増大</strong>。離脱期の<strong>激越・痙攣</strong>リスクも遠因として把握（救急連携の型）。念慮の具体性・手段（酒＋薬併用など）。' },
+          { label: '次の一手（教育用）', body: '<strong>減酒・離脱管理</strong>（内科・依存領域）と並行して精神症状を評価。教材ではBZDの自己処方や相互作用にも注意。具体的プロトコルはガイドライン。' },
+        ],
+      },
+      {
+        title: '症例10：12か月で気分が四転五転 —「治療が効かない」（29歳・女性）',
+        vignette: '双極性障害としてリチウムとクエチアピンで通院。本人いわくここ1年で、軽躁気味の週、うつで動けない月、平穏な期間が短い。主治医変更を繰り返した歴あり。\n今はうつ相。自殺企図は3か月前にあり手首を切ったが浅かった。現在は「またあのときみたいになるのが怖い」と落ち着いて話せる。',
+        blocks: [
+          { label: '鑑別・枠', body: '1年間に複数回のエピソードがあれば<strong>急速交代型Specifier</strong>の鑑別が教材に登場。治療抵抗や頻回気分変動では<strong>服薬アドヒアランス・甲状腺・薬物・生活リズム</strong>の再確認が定石。' },
+          { label: '自殺リスク', body: '既往の<strong>自傷・企図</strong>は強い因子。うつ相でも躁転後の衝動など時相で変動。安全計画の更新、家族の関与。' },
+          { label: '次の一手（教育用）', body: '気分安定薬の最適化、SGA・併用の検討、心理教育。急速交代では抗うつ薬単独強化に警戒が教材で強い（<a class="ms-link" href="bipolar-diagnosis-treatment.html">双極症ツリー</a>）。' },
+        ],
+      },
+      {
+        title: '症例11：過眠・拒絶過敏 — SSRI「効きにくい」若年うつ（26歳・女性）',
+        vignette: '就職後から対人がつらくなり休職中。週5日は12時間近く眠りたい。友人からの Line を読むと「嫌われた」と数時間落ち込むが、褒められると少し元気になる。体重は前年より増加。\n希死念慮は「ふと頭をよぎる」程度で計画はない。過去の明瞭な躁期はない。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>非定型うつ病</strong>の特徴（過眠・気分反応性・拒絶過敏など）を念頭に。SSRIのみでは伸び悩む文脈が教材に出やすい。<a class="ms-link" href="atypical-depression.html">非定型うつ</a>で薬物・心理療法の位置づけを復習。' },
+          { label: '自殺リスク', body: '対人ストレス・拒絶過敏からの<strong>衝動的自傷</strong>に注意。念慮の波、手段、孤独感、ネット上の比較による劣等感なども聴取。' },
+          { label: '次の一手（教育用）', body: '心理療法（行動活性化・IPT等）の位置づけ。薬物は<strong>ブプロピオン・SSRI・ミルタザピン</strong>などエビデンス・禁忌を鑑みて教材どおりに検討。MAOI は最終ラインかつ相互作用の暗記が必要。' },
+        ],
+      },
+      {
+        title: '症例12：配偶者死後4か月 —「生きる理由がない」（68歳・女性）',
+        vignette: '夫が急死してから眠れず食が進まない。故人の物はそのままにし「まだ帰ってきそう」。友人との外出を断る。\n「私だけ生き残ってしまった」と涙し、「生きる理由がない」と繰り返すが、具体的な死に方は「考えたくない」と述べる。独居だが娘が週1訪問。\n既往の精神科治療なし。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>複雑性悲嘆反応</strong>と大うつ病エピソードの重なりを整理。持続・重症度・機能障害・自殺念慮の質でMDDを併記するか判断が試験でも臨床でも難所。' },
+          { label: '自殺リスク', body: '高齢・独居・喪失イベントは重ね掛けのストレス。念慮が具体化していなくても<strong>老衰死願望と計画性のある希死</strong>のすり分け、手段、孤独を聴取。' },
+          { label: '次の一手（教育用）', body: '悲嘆支援・心理療法（複雑性悲嘆向け）とうつ病治療の併走が教材に登場。必要に応じ抗うつ薬。家族ネットワーク・地域包括ケア連携。' },
+        ],
+      },
+      {
+        title: '症例13：身体疾患併存 — 透析と鉄欠乏、薬だらけの抑うつ（56歳・男性）',
+        vignette: 'CKD5Dで週3回透析。最近 Hb 9.2 g/dL、フェンタニル貼付と活性型ビタミンD、カルシウム拮抗薬、リン吸着薬とPPIを内服。気分の落ち込みと「透析も嫌だ」と漏らすようになった。\n希死念慮は「続けられないときはどうしよう」と時々。自殺計画は「まだ考えてない」。配偶者は日中不在で、透析終了後は一人在家の時間が長い。精神科既往なし。',
+        blocks: [
+          { label: '鑑別・枠', body: '抑うつは<strong>身体疾患・電解質・貧血・疼痛・睡眠</strong>と玉突きで評価。CKDでは尿毒症脳症・薬物蓄積・二次性甲状腺機能異常なども念頭。<strong>うつ病としての併存</strong>を考えつつ、「すべて心なわけではない」を説明する型。' },
+          { label: '自殺リスク', body: '透析回避・治療拒否の文言は希念・<strong>レベルの高いサイン</strong>に読み替えて聴く。疼痛管理・物質（院内医療用オピオイド含む）の影響、孤独時間、具体的手段を確認。' },
+          { label: '次の一手（教育用）', body: '腎・代謝内科と情報共有し<strong>可逆因子の修正</strong>。向精神薬は<strong>腎排泄・相互作用・QT</strong>を踏まえて選択（参照：<a class="ms-link" href="crcl-psychotropics.html">CrCl×向精神薬</a>、<a class="ms-link" href="acute-alerts.html">急性期クイック</a>）。心理教育・安全計画・必要時入院。' },
+        ],
+      },
+      {
+        title: '症例14：向精神薬誘発性 — 増量後の「落ち着かなさ」と希死念慮（34歳・女性）',
+        vignette: '統合失調症スペクトラムでリスペリドン内用を年単位継続。2週前に興奮対策として<strong>1段階増量</strong>された。以降、昼間から足がもどかしく座っていられず、「体の中がむずむずして死にたい」と訴えるようになった。\n特に夕方に強い。気分そのものの落ち込みは以前から中等度。幻聴は変わらず聞こえる。血液検査は最新で異常なし。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>抗精神病薬誘発性アカシジア</strong>／急性椎体外路障害を最優先で除外。うつ増悪・内因性気分エピソード・静坐不能への誤診で抗うつ薬や抗精神病薬がさらに増える悪循環が典型の落とし穴。用量歴・開始時期との時系列一致が手掛かり。' },
+          { label: '自殺リスク', body: 'アカシジアは<strong>希死念慮・衝動行動を増強</strong>しうると教材で繰り返し警告。命令幻聴と重なる場合はリスク倍加。内容が「苦しいからやめたい」に近いか、妄想・幻聴駆動かを聴き分ける。' },
+          { label: '次の一手（教育用）', body: 'まず<strong>用量減量・分服見直し・抗コリン薬（鑑別注意）</strong>や<strong>剤の切り替え</strong>等の薬物学的対応を検討（施設プロトコル・禁忌）。ベンゾ系は依存・相互作用に留意。改善しない場合はうつ・精神病性症状への追加治療を再評価。<a class="ms-link" href="antipsychotics-japan.html">抗精神病薬ガイド</a>も参照。' },
+        ],
+      },
+      {
+        title: '症例15：統合失調感情障害 — 幻聴と大うつ病エピソードが重なる（29歳・男性）',
+        vignette: '半年前から気分の低下・不眠・興味喪失が続き、仕事を休む。ここ3週間は「家族が自分を監視している」「話していることが筒抜けだ」と被害・関係妄想が強くなり、幻聴で「お前が死ねば楽になる」と嘲られる体験が毎日という。\n若年時は2週間程度の軽躁様期を2回経験したが、その間も聴取では幻聴は目立たなかった。現在の主訴は抑うつと恐怖。過去数年に2回、うつと精神病症状が重なり入院した歴がある。',
+        blocks: [
+          { label: '鑑別・枠', body: '<strong>統合失調感情障害</strong>（ここでは双極型／うつ型のどちらに寄せるか時系列で整理）と、精神病性うつ病・統合失調症の鑑別。<strong>精神病症状と気分症状が同時期に実質的に顕著</strong>で、かつ規定どおり気分なき精神病期間が続かない、等の診断思考を教材で復習（<a class="ms-link" href="schizophrenia-diagnosis.html">統合失調症 診断</a>・<a class="ms-link" href="icd10.html#f2">ICD-10 F2章（F25 含む）</a>）。' },
+          { label: '自殺リスク', body: '命令／罵倒幻聴・被害体験は<strong>希念の行動化</strong>と結びつきやすい。抑うつ・無望感と重なると特に注意。家族への危害念慮の有無も聴取。' },
+          { label: '次の一手（教育用）', body: '急性期は<strong>抗精神病薬</strong>を基盤に、うつエピソードに応じ<strong>気分安定薬・抗うつ薬</strong>を慎重に（誘発・相互作用の教材的留意）。入院・環境調整を含め<strong>多職種安全管理</strong>。寛解後も長期フォローで気分と精神病症状の両方を追う。' },
+        ],
+      },
+    ];
+
+    let drillIdx = 0;
+
+    function renderDrill() {
+      const d = CASE_DRILL[drillIdx];
+      document.getElementById('drill-index').textContent = '症例 ' + (drillIdx + 1) + ' / ' + CASE_DRILL.length;
+      document.getElementById('drill-title').textContent = d.title;
+      document.getElementById('drill-vignette').textContent = d.vignette;
+      const box = document.getElementById('drill-reveals');
+      box.innerHTML = '';
+      d.blocks.forEach((b, i) => {
+        const det = document.createElement('details');
+        det.className = 'drill-open rounded-xl border border-purple-200/90 bg-purple-50/40 px-4 py-3';
+        const sum = document.createElement('summary');
+        sum.className = 'font-bold text-purple-900 text-sm flex items-center gap-2';
+        const prefix = ['①', '②', '③'][i] || '・';
+        sum.innerHTML = '<span class="shrink-0">' + prefix + ' ' + b.label + '</span><span class="text-xs font-normal text-purple-600/90">（考えてから開く）</span>';
+        const div = document.createElement('div');
+        div.className = 'mt-2 text-sm text-slate-700 leading-relaxed case-prose';
+        div.innerHTML = b.body;
+        det.appendChild(sum);
+        det.appendChild(div);
+        box.appendChild(det);
+      });
+    }
+
+    document.getElementById('drill-prev').addEventListener('click', () => {
+      drillIdx = (drillIdx - 1 + CASE_DRILL.length) % CASE_DRILL.length;
+      renderDrill();
+    });
+    document.getElementById('drill-next').addEventListener('click', () => {
+      drillIdx = (drillIdx + 1) % CASE_DRILL.length;
+      renderDrill();
+    });
+
+    renderDrill();
+
+    const QUIZ = [
+      {
+        q: 'うつ病様の主訴で外来初診時、薬物療法の選択に直結するため最初に切り分けたいのはどれか。',
+        opts: ['睡眠時間の長さのみ', '躁病・軽躁病エピソードの既往・臨床像', '血液型', '職歴の詳細のみ'],
+        a: 1,
+        exp: '双極性スペクトラムでは抗うつ薬の使い方・単剤回避が大きく変わるため、うつ主訴でも躁・軽躁の除外が先です。',
+      },
+      {
+        q: '自殺リスクを考える際、強いリスク因子として繰り返し挙げられるのはどれか。',
+        opts: ['軽いストレスのみ', '過去の自殺企図', '軽い運動不足のみ', '季節（秋）のみ'],
+        a: 1,
+        exp: '既往の自殺企図は最も一貫して重みづけされる因子の一つです。他因子と組み合わせて総合判断します。',
+      },
+      {
+        q: 'SSRI／SNRI 開始時の「自殺念慮・行動」の黒枠警告で、特に監視が強調されやすい年齢層として知られるのはどれか。',
+        opts: ['主に65歳以上', '24歳以下', '40代のみ', '全年齢で差がないとされている'],
+        a: 1,
+        exp: 'FDA の表現を踏まえた教育では若年層での監視が強調されます。実臨床では個別評価と説明が必要です。',
+      },
+      {
+        q: 'DSM-5-TR の「混合特徴Specifier」が付く抑うつ時に、臨床で留意されやすいのはどれか。',
+        opts: ['自殺リスクが低い', '躁／うつ症状が重なり治療難渋・リスク評価がより重要', '抗うつ薬単剤が第一選択で必須', '診断名をつけない方がよい'],
+        a: 1,
+        exp: '混合様では気分不安定さ・衝動性なども絡み、治療方針と安全管理が複雑になります。',
+      },
+      {
+        q: '双極性障害の長期管理で、教材として自殺予防効果が独立して強いとされる薬剤はどれか。',
+        opts: ['炭酸リチウム', '抗菌薬の予防内服', 'ビタミンD単剤のみ', 'H2 blocker のみ'],
+        a: 0,
+        exp: 'リチウムは双極の气氛囲気のなかで自殺予防に関するエビデンスが繰り返し言及されます。禁忌・監視は必須です。',
+      },
+      {
+        q: '抗うつ薬開始直後に不眠・焦燥が増した患者での最初の整理として適切なのはどれか。',
+        opts: ['了解せずそのまま倍量', '自殺・衝動リスクの再評価と用量・フォロー間隔の見直しを検討', '必ず中止のみ', '他院転医のみ'],
+        a: 1,
+        exp: 'アクティベーション様相は過小評価されがちです。鑑別（双極、不安、物質など）と安全管理を並行します。',
+      },
+      {
+        q: '修正型電気けいれん療法（mECT）を比較的早期に検討されやすい状況の例として適切なのはどれか。',
+        opts: ['軽症で通院のみの初発うつ（リスク低・機能良好）', '高い自殺リスクや拒食など緊急性を伴う重症例など（施設判断）', '軽い不眠のみ', 'ビタミン不足のみ'],
+        a: 1,
+        exp: '重症度・緊急性・禁忌・同意のもと、施設体制で決まりますが、試験では「緊急性の高い重症」が典型例として出やすいです。',
+      },
+      {
+        q: 'C-SSRS の趣旨に最も近いのはどれか。',
+        opts: ['血圧のカフサイズ選定', '自殺関連の念慮から行動までを段階的に評価する', '認知機能スクリーニングのみ', '肝酵素の追跡のみ'],
+        a: 1,
+        exp: '構造化された質問で漏れを減らすこと、重症度のコミュニケーションに資することが目的の一端です。',
+      },
+      {
+        q: '精神科の退院直後の自殺リスクについて、教科書的に注意が促されることが多いのはどれか。',
+        opts: ['一般外来初診と比較して差がないとされている', '移行期として再評価・フォロー体制の確認が重要', '退院後は薬を自己判断で止めてよい', '運動のみで十分'],
+        a: 1,
+        exp: '環境変化・薬依従・ストレスでリスクが変動します。個別の安全計画と連絡経路が問われます。',
+      },
+      {
+        q: '単極性うつ病として SSRI 単剤療法へ進む前に、特に慎重な鑑別が求められるのはどれか。',
+        opts: ['普通感冒', '双極性障害スペクトラムの見落とし', '軽度の貧血のみ', '花粉症'],
+        a: 1,
+        exp: '躁転リスクを含む文脈では第一選択薬・併用の有無が変わるため、鑑別順序が試験でも臨床でも重要です。',
+      },
+    ];
+
+    const quizItems = document.getElementById('quiz-items');
+    QUIZ.forEach((item, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+      wrap.datasetCorrect = String(item.a);
+      const h = document.createElement('div');
+      h.className = 'font-semibold text-slate-800 mb-2';
+      h.textContent = `Q${i + 1}. ${item.q}`;
+      wrap.appendChild(h);
+      const opts = document.createElement('div');
+      opts.className = 'space-y-2';
+      item.opts.forEach((text, j) => {
+        const lab = document.createElement('label');
+        lab.className = 'flex items-start gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50';
+        const r = document.createElement('input');
+        r.type = 'radio';
+        r.name = `q${i}`;
+        r.value = String(j);
+        r.className = 'quiz-opt mt-1 shrink-0';
+        const span = document.createElement('span');
+        span.textContent = text;
+        span.className = 'text-slate-700';
+        lab.appendChild(r);
+        lab.appendChild(span);
+        opts.appendChild(lab);
+      });
+      wrap.appendChild(opts);
+      const exp = document.createElement('details');
+      exp.className = 'mt-3 text-xs text-slate-600';
+      exp.innerHTML = '<summary class="cursor-pointer font-semibold text-violet-700">解説を表示</summary><p class="mt-2 leading-relaxed pl-1">' + item.exp + '</p>';
+      wrap.appendChild(exp);
+      quizItems.appendChild(wrap);
+    });
+
+    document.getElementById('quiz-grade').addEventListener('click', () => {
+      let ok = 0;
+      QUIZ.forEach((item, i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        if (sel && +sel.value === item.a) ok++;
+      });
+      const el = document.getElementById('quiz-result');
+      el.textContent = `正答 ${ok} / ${QUIZ.length}`;
+      el.className = 'text-sm font-bold ' + (ok >= 8 ? 'text-emerald-700' : ok >= 5 ? 'text-amber-800' : 'text-rose-700') + ' tabular-nums';
+    });
+
+    document.getElementById('quiz-reset').addEventListener('click', () => {
+      document.querySelectorAll('#quiz-items input[type="radio"]').forEach(r => { r.checked = false; });
+      const el = document.getElementById('quiz-result');
+      el.textContent = '';
+      el.className = 'text-sm font-bold text-slate-700 tabular-nums';
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

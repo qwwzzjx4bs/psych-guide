@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>MSE記載用語｜Anki風トレーニング（スマホ向け）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    body { font-family: 'Noto Sans JP', system-ui, sans-serif; padding-bottom: var(--safe-bottom); }
+    .header-gradient { background: var(--psych-gradient); }
+       .flip-scene {
+      perspective: 1200px;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      min-height: 220px;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+    }
+    .tap-hint { animation: pulse-soft 2.2s ease-in-out infinite; }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+    .rating-btn { min-height: 48px; touch-action: manipulation; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <header class="header-gradient text-white pt-[max(0.5rem,env(safe-area-inset-top))] pb-5 px-4">
+    <div class="max-w-lg mx-auto">
+      <div class="flex items-center gap-2 text-white/80 text-xs font-semibold tracking-wide uppercase mb-1">
+        <i data-lucide="brain" class="w-4 h-4"></i>
+        学習モード・教育用
+      </div>
+      <h1 class="text-xl font-bold leading-snug">MSE記載・精神医学用語</h1>
+      <p class="text-sm text-white/85 mt-1.5 leading-relaxed">精神状態診察で使う日本語用語を、定義と記載例で固定するAnki風トレーニングです。診断補助ではありません。</p>
+    </div>
+  </header>
+
+  <main class="max-w-lg mx-auto px-4 py-4 space-y-4">
+
+    <!-- カテゴリ（アクティブ学習のフィルタ） -->
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4" aria-labelledby="cat-heading">
+      <h2 id="cat-heading" class="text-sm font-bold text-slate-700 flex items-center gap-2 mb-3">
+        <i data-lucide="layout-grid" class="w-4 h-4 text-teal-700"></i>
+        用語バンク・カテゴリ
+      </h2>
+      <p class="text-xs text-slate-500 mb-3 leading-relaxed">MSEの記載枠に沿った分類です。タップで学習デックを絞り込みます。</p>
+      <div id="category-chips" class="flex flex-wrap gap-2"></div>
+      <p id="filter-summary" class="text-xs text-slate-500 mt-3 tabular-nums" aria-live="polite"></p>
+    </section>
+
+    <!-- 進捗 -->
+    <section class="flex flex-wrap gap-2 text-xs font-medium text-slate-600" aria-live="polite">
+      <span id="due-badge" class="inline-flex items-center gap-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200 px-3 py-1.5"></span>
+      <span id="new-badge" class="inline-flex items-center gap-1 rounded-full bg-sky-50 text-sky-900 border border-sky-200 px-3 py-1.5"></span>
+      <button type="button" id="btn-reset-progress" class="ml-auto text-xs text-red-600 underline decoration-red-300 hover:decoration-red-600">
+        ログを消去
+      </button>
+    </section>
+
+    <!-- カード -->
+    <section class="flip-scene" aria-live="polite">
+      <div id="flip-inner" class="flip-card-inner cursor-pointer select-none" role="button" tabindex="0" aria-label="カードをタップして裏返す">
+        <div class="flip-face bg-white border border-slate-200 shadow-md p-5">
+          <p id="card-cat" class="text-[11px] font-bold uppercase tracking-wider text-teal-700 mb-2"></p>
+          <p id="card-front" class="text-lg sm:text-xl font-bold text-slate-900 text-center leading-snug"></p>
+          <p class="text-center text-xs text-slate-400 mt-4 tap-hint">タップで答えを表示</p>
+        </div>
+        <div class="flip-face flip-back bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 shadow-inner p-5 overflow-y-auto max-h-[55vh] sm:max-h-none">
+          <p class="text-sm font-bold text-slate-800 mb-2">定義</p>
+          <p id="card-def" class="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap"></p>
+          <p class="text-sm font-bold text-slate-800 mt-4 mb-2">記載例</p>
+          <p id="card-ex" class="text-sm text-blue-950/90 leading-relaxed whitespace-pre-wrap bg-blue-50/80 rounded-lg px-3 py-2 border border-blue-100"></p>
+          <p class="text-center text-xs text-slate-400 mt-3">タップで表面に戻す</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 評価ボタン -->
+    <div id="rate-wrap" class="space-y-2 pb-[max(1rem,calc(0.5rem+var(--safe-bottom)))]">
+      <p class="text-xs text-center text-slate-500">裏面を見てから、記憶の確かさを記録（Anki風・端末に保存）</p>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" data-q="again" class="rating-btn rounded-xl bg-red-50 text-red-800 border border-red-200 font-semibold text-sm active:scale-[0.98] transition">もう一度</button>
+        <button type="button" data-q="hard" class="rating-btn rounded-xl bg-orange-50 text-orange-900 border border-orange-200 font-semibold text-sm active:scale-[0.98] transition">難しい</button>
+        <button type="button" data-q="good" class="rating-btn rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200 font-semibold text-sm active:scale-[0.98] transition">普通</button>
+        <button type="button" data-q="easy" class="rating-btn rounded-xl bg-indigo-50 text-indigo-900 border border-indigo-200 font-semibold text-sm active:scale-[0.98] transition">簡単</button>
+      </div>
+      <p id="empty-msg" class="hidden text-center text-sm text-slate-500 py-8">この条件では学習待ちのカードがありません。カテゴリを変えるか、「ログを消去」で最初から。</p>
+    </div>
+  </main>
+
+  <script>
+    /**
+     * カテゴリ一覧（MSE記載の観点）
+     * id はフィルタ・表示用。ラベルは画面表示。
+     */
+    const CATEGORIES = [
+      { id: 'all', label: 'すべて', desc: '全カード' },
+      { id: 'appearance', label: '外見・行動・随伴', desc: '外観、会話の押し・流れ、精神運動・松脂症候など' },
+      { id: 'mood', label: '気分・情動', desc: '気分、感情表出、感情の適切さ・起伏' },
+      { id: 'thought_form', label: '思考形式', desc: '思考の速度、連結、途切れ、形式面' },
+      { id: 'thought_content', label: '思考内容', desc: '妄想様、強迫、希死念慮など内容面' },
+      { id: 'perception', label: '知覚', desc: '幻覚・錯覚・人格解体など' },
+      { id: 'cognition', label: '認知・注意', desc: '見当、注意、記憶、実行機能の印象' },
+      { id: 'insight_judgment', label: '洞察・判断', desc: '病識、治療への合意、危険性判断' }
+    ];
+
+    /**
+     * 最初の52枚：用語 → 定義（簡潔）+ 記載例（文脈）
+     * 教育用の草案。原典確認・施設様式に合わせた言い換えを推奨。
+     */
+    const CARDS = [
+      { id: 'c1', cat: 'appearance', term: '精神運動性遅滞', def: '思考・行為・言動の全体的なテンポ低下。動作や発話が遅い状態。', ex: '精神運動性遅滞を認める。問いかけに対する反応時間が延長し、発話は遅徐。' },
+      { id: 'c2', cat: 'appearance', term: '精神運動性興奮', def: '無目的・不協調な活動の増加。落ち着きのなさが突出する状態。', ex: '精神運動性興奮あり。室内を歩き回り、制止には応じるがすぐ再開。' },
+      { id: 'c3', cat: 'appearance', term: '松脂症候（ワックスベンディング）', def: '指示された姿勢が長時間保持される極度の遅滞様の姿勢保持。', ex: '松脂症候が疑われる。腕を挙げた姿勢が自然と維持される。' },
+      { id: 'c4', cat: 'appearance', term: '無気力（アパシー）', def: '自発性の低下。話題提起や行動開始が乏しい状態（文脈により陰性症状・抑うつなど鑑別）。', ex: '無気力様。自発的発話は少なく、具体的事例の想起にも時間を要する。' },
+      { id: 'c5', cat: 'appearance', term: '視線接触不良', def: '会話時の対人視線の減少・回避。不安・精神病性症状など多因性。', ex: '視線接触は不安定。瞬きとともに逸脱しやすい。' },
+      { id: 'c6', cat: 'appearance', term: '作業化回答', def: '要点を抽出せず、冗長に周辺情報を重ねる回答様式。', ex: '作業化回答の傾向。結論に至るまで多量の細目を列挙する。' },
+      { id: 'c7', cat: 'appearance', term: '自発性低下', def: '本人から話題提供が乏しく、質問に答える以外の会話が少ない。', ex: '自発性は低下。沈黙が続きやすく、手がかりがないと会話が進みにくい。' },
+      { id: 'c8', cat: 'mood', term: '抑うつ気分', def: '悲しみ・空虚感・絶望感が主体で、日内変動や持続性を含めて評価。', ex: '抑うつ気分を訴える。将来について希望が持てない旨を反復。' },
+      { id: 'c9', cat: 'mood', term: '易刺激性', def: '軽微な刺激で怒り・苛立ちが誘発されやすい感情状態。', ex: '易刺激性高め。待ち時間で声量が上がり、言い争いになりやすい。' },
+      { id: 'c10', cat: 'mood', term: '情動の平坦化', def: '喜怒哀楽の幅が狭く、感情表出が乏しい。 ', ex: '情動は平坦。有益な話題にも表情変化は乏しい。' },
+      { id: 'c11', cat: 'mood', term: '感情不適切', def: '話題や状況と整合しない笑み・表情など、感情表出の不一致。', ex: '深刻な内容の説明中に不適切な笑みを認める。' },
+      { id: 'c12', cat: 'mood', term: '不安', def: '見通しの欠如や身体緊張を伴う緊迫感。程度・持続・機能障害で記載。', ex: '著明な不安。身体性不安（手指のもじもじ等）を伴う。' },
+      { id: 'c13', cat: 'mood', term: '感情鈍麻', def: '感情そのものの鋭さが低下した状態（情動の質の低下）。', ex: '感情鈍麻を疑う。喜びや悲哀の言語表出が乏しい。' },
+      { id: 'c14', cat: 'mood', term: '高揚気分', def: '気分の高揚・活動性の亢進や誇大感などが持続的に認められる状態（鑑別は文脈）。', ex: '高揚気分を認める。睡眠需要減少の訴えと整合。' },
+      { id: 'c15', cat: 'thought_form', term: '連合弛緩', def: '思考の論理的つながりが緩み、文脈から逸脱しやすい（軽度〜重度までスペクトラム）。', ex: '連合弛緩が疑われる。質問趣旨から外れる話題移行が反復。' },
+      { id: 'c16', cat: 'thought_form', term: '思考途切れ', def: '思考の流れが途中で中断され、その後再開が困難になる様子。', ex: '思考途切れを認める。文の途中で沈黙が介入し、再開に手がかりを要する。' },
+      { id: 'c17', cat: 'thought_form', term: '思考奔逸', def: '思考が勢いよく連なり、題外の話題へ急速に移行する加速思考。', ex: '思考奔逸あり。音連想で話題が連鎖し、まとまりにくい。' },
+      { id: 'c18', cat: 'thought_form', term: '固着思考', def: '同一内容に固執し、柔軟な話題転換が困難。', ex: '固着思考の傾向。同一の心配事に思考が留まりやすい。' },
+      { id: 'c19', cat: 'thought_form', term: '饒舌', def: '過度な量の発話。抑止が弱い、または衝動制御の低下など文脈で解釈。', ex: '饒舌。解答が長大で要点が後回しになりやすい。' },
+      { id: 'c20', cat: 'thought_form', term: '意味離れ', def: '発話が文法的にはつながっていても、内容の論理連結が著しく失われ、意味把握が困難な状態。', ex: '意味離れが疑われる。語句の寄せ集めで要点が把握しにくい。' },
+      { id: 'c21', cat: 'thought_form', term: '弁明思考', def: '病的に詳細な説明や弁明に時間が費やされ、要点がぼやける様式。', ex: '弁明思考様。細部の反復説明で面接時間が圧迫される。' },
+      { id: 'c22', cat: 'thought_content', term: '妄想', def: '現実の反証に屈しにくい固定された確信。内容分類は別途記載。', ex: '被害妄想を表明。近隣の意向を自分宛てと確信しやすい。' },
+      { id: 'c23', cat: 'thought_content', term: '関係妄想', def: '中立刺激を自分に関係づけて解釈する妄想。', ex: '関係妄想様。通行人の会話を自分への言及と取る。' },
+      { id: 'c24', cat: 'thought_content', term: '誇大妄想', def: '著しい能力・身分・使命などに係る誇大な確信。', ex: '誇大妄想を認める。特別な使命があると固執。' },
+      { id: 'c25', cat: 'thought_content', term: '罪業妄想', def: '軽微な過誤を拡大解釈し、罰や破滅を確信する妄想。', ex: '罪業妄想が疑われる。些細な失敗を不可逆な過ちとして反復言及。' },
+      { id: 'c26', cat: 'thought_content', term: '強迫観念', def: '本人が不本意でも反復侵入する思考。抵抗感と苦痛感を伴いやすい。', ex: '汚染への強迫観念。洗浄の衝動と整合した反復確認行為あり。' },
+      { id: 'c27', cat: 'thought_content', term: '希死念慮', def: '死を望む思考。計画・手段入手の有無は別途リスク評価。', ex: '希死念慮あり。具体計画は否認するが、手段について言及あり。' },
+      { id: 'c28', cat: 'thought_content', term: '侵入思考', def: '本人の意志とは無関係に突如入込む思考内容。', ex: '不快な内容の侵入思考を訴える。出現時に不快な身体感覚を伴う。' },
+      { id: 'c29', cat: 'thought_content', term: 'イデア・オブ・リファレンス', def: '偶然の出来事や報道を、自分に向けられた意味と解釈する病識。重度化で妄想へ移行しうる。', ex: 'イデア・オブ・リファレンス。ニュースの言い回しを自身の状況と結びつける。' },
+      { id: 'c30', cat: 'perception', term: '幻聴', def: '外界刺激なしに聴覚像を体験。コマンド・コメント性などで記載。', ex: '第三者の声の幻聴。内容は中傷性で、薬服薬について否定的。' },
+      { id: 'c31', cat: 'perception', term: '幻視', def: '視覚像の体験としての幻覚。器質鑑別も考慮。', ex: '人型の幻視を夜間に訴える。閉眼・暗所で増悪の記述。' },
+      { id: 'c32', cat: 'perception', term: '錯覚', def: '実在刺激の誤認。疲労・恐怖・照明不良などの条件下で増強しうる。', ex: '暗所での錯覚。衣類の影を人影と誤認した旨。' },
+      { id: 'c33', cat: 'perception', term: '人格解体', def: '自己や身体が現実味を失う体験（「自分が自分でない」等）。', ex: '人格解体様の体験。身体感が遠のく感覚を反復訴える。' },
+      { id: 'c34', cat: 'perception', term: '現実解体', def: '外界が非現実的に感じられる体験。', ex: '現実解体を訴える。景色が舞台のように感じる。' },
+      { id: 'c35', cat: 'cognition', term: '見当識障害', def: '時・場・人・状況についての見当の誤り。程度で記載。', ex: '時間見当にズレ（当日の日付を誤る）。場所見当は保たれる。' },
+      { id: 'c36', cat: 'cognition', term: '短期記憶の障害', def: '新情報の保持・想起の困難。簡易検査と会話所見の整合で記載。', ex: '即刻記銘3語は保持困難。5分後想起はヒントなしでは想起できない。' },
+      { id: 'c37', cat: 'cognition', term: '注意障害', def: '持続的注意・選択的注意の低下。内向的に表出する例から多動・衝動性が目立つ例まで様々。', ex: '注意持続困難。会話の途中で話題が脱線しやすい。' },
+      { id: 'c38', cat: 'cognition', term: '遂行機能障害の印象', def: '計画・開始・モニタリングなど実行面の困難の臨床的印象（検査なしでも描写可）。', ex: '遂行機能障害の印象。複数手順の課題で順序取りが乱れる。' },
+      { id: 'c39', cat: 'cognition', term: '思考貧困', def: '思考内容の量・幅の乏しさ。自発的説明が短く浅い。', ex: '思考貧困。理由の説明が抽象的で具体例が乏しい。' },
+      { id: 'c40', cat: 'cognition', term: '意識清明', def: '覚醒と意識内容の鮮明さが保たれている。', ex: '意識は清明。簡単な見当質問に矛盾なく応答。' },
+      { id: 'c41', cat: 'insight_judgment', term: '疾患洞察欠如', def: '病気であることや治療必要性の認識が著しく欠如。', ex: '疾患洞察は欠如。症状を病的作用と認めず、服薬不要と主張。' },
+      { id: 'c42', cat: 'insight_judgment', term: '一部洞察', def: '治療・症状の一部のみ病的作用を認める段階。', ex: '一部洞察。不眠は病との関連を認めるが妄想については否認。' },
+      { id: 'c43', cat: 'insight_judgment', term: '判断力低下', def: '結果予測やリスク評価が不適切で、安全性に影響しうる。', ex: '判断力低下の印象。金銭トラブルのリスクを軽視。' },
+      { id: 'c44', cat: 'insight_judgment', term: '内服遵守への合意', def: '治療方針や服薬について説明理解と実行意向の程度。', ex: '内服については合意形成。副作用懸念は残るが増薬に前向き。' },
+      { id: 'c45', cat: 'appearance', term: 'コマンド幻聴に対する従属', def: '命令内容に実際に従う危険行動の有無（リスク記載）。', ex: 'コマンド幻聴の訴えあり。自傷指示については抵抗できる旨。' },
+      { id: 'c46', cat: 'thought_content', term: '被害妄想', def: '故意の危害・監視・陰謀などへの確信。', ex: '被害妄想。職場で自分が標的にされていると確信。' },
+      { id: 'c47', cat: 'thought_content', term: '嫉妬妄想（病的嫉妬）', def: '配偶者などの不貞への根拠薄弱な確信。', ex: '嫉妬妄想様。断片的証拠で不貞を確定とする。' },
+      { id: 'c48', cat: 'mood', term: '情動コントロール障害', def: '感情の調節が困難で衝動的言行が出やすい。', ex: '情動コントロール障害の印象。叱責で大声を上げる。' },
+      { id: 'c49', cat: 'cognition', term: '見当障害なし', def: '人物・時間・場所の見当が保たれる。', ex: '見当障害なし。自己・場所・時刻は一致。' },
+      { id: 'c50', cat: 'perception', term: '体性幻覚', def: '身体内部や表面の異常感覚としての幻覚体験。', ex: '体性幻覚。脏器が扭転している感覚を訴える。' },
+      { id: 'c51', cat: 'thought_form', term: '独語', def: '他者との対話ではなく独り言様の発話が目立つ。', ex: '独語が目立つ。面接中も小声で独語が混在。' },
+      { id: 'c52', cat: 'mood', term: '感情失禁', def: 'わずかな刺激で涙や怒りが制御不能に溢れる。', ex: '感情失禁の傾向。支援の言葉で号泣。' }
+    ];
+
+    const STORAGE_KEY = 'mseTermsAnki_v1';
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { card: {}, filter: 'all' };
+        const p = JSON.parse(raw);
+        return {
+          card: p.card && typeof p.card === 'object' ? p.card : {},
+          filter: typeof p.filter === 'string' ? p.filter : 'all'
+        };
+      } catch {
+        return { card: {}, filter: 'all' };
+      }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    /** 簡易SM-2風：ease・intervalDays・due(ms)・reps */
+    function schedule(cardId, quality, prev) {
+      const p = prev || { ease: 2.5, intervalDays: 0, reps: 0, due: 0 };
+      let ease = p.ease;
+      let interval = p.intervalDays;
+      let reps = p.reps;
+
+      if (quality === 'again') {
+        ease = Math.max(1.3, ease - 0.2);
+        interval = 0;
+        reps = 0;
+      } else if (quality === 'hard') {
+        ease = Math.max(1.3, ease - 0.15);
+        interval = Math.max(1, Math.round((interval || 1) * 1.2));
+        reps += 1;
+      } else if (quality === 'good') {
+        if (reps === 0) interval = 1;
+        else if (reps === 1) interval = Math.max(1, Math.round(6 * ease / 10) || 1);
+        else interval = Math.max(1, Math.round(interval * ease));
+        reps += 1;
+      } else if (quality === 'easy') {
+        ease = ease + 0.15;
+        interval = Math.max(4, Math.round((interval || 1) * ease * 1.3));
+        reps += 1;
+      }
+
+      const dayMs = 24 * 60 * 60 * 1000;
+      let due = Date.now();
+      if (quality === 'again') due = Date.now() + 10 * 60 * 1000;
+      else due = Date.now() + interval * dayMs;
+
+      return { ease, intervalDays: interval, reps, due };
+    }
+
+    const state = loadState();
+    let activeFilter = state.filter;
+    let queue = [];
+    let queueIndex = 0;
+    let sessionFlipped = false;
+
+    const elChips = document.getElementById('category-chips');
+    const elFilterSummary = document.getElementById('filter-summary');
+    const elFlipInner = document.getElementById('flip-inner');
+    const elCardCat = document.getElementById('card-cat');
+    const elCardFront = document.getElementById('card-front');
+    const elCardDef = document.getElementById('card-def');
+    const elCardEx = document.getElementById('card-ex');
+    const elDueBadge = document.getElementById('due-badge');
+    const elNewBadge = document.getElementById('new-badge');
+    const elEmptyMsg = document.getElementById('empty-msg');
+    const elRateWrap = document.getElementById('rate-wrap');
+
+    function filterCards() {
+      if (activeFilter === 'all') return CARDS.slice();
+      return CARDS.filter((c) => c.cat === activeFilter);
+    }
+
+    function isDue(cardId) {
+      const s = state.card[cardId];
+      if (!s || !s.due) return true;
+      return s.due <= Date.now();
+    }
+
+    function buildQueue() {
+      const list = filterCards();
+      const due = list.filter((c) => isDue(c.id));
+      const notDue = list.filter((c) => !isDue(c.id));
+      due.sort(() => Math.random() - 0.5);
+      queue = due.concat(notDue);
+      queueIndex = 0;
+    }
+
+    function catLabel(catId) {
+      const c = CATEGORIES.find((x) => x.id === catId);
+      return c ? c.label : catId;
+    }
+
+    function updateBadges() {
+      const list = filterCards();
+      const now = Date.now();
+      let dueN = 0;
+      let newN = 0;
+      for (const c of list) {
+        const s = state.card[c.id];
+        if (!s || !s.due || s.due <= now) dueN++;
+        if (!s || s.reps === 0) newN++;
+      }
+      elDueBadge.textContent = `学習待ち（期日）: ${dueN} / ${list.length}`;
+      elNewBadge.textContent = `未習・再初回相当: ${newN}`;
+    }
+
+    function renderChips() {
+      elChips.innerHTML = '';
+      for (const c of CATEGORIES) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'rounded-full border px-3 py-1.5 text-xs font-semibold transition ' +
+          (activeFilter === c.id
+            ? 'bg-teal-700 text-white border-teal-700 shadow'
+            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50');
+        btn.textContent = c.label;
+        btn.title = c.desc;
+        btn.addEventListener('click', () => {
+          activeFilter = c.id;
+          state.filter = c.id;
+          saveState(state);
+          renderChips();
+          buildQueue();
+          sessionFlipped = false;
+          showCurrentCard();
+          updateBadges();
+          updateFilterSummary();
+        });
+        elChips.appendChild(btn);
+      }
+    }
+
+    function updateFilterSummary() {
+      const c = CATEGORIES.find((x) => x.id === activeFilter);
+      const n = filterCards().length;
+      elFilterSummary.textContent = c
+        ? `「${c.label}」: ${n}語。${c.desc}`
+        : `${n}語`;
+    }
+
+    function showCurrentCard() {
+      updateBadges();
+      if (!queue.length) {
+        elEmptyMsg.classList.remove('hidden');
+        elFlipInner.classList.add('opacity-40', 'pointer-events-none');
+        elCardFront.textContent = '';
+        elCardCat.textContent = '';
+        elCardDef.textContent = '';
+        elCardEx.textContent = '';
+        return;
+      }
+      elEmptyMsg.classList.add('hidden');
+      elFlipInner.classList.remove('opacity-40', 'pointer-events-none');
+      const c = CARDS.find((x) => x.id === queue[queueIndex]);
+      if (!c) return;
+      elCardCat.textContent = catLabel(c.cat);
+      elCardFront.textContent = c.term;
+      elCardDef.textContent = c.def;
+      elCardEx.textContent = c.ex;
+      elFlipInner.classList.remove('is-flipped');
+      sessionFlipped = false;
+    }
+
+    function toggleFlip() {
+      if (!queue.length) return;
+      sessionFlipped = !sessionFlipped;
+      elFlipInner.classList.toggle('is-flipped', sessionFlipped);
+    }
+
+    function advance() {
+      queueIndex++;
+      if (queueIndex >= queue.length) {
+        buildQueue();
+        queueIndex = 0;
+      }
+      showCurrentCard();
+    }
+
+    function rate(quality) {
+      if (!queue.length) return;
+      const id = queue[queueIndex];
+      const prev = state.card[id];
+      state.card[id] = schedule(id, quality, prev);
+      saveState(state);
+      advance();
+    }
+
+    document.getElementById('btn-reset-progress').addEventListener('click', () => {
+      if (!confirm('学習ログ（間隔・期日）を消してよいですか？')) return;
+      state.card = {};
+      saveState(state);
+      buildQueue();
+      showCurrentCard();
+    });
+
+    elFlipInner.addEventListener('click', toggleFlip);
+    elFlipInner.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleFlip();
+      }
+    });
+
+    for (const b of document.querySelectorAll('[data-q]')) {
+      b.addEventListener('click', () => rate(b.getAttribute('data-q')));
+    }
+
+    renderChips();
+    updateFilterSummary();
+    buildQueue();
+    showCurrentCard();
+
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  </script>
+</body>
+</html>

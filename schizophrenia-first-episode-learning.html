@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症 × 初発時対応 — 学習ハブ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sz-gradient: linear-gradient(135deg, #0f172a 0%, #0f766e 52%, #1d4ed8 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--sz-gradient); }
+    .sz-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      border: 1px solid #f1f5f9;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .sz-link {
+      color: #0f766e;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .sz-link:hover { color: #115e59; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5.5rem; }
+    }
+    .quiz-opt { accent-color: #1d4ed8; }
+    .drill-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1e3a5f;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    .case-prose { line-height: 1.75; }
+    .drill-open summary { cursor: pointer; list-style: none; }
+    .drill-open summary::-webkit-details-marker { display: none; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">学習用（教育コンテンツ）</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">統合失調症 × 初発時対応</h1>
+      <p class="text-white/85 mt-2 text-sm leading-relaxed max-w-2xl">
+        初発精神病（FEP）のフレームでは、<strong class="font-semibold text-white">鑑別・安全・治療開始・家族・継続</strong>が短い時間で重なります。診断ツリー・薬物選択にリンクしつつ、<strong class="font-semibold text-white">症例ドライループ</strong>とミニチェックで型を固めます。
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 -mt-3 relative z-10">
+
+    <div class="rounded-xl border border-amber-200 bg-amber-50/90 p-4 mb-6 text-sm text-amber-950">
+      <strong class="font-bold">重要</strong>：本ページは医学教育のためのまとめです。実際の診療では、最新の統合失調症治療ガイドライン・早期介入・法的枠組み・施設プロトコルに従ってください。激越・自己他害の危機時は当直・救急・精神保健の手順を優先してください。
+    </div>
+
+    <section id="path" class="sz-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center">
+          <i data-lucide="route" class="w-5 h-5 text-sky-800"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">おすすめの学習順（能動的想起用）</h2>
+          <p class="text-xs text-slate-500">初発時は「診断確定」より先に<strong class="text-slate-800">安全・鑑別・治療開始の準備</strong>が前に出る場面が多い、という前提で並べています。</p>
+        </div>
+      </div>
+      <ol class="list-decimal list-inside space-y-2.5 text-sm text-slate-700 leading-relaxed">
+        <li><strong class="text-slate-900">身体・神経・物質の除外</strong>：脳炎・甲状腺・VitB12・梅毒・大麻や覚醒剤など、時に命に関わる鑑別。→ <a class="sz-link" href="schizophrenia-diagnosis.html">統合失調症 診断・鑑別</a></li>
+        <li><strong class="text-slate-900">精神病症状の枠組み</strong>：陽性・陰性・解体・緊張病・認知の含意。期間基準・機能低下の評価。→ <a class="sz-link" href="icd10.html#f2">ICD-10 F2章</a>／<a class="sz-link" href="dsm5tr.html">DSM-5-TR 参照ページ</a></li>
+        <li><strong class="text-slate-900">自他害・リスク</strong>：命令幻聴、興奮、物質、孤立。→ 下記「初発時チェック」／<a class="sz-link" href="cssrs-procedure-memo.html">C-SSRS 手順メモ</a>（念慮・行動の整理）</li>
+        <li><strong class="text-slate-900">治療開始</strong>：抗精神病薬選択、用量の考え方、副作用（錐体外路・代謝・QT）。→ <a class="sz-link" href="antipsychotics-japan.html">抗精神病薬ガイド</a>／<a class="sz-link" href="schizophrenia-algorithm.html">治療アルゴリズム</a>／<a class="sz-link" href="acute-alerts.html">急性期クイック</a></li>
+        <li><strong class="text-slate-900">計測・記録</strong>：重症度の追跡。→ <a class="sz-link" href="panss-sheet-detailed.html">PANSS</a>／<a class="sz-link" href="bprs-sheet-detailed.html">BPRS</a>／<a class="sz-link" href="bfcrs-sheet.html">BFCRS</a>（緊張病）</li>
+        <li><strong class="text-slate-900">症例で回す</strong>：<a class="sz-link" href="#drill">症例ドライループ</a>で、鑑別→リスク→次の一手を毎症例口頭化してから開示。</li>
+      </ol>
+    </section>
+
+    <section id="assess" class="sz-card border-l-4 border-l-sky-600">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="clipboard-check" class="w-6 h-6 text-sky-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">初発時：構造化チェック（学習用）</h2>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">初診〜入院初期で漏れやすい観点の<strong>抜け防止リスト</strong>です。記録様式は施設標準に合わせてください。</p>
+      <ul class="grid sm:grid-cols-2 gap-2 text-sm text-slate-700">
+        <li class="flex gap-2 bg-sky-50/90 rounded-lg px-3 py-2 border border-sky-100"><span class="text-sky-700 font-bold">1</span>発症時期・経過（急性か漸進か）、トリガー（物質・感染後・生活イベント）</li>
+        <li class="flex gap-2 bg-sky-50/90 rounded-lg px-3 py-2 border border-sky-100"><span class="text-sky-700 font-bold">2</span>陽性・陰性・解体・<strong>緊張病</strong>の有無（身体所見含む）</li>
+        <li class="flex gap-2 bg-sky-50/90 rounded-lg px-3 py-2 border border-sky-100"><span class="text-sky-700 font-bold">3</span>意識・注意・見当識・神経所見（器質・脳炎の手掛かり）</li>
+        <li class="flex gap-2 bg-sky-50/90 rounded-lg px-3 py-2 border border-sky-100"><span class="text-sky-700 font-bold">4</span>身体検査・基本検査の計画（施設プロトコル）</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">5</span>家族歴・周産期・発達・大麻・覚醒剤歴</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">6</span>暴力・興奮・命令幻聴・自殺念慮</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">7</span>同意能力・入院形態・代理同意の要否</li>
+        <li class="flex gap-2 bg-amber-50 rounded-lg px-3 py-2 border border-amber-100"><span class="text-amber-800 font-bold">8</span>紹介・学校・就労・地域支援との接続（退院前から意識）</li>
+      </ul>
+    </section>
+
+    <section id="cross" class="sz-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="git-merge" class="w-6 h-6 text-blue-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">初発時の「交差点」（よく挟まる）</h2>
+      </div>
+      <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+        <div class="rounded-lg bg-slate-100 border border-slate-200 p-3">
+          <div class="font-bold text-slate-900 text-sm mb-1">治療抵抗の前の「鑑別見直し」</div>
+          <p>効きにくいときほど、<strong>物質・器質・自免疫性脳炎</strong>や<strong>気分障害併存</strong>を再放送する訓練。ガイドラインでも鑑別・併存の再評価が強調されます。</p>
+        </div>
+        <div class="rounded-lg bg-teal-50 border border-teal-100 p-3">
+          <div class="font-bold text-teal-900 text-sm mb-1">緊張病・激越</div>
+          <p>緊張病は<strong>身体合併症リスク</strong>と治療の緊急性が学習の要点。BZD・電気けいれん療法などは施設手順・禁忌に従う。→ <a class="sz-link" href="bfcrs-sheet.html">BFCRS</a></p>
+        </div>
+        <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
+          <div class="font-bold text-violet-900 text-sm mb-1">抗精神病薬の選択と副作用バランス</div>
+          <p>初発でも<strong>代謝・錐体外路・QT・プロラクチン</strong>のモニタリング設計が長期転帰に効く。若年では体重・葡萄糖・脂質のベースライン取得が教材で推奨されることが多いです。</p>
+        </div>
+        <div class="rounded-lg bg-amber-50 border border-amber-100 p-3">
+          <div class="font-bold text-amber-900 text-sm mb-1">心理教育・家族ワーク・共有意思決定</div>
+          <p>疾患名の説明、再発予兆、薬の目的と副作用、喫煙と代謝、就労・リカバリー支援への橋渡し。初発期の関与が長期アドヒアランスに効く、というエビデンスが繰り返し引用されます。</p>
+        </div>
+        <div class="rounded-lg bg-red-50 border border-red-100 p-3">
+          <div class="font-bold text-red-900 text-sm mb-1">クロザピンは「最初の一手」ではない</div>
+          <p>TRS（治療抵抗性統合失調症）の定義を満たすまでは、系統的なモニタリング下での適切な試行が先行するのが一般的整理。血液中割球・登録体制など特殊な安全管理が必要です。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="drill" class="sz-card ring-2 ring-blue-200/90 border-blue-100">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+            <i data-lucide="repeat" class="w-5 h-5 text-blue-800"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">症例ドライループ</h2>
+            <p class="text-xs text-slate-500 mt-0.5">架空の教育症例。<span class="drill-pill inline-block mt-1">READ → RECALL → REVEAL</span></p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+          <button type="button" id="drill-prev" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50">前の症例</button>
+          <button type="button" id="drill-next" class="px-3 py-2 rounded-lg bg-blue-700 text-white text-sm font-bold hover:bg-blue-800 shadow-sm">次の症例</button>
+        </div>
+      </div>
+      <div class="rounded-xl bg-indigo-50/80 border border-indigo-100 p-3 mb-4 text-xs text-indigo-950 leading-relaxed">
+        <strong class="font-bold">回し方</strong>：症例文 → <em>①鑑別・身体</em> <em>②リスク（自他害）</em> <em>③次の評価・治療の方向</em> を言語化 → 開示3つを開く。<span class="block mt-1.5">全<strong>8症例</strong>：大麻・脳炎嫌疑・緊張病・ED興奮・同意・副作用モニタ・治療抵抗手前・若年初発など。</span>
+      </div>
+      <p class="text-sm font-bold text-blue-900 mb-2 tabular-nums" id="drill-index" aria-live="polite">症例 1 / 8</p>
+      <div class="rounded-xl border border-slate-200 bg-white p-4 mb-4 shadow-sm">
+        <h3 class="text-base font-bold text-slate-900 mb-2 leading-snug" id="drill-title"></h3>
+        <div class="case-prose text-sm text-slate-700 whitespace-pre-line" id="drill-vignette"></div>
+      </div>
+      <div class="space-y-2 text-sm" id="drill-reveals"></div>
+      <p class="text-xs text-slate-400 mt-4">症例は単純化しています。実患者では法・倫理・多言語・文化的配慮を必ず加えてください。</p>
+    </section>
+
+    <section id="quiz" class="sz-card ring-2 ring-blue-200/80">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="help-circle" class="w-6 h-6 text-blue-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">ミニチェック（10問）</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">選択後「採点する」。解説は各問の折りたたみ内。</p>
+      <div id="quiz-items" class="space-y-5 text-sm"></div>
+      <div class="flex flex-wrap items-center gap-3 mt-6">
+        <button type="button" id="quiz-grade" class="px-5 py-2.5 rounded-xl bg-blue-700 text-white font-bold text-sm hover:bg-blue-800 shadow-md">採点する</button>
+        <button type="button" id="quiz-reset" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">選択をクリア</button>
+        <p id="quiz-result" class="text-sm font-bold text-slate-700 tabular-nums" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 mt-8 mb-6">参照：<a class="sz-link" href="schizophrenia-algorithm.html">統合失調症アルゴリズム</a> · ガイドラインは原著を確認してください</p>
+  </main>
+
+  <script>
+    const CASE_DRILL = [
+      {
+        title: '症例1：大学生・大麻使用後の幻聴様体験（21歳・男性）',
+        vignette: '母の付き添い。3か月前から不眠と学業不振。ここ2週間、部屋で「誰かが文句を言っている」と訴え、授業に出られない。週末は友達と大麻を「リラックスのため」と使用したと認める。身体所見は特記なし。体温平熱。\n暴言はないが、落ち着きがなく話が飛ぶ。',
+        blocks: [
+          { label: '鑑別・評価', body: '<strong>物質（大麻）関連精神病</strong>と統合失調症様エピソードの時系列を整理。使用中止後の経過観察の位置づけと、持続する場合の再評価が教材で強調。甲状腺・B12など基本は施設プロトコルで。' },
+          { label: 'リスク・安全', body: '青年期の<strong>衝動・自傷</strong>、家族との対立、薬物入手環境。現時点では他害は低めでも、興奮の変動に注意。' },
+          { label: '次の一手（教育用）', body: '減用・断絶に関する説明と、必要に応じ<strong>短期の抗精神病薬</strong>・入院判断。心理教育（大麻と精神病リスクの説明の型）。フォロー間隔を詰める。' },
+        ],
+      },
+      {
+        title: '症例2：激しい頭痛のあと人物が二重に見える（19歳・女性）',
+        vignette: '1週間前から頭痛と嘔吐があり近医受診。昨日から「隣人が盗聴している」「自分は特別な使命がある」と語る。体温38.2℃、時に言葉の返答が遅い。首こわばりは不明確。大麻・飲酒は否定。\n精神科初診だが、内科からの電話相談枠。',
+        blocks: [
+          { label: '鑑別・評価', body: '<strong>器質性（脳炎・感染・腫瘍等）</strong>を最優先に疑う手掛かり（発熱・意識・経過）。画像・髄液・内科併診はガイドライン・救命救急の流儀に従う。「精神科疾患として決め打ち」しない訓練。' },
+          { label: 'リスク・安全', body: '意識変容時の<strong>フォール・誤嚥</strong>、興奮、医療不在による遷延。搬送・住院の必要性。' },
+          { label: '次の一手（教育用）', body: '診断がつくまで抗精神病薬は<strong>器質除外とバランス</strong>で。原因治療優先が原則。鑑別表は <a class="sz-link" href="schizophrenia-diagnosis.html">診断ページ</a> を参照。' },
+        ],
+      },
+      {
+        title: '症例3：無言で動かない — 若年初発（18歳・男性）',
+        vignette: '今日、母が救急搬送。ここ4日会話が乏しく、昨天から食事もほぼ摂れない。視線は合うが答えず、著明な反抗ではない。時に同じ姿勢のまま数時間。体温37.0℃。既往なし。違法薬は否定。\n自傷他害の言及なし。',
+        blocks: [
+          { label: '鑑別・評価', body: '<strong>緊張病</strong>（カタトニア）を疑い、器質・代谢（甲状腺・電解質等）を並行。統合失調症の初発・双極・うつ精神病・薬源性など原因は多岐。→ <a class="sz-link" href="bfcrs-sheet.html">BFCRS</a>' },
+          { label: 'リスク・安全', body: '<strong>悪性緊張病</strong>（高体温・CK上昇・意識障害等）の監視。誤嚥・血栓・廃用にも注意。' },
+          { label: '次の一手（教育用）', body: '専門施設プロトコルに沿った<strong>BZD・抗精神病薬・ECT</strong>の優先順位を確認。単独で経口のみに頼らない場面もある。' },
+        ],
+      },
+      {
+        title: '症例4：救急来診・興奮と被害妄想（26歳・男性）',
+        vignette: '路上で大声を上げたため警察同伴。被害妄想を大声で叫び、スタッフに接近する。「注射は陰謀だ」と拒否。体温36.8℃、頻脈110。アルコール息は軽度。\n既往・常用薬は不明。',
+        blocks: [
+          { label: '鑑別・評価', body: '物質（アルコール・覚醒剤）・離脱・外伤・感染・低血糖等のスクリーニング。鎮静の前に<strong>可能な限り身体的評価</strong>。' },
+          { label: 'リスク・安全', body: '職員・他患者への<strong>他害</strong>、卑脱。身体的拘束・化学的鎮静は施設・救急ガイドラインに従い、呼吸循環の監視。' },
+          { label: '次の一手（教育用）', body: 'デエスカレーションを試みつつ、必要なら<strong>経口／筋注の鎮静オプション</strong>。呼吸抑制を踏まえBZD＋抗精神病薬の併用には間隔・監視。安定後に精神科入院・初発チームへ。' },
+        ],
+      },
+      {
+        title: '症例5：本人は受診拒否だが母は「様子がおかしい」（22歳・女性）',
+        vignette: '大学卒業後、友達と疎遠になり昼夜逆転。部屋の壁に「盗聴されないように」とアルミホイルを貼ったと母が写真で示す。本人は面接で「母が大げさ」と笑うが、盗聴は本当だと主張。身体検査は異常なし。\n暴力はなし。自殺念慮は否定。',
+        blocks: [
+          { label: '鑑別・評価', body: '<strong>妄想性障害・統合失調症・物質・うつ精神病</strong>の鑑別。機能低下の程度と持続期間の評価。情報源は家族＋本人の両方。' },
+          { label: 'リスク・安全', body: '独居化、炎上・警察沙汰、将来の<strong>危機的孤立</strong>。当面の他害は低くても、長期の安全計画。' },
+          { label: '次の一手（教育用）', body: '治療同盟づくり、場合により<strong>訪問診療・早期介入チーム</strong>。同意が得られないが危機が高い場合は<strong>入院の形態</strong>を法に照らして検討。' },
+        ],
+      },
+      {
+        title: '症例6：リスペリドン開始2週・体重と空腹値が上昇（24歳・男性）',
+        vignette: '初発で統合失調症としてリスペリドン経口を開始。陽性症状はやや改善したが、食欲が増し体重+3kg。空腹時血糖が境界域に。本人は「太るのが怖い」と言い、薬を勝手に減らしかけている。\n錐体外路症状は自覚なし。',
+        blocks: [
+          { label: '鑑別・評価', body: '効果と副作用の<strong>トレードオフ</strong>の説明。代謝リスクは<strong>SGAクラスで相対差</strong>があることが教材で繰り返される。用量最適化・剤変更の選択肢はガイド参照。' },
+          { label: 'リスク・安全', body: '<strong>自己減量</strong>による再燃・再発。代謝進行による長期CVリスク。' },
+          { label: '次の一手（教育用）', body: '食事・運動の具体的手帳、体重・腹囲・葡萄糖・脂質のモニタリング計画。可能的なら<strong>他剤検討</strong>。心理教育で「減薬相談は必ず医師と」。' },
+        ],
+      },
+      {
+        title: '症例7：2剤種の抗精神病薬で「まだ声が消えない」（29歳・女性）',
+        vignette: '初回エピソードから8か月。まずアリピプラゾール、効果不十分でアリピプラゾール＋クエチアピン併用となったが、命令幻聴が残存。副作用は可逆の範囲。主治医は「そろそろクロザピンも」と呟いているというが、本人は血液検査が怖い。\n規則的な外来。',
+        blocks: [
+          { label: '鑑別・評価', body: '「治療抵抗」の前にもう一度<strong>鑑別・アドヒアランス・血中濃度・相互作用</strong>を点検。TRSの定義はガイドライン順守。' },
+          { label: 'リスク・安全', body: '命令幻聴に基づく<strong>行動化</strong>のリスク。中止・過量の自己判断。' },
+          { label: '次の一手（教育用）', body: 'クロザピンは<strong>登録・週次血液・禁止薬チェック</strong>が前提。導入は専門施設で計画的に。それ以前に<strong>試行の整理・心理教育</strong>。' },
+        ],
+      },
+      {
+        title: '症例8：高校生・成績低下と「クラスで話されている」（17歳・性別不明）',
+        vignette: '3か月で成績が落ちたと担任経由の紹介。本人は「みんな私の悪口を言っている」と泣く。眠れない。幻聴は「聞こえることがある」と曖昧。大麻は否定。身体は健康診断で異常なし。\n自傷は1年前にリストカット1回。母は協力的。',
+        blocks: [
+          { label: '鑑別・評価', body: '<strong>青年期の不安・うつ・迫害体験</strong>と精神病の境界。発達・いじめ・発達障害併存の評価。診断の確定より<strong>機能障害と危機</strong>を先に扱う場面も。' },
+          { label: 'リスク・安全', body: '既往自傷、学業ストレス、SNS。家族への説明の仕方（スティグマ低減）。' },
+          { label: '次の一手（教育用）', body: '頻回外来、学校連携、必要に応じ低用量APまたは心理療法・家族支援。少年精神科・法的保護者同意を確認。<strong>若年特有の説明とモニタリング</strong>。' },
+        ],
+      },
+    ];
+
+    let drillIdx = 0;
+    function renderDrill() {
+      const d = CASE_DRILL[drillIdx];
+      document.getElementById('drill-index').textContent = '症例 ' + (drillIdx + 1) + ' / ' + CASE_DRILL.length;
+      document.getElementById('drill-title').textContent = d.title;
+      document.getElementById('drill-vignette').textContent = d.vignette;
+      const box = document.getElementById('drill-reveals');
+      box.innerHTML = '';
+      d.blocks.forEach((b, i) => {
+        const det = document.createElement('details');
+        det.className = 'drill-open rounded-xl border border-blue-200/90 bg-sky-50/50 px-4 py-3';
+        const sum = document.createElement('summary');
+        sum.className = 'font-bold text-blue-950 text-sm flex items-center gap-2';
+        const prefix = ['①', '②', '③'][i] || '・';
+        sum.innerHTML = '<span class="shrink-0">' + prefix + ' ' + b.label + '</span><span class="text-xs font-normal text-blue-700/90">（考えてから開く）</span>';
+        const div = document.createElement('div');
+        div.className = 'mt-2 text-sm text-slate-700 leading-relaxed case-prose';
+        div.innerHTML = b.body;
+        det.appendChild(sum);
+        det.appendChild(div);
+        box.appendChild(det);
+      });
+    }
+    document.getElementById('drill-prev').addEventListener('click', () => {
+      drillIdx = (drillIdx - 1 + CASE_DRILL.length) % CASE_DRILL.length;
+      renderDrill();
+    });
+    document.getElementById('drill-next').addEventListener('click', () => {
+      drillIdx = (drillIdx + 1) % CASE_DRILL.length;
+      renderDrill();
+    });
+    renderDrill();
+
+    const QUIZ = [
+      { q: '初発精神病の評価で、鑑別として特に優先度が高くなりやすいのはどれか。', opts: ['職業適性テストのみ', '器質性・神経学的疾患と物質の除外', '出生順のみ', '服装の好み'], a: 1, exp: '意識障害・発熱・急激な経過などでは脳炎・感染・代謝異常を先に考える訓練が必須です。' },
+      { q: '悪性緊張病（MCS）で監視が推奨されやすい所見に含まれるのはどれか。', opts: ['皮疹のみ', '高体温・意識障害・自律神経不安定などの悪性候補', '軽い頭痛のみ', '乾咳のみ'], a: 1, exp: 'CK上昇・高体温・意識障害などは緊急対応の手掛かりとして教材に載ることが多いです。施設プロトコルに従います。' },
+      { q: '初発期における抗精神病薬の長期的課題として、特にモニタリングが強調されやすいのはどれか。', opts: ['爪の長さ', '代謝（体重・葡萄糖・脂質など）', '皮脂分泌のみ', '毛髪の色'], a: 1, exp: '特にSGAでは代謝リスクが繰り返し説明されます。ベースライン取得と定期測定の型を身につけます。' },
+      { q: '治療抵抗性統合失調症としてクロザピンを検討する前提として、教科書的な整理に近いのはどれか。', opts: ['初診当日に必ず開始', '十分な期間・用量での複数剤試行などTRS基準を満たす', '軽微な不眠のみで開始', '患者が希望すれば血液検査なしで開始'], a: 1, exp: '無顆粒球症監視など特殊な安全対策のため、適応はガイドラインで規定された試行後に検討するのが一般的です。' },
+      { q: '大麻関連精神病と統合失調症の鑑別で教材でよく言及されるのはどれか。', opts: ['時系列と物質使用中止後の経過', '足のサイズのみ', '星座', '血液型のみ'], a: 0, exp: '物質の影響が疑われる場合は中止・経過観察や再評価の位置づけが説明されます。' },
+      { q: '激越患者への対応で、まず考えるべきことに近いのはどれか。', opts: ['直ちに最大量の複数剤を筋注', '身体的状態のスクリーニングと安全確保・デエスカレーション', '診断名の確定のみ', '面接拒否なら帰宅のみ'], a: 1, exp: '脱力・低血糖・離脱など医学的緊急を見落とさない一方で、職員の安全と鎮静オプションをプロトコルで組み立てます。' },
+      { q: '統合失調症の診断で典型的に必要とされる期間の考え方（参考）として適切なのはどれか。', opts: ['幻聴が1回あれば即診断', '活動期症状が一定期間以上持続など操作的基準を満たす', '血液検査異常のみで診断', '家族の主観のみ'], a: 1, exp: 'DSM/ICDの期間・機能障害の要件を踏まえ、鑑別がついたうえで確定診断する流れです。' },
+      { q: '初発期の予後に効く可能性がある非薬物介入として、ガイドラインで繰り返し触れられやすいのはどれか。', opts: ['心理教育・家族支援・リカバリー支援など', '飴の味見のみ', '絶対安静のみ', '断薬推奨のみ'], a: 0, exp: '疾患理解・アドヒアランス・社会復帰支援はエビデンスのまとめで重要とされます。' },
+      { q: 'アカシジアが疑われるとき、誤りやすい対応はどれか。', opts: ['用量歴と時系列を確認', '抗精神病薬をさらに盲信増量のみ', '分服・剤変更を検討', '鑑別として静坐不能を考える'], a: 1, exp: '静坐不能は希死念慮を増強しうるため、増量一辺倒は避け、薬物学的鑑別が重要です。' },
+      { q: '初発外来で「同意が困難だが危機が高い」場合に検討が及びうるのはどれか。', opts: ['合法的・倫理的枠組みに基づく入院形態の検討（施設手順）', '秘密裏に薬室から持ち出し', '何もせず終診', '診断名のみ記載'], a: 0, exp: '医療保護入院など法要件と手続を踏まえつつ、多職種で安全対応する訓練が求められます。' },
+    ];
+
+    const quizItems = document.getElementById('quiz-items');
+    QUIZ.forEach((item, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+      const h = document.createElement('div');
+      h.className = 'font-semibold text-slate-800 mb-2';
+      h.textContent = 'Q' + (i + 1) + '. ' + item.q;
+      wrap.appendChild(h);
+      const opts = document.createElement('div');
+      opts.className = 'space-y-2';
+      item.opts.forEach((text, j) => {
+        const lab = document.createElement('label');
+        lab.className = 'flex items-start gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50';
+        const r = document.createElement('input');
+        r.type = 'radio';
+        r.name = 'q' + i;
+        r.value = String(j);
+        r.className = 'quiz-opt mt-1 shrink-0';
+        const span = document.createElement('span');
+        span.textContent = text;
+        span.className = 'text-slate-700';
+        lab.appendChild(r);
+        lab.appendChild(span);
+        opts.appendChild(lab);
+      });
+      wrap.appendChild(opts);
+      const exp = document.createElement('details');
+      exp.className = 'mt-3 text-xs text-slate-600';
+      exp.innerHTML = '<summary class="cursor-pointer font-semibold text-blue-800">解説を表示</summary><p class="mt-2 leading-relaxed pl-1">' + item.exp + '</p>';
+      wrap.appendChild(exp);
+      quizItems.appendChild(wrap);
+    });
+
+    document.getElementById('quiz-grade').addEventListener('click', () => {
+      let ok = 0;
+      QUIZ.forEach((item, i) => {
+        const sel = document.querySelector('input[name="q' + i + '"]:checked');
+        if (sel && +sel.value === item.a) ok++;
+      });
+      const el = document.getElementById('quiz-result');
+      el.textContent = '正答 ' + ok + ' / ' + QUIZ.length;
+      el.className = 'text-sm font-bold ' + (ok >= 8 ? 'text-emerald-700' : ok >= 5 ? 'text-amber-800' : 'text-rose-700') + ' tabular-nums';
+    });
+    document.getElementById('quiz-reset').addEventListener('click', () => {
+      document.querySelectorAll('#quiz-items input[type="radio"]').forEach(r => { r.checked = false; });
+      const el = document.getElementById('quiz-result');
+      el.textContent = '';
+      el.className = 'text-sm font-bold text-slate-700 tabular-nums';
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

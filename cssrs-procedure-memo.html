@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C-SSRS 手順メモ（面接・記録・連携）— 教育用</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --hdr: linear-gradient(135deg, #9d174d 0%, #1e3a5f 100%); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--hdr); }
+    .memo-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.07);
+      border: 1px solid #f1f5f9;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .memo-link {
+      color: #0f766e;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .memo-link:hover { color: #115e59; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5.5rem; }
+    }
+    .step-num {
+      width: 1.75rem; height: 1.75rem;
+      border-radius: 999px;
+      background: #be185d;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">外来・病棟・コンサル共通の「流れ」メモ</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">C-SSRS 手順メモ</h1>
+      <p class="text-white/85 mt-2 text-sm leading-relaxed max-w-2xl">
+        Columbia Suicide Severity Rating Scale（C-SSRS）を施設で使うときの<strong class="font-semibold text-white">前準備・面接の姿勢・記録・連携</strong>に絞ったチェックリストです。<strong class="font-semibold text-white">質問の全文・採点表の複製は行っていません。</strong>
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 -mt-3 relative z-10">
+
+    <div class="rounded-xl border-2 border-rose-200 bg-rose-50/95 p-4 mb-6 text-sm text-rose-950 leading-relaxed">
+      <div class="flex items-start gap-2">
+        <i data-lucide="shield-alert" class="w-5 h-5 shrink-0 mt-0.5 text-rose-700"></i>
+        <div>
+          <p class="font-bold text-rose-900 mb-1">著作権・利用許諾について</p>
+          <p>C-SSRS の公式質問票・定義・訓練資料は <strong>Columbia Lighthouse Project</strong>（Columbia University 関連）が管理し、利用に際しては<strong>許諾された版・言語・バージョン</strong>を用いる必要があります。本ページは<strong>臨床手順の補助メモ</strong>であり、尺度そのものの代替にはなりません。採用前に所属施設のコンプライアンス窓口と確認してください。</p>
+          <p class="mt-2">公式情報：<a class="memo-link text-rose-900 underline font-bold" href="https://cssrs.columbia.edu/" target="_blank" rel="noopener noreferrer">The Columbia Lighthouse Project（C-SSRS）</a></p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="memo-card bg-slate-100/80 border-slate-200">
+      <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">目次</div>
+      <ul class="text-sm text-slate-700 space-y-1.5">
+        <li><a class="memo-link" href="#why">1. 何のために使うか</a></li>
+        <li><a class="memo-link" href="#versions">2. 版の選定（施設で固定する）</a></li>
+        <li><a class="memo-link" href="#before">3. 実施前チェック</a></li>
+        <li><a class="memo-link" href="#during">4. 面接中の原則</a></li>
+        <li><a class="memo-link" href="#record">5. 記録の書き方（最低限）</a></li>
+        <li><a class="memo-link" href="#after">6. 実施後・エスカレーション</a></li>
+        <li><a class="memo-link" href="#concept">7. 念慮と行動の区分（概念整理＊尺度の代用ではない）</a></li>
+        <li><a class="memo-link" href="#when-repeat">8. 再評価のタイミング例</a></li>
+        <li><a class="memo-link" href="#related">9. 関連ページ</a></li>
+      </ul>
+    </nav>
+
+    <section id="why" class="memo-card">
+      <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+        <span class="step-num">1</span> 何のために使うか
+      </h2>
+      <ul class="list-disc list-inside text-sm text-slate-700 space-y-1.5 leading-relaxed">
+        <li>自殺関連の<strong>念慮〜行動</strong>を、定義に沿って<strong>漏れなく・一貫して</strong>拾う。</li>
+        <li>多職種・他院との間で<strong>重症度の共通言語</strong>を持ちやすくする（施設訓練込み）。</li>
+        <li>入院・退院、薬物変更などの<strong>経時点</strong>で比較可能な記録を残す。</li>
+      </ul>
+    </section>
+
+    <section id="versions" class="memo-card">
+      <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+        <span class="step-num">2</span> 版の選定（施設で固定する）
+      </h2>
+      <p class="text-sm text-slate-700 leading-relaxed mb-3">ライフサイクル・設定（スクリーニング／トリアージ／縦断評価）ごとに推奨される<strong>用紙の種類</strong>が異なります。教育・研究・一般医療で案内が分かれているので、<strong>院内でどれを標準とするか決め、改訂時に更新</strong>します。</p>
+      <ul class="text-sm text-slate-600 space-y-1 list-disc list-inside">
+        <li>児童・思春期用と成人用で項目・閾値の扱いが異なることがある。</li>
+        <li>翻訳版は<strong>許諾付きの版</strong>のみを業務に使用。</li>
+        <li>電子カルテフィールドに落とし込む場合は、用語と選択肢を情報システムとすり合わせる。</li>
+      </ul>
+    </section>
+
+    <section id="before" class="memo-card border-l-4 border-teal-500">
+      <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="step-num">3</span> 実施前チェック
+      </h2>
+      <ul class="space-y-2.5 text-sm text-slate-700">
+        <li class="flex gap-2"><span class="text-teal-600 font-bold shrink-0">・</span><span><strong>安全</strong>：密室すぎる配置・刃物・過量可能な薬への物理的アクセスを可能な範囲で確認。高リスク時は<strong>二人体制・当直連絡</strong>を検討（プロトコル順）。</span></li>
+        <li class="flex gap-2"><span class="text-teal-600 font-bold shrink-0">・</span><span><strong>時間</strong>：冒頭で「今日は安全のために具体的な質問をします」と説明できる十分な長さ。</span></li>
+        <li class="flex gap-2"><span class="text-teal-600 font-bold shrink-0">・</span><span><strong>同意・守秘</strong>：情報共有の範囲（家族・紹介元）を本人に確認。</span></li>
+        <li class="flex gap-2"><span class="text-teal-600 font-bold shrink-0">・</span><span><strong>言語</strong>：通訳がいる場合は第三者の有無・用語の正確性を確保。</span></li>
+        <li class="flex gap-2"><span class="text-teal-600 font-bold shrink-0">・</span><span><strong>用紙</strong>：院内採用のC-SSRS版・バージョン・実施日を記録欄にプリセット。</span></li>
+      </ul>
+    </section>
+
+    <section id="during" class="memo-card border-l-4 border-indigo-500">
+      <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="step-num">4</span> 面接中の原則
+      </h2>
+      <ol class="list-decimal list-inside space-y-2 text-sm text-slate-700 leading-relaxed">
+        <li><strong>公式手順の順番</strong>で読み上げ・追質問する（定義の崩れを防ぐ）。本メモは順番を書き換えない。</li>
+        <li>曖昧な「たまに」「ひどい」は、<strong>頻度・最終時期・具体例</strong>まで戻して確認。</li>
+        <li>沈黙や防御は焦らせず、<strong>「正解・不正解はない」</strong>ことを短く伝えてから再質問。</li>
+        <li>自殺以外の苦痛（パニック・暴力恐怖など）が主訴でも、必要に応じ<strong>別セッションでC-SSRS</strong>を検討（疲労に注意）。</li>
+        <li>受診理由が「家族・上司の指示」のときほど、本人の声を<strong>一対一</strong>で確認。</li>
+      </ol>
+    </section>
+
+    <section id="record" class="memo-card">
+      <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="step-num">5</span> 記録の書き方（最低限）
+      </h2>
+      <ul class="text-sm text-slate-700 space-y-2 leading-relaxed">
+        <li><strong>必須メタデータ</strong>：実施日時、実施者職種、使用したC-SSRSの版名／言語、参照期間（例「過去1か月」「生涯」は公式定義に従う）。</li>
+        <li><strong>結果</strong>：各ドメインの回答を、カルテ用語に<strong>要約しすぎない</strong>よう、施設ルールに沿って転記。</li>
+        <li><strong>付記</strong>：計画の具体性・手段の入手可能性・保護因子（依頼できる支援者など）を、別欄の安全アセスと整合させる。</li>
+        <li><strong>拒否・中途中断</strong>：その事実と、可能な代替（短期フォロー・家族面接）を記載。</li>
+      </ul>
+    </section>
+
+    <section id="after" class="memo-card border-l-4 border-red-500 bg-red-50/30">
+      <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="step-num">6</span> 実施後・エスカレーション
+      </h2>
+      <p class="text-sm text-slate-700 mb-3">閾値・行動レベルは<strong>公式ガイドと施設プロトコル</strong>に従う。以下は「忘れやすい行動項目」に過ぎません。</p>
+      <ul class="text-sm text-slate-700 space-y-2 list-disc list-inside">
+        <li>高リスクと判断された場合：当日中の<strong>精神科医／当直</strong>への報告、環境調整、入院・救急の検討。</li>
+        <li><strong>安全計画</strong>（警告徴候・回避行動・連絡先）を文書化し、可能なら本人と共有。</li>
+        <li>「契約」や口約束だけに依存せず、<strong>フォロー日程</strong>を具体的に。</li>
+        <li>児童・高齢者・DV・制度の弱者では<strong>児童相談・成人保護・警察</strong>等の連携基準を併せて確認。</li>
+      </ul>
+    </section>
+
+    <section id="concept" class="memo-card bg-violet-50/50 border-violet-100">
+      <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+        <span class="step-num">7</span> 念慮と行動の区分（概念整理）
+      </h2>
+      <p class="text-xs text-violet-900/90 font-semibold mb-2">※ 一般的精神医学の整理であり、C-SSRS の採点カテゴリの置き換えではありません。採点は必ず許諾版のマニュアルに従ってください。</p>
+      <div class="grid sm:grid-cols-2 gap-3 text-sm text-slate-700">
+        <div class="rounded-lg bg-white border border-violet-100 p-3">
+          <div class="font-bold text-violet-900 text-xs mb-2">念慮の段階（概念的）</div>
+          <ul class="space-y-1 text-xs leading-relaxed">
+            <li>・存在が消えればよいという思い</li>
+            <li>・能動的な死の思考（方法の有無は別）</li>
+            <li>・実行への意図・準備の程度</li>
+          </ul>
+        </div>
+        <div class="rounded-lg bg-white border border-violet-100 p-3">
+          <div class="font-bold text-violet-900 text-xs mb-2">行動（概念的）</div>
+          <ul class="space-y-1 text-xs leading-relaxed">
+            <li>・準備的行為、中止された試み</li>
+            <li>・自殺企図（暴行・中毒を含む）</li>
+            <li>・自殺の成立</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="when-repeat" class="memo-card">
+      <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="step-num">8</span> 再評価のタイミング例
+      </h2>
+      <ul class="text-sm text-slate-700 list-disc list-inside space-y-1.5 leading-relaxed">
+        <li>抗うつ薬・抗精神病薬の<strong>開始・増量・交互作用疑い</strong>後（若年層は週単位の頻度が教材で推奨されることがある）。</li>
+        <li><strong>入院・退院</strong>の移行期。</li>
+        <li>急性ストレス・喪失・<strong>法的問題・対人トラブル</strong>などの生活事件直後。</li>
+        <li>前回評価から<strong>気分や睡眠が大きく変化</strong>したと本人または家族が報告したとき。</li>
+      </ul>
+    </section>
+
+    <section id="related" class="memo-card">
+      <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <span class="step-num">9</span> 関連ページ
+      </h2>
+      <ul class="text-sm text-slate-700 space-y-2">
+        <li><a class="memo-link" href="mood-suicide-learning.html">気分障害 × 自殺リスク — 学習ハブ</a>（症例ドライループ）</li>
+        <li><a class="memo-link" href="depression-guideline2025.html#suicide">うつ病ツリー — 自殺リスク節</a></li>
+        <li><a class="memo-link" href="psych-terminology-jp.html">用語マップ</a>（自殺・自傷リスク評価の節）</li>
+      </ul>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 mb-8">教育用メモ · 臨床判断は必ず施設プロトコルと最新ガイドラインに従ってください</p>
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
