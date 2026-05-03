@@ -89,7 +89,7 @@
     <div class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
       <p class="text-sm text-gray-600 leading-relaxed mb-4">
         各カードの <strong class="text-gray-900">表示 / 非表示</strong> と
-        <strong class="text-amber-600">★ 強調</strong> をスイッチで切り替えます。設定はこのブラウザの localStorage に保存されます。ポータル先頭の更新情報は <code class="text-xs bg-gray-100 px-1 rounded">top.html</code> 内の <code class="text-xs bg-gray-100 px-1 rounded">CARD_UPDATE_HISTORY</code> から自動表示されます。
+        <strong class="text-amber-600">★ 強調</strong> をスイッチで切り替えます。設定はこのブラウザの localStorage に保存されます。本番ポータル（<code class="text-xs bg-gray-100 px-1 rounded">top.html</code>）では <code class="text-xs bg-gray-100 px-1 rounded">CARD_UPDATE_HISTORY</code> から「新規追加（最新5件）」と、その他区分下部の「更新情報」（先頭10件＋折りたたみ）が自動表示されます。
       </p>
       <div class="flex items-center gap-2 mb-2">
         <button onclick="showAll()" class="flex-1 px-3 py-2 text-sm font-medium bg-green-50 text-green-700 border border-green-200 rounded-lg hover:bg-green-100 transition-colors">

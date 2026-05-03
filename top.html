@@ -1116,17 +1116,29 @@
         const href = card ? sanitizePortalNewsHref(card.getAttribute('href') || '') : '';
         const h3 = card && card.querySelector('h3');
         const pageTitle = h3 ? h3.textContent.trim() : '';
+        const parseY = (d) => {
+          const x = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+          return x ? new Date(+x[1], +x[2] - 1, +x[3]).getTime() : 0;
+        };
+        let best = null;
+        let bestT = 0;
         for (const row of rows) {
           if (!row || String(row.kind || '').trim() !== '新規') continue;
           if (!String(row.text || '').trim()) continue;
           const line = pageTitle ? `【${pageTitle}】 ${row.text}` : row.text;
-          flat.push({
+          const item = {
             date: String(row.date || '').trim(),
             kind: 'card',
             text: line,
             href,
-          });
+          };
+          const t = parseY(item.date);
+          if (!best || t >= bestT) {
+            best = item;
+            bestT = t;
+          }
         }
+        if (best) flat.push(best);
       }
       flat.sort((a, b) => {
         const parse = (d) => {

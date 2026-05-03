@@ -664,24 +664,19 @@
             <li>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</li>
             <li>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。</li>
             <li>ヘッダー下の検索では、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</li>
+            <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは直下の一覧（最新5件）にまとめています。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
           </ul>
         </p>
       </div>
     </section>
 
-    <section id="portal-news-section" class="mb-4 sm:mb-6 hidden" aria-labelledby="portal-news-heading">
-      <div class="bg-gray-50/90 rounded-xl border border-gray-100/90 px-3 sm:px-4 py-2 sm:py-2.5">
-        <h2 id="portal-news-heading" class="text-[11px] font-semibold text-gray-500 tracking-wide mb-1 flex items-center gap-1">
-          <span aria-hidden="true" class="opacity-60 text-[10px]">📣</span> 更新情報
+    <section id="portal-new-items-section" class="mb-4 sm:mb-6 hidden" aria-labelledby="portal-new-items-heading">
+      <div class="bg-emerald-50/85 rounded-xl border border-emerald-100/90 px-3 sm:px-4 py-2 sm:py-2.5">
+        <h2 id="portal-new-items-heading" class="text-[11px] font-semibold text-emerald-900/85 tracking-wide mb-1 flex items-center gap-1">
+          <span aria-hidden="true" class="opacity-70 text-[10px]">✨</span> 新規追加（最新5件）
         </h2>
-        <p class="text-[10px] text-gray-400 mb-1.5 leading-snug">各ページの履歴から新しい順（管理で非表示のカードは除きます）。</p>
-        <ul id="portal-news-list" class="list-none m-0 p-0"></ul>
-        <details id="portal-news-details" class="mt-0.5 border-0 hidden">
-          <summary class="list-none cursor-pointer select-none text-[10px] text-gray-400 hover:text-gray-600 py-1 pr-1 -mx-0.5 px-0.5 rounded [&::-webkit-details-marker]:hidden flex items-center gap-0.5 marker:content-none">
-            <span id="portal-news-more-summary" class="underline decoration-gray-300/80 underline-offset-2">さらに表示</span>
-          </summary>
-          <ul id="portal-news-list-more" class="list-none m-0 p-0 mt-1 pt-1 border-t border-gray-100/90"></ul>
-        </details>
+        <p class="text-[10px] text-emerald-800/65 mb-1.5 leading-snug">各カードの更新履歴のうち種別が「新規」のものだけを日付の新しい順に表示します（管理で非表示のカードは除きます）。</p>
+        <ul id="portal-new-items-list" class="list-none m-0 p-0"></ul>
       </div>
     </section>
 
@@ -985,6 +980,22 @@
           <div class="mt-3 text-xs link-slate font-medium">cursor-ai-agents.html →</div>
         </a>
       </div>
+
+      <section id="portal-news-section" class="mt-6 sm:mt-8 hidden" aria-labelledby="portal-news-heading">
+        <div class="bg-gray-50/90 rounded-xl border border-gray-200/90 px-3 sm:px-4 py-2 sm:py-2.5">
+          <h2 id="portal-news-heading" class="text-[11px] font-semibold text-slate-700 tracking-wide mb-1 flex items-center gap-1">
+            <span aria-hidden="true" class="opacity-60 text-[10px]">📣</span> 更新情報
+          </h2>
+          <p class="text-[10px] text-gray-500 mb-1.5 leading-snug">新規・更新・修正など全種別を、各ページの履歴から新しい順に表示します（管理で非表示のカードは除きます）。先頭10件を表示し、残りは折りたたみから開けます。</p>
+          <ul id="portal-news-list" class="list-none m-0 p-0"></ul>
+          <details id="portal-news-details" class="mt-0.5 border-0 hidden">
+            <summary class="list-none cursor-pointer select-none text-[10px] text-gray-400 hover:text-gray-600 py-1 pr-1 -mx-0.5 px-0.5 rounded [&::-webkit-details-marker]:hidden flex items-center gap-0.5 marker:content-none">
+              <span id="portal-news-more-summary" class="underline decoration-gray-300/80 underline-offset-2">さらに表示</span>
+            </summary>
+            <ul id="portal-news-list-more" class="list-none m-0 p-0 mt-1 pt-1 border-t border-gray-100/90"></ul>
+          </details>
+        </div>
+      </section>
     </section>
 
 
@@ -1096,7 +1107,54 @@
       return flat;
     }
 
-    const PORTAL_NEWS_HEAD = 5;
+    /** 履歴の「新規」のみ（カード掲載ページ）。日付降順・最大件数は render 側でスライス */
+    function buildLatestNewItemsFromHistory(history) {
+      if (!history || typeof history !== 'object') return [];
+      const hidden = JSON.parse(localStorage.getItem('portalHidden') || '[]');
+      const flat = [];
+      for (const [cardId, rows] of Object.entries(history)) {
+        if (!Array.isArray(rows) || cardId === '_portal') continue;
+        if (hidden.includes(cardId)) continue;
+        const card = document.getElementById(cardId);
+        const href = card ? sanitizePortalNewsHref(card.getAttribute('href') || '') : '';
+        const h3 = card && card.querySelector('h3');
+        const pageTitle = h3 ? h3.textContent.trim() : '';
+        const parseY = (d) => {
+          const x = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+          return x ? new Date(+x[1], +x[2] - 1, +x[3]).getTime() : 0;
+        };
+        let best = null;
+        let bestT = 0;
+        for (const row of rows) {
+          if (!row || String(row.kind || '').trim() !== '新規') continue;
+          if (!String(row.text || '').trim()) continue;
+          const line = pageTitle ? `【${pageTitle}】 ${row.text}` : row.text;
+          const item = {
+            date: String(row.date || '').trim(),
+            kind: 'card',
+            text: line,
+            href,
+          };
+          const t = parseY(item.date);
+          if (!best || t >= bestT) {
+            best = item;
+            bestT = t;
+          }
+        }
+        if (best) flat.push(best);
+      }
+      flat.sort((a, b) => {
+        const parse = (d) => {
+          const x = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+          return x ? new Date(+x[1], +x[2] - 1, +x[3]).getTime() : 0;
+        };
+        return parse(b.date) - parse(a.date);
+      });
+      return flat;
+    }
+
+    const PORTAL_NEW_ITEMS_HEAD = 5;
+    const PORTAL_NEWS_HEAD = 10;
 
     function sanitizePortalNewsHref(href) {
       const s = String(href || '').trim();
@@ -1147,6 +1205,23 @@
       li.appendChild(dateEl);
       li.appendChild(mid);
       return li;
+    }
+
+    function renderPortalNewItems() {
+      const wrap = document.getElementById('portal-new-items-section');
+      const list = document.getElementById('portal-new-items-list');
+      if (!wrap || !list) return;
+      const history = window.__CARD_UPDATE_HISTORY;
+      if (!history) return;
+      const items = buildLatestNewItemsFromHistory(history).slice(0, PORTAL_NEW_ITEMS_HEAD);
+      if (items.length === 0) {
+        wrap.classList.add('hidden');
+        list.innerHTML = '';
+        return;
+      }
+      wrap.classList.remove('hidden');
+      list.innerHTML = '';
+      items.forEach((it) => list.appendChild(createPortalNewsListItem(it)));
     }
 
     function renderPortalNews() {
@@ -1216,6 +1291,7 @@
         }
       });
       renderPortalNews();
+      renderPortalNewItems();
     }
 
     function applyVisibility() {
@@ -1686,8 +1762,12 @@
     window.__CARD_UPDATE_HISTORY = CARD_UPDATE_HISTORY;
     applyPortalRecencyBadges();
     renderPortalNews();
+    renderPortalNewItems();
     window.addEventListener('storage', (e) => {
-      if (e.key === 'portalHidden') renderPortalNews();
+      if (e.key === 'portalHidden') {
+        renderPortalNews();
+        renderPortalNewItems();
+      }
     });
 
     // === カードプレビューポップアップ ===
