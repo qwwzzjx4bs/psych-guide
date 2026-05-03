@@ -111,6 +111,19 @@
     .td-left { padding:0.55rem 0.75rem; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
     .th-drug, .td-drug { white-space: nowrap; vertical-align: middle; }
     table.data-table { width: max-content; min-width: 100%; }
+    table.data-table tbody tr:not(:has(td[colspan])) { cursor: pointer; }
+    html.table-row-focus-disabled table.data-table tbody tr:not(:has(td[colspan])) { cursor: default; }
+    /* 選択行：背景なし・青枠のみ（抗うつ薬 選択ガイドと同様） */
+    table.data-table tbody tr.table-row-focus > td {
+      border-top: 2px solid #2563eb !important;
+      border-bottom: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child {
+      border-left: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:last-child {
+      border-right: 2px solid #2563eb !important;
+    }
     .x-scroll { width: 100%; max-width: 100%; }
     .x-scroll__rail {
       -webkit-overflow-scrolling: touch;
@@ -203,6 +216,16 @@
   </nav>
 
   <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <div class="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+      <label class="inline-flex cursor-pointer items-start gap-3 select-none">
+        <input type="checkbox" id="data-table-row-focus-toggle" class="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked />
+        <span>
+          <span class="font-semibold text-slate-800">データ表で行クリックによる青枠強調を使う</span>
+          <span class="mt-1 block text-xs text-slate-500">オン：行をタップまたはクリックすると青い外枠で強調（同じ行でもう一度で解除）。オフにすると強調しません。この設定は端末に保存されます。</span>
+        </span>
+      </label>
+    </div>
 
     <div class="section-card" id="quickref">
       <div class="flex items-center gap-3 mb-6">
@@ -829,6 +852,48 @@
     <p class="mt-1">気分安定薬・双極治療の承認適応・用法用量は改訂が頻繁に行われます。必ず PMDA の添付文書で最新情報を確認してください（2026年5月現在）。</p>
   </footer>
 
+  <script>
+  (function () {
+    var STORAGE_KEY = 'psych-mood-stabilizers-table-row-focus-enabled';
+    var toggle = document.getElementById('data-table-row-focus-toggle');
+    function syncDomFromToggle() {
+      var disabled = toggle ? !toggle.checked : false;
+      document.documentElement.classList.toggle('table-row-focus-disabled', disabled);
+      if (disabled) {
+        document.querySelectorAll('table.data-table tbody tr.table-row-focus').forEach(function (r) {
+          r.classList.remove('table-row-focus');
+        });
+      }
+    }
+    if (toggle) {
+      try {
+        var v = localStorage.getItem(STORAGE_KEY);
+        if (v !== null) toggle.checked = v === '1';
+      } catch (e) {}
+      toggle.addEventListener('change', function () {
+        try { localStorage.setItem(STORAGE_KEY, toggle.checked ? '1' : '0'); } catch (e) {}
+        syncDomFromToggle();
+      });
+    }
+    syncDomFromToggle();
+
+    document.querySelectorAll('table.data-table').forEach(function (table) {
+      table.querySelectorAll('tbody tr').forEach(function (tr) {
+        var first = tr.querySelector('td');
+        if (!first || first.hasAttribute('colspan')) return;
+        tr.addEventListener('click', function (e) {
+          if (e.target.closest('a, button, label, input, select, textarea')) return;
+          if (document.documentElement.classList.contains('table-row-focus-disabled')) return;
+          var was = tr.classList.contains('table-row-focus');
+          table.querySelectorAll('tbody tr.table-row-focus').forEach(function (r) {
+            r.classList.remove('table-row-focus');
+          });
+          if (!was) tr.classList.add('table-row-focus');
+        });
+      });
+    });
+  })();
+  </script>
   <script>lucide.createIcons();</script>
 </body>
 </html>
