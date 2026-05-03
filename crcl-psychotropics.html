@@ -13,9 +13,25 @@
       --p1: #1e3a5f;
       --p2: #0f766e;
       --grad: linear-gradient(135deg, #1e3a5f, #0f766e);
-      --crcl-sticky-cat-w: 4.75rem;
-      --crcl-sticky-name-w-min: 9.5rem;
-      --crcl-sticky-name-w-max: 13rem;
+      --crcl-sticky-cat-w: 3.65rem;
+      --crcl-sticky-name-w-min: 7.25rem;
+      --crcl-sticky-name-w-max: 11rem;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f4f2ef; }
+    .header-bar { background: var(--grad); }
+    /* 説明文＋strong があり、環境によっては p が flex 扱いになり文末が右端へ送られるのを防ぐ */
+    header.header-bar p.crcl-header-desc {
+      display: block;
+      text-align: start;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    header.header-bar p.crcl-header-desc .crcl-header-desc-inner {
+      display: inline;
+    }
+    header.header-bar p.crcl-header-desc strong {
+      display: inline;
+      font-weight: 700;
     }
     .tbl-wrap {
       overflow-x: auto;
@@ -27,13 +43,18 @@
     @media (min-width: 640px) {
       .data-table th, .data-table td { font-size: 0.78rem; }
       :root {
-        --crcl-sticky-cat-w: 5.25rem;
-        --crcl-sticky-name-w-min: 11rem;
-        --crcl-sticky-name-w-max: 14rem;
+        --crcl-sticky-cat-w: 4rem;
+        --crcl-sticky-name-w-min: 8.25rem;
+        --crcl-sticky-name-w-max: 12rem;
       }
     }
     .data-table th { background: #f1f5f9; font-weight: 600; white-space: nowrap; }
-    .data-table th.crcl-sticky-name { white-space: normal; line-height: 1.25; }
+    .data-table th.crcl-sticky-cat,
+    .data-table th.crcl-sticky-name { white-space: normal; line-height: 1.2; }
+    .crcl-th-sub { display: block; font-weight: 500; color: #64748b; font-size: 0.58rem; margin-top: 0.15rem; letter-spacing: 0; }
+    @media (min-width: 640px) {
+      .crcl-th-sub { font-size: 0.62rem; }
+    }
     .data-table td { border-bottom: 1px solid #e5e7eb; }
     .data-table thead th.crcl-sticky-cat,
     .data-table thead th.crcl-sticky-name {
@@ -79,16 +100,25 @@
       box-sizing: border-box;
       word-break: break-word;
       box-shadow: 6px 0 10px -6px rgba(15, 23, 42, 0.18);
+      font-size: 0.68rem;
+      line-height: 1.35;
+    }
+    @media (min-width: 640px) {
+      .data-table tbody td.crcl-sticky-name { font-size: 0.76rem; }
     }
     .data-table tbody tr:hover td.crcl-sticky-cat,
     .data-table tbody tr:hover td.crcl-sticky-name {
       background: rgb(249 250 251 / 0.95);
     }
-    .col-cat { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+    .col-cat { font-size: 0.58rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.25; word-break: break-all; }
+    @media (min-width: 640px) {
+      .col-cat { font-size: 0.65rem; letter-spacing: 0.04em; }
+    }
     .cell-active { box-shadow: inset 0 0 0 2px #0f766e; background: #ecfdf5 !important; }
     .cell-warn { background: #fffbeb; }
     .cell-danger { background: #fef2f2; color: #991b1b; }
     .kbd { font-variant-numeric: tabular-nums; }
+    .tier-pill { font-variant-numeric: tabular-nums; }
   </style>
 </head>
 <body class="text-gray-900 min-h-screen pb-10">
@@ -96,7 +126,7 @@
     <div class="max-w-5xl mx-auto px-4 py-4 sm:py-5">
       <p class="text-xs text-teal-100/90 mb-1">精神科外来 · 腎機能と向精神薬</p>
       <h1 class="text-lg sm:text-xl font-bold tracking-tight">クレアチニンクリアランス推定 × 向精神薬の目安</h1>
-      <p class="text-xs sm:text-sm text-teal-100/85 mt-2 max-w-3xl leading-relaxed">Cockcroft–Gault 式による推算 CrCl（mL/min）を算出し、日本の添付文書・interview form・日本精神神経学会「腎機能低下時に最も注意の必要な薬剤投与量一覧」に基づく<strong class="text-white">日量の目安・禁忌・慎重投与</strong>を区分別に表示します。</p>
+      <p class="crcl-header-desc text-xs sm:text-sm text-teal-100/85 mt-2 max-w-3xl leading-relaxed"><span class="crcl-header-desc-inner">Cockcroft–Gault 式による推算 CrCl（mL/min）を算出し、日本の添付文書・interview form・日本精神神経学会「腎機能低下時に最も注意の必要な薬剤投与量一覧」に基づく<strong class="text-white">日量の目安・禁忌・慎重投与</strong>を区分別に表示します。</span></p>
     </div>
   </header>
 
@@ -183,8 +213,11 @@
         <table class="data-table w-full min-w-[720px] text-left border-collapse">
           <thead>
             <tr>
-              <th class="p-2 pl-3 crcl-sticky-cat">分類</th>
-              <th class="p-2 crcl-sticky-name">薬剤<span class="hidden sm:inline">（一般名・代表品）</span><span class="sm:hidden">（一般名等）</span></th>
+              <th class="p-1.5 pl-2 crcl-sticky-cat">分類</th>
+              <th class="p-1.5 pr-1.5 crcl-sticky-name">
+                <span class="block">薬剤</span>
+                <span class="crcl-th-sub"><span class="sm:hidden">（一般名等）</span><span class="hidden sm:inline">（一般名・代表品）</span></span>
+              </th>
               <th class="p-2 text-center bg-emerald-50/80">CrCl<br><span class="font-normal">≥80</span></th>
               <th class="p-2 text-center">50〜79</th>
               <th class="p-2 text-center">30〜49</th>
@@ -299,12 +332,12 @@
       tr.className = 'hover:bg-gray-50/80';
 
       const tdCat = document.createElement('td');
-      tdCat.className = 'p-2 pl-3 col-cat crcl-sticky-cat';
+      tdCat.className = 'p-1.5 pl-2 col-cat crcl-sticky-cat';
       tdCat.textContent = row.cat;
       tr.appendChild(tdCat);
 
       const tdName = document.createElement('td');
-      tdName.className = 'p-2 font-medium text-gray-800 crcl-sticky-name';
+      tdName.className = 'p-1.5 pr-1 font-medium text-gray-800 crcl-sticky-name';
       tdName.textContent = row.name;
       tr.appendChild(tdName);
 
