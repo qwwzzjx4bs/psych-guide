@@ -187,6 +187,12 @@
     }
 
     .sec-study { background: #9d4a7a; }
+    /* 学習・ドリル — sec-study / ジャンプバー（ピンク）に合わせたカード配色 */
+    .bg-study     { background: #fdf2f8; border: 2px solid #c2789a; }
+    .border-study { border-top: 3px solid #9d4a7a; }
+    .tag-study    { background: #f5c4df; color: #831843; }
+    .link-study   { color: #9d174d; }
+    .row-study    { background: #fdf2f8; }
 
     /* ===================================
        ヘッダーアイコン（くすみ青）
@@ -588,37 +594,37 @@
         <a href="#portal-calc"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyan-100 hover:bg-cyan-200 transition-colors text-xs font-medium text-teal-900 whitespace-nowrap">
           🧮 計算ツール
-          <span class="bg-cyan-200 text-teal-800 px-1.5 py-0.5 rounded-full text-xs leading-none">1</span>
+          <span id="jump-cnt-portal-calc" class="bg-cyan-200 text-teal-800 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">3</span>
         </a>
         <a href="#portal-scales"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 transition-colors text-xs font-medium text-sky-900 whitespace-nowrap">
           📊 評価スケール
-          <span class="bg-sky-200 text-sky-900 px-1.5 py-0.5 rounded-full text-xs leading-none">10</span>
+          <span id="jump-cnt-portal-scales" class="bg-sky-200 text-sky-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">10</span>
         </a>
         <a href="#portal-diag"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-blue-100 hover:bg-blue-200 transition-colors text-xs font-medium text-blue-900 whitespace-nowrap">
           🗂 診断・分類
-          <span class="bg-blue-200 text-blue-900 px-1.5 py-0.5 rounded-full text-xs leading-none">3</span>
+          <span id="jump-cnt-portal-diag" class="bg-blue-200 text-blue-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">5</span>
         </a>
         <a href="#portal-therapy"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors text-xs font-medium text-violet-900 whitespace-nowrap">
           💊 治療・薬
-          <span class="bg-violet-200 text-violet-900 px-1.5 py-0.5 rounded-full text-xs leading-none">8</span>
+          <span id="jump-cnt-portal-therapy" class="bg-violet-200 text-violet-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">8</span>
         </a>
         <a href="#portal-ref"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-900 whitespace-nowrap">
           📚 用語・資格
-          <span class="bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+          <span id="jump-cnt-portal-ref" class="bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">2</span>
         </a>
         <a href="#portal-study"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-pink-100 hover:bg-pink-200 transition-colors text-xs font-medium text-pink-900 whitespace-nowrap">
           🎓 学習・ドリル
-          <span class="bg-pink-200 text-pink-900 px-1.5 py-0.5 rounded-full text-xs leading-none">1</span>
+          <span id="jump-cnt-portal-study" class="bg-pink-200 text-pink-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">1</span>
         </a>
         <a href="#portal-other"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
           💡 その他
-          <span class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none">2</span>
+          <span id="jump-cnt-portal-other" class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">2</span>
         </a>
       </div>
       <p class="portal-jump-hint">上のタブは左から「計算 → 数値評価 → 診断 → 治療 → 辞書・制度 → 勉強 → その他」のイメージです。迷ったら検索バーでページ名を決定してください（開発版）。</p>
@@ -927,11 +933,11 @@
       </div>
       <p class="text-xs text-gray-500 -mt-2 mb-4 max-w-3xl leading-relaxed">臨床の合間ではなく、知識の確認・試験対策向けのコンテンツです。</p>
       <div class="grid sm:grid-cols-2 gap-3" id="grid-portal-study">
-        <a id="card-icd10-quiz" href="icd10-quiz.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full">クイズ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-13 作成</span></div>
+        <a id="card-icd10-quiz" href="icd10-quiz.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">クイズ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-13 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-10 精神科クイズ — 定義から疾患を当てよう</h3>
           <p class="text-xs text-gray-500 leading-relaxed">疾患定義の文章から ICD-10 コード・疾患名を答えるインタラクティブ問題集。専攻医・医学生の自己学習・試験対策に対応。</p>
-          <div class="mt-3 text-xs link-violet font-medium">icd10-quiz.html →</div>
+          <div class="mt-3 text-xs link-study font-medium">icd10-quiz.html →</div>
         </a>
       </div>
     </section>
@@ -1180,6 +1186,8 @@
         });
         const cnt = document.getElementById('cnt-' + sec);
         if (cnt) cnt.textContent = visible + 'ページ';
+        const jumpCnt = document.getElementById('jump-cnt-' + sec);
+        if (jumpCnt) jumpCnt.textContent = String(visible);
         const sectionEl = document.getElementById(sec);
         if (sectionEl) {
           sectionEl.classList.toggle('portal-section-empty', Boolean(q) && visible === 0);
