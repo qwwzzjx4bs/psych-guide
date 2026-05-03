@@ -18,12 +18,10 @@
       font-feature-settings: 'palt';
     }
     a { text-decoration: none; }
-    /* スティッキーヘッダー（タイトル＋ジャンプバー＋検索）下に区分タイトルが隠れないようアンカー余白 */
-    html {
-      scroll-padding-top: max(13rem, min(20vh, 17rem));
-    }
-    @media (max-width: 640px) {
-      html { scroll-padding-top: max(15rem, min(28vh, 19rem)); }
+    /* ジャンプ先：スティッキーヘッダー実測高＋余白（dsm5tr と同型。--portal-sticky-offset はスクリプトで更新） */
+    :root { --portal-sticky-offset: 12rem; }
+    main > section[id^="portal-"] {
+      scroll-margin-top: var(--portal-sticky-offset);
     }
     @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
@@ -554,7 +552,7 @@
 </head>
 <body class="min-h-screen">
 
-  <header class="bg-white sticky top-0 z-10 shadow-sm">
+  <header id="portal-sticky-header" class="bg-white sticky top-0 z-10 shadow-sm">
     <!-- タイトルバー -->
     <div class="border-b border-gray-200">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
@@ -686,6 +684,18 @@
           <h3 class="font-semibold text-gray-900 text-sm mb-1">抗精神病薬 CP換算計算機</h3>
           <p class="text-xs text-gray-500 leading-relaxed">世代別（第1世代・第2世代）に分類された抗精神病薬のクロルプロマジン等価換算（稲垣・稲田版）をリアルタイムで計算。経口・持効性注射剤・速効性注射剤に対応。スマホ最適化。</p>
           <div class="mt-3 text-xs link-calc font-medium">cp-calculator.html →</div>
+        </a>
+        <a id="card-crcl-psych" href="crcl-psychotropics.html" class="card block border border-cyan-100 rounded-xl p-4 border-calc bg-calc">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-calc px-2 py-0.5 rounded-full">計算ツール</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-03 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">CrCl 推算 × 向精神薬の腎障害時目安</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Cockcroft–Gault による推算クレアチニンクリアランスと、CrCl 区分ごとの国内向精神薬の1日量上限・禁忌・慎重投与の要約表を1画面に表示。</p>
+          <div class="mt-3 text-xs link-calc font-medium">crcl-psychotropics.html →</div>
+        </a>
+        <a id="card-acute-alerts" href="acute-alerts.html" class="card block border border-cyan-100 rounded-xl p-4 border-calc bg-calc">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-calc px-2 py-0.5 rounded-full">計算ツール</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-03 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">急性期クイック（QTc・電解質・離脱要約）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Bazett / Fridericia による QTc、Na・K・Mg の閾値アラート、CIWA-Ar 型の要約スコア（最大67点）を1画面に集約。教育用の目安表示。</p>
+          <div class="mt-3 text-xs link-calc font-medium">acute-alerts.html →</div>
         </a>
       </div>
     </section>
@@ -983,7 +993,7 @@
   <script>
     // カードID → セクションIDのマッピング
     const SECTIONS = {
-      'portal-calc': ['card-cp-calc'],
+      'portal-calc': ['card-cp-calc', 'card-crcl-psych', 'card-acute-alerts'],
       'portal-scales': [
         'card-schiz-sheets', 'card-anxiety-scales',
         'card-bprs-detailed', 'card-panss-detailed', 'card-bfcrs', 'card-ymrs', 'card-hamd', 'card-madrs',
@@ -1358,6 +1368,8 @@
       'card-dsm5trmini':       ['🏥 外来参照', '📘 DSM', '⚡ 軽量版'],
       'card-icd10-quiz':       ['🎓 学習・確認'],
       'card-cp-calc':          ['🏥 外来参照', '🧮 CP換算', '💊 薬剤選択'],
+      'card-crcl-psych':       ['🏥 外来参照', '🧮 CrCl', '💧 腎機能'],
+      'card-acute-alerts':     ['🏥 外来参照', '⚡ 急性期', '📟 QT・電解質'],
       'card-antipsychotics':   ['🏥 外来参照', '💊 薬剤選択'],
       'card-anxiety':          ['🏥 外来参照', '📋 診断・治療'],
       'card-schiz-diagnosis':  ['🏥 外来参照', '📋 診断フロー'],
@@ -1437,6 +1449,12 @@
         { date: '2026-05-03', kind: '更新', text: '薬剤名・製品名の横断検索バーを追加' },
         { date: '2026-05-03', kind: '更新', text: 'クイック入力・クリア、タブのスマホ幅対応を追加' },
         { date: '2026-05-03', kind: '新規', text: '抗精神病薬CP換算計算機（稲垣・稲田版）として初版公開。世代別分類・LAI・速効性注射剤対応' },
+      ],
+      'card-crcl-psych': [
+        { date: '2026-05-03', kind: '新規', text: '推算CrClと向精神薬の腎障害区分別用量目安を一覧表示' },
+      ],
+      'card-acute-alerts': [
+        { date: '2026-05-03', kind: '新規', text: 'QTc（Bazett/Fridericia）・電解質閾値アラート・アルコール離脱要約スコアを1ページに集約' },
       ],
       'card-antipsychotics': [
         { date: '2026-04-23', kind: '新規', text: '日本における抗精神病薬選択ガイドとして初版公開' },
@@ -1838,6 +1856,51 @@
       window.addEventListener('scroll', () => {
         if (openMode === 'hover') hide();
       }, { passive: true });
+    })();
+  </script>
+  <script>
+    (function () {
+      var HEADER_ID = 'portal-sticky-header';
+      var EXTRA = 8;
+      function portalStickyOffsetPx() {
+        var el = document.getElementById(HEADER_ID);
+        if (!el) return null;
+        return Math.ceil(el.getBoundingClientRect().height) + EXTRA;
+      }
+      function syncPortalStickyJump() {
+        var px = portalStickyOffsetPx();
+        if (px == null) return;
+        document.documentElement.style.setProperty('--portal-sticky-offset', px + 'px');
+      }
+      function portalRevealHashAnchor() {
+        var slug = (location.hash || '').slice(1);
+        if (!slug) return;
+        var tgt = document.getElementById(slug);
+        if (!tgt) return;
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            tgt.scrollIntoView({ block: 'start' });
+          });
+        });
+      }
+      window.portalRefreshJumpScroll = function () {
+        syncPortalStickyJump();
+        portalRevealHashAnchor();
+      };
+      syncPortalStickyJump();
+      window.addEventListener('resize', syncPortalStickyJump);
+      window.addEventListener('hashchange', function () {
+        window.portalRefreshJumpScroll();
+      });
+      if (window.ResizeObserver) {
+        var h = document.getElementById(HEADER_ID);
+        if (h) new ResizeObserver(syncPortalStickyJump).observe(h);
+      }
+      document.addEventListener('DOMContentLoaded', function () {
+        requestAnimationFrame(function () {
+          if (window.portalRefreshJumpScroll) window.portalRefreshJumpScroll();
+        });
+      });
     })();
   </script>
 </body>
