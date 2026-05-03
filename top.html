@@ -788,7 +788,7 @@
         <a href="#portal-therapy"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors text-xs font-medium text-violet-900 whitespace-nowrap">
           💊 治療・薬
-          <span id="jump-cnt-portal-therapy" class="bg-violet-200 text-violet-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">8</span>
+          <span id="jump-cnt-portal-therapy" class="bg-violet-200 text-violet-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">10</span>
         </a>
         <a href="#portal-ref"
            class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-900 whitespace-nowrap">
@@ -1227,6 +1227,7 @@
         'card-anxiety', 'card-schiz-diagnosis', 'card-schiz-history', 'card-atypical-depression',
         'card-antipsychotics',
         'card-benzodiazepines',
+        'card-antidepressants',
         'card-schiz-algo', 'card-depression', 'card-bipolar'
       ],
       'portal-ref': ['card-terminology', 'card-shiteii'],
@@ -1749,6 +1750,7 @@
       'card-acute-alerts':     ['🏥 外来参照', '⚡ 急性期', '📟 QT・電解質'],
       'card-antipsychotics':   ['🏥 外来参照', '💊 薬剤選択'],
       'card-benzodiazepines':  ['🏥 外来参照', '💊 薬剤選択', '💤 BZD'],
+      'card-antidepressants':  ['🏥 外来参照', '💊 薬剤選択', '📉 抗うつ薬'],
       'card-anxiety':          ['🏥 外来参照', '📋 診断・治療'],
       'card-schiz-diagnosis':  ['🏥 外来参照', '📋 診断フロー'],
       'card-schiz-history':    ['🏥 外来参照', '📝 病歴聴取'],
@@ -1847,6 +1849,8 @@
       ],
       'card-benzodiazepines': [
         { date: '2026-05-03', kind: '新規', text: '日本承認ベンゾジアゼピン選択ガイド（抗精神病薬ガイドと同構成）として初版公開' },
+      ],
+      'card-antidepressants': [
         { date: '2026-05-03', kind: '新規', text: '日本承認抗うつ薬選択ガイド（抗精神病薬ガイドと同構成）として初版公開' },
       ],
       'card-anxiety': [
@@ -1937,6 +1941,9 @@
         { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
       ],
       _portal: [
+        { date: '2026-05-05', kind: '表示', text: 'カード配色を区分（ジャンプバー）に合わせて統一（評価スケール＝スカイ、診断・分類＝ブルー、治療・薬＝バイオレット、DSMもブルーに揃えた）', href: 'top.html' },
+        { date: '2026-05-05', kind: '更新', text: '「新規追加」一覧を新規掲載日の新しい順で並べるよう変更。新規行の区分色（スカイ等）をカードに合わせて調整', href: 'top.html' },
+        { date: '2026-05-05', kind: '更新', text: '抗うつ薬ガイドを「治療・薬」の更新履歴・件数・検索対象に正式追加', href: 'antidepressants-japan.html' },
         { date: '2026-05-03', kind: '更新', text: 'CrCl×向精神薬ページの入力・結果バー・表レイアウトを改善', href: 'crcl-psychotropics.html' },
         { date: '2026-05-04', kind: '更新', text: 'ベンゾ換算の追補（販売名・ヒント）、CP/admin からの導線、psych-news の調整', href: 'dzp-calculator.html' },
         { date: '2026-05-04', kind: '更新', text: 'ジャンプバーで区分へ移動したとき、ヘッダーに隠れないようスクロール余白を調整', href: 'top.html' },
