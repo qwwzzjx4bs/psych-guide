@@ -349,14 +349,77 @@
       position: sticky;
       bottom: 0;
       z-index: 40;
-      background: var(--psych-gradient);
-      color: white;
-      padding: 0.75rem 1rem;
+      color: #fff;
+      padding: 0.65rem 0.875rem;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+      transition: background 0.35s ease;
+    }
+
+    /* CP帯による背景（合計値の目安帯と対応） */
+    .sticky-cp-neutral {
+      background: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    .sticky-cp-low {
+      background: linear-gradient(135deg, #047857, #059669);
+    }
+    .sticky-cp-mid {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    }
+    .sticky-cp-high {
+      background: linear-gradient(135deg, #b45309, #ea580c);
+    }
+    .sticky-cp-xhigh {
+      background: linear-gradient(135deg, #991b1b, #dc2626);
+    }
+
+    .sticky-total-inner {
+      width: 100%;
+      max-width: 42rem;
+      margin: 0 auto;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+      gap: 0.5rem 0.75rem;
     }
+
+    .sticky-clear-btn {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.4rem 0.55rem;
+      border-radius: 0.375rem;
+      border: 1.5px solid rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .sticky-clear-btn:hover { background: rgba(255,255,255,0.28); }
+    .sticky-clear-btn:active { transform: scale(0.96); }
+
+    /* CP換算ガイド */
+    .cp-guide-panel {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 0.75rem 0.875rem;
+      margin: 0 1rem 0.625rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .cp-guide-panel h2 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.35rem;
+    }
+    .cp-guide-panel p,
+    .cp-guide-panel ul { font-size: 0.7rem; line-height: 1.65; color: #64748b; }
+    .cp-guide-panel ul { margin-top: 0.25rem; padding-left: 1rem; margin-bottom: 0.5rem; }
+    .cp-guide-panel li { margin-bottom: 0.2rem; }
+    .cp-guide-panel p:last-child { margin-bottom: 0; }
 
     /* スマホ対応 */
     @media (max-width: 640px) {
@@ -427,6 +490,21 @@
         >
         <button class="search-clear" id="search-clear-btn" onclick="clearSearch()" aria-label="クリア">✕</button>
       </div>
+    </div>
+
+    <!-- CP換算の概要・操作法 -->
+    <div class="cp-guide-panel max-w-2xl mx-auto">
+      <h2>CP換算とは</h2>
+      <p>数ある抗精神病薬を基準となる<strong>クロルプロマジン（CP）</strong>換算<strong>mg</strong>にした値です（稲垣・稲田版）。複数薬剤の併用時の<strong>概算総量の把握</strong>や、製剤切替時の投与量設定の<strong>おおまかな目安</strong>に使えます。鎮静作用などは評価に含まれていません。</p>
+      <h2 class="mt-3">操作方法</h2>
+      <ul>
+        <li>上部タブで<strong>経口・貼付剤</strong>／<strong>持効性注射剤</strong>／<strong>速効性注射剤</strong>を切り替えます。</li>
+        <li>各行の<strong>数値ボタン</strong>は、押すたびに入力欄の数値へその mg が<strong>加算</strong>されます（複数錠もその都度ボタンを押してください）。</li>
+        <li>入力欄には<strong>直接キーボード入力</strong>することもできます。持効性注射剤は<strong>投与間隔（週）</strong>も調整してください。</li>
+        <li>行末の<strong>✕（クリア）</strong>で、その薬剤の入力のみ消えます。<strong>全てクリア</strong>は画面下の結果バーのボタン、またはリスト下の<strong>すべてリセット</strong>で一括消去できます。</li>
+        <li><strong>検索バー</strong>には一般名・商品名の一部を入れると、その文字列にヒットした薬剤だけが並びます（検索語を消すと元のタブ表示に戻ります）。</li>
+      </ul>
+      <p>合計値の背景色・「目安」は同一スケール内での参考表示です。<strong>臨床上の総合判断は別途ご判断ください。</strong></p>
     </div>
 
     <!-- 注意事項 -->
@@ -631,17 +709,22 @@
   </main>
 
   <!-- スティッキー合計バー -->
-  <div class="sticky-total">
-    <div class="flex items-center gap-2">
-      <i data-lucide="calculator" class="w-5 h-5 opacity-80"></i>
-      <div>
-        <div class="text-xs opacity-70">CP換算 合計</div>
-        <div class="font-bold text-lg leading-tight" id="grand-total">0 mg</div>
+  <div class="sticky-total sticky-cp-neutral" id="sticky-total-bar" role="region" aria-label="CP換算合計">
+    <div class="sticky-total-inner">
+      <div class="flex items-center gap-2 min-w-0">
+        <i data-lucide="calculator" class="w-5 h-5 opacity-90 flex-shrink-0" aria-hidden="true"></i>
+        <div class="min-w-0">
+          <div class="text-xs opacity-80">CP換算 合計</div>
+          <div class="font-bold text-lg leading-tight" id="grand-total">0 mg</div>
+        </div>
       </div>
-    </div>
-    <div class="text-right">
-      <div class="text-xs opacity-70">目安</div>
-      <div class="font-medium text-sm" id="dose-guide">—</div>
+      <div class="flex items-center gap-2 ml-auto">
+        <div class="text-right">
+          <div class="text-xs opacity-80">目安</div>
+          <div class="font-medium text-sm" id="dose-guide">—</div>
+        </div>
+        <button type="button" class="sticky-clear-btn" onclick="resetAll()" title="全入力をクリアします">全てクリア</button>
+      </div>
     </div>
   </div>
 
@@ -1075,6 +1158,23 @@ function getInjectCP(id) {
 }
 
 // ============================================================
+// 合計バー見た目（CP帯ごとの配色）
+// ============================================================
+
+const STICKY_CP_CLASSES = ['sticky-cp-neutral', 'sticky-cp-low', 'sticky-cp-mid', 'sticky-cp-high', 'sticky-cp-xhigh'];
+
+function applyStickyBarTheme(grandTotal) {
+  const bar = document.getElementById('sticky-total-bar');
+  if (!bar) return;
+  STICKY_CP_CLASSES.forEach(c => bar.classList.remove(c));
+  if (grandTotal <= 0) bar.classList.add('sticky-cp-neutral');
+  else if (grandTotal < 200) bar.classList.add('sticky-cp-low');
+  else if (grandTotal < 600) bar.classList.add('sticky-cp-mid');
+  else if (grandTotal < 1000) bar.classList.add('sticky-cp-high');
+  else bar.classList.add('sticky-cp-xhigh');
+}
+
+// ============================================================
 // 合計更新
 // ============================================================
 
@@ -1131,6 +1231,8 @@ function updateTotals() {
   } else {
     guideEl.textContent = '超高用量';
   }
+
+  applyStickyBarTheme(grandTotal);
 
   // アニメ
   totalEl.classList.remove('updated');
