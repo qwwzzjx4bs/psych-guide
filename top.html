@@ -393,6 +393,156 @@
     }
     section.portal-section-empty { display: none !important; }
 
+    /* 新規追加：コンパクトカード（区分ピル＋タイトル1行） */
+    .portal-new-items-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .portal-new-item-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(14, 124, 134, 0.2);
+      background: linear-gradient(180deg, #e8f7f8 0%, #dcf2f4 100%);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.045);
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.16s ease, transform 0.16s ease;
+    }
+    .portal-new-item-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+      transform: translateY(-1px);
+    }
+    .portal-new-item-card:focus-visible {
+      outline: 2px solid #4c6e9c;
+      outline-offset: 2px;
+    }
+    .portal-new-item-badge {
+      flex-shrink: 0;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      max-width: 42%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .portal-new-item-title {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.35;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .portal-new-item-card.variant-calc .portal-new-item-badge {
+      background: #c5eaf0;
+      color: #0a5c62;
+    }
+    .portal-new-item-card.variant-blue .portal-new-item-badge {
+      background: #cde0f0;
+      color: #284470;
+    }
+    .portal-new-item-card.variant-sky .portal-new-item-badge {
+      background: #ccdcf0;
+      color: #225280;
+    }
+    .portal-new-item-card.variant-teal .portal-new-item-badge {
+      background: #c6e0dc;
+      color: #24625e;
+    }
+    .portal-new-item-card.variant-violet .portal-new-item-badge {
+      background: #d8d2ee;
+      color: #443688;
+    }
+    .portal-new-item-card.variant-rose .portal-new-item-badge {
+      background: #ecd0d8;
+      color: #682838;
+    }
+    .portal-new-item-card.variant-emerald .portal-new-item-badge {
+      background: #c6e0d4;
+      color: #225a3e;
+    }
+    .portal-new-item-card.variant-amber .portal-new-item-badge {
+      background: #ead8a8;
+      color: #6a4a18;
+    }
+    .portal-new-item-card.variant-study .portal-new-item-badge {
+      background: #f5c4df;
+      color: #831843;
+    }
+    .portal-new-item-card.variant-slate .portal-new-item-badge {
+      background: #d4dae4;
+      color: #384458;
+    }
+    .portal-new-item-card.variant-indigo .portal-new-item-badge {
+      background: #c7d2fe;
+      color: #312e81;
+    }
+    .portal-new-item-card.variant-indigo {
+      border-color: rgba(99, 102, 241, 0.28);
+      background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 100%);
+    }
+    .portal-new-item-card.variant-blue {
+      border-color: rgba(100, 144, 190, 0.35);
+      background: linear-gradient(180deg, #f0f6fc 0%, #e8f0f8 100%);
+    }
+    .portal-new-item-card.variant-violet {
+      border-color: rgba(136, 120, 188, 0.35);
+      background: linear-gradient(180deg, #f5f3fb 0%, #ece8f8 100%);
+    }
+    .portal-new-item-card.variant-rose {
+      border-color: rgba(168, 104, 120, 0.3);
+      background: linear-gradient(180deg, #fdf2f6 0%, #f8e8ee 100%);
+    }
+    .portal-new-item-card.variant-teal {
+      border-color: rgba(82, 160, 154, 0.35);
+      background: linear-gradient(180deg, #f0f9f7 0%, #e6f4f2 100%);
+    }
+    .portal-new-item-card.variant-emerald {
+      border-color: rgba(78, 150, 112, 0.32);
+      background: linear-gradient(180deg, #f3faf5 0%, #e8f5ee 100%);
+    }
+    .portal-new-item-card.variant-amber {
+      border-color: rgba(154, 118, 48, 0.3);
+      background: linear-gradient(180deg, #fdfaf3 0%, #f5ecd8 100%);
+    }
+    .portal-new-item-card.variant-study {
+      border-color: rgba(194, 120, 154, 0.35);
+      background: linear-gradient(180deg, #fff5fa 0%, #fce7f3 100%);
+    }
+    .portal-new-item-card.variant-slate {
+      border-color: rgba(116, 136, 160, 0.35);
+      background: linear-gradient(180deg, #f5f6f8 0%, #e8ebf0 100%);
+    }
+    .portal-new-item-card.variant-sky {
+      border-color: rgba(82, 144, 190, 0.3);
+      background: linear-gradient(180deg, #f2f8fc 0%, #e5f0f8 100%);
+    }
+    .portal-new-item-card.variant-default .portal-new-item-badge {
+      background: rgba(0, 0, 0, 0.07);
+      color: #444;
+    }
+    body.compact-mode .portal-new-item-card {
+      padding: 7px 11px;
+      border-radius: 11px;
+    }
+    body.compact-mode .portal-new-item-title {
+      font-size: 0.78rem;
+    }
+
     /* ===================================
        カード日付バッジ
        =================================== */
@@ -661,7 +811,7 @@
             <li>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</li>
             <li>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。</li>
             <li>ヘッダー下の検索では、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</li>
-            <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは直下の一覧（最新5件）にまとめています。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
+            <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは、直下のコンパクトカード（最新5件）にまとめています。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
           </ul>
         </div>
       </div>
@@ -672,8 +822,8 @@
         <h2 id="portal-new-items-heading" class="text-[11px] font-semibold text-emerald-900/85 tracking-wide mb-1 flex items-center gap-1">
           <span aria-hidden="true" class="opacity-70 text-[10px]">✨</span> 新規追加（最新5件）
         </h2>
-        <p class="text-[10px] text-emerald-800/65 mb-1.5 leading-snug">各カードの更新履歴のうち種別が「新規」のものだけを日付の新しい順に表示します（管理で非表示のカードは除きます）。</p>
-        <ul id="portal-new-items-list" class="list-none m-0 p-0"></ul>
+        <p class="text-[10px] text-emerald-800/65 mb-1.5 leading-snug">履歴が「新規」のページを日付の新しい順に、区分ラベル＋タイトルのコンパクトカードで表示します（管理で非表示のカードは除きます）。</p>
+        <ul id="portal-new-items-list" class="portal-new-items-stack" role="list"></ul>
       </div>
     </section>
 
@@ -891,6 +1041,12 @@
           <p class="text-xs text-gray-500 leading-relaxed">作用時間分類・薬物動態・主訴別アルゴリズム・注射剤・漸減まで、抗精神病薬ガイドと同構成で整理。</p>
           <div class="mt-3 text-xs font-medium text-cyan-700">benzodiazepines-japan.html →</div>
         </a>
+        <a id="card-antidepressants" href="antidepressants-japan.html" class="card block border border-rose-100 rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium px-2 py-0.5 rounded-full bg-rose-100 text-rose-900">薬物治療</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-03 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">抗うつ薬 選択ガイド（日本承認薬）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">SSRI・SNRI・NaSSA・SMS 等の分類、トランスポーター／薬理比較、主訴別アルゴリズム、薬剤ごとの用量・特徴、副作用マトリックス、製剤経路、相互作用まで抗精神病薬ガイドと同構成で整理。</p>
+          <div class="mt-3 text-xs font-medium text-rose-700">antidepressants-japan.html →</div>
+        </a>
         <div class="portal-grid-divider"><span>治療アルゴリズム（ガイドライン）</span></div>
         <a id="card-schiz-algo" href="schizophrenia-algorithm.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">統合失調症</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-23 更新</span></div>
@@ -1104,6 +1260,33 @@
       return flat;
     }
 
+    /** 新規追加カード用：ポータル本体カード先頭の区分ピルを読む */
+    function extractNewItemTagFromCard(card) {
+      const fallback = { label: 'ページ', variant: 'default' };
+      if (!card) return fallback;
+      const pill = card.querySelector(':scope > div.mb-2 .flex.items-center > span:first-child');
+      if (!pill) return fallback;
+      const label = (pill.textContent || '').replace(/\s+/g, ' ').trim() || 'ページ';
+      const pcls = pill.className || '';
+      const ccls = card.className || '';
+      let variant = 'default';
+      const tagMatch = pcls.match(/\btag-([a-z0-9-]+)\b/);
+      if (tagMatch) variant = tagMatch[1];
+      else if (/\bindigo\b/.test(pcls) || /\bborder-indigo\b|\bbg-indigo\b/.test(ccls)) variant = 'indigo';
+      else if (/cyan/.test(pcls)) variant = 'calc';
+      else if (/\bborder-calc\b|\bbg-calc\b/.test(ccls)) variant = 'calc';
+      else if (/\bborder-blue\b|\bbg-blue\b/.test(ccls)) variant = 'blue';
+      else if (/\bborder-teal\b|\bbg-teal\b/.test(ccls)) variant = 'teal';
+      else if (/\bborder-violet\b|\bbg-violet\b/.test(ccls)) variant = 'violet';
+      else if (/\bborder-rose\b|\bbg-rose\b/.test(ccls)) variant = 'rose';
+      else if (/\bborder-emerald\b|\bbg-emerald\b/.test(ccls)) variant = 'emerald';
+      else if (/\bborder-amber\b|\bbg-amber\b/.test(ccls)) variant = 'amber';
+      else if (/\bborder-study\b|\bbg-study\b/.test(ccls)) variant = 'study';
+      else if (/\bborder-slate\b|\bbg-slate\b/.test(ccls)) variant = 'slate';
+      else if (/\bsec-sky\b/.test(ccls) || /sky-100/.test(ccls)) variant = 'sky';
+      return { label, variant };
+    }
+
     /** 履歴の「新規」のみ（カード掲載ページ）。日付降順・最大件数は render 側でスライス */
     function buildLatestNewItemsFromHistory(history) {
       if (!history || typeof history !== 'object') return [];
@@ -1116,6 +1299,7 @@
         const href = card ? sanitizePortalNewsHref(card.getAttribute('href') || '') : '';
         const h3 = card && card.querySelector('h3');
         const pageTitle = h3 ? h3.textContent.trim() : '';
+        const tagInfo = extractNewItemTagFromCard(card);
         const parseY = (d) => {
           const x = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
           return x ? new Date(+x[1], +x[2] - 1, +x[3]).getTime() : 0;
@@ -1125,12 +1309,12 @@
         for (const row of rows) {
           if (!row || String(row.kind || '').trim() !== '新規') continue;
           if (!String(row.text || '').trim()) continue;
-          const line = pageTitle ? `【${pageTitle}】 ${row.text}` : row.text;
           const item = {
             date: String(row.date || '').trim(),
-            kind: 'card',
-            text: line,
+            title: pageTitle || '（無題）',
             href,
+            tagLabel: tagInfo.label,
+            tagVariant: tagInfo.variant,
           };
           const t = parseY(item.date);
           if (!best || t >= bestT) {
@@ -1204,6 +1388,36 @@
       return li;
     }
 
+    function createPortalNewItemCard(it) {
+      const li = document.createElement('li');
+      li.className = 'list-none';
+      const href = sanitizePortalNewsHref(it.href);
+      const safeVar = /^[a-z0-9-]+$/.test(String(it.tagVariant || '')) ? it.tagVariant : 'default';
+      const row = document.createElement(href ? 'a' : 'div');
+      row.className = 'portal-new-item-card variant-' + safeVar;
+      if (href) {
+        row.href = href;
+        if (/^https?:/i.test(href)) {
+          row.target = '_blank';
+          row.rel = 'noopener noreferrer';
+        }
+      }
+      const d = String(it.date || '').trim();
+      const title = String(it.title || '').trim() || '（無題）';
+      if (d) row.title = `${d} 新規 · ${title}`;
+      else row.title = title;
+      const badge = document.createElement('span');
+      badge.className = 'portal-new-item-badge';
+      badge.textContent = String(it.tagLabel || 'ページ').trim() || 'ページ';
+      const titleEl = document.createElement('span');
+      titleEl.className = 'portal-new-item-title';
+      titleEl.textContent = title;
+      row.appendChild(badge);
+      row.appendChild(titleEl);
+      li.appendChild(row);
+      return li;
+    }
+
     function renderPortalNewItems() {
       const wrap = document.getElementById('portal-new-items-section');
       const list = document.getElementById('portal-new-items-list');
@@ -1218,7 +1432,7 @@
       }
       wrap.classList.remove('hidden');
       list.innerHTML = '';
-      items.forEach((it) => list.appendChild(createPortalNewsListItem(it)));
+      items.forEach((it) => list.appendChild(createPortalNewItemCard(it)));
     }
 
     function renderPortalNews() {
@@ -1574,6 +1788,7 @@
       ],
       'card-benzodiazepines': [
         { date: '2026-05-03', kind: '新規', text: '日本承認ベンゾジアゼピン選択ガイド（抗精神病薬ガイドと同構成）として初版公開' },
+        { date: '2026-05-03', kind: '新規', text: '日本承認抗うつ薬選択ガイド（抗精神病薬ガイドと同構成）として初版公開' },
       ],
       'card-anxiety': [
         { date: '2026-04-05', kind: '新規', text: '不安症群の診断・治療フローとして初版公開' },
