@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>向精神薬 × 相互作用・禁忌 — 学習ハブ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ddi-gradient: linear-gradient(135deg, #4c1d95 0%, #7c3aed 45%, #c026d3 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--ddi-gradient); }
+    .ddi-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      border: 1px solid #f1f5f9;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .ddi-link {
+      color: #6d28d9;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .ddi-link:hover { color: #5b21b6; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5.5rem; }
+    }
+    .quiz-opt { accent-color: #7c3aed; }
+    .drill-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #5b21b6;
+      background: #ede9fe;
+      border: 1px solid #c4b5fd;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    .case-prose { line-height: 1.75; }
+    .drill-open summary { cursor: pointer; list-style: none; }
+    .drill-open summary::-webkit-details-marker { display: none; }
+    .quiz-q-card { transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; }
+    .quiz-q-card.quiz-graded.quiz-card-ok { border-color: #34d399; box-shadow: 0 1px 3px rgba(16,185,129,0.28); background: #f0fdf4; }
+    .quiz-q-card.quiz-graded.quiz-card-ng { border-color: #fb923c; box-shadow: 0 1px 3px rgba(251,146,60,0.28); background: #fff7ed; }
+    .quiz-q-card.quiz-graded.quiz-card-skip { border-color: #94a3b8; box-shadow: 0 1px 3px rgba(148,163,184,0.28); background: #f8fafc; }
+    .quiz-q-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+    .quiz-q-title { flex: 1; min-width: 0; }
+    .quiz-result-badge { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.25rem 0.6rem; border-radius: 9999px; line-height: 1.2; }
+    .quiz-result-badge.is-hidden { display: none !important; }
+    .quiz-badge-ok { background: #a7f3d0; color: #065f46; }
+    .quiz-badge-ng { background: #fed7aa; color: #9a3412; }
+    .quiz-badge-skip { background: #e2e8f0; color: #475569; }
+    .quiz-opt-row.quiz-opt-correct { background: #dcfce7 !important; border: 1px solid #86efac !important; }
+    .quiz-opt-row.quiz-opt-wrong { background: #ffe4e6 !important; border: 1px solid #fb7185 !important; }
+    .quiz-q-card.quiz-graded .quiz-opt-row { cursor: default; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">学習用（教育コンテンツ）</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">向精神薬 × 相互作用・禁忌</h1>
+      <p class="text-white/85 mt-2 text-sm leading-relaxed max-w-2xl">
+        処方の前後で<strong class="font-semibold text-white">薬物動態（代謝酵素・排泄）</strong>と<strong class="font-semibold text-white">薬力学（QT・中枢・血清素等）</strong>の両方を短時間で立ち上げられると、有害事象を避けやすくなります。<strong class="font-semibold text-white">症例ドライループ</strong>とミニチェックでパターンに慣れます。
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 -mt-3 relative z-10">
+
+    <div class="rounded-xl border border-amber-200 bg-amber-50/90 p-4 mb-6 text-sm text-amber-950">
+      <strong class="font-bold">重要</strong>：本ページは医学教育のためのまとめです。実際の処方・変更は<strong class="font-bold">各製品の最新版添付文書</strong>、施設の相互作用ソフト、ガイドライン、主治医の判断に必ず従ってください。ここに示す組み合わせは<strong class="font-bold">典型例・鑑別の型</strong>であり、網羅でも確定診断でもありません。
+    </div>
+
+    <section id="path" class="ddi-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center">
+          <i data-lucide="route" class="w-5 h-5 text-violet-900"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">おすすめの学習順（能動的想起用）</h2>
+          <p class="text-xs text-slate-500">まず<strong class="text-slate-800">禁忌・黒枠</strong>、次に<strong class="text-slate-800">用量調整が要る代謝</strong>、最後に<strong class="text-slate-800">身体合併症（QT・腎）</strong>の順が扱いやすいです。</p>
+        </div>
+      </div>
+      <ol class="list-decimal list-inside space-y-2.5 text-sm text-slate-700 leading-relaxed">
+        <li><strong class="text-slate-900">クラス単位の危険ペア</strong>：MAOI・強い血清素作用、QT延長薬、中枢抑制の重ね過ぎのイメージを言語化。→ 各ガイドで復習：<a class="ddi-link" href="antidepressants-japan.html">抗うつ薬</a>／<a class="ddi-link" href="antipsychotics-japan.html">抗精神病薬</a>／<a class="ddi-link" href="benzodiazepines-japan.html">ベンゾジアゼピン</a></li>
+        <li><strong class="text-slate-900">薬物動態（PK）</strong>：CYP（特に 1A2・2D6・3A4）・尿排泄の変化で血中濃度が動く典型を押さえる。</li>
+        <li><strong class="text-slate-900">QT・電解質</strong>：多剤併用・下痢・飲水低下でリスクが積み上がることを意識。→ <a class="ddi-link" href="acute-alerts.html">QT・電解質・アラート集</a></li>
+        <li><strong class="text-slate-900">腎機能と用量</strong>：eGFR／CrCl を見てから向精神薬を足す型。→ <a class="ddi-link" href="crcl-psychotropics.html">CrCl × 向精神薬</a></li>
+        <li><strong class="text-slate-900">力価換算の前提</strong>：世代・受容体プロファイルが違うため「同mg」ではない。→ <a class="ddi-link" href="cp-calculator.html">抗精神病薬 CP 換算</a>／<a class="ddi-link" href="dzp-calculator.html">ジアゼパム換算（BZD）</a></li>
+        <li><strong class="text-slate-900">症例で回す</strong>：<a class="ddi-link" href="#drill">症例ドライループ</a>で「①どの機序か ②何を確認するか ③記録に残すとよいこと」を先に言語化してから開示。</li>
+      </ol>
+    </section>
+
+    <section id="assess" class="ddi-card border-l-4 border-l-violet-600">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="clipboard-check" class="w-6 h-6 text-violet-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">新規併用・増量前のミニチェック（学習用）</h2>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">外来・回診で<strong>サッと頭を通す</strong>ための8項目です。</p>
+      <ul class="grid sm:grid-cols-2 gap-2 text-sm text-slate-700">
+        <li class="flex gap-2 bg-violet-50/90 rounded-lg px-3 py-2 border border-violet-100"><span class="text-violet-800 font-bold">1</span><strong>禁忌・併用注意</strong>（添付文書の相互作用・黒枠）</li>
+        <li class="flex gap-2 bg-violet-50/90 rounded-lg px-3 py-2 border border-violet-100"><span class="text-violet-800 font-bold">2</span><strong>直近2週間</strong>の処方変更・OTC・漢方・サプリ</li>
+        <li class="flex gap-2 bg-violet-50/90 rounded-lg px-3 py-2 border border-violet-100"><span class="text-violet-800 font-bold">3</span><strong>腎・肝・心</strong>（eGFR、肝酵素、QTc、電解質の有無）</li>
+        <li class="flex gap-2 bg-violet-50/90 rounded-lg px-3 py-2 border border-violet-100"><span class="text-violet-800 font-bold">4</span><strong>妊娠・授乳・避妊</strong>の必要性（妊娠計画の有無）</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">5</span><strong>誘導／阻害</strong>で用量が要調整か（併用薬のクラスから逆算）</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">6</span><strong>覚醒系の重ね</strong>（抗コリン・ヒスタミン等）で認知・転倒が悪化しないか</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">7</span><strong>患者教育</strong>：何を中止・受診すべきか（高体温・振戦・下痢等）</li>
+        <li class="flex gap-2 bg-amber-50 rounded-lg px-3 py-2 border border-amber-100"><span class="text-amber-800 font-bold">8</span><strong>観察計画</strong>：何日後に何を見るか（白血球・濃度・体重 等、薬に応じて）</li>
+      </ul>
+    </section>
+
+    <section id="cross" class="ddi-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="git-merge" class="w-6 h-6 text-fuchsia-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">よく試験・回診に出る「交差点」</h2>
+      </div>
+      <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+        <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
+          <div class="font-bold text-violet-900 text-sm mb-1">血清素症候群様・強い血清素作用の重ね</div>
+          <p>SSRI／SNRI・<strong>可逆的なモノアミン酸化酵素阻害作用</strong>を持つ薬・一部抗菌薬・一部向精神薬の組み合わせで<strong>体温・自律神経・精神状態</strong>が急変することがあります。臨床では時系列・新規薬・用量変更を必ずメモします。</p>
+        </div>
+        <div class="rounded-lg bg-fuchsia-50 border border-fuchsia-100 p-3">
+          <div class="font-bold text-fuchsia-900 text-sm mb-1">QT 延長の積算</div>
+          <p>抗精神病薬・一部抗うつ薬・抗不整脈薬・電解質異常・多剤併用で<strong>リスクが足し算</strong>になります。追加前に既存要因（K・Mg・下痢・腎障害）を整理する型が教材で繰り返し出ます。</p>
+        </div>
+        <div class="rounded-lg bg-indigo-50 border border-indigo-100 p-3">
+          <div class="font-bold text-indigo-900 text-sm mb-1">酵素誘導・阻害</div>
+          <p>抗てんかん薬や一部抗菌薬・タバコなどで<strong>代謝が動き</strong>、向精神薬の有効／中毒域がズレます。「効かなくなった」「急に眠くなった」の背景にPKを置く訓練が効きます。</p>
+        </div>
+        <div class="rounded-lg bg-purple-50 border border-purple-100 p-3">
+          <div class="font-bold text-purple-900 text-sm mb-1">リチウム・バルプロ酸・ラモトリギン</div>
+          <p>腎機能・脱水・NSAIDs、または<strong>導入速度と併用</strong>で、毒性や皮膚症状のリスクが変わる教科書級の話題です。添付文書の<strong>増量レジメン</strong>を毎回確認する習慣が安全側です。</p>
+        </div>
+        <div class="rounded-lg bg-slate-100 border border-slate-200 p-3">
+          <div class="font-bold text-slate-900 text-sm mb-1">中枢抑制・呼吸抑制</div>
+          <p>オピオイド・酒精・ベンゾ・睡眠薬の重ねで<strong>呼吸・覚醒</strong>が落ちるケースは、相互作用というより「総量」の問題として会話に上がります。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="drill" class="ddi-card ring-2 ring-violet-200/90 border-violet-100">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
+            <i data-lucide="repeat" class="w-5 h-5 text-violet-900"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">症例ドライループ</h2>
+            <p class="text-xs text-slate-500 mt-0.5">架空症例。<span class="drill-pill inline-block mt-1">READ → RECALL → REVEAL</span></p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+          <button type="button" id="drill-prev" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50">前の症例</button>
+          <button type="button" id="drill-next" class="px-3 py-2 rounded-lg bg-violet-700 text-white text-sm font-bold hover:bg-violet-800 shadow-sm">次の症例</button>
+        </div>
+      </div>
+      <div class="rounded-xl bg-amber-50/80 border border-amber-100 p-3 mb-4 text-xs text-amber-950 leading-relaxed">
+        <strong class="font-bold">回し方</strong>：症例を読む → <em>①主たる相互作用の機序</em> <em>②確認する検査・情報</em> <em>③避けたい処方ミス</em> を言語化 → 開示を開く。<span class="block mt-1.5">全<strong>8症例</strong>。</span>
+      </div>
+      <p class="text-sm font-bold text-violet-900 mb-2 tabular-nums" id="drill-index" aria-live="polite">症例 1 / 8</p>
+      <div class="rounded-xl border border-slate-200 bg-white p-4 mb-4 shadow-sm">
+        <h3 class="text-base font-bold text-slate-900 mb-2 leading-snug" id="drill-title"></h3>
+        <div class="case-prose text-sm text-slate-700 whitespace-pre-line" id="drill-vignette"></div>
+      </div>
+      <div class="space-y-2 text-sm" id="drill-reveals"></div>
+      <p class="text-xs text-slate-400 mt-4">実臨床では必ず<strong>最新の添付文書</strong>と<strong>施設の相互作用ツール</strong>で確定してください。</p>
+    </section>
+
+    <section id="quiz" class="ddi-card ring-2 ring-violet-200/80">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="help-circle" class="w-6 h-6 text-violet-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">ミニチェック（10問）</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">選択後「採点する」。</p>
+      <div id="quiz-items" class="space-y-5 text-sm"></div>
+      <div class="flex flex-wrap items-center gap-3 mt-6">
+        <button type="button" id="quiz-grade" class="px-5 py-2.5 rounded-xl bg-violet-700 text-white font-bold text-sm hover:bg-violet-800 shadow-md">採点する</button>
+        <button type="button" id="quiz-reset" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">選択をクリア</button>
+        <p id="quiz-result" class="text-sm font-bold text-slate-700 tabular-nums" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 mt-8 mb-6">関連：<a class="ddi-link" href="psychopathology-scales-learning.html">精神病理 × スケール</a> · <a class="ddi-link" href="mood-suicide-learning.html">気分障害 × 自殺リスク</a></p>
+  </main>
+
+  <script>
+    const CASE_DRILL = [
+      {
+        title: '症例1：SSRI 服用中に「古典的MAO阻害薬」を足したい（48歳・女性）',
+        vignette: '非定型うつ病として精神科専門医がトラニルシプロミン等の古典的MAO阻害を検討。現在エスシタロプラム10mgを6か月服用。\n循環器既往なし。本人は「とにかく早く良くしたい」と言う。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: '古典的MAO阻害とSSRIの組み合わせは<strong>血清素症候群</strong>など重篤な事態のリスクが高く、<strong>添付文書上の禁忌・休薬間隔（ウォッシュアウト期間）</strong>が問題になる典型例です（製剤ごとに規定が異なります）。' },
+          { label: '添付文書・確認のポイント', body: 'SSRI中止からの待機期間、既存薬の選択可否、<strong>他科処方の再確認</strong>（リネゾリド等の併用歴も含む）を対面で固定化してから変更日を決めます。' },
+          { label: '次の一手（教育用）', body: '「早さ」より<strong>切り替え手順の安全</strong>を説明し、自宅での警戒症状（高熱・振戦・意識変化等）の教育をセットにする型が望ましいです。' },
+        ],
+      },
+      {
+        title: '症例2：ハロペリドール開始後、内科から「マクロライド系抗菌薬」処方の連絡（72歳・男性）',
+        vignette: 'せん妄でハロペリドール0.5mg×2内服開始2日目。肺炎疑いで呼吸器内科が大環内系を静注で開始予定。\nK 3.4 mEq/L、Na 136、心電図は外来時QTc 450ms付近。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: '複数要因で<strong>QT延長・トルサード・ド・ポイント</strong>のリスクが積み上がるパターン（低K・高齢・抗精神病薬＋QT延長に注意が要る抗菌薬等）。機序は主に<strong>心筋の再分極</strong>に関与。' },
+          { label: '添付文書・確認のポイント', body: '抗菌薬クラスの選択替え、K補正、連続心電図モニタの要否、ハロペリドールの<strong>継続妥当性</strong>をチームで話し合う。→ <a class="ddi-link" href="acute-alerts.html">QT・アラート</a>も参照。' },
+          { label: '次の一手（教育用）', body: '「肺炎だから抗菌薬は必須、精神薬はそのまま」で終わらせず、<strong>リスク積算</strong>を一言メモに残す訓練が試験にも実臨床にも効きます。' },
+        ],
+      },
+      {
+        title: '症例3：カルバマゼピン併用で「ケタイアピンの効きが急に悪い」（29歳・男性）',
+        vignette: '統合失調症。ケタイアピン400mg就寝前。1か月前からてんかん診療所でカルバマゼピンが追加された。幻聴が再燃し精神科で増量を検討することに。\n肝機能は軽度変動のみ。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: 'カルバマゼピンは<strong>強い酵素誘導</strong>として知られ、多くの向精神薬の<strong>クリアランス増</strong>・血中濃度低下を来すことがあります。' },
+          { label: '添付文書・確認のポイント', body: '併用歴の時系列、他に誘導薬がないか、増量で解決するか／<strong>相互作用の解消</strong>が先かを整理。可能なら濃度・臨床効果で合わせる考え方になります。' },
+          { label: '次の一手（教育用）', body: '無思考に抗精神病薬だけ積み増す前に、<strong>PKでの説明</strong>がつくかを必ず口頭化するのが学習効果が高いです。' },
+        ],
+      },
+      {
+        title: '症例4：リチウム内服中、整形外科でNSAIDs処方予定（55歳・女性）',
+        vignette: '双極性障害で炭酸リチウム600mg/日、状態安定。膝OA急性増悪で整形科がNSAIDs処方を提案予定との連絡。eGFR 58、血圧OK、最近感冒後で食事量がやや少ない。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: 'NSAIDsは腎でのリチウム排泄に影響し、<strong>リチウム血中濃度上昇・中毒</strong>の報告が教科書的に繰り返されます（患者・製剤で差はあります）。脱水も加わりやすい。' },
+          { label: '添付文書・確認のポイント', body: '代替鎮痛、短期使用可否、リチウム・電解質・腎の<strong>モニタリング計画</strong>、患者への飲水・下痢嘔吐時の受診指示。' },
+          { label: '次の一手（教育用）', body: '「整形科の薬だから精神科は関係なし」にしない。<strong>共有カルテか連絡簿</strong>に相互作用の念押しを1行入れるとチーム医療の型になります。' },
+        ],
+      },
+      {
+        title: '症例5：リネゾリド投与開始後、既存のSSRIが継続されている（63歳・男性）',
+        vignette: '糖尿病足感染で外科入院。リネゾリド開始。既往でパロキセチン20mgを継続中。看護師から「熱はなくも振戦と軽い錯乱」と報告。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: '<strong>MAO阻害作用のある抗菌薬</strong>（リネゾリド等）とSSRIの併用は、血清素関連の重症有害事象が教材・添付文書で繰り返し警告される組み合わせです。' },
+          { label: '添付文書・確認のポイント', body: '抗菌薬継続の必要性、SSRI中止可否、精神科・感染症の共同判断、バイタルと神経所見の頻度。代替薬の有無は感染症側の判断が主になります。' },
+          { label: '次の一手（教育用）', body: '入院時サマリーに<strong>精神科薬の洗い出し</strong>をルーチン化すると、こうした見落としを減らせます。' },
+        ],
+      },
+      {
+        title: '症例6：バルプロ酸併用でラモトリギンを「いきなり標準量」へ（22歳・女性）',
+        vignette: 'うつ病でラモトリギン導入予定。他院のてんかん外来でバルプロ酸500mgも内服中。前医の指示メモに「週明けから100mg」とあるが、初診当日にはまだ内服開始していない。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: 'バルプロ酸はラモトリギンの<strong>代謝を抑える</strong>側の相互作用があり、添付文書上<strong>導入速度・目標量</strong>が単剤時と異なることがあります。皮膚症状のリスクの話題も教材でよく出ます。' },
+          { label: '添付文書・確認のポイント', body: '必ず<strong>現行版添付文書の増量表</strong>に照らす。前医メモと不一致なら電話確認。皮疹・粘膜症状の自己観察指導。' },
+          { label: '次の一手（教育用）', body: '「前医そう言ってた」で手書きを盲信せず、<strong>相互作用がある薬は添付文書で上書き</strong>する反射神経を身につけるのが狙いです。' },
+        ],
+      },
+      {
+        title: '症例7：クロザピンの血中濃度が安定しているのに、患者が「禁煙に成功」（34歳・男性）',
+        vignette: '治療抵抗性統合失調症でクロザピン継続中。喫煙20本/日から3か月で完全禁煙。体調は良いが急に強い鎮静とよろめき。\n白血球は週例で許容範囲。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: '喫煙は<strong>CYP1A2誘導</strong>として知られ、禁煙でクロザピンの<strong>血中濃度が上昇</strong>しうる典型シナリオです。症候は濃度毒性域に寄りやすい。' },
+          { label: '添付文書・確認のポイント', body: '濃度測定の可否、漸減のタイミング、転倒・便秘・流涎などの徴候、禁煙支援との連携。クロザピンは<strong>モニタリング項目が多い薬</strong>なので計画を文章化。' },
+          { label: '次の一手（教育用）', body: '生活習慣介入（禁煙）も<strong>処方変更イベント</strong>としてカルテに残すと相互作用の学習につながります。' },
+        ],
+      },
+      {
+        title: '症例8：トラマドールとSSRI併用で午後から嘔気・振戦（58歳・女性）',
+        vignette: '腰痛で整形からトラマドール徐放を処方され、精神科ではエスシタロプラム継続。開始3日目から嘔気・発汗・軽度振戦。血圧心拍は次第に上がり気味。',
+        blocks: [
+          { label: '相互作用・リスクの読み', body: 'トラマドールは<strong>血清素作用</strong>も話題に上がる薬で、SSRIと重ねた際の<strong>中枢・自律神経症状</strong>を鑑別に入れるのが教材的です（確率は症例による）。' },
+          { label: '添付文書・確認のポイント', body: '鎮痛薬の変更（代替の検討）、投与継続可否、脱水・感染・他因の除外、必要なら救急連携の閾値。他に<strong>セロトニン作動薬</strong>がないか薬歴を再確認。' },
+          { label: '次の一手（教育用）', body: '「処方数が少ないから安全」と思わず、<strong>血清素・脳内モノアミンの総量イメージ</strong>で併用を見る習慣が重要です。' },
+        ],
+      },
+    ];
+
+    let drillIdx = 0;
+    function renderDrill() {
+      var d = CASE_DRILL[drillIdx];
+      document.getElementById('drill-index').textContent = '症例 ' + (drillIdx + 1) + ' / ' + CASE_DRILL.length;
+      document.getElementById('drill-title').textContent = d.title;
+      document.getElementById('drill-vignette').textContent = d.vignette;
+      var box = document.getElementById('drill-reveals');
+      box.innerHTML = '';
+      d.blocks.forEach(function (b, i) {
+        var det = document.createElement('details');
+        det.className = 'drill-open rounded-xl border border-violet-200/90 bg-violet-50/40 px-4 py-3';
+        var sum = document.createElement('summary');
+        sum.className = 'font-bold text-violet-950 text-sm flex flex-wrap items-center gap-2';
+        var prefix = ['①', '②', '③'][i] || '・';
+        sum.innerHTML = '<span class="shrink-0">' + prefix + ' ' + b.label + '</span><span class="text-xs font-normal text-violet-800/90">（考えてから開く）</span>';
+        var div = document.createElement('div');
+        div.className = 'mt-2 text-sm text-slate-700 leading-relaxed case-prose';
+        div.innerHTML = b.body;
+        det.appendChild(sum);
+        det.appendChild(div);
+        box.appendChild(det);
+      });
+    }
+    document.getElementById('drill-prev').addEventListener('click', function () {
+      drillIdx = (drillIdx - 1 + CASE_DRILL.length) % CASE_DRILL.length;
+      renderDrill();
+    });
+    document.getElementById('drill-next').addEventListener('click', function () {
+      drillIdx = (drillIdx + 1) % CASE_DRILL.length;
+      renderDrill();
+    });
+    renderDrill();
+
+    var QUIZ = [
+      { q: '向精神薬の新規併用前に、教材で繰り返し確認される身体要因として適切なのはどれか。', opts: ['腎機能・電解質・QT延長要因の有無', '爪の色のみ', '靴のサイズのみ', '血液型のみ'], a: 0, exp: 'PK（排泄）とQTの積算は、試験でも臨床でも重要な評価ポイントになります。' },
+      { q: '古典的MAO阻害薬とSSRIの関係について、教育的に適切に近い注意はどれか。', opts: ['禁忌や休薬間隔（ウォッシュアウト）が製品ごとに問題になりうる', '常に自由に併用してよい', '併用は血圧にのみ無関係', '相互作用は存在しない'], a: 0, exp: '実務では添付文書の相互作用と切り替え手順を最優先します。' },
+      { q: 'カルバマゼピンが向精神薬に与えうる薬物動態の変化として、典型例として挙がりやすいのはどれか。', opts: ['酵素誘導により他薬の濃度が低下しうる', '必ず全薬の濃度が上がる', '腎排泄のみが対象', '相互作用はない'], a: 0, exp: '誘導・阻害は「効かない／効き過ぎ」の背景説明に使えます。' },
+      { q: 'リチウム内服患者にNSAIDsが必要になる場面で、教材的に意識するのはどれか。', opts: ['リチウム排泄・腎機能への影響で濃度が変動しうる', 'リチウムは常にNSAIDsと無関係', '電解質は見なくてよい', '腎は無関係'], a: 0, exp: 'モニタリングと代替案の検討が安全側です。' },
+      { q: 'クロザピン服用患者が禁煙した場合、機序として教材で説明されやすいのはどれか。', opts: ['CYP1A2誘導の減少により濃度が上昇しうる', '必ず濃度は下がる', '相互作用はない', '禁煙は薬物動態に無関係'], a: 0, exp: '生活習慣変化も薬物療法イベントとして記録します。' },
+      { q: 'QT延長リスクを考える際の整理として適切なのはどれか。', opts: ['複数の薬・電解質・基礎心疾患が「足し算」になりうる', '抗精神病薬1剤だけなら他は不要', '低KはQTに無関係', '高齢は無関係'], a: 0, exp: 'acute-alerts 等で閾値意識を揃えるとよいです。' },
+      { q: '中枢抑制作用の累積で注意が要る組み合わせの例として、話に上がりやすいのはどれか。', opts: ['ベンゾジアゼピン系・オピオイド・酒精などの重ね', '抗生物質のみの組み合わせ', 'ビタミン同士のみ', '生理食塩水のみ'], a: 0, exp: '「種類が違うから大丈夫」は危険です。' },
+      { q: 'ラモトリギン導入でバルプロ酸を併用する場合、教材で強調されやすいのはどれか。', opts: ['増量スケジュールは添付文書に従い単剤時と異なることがある', '併用でも増量速度は常に同じでよい', '皮膚症状のフォローは不要', 'バルプロ酸は無関係'], a: 0, exp: '他院からの指示書・メモと添付文書が食い違う場合は、必ず確認し、患者教育とセットにします。' },
+      { q: '腎機能低下が顕著な患者への向精神薬について、本サイトの参照として適切なのはどれか。', opts: ['CrClやeGFRに応じた用量配慮の一覧を参照', '腎機能は無視して全員同量', '向精神薬は腎排泄されない', '検査は不要'], a: 0, exp: 'crcl-psychotropics ページが補助になります。' },
+      { q: 'リネゾリドとSSRIの併用が問題視されうる主な理由として、教育的に近いのはどれか。', opts: ['血清素関連の有害事象リスクが警告される文脈がある', '肝毒性のみ', '相互作用は一切ない', '用量に関係なく安全'], a: 0, exp: '多職種連携で精神科薬の再評価が重要です。' },
+    ];
+
+    var quizItems = document.getElementById('quiz-items');
+    QUIZ.forEach(function (item, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'quiz-q-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+      var head = document.createElement('div');
+      head.className = 'quiz-q-head mb-2';
+      var h = document.createElement('div');
+      h.className = 'quiz-q-title font-semibold text-slate-800';
+      h.textContent = 'Q' + (i + 1) + '. ' + item.q;
+      var badge = document.createElement('span');
+      badge.className = 'quiz-result-badge is-hidden';
+      badge.setAttribute('aria-live', 'polite');
+      head.appendChild(h);
+      head.appendChild(badge);
+      wrap.appendChild(head);
+      var opts = document.createElement('div');
+      opts.className = 'space-y-2';
+      item.opts.forEach(function (text, j) {
+        var lab = document.createElement('label');
+        lab.className = 'quiz-opt-row flex items-start gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50 border border-transparent';
+        var r = document.createElement('input');
+        r.type = 'radio';
+        r.name = 'q' + i;
+        r.value = String(j);
+        r.className = 'quiz-opt mt-1 shrink-0';
+        var span = document.createElement('span');
+        span.textContent = text;
+        span.className = 'text-slate-700';
+        lab.appendChild(r);
+        lab.appendChild(span);
+        opts.appendChild(lab);
+      });
+      wrap.appendChild(opts);
+      var exp = document.createElement('details');
+      exp.className = 'mt-3 text-xs text-slate-600';
+      exp.innerHTML = '<summary class="cursor-pointer font-semibold text-violet-800">解説を表示</summary><p class="mt-2 leading-relaxed pl-1">' + item.exp + '</p>';
+      wrap.appendChild(exp);
+      quizItems.appendChild(wrap);
+    });
+
+    function clearMiniQuizVisuals() {
+      document.querySelectorAll('#quiz-items .quiz-q-card').forEach(function (card) {
+        card.classList.remove('quiz-graded', 'quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        var b = card.querySelector('.quiz-result-badge');
+        if (b) {
+          b.classList.add('is-hidden');
+          b.textContent = '';
+          b.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip');
+        }
+        card.querySelectorAll('.quiz-opt-row').forEach(function (lab) {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+      });
+    }
+
+    document.getElementById('quiz-grade').addEventListener('click', function () {
+      var ok = 0;
+      var cards = document.querySelectorAll('#quiz-items .quiz-q-card');
+      QUIZ.forEach(function (item, i) {
+        var wrap = cards[i];
+        if (!wrap) return;
+        var badge = wrap.querySelector('.quiz-result-badge');
+        var sel = wrap.querySelector('input[type="radio"]:checked');
+        var picked = sel ? +sel.value : null;
+        var isOk = picked === item.a;
+        if (isOk) ok++;
+
+        wrap.classList.remove('quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        wrap.classList.add('quiz-graded');
+        badge.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip', 'is-hidden');
+
+        if (picked === null) {
+          wrap.classList.add('quiz-card-skip');
+          badge.textContent = '未解答';
+          badge.classList.add('quiz-badge-skip');
+        } else if (isOk) {
+          wrap.classList.add('quiz-card-ok');
+          badge.textContent = '正解';
+          badge.classList.add('quiz-badge-ok');
+        } else {
+          wrap.classList.add('quiz-card-ng');
+          badge.textContent = '不正解';
+          badge.classList.add('quiz-badge-ng');
+        }
+
+        wrap.querySelectorAll('.quiz-opt-row').forEach(function (lab) {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+        var rows = wrap.querySelectorAll('.quiz-opt-row');
+        if (rows[item.a]) rows[item.a].classList.add('quiz-opt-correct');
+        if (picked !== null && picked !== item.a && rows[picked]) rows[picked].classList.add('quiz-opt-wrong');
+      });
+      var el = document.getElementById('quiz-result');
+      el.textContent = '正答 ' + ok + ' / ' + QUIZ.length;
+      el.className = 'text-sm font-bold ' + (ok >= 8 ? 'text-violet-700' : ok >= 5 ? 'text-amber-800' : 'text-rose-700') + ' tabular-nums';
+    });
+    document.getElementById('quiz-reset').addEventListener('click', function () {
+      document.querySelectorAll('#quiz-items input[type="radio"]').forEach(function (r) { r.checked = false; });
+      clearMiniQuizVisuals();
+      var el = document.getElementById('quiz-result');
+      el.textContent = '';
+      el.className = 'text-sm font-bold text-slate-700 tabular-nums';
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

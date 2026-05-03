@@ -142,26 +142,16 @@
     .generation-badge-3rd { background:#ede9fe; color:#5b21b6; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
     .generation-badge-clz { background:#fae8ff; color:#701a75; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
     .side-effect-bar { height:8px; border-radius:4px; margin-top:2px; }
-    .x-scroll__rail { -webkit-overflow-scrolling: touch; }
+    .x-scroll { width: 100%; max-width: 100%; }
+    .x-scroll__rail {
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }
+    .th-drug, .td-drug { white-space: nowrap; vertical-align: middle; }
+    table.data-table { width: max-content; min-width: 100%; }
     @media (max-width: 767px) {
       .x-scroll__rail {
         box-shadow: inset -16px 0 20px -10px rgba(30, 41, 59, 0.18);
-        border-radius: 0.375rem;
-      }
-      .x-scroll__hint {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.375rem;
-        margin-top: 0.4rem;
-        padding: 0.3rem 0.65rem;
-        font-size: 0.6875rem;
-        font-weight: 600;
-        color: #475569;
-        line-height: 1.35;
-        text-align: center;
-        background: rgba(241, 245, 249, 0.95);
-        border: 1px dashed #94a3b8;
         border-radius: 0.375rem;
       }
       .x-scroll__hint .x-scroll__hint-icon {
@@ -177,6 +167,34 @@
     @keyframes x-scroll-hint-nudge {
       0%, 100% { transform: translateX(0); opacity: 0.55; }
       50% { transform: translateX(5px); opacity: 1; }
+    }
+    .x-scroll__hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      margin-top: 0.4rem;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: #475569;
+      line-height: 1.35;
+      text-align: center;
+      background: rgba(241, 245, 249, 0.95);
+      border: 1px dashed #94a3b8;
+      border-radius: 0.375rem;
+    }
+    @media (min-width: 768px) {
+      .x-scroll__hint {
+        justify-content: flex-end;
+        font-size: 0.65rem;
+        font-weight: 500;
+        padding: 0.2rem 0;
+        background: transparent;
+        border: none;
+        color: #64748b;
+      }
+      .x-scroll__hint .x-scroll__hint-icon { display: none; }
     }
   </style>
 </head>
@@ -288,24 +306,24 @@
             <div>
               <div class="text-xs font-bold text-red-700 mb-1">フェノチアジン系</div>
               <div class="grid grid-cols-2 gap-1 text-xs">
-                <span class="bg-white rounded px-2 py-1 border border-red-200">クロルプロマジン<br><span class="text-gray-400">コントミン</span></span>
-                <span class="bg-white rounded px-2 py-1 border border-red-200">レボメプロマジン<br><span class="text-gray-400">ヒルナミン</span></span>
-                <span class="bg-white rounded px-2 py-1 border border-red-200">フルフェナジン<br><span class="text-gray-400">フルメジン</span></span>
-                <span class="bg-white rounded px-2 py-1 border border-red-200">ペルフェナジン<br><span class="text-gray-400">ピーゼットシー</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">クロルプロマジン<span class="text-gray-400">（コントミン）</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">レボメプロマジン<span class="text-gray-400">（ヒルナミン）</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">フルフェナジン<span class="text-gray-400">（フルメジン）</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">ペルフェナジン<span class="text-gray-400">（ピーゼットシー）</span></span>
               </div>
             </div>
             <div>
               <div class="text-xs font-bold text-red-700 mb-1">ブチロフェノン系</div>
               <div class="grid grid-cols-2 gap-1 text-xs">
-                <span class="bg-white rounded px-2 py-1 border border-red-200">ハロペリドール<br><span class="text-gray-400">セレネース</span></span>
-                <span class="bg-white rounded px-2 py-1 border border-red-200">ブロムペリドール<br><span class="text-gray-400">インプロメン</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">ハロペリドール<span class="text-gray-400">（セレネース）</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">ブロムペリドール<span class="text-gray-400">（インプロメン）</span></span>
               </div>
             </div>
             <div>
               <div class="text-xs font-bold text-red-700 mb-1">ベンザミド系</div>
               <div class="grid grid-cols-2 gap-1 text-xs">
-                <span class="bg-white rounded px-2 py-1 border border-red-200">スルピリド<br><span class="text-gray-400">ドグマチール</span></span>
-                <span class="bg-white rounded px-2 py-1 border border-red-200">チアプリド<br><span class="text-gray-400">グラマリール</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">スルピリド<span class="text-gray-400">（ドグマチール）</span></span>
+                <span class="bg-white rounded px-2 py-1 border border-red-200">チアプリド<span class="text-gray-400">（グラマリール）</span></span>
               </div>
             </div>
           </div>
@@ -323,15 +341,15 @@
           </div>
           <p class="text-xs text-gray-600 mb-3">D2＋5-HT2A拮抗。EPS軽減されるが代謝系副作用に注意。</p>
           <div class="grid grid-cols-2 gap-1 text-xs">
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">リスペリドン<br><span class="text-gray-400">リスパダール</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">パリペリドン<br><span class="text-gray-400">インベガ</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">オランザピン<br><span class="text-gray-400">ジプレキサ</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">クエチアピン<br><span class="text-gray-400">セロクエル</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">クエチアピン徐放<br><span class="text-gray-400">ビプレッソ</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">ペロスピロン<br><span class="text-gray-400">ルーラン</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">ブロナンセリン<br><span class="text-gray-400">ロナセン</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">アセナピン<br><span class="text-gray-400">サクライズ</span></span>
-            <span class="bg-white rounded px-2 py-1 border border-blue-200">ルラシドン<br><span class="text-gray-400">ラツーダ</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">リスペリドン<span class="text-gray-400">（リスパダール）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">パリペリドン<span class="text-gray-400">（インベガ）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">オランザピン<span class="text-gray-400">（ジプレキサ）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">クエチアピン<span class="text-gray-400">（セロクエル）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">クエチアピン徐放<span class="text-gray-400">（ビプレッソ）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ペロスピロン<span class="text-gray-400">（ルーラン）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ブロナンセリン<span class="text-gray-400">（ロナセン）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">アセナピン<span class="text-gray-400">（サクライズ）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ルラシドン<span class="text-gray-400">（ラツーダ）</span></span>
           </div>
           <div class="mt-3 text-xs text-blue-700 bg-blue-50 rounded p-2">
             <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
@@ -397,31 +415,31 @@
         <p class="text-xs text-gray-600 mb-3">「十分量」の評価・多剤比較に使用（CPZ 600〜1000mg/日相当が標準的試行範囲）</p>
         <div class="x-scroll">
           <div class="overflow-x-auto x-scroll__rail">
-          <table class="w-full text-xs">
+          <table class="w-full text-xs border-collapse min-w-max data-table">
             <thead>
               <tr>
-                <th class="th-cell rounded-tl-lg text-left pl-3">薬剤名</th>
+                <th class="th-cell rounded-tl-lg text-left pl-3 th-drug">薬剤名</th>
                 <th class="th-cell">CPZ換算比</th>
                 <th class="th-cell">600mg相当</th>
                 <th class="th-cell rounded-tr-lg">備考</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td class="td-left">ハロペリドール</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">高力価</td></tr>
-              <tr class="bg-gray-50"><td class="td-left">リスペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">—</td></tr>
-              <tr><td class="td-left">パリペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">リスの活性代謝物</td></tr>
-              <tr class="bg-gray-50"><td class="td-left">オランザピン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">—</td></tr>
-              <tr><td class="td-left">クエチアピン</td><td class="td-cell">×0.75</td><td class="td-cell">800mg</td><td class="td-cell text-gray-500">低力価</td></tr>
-              <tr class="bg-gray-50"><td class="td-left">アリピプラゾール</td><td class="td-cell">×67</td><td class="td-cell">9mg</td><td class="td-cell text-gray-500">参考値</td></tr>
-              <tr><td class="td-left">ブレクスピプラゾール</td><td class="td-cell">×100</td><td class="td-cell">6mg</td><td class="td-cell text-gray-500">参考値</td></tr>
-              <tr class="bg-gray-50"><td class="td-left">ルラシドン</td><td class="td-cell">×3</td><td class="td-cell">200mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
-              <tr><td class="td-left">ブロナンセリン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
-              <tr class="bg-gray-50"><td class="td-left">スルピリド</td><td class="td-cell">×0.5〜1</td><td class="td-cell">600〜1200mg</td><td class="td-cell text-gray-500">換算値に幅あり（参考値）</td></tr>
-              <tr><td class="td-left">クロルプロマジン</td><td class="td-cell">×1</td><td class="td-cell">600mg</td><td class="td-cell text-gray-500">基準薬</td></tr>
+              <tr><td class="td-left td-drug">ハロペリドール</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">高力価</td></tr>
+              <tr class="bg-gray-50"><td class="td-left td-drug">リスペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">—</td></tr>
+              <tr><td class="td-left td-drug">パリペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">リスの活性代謝物</td></tr>
+              <tr class="bg-gray-50"><td class="td-left td-drug">オランザピン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">—</td></tr>
+              <tr><td class="td-left td-drug">クエチアピン</td><td class="td-cell">×0.75</td><td class="td-cell">800mg</td><td class="td-cell text-gray-500">低力価</td></tr>
+              <tr class="bg-gray-50"><td class="td-left td-drug">アリピプラゾール</td><td class="td-cell">×67</td><td class="td-cell">9mg</td><td class="td-cell text-gray-500">参考値</td></tr>
+              <tr><td class="td-left td-drug">ブレクスピプラゾール</td><td class="td-cell">×100</td><td class="td-cell">6mg</td><td class="td-cell text-gray-500">参考値</td></tr>
+              <tr class="bg-gray-50"><td class="td-left td-drug">ルラシドン</td><td class="td-cell">×3</td><td class="td-cell">200mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
+              <tr><td class="td-left td-drug">ブロナンセリン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
+              <tr class="bg-gray-50"><td class="td-left td-drug">スルピリド</td><td class="td-cell">×0.5〜1</td><td class="td-cell">600〜1200mg</td><td class="td-cell text-gray-500">換算値に幅あり（参考値）</td></tr>
+              <tr><td class="td-left td-drug">クロルプロマジン</td><td class="td-cell">×1</td><td class="td-cell">600mg</td><td class="td-cell text-gray-500">基準薬</td></tr>
             </tbody>
           </table>
           </div>
-          <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+          <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
         </div>
         <p class="text-xs text-gray-500 mt-2">※換算値は各種文献・ガイドラインにより差があります。臨床的判断に用いる目安値です。</p>
       </div>
@@ -658,10 +676,10 @@
 
       <div class="x-scroll">
         <div class="overflow-x-auto x-scroll__rail">
-        <table class="w-full text-xs border-collapse min-w-max">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
           <thead>
             <tr>
-              <th class="th-cell text-left pl-3 rounded-tl-lg w-36">薬剤</th>
+              <th class="th-cell text-left pl-3 rounded-tl-lg w-36 th-drug">薬剤</th>
               <th class="th-cell w-16">D2<br>拮抗</th>
               <th class="th-cell w-16">5-HT2A<br>拮抗</th>
               <th class="th-cell w-16">5-HT1A<br>作用</th>
@@ -678,7 +696,7 @@
               <td class="td-left font-bold text-red-800" colspan="9">第一世代（FGA）</td>
             </tr>
             <tr>
-              <td class="td-left">ハロペリドール</td>
+              <td class="td-left td-drug">ハロペリドール</td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-low"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -689,7 +707,7 @@
               <td class="td-cell text-left text-gray-600">EPS強い・高プロラクチン・QT延長</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left">クロルプロマジン</td>
+              <td class="td-left td-drug">クロルプロマジン</td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -700,7 +718,7 @@
               <td class="td-cell text-left text-gray-600">強鎮静・起立性低血圧・抗コリン</td>
             </tr>
             <tr>
-              <td class="td-left">レボメプロマジン</td>
+              <td class="td-left td-drug">レボメプロマジン</td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -711,7 +729,7 @@
               <td class="td-cell text-left text-gray-600">最強鎮静・起立性低血圧・認知障害</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left">スルピリド</td>
+              <td class="td-left td-drug">スルピリド</td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -727,7 +745,7 @@
               <td class="td-left font-bold text-blue-800" colspan="9">第二世代（SGA）</td>
             </tr>
             <tr>
-              <td class="td-left">リスペリドン</td>
+              <td class="td-left td-drug">リスペリドン</td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -738,7 +756,7 @@
               <td class="td-cell text-left text-gray-600">EPS用量依存・高プロラクチン・起立性低血圧</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left">パリペリドン</td>
+              <td class="td-left td-drug">パリペリドン</td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -749,7 +767,7 @@
               <td class="td-cell text-left text-gray-600">リスペリドンと類似（活性代謝物）</td>
             </tr>
             <tr>
-              <td class="td-left">オランザピン</td>
+              <td class="td-left td-drug">オランザピン</td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -760,7 +778,7 @@
               <td class="td-cell text-left text-gray-600">体重増加・血糖上昇・鎮静・抗コリン</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left">クエチアピン</td>
+              <td class="td-left td-drug">クエチアピン</td>
               <td class="td-cell"><span class="receptor-dot-low"></span></td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-low"></span></td>
@@ -771,7 +789,7 @@
               <td class="td-cell text-left text-gray-600">鎮静・起立性低血圧・EPS少・代謝中等度</td>
             </tr>
             <tr>
-              <td class="td-left">ブロナンセリン</td>
+              <td class="td-left td-drug">ブロナンセリン</td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-none"></span></td>
@@ -782,7 +800,7 @@
               <td class="td-cell text-left text-gray-600">EPSやや注意・代謝中立・食後投与</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left">ルラシドン</td>
+              <td class="td-left td-drug">ルラシドン</td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
@@ -793,7 +811,7 @@
               <td class="td-cell text-left text-gray-600">代謝中立・体重増加少・アカシジア注意・食後必須。<strong>5-HT7拮抗</strong>（抗うつ・認知機能改善に関与）</td>
             </tr>
             <tr>
-              <td class="td-left">アセナピン</td>
+              <td class="td-left td-drug">アセナピン</td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
@@ -804,7 +822,7 @@
               <td class="td-cell text-left text-gray-600">舌下錠・口腔内しびれ・鎮静中等度</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left">ペロスピロン</td>
+              <td class="td-left td-drug">ペロスピロン</td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-med"></span></td>
@@ -820,7 +838,7 @@
               <td class="td-left font-bold text-purple-800" colspan="9">第三世代（部分作動薬）</td>
             </tr>
             <tr>
-              <td class="td-left">アリピプラゾール</td>
+              <td class="td-left td-drug">アリピプラゾール</td>
               <td class="td-cell"><span class="receptor-dot-partial"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-partial"></span></td>
@@ -831,7 +849,7 @@
               <td class="td-cell text-left text-gray-600">アカシジア注意・代謝中立・低鎮静・プロラクチン低</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left">ブレクスピプラゾール</td>
+              <td class="td-left td-drug">ブレクスピプラゾール</td>
               <td class="td-cell"><span class="receptor-dot-partial"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-partial"></span></td>
@@ -847,7 +865,7 @@
               <td class="td-left font-bold text-fuchsia-800" colspan="9">クロザピン（治療抵抗性）</td>
             </tr>
             <tr>
-              <td class="td-left">クロザピン</td>
+              <td class="td-left td-drug">クロザピン</td>
               <td class="td-cell"><span class="receptor-dot-low"></span></td>
               <td class="td-cell"><span class="receptor-dot-high"></span></td>
               <td class="td-cell"><span class="receptor-dot-low"></span></td>
@@ -860,7 +878,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- 受容体と臨床的意義の解説 -->
@@ -903,10 +921,10 @@
       <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="generation-badge-sga text-xs">第二世代（SGA）</span><span class="generation-badge-3rd text-xs ml-1">第三世代</span></h3>
       <div class="x-scroll mb-6">
         <div class="overflow-x-auto x-scroll__rail">
-        <table class="w-full text-xs border-collapse">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
           <thead>
             <tr>
-              <th class="th-cell text-left pl-3 rounded-tl-lg">成分名（商品名）</th>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">成分名（商品名）</th>
               <th class="th-cell">開始量</th>
               <th class="th-cell">維持量</th>
               <th class="th-cell">最大量</th>
@@ -917,7 +935,7 @@
           </thead>
           <tbody>
             <tr>
-              <td class="td-left font-medium">リスペリドン<br><span class="text-gray-400">リスパダール他</span></td>
+              <td class="td-left font-medium td-drug">リスペリドン<span class="text-gray-400">（リスパダール他）</span></td>
               <td class="td-cell">1-2mg</td>
               <td class="td-cell">2-6mg</td>
               <td class="td-cell">12mg</td>
@@ -926,7 +944,7 @@
               <td class="td-cell text-left">EPS用量依存性。高プロラクチン。LAIあり</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">パリペリドン<br><span class="text-gray-400">インベガ他</span></td>
+              <td class="td-left font-medium td-drug">パリペリドン<span class="text-gray-400">（インベガ他）</span></td>
               <td class="td-cell">3-6mg</td>
               <td class="td-cell">6-9mg</td>
               <td class="td-cell">12mg</td>
@@ -935,7 +953,7 @@
               <td class="td-cell text-left">空腹/食事で吸収変化少。LAI（ゼプリオン）あり</td>
             </tr>
             <tr>
-              <td class="td-left font-medium">オランザピン<br><span class="text-gray-400">ジプレキサ他</span></td>
+              <td class="td-left font-medium td-drug">オランザピン<span class="text-gray-400">（ジプレキサ他）</span></td>
               <td class="td-cell">5-10mg</td>
               <td class="td-cell">10-20mg</td>
               <td class="td-cell">20mg</td>
@@ -944,7 +962,7 @@
               <td class="td-cell text-left">糖尿病禁忌。体重↑↑。鎮静強。急性期筋注あり</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">クエチアピン<br><span class="text-gray-400">セロクエル他</span></td>
+              <td class="td-left font-medium td-drug">クエチアピン<span class="text-gray-400">（セロクエル他）</span></td>
               <td class="td-cell">25-50mg</td>
               <td class="td-cell">150-600mg</td>
               <td class="td-cell">750mg</td>
@@ -953,7 +971,7 @@
               <td class="td-cell text-left">糖尿病禁忌。EPS最少。鎮静活用。QT注意</td>
             </tr>
             <tr>
-              <td class="td-left font-medium">クエチアピン徐放<br><span class="text-gray-400">ビプレッソ</span></td>
+              <td class="td-left font-medium td-drug">クエチアピン徐放<span class="text-gray-400">（ビプレッソ）</span></td>
               <td class="td-cell">50mg</td>
               <td class="td-cell">150-300mg</td>
               <td class="td-cell">300mg</td>
@@ -962,7 +980,7 @@
               <td class="td-cell text-left">就寝前服用。糖尿病禁忌。眠気注意</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">ブロナンセリン<br><span class="text-gray-400">ロナセン</span></td>
+              <td class="td-left font-medium td-drug">ブロナンセリン<span class="text-gray-400">（ロナセン）</span></td>
               <td class="td-cell">4mg</td>
               <td class="td-cell">8-16mg</td>
               <td class="td-cell">24mg</td>
@@ -971,7 +989,7 @@
               <td class="td-cell text-left">食後投与必須（空腹で吸収↓）。経皮吸収テープあり</td>
             </tr>
             <tr>
-              <td class="td-left font-medium">ルラシドン<br><span class="text-gray-400">ラツーダ</span></td>
+              <td class="td-left font-medium td-drug">ルラシドン<span class="text-gray-400">（ラツーダ）</span></td>
               <td class="td-cell">40mg</td>
               <td class="td-cell">40-80mg</td>
               <td class="td-cell">80mg</td>
@@ -980,7 +998,7 @@
               <td class="td-cell text-left"><strong>食後必須</strong>（350kcal以上の食事と）。CYP3A4基質</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">ペロスピロン<br><span class="text-gray-400">ルーラン</span></td>
+              <td class="td-left font-medium td-drug">ペロスピロン<span class="text-gray-400">（ルーラン）</span></td>
               <td class="td-cell">4-8mg</td>
               <td class="td-cell">12-48mg</td>
               <td class="td-cell">48mg</td>
@@ -989,7 +1007,7 @@
               <td class="td-cell text-left">1日3回分割。食後投与推奨</td>
             </tr>
             <tr>
-              <td class="td-left font-medium">アセナピン<br><span class="text-gray-400">サクライズ</span></td>
+              <td class="td-left font-medium td-drug">アセナピン<span class="text-gray-400">（サクライズ）</span></td>
               <td class="td-cell">5mg×2</td>
               <td class="td-cell">5-10mg×2</td>
               <td class="td-cell">20mg</td>
@@ -998,7 +1016,7 @@
               <td class="td-cell text-left">舌下吸収。10分間飲食不可。口腔内しびれあり</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">アリピプラゾール<br><span class="text-gray-400">エビリファイ他</span></td>
+              <td class="td-left font-medium td-drug">アリピプラゾール<span class="text-gray-400">（エビリファイ他）</span></td>
               <td class="td-cell">6-12mg</td>
               <td class="td-cell">12-30mg</td>
               <td class="td-cell">30mg</td>
@@ -1007,7 +1025,7 @@
               <td class="td-cell text-left">D2部分作動。アカシジア注意。CYP2D6・3A4基質</td>
             </tr>
             <tr>
-              <td class="td-left font-medium">ブレクスピプラゾール<br><span class="text-gray-400">レキサルティ</span></td>
+              <td class="td-left font-medium td-drug">ブレクスピプラゾール<span class="text-gray-400">（レキサルティ）</span></td>
               <td class="td-cell">0.5-1mg</td>
               <td class="td-cell">2-4mg</td>
               <td class="td-cell">4mg</td>
@@ -1018,17 +1036,17 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- FGA詳細テーブル -->
       <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="generation-badge-fga text-xs">第一世代（FGA）</span></h3>
       <div class="x-scroll mb-4">
         <div class="overflow-x-auto x-scroll__rail">
-        <table class="w-full text-xs border-collapse">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
           <thead>
             <tr>
-              <th class="th-cell text-left pl-3 rounded-tl-lg">成分名（商品名）</th>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">成分名（商品名）</th>
               <th class="th-cell">系統</th>
               <th class="th-cell">標準用量目安</th>
               <th class="th-cell">CPZ換算比</th>
@@ -1038,7 +1056,7 @@
           </thead>
           <tbody>
             <tr>
-              <td class="td-left font-medium">ハロペリドール（セレネース）</td>
+              <td class="td-left font-medium td-drug">ハロペリドール（セレネース）</td>
               <td class="td-cell">ブチロフェノン</td>
               <td class="td-cell">2-10mg/日</td>
               <td class="td-cell">×50</td>
@@ -1046,7 +1064,7 @@
               <td class="td-cell">統合失調症・せん妄・器質性</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">クロルプロマジン（コントミン）</td>
+              <td class="td-left font-medium td-drug">クロルプロマジン（コントミン）</td>
               <td class="td-cell">フェノチアジン</td>
               <td class="td-cell">100-600mg/日</td>
               <td class="td-cell">×1</td>
@@ -1054,7 +1072,7 @@
               <td class="td-cell">統合失調症・鎮静目的</td>
             </tr>
             <tr>
-              <td class="td-left font-medium">レボメプロマジン（ヒルナミン）</td>
+              <td class="td-left font-medium td-drug">レボメプロマジン（ヒルナミン）</td>
               <td class="td-cell">フェノチアジン</td>
               <td class="td-cell">25-200mg/日</td>
               <td class="td-cell">×2</td>
@@ -1062,7 +1080,7 @@
               <td class="td-cell">急性期・鎮静・緩和</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">スルピリド（ドグマチール）</td>
+              <td class="td-left font-medium td-drug">スルピリド（ドグマチール）</td>
               <td class="td-cell">ベンザミド</td>
               <td class="td-cell">150-600mg/日</td>
               <td class="td-cell">×1</td>
@@ -1070,7 +1088,7 @@
               <td class="td-cell">統合失調症・抑うつ・消化器</td>
             </tr>
             <tr>
-              <td class="td-left font-medium">チアプリド（グラマリール）</td>
+              <td class="td-left font-medium td-drug">チアプリド（グラマリール）</td>
               <td class="td-cell">ベンザミド</td>
               <td class="td-cell">150-300mg/日</td>
               <td class="td-cell">—</td>
@@ -1078,7 +1096,7 @@
               <td class="td-cell">脳血管疾患・高齢者不穏</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-medium">フルフェナジン（フルメジン）</td>
+              <td class="td-left font-medium td-drug">フルフェナジン（フルメジン）</td>
               <td class="td-cell">フェノチアジン</td>
               <td class="td-cell">0.5-10mg/日</td>
               <td class="td-cell">×50</td>
@@ -1088,7 +1106,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <div class="danger-box">
@@ -1127,10 +1145,10 @@
 
       <div class="x-scroll">
         <div class="overflow-x-auto x-scroll__rail">
-        <table class="w-full text-xs border-collapse">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
           <thead>
             <tr>
-              <th class="th-cell text-left pl-3 rounded-tl-lg">製品名</th>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">製品名</th>
               <th class="th-cell">成分</th>
               <th class="th-cell">投与間隔</th>
               <th class="th-cell">投与部位</th>
@@ -1140,48 +1158,48 @@
           </thead>
           <tbody>
             <tr>
-              <td class="td-left font-bold text-blue-800">リスパダール・コンスタ<br><span class="text-gray-400 font-normal">筋注用</span></td>
-              <td class="td-cell">リスペリドン<br>マイクロスフェア</td>
+              <td class="td-left td-drug font-bold text-blue-800">リスパダール・コンスタ<span class="text-gray-400 font-normal">（筋注用）</span></td>
+              <td class="td-cell td-drug">リスペリドン（マイクロスフェア）</td>
               <td class="td-cell font-bold">2週</td>
               <td class="td-cell">臀部筋注</td>
               <td class="td-cell">3週間経口継続</td>
               <td class="td-cell text-left">初回注射後3週で有効血中濃度到達。冷蔵保存</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-bold text-blue-800">ゼプリオン水懸注<br><span class="text-gray-400 font-normal">（月1回）</span></td>
-              <td class="td-cell">パリペリドン<br>パルミチン酸</td>
+              <td class="td-left td-drug font-bold text-blue-800">ゼプリオン水懸注<span class="text-gray-400 font-normal">（月1回）</span></td>
+              <td class="td-cell td-drug">パリペリドン（パルミチン酸）</td>
               <td class="td-cell font-bold">4週</td>
               <td class="td-cell">三角筋 or 臀部</td>
-              <td class="td-cell">初回150mg→1週後100mg<br>（経口不要）</td>
+              <td class="td-cell whitespace-nowrap">初回150mg→1週後100mg（経口不要）</td>
               <td class="td-cell text-left">初回2回でローディング。経口不要が利点。冷蔵不要</td>
             </tr>
             <tr>
-              <td class="td-left font-bold text-blue-800">ゼプリオンTRI水懸注<br><span class="text-gray-400 font-normal">（3ヶ月1回）</span></td>
-              <td class="td-cell">パリペリドン<br>パルミチン酸</td>
+              <td class="td-left td-drug font-bold text-blue-800">ゼプリオンTRI水懸注<span class="text-gray-400 font-normal">（3ヶ月1回）</span></td>
+              <td class="td-cell td-drug">パリペリドン（パルミチン酸）</td>
               <td class="td-cell font-bold">12週</td>
               <td class="td-cell">臀部筋注</td>
               <td class="td-cell">月1回製剤で安定後に変更</td>
               <td class="td-cell text-left">3ヶ月1回で最長間隔。ゼプリオンからの変換式あり</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-bold text-purple-800">エビリファイ持続性<br>水懸筋注用<br><span class="text-gray-400 font-normal">（月1回）</span></td>
-              <td class="td-cell">アリピプラゾール<br>水和物</td>
+              <td class="td-left td-drug font-bold text-purple-800">エビリファイ持続性水懸筋注用<span class="text-gray-400 font-normal">（月1回）</span></td>
+              <td class="td-cell td-drug">アリピプラゾール（水和物）</td>
               <td class="td-cell font-bold">4週</td>
               <td class="td-cell">三角筋 or 臀部</td>
               <td class="td-cell">14日間経口アリピプラゾール継続</td>
               <td class="td-cell text-left">代謝副作用少。初回注射後14日経口継続必須。冷蔵保存</td>
             </tr>
             <tr>
-              <td class="td-left font-bold text-red-800">ハロマンス筋注<br>ネオペリドール筋注<br><span class="text-gray-400 font-normal">（FGA LAI）</span></td>
-              <td class="td-cell">ハロペリドール<br>デカン酸</td>
+              <td class="td-left td-drug font-bold text-red-800">ハロマンス筋注・ネオペリドール筋注<span class="text-gray-400 font-normal">（FGA LAI）</span></td>
+              <td class="td-cell td-drug">ハロペリドール（デカン酸）</td>
               <td class="td-cell font-bold">4週前後</td>
               <td class="td-cell">臀部筋注</td>
               <td class="td-cell">製品・用量に応じて</td>
               <td class="td-cell text-left">FGA LAI。EPSリスク。コスト安。SGAで代替可</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-bold text-red-800">フルデカシン<br><span class="text-gray-400 font-normal">（FGA LAI）</span></td>
-              <td class="td-cell">フルフェナジン<br>デカン酸</td>
+              <td class="td-left td-drug font-bold text-red-800">フルデカシン<span class="text-gray-400 font-normal">（FGA LAI）</span></td>
+              <td class="td-cell td-drug">フルフェナジン（デカン酸）</td>
               <td class="td-cell font-bold">2-4週</td>
               <td class="td-cell">臀部筋注</td>
               <td class="td-cell">製品による</td>
@@ -1190,7 +1208,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <div class="warning-box mt-4">
@@ -1222,10 +1240,10 @@
 
       <div class="x-scroll mb-6">
         <div class="overflow-x-auto x-scroll__rail">
-        <table class="w-full text-xs border-collapse">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
           <thead>
             <tr>
-              <th class="th-cell text-left pl-3 rounded-tl-lg w-36">薬剤</th>
+              <th class="th-cell text-left pl-3 rounded-tl-lg w-36 th-drug">薬剤</th>
               <th class="th-cell">EPS</th>
               <th class="th-cell">遅発性<br>ジスキネジア</th>
               <th class="th-cell">体重増加</th>
@@ -1239,7 +1257,7 @@
           </thead>
           <tbody>
             <tr class="bg-red-50">
-              <td class="td-left font-bold">ハロペリドール</td>
+              <td class="td-left font-bold td-drug">ハロペリドール</td>
               <td class="td-cell text-red-600 font-bold">〇〇</td>
               <td class="td-cell text-red-600 font-bold">〇</td>
               <td class="td-cell text-gray-400">✕</td>
@@ -1251,7 +1269,7 @@
               <td class="td-cell text-gray-400">✕</td>
             </tr>
             <tr>
-              <td class="td-left font-bold">クロルプロマジン</td>
+              <td class="td-left font-bold td-drug">クロルプロマジン</td>
               <td class="td-cell text-orange-500">△</td>
               <td class="td-cell text-orange-500">△</td>
               <td class="td-cell text-orange-500">△</td>
@@ -1263,7 +1281,7 @@
               <td class="td-cell text-red-600 font-bold">〇</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-bold">リスペリドン</td>
+              <td class="td-left font-bold td-drug">リスペリドン</td>
               <td class="td-cell text-orange-500">△（用量依存）</td>
               <td class="td-cell text-orange-500">△</td>
               <td class="td-cell text-orange-500">△</td>
@@ -1275,7 +1293,7 @@
               <td class="td-cell text-orange-500">△</td>
             </tr>
             <tr>
-              <td class="td-left font-bold">オランザピン</td>
+              <td class="td-left font-bold td-drug">オランザピン</td>
               <td class="td-cell text-gray-400">✕</td>
               <td class="td-cell text-gray-400">✕</td>
               <td class="td-cell text-red-600 font-bold">〇〇</td>
@@ -1287,7 +1305,7 @@
               <td class="td-cell text-gray-400">✕</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-bold">クエチアピン</td>
+              <td class="td-left font-bold td-drug">クエチアピン</td>
               <td class="td-cell text-green-600">✕✕</td>
               <td class="td-cell text-green-600">✕</td>
               <td class="td-cell text-orange-500">△</td>
@@ -1299,7 +1317,7 @@
               <td class="td-cell text-orange-500">△</td>
             </tr>
             <tr>
-              <td class="td-left font-bold">ブロナンセリン</td>
+              <td class="td-left font-bold td-drug">ブロナンセリン</td>
               <td class="td-cell text-orange-500">△</td>
               <td class="td-cell text-orange-500">△</td>
               <td class="td-cell text-gray-400">✕</td>
@@ -1311,7 +1329,7 @@
               <td class="td-cell text-gray-400">✕</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-bold">ルラシドン</td>
+              <td class="td-left font-bold td-drug">ルラシドン</td>
               <td class="td-cell text-orange-500">△</td>
               <td class="td-cell text-gray-400">✕</td>
               <td class="td-cell text-gray-400">✕</td>
@@ -1323,7 +1341,7 @@
               <td class="td-cell text-gray-400">✕</td>
             </tr>
             <tr>
-              <td class="td-left font-bold">アリピプラゾール</td>
+              <td class="td-left font-bold td-drug">アリピプラゾール</td>
               <td class="td-cell text-orange-500">△<br><span class="text-xs">(アカシジア)</span></td>
               <td class="td-cell text-gray-400">✕</td>
               <td class="td-cell text-gray-400">✕</td>
@@ -1335,7 +1353,7 @@
               <td class="td-cell text-gray-400">✕</td>
             </tr>
             <tr class="bg-gray-50">
-              <td class="td-left font-bold">ブレクスピプラゾール</td>
+              <td class="td-left font-bold td-drug">ブレクスピプラゾール</td>
               <td class="td-cell text-gray-400">✕</td>
               <td class="td-cell text-gray-400">✕</td>
               <td class="td-cell text-gray-400">✕（軽微）</td>
@@ -1347,7 +1365,7 @@
               <td class="td-cell text-gray-400">✕</td>
             </tr>
             <tr class="bg-fuchsia-50">
-              <td class="td-left font-bold text-fuchsia-800">クロザピン</td>
+              <td class="td-left font-bold text-fuchsia-800 td-drug">クロザピン</td>
               <td class="td-cell text-green-600">✕✕</td>
               <td class="td-cell text-green-600">✕✕</td>
               <td class="td-cell text-red-600 font-bold">〇〇〇</td>
@@ -1361,7 +1379,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- 重大な副作用 -->
@@ -1465,7 +1483,7 @@
 
       <div class="x-scroll mb-6">
         <div class="overflow-x-auto x-scroll__rail">
-        <table class="w-full text-xs border-collapse">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
           <thead>
             <tr>
               <th class="th-cell text-left pl-3 rounded-tl-lg">モニタリング項目</th>
@@ -1489,7 +1507,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- クロザピン特別スケジュール -->
@@ -1517,7 +1535,7 @@
             </tbody>
           </table>
         </div>
-          <p class="x-scroll__hint md:hidden"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>左右にスワイプして表の続きを表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+          <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <div class="mt-4 grid md:grid-cols-3 gap-3 text-xs">

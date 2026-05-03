@@ -48,6 +48,20 @@
     .case-prose { line-height: 1.75; }
     .drill-open summary { cursor: pointer; list-style: none; }
     .drill-open summary::-webkit-details-marker { display: none; }
+    .quiz-q-card { transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; }
+    .quiz-q-card.quiz-graded.quiz-card-ok { border-color: #34d399; box-shadow: 0 1px 3px rgba(16,185,129,0.28); background: #f0fdf4; }
+    .quiz-q-card.quiz-graded.quiz-card-ng { border-color: #fb923c; box-shadow: 0 1px 3px rgba(251,146,60,0.28); background: #fff7ed; }
+    .quiz-q-card.quiz-graded.quiz-card-skip { border-color: #94a3b8; box-shadow: 0 1px 3px rgba(148,163,184,0.28); background: #f8fafc; }
+    .quiz-q-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+    .quiz-q-title { flex: 1; min-width: 0; }
+    .quiz-result-badge { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.25rem 0.6rem; border-radius: 9999px; line-height: 1.2; }
+    .quiz-result-badge.is-hidden { display: none !important; }
+    .quiz-badge-ok { background: #a7f3d0; color: #065f46; }
+    .quiz-badge-ng { background: #fed7aa; color: #9a3412; }
+    .quiz-badge-skip { background: #e2e8f0; color: #475569; }
+    .quiz-opt-row.quiz-opt-correct { background: #dcfce7 !important; border: 1px solid #86efac !important; }
+    .quiz-opt-row.quiz-opt-wrong { background: #ffe4e6 !important; border: 1px solid #fb7185 !important; }
+    .quiz-q-card.quiz-graded .quiz-opt-row { cursor: default; }
   </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -442,17 +456,23 @@
     const quizItems = document.getElementById('quiz-items');
     QUIZ.forEach((item, i) => {
       const wrap = document.createElement('div');
-      wrap.className = 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
-      wrap.datasetCorrect = String(item.a);
+      wrap.className = 'quiz-q-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+      const head = document.createElement('div');
+      head.className = 'quiz-q-head mb-2';
       const h = document.createElement('div');
-      h.className = 'font-semibold text-slate-800 mb-2';
+      h.className = 'quiz-q-title font-semibold text-slate-800';
       h.textContent = `Q${i + 1}. ${item.q}`;
-      wrap.appendChild(h);
+      const badge = document.createElement('span');
+      badge.className = 'quiz-result-badge is-hidden';
+      badge.setAttribute('aria-live', 'polite');
+      head.appendChild(h);
+      head.appendChild(badge);
+      wrap.appendChild(head);
       const opts = document.createElement('div');
       opts.className = 'space-y-2';
       item.opts.forEach((text, j) => {
         const lab = document.createElement('label');
-        lab.className = 'flex items-start gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50';
+        lab.className = 'quiz-opt-row flex items-start gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50 border border-transparent';
         const r = document.createElement('input');
         r.type = 'radio';
         r.name = `q${i}`;
@@ -473,11 +493,57 @@
       quizItems.appendChild(wrap);
     });
 
+    function clearMiniQuizVisuals() {
+      document.querySelectorAll('#quiz-items .quiz-q-card').forEach((card) => {
+        card.classList.remove('quiz-graded', 'quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        const b = card.querySelector('.quiz-result-badge');
+        if (b) {
+          b.classList.add('is-hidden');
+          b.textContent = '';
+          b.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip');
+        }
+        card.querySelectorAll('.quiz-opt-row').forEach((lab) => {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+      });
+    }
+
     document.getElementById('quiz-grade').addEventListener('click', () => {
       let ok = 0;
+      const cards = document.querySelectorAll('#quiz-items .quiz-q-card');
       QUIZ.forEach((item, i) => {
-        const sel = document.querySelector(`input[name="q${i}"]:checked`);
-        if (sel && +sel.value === item.a) ok++;
+        const wrap = cards[i];
+        if (!wrap) return;
+        const badge = wrap.querySelector('.quiz-result-badge');
+        const sel = wrap.querySelector('input[type="radio"]:checked');
+        const picked = sel ? +sel.value : null;
+        const isOk = picked === item.a;
+        if (isOk) ok++;
+
+        wrap.classList.remove('quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        wrap.classList.add('quiz-graded');
+        badge.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip', 'is-hidden');
+
+        if (picked === null) {
+          wrap.classList.add('quiz-card-skip');
+          badge.textContent = '未解答';
+          badge.classList.add('quiz-badge-skip');
+        } else if (isOk) {
+          wrap.classList.add('quiz-card-ok');
+          badge.textContent = '正解';
+          badge.classList.add('quiz-badge-ok');
+        } else {
+          wrap.classList.add('quiz-card-ng');
+          badge.textContent = '不正解';
+          badge.classList.add('quiz-badge-ng');
+        }
+
+        wrap.querySelectorAll('.quiz-opt-row').forEach((lab) => {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+        const rows = wrap.querySelectorAll('.quiz-opt-row');
+        if (rows[item.a]) rows[item.a].classList.add('quiz-opt-correct');
+        if (picked !== null && picked !== item.a && rows[picked]) rows[picked].classList.add('quiz-opt-wrong');
       });
       const el = document.getElementById('quiz-result');
       el.textContent = `正答 ${ok} / ${QUIZ.length}`;
@@ -485,7 +551,8 @@
     });
 
     document.getElementById('quiz-reset').addEventListener('click', () => {
-      document.querySelectorAll('#quiz-items input[type="radio"]').forEach(r => { r.checked = false; });
+      document.querySelectorAll('#quiz-items input[type="radio"]').forEach((r) => { r.checked = false; });
+      clearMiniQuizVisuals();
       const el = document.getElementById('quiz-result');
       el.textContent = '';
       el.className = 'text-sm font-bold text-slate-700 tabular-nums';

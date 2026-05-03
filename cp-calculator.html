@@ -661,7 +661,7 @@
         <span class="text-xs font-medium opacity-70 uppercase tracking-wider">抗精神病薬 臨床ツール</span>
       </div>
       <h1 class="text-2xl font-bold leading-tight">CP換算計算機</h1>
-      <p class="text-sm opacity-80 mt-1">クロルプロマジン等価換算（稲垣・稲田版）</p>
+      <p class="text-sm opacity-80 mt-1">クロルプロマジン相当量への換算（稲垣・稲田版）</p>
       <p class="text-xs opacity-80 mt-2 flex flex-wrap gap-x-3 gap-y-1">
         <a href="top.html" class="text-white hover:underline font-medium">← 精神科臨床ガイド・ポータルへ</a>
         <a href="dzp-calculator.html" class="text-white/90 hover:underline font-medium">ジアゼパム換算計算機 →</a>
@@ -729,7 +729,7 @@
     <!-- CP換算の概要・操作法 -->
     <div class="cp-guide-panel max-w-2xl mx-auto">
       <h2>CP換算とは</h2>
-      <p>数ある抗精神病薬を基準となる<strong>クロルプロマジン（CP）</strong>換算<strong>mg</strong>にした値です（稲垣・稲田版）。複数薬剤の併用時の<strong>概算総量の把握</strong>や、製剤切替時の投与量設定の<strong>おおまかな目安</strong>に使えます。鎮静作用などは評価に含まれていません。</p>
+      <p>各抗精神病薬の投与量を、基準薬である<strong>クロルプロマジン（CP）</strong>に換算した<strong>mg</strong>相当量です（稲垣・稲田版）。複数薬剤の併用時の<strong>概算総量の把握</strong>や、製剤切替時の投与量設定の<strong>おおまかな目安</strong>に用いられます。鎮静作用などは換算に含まれていません。</p>
       <h2 class="mt-3">操作方法</h2>
       <ul>
         <li>上部タブで<strong>経口・貼付剤</strong>／<strong>持効性注射剤</strong>／<strong>速効性注射剤</strong>を切り替えます。</li>
@@ -747,7 +747,7 @@
         <div class="flex items-start gap-2">
           <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
           <div class="text-xs text-amber-800">
-            <span class="font-bold">留意事項：</span>CP換算値は抗精神病作用のみを評価したものです。鎮静作用等は含まれません。あくまで投与量の目安としてお使いください。各行の<strong>「上限」</strong>は国内添付における<strong>用量の簡記</strong>であり、適応・年齢・製品・増量規定により変わります。<strong>臨床上は現行添付・施設規程で確認</strong>してください。©稲垣中, 稲田俊也
+            <span class="font-bold">留意事項：</span>CP換算値は抗精神病作用のみを評価したものです。鎮静作用などは含まれません。あくまで投与量の<strong>目安</strong>としてお使いください。各行の<strong>「上限」</strong>は、国内承認医薬品の<strong>添付文書（用法・用量）</strong>における<strong>用量の簡記</strong>であり、適応・年齢・製剤・増量手順などにより異なります。<strong>臨床では現行の添付文書および院内規程で必ず確認</strong>してください。出典：稲垣中・稲田俊也
           </div>
         </div>
       </div>
@@ -800,7 +800,7 @@
           <!-- MARTA -->
           <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-marta">
             <span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
-            MARTA（多受容体作用）
+            MARTA（多受容体拮抗型）
           </div>
           <div id="drugs-marta"></div>
           <div class="divider" data-divider-for="drugs-marta"></div>
@@ -808,7 +808,7 @@
           <!-- DPA -->
           <div class="subsection-label flex items-center gap-1.5" data-subsection-for="drugs-dpa">
             <span class="w-2 h-2 rounded-full bg-indigo-500 inline-block"></span>
-            DPA（ドパミン部分作動薬）
+            DPA（ドパミン受容体部分作動薬）
           </div>
           <div id="drugs-dpa"></div>
 
@@ -998,7 +998,7 @@ const ORAL_GEN1 = {
     { id: 'propericiazine',    name: 'プロペリシアジン',    brand: 'ニューレプチル',         factor: 20,  disc: false, tabs: [5, 10],              maxJp: '90 mg/日' },
     { id: 'thioridazine',      name: 'チオリダジン',        brand: 'メレリル',               factor: 100, disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
     { id: 'trifluoperazine',   name: 'トリフロペラジン',    brand: 'トリフロペラジン',       factor: 5,   disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
-    { id: 'perazine',          name: 'ぺラジン',            brand: 'プシトミン',             factor: 100, disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
+    { id: 'perazine',          name: 'ペラジン',            brand: 'プシトミン',             factor: 100, disc: true,  tabs: [],                   maxJp: '—（販売中止）' },
   ],
   butyrophenone: [
     { id: 'haloperidol',       name: 'ハロペリドール',      brand: 'セレネース',             factor: 2,   disc: false, tabs: [0.75, 1, 1.5, 3],   maxJp: '30 mg/日' },
@@ -1523,8 +1523,8 @@ function buildDrugSearchIndex() {
     ...ORAL_GEN1.benzamide,
     ...ORAL_GEN1.other
   ].forEach(d => push(d, 'oral', '経口'));
-  LAI_DRUGS.forEach(d => push(d, 'lai', '持効注'));
-  RAPID_INJECT_DRUGS.forEach(d => push(d, 'inject', '速効注'));
+  LAI_DRUGS.forEach(d => push(d, 'lai', '持効注射'));
+  RAPID_INJECT_DRUGS.forEach(d => push(d, 'inject', '速効注射'));
 }
 
 let searchMatches = [];
@@ -1545,8 +1545,8 @@ function renderCpConversionReference() {
 
   const oralGroups = [
     ['第2世代 SDA（セロトニン・ドパミン拮抗薬）', ORAL_DRUGS.sda],
-    ['第2世代 MARTA（多受容体作用）', ORAL_DRUGS.marta],
-    ['第2世代 DPA（ドパミン部分作動薬）', ORAL_DRUGS.dpa],
+    ['第2世代 MARTA（多受容体拮抗型）', ORAL_DRUGS.marta],
+    ['第2世代 DPA（ドパミン受容体部分作動薬）', ORAL_DRUGS.dpa],
     ['第1世代 フェノチアジン系', ORAL_GEN1.phenothiazine],
     ['第1世代 ブチロフェノン系', ORAL_GEN1.butyrophenone],
     ['第1世代 ベンズアミド系', ORAL_GEN1.benzamide],
@@ -1600,7 +1600,7 @@ function renderCpConversionReference() {
 <details class="cp-ref-panel">
   <summary>計算に使用しているCP換算係数・基準値の一覧（開く）</summary>
   <div class="cp-ref-body">
-    <p class="cp-ref-intro">本ページの自動計算に使っている数値は、クロルプロマジン換算における<strong>稲垣・稲田版</strong>（日本精神薬学会サイト掲載表と対応する係数／基準量）です。©稲垣中, 稲田俊也</p>
+    <p class="cp-ref-intro">本ページの自動計算に用いている数値は、クロルプロマジン換算における<strong>稲垣・稲田版</strong>（日本精神薬学会サイト掲載の表に対応する係数・基準量）です。出典：稲垣中・稲田俊也</p>
     <p class="cp-ref-intro"><strong>経口・貼付剤・速効性注射剤</strong><br>
     <span style="white-space:normal">CP換算 mg＝（投与 mg ÷ 換算係数）×100</span></p>
     <p class="cp-ref-intro"><strong>持効性注射剤</strong><br>
@@ -1620,8 +1620,8 @@ function renderCpConversionReference() {
       </thead><tbody>${laiRows}</tbody></table></div>
     <div class="cp-ref-sub">速効性注射剤（換算係数）</div>
     <div class="cp-ref-scroll"><table class="cp-ref-table"><thead><tr><th scope="col">一般名・商品名</th><th scope="col">換算係数<sup>※</sup></th><th scope="col">単回など<br><span class="cp-ref-muted" style="font-weight:600">上限（簡記）<sup>†</sup></span></th></tr></thead><tbody>${injRows}</tbody></table></div>
-    <p id="cp-ref-fn" class="cp-ref-footnote">※ 「換算係数」は、<a href="https://js-pp.or.jp/cp/" target="_blank" rel="noopener noreferrer" class="text-teal-700 underline underline-offset-2 hover:text-teal-900">日本精神薬学会の CP 換算ページ</a>にある<strong>経口・速効注射</strong>表の係数値と対応しています。この計算機では CP mg＝（投与 mg÷係数）×100 と代入しています。持効性注射は表の<strong>基準投与 mg と基準間隔</strong>として同様に使用しています。</p>
-    <p class="cp-ref-footnote">† 「国内上限（簡記）」は各製品<strong>電子添付（用法・用量）</strong>の<strong>概要</strong>です。精神科の主適応を想定した記載でも、実際には疾患・経路・年齢・併症・増量規定で異なる場合があります。処方確定には添付記載および施設内ルールで必ず確認してください。</p>
+    <p id="cp-ref-fn" class="cp-ref-footnote">※ 「換算係数」は、<a href="https://js-pp.or.jp/cp/" target="_blank" rel="noopener noreferrer" class="text-teal-700 underline underline-offset-2 hover:text-teal-900">日本精神薬学会の CP 換算ページ</a>に掲載の<strong>経口・速効性注射剤</strong>の表の係数値に対応しています。本計算機では CP mg＝（投与 mg÷係数）×100 と代入しています。持効性注射剤は表の<strong>基準投与量（mg）と基準投与間隔</strong>を同様に用いています。</p>
+    <p class="cp-ref-footnote">† 「国内上限（簡記）」は、各医薬品の<strong>電子添付文書（用法・用量）</strong>に基づく<strong>概要</strong>です。主に精神科的適応での記載を想定していますが、疾患・投与経路・年齢・併存疾患・増量に関する記載により実際の上限は異なる場合があります。処方内容の確定には、必ず現行の添付文書および院内の手順に従って確認してください。</p>
   </div>
 </details>`;
 }

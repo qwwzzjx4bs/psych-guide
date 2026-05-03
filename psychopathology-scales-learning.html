@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神病理 × スケール — 学習ハブ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pp-gradient: linear-gradient(135deg, #422006 0%, #15803d 48%, #b45309 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--pp-gradient); }
+    .pp-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      border: 1px solid #f1f5f9;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .pp-link {
+      color: #15803d;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .pp-link:hover { color: #166534; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5.5rem; }
+    }
+    .quiz-opt { accent-color: #15803d; }
+    .drill-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #14532d;
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    .case-prose { line-height: 1.75; }
+    .drill-open summary { cursor: pointer; list-style: none; }
+    .drill-open summary::-webkit-details-marker { display: none; }
+    .quiz-q-card { transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; }
+    .quiz-q-card.quiz-graded.quiz-card-ok { border-color: #34d399; box-shadow: 0 1px 3px rgba(16,185,129,0.28); background: #f0fdf4; }
+    .quiz-q-card.quiz-graded.quiz-card-ng { border-color: #fb923c; box-shadow: 0 1px 3px rgba(251,146,60,0.28); background: #fff7ed; }
+    .quiz-q-card.quiz-graded.quiz-card-skip { border-color: #94a3b8; box-shadow: 0 1px 3px rgba(148,163,184,0.28); background: #f8fafc; }
+    .quiz-q-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+    .quiz-q-title { flex: 1; min-width: 0; }
+    .quiz-result-badge { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.25rem 0.6rem; border-radius: 9999px; line-height: 1.2; }
+    .quiz-result-badge.is-hidden { display: none !important; }
+    .quiz-badge-ok { background: #a7f3d0; color: #065f46; }
+    .quiz-badge-ng { background: #fed7aa; color: #9a3412; }
+    .quiz-badge-skip { background: #e2e8f0; color: #475569; }
+    .quiz-opt-row.quiz-opt-correct { background: #dcfce7 !important; border: 1px solid #86efac !important; }
+    .quiz-opt-row.quiz-opt-wrong { background: #ffe4e6 !important; border: 1px solid #fb7185 !important; }
+    .quiz-q-card.quiz-graded .quiz-opt-row { cursor: default; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">学習用（教育コンテンツ）</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">精神病理 × スケール</h1>
+      <p class="text-white/85 mt-2 text-sm leading-relaxed max-w-2xl">
+        臨床で見える<strong class="font-semibold text-white">症候・症候群</strong>を、どの評価尺度の<strong class="font-semibold text-white">どの項目</strong>に載せるかを意識すると、記録の一貫性とエビデンスの読みが伸びます。<strong class="font-semibold text-white">症例ドライループ</strong>とミニチェックで結びつけを練習します。
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 -mt-3 relative z-10">
+
+    <div class="rounded-xl border border-amber-200 bg-amber-50/90 p-4 mb-6 text-sm text-amber-950">
+      <strong class="font-bold">重要</strong>：本ページは医学教育のためのまとめです。採点は各尺度の<strong class="font-bold">原著・日本語マニュアル・施設訓練</strong>に必ず従ってください。ここに示すのは「おおまかな対応関係」であり、個別症例の正式採点の代替ではありません。
+    </div>
+
+    <section id="path" class="pp-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+          <i data-lucide="route" class="w-5 h-5 text-emerald-800"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">おすすめの学習順（能動的想起用）</h2>
+          <p class="text-xs text-slate-500">まず<strong class="text-slate-800">言葉</strong>、次に<strong class="text-slate-800">行動・表情</strong>、最後に<strong class="text-slate-800">点数の幅</strong>の順だと教えやすいです。</p>
+        </div>
+      </div>
+      <ol class="list-decimal list-inside space-y-2.5 text-sm text-slate-700 leading-relaxed">
+        <li><strong class="text-slate-900">用語の統一</strong>：精神病理の名称・定義を自分なりに言えるか。→ <a class="pp-link" href="psych-terminology-jp.html">精神医学・症候学 用語マップ</a></li>
+        <li><strong class="text-slate-900">症候の「見え方」</strong>：自覚症状・他観所見・時系列を分けてメモする習慣。→ <a class="pp-link" href="bprs-guide.html">BPRS 質問・採点の考え方</a></li>
+        <li><strong class="text-slate-900">精神病性尺度</strong>：陽性・陰性・一般精神病理の枠。→ <a class="pp-link" href="panss-sheet-detailed.html">PANSS 詳細シート</a>／<a class="pp-link" href="bprs-sheet-detailed.html">BPRS 詳細シート</a>／<a class="pp-link" href="schizophrenia-scales.html">スケール解説一覧</a></li>
+        <li><strong class="text-slate-900">うつ・不安との境界</strong>：陰性症状・解体様相とうつ・パニックの重なり。→ <a class="pp-link" href="hamd-sheet-detailed.html">HAM-D</a>／<a class="pp-link" href="madrs-sheet-detailed.html">MADRS</a></li>
+        <li><strong class="text-slate-900">緊張病・興奮</strong>：運動症状は身体所見が命。→ <a class="pp-link" href="bfcrs-sheet.html">BFCRS</a></li>
+        <li><strong class="text-slate-900">躁・気分変調</strong>：思考奔逸と多弁、誇大の見極め。→ <a class="pp-link" href="ymrs-sheet-detailed.html">YMRS</a></li>
+        <li><strong class="text-slate-900">症例で回す</strong>：<a class="pp-link" href="#drill">症例ドライループ</a>で「病理 → どの尺度のどの要素か」を毎回口頭化してから開示。</li>
+      </ol>
+    </section>
+
+    <section id="assess" class="pp-card border-l-4 border-l-emerald-600">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="clipboard-check" class="w-6 h-6 text-emerald-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">精神病理をスケールに載せるときのチェック（学習用）</h2>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">採点前に頭を通すと<strong>ブレ</strong>が減ります。</p>
+      <ul class="grid sm:grid-cols-2 gap-2 text-sm text-slate-700">
+        <li class="flex gap-2 bg-emerald-50/90 rounded-lg px-3 py-2 border border-emerald-100"><span class="text-emerald-800 font-bold">1</span>その症候は<strong>定義どおり</strong>か（教科書・マニュアルの文言に当てはまるか）</li>
+        <li class="flex gap-2 bg-emerald-50/90 rounded-lg px-3 py-2 border border-emerald-100"><span class="text-emerald-800 font-bold">2</span>情報源は<strong>本人／家族／職員観察</strong>のどれか明示</li>
+        <li class="flex gap-2 bg-emerald-50/90 rounded-lg px-3 py-2 border border-emerald-100"><span class="text-emerald-800 font-bold">3</span><strong>評価期間内の最重時</strong>の症状レベルか、当日の一瞬か</li>
+        <li class="flex gap-2 bg-emerald-50/90 rounded-lg px-3 py-2 border border-emerald-100"><span class="text-emerald-800 font-bold">4</span>併存する<strong>器質・物質・他軸障害</strong>で説明しうるか</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">5</span>同じ現象を<strong>別尺度の別項目</strong>で二重に稼いでいないか</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">6</span><strong>アンカーテキスト</strong>の「典型例」と照合（境界は面接で埋める）</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">7</span>薬源・離脱（EPS・アカシジア等）を<strong>精神病理と混同</strong>していないか</li>
+        <li class="flex gap-2 bg-amber-50 rounded-lg px-3 py-2 border border-amber-100"><span class="text-amber-800 font-bold">8</span>通訳・文化圏で概念がずれていないか（必要なら用語を併記）</li>
+      </ul>
+    </section>
+
+    <section id="cross" class="pp-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="git-merge" class="w-6 h-6 text-amber-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">よくぶつかる「対応関係」（概念整理）</h2>
+      </div>
+      <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+        <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-3">
+          <div class="font-bold text-emerald-900 text-sm mb-1">PANSS の P / N / G</div>
+          <p><strong>陽性</strong>（妄想・幻覚・誇大・興奮など）、<strong>陰性</strong>（感情平淡・社会的孤立・思考貧困など）、<strong>一般精神病理</strong>（抑うつ・罪責感・運動異常など）に症候を振り分ける枠です。同一の面接で<strong>複数サブ尺度にまたがる</strong>こともあります。</p>
+        </div>
+        <div class="rounded-lg bg-teal-50 border border-teal-100 p-3">
+          <div class="font-bold text-teal-900 text-sm mb-1">BPRS と PANSS</div>
+          <p>BPRS は<strong>項目がやや粗く歴史が長い</strong>一方、PANSS は統合失調症治療研究で広く使われる<strong>細分化</strong>です。同一症例でも<strong>丸め方</strong>が異なるので、研究比較時は尺度の切り替えに注意します。</p>
+        </div>
+        <div class="rounded-lg bg-sky-50 border border-sky-100 p-3">
+          <div class="font-bold text-sky-900 text-sm mb-1">陰性症状 vs 抑うつ</div>
+          <p>感情平淡・自発性低下は PANSS 陰性へ、<strong>抑うつ気分・罪責・自殺念慮</strong>はうつ尺度（HAM-D / MADRS の該当項目）や PANSS 一般精神病理で<strong>分解して評価</strong>する型が典型です。</p>
+        </div>
+        <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
+          <div class="font-bold text-violet-900 text-sm mb-1">緊張病は BFCRS</div>
+          <p>拒食・不動・蠟屈・興奮性緊張などは、精神医学的な説明だけでなく<strong>身体所見</strong>が核です。抗精神病薬開始・増量直後は<strong>NMS・急性錐体外路症状</strong>も鑑別に入ります。</p>
+        </div>
+        <div class="rounded-lg bg-orange-50 border border-orange-100 p-3">
+          <div class="font-bold text-orange-900 text-sm mb-1">躁気分・思考奔逸</div>
+          <p>会話の速度・量・連想の飛び・睡眠欲求低下などは <strong>YMRS</strong> 系の評価と相性がよく、精神病性誇大は PANSS／BPRS の誇大系項目も併考します。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="drill" class="pp-card ring-2 ring-emerald-200/90 border-emerald-100">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+            <i data-lucide="repeat" class="w-5 h-5 text-emerald-900"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">症例ドライループ</h2>
+            <p class="text-xs text-slate-500 mt-0.5">架空症例。<span class="drill-pill inline-block mt-1">READ → RECALL → REVEAL</span></p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+          <button type="button" id="drill-prev" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50">前の症例</button>
+          <button type="button" id="drill-next" class="px-3 py-2 rounded-lg bg-emerald-700 text-white text-sm font-bold hover:bg-emerald-800 shadow-sm">次の症例</button>
+        </div>
+      </div>
+      <div class="rounded-xl bg-amber-50/80 border border-amber-100 p-3 mb-4 text-xs text-amber-950 leading-relaxed">
+        <strong class="font-bold">回し方</strong>：症例を読む → <em>①どの精神病理か</em> <em>②主にどの尺度・因子か</em> <em>③採点で迷いそうな境界</em> を言語化 → 開示を開く。<span class="block mt-1.5">全<strong>8症例</strong>。</span>
+      </div>
+      <p class="text-sm font-bold text-emerald-900 mb-2 tabular-nums" id="drill-index" aria-live="polite">症例 1 / 8</p>
+      <div class="rounded-xl border border-slate-200 bg-white p-4 mb-4 shadow-sm">
+        <h3 class="text-base font-bold text-slate-900 mb-2 leading-snug" id="drill-title"></h3>
+        <div class="case-prose text-sm text-slate-700 whitespace-pre-line" id="drill-vignette"></div>
+      </div>
+      <div class="space-y-2 text-sm" id="drill-reveals"></div>
+      <p class="text-xs text-slate-400 mt-4">実採点は各シートの定義文に従ってください。</p>
+    </section>
+
+    <section id="quiz" class="pp-card ring-2 ring-emerald-200/80">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="help-circle" class="w-6 h-6 text-emerald-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">ミニチェック（10問）</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">選択後「採点する」。</p>
+      <div id="quiz-items" class="space-y-5 text-sm"></div>
+      <div class="flex flex-wrap items-center gap-3 mt-6">
+        <button type="button" id="quiz-grade" class="px-5 py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-sm hover:bg-emerald-800 shadow-md">採点する</button>
+        <button type="button" id="quiz-reset" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">選択をクリア</button>
+        <p id="quiz-result" class="text-sm font-bold text-slate-700 tabular-nums" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 mt-8 mb-6">関連：<a class="pp-link" href="mood-suicide-learning.html">気分障害 × 自殺リスク</a> · <a class="pp-link" href="schizophrenia-first-episode-learning.html">統合失調症 × 初発時対応</a></p>
+  </main>
+
+  <script>
+    const CASE_DRILL = [
+      {
+        title: '症例1：「何もしたくないが、気分は落ち込んでいない」（32歳・男性）',
+        vignette: '統合失調症。就労支援通所。本人は「気分は普通。ただ動きたくない」。面接は要問いかけで短い応答。表情の変化は乏しい。近医では「うつでは？」と言われたことがある。\n幻聴は週に数日。被害妄想はコントロールできているとのこと。',
+        blocks: [
+          { label: '精神病理の読み', body: '意欲・自発性の低下と感情反応の乏しさが目立つ。<strong>陰性症状</strong>の色が強い一方、抑うつ気分の訴えが弱い。' },
+          { label: '対応スケール・因子', body: 'PANSS では<strong>陰性因子</strong>（感情平淡・社会的退却・自発性低下 等）を当面。うつ分量表だけでは<strong>捉えきれない</strong>部分が残る典型例。' },
+          { label: '採点のコツ（教育用）', body: '「意欲低下＝うつ」と決めつけず、<strong>感情の平板さ・発語量</strong>を観察で別採点。必要なら HAM-D の該当項目でうつ成分だけ切り出す。' },
+        ],
+      },
+      {
+        title: '症例2：会話が早く、話題が飛ぶが「すごく調子がいいわけでもない」（24歳・女性）',
+        vignette: '双極性障害の外来。先週から睡眠が5時間程度。話は早口で面接者の質問をさえぎりがち。内容は職場の不満から世界経済の話へジャンプ。喜怒はやや表出が大きい。\n妄想や幻聴の自覚はなし。',
+        blocks: [
+          { label: '精神病理の読み', body: '<strong>思考連絡障害（連想の速さ・話題転換）</strong>と軽躁〜躁の境界を疑う。精神病性誇大は今のところ聴取上は弱い。' },
+          { label: '対応スケール・因子', body: '<strong>YMRS</strong>で気分・思考言語・睡眠などを総合評価。PANSS では興奮・不安／一般精神病理の寄与も検討しうるが、<strong>気分エピソードの主役</strong>か先に決める。' },
+          { label: '採点のコツ（教育用）', body: '「多弁＝躁」と一発で決めず、<strong>睡眠・衝動・誇大</strong>とセットでYMRSの各アンカーをなぞる。' },
+        ],
+      },
+      {
+        title: '症例3：「隣人が電波で攻撃している」— 固定妄想（45歳・男性）',
+        vignette: '初診ではない。数か月一貫して被害的内容。感情は刺すような怒りを含むが、会話のロジックは保たれている。幻聴は環境音の裏に「刺繍針の音」のように聞こえると形容。',
+        blocks: [
+          { label: '精神病理の読み', body: '<strong>妄想性認知・被害妄想</strong>。幻聴は<strong>真の幻聴 vs 過度の解釈</strong>で面接を深める余地。' },
+          { label: '対応スケール・因子', body: 'PANSS <strong>陽性</strong>（被害妄想・幻聴・興奮の有無）や BPRS の思考内容／疑念系にマッピングしやすい。' },
+          { label: '採点のコツ（教育用）', body: '妄想の<strong>確信度・行動への影響</strong>（他人に訴える・警察など）で重症度が変わるので、スコアだけでなく文脈を記載。' },
+        ],
+      },
+      {
+        title: '症例4：無表情で座り、指示は追従するがほとんど話さない（29歳・女性）',
+        vignette: '入院中。昨日から朝食を口に含むが嚥下が遅い。ベッドから出ず、指示でトイレには立てる。時折同じ姿勢で数十分。体温は平熱後半。CKは軽度上昇。\n妄想的言及は乏しい。',
+        blocks: [
+          { label: '精神病理の読み', body: '<strong>緊張病（カタトニア）</strong>を最優先に疑う所見。抑うつ・神経性食欲不振症・NMS など鑑別の軸も並行。' },
+          { label: '対応スケール・因子', body: '<strong>BFCRS</strong>で運動徴候を項目化。PANSS の興奮・陰性とは<strong>別軸</strong>で記録すると後から読みやすい。' },
+          { label: '採点のコツ（教育用）', body: '「無言＝陰性のみ」にせず、<strong>蠟屈・拒食・奇異な姿勢</strong>を身体診察ベースで拾う。' },
+        ],
+      },
+      {
+        title: '症例5：部屋を歩き回り「じっとしていられない」（58歳・男性）',
+        vignette: 'パーキンソン病併用のハロペリドール内服中。精神症状はやや安定したが、落ち着きがないと家族が訴える。本人は「胸のあたりがムズムズする」と形容。筋剛急は軽度。\n自殺念慮は否定。',
+        blocks: [
+          { label: '精神病理の読み', body: '<strong>静坐不能（アカシジア）</strong>を薬物起因として強く疑う。不安発作や精神病性焦燥との鑑別。' },
+          { label: '対応スケール・因子', body: 'BPRS の<strong>焦燥・緊張</strong>や PANSS の興奮項目が上がりがちだが、<strong>因果はEPS</strong>の可能性。必要なら別紙で錐体外路評価を残す型。' },
+          { label: '採点のコツ（教育用）', body: '抗精神病薬を增量でごまかさず、<strong>用量・剤の見直し</strong>を先に考えるフィードバック訓練。' },
+        ],
+      },
+      {
+        title: '症例6：抑うつ主訴だが、初対面で「あなたの思考が読める」と言う（35歳・女性）',
+        vignette: '友人紹介。気分は落ち込み毎日数時間泣く。一方で「先生の今の考えがわかる」と訴える。幻聴は否定。家族は「昔から繊細」とのみ。\n睡眠は断片化し中途覚醒が多い。食欲低下。',
+        blocks: [
+          { label: '精神病理の読み', body: '大うつ病に加え、<strong>読心妄想</strong>などの精神病性症状の可能性。<strong>自閉スペクトラム症（ASD）</strong>や児童期の発達・トラウマ歴などの背景も確認。' },
+          { label: '対応スケール・因子', body: 'HAM-D / MADRS でうつ重症度。<strong>PANSS 陽性</strong>（特異思考／被害等の記載の仕方は版に従う）で精神病性成分を独立に追う。' },
+          { label: '採点のコツ（教育用）', body: '同一因子に「うつ」と「妄想様」を<strong>無理に一つに丸めない</strong>。治療効果判定で役に立つ。' },
+        ],
+      },
+      {
+        title: '症例7：若者・カンナビス使用後も会話が飛ぶ主訴（20歳・男性）',
+        vignette: '母同伴。3週間前まで毎晩大麻。現在は中止1週間。それでも「変な連想が止まらない」と訴え。会話は時に造語調。自他危害はなし。身体所見特記なし。',
+        blocks: [
+          { label: '精神病理の読み', body: '<strong>物質関連</strong>の解体様／思考形式障害様と、持続する精神病の境界。時系列再構成が必須。' },
+          { label: '対応スケール・因子', body: 'BPRS の<strong>概念化障害・思考形式障害</strong>様項目や PANSS 陽性の構成概念に当てはめつつ、週次で<strong>推移</strong>を見る設計が望ましい。' },
+          { label: '採点のコツ（教育用）', body: '初回スコアを絶対視せず、<strong>物質自由期間後の再評価</strong>で因子がどう動くかを教材的に追う。' },
+        ],
+      },
+      {
+        title: '症例8：高齢・夜間に見える「人影」で盗聴を疑う（78歳・女性）',
+        vignette: '独居。白内障治療後も「リビングに誰かいる」。警察に電話したが異常なし。日中は介護ヘルパー来訪時は落ち着く。認知機能検査は軽微な遅滞。身体は高血圧のみ。',
+        blocks: [
+          { label: '精神病理の読み', body: '<strong>妄想／誤認／認知症関連精神病</strong>のスペクトラム。視覚・睡眠・感覚器官も鑑別。' },
+          { label: '対応スケール・因子', body: '主たる治療目標が精神病性症状なら PANSS／BPRS。認知症全体像なら別評価が主体になりうる。<strong>目的に応じて主尺度を決める</strong>。' },
+          { label: '採点のコツ（教育用）', body: '高齢例では「妄想＝統合失調症」とラベル貼りせず、<strong>視覚障害・睡眠・薬剤</strong>をスコア文脈に書き添える。' },
+        ],
+      },
+    ];
+
+    let drillIdx = 0;
+    function renderDrill() {
+      var d = CASE_DRILL[drillIdx];
+      document.getElementById('drill-index').textContent = '症例 ' + (drillIdx + 1) + ' / ' + CASE_DRILL.length;
+      document.getElementById('drill-title').textContent = d.title;
+      document.getElementById('drill-vignette').textContent = d.vignette;
+      var box = document.getElementById('drill-reveals');
+      box.innerHTML = '';
+      d.blocks.forEach(function (b, i) {
+        var det = document.createElement('details');
+        det.className = 'drill-open rounded-xl border border-emerald-200/90 bg-emerald-50/40 px-4 py-3';
+        var sum = document.createElement('summary');
+        sum.className = 'font-bold text-emerald-950 text-sm flex items-center gap-2';
+        var prefix = ['①', '②', '③'][i] || '・';
+        sum.innerHTML = '<span class="shrink-0">' + prefix + ' ' + b.label + '</span><span class="text-xs font-normal text-emerald-800/90">（考えてから開く）</span>';
+        var div = document.createElement('div');
+        div.className = 'mt-2 text-sm text-slate-700 leading-relaxed case-prose';
+        div.innerHTML = b.body;
+        det.appendChild(sum);
+        det.appendChild(div);
+        box.appendChild(det);
+      });
+    }
+    document.getElementById('drill-prev').addEventListener('click', function () {
+      drillIdx = (drillIdx - 1 + CASE_DRILL.length) % CASE_DRILL.length;
+      renderDrill();
+    });
+    document.getElementById('drill-next').addEventListener('click', function () {
+      drillIdx = (drillIdx + 1) % CASE_DRILL.length;
+      renderDrill();
+    });
+    renderDrill();
+
+    var QUIZ = [
+      { q: 'PANSS の因子区分として、一般的な整理に含まれるのはどれか。', opts: ['陽性・陰性・一般精神病理・興奮などの下位構成', '血圧・脈拍のみ', '握力のみ', '身長のみ'], a: 0, exp: '研究では5因子など細分化版も使われますが、教材では陽性／陰性／一般精神病理の枠が基本です。' },
+      { q: '「無気力だが抑うつ気分は弱い」症例で、まず意識したいのはどれか。', opts: ['陰性症状とうつの鑑別', '爪の色のみ', '靴のサイズのみ', '血液型のみ'], a: 0, exp: '意欲・感情反応の評価を分けて記載するとスコアが安定しやすいです。' },
+      { q: '緊張病（カタトニア）の評価で特化した尺度の例として教材で挙がりやすいのはどれか。', opts: ['BFCRS', '視力検査表のみ', '聴力検査のみ', '歯科検診票のみ'], a: 0, exp: '運動徴候を項目化し、経時変化を追いやすいです。' },
+      { q: '抗精神病薬内服後に焦燥・歩き回りが増し、「胸がムズムズ」と訴える場合、鑑別でまず疑うべきものに近いのはどれか。', opts: ['アカシジア（静坐不能）', '必ず新たな妄想の増悪のみ', '貧血のみ', '花粉症のみ'], a: 0, exp: '静坐不能は自殺念慮を増強しうるため、増量一辺倒を避ける訓練が重要です。' },
+      { q: '躁様の興奮と精神病性興奮の整理で、教材的に併用検討されやすいのはどれか。', opts: ['YMRS と PANSS 興奮などの役割分担', '身長計のみ', '尿比重のみ', '握力のみ'], a: 0, exp: '気分エピソード主役かどうかで主尺度が変わります。' },
+      { q: 'BPRS と PANSS の関係として、適切に近い説明はどれか。', opts: ['歴史・項目粒度が異なり、そのまま数値が一対一対応するとは限らない', '常に同一点になる', 'どちらも血圧だけを見る', 'どちらも眼科のみ'], a: 0, exp: '研究によっては変換式が提案されることもありますが、臨床記録では定義差に注意します。' },
+      { q: '精神病性うつで幻聴や妄想が持続する場合、評価の型として教材的なのはどれか。', opts: ['うつ重症度尺度と精神病性尺度を重ねて評価', 'うつ尺度のみで十分と決め打ち', '体重のみ', '星座のみ'], a: 0, exp: '効果判定を分けると、抗うつ薬と抗精神病薬の効きを議論しやすくなります。' },
+      { q: '採点のブレを減らす工夫として適切なのはどれか。', opts: ['評価期間と情報源（本人／他者／観察）を記録に明記', '黙って思いつきで点だけ書く', '前回のスコアを必ずコピー', 'サイコロで決める'], a: 0, exp: 'マニュアルが指定する参照期間にそろえることも重要です。' },
+      { q: '高齢者で誤認・妄想様訴えがあるとき、スケール利用の前提として重要なのはどれか。', opts: ['主目的が精神病性症状のコントロールか、認知症全体管理かを整理する', '必ず統合失調症と診断してからのみ採点', '採点は不要', '尿検査のみで代替'], a: 0, exp: '記録の読者（精神科・老年科・介護）向けに文脈を添えると伝わりやすいです。' },
+      { q: '精神病理学でいう「思考形式障害」と採点の関係で、しばしば話に上がる尺度要素はどれか。', opts: ['連想の飛躍・論理の破綻などを評価する項目群（BPRS／PANSSの関連項目）', '歩幅のみ', '体温のみ', '握力のみ'], a: 0, exp: '面接・会話のテンポと内容の両方からアンカーを照合します。' },
+    ];
+
+    var quizItems = document.getElementById('quiz-items');
+    QUIZ.forEach(function (item, i) {
+      var wrap = document.createElement('div');
+      wrap.className = 'quiz-q-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+      var head = document.createElement('div');
+      head.className = 'quiz-q-head mb-2';
+      var h = document.createElement('div');
+      h.className = 'quiz-q-title font-semibold text-slate-800';
+      h.textContent = 'Q' + (i + 1) + '. ' + item.q;
+      var badge = document.createElement('span');
+      badge.className = 'quiz-result-badge is-hidden';
+      badge.setAttribute('aria-live', 'polite');
+      head.appendChild(h);
+      head.appendChild(badge);
+      wrap.appendChild(head);
+      var opts = document.createElement('div');
+      opts.className = 'space-y-2';
+      item.opts.forEach(function (text, j) {
+        var lab = document.createElement('label');
+        lab.className = 'quiz-opt-row flex items-start gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50 border border-transparent';
+        var r = document.createElement('input');
+        r.type = 'radio';
+        r.name = 'q' + i;
+        r.value = String(j);
+        r.className = 'quiz-opt mt-1 shrink-0';
+        var span = document.createElement('span');
+        span.textContent = text;
+        span.className = 'text-slate-700';
+        lab.appendChild(r);
+        lab.appendChild(span);
+        opts.appendChild(lab);
+      });
+      wrap.appendChild(opts);
+      var exp = document.createElement('details');
+      exp.className = 'mt-3 text-xs text-slate-600';
+      exp.innerHTML = '<summary class="cursor-pointer font-semibold text-emerald-800">解説を表示</summary><p class="mt-2 leading-relaxed pl-1">' + item.exp + '</p>';
+      wrap.appendChild(exp);
+      quizItems.appendChild(wrap);
+    });
+
+    function clearMiniQuizVisuals() {
+      document.querySelectorAll('#quiz-items .quiz-q-card').forEach(function (card) {
+        card.classList.remove('quiz-graded', 'quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        var b = card.querySelector('.quiz-result-badge');
+        if (b) {
+          b.classList.add('is-hidden');
+          b.textContent = '';
+          b.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip');
+        }
+        card.querySelectorAll('.quiz-opt-row').forEach(function (lab) {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+      });
+    }
+
+    document.getElementById('quiz-grade').addEventListener('click', function () {
+      var ok = 0;
+      var cards = document.querySelectorAll('#quiz-items .quiz-q-card');
+      QUIZ.forEach(function (item, i) {
+        var wrap = cards[i];
+        if (!wrap) return;
+        var badge = wrap.querySelector('.quiz-result-badge');
+        var sel = wrap.querySelector('input[type="radio"]:checked');
+        var picked = sel ? +sel.value : null;
+        var isOk = picked === item.a;
+        if (isOk) ok++;
+
+        wrap.classList.remove('quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        wrap.classList.add('quiz-graded');
+        badge.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip', 'is-hidden');
+
+        if (picked === null) {
+          wrap.classList.add('quiz-card-skip');
+          badge.textContent = '未解答';
+          badge.classList.add('quiz-badge-skip');
+        } else if (isOk) {
+          wrap.classList.add('quiz-card-ok');
+          badge.textContent = '正解';
+          badge.classList.add('quiz-badge-ok');
+        } else {
+          wrap.classList.add('quiz-card-ng');
+          badge.textContent = '不正解';
+          badge.classList.add('quiz-badge-ng');
+        }
+
+        wrap.querySelectorAll('.quiz-opt-row').forEach(function (lab) {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+        var rows = wrap.querySelectorAll('.quiz-opt-row');
+        if (rows[item.a]) rows[item.a].classList.add('quiz-opt-correct');
+        if (picked !== null && picked !== item.a && rows[picked]) rows[picked].classList.add('quiz-opt-wrong');
+      });
+      var el = document.getElementById('quiz-result');
+      el.textContent = '正答 ' + ok + ' / ' + QUIZ.length;
+      el.className = 'text-sm font-bold ' + (ok >= 8 ? 'text-emerald-700' : ok >= 5 ? 'text-amber-800' : 'text-rose-700') + ' tabular-nums';
+    });
+    document.getElementById('quiz-reset').addEventListener('click', function () {
+      document.querySelectorAll('#quiz-items input[type="radio"]').forEach(function (r) { r.checked = false; });
+      clearMiniQuizVisuals();
+      var el = document.getElementById('quiz-result');
+      el.textContent = '';
+      el.className = 'text-sm font-bold text-slate-700 tabular-nums';
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
