@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/antidepressants-japan.html">
+  <title>抗うつ薬 選択ガイド（日本承認薬）- 精神科臨床</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #9d174d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #be185d);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-first {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .dot-hi { background:#dc2626; border-radius:50%; width:0.85rem; height:0.85rem; display:inline-block; }
+    .dot-md { background:#d97706; border-radius:50%; width:0.85rem; height:0.85rem; display:inline-block; }
+    .dot-lo { background:#6ee7b7; border-radius:50%; width:0.85rem; height:0.85rem; display:inline-block; }
+    .dot-no { background:#e5e7eb; border-radius:50%; width:0.85rem; height:0.85rem; display:inline-block; }
+    .drug-card { border-radius: 0.75rem; padding: 1rem; border: 1px solid; }
+    .drug-card-ssri { background:#ecfdf5; border-color:#6ee7b7; }
+    .drug-card-snri { background:#eff6ff; border-color:#93c5fd; }
+    .drug-card-nassa { background:#fff7ed; border-color:#fdba74; }
+    .drug-card-sms { background:#f5f3ff; border-color:#c4b5fd; }
+    .drug-card-other { background:#fdf2f8; border-color:#f9a8d4; }
+    .toc {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 50;
+      min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .th-cell { background:#f1f5f9; font-weight:700; font-size:0.78rem; padding:0.6rem 0.5rem; text-align:center; color:#374151; }
+    .td-cell { padding:0.55rem 0.5rem; text-align:center; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .td-left { padding:0.55rem 0.75rem; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .gen-ssri { background:#d1fae5; color:#065f46; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .gen-snri { background:#dbeafe; color:#1e40af; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .gen-other { background:#fce7f3; color:#9d174d; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <header class="header-gradient text-white py-8">
+      <div class="max-w-5xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="pill" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold">抗うつ薬 選択ガイド</h1>
+      <p class="mt-2 text-lg opacity-85">日本承認薬 — 分類・薬理・使い分け・副作用・モニタリング</p>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">薬剤分類</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">トランスポーター／薬理</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">選択アルゴリズム</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">副作用比較</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">製剤バリエーション</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">相互作用・漸減</span>
+      </div>
+      <p class="mt-3 text-xs opacity-60">参照：うつ病の治療ガイドライン2025（日本うつ病学会）/ 各添付文書（PMDA）</p>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#quickref" class="text-sm text-gray-600 hover:text-blue-700 block">クイックリファレンス</a></li>
+      <li><a href="#classification" class="text-sm text-gray-600 hover:text-blue-700 block">薬剤分類</a></li>
+      <li><a href="#selection" class="text-sm text-gray-600 hover:text-blue-700 block">選択アルゴリズム</a></li>
+      <li><a href="#mechanism" class="text-sm text-gray-600 hover:text-blue-700 block">薬理プロファイル</a></li>
+      <li><a href="#druglist" class="text-sm text-gray-600 hover:text-blue-700 block">薬剤詳細</a></li>
+      <li><a href="#formulations" class="text-sm text-gray-600 hover:text-blue-700 block">製剤・経路</a></li>
+      <li><a href="#sideeffects" class="text-sm text-gray-600 hover:text-blue-700 block">副作用比較</a></li>
+      <li><a href="#monitoring" class="text-sm text-gray-600 hover:text-blue-700 block">モニタリング</a></li>
+      <li><a href="#interactions" class="text-sm text-gray-600 hover:text-blue-700 block">相互作用・禁忌</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <div class="section-card" id="quickref">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる4ポイント</h2>
+          <p class="text-gray-500 text-sm">新規・増量・切替の前に必ず確認</p>
+        </div>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl border-l-4 border-emerald-600">
+          <div class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">SSRI／SNRIを第一選択、十分期間で評価</div>
+            <p class="text-gray-600 text-sm">軽症でもCBT併用を検討。単剤で通常<strong>4〜8週</strong>（重症は長め）の十分量試行後に効果判定。早期の無計画な多剤併用は避ける。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl border-l-4 border-amber-600">
+          <div class="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">双極スペクトラムを除外してからSSRI単剤</div>
+            <p class="text-gray-600 text-sm">躁・軽躁既往・混合特徴・急速交代の既往は再確認。疑わしければ気分安定薬／SGAを優先し、抗うつ薬単剤は慎重に。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-rose-50 to-rose-100 rounded-xl border-l-4 border-rose-600">
+          <div class="w-10 h-10 bg-rose-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">賦活・自殺念慮・消化器はスタート直後</div>
+            <p class="text-gray-600 text-sm">開始1〜2週の焦燥増強を説明。<strong>24歳以下</strong>はFDA黒枠警告に照らし緊密フォロー。SNRI・一部SSRIで血圧・QTに注意。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-violet-50 to-violet-100 rounded-xl border-l-4 border-violet-600">
+          <div class="w-10 h-10 bg-violet-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">中止は漸減、MAOI切替はウォッシュアウト</div>
+            <p class="text-gray-600 text-sm">離脱症状を防ぐため数週間かけて減量。モクロベミド・不可逆性MAOIへの切替は各薬ごとの休薬期間を厳守。フルオキセチンは活性代謝物で長期残留あり。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="classification">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤分類</h2>
+          <p class="text-gray-500 text-sm">作用機序・臨床的ポジション</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="drug-card drug-card-ssri">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-ssri">SSRI</span>
+            <span class="text-xs text-gray-500">セロトニン選択的再取り込み阻害</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">SERT阻害が主作用。不安障害・強迫症など併存に応じて薬剤を選ぶ。全般にファーストライン。</p>
+          <div class="grid grid-cols-2 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-emerald-200">エスシタロプラム<br><span class="text-gray-400">レクサプロ等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-emerald-200">セルトラリン<br><span class="text-gray-400">ゾロフト等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-emerald-200">パロキセチン<br><span class="text-gray-400">パキシル等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-emerald-200">フルボキサミン<br><span class="text-gray-400">ルボックス等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-emerald-200">フルオキセチン<br><span class="text-gray-400">プロザック等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-emerald-200">シタロプラム<br><span class="text-gray-400">シーマ等</span></span>
+          </div>
+          <div class="mt-3 text-xs text-emerald-800 bg-emerald-50 rounded p-2">
+            <strong>使い分けの核：</strong>忍容性・妊孕性データ・CYP相互作用・離脱の出やすさ（パロキセチン等）・QT（シタロプラム／エス高用量）
+          </div>
+        </div>
+
+        <div class="drug-card drug-card-snri">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-snri">SNRI</span>
+            <span class="text-xs text-gray-500">セロトニン・ノルアドレナリン再取り込み阻害</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">SERT＋NET（用量依存でNA作用↑）。疼痛・重症うつ・意欲低下に配慮。</p>
+          <div class="grid grid-cols-2 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">デュロキセチン<br><span class="text-gray-400">サインバルタ等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ベンラファキシン<br><span class="text-gray-400">エフェクサー等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ミルナシプラン<br><span class="text-gray-400">トレドミン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">デスベンラファキシン<br><span class="text-gray-400">プレチク等</span></span>
+          </div>
+          <div class="mt-3 text-xs text-blue-800 bg-blue-50 rounded p-2">
+            <strong>共通注意：</strong>血圧・心拍・尿閉（抗コリン様）。ベンラファキシン・ミルナシプランは高用量で交感亢進寄りの副作用が目立ちやすい。
+          </div>
+        </div>
+
+        <div class="drug-card drug-card-nassa">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-other">NaSSA</span>
+            <span class="text-xs text-gray-500">ノルアドレナリン・特異的セロトニン作動薬</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">α2拮抗・5-HT2/3拮抗・H1強遮断。睡眠・食欲改善に強み。</p>
+          <div class="bg-white rounded p-3 border border-amber-200 text-xs">
+            <div class="font-bold text-amber-900">ミルタザピン</div>
+            <div class="text-gray-400">レメロン等</div>
+            <div class="text-gray-600 mt-1">夜間投与で眠気を活用。体重増加・脂質・鎮静に注意。</div>
+          </div>
+        </div>
+
+        <div class="drug-card drug-card-sms">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-other">SMS 等</span>
+            <span class="text-xs text-gray-500">多面的作用</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">再取り込み阻害に加え受容体調節作用を持つ薬剤。</p>
+          <div class="bg-white rounded p-3 border border-violet-200 text-xs">
+            <div class="font-bold text-violet-900">ボルチオキセチン</div>
+            <div class="text-gray-400">トリンテリックス</div>
+            <div class="text-gray-600 mt-1">SERT阻害＋複数の5-HT受容体調節。認知症状・性機能障害の少なさが臨床的利点として言及されやすい。恶心・消化器（初期）注意。</div>
+          </div>
+        </div>
+
+        <div class="drug-card drug-card-other">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-other">その他単剤</span>
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="bg-white rounded p-2 border border-pink-200">
+              <strong>ブプロピオン（NDRI）</strong> — 作動性・禁煙補助・性的副作用回避の切替先。てんかん閾値低下・食思不振に注意。
+            </div>
+            <div class="bg-white rounded p-2 border border-pink-200">
+              <strong>トラゾドン（SARI）</strong> — 低用量で睡眠導入、高用量で抗うつ。起立性低血圧・鎮静。プリアピズム（稀だが重篤）。
+            </div>
+            <div class="bg-white rounded p-2 border border-pink-200">
+              <strong>モクロベミド（RIMA）</strong> — 可逆的MAO-A阻害。チラミン感受性は非選択MAOIより低いが注意。併用禁忌の整理が必要。
+            </div>
+            <div class="bg-white rounded p-2 border border-pink-200">
+              <strong>アゴメラチン</strong> — MT1/MT2作動＋5-HT2C拮抗。肝機能モニタリング必須。入眠困難型不眠と相性。
+            </div>
+            <div class="bg-white rounded p-2 border border-pink-200">
+              <strong>タオピド（チアネプチン）</strong> — グルタミン酸系など複合作用。依存・濫用報告への注意（処方ガイドライン参照）。
+            </div>
+          </div>
+        </div>
+
+        <div class="drug-card border border-slate-300 bg-slate-50">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-other">三環系・四环系</span>
+            <span class="text-xs text-gray-500">2nd line</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-2">抗コリン作用・QT延長・心毒性（過量時）で後方配置。高齢者・自杀リスク・心疾患では特に慎重。</p>
+          <div class="text-xs text-gray-700 space-y-1">
+            <div>アミトリプチリン・イミプラミン・クロミプラミン・ノルトリプチリン・トリミプラミン・ドスレピン・ジベンゼピン・マプロチリン・アモキサピン 等（各添付文書で適応・禁忌確認）</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-2">
+          <i data-lucide="info" class="w-5 h-5 text-blue-700"></i>
+          <span class="font-bold text-blue-800">増強療法（ガイドライン2025の文脈）</span>
+        </div>
+        <p class="text-xs text-gray-700">十分な単剤試行で不十分な場合、<strong>ミルタザピン／ボルチオキセチン／三環系のスイッチ</strong>や、<strong>非定型抗精神病薬追加</strong>（アリピプラゾール・ブレクスピプラゾール・低用量クエチアピン等）、<strong>リチウム・甲状腺ホルモン</strong>、<strong>エスケタミン鼻腔内・rTMS・mECT</strong>を病態・施設条件で検討。詳細はうつ病ガイドライン本編を参照。</p>
+      </div>
+    </div>
+
+    <div class="section-card" id="selection">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤選択アルゴリズム</h2>
+          <p class="text-gray-500 text-sm">大うつ病エピソード（単極性）の一般的流れ</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-2 mb-8">
+        <div class="bg-gray-800 text-white rounded-xl px-6 py-3 text-center font-bold text-sm w-80">うつ病エピソード（新規／再発）・薬物療法開始</div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="bg-yellow-100 border-2 border-yellow-500 rounded-xl px-4 py-3 text-center text-sm w-[22rem] font-medium text-yellow-900">
+          <i data-lucide="alert-circle" class="w-4 h-4 inline-block mr-1 text-yellow-600"></i>
+          双極性障害・物質・甲状腺・薬剤誘発を鑑別<br><span class="text-xs text-yellow-700">既往躁・軽躁・混合特徴・気分変動・家族歴を必ず確認</span>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="bg-emerald-50 border-2 border-emerald-400 rounded-xl px-5 py-3 text-center text-sm font-medium text-emerald-900 w-80">
+          第1段階：<strong>SSRI または SNRI</strong>＋心理療法を検討
+          <div class="text-xs font-normal mt-1 text-emerald-800">併存不安・疼痛・不眠・妊孕性で薬剤を個別化（下記マトリックス）</div>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="bg-orange-50 border-2 border-orange-400 rounded-xl px-5 py-3 text-center text-sm font-medium text-orange-900 w-80">
+          4〜8週・通常量で評価（PHQ-9／MADRS等）→ 忍容性確認
+        </div>
+        <div class="flex gap-4 mt-3 w-full justify-center flex-wrap">
+          <div class="flex flex-col items-center gap-1 max-w-[11rem]">
+            <div class="text-green-700 font-bold text-sm">有効</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-green-500"></i>
+            <div class="bg-green-50 border border-green-300 rounded-xl px-3 py-2 text-xs text-center">
+              <div class="font-bold text-green-800">急性期後も維持</div>
+              <div class="text-gray-600">再発予防のため数ヶ月〜（エピソード回数で調整）漸減は計画的に</div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center gap-1 max-w-[11rem]">
+            <div class="text-amber-700 font-bold text-sm">部分改善／副作用</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-amber-500"></i>
+            <div class="bg-amber-50 border border-amber-300 rounded-xl px-3 py-2 text-xs text-center">
+              <div class="font-bold text-amber-900">用量最適化・服薬タイミング</div>
+              <div class="text-gray-600">または副作用プロファイルの異なる同一クラスへスイッチ</div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center gap-1 max-w-[11rem]">
+            <div class="text-red-700 font-bold text-sm">無効</div>
+            <i data-lucide="arrow-down" class="w-5 h-5 text-red-500"></i>
+            <div class="bg-rose-50 border border-rose-300 rounded-xl px-3 py-2 text-xs text-center">
+              <div class="font-bold text-rose-900">クラス変更</div>
+              <div class="text-gray-600">SSRI↔SNRI、NaSSA、SMS、TCA、併用療法・増強を段階的に</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-700 text-lg mb-4 flex items-center gap-2">
+        <i data-lucide="user-check" class="w-5 h-5 text-blue-600"></i>
+        患者背景・主訴別の推奨イメージ
+      </h3>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+          <div class="font-bold text-emerald-900 text-sm mb-2">一般的外来・忍容性重視</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>エスシタロプラム（相互作用相対的少、選択性高）</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>セルトラリン（妊孕性データ豊富）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>ボルチオキセチン（性機能・認知目標時）</li>
+          </ul>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-900 text-sm mb-2">不安・パニック・PTSD・強迫症状が強い</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>パロキセチン、エスシタロプラム、セルトラリン</li>
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>フルボキサミン（強迫症エビデンス）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>デュロキセチン、ベンラファキシン（SNRI）</li>
+          </ul>
+        </div>
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+          <div class="font-bold text-orange-900 text-sm mb-2">不眠・消瘦・激越・食欲低下</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ミルタザピン（夜服、H1作用）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>トラゾドン（主に睡眠導入〜補助的抗うつ）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>アゴメラチン（入眠困難、肝機能フォロー）</li>
+          </ul>
+        </div>
+        <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+          <div class="font-bold text-violet-900 text-sm mb-2">疼痛（糖尿病性神経障害性疼痛等）・身体合併</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>デュロキセチン（神経障害性疼痛適応あり）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>ミルナシプラン、ベンラファキシン（疼痛併用うつ）</li>
+          </ul>
+        </div>
+        <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+          <div class="font-bold text-rose-900 text-sm mb-2">性的副作用がSSRIで問題</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ボルチオキセチンへスイッチ検討</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>ブプロピオン追加またはスイッチ（禁忌・けいれんリスク確認）</li>
+            <li class="flex items-center gap-2"><span class="badge-second text-xs">次選</span>ミルタザピン（個人差あり）</li>
+          </ul>
+        </div>
+        <div class="bg-teal-50 border border-teal-200 rounded-xl p-4">
+          <div class="font-bold text-teal-900 text-sm mb-2">喫煙中止・注意欠陥・作動性低下イメージ</div>
+          <ul class="text-xs space-y-1 text-gray-700">
+            <li class="flex items-center gap-2"><span class="badge-first text-xs">推奨</span>ブプロピオン（禁煙補助・うつ適応、禁忌確認）</li>
+            <li class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold">注意</span>食思不振・体重減少・てんかん閾値・高齢脳卒中後</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="mechanism">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="circle-dot" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬理プロファイル比較</h2>
+          <p class="text-gray-500 text-sm">主要トランスポーター阻害の強度（定性的）と補足</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 mb-4 text-xs">
+        <div class="flex items-center gap-1"><span class="dot-hi"></span> 強</div>
+        <div class="flex items-center gap-1"><span class="dot-md"></span> 中</div>
+        <div class="flex items-center gap-1"><span class="dot-lo"></span> 弱</div>
+        <div class="flex items-center gap-1"><span class="dot-no"></span> なし／実質なし</div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse min-w-max">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">薬剤</th>
+              <th class="th-cell">SERT</th>
+              <th class="th-cell">NET</th>
+              <th class="th-cell">DAT</th>
+              <th class="th-cell rounded-tr-lg">補足（臨床）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-emerald-50"><td class="td-left font-bold text-emerald-900" colspan="5">SSRI</td></tr>
+            <tr><td class="td-left">エスシタロプラム</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">S形エナンチオマー。高用量でQT</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">セルトラリン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-lo"></span></td><td class="td-cell"><span class="dot-lo"></span></td><td class="td-cell text-left text-gray-600">弱いDA取り込み抑制（臨床的意義は限定的なこと多い）</td></tr>
+            <tr><td class="td-left">パロキセチン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">抗コリン寄り・CYP2D6阻害強・離脱に注意</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">フルボキサミン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">CYP1A2/3A4/2C19等 — 薬物相互作用のホットスポット</td></tr>
+            <tr><td class="td-left">フルオキセチン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">長半減期・<strong>norfluoxetine</strong> — MAOI切替に最長ウォッシュアウト</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">シタロプラム</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">エスに比しQTリスク（用量上限の添付文書確認）</td></tr>
+            <tr class="bg-blue-50"><td class="td-left font-bold text-blue-900" colspan="5">SNRI</td></tr>
+            <tr><td class="td-left">デュロキセチン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">均衡的SNRI。血圧・肝障害に注意</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">ベンラファキシン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-md"></span><br><span class="text-[10px] text-gray-500">用量↑で↑</span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">低用量はSSRI様、高用量でNA寄与増</td></tr>
+            <tr><td class="td-left">ミルナシプラン</td><td class="td-cell"><span class="dot-md"></span></td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">NA再取り込み抑制が相対的に強いプロファイル</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">デスベンラファキシン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-md"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">ベンラファキシン活性体。CYP2D6代謝が少ない点が利点になりうる</td></tr>
+            <tr class="bg-amber-50"><td class="td-left font-bold text-amber-900" colspan="5">NaSSA・SMS・その他</td></tr>
+            <tr><td class="td-left">ミルタザピン</td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">α2·5-HT2/3拮抗・<strong>H1強</strong> — 鎮静・食欲</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">ボルチオキセチン</td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">5-HT1A/1B/1D/3A/7等の調節作用（複合薬理）</td></tr>
+            <tr><td class="td-left">ブプロピオン</td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-md"></span></td><td class="td-cell"><span class="dot-hi"></span></td><td class="td-cell text-left text-gray-600">NDRI。代謝物（ヒドロキシブプロピオン）も寄与</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">トラゾドン</td><td class="td-cell"><span class="dot-md"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">5-HT2A拮抗、活性代謝物 mCPP 等</td></tr>
+            <tr><td class="td-left">モクロベミド</td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">可逆的MAO-A阻害 — セロトニン症候群リスクの併用管理</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">アゴメラチン</td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell"><span class="dot-no"></span></td><td class="td-cell text-left text-gray-600">MT受容体＋5-HT2C拮抗。肝逸脱酵素必監視</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-500 mt-3">※表中の強度は受容体・トランスポーター薬理の概略である。患者個人差・相互作用で血浆濃度は変動する。</p>
+    </div>
+
+    <div class="section-card" id="druglist">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="pill" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤詳細・用量・特徴</h2>
+          <p class="text-gray-500 text-sm">代表的用量は目安。必ず添付文書・腎肝機能で調整</p>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="gen-ssri text-xs">SSRI</span></h3>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">成分（商品例）</th>
+              <th class="th-cell">開始量</th>
+              <th class="th-cell">目標量</th>
+              <th class="th-cell">最大量目安</th>
+              <th class="th-cell">薬剤固有の特徴</th>
+              <th class="th-cell rounded-tr-lg">主な注意</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-medium">エスシタロプラム<br><span class="text-gray-400">レクサプロ</span></td><td class="td-cell">5–10mg</td><td class="td-cell">10–20mg</td><td class="td-cell">20mg</td><td class="td-cell text-left">選択性・忍容性バランス良。CYP阻害少なめ</td><td class="td-cell text-left">高用量・高リスク因子でQT</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">セルトラリン<br><span class="text-gray-400">ゾロフト</span></td><td class="td-cell">25mg</td><td class="td-cell">100–200mg</td><td class="td-cell">200mg</td><td class="td-cell text-left">妊孕性データ比較的多い</td><td class="td-cell text-left">GI症状（初期）、稀に男子乳発</td></tr>
+            <tr><td class="td-left font-medium">パロキセチン<br><span class="text-gray-400">パキシル</span></td><td class="td-cell">10mg</td><td class="td-cell">20–40mg</td><td class="td-cell">40–50mg</td><td class="td-cell text-left">不安系・PTSD・抗コリン寄り</td><td class="td-cell text-left">離脱強、2D6阻害、妊娠初期リスク</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">フルボキサミン<br><span class="text-gray-400">ルボックス</span></td><td class="td-cell">50mg</td><td class="td-cell">100–150mg</td><td class="td-cell">300mg</td><td class="td-cell text-left">強迫症・社交不安のエビデンス蓄積</td><td class="td-cell text-left">多CYP相互作用（タンパク結合率も高い）</td></tr>
+            <tr><td class="td-left font-medium">フルオキセチン<br><span class="text-gray-400">プロザック</span></td><td class="td-cell">10–20mg</td><td class="td-cell">20–40mg</td><td class="td-cell">60mg</td><td class="td-cell text-left">長半減期・PMDD・過食症適応（用途は添付確認）</td><td class="td-cell text-left">2D6阻害、MAOI切替に最長間隔</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">シタロプラム※<br><span class="text-gray-400">シーマ等</span></td><td class="td-cell">10mg</td><td class="td-cell">10–20mg</td><td class="td-cell">20mg※</td><td class="td-cell text-left">レイシミック、エスよりQT注意</td><td class="td-cell text-left">高齢・併用で用量上限厳守（文書）</td></tr>
+          </tbody>
+        </table>
+        <p class="text-[10px] text-gray-500 mt-1">※シタロプラムの65歳以上上限等は添付文書の「用法・用量」欄に従う。</p>
+      </div>
+
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="gen-snri text-xs">SNRI</span></h3>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">成分（商品例）</th>
+              <th class="th-cell">開始量</th>
+              <th class="th-cell">目標量</th>
+              <th class="th-cell">最大量目安</th>
+              <th class="th-cell">薬剤固有の特徴</th>
+              <th class="th-cell rounded-tr-lg">主な注意</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-medium">デュロキセチン<br><span class="text-gray-400">サインバルタ</span></td><td class="td-cell">20–30mg</td><td class="td-cell">40–60mg</td><td class="td-cell">120mg</td><td class="td-cell text-left">神経障害性疼痛・線維筋痛症適応</td><td class="td-cell text-left">血圧、肝機能、急な中止</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">ベンラファキシン<br><span class="text-gray-400">エフェクサー</span></td><td class="td-cell">37.5–75mg</td><td class="td-cell">75–225mg</td><td class="td-cell">225mg※</td><td class="td-cell text-left">用量でNA作用↑、徐放剤で離脱緩和しうる</td><td class="td-cell text-left">離脱、高血圧、嗜眠め稀に抑制低下</td></tr>
+            <tr><td class="td-left font-medium">ミルナシプラン<br><span class="text-gray-400">トレドミン</span></td><td class="td-cell">25mg</td><td class="td-cell">50–100mg</td><td class="td-cell">100mg</td><td class="td-cell text-left">意欲・エネルギー低下に期待されやすいプロファイル</td><td class="td-cell text-left">心拍↑、排尿障害、腎障害で減量</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">デスベンラファキシン<br><span class="text-gray-400">プレチク</span></td><td class="td-cell">50–100mg</td><td class="td-cell">100mg</td><td class="td-cell">100–200mg※</td><td class="td-cell text-left">活性体直接投与、用量調整が単純化しうる</td><td class="td-cell text-left">高血圧、妊婦・授乳は文書確認</td></tr>
+          </tbody>
+        </table>
+        <p class="text-[10px] text-gray-500 mt-1">※ベンラファキシン・デスベンラファキシンの1日上限は承認・改訂で変動しうる。最新添付文書の用法用量に従うこと。</p>
+      </div>
+
+      <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="gen-other text-xs">NaSSA・SMS・NDRI・SARI等</span></h3>
+      <div class="overflow-x-auto mb-4">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">成分</th>
+              <th class="th-cell">標準用量目安</th>
+              <th class="th-cell">薬剤固有の特徴</th>
+              <th class="th-cell rounded-tr-lg">主な注意</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-medium">ミルタザピン</td><td class="td-cell">15–45mg</td><td class="td-cell text-left">食欲・不眠改善、分割で日量自在</td><td class="td-cell text-left">体重↑、脂質、鎮静、好中球減少（稀）</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">ボルチオキセチン</td><td class="td-cell">5–20mg</td><td class="td-cell text-left">複合薬理、性機能障害が出にくい傾向の報告</td><td class="td-cell text-left">悪心、出血傾向（他SSRIと同様の一般論）</td></tr>
+            <tr><td class="td-left font-medium">ブプロピオン</td><td class="td-cell">150→300mg</td><td class="td-cell text-left">NDRI、喫煙戒断補助、性副作用回避の切替</td><td class="td-cell text-left">けいれん閾値、摂食障害・頭部外傷禁忌に近い扱い</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">トラゾドン</td><td class="td-cell">25–300mg</td><td class="td-cell text-left">低用量睡眠、高用量抗うつ</td><td class="td-cell text-left">起立性低血圧、鎮静、Priapism</td></tr>
+            <tr><td class="td-left font-medium">モクロベミド</td><td class="td-cell">300–600mg</td><td class="td-cell text-left">非定型うつ・社交不安等（適応は文書）</td><td class="td-cell text-left">併用薬・チラミン・セロトニン症候群</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium">アゴメラチン</td><td class="td-cell">25–50mg</td><td class="td-cell text-left">睡眠リズム寄り、日中鎮静は比較的少なめ</td><td class="td-cell text-left">肝機能障害 — <strong>開始前・定期Trans</strong></td></tr>
+            <tr><td class="td-left font-medium">チアネプチンNa</td><td class="td-cell">25mg×3</td><td class="td-cell text-left">グルタミン酸系作用（SSRIとは異なる機序）</td><td class="td-cell text-left">依存・転用リスクの行政・学会注意喚起</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="triangle-alert" class="w-4 h-4"></i>三環系・四环系（概要）</div>
+        <p class="text-sm text-gray-700 mb-2">アミトリプチリン・クロミプラミン・イミプラミン等は鎮痛・難治性に価値がある一方、<strong>抗コリン、QT延長、心毒性（過量）、けいれん閾値低下</strong>で後方選択。高齢者ではBeers基準的視点で避けたい剤もある。</p>
+      </div>
+    </div>
+
+    <div class="section-card" id="formulations">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="package" class="w-6 h-6 text-violet-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">製剤バリエーション・経路</h2>
+          <p class="text-gray-500 text-sm">服薬困難例・離脱予防・急速介入（抗精神病薬ガイドのLAI章に相当）</p>
+        </div>
+      </div>
+      <div class="recommend-box mb-4">
+        <ul class="text-sm text-gray-700 space-y-2">
+          <li>・<strong>経口溶解錠・OD錠・ドライシロップ・内用液</strong>：嚥下障害・NGチューブ・細粒嗜好のある小児高齢者向け（製品ごとに添付確認）</li>
+          <li>・<strong>徐放製剤</strong>：ベンラファキシンXR等 — 血中濃度変動・離脱症状を軽減しうる</li>
+          <li>・<strong>エスケタミン鼻腔内スプレー</strong>：治療抵抗性うつ（TRD）向け。解離・血圧上昇、管理施設・患者登録体制は承認時点の情報を確認</li>
+        </ul>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">製品タイプ例</th>
+              <th class="th-cell">成分例</th>
+              <th class="th-cell rounded-tr-lg">臨床的ポイント</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left">徐放カプセル・錠</td><td class="td-cell">ベンラファキシンXR 等</td><td class="td-cell text-left">分割できない製剤あり。漸減時は細かい経口即放か医師判断</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">odT・内用液・細粒</td><td class="td-cell">エスシタロプラム、セルトラリン等</td><td class="td-cell text-left">低用量から滴定しやすい</td></tr>
+            <tr><td class="td-left">鼻内スプレー</td><td class="td-cell">エスケタミン</td><td class="td-cell text-left">投与後監視が前提。ベンゾジアゼピン併用で鎮静増強に注意</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-card" id="sideeffects">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">副作用プロファイル比較</h2>
+          <p class="text-gray-500 text-sm">相対的頻度・臨床的留意（〇多い／△あり／✕少ない）</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg w-28">薬剤</th>
+              <th class="th-cell">GI（悪心等）</th>
+              <th class="th-cell">性機能</th>
+              <th class="th-cell">体重</th>
+              <th class="th-cell">血圧／脈</th>
+              <th class="th-cell">鎮静</th>
+              <th class="th-cell">QT</th>
+              <th class="th-cell rounded-tr-lg">抗コリン</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-bold">エスシタロプラム</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△※</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold">セルトラリン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr><td class="td-left font-bold">パロキセチン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△↑</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold">フルボキサミン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr><td class="td-left font-bold">フルオキセチン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕〜軽減</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold">シタロプラム</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr><td class="td-left font-bold">デュロキセチン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△↑</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕〜△</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold">ベンラファキシン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-red-600 font-bold">〇↑</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△※</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr><td class="td-left font-bold">ミルナシプラン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△↑脈</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△排尿</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold">デスベンラファキシン</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△↑</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕〜△</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr><td class="td-left font-bold">ミルタザピン</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕〜改善</td><td class="td-cell text-red-600 font-bold">〇↑</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold">ボルチオキセチン</td><td class="td-cell text-orange-500">△〜〇</td><td class="td-cell text-green-600">✕少</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr><td class="td-left font-bold">ブプロピオン</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-green-600">改善傾向</td><td class="td-cell text-orange-500">△↓</td><td class="td-cell text-orange-500">△↑</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△※</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold">トラゾドン</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-orange-500">△起立性</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-gray-400">✕〜△</td><td class="td-cell text-orange-500">△</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-500 mb-4">※用量・電解質・基礎心疾患でQT延長リスクは変動。中高用量や併用薬で心電図を検討。</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2">重大なリスク（クラス横断）</div>
+          <ul class="text-sm text-gray-700 space-y-2">
+            <li><strong>血清ナトリウム低下（SIADH）</strong> — 高齢・女性・利尿薬併用で発症リスク。意識変容時は電解質</li>
+            <li><strong>消化管出血</strong> — NSAID・抗血栓薬併用で注意（SSRI/SNRI一般論）</li>
+            <li><strong>セロトニン症候群</strong> — MAOI、リネゾリド、トリプタン、少量でもセロトニン作用の強いオピオイド（トラマドール・タペンタドール等）の併用</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-2">三環系に特有しやすい</div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>・実質的抗コリン・眼内圧・前立腺肥大</li>
+            <li>・心室性不整脈（過量でQRS拡大）。ブプロピオン過量でもリスク</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="monitoring">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="activity" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">モニタリング・安全管理</h2>
+          <p class="text-gray-500 text-sm">外来での標準的チェックリスト</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">項目</th>
+              <th class="th-cell">開始前</th>
+              <th class="th-cell">2〜4週</th>
+              <th class="th-cell">以降安定まで</th>
+              <th class="th-cell rounded-tr-lg">長期</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left">自殺念慮・賦活（若年）</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-orange-500">△増悪時</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">体重・血糖・脂質</td><td class="td-cell text-green-600">●</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●年1〜</td></tr>
+            <tr><td class="td-left">血圧・脈拍（SNRI等）</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">肝機能（デュロキセチン・アゴメラチン等）</td><td class="td-cell text-green-600">●</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●定期</td></tr>
+            <tr><td class="td-left">Na（高齢・女性・利尿薬併用）</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-green-600">●</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">心電図（QT延長リスク・TCA）</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-card" id="interactions">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="x-circle" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">相互作用・禁忌・切替</h2>
+          <p class="text-gray-500 text-sm">処方誤りの多いポイントのみ抜粋</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2">併用・切替で最優先</div>
+          <ul class="text-sm text-gray-700 space-y-2">
+            <li><strong>MAOI ↔ SSRI／SNRI／TCA／チアネプチン等</strong>：原則禁忌。ウォッシュアウト期間は対薬剤ごとに定める（<strong>フルオキセチン→MAOI：最低5週</strong>等）</li>
+            <li><strong>モクロベミド併用</strong>：トリプタン・他抗うつ薬・ペチジン等とのセロトニン症候群リスク。文書の禁忌・減量を厳守</li>
+            <li><strong>ブプロピオンとCYP2B6基質</strong>：濃度変動（例：クロピドグレル活性化低下の報告）— 添付参照</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-2">CYP相互作用（例）</div>
+          <ul class="text-xs text-gray-700 space-y-2">
+            <li>・<strong>パロキセチン・フルオキセチン・フルボキサミン</strong>：2D6/1A2等 — リスペリドン、メトプロロール、トラマドル等の濃度変化</li>
+            <li>・<strong>デュロキセチン</strong>：2D6阻害 — 併用薬の蓄積に注意</li>
+          </ul>
+        </div>
+      </div>
+      <div class="recommend-box mt-4">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i>参照ガイドライン</div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>・うつ病の治療ガイドライン2025（日本うつ病学会）</li>
+          <li>・うつ病のガイドライン（日本精神神経学会）各版・CQ</li>
+          <li>・不安障害診療ガイドライン（SSRI用量・期間の参考）</li>
+          <li>・各薬 PMDA 添付文書：<a href="https://www.pmda.go.jp" class="text-green-700 underline">pmda.go.jp</a></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-6 text-xs text-gray-400 border-t border-gray-200">
+    <p>本資料は医療専門職向け参照資料です。処方判断には最新の各薬剤添付文書・ガイドラインを必ず参照してください。</p>
+    <p class="mt-1">参照：うつ病の治療ガイドライン2025（日本うつ病学会）/ PMDA添付文書 / 2026年5月現在</p>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
