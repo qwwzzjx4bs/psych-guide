@@ -431,9 +431,18 @@
       border-radius: 999px;
       letter-spacing: 0.02em;
       white-space: nowrap;
-      max-width: 42%;
+      max-width: 36%;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    .portal-new-item-date {
+      flex-shrink: 0;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #5a6168;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+      min-width: 4.9rem;
     }
     .portal-new-item-title {
       flex: 1;
@@ -541,6 +550,26 @@
     }
     body.compact-mode .portal-new-item-title {
       font-size: 0.78rem;
+    }
+    body.compact-mode .portal-new-item-date {
+      font-size: 0.6rem;
+      min-width: 4.5rem;
+    }
+    #portal-new-items-more-btn {
+      width: 100%;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.45rem 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(6, 95, 70, 0.25);
+      background: rgba(255, 255, 255, 0.75);
+      color: #0f4d3a;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    #portal-new-items-more-btn:hover {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(6, 95, 70, 0.4);
     }
 
     /* ===================================
@@ -811,7 +840,7 @@
             <li>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</li>
             <li>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。</li>
             <li>ヘッダー下の検索では、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</li>
-            <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは、直下のコンパクトカード（最新5件）にまとめています。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
+            <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは、直下のコンパクトカードにまとめています（新規掲載日の<strong class="text-gray-600 font-medium">古い順</strong>・5件ずつ、「次の５件を表示する」で続き）。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
           </ul>
         </div>
       </div>
@@ -820,10 +849,13 @@
     <section id="portal-new-items-section" class="mb-4 sm:mb-6 hidden" aria-labelledby="portal-new-items-heading">
       <div class="bg-emerald-50/85 rounded-xl border border-emerald-100/90 px-3 sm:px-4 py-2 sm:py-2.5">
         <h2 id="portal-new-items-heading" class="text-[11px] font-semibold text-emerald-900/85 tracking-wide mb-1 flex items-center gap-1">
-          <span aria-hidden="true" class="opacity-70 text-[10px]">✨</span> 新規追加（最新5件）
+          <span aria-hidden="true" class="opacity-70 text-[10px]">✨</span> 新規追加
         </h2>
-        <p class="text-[10px] text-emerald-800/65 mb-1.5 leading-snug">履歴が「新規」のページを日付の新しい順に、区分ラベル＋タイトルのコンパクトカードで表示します（管理で非表示のカードは除きます）。</p>
+        <p class="text-[10px] text-emerald-800/65 mb-1.5 leading-snug">履歴が「新規」のページを、<strong class="font-medium text-emerald-900/80">新規掲載日の古い順</strong>（先に追加されたページが上）で並べます。各行に日付を表示し、最初は5件・「次の５件を表示する」で続きを表示します（管理で非表示のカードは除きます）。</p>
         <ul id="portal-new-items-list" class="portal-new-items-stack" role="list"></ul>
+        <div id="portal-new-items-more-wrap" class="mt-2.5 hidden">
+          <button type="button" id="portal-new-items-more-btn" class="sm:max-w-xs sm:mx-auto sm:block">次の５件を表示する</button>
+        </div>
       </div>
     </section>
 
@@ -1203,6 +1235,8 @@
     };
 
     let portalSearchCommittedQuery = '';
+    const PORTAL_NEW_ITEMS_CHUNK = 5;
+    let portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
 
     function normSearchText(s) {
       return (s || '').toLowerCase().normalize('NFKC');
@@ -1287,7 +1321,7 @@
       return { label, variant };
     }
 
-    /** 履歴の「新規」のみ（カード掲載ページ）。日付降順・最大件数は render 側でスライス */
+    /** 履歴の「新規」のみ（カード掲載ページ）。新規掲載日は昇順（古い順）。件数は render 側でスライス */
     function buildLatestNewItemsFromHistory(history) {
       if (!history || typeof history !== 'object') return [];
       const hidden = JSON.parse(localStorage.getItem('portalHidden') || '[]');
@@ -1329,12 +1363,11 @@
           const x = String(d || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
           return x ? new Date(+x[1], +x[2] - 1, +x[3]).getTime() : 0;
         };
-        return parse(b.date) - parse(a.date);
+        return parse(a.date) - parse(b.date);
       });
       return flat;
     }
 
-    const PORTAL_NEW_ITEMS_HEAD = 5;
     const PORTAL_NEWS_HEAD = 10;
 
     function sanitizePortalNewsHref(href) {
@@ -1402,17 +1435,24 @@
           row.rel = 'noopener noreferrer';
         }
       }
-      const d = String(it.date || '').trim();
       const title = String(it.title || '').trim() || '（無題）';
-      if (d) row.title = `${d} 新規 · ${title}`;
+      const d = String(it.date || '').trim();
+      const dm = d.match(/^(\d{4}-\d{2}-\d{2})/);
+      const dateShown = dm ? dm[1] : (d || '—');
+      if (dm) row.title = `${dateShown} 新規 · ${title}`;
       else row.title = title;
       const badge = document.createElement('span');
       badge.className = 'portal-new-item-badge';
       badge.textContent = String(it.tagLabel || 'ページ').trim() || 'ページ';
+      const timeEl = document.createElement('time');
+      timeEl.className = 'portal-new-item-date';
+      if (dm) timeEl.setAttribute('datetime', dm[1]);
+      timeEl.textContent = dateShown;
       const titleEl = document.createElement('span');
       titleEl.className = 'portal-new-item-title';
       titleEl.textContent = title;
       row.appendChild(badge);
+      row.appendChild(timeEl);
       row.appendChild(titleEl);
       li.appendChild(row);
       return li;
@@ -1421,18 +1461,36 @@
     function renderPortalNewItems() {
       const wrap = document.getElementById('portal-new-items-section');
       const list = document.getElementById('portal-new-items-list');
+      const moreWrap = document.getElementById('portal-new-items-more-wrap');
       if (!wrap || !list) return;
       const history = window.__CARD_UPDATE_HISTORY;
       if (!history) return;
-      const items = buildLatestNewItemsFromHistory(history).slice(0, PORTAL_NEW_ITEMS_HEAD);
-      if (items.length === 0) {
+      const allItems = buildLatestNewItemsFromHistory(history);
+      if (allItems.length === 0) {
         wrap.classList.add('hidden');
         list.innerHTML = '';
+        if (moreWrap) moreWrap.classList.add('hidden');
         return;
       }
       wrap.classList.remove('hidden');
+      const nShow = Math.min(portalNewItemsVisibleCount, allItems.length);
+      const slice = allItems.slice(0, nShow);
       list.innerHTML = '';
-      items.forEach((it) => list.appendChild(createPortalNewItemCard(it)));
+      slice.forEach((it) => list.appendChild(createPortalNewItemCard(it)));
+      if (moreWrap) {
+        if (allItems.length > nShow) {
+          moreWrap.classList.remove('hidden');
+          const moreBtn = document.getElementById('portal-new-items-more-btn');
+          if (moreBtn) {
+            const rest = allItems.length - nShow;
+            const take = Math.min(PORTAL_NEW_ITEMS_CHUNK, rest);
+            moreBtn.textContent = '次の５件を表示する';
+            moreBtn.setAttribute('aria-label', `あと${rest}件のうち${take}件を表示`);
+          }
+        } else {
+          moreWrap.classList.add('hidden');
+        }
+      }
     }
 
     function renderPortalNews() {
@@ -1501,6 +1559,7 @@
           sectionEl.classList.toggle('portal-section-empty', Boolean(q) && visible === 0);
         }
       });
+      portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
       renderPortalNews();
       renderPortalNewItems();
     }
@@ -1976,10 +2035,16 @@
 
     window.__CARD_UPDATE_HISTORY = CARD_UPDATE_HISTORY;
     applyPortalRecencyBadges();
+    portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
     renderPortalNews();
     renderPortalNewItems();
+    document.getElementById('portal-new-items-more-btn')?.addEventListener('click', () => {
+      portalNewItemsVisibleCount += PORTAL_NEW_ITEMS_CHUNK;
+      renderPortalNewItems();
+    });
     window.addEventListener('storage', (e) => {
       if (e.key === 'portalHidden') {
+        portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
         renderPortalNews();
         renderPortalNewItems();
       }
