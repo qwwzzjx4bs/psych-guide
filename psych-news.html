@@ -150,16 +150,16 @@
   <div class="border-t border-gray-100">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-1.5 overflow-x-auto slim">
       <span class="text-xs text-gray-400 shrink-0 mr-1">カテゴリ</span>
-      <button class="chip active px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shrink-0" data-cat="all" data-orig="bg-gray-100 text-gray-700">すべて</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 shrink-0" data-cat="sz"    data-orig="bg-violet-100 text-violet-800">🧠 統合失調症</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-100   text-blue-800   hover:bg-blue-200   shrink-0" data-cat="dep"   data-orig="bg-blue-100 text-blue-800">😔 うつ病・気分障害</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100  text-amber-800  hover:bg-amber-200  shrink-0" data-cat="bip"   data-orig="bg-amber-100 text-amber-800">⚡ 双極性障害</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-100   text-teal-800   hover:bg-teal-200   shrink-0" data-cat="anx"   data-orig="bg-teal-100 text-teal-800">😰 不安障害・PTSD</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 shrink-0" data-cat="ndd"  data-orig="bg-emerald-100 text-emerald-800">🔬 神経発達症</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100    text-red-800    hover:bg-red-200    shrink-0" data-cat="sub"   data-orig="bg-red-100 text-red-800">🚫 依存症</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shrink-0" data-cat="pharm" data-orig="bg-indigo-100 text-indigo-800">💊 薬物治療</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-sky-100    text-sky-800    hover:bg-sky-200    shrink-0" data-cat="psych" data-orig="bg-sky-100 text-sky-800">🗣 精神療法</button>
-      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-pink-100   text-pink-800   hover:bg-pink-200   shrink-0" data-cat="neuro" data-orig="bg-pink-100 text-pink-800">⚡ 神経科学</button>
+      <button class="chip active px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shrink-0" data-cat="all" data-chip-reset="bg-gray-100 text-gray-700">すべて</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-800 hover:bg-violet-200 shrink-0" data-cat="sz"    data-chip-reset="bg-violet-100 text-violet-800">🧠 統合失調症</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-100   text-blue-800   hover:bg-blue-200   shrink-0" data-cat="dep"   data-chip-reset="bg-blue-100 text-blue-800">😔 うつ病・気分障害</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100  text-amber-800  hover:bg-amber-200  shrink-0" data-cat="bip"   data-chip-reset="bg-amber-100 text-amber-800">⚡ 双極性障害</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-teal-100   text-teal-800   hover:bg-teal-200   shrink-0" data-cat="anx"   data-chip-reset="bg-teal-100 text-teal-800">😰 不安障害・PTSD</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 shrink-0" data-cat="ndd"  data-chip-reset="bg-emerald-100 text-emerald-800">🔬 神経発達症</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-red-100    text-red-800    hover:bg-red-200    shrink-0" data-cat="sub"   data-chip-reset="bg-red-100 text-red-800">🚫 依存症</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shrink-0" data-cat="pharm" data-chip-reset="bg-indigo-100 text-indigo-800">💊 薬物治療</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-sky-100    text-sky-800    hover:bg-sky-200    shrink-0" data-cat="psych" data-chip-reset="bg-sky-100 text-sky-800">🗣 精神療法</button>
+      <button class="chip px-3 py-1.5 rounded-full text-xs font-semibold bg-pink-100   text-pink-800   hover:bg-pink-200   shrink-0" data-cat="neuro" data-chip-reset="bg-pink-100 text-pink-800">⚡ 神経科学</button>
     </div>
   </div>
 </header>
@@ -525,12 +525,15 @@ function applyTextToElement(el, text) {
   el.innerHTML = hl(text) + (withEllipsis ? '…' : '');
 }
 
+// 翻訳対象はメインコンテンツ内のみ（カテゴリチップ等のヘッダーは除外）
+const TL_SEL = '#heroZone [data-orig], #articleList [data-orig], #glList [data-orig], #newsList [data-orig]';
+
 // ============================================================
 // TRANSLATE ALL VISIBLE [data-orig] ELEMENTS
 // ============================================================
 async function translateAllVisible() {
   if (langMode !== 'ja') return;
-  const elements = [...document.querySelectorAll('[data-orig]')];
+  const elements = [...document.querySelectorAll(TL_SEL)];
   let count = 0;
   for (const el of elements) {
     const orig = el.dataset.orig || '';
@@ -573,8 +576,8 @@ function applyLang(mode) {
       b.classList.remove('active-lang');
     }
   });
-  // Apply to all translatable elements
-  document.querySelectorAll('[data-orig]').forEach(el => {
+  // Apply to all translatable elements (feed only — not category chips / header chrome)
+  document.querySelectorAll(TL_SEL).forEach(el => {
     const text = mode === 'ja' ? (el.dataset.ja || el.dataset.orig || '') : (el.dataset.orig || '');
     applyTextToElement(el, text);
   });
@@ -1067,8 +1070,8 @@ document.getElementById('alertInput').addEventListener('keydown', e => {
 document.querySelectorAll('.chip').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.chip').forEach(c => {
-      const orig = c.dataset.orig || '';
-      c.className = `chip px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 ${orig}`;
+      const resetCls = c.dataset.chipReset || '';
+      c.className = `chip px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 ${resetCls}`;
       c.classList.add('hover:opacity-90');
     });
     btn.className = 'chip active px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white shrink-0';

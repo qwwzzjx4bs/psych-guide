@@ -722,7 +722,7 @@
                 <span class="class-long-badge">長時間型</span>
                 ジアニオン・長半減期型
               </div>
-              <div class="text-xs text-gray-500">ジアゼパム・デメチル代謝物型・長時間睡眠薬 ほか</div>
+              <div class="text-xs text-gray-500">セルシン/ホリゾン・チョコビー・ベンジリン/ネルボン・ダルメート・トランセーネ・マイスタン ほか</div>
             </div>
           </div>
           <div class="flex items-center gap-3">
@@ -763,7 +763,7 @@
                 <span class="class-mid-badge">中間型</span>
                 抗不安・睡眠（中間）
               </div>
-              <div class="text-xs text-gray-500">クロナゼパム・ロラゼパム・アルプラゾラム・エチゾラム ほか</div>
+              <div class="text-xs text-gray-500">リボトリール・ワイパックス・ソラナックス/コンスタン・デパス・リーゼ・メイラックス・ソムリン ほか</div>
             </div>
           </div>
           <div class="flex items-center gap-3">
@@ -794,7 +794,7 @@
                 <span class="class-short-badge">短時間型</span>
                 超短時間・導入
               </div>
-              <div class="text-xs text-gray-500">トリアゾラム系・ブロチゾラム・ロフラゼプ酸エチル ほか</div>
+              <div class="text-xs text-gray-500">ハルシオン・ランドルミン/レビューミン・ドルミカム/ブコラム ほか</div>
             </div>
           </div>
           <div class="flex items-center gap-3">
@@ -890,56 +890,57 @@
 // ジアゼパム換算 mg = 投与 mg ÷ factor
 
 const ORAL_LONG_CORE = [
-  { id: 'diazepam', name: 'ジアゼパム', brand: 'セルシン・ホリゾン', factor: 1, disc: false, tabs: [2, 5, 10], maxJp: '30 mg/日（主適応・製剤依存）' },
-  { id: 'chlordiazepoxide', name: 'クロルジアゼポキシド', brand: 'チョコビー', factor: 2, disc: false, tabs: [5, 10], maxJp: '40〜50 mg/日級（製品準拠）' },
-  { id: 'prazepam', name: 'プラゼパム', brand: 'プラジタール', factor: 1.5, disc: false, tabs: [5, 10], maxJp: '60 mg/日' },
-  { id: 'flurazepam', name: 'フルラゼパム', brand: 'ダルメートほか', factor: 1.5, disc: false, tabs: [15], maxJp: '30 mg/就寝前級' },
-  { id: 'nitrazepam', name: 'ニトラゼパム', brand: 'イノゲン・ベンジリン', factor: 1, disc: false, tabs: [5, 10], maxJp: '10 mg/日級（主に睡眠）' },
-  { id: 'clorazepate', name: 'クロラゼペート二カリウム', brand: 'トランセーネ', factor: 1.25, disc: false, tabs: [3.75], maxJp: '15 mg/日級' },
+  { id: 'diazepam', name: 'ジアゼパム', brand: 'セルシン錠/ホリゾン錠', factor: 1, disc: false, tabs: [2, 5, 10], maxJp: '15 mg/日（外来原則・適応により異なる）' },
+  { id: 'chlordiazepoxide', name: 'クロルジアゼポキシド', brand: 'チョコビー錠', factor: 2, disc: false, tabs: [5, 10], maxJp: '50 mg/日（主適応・製剤添付準拠）' },
+  { id: 'prazepam', name: 'プラゼパム', brand: 'プラジタール錠', factor: 1.5, disc: false, tabs: [5, 10], maxJp: '60 mg/日（添付準拠）' },
+  { id: 'flurazepam', name: 'フルラゼパム塩酸塩', brand: 'ダルメートカプセル', factor: 1.5, disc: false, tabs: [15], maxJp: '30 mg/日（就寝前・1回10〜30mg）' },
+  { id: 'nitrazepam', name: 'ニトラゼパム', brand: 'ベンジリン錠/ネルボン錠', factor: 1, disc: false, tabs: [5, 10], maxJp: '10 mg/日（主に睡眠・添付準拠）' },
+  { id: 'clorazepate', name: 'ジポタッシウムクロラゼプ酸塩', brand: 'トランセーネ錠', factor: 1.25, disc: false, tabs: [3.75], maxJp: '15 mg/日（添付準拠）' },
 ];
 
 const ORAL_LONG_OTHER = [
-  { id: 'medazepam', name: 'メダゼパム', brand: 'ノーブス', factor: 1.2, disc: false, tabs: [5, 10], maxJp: '30 mg/日' },
-  { id: 'oxazolam', name: 'オキサゾラム', brand: 'セランナ・コンスタン', factor: 2, disc: false, tabs: [10], maxJp: '40 mg/日' },
-  { id: 'clobazam', name: 'クロバザム', brand: 'フリスビーム', factor: 2, disc: false, note: '受容体特性は通常BZDと異なる', tabs: [5, 10], maxJp: '30 mg/日（主適応により異なる）' },
+  { id: 'medazepam', name: 'メダゼパム', brand: 'ノーブス錠', factor: 1.2, disc: false, tabs: [5, 10], maxJp: '30 mg/日（添付準拠）' },
+  { id: 'oxazolam', name: 'オキサゾラム', brand: 'セランナ錠', factor: 2, disc: false, tabs: [10], maxJp: '40 mg/日（添付準拠）' },
+  { id: 'clobazam', name: 'クロバザム', brand: 'マイスタン錠/マイスタン細粒', factor: 2, disc: false, note: '抗てんかん・受容体特性は多くのBZDと異なる', tabs: [5, 10], maxJp: '40 mg/日（てんかん・体重児等で異なる・添付準拠）' },
 ];
 
 const ORAL_MID = [
-  { id: 'oxazepam', name: 'オキサゼパム', brand: 'セラックス等', factor: 2, disc: false, tabs: [10], maxJp: '120 mg/日' },
-  { id: 'lorazepam', name: 'ロラゼパム', brand: 'ワイパックス', factor: 0.1, disc: false, tabs: [0.5, 1, 2], maxJp: '10 mg/日級' },
-  { id: 'clonazepam', name: 'クロナゼパム', brand: 'リボトリール', factor: 0.05, disc: false, tabs: [0.5, 1, 2], maxJp: '睡眠4 mg/日まで級' },
-  { id: 'alprazolam', name: 'アルプラゾラム', brand: 'コンスタン', factor: 0.05, disc: false, tabs: [0.4, 0.8], maxJp: '1.6〜3.2 mg/日（適応準拠）' },
-  { id: 'bromazepam', name: 'ブロマゼパム', brand: 'レキソタン', factor: 0.25, disc: false, tabs: [2, 5], maxJp: '25 mg/日' },
-  { id: 'etizolam', name: 'エチゾラム', brand: 'デパス', factor: 0.1, disc: false, tabs: [0.5, 1], maxJp: '3 mg/日' },
-  { id: 'estazolam', name: 'エスタゾラム', brand: 'ユーロジン', factor: 0.2, disc: false, tabs: [1, 2], maxJp: '4 mg/日' },
-  { id: 'flunitrazepam', name: 'フルニトラゼパム', brand: 'ロヒプノール', factor: 0.1, disc: false, tabs: [1, 2], maxJp: '2 mg/就寝前' },
-  { id: 'clotiazepam', name: 'クロチアゼパム', brand: 'リドルミン・セネリル', factor: 0.2, disc: false, tabs: [5, 10], maxJp: '40 mg/日' },
-  { id: 'mexazolam', name: 'メキサゾラム', brand: 'メレックス', factor: 0.2, disc: false, tabs: [0.5, 1, 1.5], maxJp: '3 mg/日' },
-  { id: 'cloxazolam', name: 'クロキサゾラム', brand: 'セパゾン', factor: 0.2, disc: false, tabs: [2, 5], maxJp: '20 mg/日' },
-  { id: 'loflazepateethyl', name: 'ロフラゼプ酸エチル', brand: 'エメラルド', factor: 0.1, disc: false, tabs: [1, 2], maxJp: '4 mg/日' },
-  { id: 'haloxazolam', name: 'ハロキサゾラム', brand: 'ソムリン', factor: 0.2, disc: false, tabs: [5, 10], maxJp: '40 mg/日' },
-  { id: 'temazepam', name: 'テマゼパム', brand: 'メソピークン ほか', factor: 2, disc: true, tabs: [], maxJp: '—（主剤販売中止・製品確認）' },
+  { id: 'oxazepam', name: 'オキサゼパム', brand: 'セラックス錠', factor: 2, disc: false, tabs: [10], maxJp: '120 mg/日（添付準拠）' },
+  { id: 'lorazepam', name: 'ロラゼパム', brand: 'ワイパックス錠', factor: 0.1, disc: false, tabs: [0.5, 1, 2], maxJp: '3 mg/日（漸増規定あり・高齢者は注意）' },
+  { id: 'clonazepam', name: 'クロナゼパム', brand: 'リボトリール錠/リボトリール細粒', factor: 0.05, disc: false, tabs: [0.5, 1, 2], maxJp: '6 mg/日（てんかん維持量の目安・適応により異なる）' },
+  { id: 'alprazolam', name: 'アルプラゾラム', brand: 'ソラナックス錠/コンスタン錠', factor: 0.05, disc: false, tabs: [0.4, 0.8], maxJp: '2.4 mg/日（漸増規定あり・高齢者1.2mgまで）' },
+  { id: 'bromazepam', name: 'ブロマゼパム', brand: 'レキソタン錠', factor: 0.25, disc: false, tabs: [2, 5], maxJp: '25 mg/日（添付準拠）' },
+  { id: 'etizolam', name: 'エチゾラム', brand: 'デパス錠', factor: 0.1, disc: false, tabs: [0.5, 1], maxJp: '3 mg/日（添付準拠）' },
+  { id: 'estazolam', name: 'エスタゾラム', brand: 'ユーロジン錠', factor: 0.2, disc: false, tabs: [1, 2], maxJp: '4 mg/日（添付準拠）' },
+  { id: 'flunitrazepam', name: 'フルニトラゼパム', brand: 'ロヒプノール錠/サイレース錠', factor: 0.1, disc: false, tabs: [1, 2], maxJp: '2 mg/日（就寝前・第二種向精神薬）' },
+  { id: 'clotiazepam', name: 'クロチアゼパム', brand: 'リーゼ錠', factor: 0.2, disc: false, tabs: [5, 10], maxJp: '40 mg/日（添付準拠）' },
+  { id: 'mexazolam', name: 'メキサゾラム', brand: 'メレックス錠', factor: 0.2, disc: false, tabs: [0.5, 1, 1.5], maxJp: '3 mg/日（添付準拠）' },
+  { id: 'cloxazolam', name: 'クロキサゾラム', brand: 'セパゾン錠', factor: 0.2, disc: false, tabs: [2, 5], maxJp: '20 mg/日（添付準拠）' },
+  { id: 'loflazepateethyl', name: 'ロフラゼプ酸エチル', brand: 'メイラックス錠', factor: 0.1, disc: false, tabs: [1, 2], maxJp: '4 mg/日（添付準拠）' },
+  { id: 'haloxazolam', name: 'ハロキサゾラム', brand: 'ソムリン錠', factor: 0.2, disc: false, tabs: [5, 10], maxJp: '40 mg/日（添付準拠）' },
+  { id: 'temazepam', name: 'テマゼパム', brand: '—', factor: 2, disc: true, discNote: '国内未承認', tabs: [], maxJp: '—（国内未承認）' },
 ];
 
 const ORAL_SHORT = [
-  { id: 'triazolam', name: 'トリアゾラム', brand: 'ハルシオン', factor: 0.05, disc: false, tabs: [0.125, 0.25], maxJp: '0.5 mg/日' },
-  { id: 'brotizolam', name: 'ブロチゾラム', brand: 'ランドルミン・レビューミン', factor: 0.05, disc: false, tabs: [0.125, 0.25], maxJp: '0.75 mg/日' },
-  { id: 'midazolamPO', name: 'ミダゾラム（経口）', brand: 'ドルミカム経口ゼリー等', factor: 0.4, disc: false, note: '吸入・静注は別欄', tabs: [10], maxJp: '15 mg/日級' },
+  { id: 'triazolam', name: 'トリアゾラム', brand: 'ハルシオン錠', factor: 0.05, disc: false, tabs: [0.125, 0.25], maxJp: '0.5 mg/日（添付準拠）' },
+  { id: 'brotizolam', name: 'ブロチゾラム', brand: 'ランドルミン錠/レビューミン錠', factor: 0.05, disc: false, tabs: [0.125, 0.25], maxJp: '0.75 mg/日（添付準拠）' },
+  { id: 'midazolamPO', name: 'ミダゾラム', brand: 'ドルミカムシロップ2mg/mL/ブコラム口腔用液', factor: 0.4, disc: false, note: '注射剤は別欄', tabs: [2.5, 5, 7.5, 10], maxJp: '単回年齢・体重別（口腔用液）／0.25〜1mg/kg・最大20mg（シロップ・麻酔前）' },
 ];
 
 const ER_ODT = [
-  { id: 'alprazolamODT', name: 'アルプラゾラム', brand: 'コンスタン OD', factor: 0.05, disc: false, note: '口崩壊錠', tabs: [0.4, 0.8], maxJp: '即放と同上限目安' },
-  { id: 'alprazolamXR', name: 'アルプラゾラム徐放型', brand: 'ザニックス SR', factor: 0.05, disc: false, note: '徐放', tabs: [1, 2], maxJp: '製品添付に準拠' },
-  { id: 'lorazepamSL', name: 'ロラゼパム', brand: 'ワイパックス SL', factor: 0.1, disc: false, note: '舌下・口腔内崩壊', tabs: [0.5, 1], maxJp: '即放と同上限目安' },
-  { id: 'clonazepamODT', name: 'クロナゼパム', brand: 'リボトリール OD', factor: 0.05, disc: false, note: '口崩壊錠', tabs: [0.5, 1], maxJp: '即放と同上限目安' },
-  { id: 'diazepamOJ', name: 'ジアゼパム', brand: '経口液・懸濁等（製品名は添付で確認）', factor: 1, disc: false, note: '経口液・懸濁は製品ごとに確認', tabs: [2, 5, 10], maxJp: '製品添付に準拠' },
+  { id: 'diazepam_sirop', name: 'ジアゼパム', brand: 'ホリゾンシロップ0.1%/セルシン散1%', factor: 1, disc: false, note: 'シロップ・散剤（2mg錠は経口タブ）', tabs: [2, 5, 10], maxJp: '15 mg/日（外来原則・液・散は各添付）' },
+  { id: 'alprazolamODT', name: 'アルプラゾラム', brand: '—', factor: 0.05, disc: true, discNote: '国内未承認', tabs: [], maxJp: '—（国内未承認）', note: '口腔内崩壊錠は国内未承認' },
+  { id: 'alprazolamXR', name: 'アルプラゾラム', brand: '—', factor: 0.05, disc: true, discNote: '国内未承認', tabs: [], maxJp: '—（国内未承認）', note: '徐放製剤は国内未承認' },
+  { id: 'lorazepamSL', name: 'ロラゼパム', brand: '—', factor: 0.1, disc: true, discNote: '国内未承認', tabs: [], maxJp: '—（国内未承認）', note: '舌下・口腔内崩壊錠は国内未承認' },
+  { id: 'clonazepamODT', name: 'クロナゼパム', brand: '—', factor: 0.05, disc: true, discNote: '国内未承認', tabs: [], maxJp: '—（国内未承認）', note: '口腔内崩壊錠は国内未承認' },
 ];
 
 const INJECT = [
-  { id: 'diazepam_inj', name: 'ジアゼパム', brand: 'ホリゾン・セルシン 注', factor: 1, disc: false, tabs: [10], maxJp: '20 mg／回級（静注速度注意）' },
-  { id: 'lorazepam_inj', name: 'ロラゼパム', brand: 'ワイパックス 注', factor: 0.1, disc: false, tabs: [1, 2, 4], maxJp: '4 mg/回級' },
-  { id: 'midazolam_inj', name: 'ミダゾラム', brand: 'ドルミカム 注', factor: 0.4, disc: false, tabs: [1, 5, 15], maxJp: '10 mg/回級（施設・適応準拠）' },
-  { id: 'flunitrazepam_inj', name: 'フルニトラゼパム', brand: 'ロヒプノール 注', factor: 0.1, disc: false, tabs: [2], maxJp: '4 mg／日' },
+  { id: 'diazepam_inj', name: 'ジアゼパム', brand: 'セルシン注射液/ホリゾン注射液', factor: 1, disc: false, tabs: [10], maxJp: '10 mg/回・総量は症状により（緩徐静注・添付）' },
+  { id: 'lorazepam_inj', name: 'ロラゼパム', brand: 'ワイパックス注射液', factor: 0.1, disc: false, tabs: [1, 2], maxJp: '4 mg/回級（適応・施設により異なる）' },
+  { id: 'midazolam_inj', name: 'ミダゾラム', brand: 'ドルミカム注射液/ミダフレッサ注射液', factor: 0.4, disc: false, tabs: [1, 5, 10, 15], maxJp: '体重・手技・適応により（添付・施設準拠）' },
+  { id: 'flunitrazepam_inj', name: 'フルニトラゼパム', brand: 'サイレース静注2mg', factor: 0.1, disc: false, tabs: [2], maxJp: '体重ベース（全身麻酔導入等・添付）' },
+  { id: 'flunitrazepam_inj_old', name: 'フルニトラゼパム', brand: 'ロヒプノール静注用2mg', factor: 0.1, disc: true, tabs: [], maxJp: '—（販売中止）' },
 ];
 
 const doses = {};
@@ -987,7 +988,9 @@ function buildDrugRow(drug, containerId, type = 'oral') {
   const mj = drug.maxJp ? ' ' + String(drug.maxJp) : '';
   row.dataset.search = (drug.name + ' ' + drug.brand + (drug.note ? ' ' + drug.note : '') + mj).toLowerCase();
   const noteHtml  = drug.note ? `<span class="text-xs text-gray-400">(${drug.note})</span>` : '';
-  const discBadge = drug.disc ? `<span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">販売中止</span>` : '';
+  const discBadge = drug.disc
+    ? `<span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">${escapeHtml(drug.discNote || '販売中止')}</span>`
+    : '';
   const btns = buildQtyBtns(drug.tabs, drug.id, type);
   row.innerHTML = `
     <div class="flex items-start justify-between gap-2 min-w-0">
@@ -1195,6 +1198,11 @@ function buildDrugSearchIndex() {
   INJECT.forEach(d => push(d, 'inject', '注射'));
 }
 
+function discRefSuffix(d) {
+  if (!d.disc) return '';
+  return d.discNote ? ' <span class="dz-ref-muted">（' + escapeHtml(d.discNote) + '）</span>' : ' <span class="dz-ref-muted">（販売中止）</span>';
+}
+
 function renderDzConversionReference() {
   const mount = document.getElementById('dz-reference-mount');
   if (!mount) return;
@@ -1210,7 +1218,7 @@ function renderDzConversionReference() {
     const rows = drugs.map(d => {
       const disc = d.disc ? ' dz-ref-disc' : '';
       const note = d.note ? ' <span class="dz-ref-muted">（' + escapeHtml(d.note) + '）</span>' : '';
-      const discLbl = d.disc ? ' <span class="dz-ref-muted">（販売中止）</span>' : '';
+      const discLbl = discRefSuffix(d);
       const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
       return `<tr class="${disc}">
         <td>${escapeHtml(d.name)}${note}<div class="dz-ref-muted">${escapeHtml(d.brand)}${discLbl}</div></td>
@@ -1223,14 +1231,18 @@ function renderDzConversionReference() {
         <thead><tr><th scope="col">一般名・商品名</th><th scope="col">因子 mg<sup>※</sup></th><th scope="col">国内上限（簡記）<sup>†</sup></th></tr></thead><tbody>${rows}</tbody></table></div>`;
   });
   const erRows = ER_ODT.map(d => {
+    const disc = d.disc ? ' dz-ref-disc' : '';
     const note = d.note ? ' <span class="dz-ref-muted">（' + escapeHtml(d.note) + '）</span>' : '';
     const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
-    return `<tr><td>${escapeHtml(d.name)}${note}<div class="dz-ref-muted">${escapeHtml(d.brand)}</div></td>
-      <td class="col-num">${formatFactor(d.factor)}</td><td class="col-maxJp">${maxJp}</td></tr>`;
+    return `<tr class="${disc}">
+      <td>${escapeHtml(d.name)}${note}<div class="dz-ref-muted">${escapeHtml(d.brand)}${discRefSuffix(d)}</div></td>
+      <td class="col-num">${formatFactor(d.factor)}</td><td class="col-maxJp">${maxJp}</td>
+    </tr>`;
   }).join('');
   const injRows = INJECT.map(d => {
+    const disc = d.disc ? ' dz-ref-disc' : '';
     const maxJp = d.maxJp ? escapeHtml(d.maxJp) : '—';
-    return `<tr><td>${escapeHtml(d.name)}<div class="dz-ref-muted">${escapeHtml(d.brand)}</div></td>
+    return `<tr class="${disc}"><td>${escapeHtml(d.name)}<div class="dz-ref-muted">${escapeHtml(d.brand)}${discRefSuffix(d)}</div></td>
       <td class="col-num">${formatFactor(d.factor)}</td><td class="col-maxJp">${maxJp}</td></tr>`;
   }).join('');
 
