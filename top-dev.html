@@ -716,13 +716,19 @@
       </div>
     </section>
 
-    <section id="portal-news-section" class="mb-6 sm:mb-10 hidden" aria-labelledby="portal-news-heading">
-      <div class="bg-white rounded-2xl border border-gray-200 px-5 sm:px-6 py-4 sm:py-5 shadow-sm">
-        <h2 id="portal-news-heading" class="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-          <span aria-hidden="true">📣</span> 更新情報
+    <section id="portal-news-section" class="mb-4 sm:mb-6 hidden" aria-labelledby="portal-news-heading">
+      <div class="bg-gray-50/90 rounded-xl border border-gray-100/90 px-3 sm:px-4 py-2 sm:py-2.5">
+        <h2 id="portal-news-heading" class="text-[11px] font-semibold text-gray-500 tracking-wide mb-1 flex items-center gap-1">
+          <span aria-hidden="true" class="opacity-60 text-[10px]">📣</span> 更新情報
         </h2>
-        <p class="text-xs text-gray-400 mb-3 leading-relaxed">各ページの更新履歴データから、新しい順に最大5件を自動表示します（ポータル管理で非表示のカードは除きます）。</p>
+        <p class="text-[10px] text-gray-400 mb-1.5 leading-snug">各ページの履歴から新しい順（管理で非表示のカードは除きます）。</p>
         <ul id="portal-news-list" class="list-none m-0 p-0"></ul>
+        <details id="portal-news-details" class="mt-0.5 border-0 hidden">
+          <summary class="list-none cursor-pointer select-none text-[10px] text-gray-400 hover:text-gray-600 py-1 pr-1 -mx-0.5 px-0.5 rounded [&::-webkit-details-marker]:hidden flex items-center gap-0.5 marker:content-none">
+            <span id="portal-news-more-summary" class="underline decoration-gray-300/80 underline-offset-2">さらに表示</span>
+          </summary>
+          <ul id="portal-news-list-more" class="list-none m-0 p-0 mt-1 pt-1 border-t border-gray-100/90"></ul>
+        </details>
       </div>
     </section>
 
@@ -1097,8 +1103,10 @@
         };
         return parse(b.date) - parse(a.date);
       });
-      return flat.slice(0, 5);
+      return flat;
     }
+
+    const PORTAL_NEWS_HEAD = 5;
 
     function sanitizePortalNewsHref(href) {
       const s = String(href || '').trim();
@@ -1110,60 +1118,79 @@
       return '';
     }
 
+    function createPortalNewsListItem(it) {
+      const li = document.createElement('li');
+      li.className = 'flex gap-2 text-[11px] text-gray-500 py-1 border-b border-gray-100/80 last:border-0 last:pb-0';
+      const dateEl = document.createElement('span');
+      dateEl.className = 'text-gray-400 tabular-nums shrink-0 w-[4.75rem] text-[10px] pt-0.5';
+      const d = String(it.date || '').trim();
+      dateEl.textContent = d || '—';
+      const mid = document.createElement('div');
+      mid.className = 'min-w-0 flex-1 flex flex-col gap-0.5';
+      const kindRaw = String(it.kind || '').trim();
+      if (kindRaw === 'card' || kindRaw === 'feature') {
+        const badge = document.createElement('span');
+        badge.className = kindRaw === 'card'
+          ? 'self-start text-[9px] font-medium px-1 py-px rounded border border-violet-200/70 bg-violet-50/80 text-violet-700/90'
+          : 'self-start text-[9px] font-medium px-1 py-px rounded border border-teal-200/70 bg-teal-50/70 text-teal-800/90';
+        badge.textContent = kindRaw === 'card' ? '新規' : '機能';
+        mid.appendChild(badge);
+      }
+      const text = String(it.text || '').trim();
+      const href = sanitizePortalNewsHref(it.href);
+      const textWrap = document.createElement('div');
+      textWrap.className = 'leading-snug text-gray-600';
+      if (href) {
+        const a = document.createElement('a');
+        a.href = href;
+        a.className = 'text-blue-600/85 hover:underline font-normal [word-break:break-word]';
+        if (/^https?:/i.test(href)) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        }
+        a.textContent = text;
+        textWrap.appendChild(a);
+      } else {
+        textWrap.textContent = text;
+      }
+      mid.appendChild(textWrap);
+      li.appendChild(dateEl);
+      li.appendChild(mid);
+      return li;
+    }
+
     function renderPortalNews() {
       const wrap = document.getElementById('portal-news-section');
       const list = document.getElementById('portal-news-list');
-      if (!wrap || !list) return;
+      const details = document.getElementById('portal-news-details');
+      const listMore = document.getElementById('portal-news-list-more');
+      const summaryLabel = document.getElementById('portal-news-more-summary');
+      if (!wrap || !list || !details || !listMore) return;
       const history = window.__CARD_UPDATE_HISTORY;
       if (!history) return;
-      const items = buildAutoPortalNewsFromHistory(history);
-      if (items.length === 0) {
+      const allItems = buildAutoPortalNewsFromHistory(history);
+      if (allItems.length === 0) {
         wrap.classList.add('hidden');
         list.innerHTML = '';
+        listMore.innerHTML = '';
+        details.classList.add('hidden');
+        details.open = false;
         return;
       }
       wrap.classList.remove('hidden');
+      const head = allItems.slice(0, PORTAL_NEWS_HEAD);
+      const tail = allItems.slice(PORTAL_NEWS_HEAD);
       list.innerHTML = '';
-      items.forEach(it => {
-        const li = document.createElement('li');
-        li.className = 'flex gap-3 sm:gap-4 text-sm text-gray-700 py-2.5 border-b border-gray-100 last:border-0 last:pb-0';
-        const dateEl = document.createElement('span');
-        dateEl.className = 'text-gray-400 tabular-nums shrink-0 w-[5.5rem] sm:w-24 text-xs sm:text-sm pt-0.5';
-        const d = String(it.date || '').trim();
-        dateEl.textContent = d || '—';
-        const mid = document.createElement('div');
-        mid.className = 'min-w-0 flex-1 flex flex-col gap-1';
-        const kindRaw = String(it.kind || '').trim();
-        if (kindRaw === 'card' || kindRaw === 'feature') {
-          const badge = document.createElement('span');
-          badge.className = kindRaw === 'card'
-            ? 'self-start text-[10px] font-semibold px-1.5 py-0.5 rounded border border-violet-200 bg-violet-50 text-violet-800'
-            : 'self-start text-[10px] font-semibold px-1.5 py-0.5 rounded border border-teal-200 bg-teal-50 text-teal-900';
-          badge.textContent = kindRaw === 'card' ? '新規カード' : '機能';
-          mid.appendChild(badge);
-        }
-        const text = String(it.text || '').trim();
-        const href = sanitizePortalNewsHref(it.href);
-        const textWrap = document.createElement('div');
-        textWrap.className = 'leading-relaxed';
-        if (href) {
-          const a = document.createElement('a');
-          a.href = href;
-          a.className = 'text-blue-700 hover:underline font-medium [word-break:break-word]';
-          if (/^https?:/i.test(href)) {
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-          }
-          a.textContent = text;
-          textWrap.appendChild(a);
-        } else {
-          textWrap.textContent = text;
-        }
-        mid.appendChild(textWrap);
-        li.appendChild(dateEl);
-        li.appendChild(mid);
-        list.appendChild(li);
-      });
+      head.forEach(it => list.appendChild(createPortalNewsListItem(it)));
+      listMore.innerHTML = '';
+      tail.forEach(it => listMore.appendChild(createPortalNewsListItem(it)));
+      if (tail.length > 0) {
+        details.classList.remove('hidden');
+        if (summaryLabel) summaryLabel.textContent = `さらに表示（${tail.length}件）`;
+      } else {
+        details.classList.add('hidden');
+        details.open = false;
+      }
     }
 
     function refreshCardDisplay() {
