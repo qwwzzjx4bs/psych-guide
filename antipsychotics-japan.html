@@ -221,6 +221,32 @@
         opacity: 0.85;
       }
       .x-scroll__hint .x-scroll__hint-icon--r { animation-delay: 0.2s; }
+      /* 狭い画面：先頭固定列を狭く＋折り返しで右側のスクロール領域を広げる */
+      table.data-table .th-drug,
+      table.data-table .td-drug {
+        white-space: normal;
+        vertical-align: top;
+      }
+      table.data-table thead th:first-child:not([colspan]),
+      table.data-table tbody td:first-child:not([colspan]) {
+        width: min(30vw, 7.25rem) !important;
+        max-width: min(30vw, 7.25rem) !important;
+        min-width: 3.75rem;
+        box-sizing: border-box;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+        font-size: 0.7rem !important;
+        padding: 0.45rem 0.35rem !important;
+      }
+      table.data-table thead th:first-child.th-cell {
+        text-align: left;
+      }
+      table.data-table .th-cell:not(:first-child),
+      table.data-table .td-cell {
+        padding: 0.45rem 0.32rem;
+        font-size: 0.72rem;
+      }
     }
     @media (min-width: 768px) {
       .x-scroll__rail { box-shadow: none; }
