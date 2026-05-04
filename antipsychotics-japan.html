@@ -182,7 +182,7 @@
     table.data-table tbody tr.table-row-focus > td:last-child {
       border-right: 2px solid #2563eb !important;
     }
-    /* 横スクロール時：先頭列（colspanの区分行を除く）を左に固定 */
+    /* 横スクロール時：先頭列（区分ラベル・薬剤名）を左に固定。区分行はラベル1セル＋colspanで残列を確保 */
     table.data-table th:first-child:not([colspan]),
     table.data-table td:first-child:not([colspan]) {
       position: sticky;
@@ -754,7 +754,8 @@
           <tbody>
             <!-- FGA -->
             <tr class="bg-red-50">
-              <td class="td-left font-bold text-red-800" colspan="9">第一世代（FGA）</td>
+              <td class="td-left font-bold text-red-800">第一世代（FGA）</td>
+              <td class="td-cell" colspan="8"></td>
             </tr>
             <tr>
               <td class="td-left td-drug">ハロペリドール</td>
@@ -803,7 +804,8 @@
 
             <!-- SGA -->
             <tr class="bg-blue-50">
-              <td class="td-left font-bold text-blue-800" colspan="9">第二世代（SGA）</td>
+              <td class="td-left font-bold text-blue-800">第二世代（SGA）</td>
+              <td class="td-cell" colspan="8"></td>
             </tr>
             <tr>
               <td class="td-left td-drug">リスペリドン</td>
@@ -896,7 +898,8 @@
 
             <!-- Partial agonists -->
             <tr class="bg-purple-50">
-              <td class="td-left font-bold text-purple-800" colspan="9">第三世代（部分作動薬）</td>
+              <td class="td-left font-bold text-purple-800">第三世代（部分作動薬）</td>
+              <td class="td-cell" colspan="8"></td>
             </tr>
             <tr>
               <td class="td-left td-drug">アリピプラゾール</td>
@@ -923,7 +926,8 @@
 
             <!-- Clozapine -->
             <tr class="bg-fuchsia-50">
-              <td class="td-left font-bold text-fuchsia-800" colspan="9">クロザピン（治療抵抗性）</td>
+              <td class="td-left font-bold text-fuchsia-800">クロザピン（治療抵抗性）</td>
+              <td class="td-cell" colspan="8"></td>
             </tr>
             <tr>
               <td class="td-left td-drug">クロザピン</td>
@@ -1774,7 +1778,8 @@
     document.querySelectorAll('table.data-table').forEach(function (table) {
       table.querySelectorAll('tbody tr').forEach(function (tr) {
         var first = tr.querySelector('td');
-        if (!first || first.hasAttribute('colspan')) return;
+        if (!first) return;
+        if (tr.querySelector('td[colspan]')) return;
         tr.addEventListener('click', function (e) {
           if (e.target.closest('a, button, label, input, select, textarea')) return;
           var was = tr.classList.contains('table-row-focus');
