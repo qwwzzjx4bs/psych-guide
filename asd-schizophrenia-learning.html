@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自閉症スペクトラム障害 × 統合失調症 — 学習ハブ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --as-gradient: linear-gradient(135deg, #3730a3 0%, #0f766e 50%, #b45309 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--as-gradient); }
+    .as-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      border: 1px solid #f1f5f9;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .as-link {
+      color: #4338ca;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .as-link:hover { color: #3730a3; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5.5rem; }
+    }
+    .quiz-opt { accent-color: #4338ca; }
+    .drill-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #312e81;
+      background: #e0e7ff;
+      border: 1px solid #a5b4fc;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+    }
+    .case-prose { line-height: 1.75; }
+    .drill-open summary { cursor: pointer; list-style: none; }
+    .drill-open summary::-webkit-details-marker { display: none; }
+    .quiz-q-card { transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; }
+    .quiz-q-card.quiz-graded.quiz-card-ok { border-color: #34d399; box-shadow: 0 1px 3px rgba(16,185,129,0.28); background: #f0fdf4; }
+    .quiz-q-card.quiz-graded.quiz-card-ng { border-color: #fb923c; box-shadow: 0 1px 3px rgba(251,146,60,0.28); background: #fff7ed; }
+    .quiz-q-card.quiz-graded.quiz-card-skip { border-color: #94a3b8; box-shadow: 0 1px 3px rgba(148,163,184,0.28); background: #f8fafc; }
+    .quiz-q-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+    .quiz-q-title { flex: 1; min-width: 0; }
+    .quiz-result-badge { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.25rem 0.6rem; border-radius: 9999px; line-height: 1.2; }
+    .quiz-result-badge.is-hidden { display: none !important; }
+    .quiz-badge-ok { background: #a7f3d0; color: #065f46; }
+    .quiz-badge-ng { background: #fed7aa; color: #9a3412; }
+    .quiz-badge-skip { background: #e2e8f0; color: #475569; }
+    .quiz-opt-row.quiz-opt-correct { background: #dcfce7 !important; border: 1px solid #86efac !important; }
+    .quiz-opt-row.quiz-opt-wrong { background: #ffe4e6 !important; border: 1px solid #fb7185 !important; }
+    .quiz-q-card.quiz-graded .quiz-opt-row { cursor: default; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-3xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">学習用（教育コンテンツ）</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">自閉症スペクトラム障害 × 統合失調症</h1>
+      <p class="text-white/85 mt-2 text-sm leading-relaxed max-w-2xl">
+        臨床では<strong class="font-semibold text-white">発達史・基礎からの行動様式</strong>と<strong class="font-semibold text-white">後発の精神病症状</strong>の整理が、鑑別と支援方針の両方で効きます。DSM-5-TR では診断名として<strong class="font-semibold text-white">自閉スペクトラム症（ASD）</strong>が用いられることが多く、本ページでも同義に扱います。<strong class="font-semibold text-white">症例ドライループ</strong>とミニチェックで型を固めます。
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-6 -mt-3 relative z-10">
+
+    <div class="rounded-xl border border-amber-200 bg-amber-50/90 p-4 mb-6 text-sm text-amber-950">
+      <strong class="font-bold">重要</strong>：本ページは医学教育のためのまとめです。実際の診療では、発達障害と精神病理の専門的評価（構造化面接・観察・適応評価・心理検査・神経・代謝除外など）に従ってください。診断名のラベル付けより<strong class="font-bold">機能・安全・支援の優先度</strong>を損なわないよう、多職種で共有してください。
+    </div>
+
+    <section id="path" class="as-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
+          <i data-lucide="route" class="w-5 h-5 text-indigo-900"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">おすすめの学習順（能動的想起用）</h2>
+          <p class="text-xs text-slate-500">「今の症状は<strong class="text-slate-800">生涯からある型</strong>か、<strong class="text-slate-800">明確な変化点以降</strong>か」を先に決めると迷いが減ります。</p>
+        </div>
+      </div>
+      <ol class="list-decimal list-inside space-y-2.5 text-sm text-slate-700 leading-relaxed">
+        <li><strong class="text-slate-900">用語と分類の枠</strong>：ASD の核心症状（社会的コミュニケーション・限定反復的行動）と統合失調症の陽性／陰性／解体・緊張の違い。→ <a class="as-link" href="icd10.html#f8">ICD-10 F8章（広汎性発達障害・F84）</a>／<a class="as-link" href="icd10.html#f2">F2章</a>／<a class="as-link" href="psych-terminology-jp.html">用語マップ</a></li>
+        <li><strong class="text-slate-900">発達史・環境</strong>：言語・遊び・対人・感覚・きょう執の歴史。学校・職場での実機能。養育者・教員からの具体例。</li>
+        <li><strong class="text-slate-900">精神病症状の時間軸</strong>：いつから「明らかにベースラインを超えた幻聴・妄想・解体・陽性症状」か。物質・薬・不眠・感染後も確認。→ <a class="as-link" href="schizophrenia-diagnosis.html">統合失調症 診断・鑑別</a></li>
+        <li><strong class="text-slate-900">重なりやすい身体・行動</strong>：緊張病様、激越、自傷、摂食。→ <a class="as-link" href="bfcrs-sheet.html">BFCRS</a>／<a class="as-link" href="schizophrenia-first-episode-learning.html">初発時対応ハブ</a></li>
+        <li><strong class="text-slate-900">薬物療法の位置づけ</strong>：ASD における行動症状への向精神薬と、精神病性障害としての治療目的は異なることがある。→ <a class="as-link" href="antipsychotics-japan.html">抗精神病薬ガイド</a></li>
+        <li><strong class="text-slate-900">症例で回す</strong>：<a class="as-link" href="#drill">症例ドライループ</a>で「発達の線」「精神病の線」「まず守るべき安全」を口頭化してから開示。</li>
+      </ol>
+    </section>
+
+    <section id="assess" class="as-card border-l-4 border-l-indigo-600">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="clipboard-check" class="w-6 h-6 text-indigo-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">ASD × 精神病症状の整理チェック（学習用）</h2>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">外来・入院初期で<strong>取り違えやすい観点</strong>のリストです。</p>
+      <ul class="grid sm:grid-cols-2 gap-2 text-sm text-slate-700">
+        <li class="flex gap-2 bg-indigo-50/90 rounded-lg px-3 py-2 border border-indigo-100"><span class="text-indigo-800 font-bold">1</span>幼少期からの<strong>社会的コミュニケーション</strong>の質（相互性・アイコンタクト・共同注意）</li>
+        <li class="flex gap-2 bg-indigo-50/90 rounded-lg px-3 py-2 border border-indigo-100"><span class="text-indigo-800 font-bold">2</span><strong>限定反復的</strong>興味・ルーティン・感覚への過敏／鈍麻の履歴</li>
+        <li class="flex gap-2 bg-indigo-50/90 rounded-lg px-3 py-2 border border-indigo-100"><span class="text-indigo-800 font-bold">3</span>精神病症状の<strong>ベースラインからの変化</strong>（時期・速度・ストレス・物質）</li>
+        <li class="flex gap-2 bg-indigo-50/90 rounded-lg px-3 py-2 border border-indigo-100"><span class="text-indigo-800 font-bold">4</span><strong>知的障害・言語特性</strong>による「主訴の言い表され方」の制約</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">5</span>「ひとりごと」「リピート言行」<strong>vs 形式障害・奔逸</strong>の聴き分け</li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">6</span>抑うつ・不安・PTSD・OCD との<strong>併存・誤認</strong></li>
+        <li class="flex gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100"><span class="font-bold text-slate-500">7</span><strong>第三者情報</strong>（家族・支援者・学校）の粒度と一貫性</li>
+        <li class="flex gap-2 bg-amber-50 rounded-lg px-3 py-2 border border-amber-100"><span class="text-amber-800 font-bold">8</span><strong>安全</strong>：自傷・他害・栄養・不眠・虐待リスクを別軸で固定</li>
+      </ul>
+    </section>
+
+    <section id="cross" class="as-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="git-merge" class="w-6 h-6 text-teal-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">交差点（取り違えやすい組み合わせ）</h2>
+      </div>
+      <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+        <div class="rounded-lg bg-indigo-50 border border-indigo-100 p-3">
+          <div class="font-bold text-indigo-900 text-sm mb-1">社会的退避 vs 陰性症状</div>
+          <p>ASD における疲労・感覚過負荷・コミュニケーションコストによる<strong>退室・短い返答</strong>は、陰性症状の平坦・思考貧潔と重なり得ます。<strong>文脈＋発達史</strong>で説明がつくかが鍵です。</p>
+        </div>
+        <div class="rounded-lg bg-teal-50 border border-teal-100 p-3">
+          <div class="font-bold text-teal-900 text-sm mb-1">こだわり話法 vs 思考連絡障害</div>
+          <p>特殊興味に基づく<strong>一方的で詳細な会話</strong>は、躁や精神病性思考形式障害と混同されやすいです。<strong>双極様エピソード</strong>の有無、睡眠・気分・衝動の系列を別に確認します。</p>
+        </div>
+        <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
+          <div class="font-bold text-violet-900 text-sm mb-1">感覚・内部体験 vs 幻覚</div>
+          <p>感覚過敏や身体感覚への言及が、<strong>「幻聴のように聞こえる」</strong>表現で報告されることがあります。内容の一貫性・状況依存・対処で変わるかを丁寧に聴取します。</p>
+        </div>
+        <div class="rounded-lg bg-amber-50 border border-amber-100 p-3">
+          <div class="font-bold text-amber-900 text-sm mb-1">ASD と精神病性障害の併存</div>
+          <p>診断基準上は両者が<strong>独立に成立しうる</strong>ケースの整理です。どちらを先に主訴として治療目標を置くかで、面接の深め方・記録項目が変わります。</p>
+        </div>
+        <div class="rounded-lg bg-rose-50 border border-rose-100 p-3">
+          <div class="font-bold text-rose-900 text-sm mb-1">知的障害・コミュニケーション障害と「妄想の確定」</div>
+          <p>情報取得が限られるとき、思考内容の異常を<strong>早すぎる断定</strong>しない。養育者面接・観察・反復評価の設計が安全側です。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="drill" class="as-card ring-2 ring-indigo-200/90 border-indigo-100">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center shrink-0">
+            <i data-lucide="repeat" class="w-5 h-5 text-indigo-900"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">症例ドライループ</h2>
+            <p class="text-xs text-slate-500 mt-0.5">架空の教育症例。<span class="drill-pill inline-block mt-1">READ → RECALL → REVEAL</span></p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+          <button type="button" id="drill-prev" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50">前の症例</button>
+          <button type="button" id="drill-next" class="px-3 py-2 rounded-lg bg-indigo-700 text-white text-sm font-bold hover:bg-indigo-800 shadow-sm">次の症例</button>
+        </div>
+      </div>
+      <div class="rounded-xl bg-indigo-50/80 border border-indigo-100 p-3 mb-4 text-xs text-indigo-950 leading-relaxed">
+        <strong class="font-bold">回し方</strong>：症例を読む → <em>①発達の線で説明できるか</em> <em>②精神病性症状のズレはあるか</em> <em>③次の評価・支援</em> を言語化 → 開示。<span class="block mt-1.5">全<strong>8症例</strong>。</span>
+      </div>
+      <p class="text-sm font-bold text-indigo-900 mb-2 tabular-nums" id="drill-index" aria-live="polite">症例 1 / 8</p>
+      <div class="rounded-xl border border-slate-200 bg-white p-4 mb-4 shadow-sm">
+        <h3 class="text-base font-bold text-slate-900 mb-2 leading-snug" id="drill-title"></h3>
+        <div class="case-prose text-sm text-slate-700 whitespace-pre-line" id="drill-vignette"></div>
+      </div>
+      <div class="space-y-2 text-sm" id="drill-reveals"></div>
+      <p class="text-xs text-slate-400 mt-4">実臨床では児童精神科・知的障害・地域発達支援・成人精神科の連携を前提にしてください。</p>
+    </section>
+
+    <section id="quiz" class="as-card ring-2 ring-indigo-200/80">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="help-circle" class="w-6 h-6 text-indigo-700"></i>
+        <h2 class="text-lg font-bold text-slate-800">ミニチェック（10問）</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">選択後「採点する」。解説は各問の折りたたみ内。</p>
+      <div id="quiz-items" class="space-y-5 text-sm"></div>
+      <div class="flex flex-wrap items-center gap-3 mt-6">
+        <button type="button" id="quiz-grade" class="px-5 py-2.5 rounded-xl bg-indigo-700 text-white font-bold text-sm hover:bg-indigo-800 shadow-md">採点する</button>
+        <button type="button" id="quiz-reset" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">選択をクリア</button>
+        <p id="quiz-result" class="text-sm font-bold text-slate-700 tabular-nums" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 mt-8 mb-6">関連：<a class="as-link" href="schizophrenia-first-episode-learning.html">統合失調症 × 初発時対応</a> · <a class="as-link" href="psychopathology-scales-learning.html">精神病理 × スケール</a></p>
+  </main>
+
+  <script>
+    const CASE_DRILL = [
+      {
+        title: '症例1：既診ASDの高校生が「いじめ後、誰かに見られている」（16歳・男性）',
+        vignette: '小児期からASD診断、特支で就学。2か月前からいじめが表面化し、不登校。本人は「廊下に出ると知らない人が見ている気がする」と言うが、内容は曖昧。睡眠は浅い。新規の命令幻聴や体系だった被害は取りきれない。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '<strong>悪化後の不安・身体表現・対人恐怖</strong>が主役の可能性と、<strong>精神病閾値の体験</strong>の両方を並行に想定。ASD では状況説明が箇条書きに乏しいことがある。' },
+          { label: '鑑別・評価のポイント', body: '学校・家族への<strong>時系列と行動</strong>（起床、外出、SNS、食事）の聴取。うつ・PTSD 様相。必要なら<strong>構造化面接や観察</strong>の専門窓口を検討。' },
+          { label: '次の一手（教育用）', body: '「ASDだから精神病はない」と決めつけず、<strong>ベースラインからの逸脱</strong>を文章で固定。安全・学びの継続・被害対応を<strong>多職種</strong>で。' },
+        ],
+      },
+      {
+        title: '症例2：「統合失調症」で通院中だが幼少の言語遅滞が判明（24歳・女性）',
+        vignette: '18歳で幻聴・被害を主訴に精神科。以降抗精神病薬単剤で通院。再度詳しい発達聴取で、幼少の言語遅滞・こだわり・感覚過敏が強かったと母が語る。現在も対面は短いが妄想様主誘は持続。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '後追いで<strong>ASD 特性の強さ</strong>が見える症例は臨床で少なくない。精神病性障害の診断と<strong>発達の説明因子</strong>は両立しうる。' },
+          { label: '鑑別・評価のポイント', body: '診断ラベルの<strong>書き換えより機能記述</strong>を豊かにする。就労・地域支援で必要な配慮（環境調整・連絡様式）を別欄に残す価値。' },
+          { label: '次の一手（教育用）', body: '薬は現状維持でも、<strong>リハ・支援計画</strong>の言語が変わる。本人と家族への説明の踏み込み方を調整。' },
+        ],
+      },
+      {
+        title: '症例3：ASD青年の不動・少食（19歳・男性）',
+        vignette: '知的境界域。これまでにもこだわりの断裂で食が細くなることがあった。大学入学後、部屋から出ず水も少ない日がある。言葉は「だめ」と短い。命に関わる摂食量の低下。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '<strong>緊張病・うつ・カタトニア</strong>と、環境変化に伴う<strong>閉じこもり・感覚オーバー</strong>の鑑別。ASD ではコミュニケーション制限で重症度が過小評価されやすい。' },
+          { label: '鑑別・評価のポイント', body: '身体・脱水・電解質。<strong>BFCRS</strong>的観点と、養育者が知る「いつものパターンか」の確認。内科・児童精神科連携。→ <a class="as-link" href="bfcrs-sheet.html">BFCRS</a>' },
+          { label: '次の一手（教育用）', body: '安全が先。栄養・輸液・入院適応を検討。<strong>行動分析</strong>と医学的治療を対立させない。' },
+        ],
+      },
+      {
+        title: '症例4：新幹線の音が「頭に入ってくる」— 感覚か幻聴か（28歳・女性）',
+        vignette: 'ASD と診断後、就労支援。通勤電車が苦痛で出勤困難。「音が頭にズキズキ入る」と表現。被害の意味づけは乏しい。気分エピソードの歴は不明瞭。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '<strong>感覚処理</strong>の訴えが、言葉不足で劇的に聞こえる例。真の幻聴かは<strong>内容・状況・確信度</strong>で掘る。' },
+          { label: '鑑別・評価のポイント', body: '環境調整（時差・座席・耳栓）の試みと反応。不安・抑うつの有無。必要なら<strong>作業興味への配慮</strong>で通勤経路を再設計。' },
+          { label: '次の一手（教育用）', body: '早期に「精神病」とラベルして<strong>環境因子を閉じない</strong>。記録は体験記述を残す。' },
+        ],
+      },
+      {
+        title: '症例5：中度知的障害・自閉症の男性が「天井から落ちてくる」（35歳・男性）',
+        vignette: 'グループホーム入所歴5年。ここ数週間、天井を指さし激怒することが増えた。言語は限定的。スタッフは「いつもと違う」と感じる。身体所見に目立った発熱はなし。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '器質（視覚・てんかんに関連する精神病性症状・疼痛・便秘）や<strong>環境変更</strong>を先に。視覚誤認と精神病性幻覚の境界も。' },
+          { label: '鑑別・評価のポイント', body: '長く知る支援者による<strong>行動ベースライン</strong>。身体検査・基本検査・映像記録の活用。向精神薬は目的を明確に。' },
+          { label: '次の一手（教育用）', body: '「知的障害＝妄想は取れない」ではなく、<strong>評価の幅を広げる</strong>訓練。多職種のケースカンファレンスで共有。' },
+        ],
+      },
+      {
+        title: '症例6：ASD診断の成人が、就職先で「同僚が囁いている」と主訴（31歳・男性）',
+        vignette: '幼少からきょう執と固いこだわり。ASD とADHDの併存指摘あり。新職場2か月で、「廊下で囁かれている」と言い残業拒否。内容は職場の噂話と重なる部分がある。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '<strong>社会的シグナルの過解釈</strong>や不安と、<strong>関係妄想・幻聴</strong>の重なりを考える。新環境ストレスはトリガーになりうる。' },
+          { label: '鑑別・評価のポイント', body: '職場の具体状況、同僚コメントの検可能性。心理・職業支援との連携。必要にら<strong>短期の薬物介入</strong>は慎重に目的を。' },
+          { label: '次の一手（教育用）', body: '職場調整と治療を対立させず、<strong>記録は事実と推測を分ける</strong>。' },
+        ],
+      },
+      {
+        title: '症例7：若年でASDを疑われたが、薬物自由期後も幻聴持続（22歳・女性）',
+        vignette: '大学休学。大麻使用歴あり、中止3か月経過も批判的幻聴が持続。幼少の対人トラブル・感覚こだわりはあったが、診断は曖昧。家族は「昔から変わった子」とのみ。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '物質関連精神病から<strong>持続する独立エピソード</strong>への移行を考える。ASD 特性は併存のリスク因子・背景にもなりうる。' },
+          { label: '鑑別・評価のポイント', body: '時系列の図示。PANSS 等で<strong>陽性症状の推移</strong>。発達専門の一次評価を別途。→ <a class="as-link" href="panss-sheet-detailed.html">PANSS</a>' },
+          { label: '次の一手（教育用）', body: '「物質が原因で終わり」とせず、<strong>再評価プロトコル</strong>をカルテに残す。' },
+        ],
+      },
+      {
+        title: '症例8：主に「会話が続かない」で紹介— 陰性かASDか（29歳・男性）',
+        vignette: '単身。友人少。母は「小さい頃から人と遊ばず、電車の番線に強い」。本人は就職面接で質問の意図が取りにくいと悩む。幻覚妄想は明確には聴取できない。',
+        blocks: [
+          { label: '発達・精神病性の読み', body: '主因が<strong>生涯からの社会的コミュニケーション様式</strong>ならASD 軸が強い。単独では<strong>統合失調症スペクトラムは慎重</strong>。' },
+          { label: '鑑別・評価のポイント', body: '構造化された発達面接・観察ツールの知識（施設で可能な範囲）。抑うつ・不安障害の併存。就労支援・合理的配慮の文書化。' },
+          { label: '次の一手（教育用）', body: 'スケールだけで切らず、<strong>具体エピソードの厚み</strong>を増やすのが鑑別の核。' },
+        ],
+      },
+    ];
+
+    let drillIdx = 0;
+    function renderDrill() {
+      const d = CASE_DRILL[drillIdx];
+      document.getElementById('drill-index').textContent = '症例 ' + (drillIdx + 1) + ' / ' + CASE_DRILL.length;
+      document.getElementById('drill-title').textContent = d.title;
+      document.getElementById('drill-vignette').textContent = d.vignette;
+      const box = document.getElementById('drill-reveals');
+      box.innerHTML = '';
+      d.blocks.forEach((b, i) => {
+        const det = document.createElement('details');
+        det.className = 'drill-open rounded-xl border border-indigo-200/90 bg-indigo-50/40 px-4 py-3';
+        const sum = document.createElement('summary');
+        sum.className = 'font-bold text-indigo-950 text-sm flex flex-wrap items-center gap-2';
+        const prefix = ['①', '②', '③'][i] || '・';
+        sum.innerHTML = '<span class="shrink-0">' + prefix + ' ' + b.label + '</span><span class="text-xs font-normal text-indigo-800/90">（考えてから開く）</span>';
+        const div = document.createElement('div');
+        div.className = 'mt-2 text-sm text-slate-700 leading-relaxed case-prose';
+        div.innerHTML = b.body;
+        det.appendChild(sum);
+        det.appendChild(div);
+        box.appendChild(det);
+      });
+    }
+    document.getElementById('drill-prev').addEventListener('click', () => {
+      drillIdx = (drillIdx - 1 + CASE_DRILL.length) % CASE_DRILL.length;
+      renderDrill();
+    });
+    document.getElementById('drill-next').addEventListener('click', () => {
+      drillIdx = (drillIdx + 1) % CASE_DRILL.length;
+      renderDrill();
+    });
+    renderDrill();
+
+    const QUIZ = [
+      { q: 'ASD の診断で中核となる症状領域として、教科書的に挙げられやすいのはどれか。', opts: ['社会的コミュニケーションと限定反復的行動', '高血圧コントロールのみ', '視力矯正のみ', '歯列矯正のみ'], a: 0, exp: 'ASD は発達期からの持続的困難として整理され、統合失調症の操作性基準とは別の軸です。' },
+      { q: 'ASD と統合失調症の鑑別で特に重視されやすいのはどれか。', opts: ['発達史・生涯を通じた対人行動様式と、精神病症状の明確な変化点', '靴のサイズのみ', '血液型のみ', '星座のみ'], a: 0, exp: '「いつからそうか」を発達と精神病の両方の時間軸で分けて聴くのが定石です。' },
+      { q: '社会的孤立や平淡な表情がみられるとき、取り違えやすい組み合わせとして適切なのはどれか。', opts: ['ASD における対人負荷・感覚過負荷と、陰性症状', '季節性アレルギーのみ', '貧血のみ', '花粉症のみ'], a: 0, exp: '文脈・疲労・環境で変動するか、養育者の語る幼少像と矛盾しないかが手掛かりになります。' },
+      { q: '知的障害や言語制限がある患者の「奇妙な言及」を評価する際の姿勢として適切に近いのはどれか。', opts: ['養育者面接・観察・反復評価を組み合わせ、早すぎる妄想断定を避ける', '一刻も早く妄想として記載のみ', '身体診察は不要', '支援者は不要'], a: 0, exp: '情報源の制約は診断の不確実性として記録に残すのが望ましいです。' },
+      { q: 'ASD でみられる興味に基づく話の押しと、躁病の思考奔逸を区別する際に用いやすいのはどれか。', opts: ['気分・睡眠・活動量・衝動性の系列と時系列', '握力のみ', '身長のみ', '爪の色のみ'], a: 0, exp: '感情障害の枠が疑わるときはYMRSやうつ評価も視野に入れます。' },
+      { q: 'カタトニア様の不動・摂食低下を ASD 青年で評価するとき、鑑別に入れやすいのはどれか。', opts: ['緊張病・うつ・身体合併症・いつものストレス反応の鑑別', '扁桃腺肥大のみ', '近視のみ', 'アレルギー皮膚炎のみ'], a: 0, exp: 'BFCRS 等で運動徴候を身体面から整理し、内科的除外と並行する型が安全です。' },
+      { q: '後天性の精神病症状が明瞭な場合の記載として、教科書的に妥当に近いのはどれか。', opts: ['ASD（またはASD特性）と精神病性障害の併存を疑うケースがありうる', 'ASD と精神病性障害は絶対に併存しない', 'ASD があれば抗精神病薬は禁止', '精神病理は記載しない'], a: 0, exp: '実臨床では治療目標・説明・支援計画のために併記が有用なことがあります。' },
+      { q: '評価ツールの使い分けのイメージとして適切に近いのはどれか。', opts: ['ASD の構造化観察・面接と、精神病性症状の臨床評価は目的が異なり得る', 'PANSS だけでASD も確定できる', '片方のみで十分と決め打ちする', '発達評価は成人では不要'], a: 0, exp: '施設・専門窓口の役割分担と、記録に「未実施・要紹介」を残すことも重要です。' },
+      { q: '家族が「昔から変わった子だった」と述べ、精神病の明瞭な変化点が取りにくいとき、次に考えやすいのはどれか。', opts: ['発達障害スペクトラム上の説明と、環境ストレス反応の整理', '直ちに統合失調症のみで確定', '一切フォローしない', '診断名だけ記載'], a: 0, exp: '変化点が曖昧なときほど、長期の機能記述と再評価計画が役立ちます。' },
+      { q: '向精神薬を検討する際の前提として、ASD 併存例で教科書的に意識されやすいのはどれか。', opts: ['行動症状の管理目的か、精神病性症状治療目的かを区別して説明・記録する', '目的の区別は不要', '体重は見なくてよい', '同意は不要'], a: 0, exp: 'オフレーベル使用や副作用プロファイルは、本人・家族との共有意思決定とセットです。' },
+    ];
+
+    const quizItems = document.getElementById('quiz-items');
+    QUIZ.forEach((item, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'quiz-q-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm';
+      const head = document.createElement('div');
+      head.className = 'quiz-q-head mb-2';
+      const h = document.createElement('div');
+      h.className = 'quiz-q-title font-semibold text-slate-800';
+      h.textContent = 'Q' + (i + 1) + '. ' + item.q;
+      const badge = document.createElement('span');
+      badge.className = 'quiz-result-badge is-hidden';
+      badge.setAttribute('aria-live', 'polite');
+      head.appendChild(h);
+      head.appendChild(badge);
+      wrap.appendChild(head);
+      const opts = document.createElement('div');
+      opts.className = 'space-y-2';
+      item.opts.forEach((text, j) => {
+        const lab = document.createElement('label');
+        lab.className = 'quiz-opt-row flex items-start gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50 border border-transparent';
+        const r = document.createElement('input');
+        r.type = 'radio';
+        r.name = 'q' + i;
+        r.value = String(j);
+        r.className = 'quiz-opt mt-1 shrink-0';
+        const span = document.createElement('span');
+        span.textContent = text;
+        span.className = 'text-slate-700';
+        lab.appendChild(r);
+        lab.appendChild(span);
+        opts.appendChild(lab);
+      });
+      wrap.appendChild(opts);
+      const exp = document.createElement('details');
+      exp.className = 'mt-3 text-xs text-slate-600';
+      exp.innerHTML = '<summary class="cursor-pointer font-semibold text-indigo-800">解説を表示</summary><p class="mt-2 leading-relaxed pl-1">' + item.exp + '</p>';
+      wrap.appendChild(exp);
+      quizItems.appendChild(wrap);
+    });
+
+    function clearMiniQuizVisuals() {
+      document.querySelectorAll('#quiz-items .quiz-q-card').forEach((card) => {
+        card.classList.remove('quiz-graded', 'quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        const b = card.querySelector('.quiz-result-badge');
+        if (b) {
+          b.classList.add('is-hidden');
+          b.textContent = '';
+          b.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip');
+        }
+        card.querySelectorAll('.quiz-opt-row').forEach((lab) => {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+      });
+    }
+
+    document.getElementById('quiz-grade').addEventListener('click', () => {
+      let ok = 0;
+      const cards = document.querySelectorAll('#quiz-items .quiz-q-card');
+      QUIZ.forEach((item, i) => {
+        const wrap = cards[i];
+        if (!wrap) return;
+        const badge = wrap.querySelector('.quiz-result-badge');
+        const sel = wrap.querySelector('input[type="radio"]:checked');
+        const picked = sel ? +sel.value : null;
+        const isOk = picked === item.a;
+        if (isOk) ok++;
+
+        wrap.classList.remove('quiz-card-ok', 'quiz-card-ng', 'quiz-card-skip');
+        wrap.classList.add('quiz-graded');
+        badge.classList.remove('quiz-badge-ok', 'quiz-badge-ng', 'quiz-badge-skip', 'is-hidden');
+
+        if (picked === null) {
+          wrap.classList.add('quiz-card-skip');
+          badge.textContent = '未解答';
+          badge.classList.add('quiz-badge-skip');
+        } else if (isOk) {
+          wrap.classList.add('quiz-card-ok');
+          badge.textContent = '正解';
+          badge.classList.add('quiz-badge-ok');
+        } else {
+          wrap.classList.add('quiz-card-ng');
+          badge.textContent = '不正解';
+          badge.classList.add('quiz-badge-ng');
+        }
+
+        wrap.querySelectorAll('.quiz-opt-row').forEach((lab) => {
+          lab.classList.remove('quiz-opt-correct', 'quiz-opt-wrong');
+        });
+        const rows = wrap.querySelectorAll('.quiz-opt-row');
+        if (rows[item.a]) rows[item.a].classList.add('quiz-opt-correct');
+        if (picked !== null && picked !== item.a && rows[picked]) rows[picked].classList.add('quiz-opt-wrong');
+      });
+      const el = document.getElementById('quiz-result');
+      el.textContent = '正答 ' + ok + ' / ' + QUIZ.length;
+      el.className = 'text-sm font-bold ' + (ok >= 8 ? 'text-indigo-700' : ok >= 5 ? 'text-amber-800' : 'text-rose-700') + ' tabular-nums';
+    });
+    document.getElementById('quiz-reset').addEventListener('click', () => {
+      document.querySelectorAll('#quiz-items input[type="radio"]').forEach((r) => { r.checked = false; });
+      clearMiniQuizVisuals();
+      const el = document.getElementById('quiz-result');
+      el.textContent = '';
+      el.className = 'text-sm font-bold text-slate-700 tabular-nums';
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
