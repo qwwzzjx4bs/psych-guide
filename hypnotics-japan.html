@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>不眠症治療薬 選択ガイド（日本承認薬）- 精神科臨床</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #0f172a;
+      --psych-secondary: #312e81;
+      --psych-gradient: linear-gradient(135deg, #0f172a, #4338ca);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+      border-left: 4px solid #4338ca;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 639px) {
+      .section-card { padding: 1rem; margin-bottom: 1rem; border-radius: 0.75rem; }
+      .criteria-box, .danger-box, .warning-box, .recommend-box { padding: 1rem 0.875rem; }
+    }
+    .badge-first {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .gen-mel { background:#cffafe; color:#155e75; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .gen-ora { background:#ede9fe; color:#5b21b6; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .gen-z { background:#dbeafe; color:#1e40af; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .gen-bzd { background:#fef3c7; color:#92400e; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .drug-card { border-radius: 0.75rem; padding: 1rem; border: 1px solid; }
+    .drug-card-mel { background:#ecfeff; border-color:#67e8f9; }
+    .drug-card-ora { background:#f5f3ff; border-color:#c4b5fd; }
+    .drug-card-z { background:#eff6ff; border-color:#93c5fd; }
+    .drug-card-bzd { background:#fffbeb; border-color:#fcd34d; }
+    @media (max-width: 639px) { .drug-card { padding: 0.75rem; } }
+    .toc {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 50;
+      min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .th-cell { background:#f1f5f9; font-weight:700; font-size:0.78rem; padding:0.6rem 0.5rem; text-align:center; color:#374151; }
+    .td-cell { padding:0.55rem 0.5rem; text-align:center; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .td-left { padding:0.55rem 0.75rem; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .x-scroll { width: 100%; max-width: 100%; }
+    .x-scroll__rail { -webkit-overflow-scrolling: touch; max-width: 100%; }
+    .th-drug, .td-drug { white-space: nowrap; vertical-align: middle; }
+    table.data-table { width: max-content; min-width: 100%; }
+    table.data-table tbody tr:not(:has(td[colspan])) { cursor: pointer; }
+    table.data-table tbody tr.table-row-focus > td {
+      border-top: 2px solid #2563eb !important;
+      border-bottom: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child { border-left: 2px solid #2563eb !important; }
+    table.data-table tbody tr.table-row-focus > td:last-child { border-right: 2px solid #2563eb !important; }
+    @media (max-width: 767px) {
+      .x-scroll__rail { box-shadow: inset -16px 0 20px -10px rgba(30, 41, 59, 0.18); border-radius: 0.375rem; }
+      .x-scroll__hint .x-scroll__hint-icon { display: inline-flex; animation: x-scroll-hint-nudge 1.65s ease-in-out infinite; opacity: 0.85; }
+      .x-scroll__hint .x-scroll__hint-icon--r { animation-delay: 0.2s; }
+    }
+    @media (min-width: 768px) { .x-scroll__rail { box-shadow: none; } }
+    @keyframes x-scroll-hint-nudge {
+      0%, 100% { transform: translateX(0); opacity: 0.55; }
+      50% { transform: translateX(5px); opacity: 1; }
+    }
+    .x-scroll__hint {
+      display: flex; align-items: center; justify-content: center; gap: 0.375rem;
+      margin-top: 0.4rem; padding: 0.3rem 0.65rem; font-size: 0.6875rem; font-weight: 600;
+      color: #475569; line-height: 1.35; text-align: center;
+      background: rgba(241, 245, 249, 0.95); border: 1px dashed #94a3b8; border-radius: 0.375rem;
+    }
+    @media (min-width: 768px) {
+      .x-scroll__hint { justify-content: flex-end; font-size: 0.65rem; font-weight: 500; padding: 0.2rem 0;
+        background: transparent; border: none; color: #64748b; }
+      .x-scroll__hint .x-scroll__hint-icon { display: none; }
+    }
+    .dot-hi { background:#dc2626; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+    .dot-md { background:#d97706; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+    .dot-lo { background:#22c55e; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+    .dot-no { background:#e5e7eb; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <header class="header-gradient text-white py-8">
+    <div class="max-w-5xl mx-auto px-2 sm:px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="moon" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold">不眠症治療薬 選択ガイド</h1>
+      <p class="mt-2 text-lg opacity-85">日本承認薬 — メラトニン受容体作動・オレキシン拮抗・Z 薬・ベンゾ系催眠の使い分け</p>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">作用機序マップ</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">主訴別アルゴリズム</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">薬剤比較表</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">高齢・OSA・CYP3A</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">副作用・相互作用</span>
+      </div>
+      <p class="mt-3 text-xs opacity-60">参照：各添付文書（<a href="https://www.pmda.go.jp" class="underline opacity-90">PMDA 医薬品医療機器総合機構</a>）／日本精神神経学会「不眠症診療ガイドライン」改訂版（2017）等の趣旨／<a href="benzodiazepines-japan.html" class="underline opacity-90">ベンゾジアゼピン 選択ガイド</a></p>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#quickref" class="text-sm text-gray-600 hover:text-indigo-700 block">クイックリファレンス</a></li>
+      <li><a href="#classification" class="text-sm text-gray-600 hover:text-indigo-700 block">薬剤分類</a></li>
+      <li><a href="#selection" class="text-sm text-gray-600 hover:text-indigo-700 block">選択アルゴリズム</a></li>
+      <li><a href="#compare" class="text-sm text-gray-600 hover:text-indigo-700 block">クラス別比較</a></li>
+      <li><a href="#druglist" class="text-sm text-gray-600 hover:text-indigo-700 block">薬剤詳細</a></li>
+      <li><a href="#bzd" class="text-sm text-gray-600 hover:text-indigo-700 block">BZD 催眠（要約）</a></li>
+      <li><a href="#sideeffects" class="text-sm text-gray-600 hover:text-indigo-700 block">副作用比較</a></li>
+      <li><a href="#monitoring" class="text-sm text-gray-600 hover:text-indigo-700 block">モニタリング・漸減</a></li>
+      <li><a href="#interactions" class="text-sm text-gray-600 hover:text-indigo-700 block">相互作用・禁忌</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
+
+    <div class="section-card" id="quickref">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる4ポイント</h2>
+          <p class="text-gray-500 text-sm">不眠の薬物療法を始める前に</p>
+        </div>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl border-l-4 border-emerald-600">
+          <div class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">非薬物療法（CBT-I・睡眠衛生）を第一に計画</div>
+            <p class="text-gray-600 text-sm">慢性不眠では CBT-I がエビデンスの核。薬は補助として、目標睡眠時間・服薬タイミング・減薬計画までセットで説明する。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-xl border-l-4 border-indigo-600">
+          <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">主訴の型で薬剤クラスを絞る</div>
+            <p class="text-gray-600 text-sm">入眠困難<strong>のみ</strong>ならラメルテオンが適応上マッチしやすい。中途覚醒・早朝覚醒が主なら DORA・Z 薬・BZD の検討領域（いずれも添付の効能・注意を確認）。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl border-l-4 border-amber-600">
+          <div class="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">翌日残留・転倒・複雑睡眠関連行動を常に説明</div>
+            <p class="text-gray-600 text-sm">Z 薬・BZD は睡眠行動異常・記憶障害の警告が共通。高齢者は転倒・骨折。DORA も傾眠・運転能力に注意。就寝直前服用・「起床して作業する夜」は避ける。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-rose-50 to-rose-100 rounded-xl border-l-4 border-rose-600">
+          <div class="w-10 h-10 bg-rose-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">呼吸抑制リスク・CYP3A を多併用で再点検</div>
+            <p class="text-gray-600 text-sm">オピオイド・大量アルコール・重症 OSA 未治療等は BZD／Z 薬で特に重い。DORA／ダリドレキサントは強い CYP3A4 阻害との併用禁忌例あり。併用薬変更のたびに添付を開く。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="classification">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="layers" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤分類（承認スコープ付き）</h2>
+          <p class="text-gray-500 text-sm">同一「不眠症」でも効能表現・注意事項が製品ごとに異なる</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="drug-card drug-card-mel">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-mel">MT₁/MT₂</span>
+            <span class="text-xs text-gray-500">メラトニン受容体作動薬</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">睡眠相を前寄せする薬理。中途覚醒への効果は期待し過ぎない。食事の影響が大きい。</p>
+          <div class="bg-white rounded p-3 border border-cyan-200 text-xs">
+            <div><span class="font-bold text-cyan-900">ラメルテオン</span><span class="text-gray-400">（ラメルテオン錠「杏林」等）</span></div>
+            <div class="text-gray-600 mt-1">効能：不眠症における<strong>入眠困難の改善</strong>（睡眠維持を主訴とするケースの第一選択とは限らない）。</div>
+          </div>
+        </div>
+
+        <div class="drug-card drug-card-ora">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-ora">オレキシン拮抗</span>
+            <span class="text-xs text-gray-500">覚醒信号の抑制</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">依存様式は BZD ほど臨床問題にならないが、傾眠・麻痺体験・悪夢等の報告あり。多くは空腹寄り・就寝直前。CYP3A 管理が重要。</p>
+          <div class="grid grid-cols-1 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-violet-200"><strong>スボレキサント</strong>（ベルソムラ錠）</span>
+            <span class="bg-white rounded px-2 py-1 border border-violet-200"><strong>レンボレキサント</strong>（デイビゴ錠）</span>
+            <span class="bg-white rounded px-2 py-1 border border-violet-200"><strong>ダリドレキサント</strong>（クビビック錠）</span>
+            <span class="bg-white rounded px-2 py-1 border border-violet-200"><strong>ボルノレキサント</strong>（ボルズィ錠・2025年承認）</span>
+          </div>
+          <div class="mt-2 text-xs text-violet-800 bg-violet-50 rounded p-2">効能：いずれも<strong>不眠症</strong>。他の不眠薬との併用は各添付で「有効性・安全性は確立していない」旨の記載が一般的。</div>
+        </div>
+
+        <div class="drug-card drug-card-z">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-z">非 BZD GABA-A</span>
+            <span class="text-xs text-gray-500">Z 薬・類縁</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">ω サブタイプ選択性の概念は臨床補助。習慣性・離脱・反跳性不眠は BZD に近い管理が必要。</p>
+          <div class="grid grid-cols-1 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-blue-200"><strong>ゾルピデム酒石酸塩</strong>（マイスリー等）</span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200"><strong>ゾピクロン</strong>（アモバン等）</span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200"><strong>エスゾピクロン</strong>（エスゾピクロン錠「杏林」等）</span>
+          </div>
+        </div>
+
+        <div class="drug-card drug-card-bzd">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="gen-bzd">BZD</span>
+            <span class="text-xs text-gray-500">GABA-A 作動・骨格 BZD</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">日本では不眠に広く処方されるが、依存・認知・転倒リスクが最大クラス。作用時間で使い分け。</p>
+          <p class="text-xs text-amber-900 bg-amber-50 rounded p-2">詳細（作用時間・PK・注射剤・漸減）は <a href="benzodiazepines-japan.html" class="font-bold underline">ベンゾジアゼピン 選択ガイド</a> を参照。本ページでは<strong>催眠用途の要約表</strong>のみ掲載。</p>
+        </div>
+      </div>
+
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-2">
+          <i data-lucide="info" class="w-5 h-5 text-indigo-700"></i>
+          <span class="font-bold text-indigo-800">うつ病・不安障害に伴う不眠</span>
+        </div>
+        <p class="text-xs text-gray-700">一次治療は原疾患へ（<a href="antidepressants-japan.html" class="text-indigo-800 underline font-medium">抗うつ薬ガイド</a>・<a href="benzodiazepines-japan.html" class="text-indigo-800 underline font-medium">BZD ガイド</a>）。ラメルテオン添付では、精神疾患合併時の有効性・安全性は確立していない旨の注意あり。オレキシン拮抗薬でも併用睡眠薬の位置づけは慎重に。</p>
+      </div>
+    </div>
+
+    <div class="section-card" id="selection">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤選択アルゴリズム</h2>
+          <p class="text-gray-500 text-sm">主訴・背景を入口に（併用禁忌は必ず添付で確認）</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-2 mb-8">
+        <div class="bg-slate-800 text-white rounded-xl px-6 py-3 text-center font-bold text-sm w-72">不眠症で専用薬を検討</div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="bg-yellow-100 border-2 border-yellow-500 rounded-xl px-4 py-3 text-center text-sm w-full max-w-2xl font-medium text-yellow-900">
+          <i data-lucide="alert-circle" class="w-4 h-4 inline-block mr-1 text-yellow-600"></i>
+          呼吸不全・未治療重度 OSA・オピオイド多剤・アルコール依存活動期・妊娠授乳など：BZD／Z 薬は特に慎重〜避ける。各 DORA の呼吸器系注意も確認。
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <div class="grid md:grid-cols-2 gap-4 w-full">
+          <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-4">
+            <div class="font-bold text-cyan-900 text-sm mb-2">入眠潜時延長が主（睡眠維持は比較的保たれる）</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li><span class="badge-first text-xs">第一に検討</span> <strong>ラメルテオン</strong>（8mg・食事の 2〜3 時間前または空腹寄り）</li>
+              <li><span class="badge-second text-xs">代替</span> <strong>DORA</strong>（不眠症適応／食事タイミング各添付）</li>
+              <li><span class="badge-second text-xs">短期補助</span> <strong>超低短〜短時間 BZD</strong>（トリアゾラム等）— <a href="benzodiazepines-japan.html#selection" class="underline text-cyan-800">BZD ガイド</a></li>
+            </ul>
+            <div class="mt-2"><span class="badge-level-b text-xs">ラベル適合が明確なら迷いが少ない</span></div>
+          </div>
+          <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+            <div class="font-bold text-violet-900 text-sm mb-2">中途覚醒・早覚醒・短期総睡眠時間短縮</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li><span class="badge-first text-xs">第一選択肢の一つ</span> <strong>DORA</strong>（半減期・翌日残留プロファイルが製品ごとに異なる）</li>
+              <li><span class="badge-second text-xs">代替</span> <strong>エスゾピクロン・ゾルピデム・ゾピクロン</strong></li>
+              <li><span class="badge-second text-xs">日本で慣れた選択</span> <strong>ニトラゼパム・エスタゾラム・テマゼパム等</strong>（翌日残留に注意）</li>
+            </ul>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 md:col-span-2">
+            <div class="font-bold text-slate-900 text-sm mb-2">併用制約が強い（CYP3A 多剤・中等度肝障害）</div>
+            <ul class="text-xs text-gray-700 space-y-1 grid sm:grid-cols-2 gap-2">
+              <li><strong>強力 CYP3A 阻害が不可避</strong>：スボレキサントは禁忌例が明示。ダリドレキサントも強 inhibitor は禁忌。DORA 切替または非 CYP 主経路を優先検討。</li>
+              <li><strong>中等度肝障害（Child-Pugh B）</strong>：ダリドレキサント 25mg／ボルノレキサント・レンボレキサントは 2.5mg から等—各添付で固定。</li>
+              <li><strong>フライル高齢者</strong>：Z 薬は低用量開始。BZD は長時間型・活性代謝物を避ける（<a href="benzodiazepines-japan.html" class="underline">BZD ガイド</a> の高齢者節）。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="compare">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="scale" class="w-6 h-6 text-slate-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">クラス別コンセプト比較</h2>
+          <p class="text-gray-500 text-sm">相対的プロファイル（患者個人・併用で変動）</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mb-4 text-xs">
+        <span class="flex items-center gap-1"><span class="dot-hi"></span>高い／長い／問題になりやすい</span>
+        <span class="flex items-center gap-1"><span class="dot-md"></span>中程度</span>
+        <span class="flex items-center gap-1"><span class="dot-lo"></span>低め（≠ゼロ）</span>
+      </div>
+      <div class="x-scroll">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">クラス</th>
+              <th class="th-cell">入眠寄与</th>
+              <th class="th-cell">睡眠維持寄与</th>
+              <th class="th-cell">翌日傾眠</th>
+              <th class="th-cell">離脱・反跳</th>
+              <th class="th-cell">複雑睡眠<br>関連行動</th>
+              <th class="th-cell rounded-tr-lg">呼吸抑制<br>（単独）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-left font-medium td-drug">ラメルテオン</td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-lo"></span></td>
+              <td class="td-cell"><span class="dot-lo"></span></td>
+              <td class="td-cell"><span class="dot-lo"></span></td>
+              <td class="td-cell"><span class="dot-lo"></span></td>
+              <td class="td-cell"><span class="dot-lo"></span></td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium td-drug">オレキシン拮抗（<span class="whitespace-normal">4 成分</span>）</td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-lo"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-lo"></span></td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium td-drug">Z 薬（ゾルピデム等）</td>
+              <td class="td-cell"><span class="dot-hi"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-hi"></span></td>
+              <td class="td-cell"><span class="dot-hi"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium td-drug">BZD 催眠</td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-hi"></span></td>
+              <td class="td-cell"><span class="dot-hi"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+              <td class="td-cell"><span class="dot-md"></span></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+    </div>
+
+    <div class="section-card" id="druglist">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="pill" class="w-6 h-6 text-violet-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤詳細（日本承認・用法の要約）</h2>
+          <p class="text-gray-500 text-sm">用量・禁忌は改訂で変わるため、処方毎に電子添付を確認すること</p>
+        </div>
+      </div>
+      <div class="x-scroll">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">成分（代表的販売名）</th>
+              <th class="th-cell">効能（要約）</th>
+              <th class="th-cell">用法の核</th>
+              <th class="th-cell">食事</th>
+              <th class="th-cell">代謝・相互作用の核</th>
+              <th class="th-cell rounded-tr-lg">外来メモ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-left font-medium td-drug">ラメルテオン<br><span class="text-gray-400 font-normal">ラメルテオン錠「杏林」等</span></td>
+              <td class="td-cell text-left">入眠困難の改善</td>
+              <td class="td-cell text-left">8mg 就寝前</td>
+              <td class="td-cell text-left">食事同時・食直後は避ける</td>
+              <td class="td-cell text-left">フルボキサミン併用<strong>禁忌</strong>。高度肝障害<strong>禁忌</strong>。CYP1A2 誘導・喫煙で濃度低下しうる</td>
+              <td class="td-cell text-left">中途覚醒単独には不向きになりがち。2 週で再評価の記載</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium td-drug">スボレキサント<br><span class="text-gray-400 font-normal">ベルソムラ錠</span></td>
+              <td class="td-cell text-left">不眠症</td>
+              <td class="td-cell text-left">成人 20mg／高齢者 15mg 就寝直前<br>中等度 CYP3A 阻害併用時は 10mg 減量を考慮</td>
+              <td class="td-cell text-left">食事同時・食直後は避ける</td>
+              <td class="td-cell text-left">強 CYP3A 阻害薬多数<strong>禁忌</strong>中程度阻害で濃度上昇</td>
+              <td class="td-cell text-left">10・15・20mg 錠で調整。ナルコレプシー注意</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium td-drug">レンボレキサント<br><span class="text-gray-400 font-normal">デイビゴ錠</span></td>
+              <td class="td-cell text-left">不眠症</td>
+              <td class="td-cell text-left">5mg 就寝直前（最大 10mg）<br>中〜強 CYP3A 阻害併用は <strong>2.5mg</strong>。中等度肝障害は 5mg 上限</td>
+              <td class="td-cell text-left">食事同時・食直後は避ける</td>
+              <td class="td-cell text-left">主に CYP3A／P-gp 経路。阻害剤リストは添付の参考表が有用</td>
+              <td class="td-cell text-left">翌朝運転試験データが各添付で強調されやすい</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium td-drug">ダリドレキサント<br><span class="text-gray-400 font-normal">クビビック錠</span></td>
+              <td class="td-cell text-left">不眠症</td>
+              <td class="td-cell text-left">通常 50mg。状態により 25mg<br>中等度肝障害・中程度 CYP3A 阻害併用は <strong>25mg</strong></td>
+              <td class="td-cell text-left">食事同時・食直後は避ける</td>
+              <td class="td-cell text-left"><strong>強い CYP3A4 阻害は禁忌</strong>。半減期が DORA 中最短寄り → 翌日残留は比較的軽めの報告</td>
+              <td class="td-cell text-left">「覚醒を抑えない」コンセプトで処方説明しやすいが個人差大</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium td-drug">ボルノレキサント<br><span class="text-gray-400 font-normal">ボルズィ錠</span></td>
+              <td class="td-cell text-left">不眠症</td>
+              <td class="td-cell text-left">5mg 就寝直前（最大 10mg）<br>中程度 CYP3A 阻害・中等度肝障害（Child B）は <strong>2.5mg</strong></td>
+              <td class="td-cell text-left">食事同時・食直後は避ける</td>
+              <td class="td-cell text-left">強 CYP3A 阻害は<strong>禁忌</strong>（スボレキサント類と同型の管理）</td>
+              <td class="td-cell text-left">2025 年承認。レンボレキサントと用途は近い—価格・供給で選択</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium td-drug">ゾルピデム酒石酸塩<br><span class="text-gray-400 font-normal">マイスリー等</span></td>
+              <td class="td-cell text-left">不眠症</td>
+              <td class="td-cell text-left">5〜10mg 就寝前（高齢は 5mg から）1 日 10mg 上限</td>
+              <td class="td-cell text-left">製品ごとに説明書の服薬タイミング・食事の影響を確認</td>
+              <td class="td-cell text-left">CYP3A4・CYP2C9 など。肝不全で作用増強</td>
+              <td class="td-cell text-left">反跳・依存・行動異常の説明必須</td>
+            </tr>
+            <tr>
+              <td class="td-left font-medium td-drug">ゾピクロン<br><span class="text-gray-400 font-normal">アモバン等</span></td>
+              <td class="td-cell text-left">不眠症</td>
+              <td class="td-cell text-left">7.5mg 就寝前が標準</td>
+              <td class="td-cell text-left">—</td>
+              <td class="td-cell text-left">CYP3A4。高齢・肝障害で低用量から</td>
+              <td class="td-cell text-left">苦味・味覚異常。ジメチル代謝物で活性</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="td-left font-medium td-drug">エスゾピクロン<br><span class="text-gray-400 font-normal">エスゾピクロン錠「杏林」等</span></td>
+              <td class="td-cell text-left">不眠症</td>
+              <td class="td-cell text-left">成人 2mg／高齢 1mg 就寝前（最大 成人 3mg・高齢 2mg）<br>高度肝・腎障害は 1mg から</td>
+              <td class="td-cell text-left">食事同時・食直後は避ける</td>
+              <td class="td-cell text-left">習慣性医薬品。重症筋無力症・急性閉塞隅角緑内障<strong>禁忌</strong></td>
+              <td class="td-cell text-left">R-ゾピクロン活性体。ゾピクロンアレルギーも禁忌</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+    </div>
+
+    <div class="section-card" id="bzd">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="alarm-clock" class="w-6 h-6 text-amber-800"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">ベンゾジアゼピン系催眠薬（要約）</h2>
+          <p class="text-gray-500 text-sm">日本で不眠の効能を持つ代表例—詳細は BZD 専用ガイドへ</p>
+        </div>
+      </div>
+      <div class="x-scroll">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">成分（商品例）</th>
+              <th class="th-cell">時間像</th>
+              <th class="th-cell">就寝前用量の目安</th>
+              <th class="th-cell rounded-tr-lg">選択の要点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-medium td-drug">トリアゾラム<span class="text-gray-400">（ハルシオン）</span></td><td class="td-cell">超短〜短</td><td class="td-cell">0.25mg</td><td class="td-cell text-left">反跳性不眠・3A4 相互作用</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ブロチゾラム<span class="text-gray-400">（レンドルミン）</span></td><td class="td-cell">短</td><td class="td-cell">0.25mg</td><td class="td-cell text-left">中途覚醒向け、3A4</td></tr>
+            <tr><td class="td-left font-medium td-drug">ロルメタゼパム<span class="text-gray-400">（エバミール）</span></td><td class="td-cell">短</td><td class="td-cell">1mg</td><td class="td-cell text-left">翌日残留は比較的少ない群</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">フルニトラゼパム<span class="text-gray-400">（サイレース）</span></td><td class="td-cell">短〜中</td><td class="td-cell">1〜2mg</td><td class="td-cell text-left">依存・行政的留意地域あり</td></tr>
+            <tr><td class="td-left font-medium td-drug">ニトラゼパム<span class="text-gray-400">（ベンザリン等）</span></td><td class="td-cell">中</td><td class="td-cell">5〜10mg</td><td class="td-cell text-left">日本人で広用、翌日倦怠</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">エスタゾラム<span class="text-gray-400">（ユーロジン）</span></td><td class="td-cell">短〜中</td><td class="td-cell">1〜3mg</td><td class="td-cell text-left">麻酔前用途も</td></tr>
+            <tr><td class="td-left font-medium td-drug">テマゼパム<span class="text-gray-400">（メタモール）</span></td><td class="td-cell">中</td><td class="td-cell">5〜15mg</td><td class="td-cell text-left">ジアゼパム系列と関連</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">フルラゼパム<span class="text-gray-400">（ダルメール）</span></td><td class="td-cell">長</td><td class="td-cell">15〜30mg</td><td class="td-cell text-left">活性代謝物で長残留</td></tr>
+            <tr><td class="td-left font-medium td-drug">クアゼパム<span class="text-gray-400">（ドラール）</span></td><td class="td-cell">長</td><td class="td-cell">10〜30mg</td><td class="td-cell text-left">高齢は特に蓄積注意</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">リルマザフォン<span class="text-gray-400">（リスミー）</span></td><td class="td-cell">長</td><td class="td-cell">1〜4mg</td><td class="td-cell text-left">プロドラッグ→BZD 様活性体</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+      <p class="text-sm text-gray-600 mt-3">PK・ω 選択性・注射剤・急性期用途は <a href="benzodiazepines-japan.html" class="text-amber-800 font-semibold underline">benzodiazepines-japan.html</a> を参照。</p>
+    </div>
+
+    <div class="section-card" id="sideeffects">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">副作用・リスクの臨床整理</h2>
+          <p class="text-gray-500 text-sm">重大例は各 PDF の「警告」「重大な副作用」欄を必読</p>
+        </div>
+      </div>
+      <ul class="text-sm text-gray-700 space-y-2 mb-4">
+        <li><strong class="text-gray-900">中枢・精神</strong>：傾眠、めまい、異常感覚、悪夢、ナルコレプシー様症状（DORA クラス注意）、抑うつ気分の増悪（原疾患鑑別）。</li>
+        <li><strong class="text-gray-900">行動</strong>：複雑睡眠関連行動（Z 薬・BZD・一部 DORA で警告・注意）。服薬後の飲酒・他抑制薬は厳禁に近い。</li>
+        <li><strong class="text-gray-900">内分泌</strong>：ラメルテオンでプロラクチン上昇の記載—月経異常・乳汁漏出で中止考慮。</li>
+        <li><strong class="text-gray-900">骨・転倒</strong>：高齢では BZD／Z 薬の骨折リスクが特に問題。DORA でも傾眠・ふらつきは実臨床リスク。</li>
+      </ul>
+      <div class="danger-box">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="triangle-alert" class="w-4 h-4"></i>オピオイド併用</div>
+        <p class="text-sm text-gray-700">米国 FDA の中枢抑制薬ボックス警告の考え方に沿い、可能なら回避。やむを得ない場合は最低用量・短期・家族への陪伴指示。</p>
+      </div>
+    </div>
+
+    <div class="section-card" id="monitoring">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">モニタリング・漸減</h2>
+          <p class="text-gray-500 text-sm">長期化を防ぐ文書化が重要</p>
+        </div>
+      </div>
+      <div class="x-scroll mb-4">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">タイミング</th>
+              <th class="th-cell">Z 薬・BZD</th>
+              <th class="th-cell">DORA</th>
+              <th class="th-cell rounded-tr-lg">ラメルテオン</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left">開始時</td><td class="td-cell text-left">転倒リスク、呼吸、物質使用、妊娠</td><td class="td-cell text-left">CYP3A 多剤、肝機能、ナルコレプシー履歴</td><td class="td-cell text-left">喫煙量、フルボキサミン、肝障害</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">2〜4 週</td><td class="td-cell text-left">効果・反跳・用量増加の有無</td><td class="td-cell text-left">日中傾眠、麻痺体験、悪夢</td><td class="td-cell text-left">添付に準じ 2 週前後で再評価</td></tr>
+            <tr><td class="td-left">3 ヶ月以降</td><td class="td-cell text-left">漸減可否、CBT-I 紹介</td><td class="td-cell text-left">漫然継続を避け、改善時は休薬試験</td><td class="td-cell text-left">有用性再評価</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+      <div class="recommend-box">
+        <div class="font-bold text-green-800 mb-2">BZD／Z 薬からの移行・減量</div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>目標総量だけでなく、<strong>就寝のみ</strong>に寄せてからゆっくり減らすと離脱・再不眠の整理がしやすい。</li>
+          <li>DORA やラメルテオンへのスイッチは漸進的に—いきなり全置換より段階的減量＋別クラス追加が安全なことが多い。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-card" id="interactions">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="x-circle" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">相互作用・禁忌（横断的注意）</h2>
+          <p class="text-gray-500 text-sm">薬剤ごとの一覧は電子添付の相互作用章が正本</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2">併用で特に危険度が跳ねやすい</div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>オピオイド、他の催眠薬・BZD・一部抗精神病薬の重ね込み</li>
+            <li>アルコール（処方研修でも強調）</li>
+            <li>DORA：<strong>強い CYP3A 阻害</strong>（成分により禁忌リストが異なる）</li>
+            <li>ラメルテオン：<strong>フルボキサミン</strong>（禁忌）</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-2">Z 薬・BZD 側で忘れやすい点</div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>アゾール系抗真菌、マクロライド、HV 蛋白酶阻害による 3A4 抑制作用</li>
+            <li>エスゾピクロンの急性閉塞隅角緑内障・重症筋無力症<strong>禁忌</strong></li>
+            <li>ジアゼパム類の長時間型：ウルフチン・強 CYP 誘導／阻害との組み合わせ</li>
+          </ul>
+        </div>
+      </div>
+      <div class="recommend-box mt-4">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i>関連ページ</div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><a href="benzodiazepines-japan.html" class="text-green-800 underline font-medium">ベンゾジアゼピン 選択ガイド</a></li>
+          <li><a href="antidepressants-japan.html" class="text-green-800 underline font-medium">抗うつ薬 選択ガイド</a>（セド系抗うつ薬が不眠に寄与することも）</li>
+          <li><a href="https://www.pmda.go.jp" class="text-green-800 underline font-medium">PMDA 医薬品医療機器総合機構</a>（検索）</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center py-6 text-xs text-gray-400 border-t border-gray-200">
+    <p>本資料は医療専門職向け参照資料です。処方判断には最新の各製品電子添付文書を必ず参照してください。</p>
+    <p class="mt-1">参照：各薬 PDF インタビューフォーム・2026年5月時点／スコープ外の適応外使用については説明義務・院内規程を遵守してください。</p>
+  </footer>
+
+  <script>
+  (function () {
+    document.querySelectorAll('table.data-table').forEach(function (table) {
+      table.querySelectorAll('tbody tr').forEach(function (tr) {
+        var first = tr.querySelector('td');
+        if (!first || first.hasAttribute('colspan')) return;
+        tr.addEventListener('click', function (e) {
+          if (e.target.closest('a, button, label, input, select, textarea')) return;
+          var was = tr.classList.contains('table-row-focus');
+          table.querySelectorAll('tbody tr.table-row-focus').forEach(function (r) {
+            r.classList.remove('table-row-focus');
+          });
+          if (!was) tr.classList.add('table-row-focus');
+        });
+      });
+    });
+  })();
+  </script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

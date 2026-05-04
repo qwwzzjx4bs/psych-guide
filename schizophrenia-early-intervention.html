@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症の早期介入 — 概要・具体的内容・エビデンス図解</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ei-primary: #1e3a5f;
+      --ei-teal: #0f766e;
+      --ei-gradient: linear-gradient(135deg, #1e3a5f 0%, #0f766e 55%, #1d4ed8 100%);
+      --level-a: #15803d;
+      --level-b: #1d4ed8;
+      --level-c: #6b7280;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--ei-gradient); }
+    .ei-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e2e8f0;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .ei-link {
+      color: #0f766e;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .ei-link:hover { color: #115e59; }
+    .badge-level-a {
+      background: linear-gradient(135deg, var(--level-a), #16a34a);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, var(--level-b), #2563eb);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, var(--level-c));
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .flow-node {
+      border-radius: 0.75rem;
+      padding: 0.85rem 1.1rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-align: center;
+      line-height: 1.45;
+    }
+    .flow-start { background: #1e3a5f; color: white; }
+    .flow-branch { background: #eff6ff; border: 2px solid #93c5fd; color: #1e3a8a; }
+    .flow-action { background: #f0fdf4; border: 2px solid #86efac; color: #14532d; }
+    .flow-note { background: #fffbeb; border: 2px solid #fcd34d; color: #78350f; }
+    .team-hub-center {
+      background: linear-gradient(145deg, #1e3a5f 0%, #0f766e 100%);
+      color: white;
+      border-radius: 1rem;
+      padding: 1rem 1.25rem;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      box-shadow: 0 8px 24px rgba(30, 58, 95, 0.25);
+    }
+    .team-hub-spoke {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+    .team-hub-spoke strong { color: #0f172a; font-size: 0.82rem; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5rem; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-4xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">外来参照用・教育コンテンツ（図解）</p>
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="scan-line" class="w-9 h-9 opacity-90 shrink-0"></i>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight leading-snug">統合失調症に関する「早期介入」</h1>
+      </div>
+      <p class="text-white/90 text-sm sm:text-base leading-relaxed max-w-3xl mt-2">
+        国リセ・精神保健研究所「こころとくらし」の早期介入解説と、コクランレビュー要約をベースに、<strong class="text-white font-semibold">概念・対象・具体的内容・エビデンスの限定</strong>を一枚の流れで整理します。
+      </p>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <span class="bg-white/15 text-white text-xs px-3 py-1 rounded-full border border-white/25">2本柱（早期発見／進行に応じた治療）</span>
+        <span class="bg-white/15 text-white text-xs px-3 py-1 rounded-full border border-white/25">専門チーム・多職種</span>
+        <span class="bg-white/15 text-white text-xs px-3 py-1 rounded-full border border-white/25">エビデンスの境界</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="max-w-4xl mx-auto px-4 py-3 border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-30 shadow-sm">
+    <ul class="flex flex-wrap gap-x-4 gap-y-1 text-xs sm:text-sm font-medium text-slate-600">
+      <li><a href="#concept" class="hover:text-teal-700">概念</a></li>
+      <li><a href="#flow" class="hover:text-teal-700">対象と流れ</a></li>
+      <li><a href="#components" class="hover:text-teal-700">具体的内容</a></li>
+      <li><a href="#specialist-team" class="hover:text-teal-700">専門チーム</a></li>
+      <li><a href="#evidence" class="hover:text-teal-700">エビデンス</a></li>
+      <li><a href="#transition" class="hover:text-teal-700">継続・移行</a></li>
+      <li><a href="#refs" class="hover:text-teal-700">出典</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-4 py-6">
+
+    <div class="ei-card border-amber-200 bg-amber-50/85 text-sm text-amber-950">
+      <div class="flex gap-2">
+        <i data-lucide="triangle-alert" class="w-5 h-5 shrink-0 text-amber-700 mt-0.5"></i>
+        <div>
+          <p class="font-bold mb-1">免責・読み方</p>
+          <p class="leading-relaxed">本文は<strong>理解を助ける要約</strong>です。症例ごとの最適な体制・期間は、地域の早期精神病対応・ガイドライン・施設プロトコルに従ってください。精神病の広い枠組みと統合失調症の関係は現場・文献で表現が揺れるため、こころとくらしでは支援対象を「精神病（≒統合失調症）発症リスク／発症直後」と説明しています。</p>
+        </div>
+      </div>
+    </div>
+
+    <section id="concept" class="ei-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+          <i data-lucide="book-open" class="w-5 h-5 text-blue-800"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">早期介入とは（2本柱）</h2>
+          <p class="text-xs text-slate-500">国立精神・神経医療研究センター「こころとくらし」早期介入ページの整理に準拠</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="rounded-xl bg-slate-50 border border-slate-200 p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="search" class="w-5 h-5 text-slate-700"></i>
+            <span class="font-bold text-slate-900 text-sm">① 早期発見</span>
+          </div>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            精神病（サイト上では統合失調症に近い意味合いで記載）<strong>発症の可能性が高い段階</strong>の人に、できるだけ早い時期に支援を届けること。
+          </p>
+        </div>
+        <div class="rounded-xl bg-teal-50/80 border border-teal-100 p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="activity" class="w-5 h-5 text-teal-800"></i>
+            <span class="font-bold text-teal-950 text-sm">② 症状の進行に応じた治療</span>
+          </div>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            <strong>発症後の初期</strong>の人に対し、専門的な治療・支援を行うこと。通常治療を補う形、または早期介入専門チームが実施する形があり得ます。
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-xl bg-indigo-50/90 border border-indigo-100 p-4 flex gap-3">
+        <i data-lucide="target" class="w-6 h-6 text-indigo-700 shrink-0"></i>
+        <div class="text-sm text-slate-700 leading-relaxed">
+          <span class="font-bold text-indigo-900">目的：</span>精神病発症の予防、または発症後の<strong>重症化の防止</strong>（サイト記載の趣旨）。
+        </div>
+      </div>
+    </section>
+
+    <section id="flow" class="ei-card border-l-4 border-l-blue-600">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="git-branch" class="w-6 h-6 text-blue-700"></i>
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">対象のイメージとケアの流れ</h2>
+          <p class="text-xs text-slate-500">臨床・政策文献で頻出の「前駆・超高危険群」と「最近発症」の区別を図示</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-2 py-2">
+        <div class="flow-node flow-start w-full max-w-md">当事者・家族・学校・勤務先・一次医からの関心・紹介</div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-slate-400"></i>
+        <div class="flow-node flow-branch w-full max-w-md">段階の見極め<br><span class="text-xs font-normal opacity-90">精神病理・機能・身体鑑別・危険性・同意</span></div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-slate-400"></i>
+
+        <div class="w-full max-w-2xl grid sm:grid-cols-2 gap-3">
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-xs font-bold text-blue-900 uppercase tracking-wide">Track A</span>
+            <div class="flow-node flow-note w-full">発症前〜前駆期の支援<br><span class="text-xs font-normal">サイトでは「発症可能性が高い人」の早期発見に相当</span></div>
+            <i data-lucide="corner-down-right" class="w-5 h-5 text-slate-400 rotate-90 sm:rotate-0 sm:hidden"></i>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-xs font-bold text-teal-900 uppercase tracking-wide">Track B</span>
+            <div class="flow-node flow-action w-full">初発〜初期（最近発症）の専門的治療<br><span class="text-xs font-normal">「進行に応じた治療」／専門チーム</span></div>
+          </div>
+        </div>
+
+        <i data-lucide="arrow-down" class="w-6 h-6 text-slate-400"></i>
+        <div class="flow-node flow-action w-full max-w-lg text-sm">
+          多職種の包括的プラン（薬物・心理・家族・教育就労・ケースマネジメント）
+        </div>
+      </div>
+    </section>
+
+    <section id="components" class="ei-card">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="users" class="w-6 h-6 text-teal-700"></i>
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">具体的内容（何をするか）</h2>
+          <p class="text-xs text-slate-500">こころとくらし掲載の例示を箱分け</p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-3.5">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="heart-handshake" class="w-5 h-5 text-rose-600"></i>
+            <span class="font-bold text-sm">心理社会的介入</span>
+          </div>
+          <ul class="text-sm text-slate-700 space-y-1.5 list-disc list-inside marker:text-teal-600">
+            <li>認知行動療法（CBT）</li>
+            <li>家族療法</li>
+            <li>心理教育</li>
+            <li>就労支援</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-3.5">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="hospital" class="w-5 h-5 text-slate-600"></i>
+            <span class="font-bold text-sm">提供形態</span>
+          </div>
+          <ul class="text-sm text-slate-700 space-y-1.5 leading-relaxed">
+            <li>通常の治療（外来・入院等）を<strong>補完</strong></li>
+            <li>早期介入<strong>専門チーム</strong>が一括して関与</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warning-box mt-4 rounded-xl border border-amber-200 bg-amber-50/90 p-4 text-sm text-amber-950">
+        <div class="flex gap-2">
+          <i data-lucide="alert-circle" class="w-5 h-5 shrink-0"></i>
+          <p><span class="font-bold">臨床メモ：</span>「早期介入」はブランド名ではなく<strong>サービス設計の総称</strong>です。CBT・家族介入・リカバリー志向の個別支援など、包摂されるプログラムは施設・国際比較で異なります。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="specialist-team" class="ei-card ring-2 ring-teal-100 border-teal-100">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-teal-100 flex items-center justify-center shrink-0">
+            <i data-lucide="network" class="w-5 h-5 text-teal-800"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">専門早期介入チーム（SEI）の具体像</h2>
+            <p class="text-xs text-slate-500">コクランレビュー（Puntis et al. 2020, CD013288）が試験納入のために用いた「専門チーム」の定義を骨格に、運用上の要点を図示</p>
+          </div>
+        </div>
+        <span class="badge-level-b">SEIの運用モデル</span>
+      </div>
+
+      <div class="rounded-xl border border-blue-100 bg-blue-50/80 p-4 mb-5 text-sm text-slate-800 leading-relaxed">
+        <div class="flex gap-2">
+          <i data-lucide="clipboard-list" class="w-5 h-5 text-blue-800 shrink-0 mt-0.5"></i>
+          <div>
+            <p class="font-bold text-blue-950 mb-1">レビューにおける SEI（specialised early intervention）</p>
+            <p>「最近発症精神病」の人を対象に、<strong>地域の多職種チーム</strong>が<strong>集中的・段階特異的（発症早期）</strong>に手を届けるモデルとして定義されています。コクラン総説では、チームは<strong>薬物療法、心理療法、本人・介護者への心理教育、就労支援、身体的健康管理</strong>などを束ね、<strong>定期的なアサーティブ・アウトリーチ</strong>と<strong>小さいケースロード（割当て件数）</strong>で関与の濃度を上げる、と説明されています。提供期間は概ね<strong>2〜3年</strong>で、その後は一次・一般成人CMHT等へ移行するのが典型例です。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <i data-lucide="list-checks" class="w-4 h-4 text-slate-600"></i>
+          RCTに「SEI」と認められたサービスの条件（コクラン記載の整理）
+        </h3>
+        <ul class="space-y-2 text-sm text-slate-700">
+          <li class="flex gap-2 items-start rounded-lg bg-slate-50 border border-slate-100 p-3">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-white text-xs font-bold">1</span>
+            <span><strong class="text-slate-900">多職種・地域ベース・自立運営</strong>：最近発症精神病の患者を受け付けるチームで、比較対照の「通常精神科ケア」の<strong>代替</strong>として機能する（施設を共有しても、<strong>別カセロード・別チーム会・専用プログラム</strong>で独立して動く）。</span>
+          </li>
+          <li class="flex gap-2 items-start rounded-lg bg-slate-50 border border-slate-100 p-3">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-white text-xs font-bold">2</span>
+            <span><strong class="text-slate-900">治療パッケージ＋アサーティブ・アウトリーチ</strong>：薬物療法、心理療法、本人・介護者への心理教育、就労支援、身体的介入（禁煙支援・健診等）を組み合わせ、<strong>積極的な訪問・コンタクト</strong>のもとで継続的に届ける。</span>
+          </li>
+          <li class="flex gap-2 items-start rounded-lg bg-slate-50 border border-slate-100 p-3">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-800 text-white text-xs font-bold">3</span>
+            <span><strong class="text-slate-900">対象の枠</strong>：レビューでは、<strong>第1または第2の精神病エピソード</strong>かつ、精神病症状の開始から<strong>3年以内</strong>の者を対象とする試験が納入されています（前駆・ARMSのみの試験は別枠）。</span>
+          </li>
+        </ul>
+        <p class="text-xs text-slate-500 mt-3">出典：Puntis S, et al. <em>Specialised early intervention teams for recent-onset psychosis.</em> Cochrane Database Syst Rev. 2020;(11):CD013288.（PMC全文・平易な言葉の要約あり）</p>
+      </div>
+
+      <div class="mb-5">
+        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <i data-lucide="orbit" class="w-4 h-4 text-teal-700"></i>
+          多職種が「束ねる」イメージ（職種例）
+        </h3>
+        <p class="text-xs text-slate-600 mb-4">実際の職種表は国・施設差が大きいです。英米のEI/CSC報告では、心理療法、家族支援、就労IPS、回復志向の支援・コーディネーション、医学的管理などがチームとして連結される例が示されます。日本でも、単科病院でのチームアプローチや地域ワンストップでの多職種アセスメント＋ケースマネジメントが報告されています。</p>
+
+        <div class="max-w-lg mx-auto mb-4">
+          <div class="team-hub-center">
+            <i data-lucide="user-circle-2" class="w-7 h-7 mx-auto mb-2 opacity-95"></i>
+            当事者・家族<br>
+            <span class="text-xs font-normal opacity-90">小ケースロードで担当が「握る」</span>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-2 max-w-3xl mx-auto">
+          <div class="team-hub-spoke flex gap-2">
+            <i data-lucide="stethoscope" class="w-4 h-4 text-blue-700 shrink-0 mt-0.5"></i>
+            <div><strong>医学的管理</strong><br>診断・薬物療法・併存身体疾患、副作用モニタ</div>
+          </div>
+          <div class="team-hub-spoke flex gap-2">
+            <i data-lucide="brain" class="w-4 h-4 text-violet-700 shrink-0 mt-0.5"></i>
+            <div><strong>心理療法・心理教育</strong><br>CBT、個別支援、本人・家族への疾患理解</div>
+          </div>
+          <div class="team-hub-spoke flex gap-2">
+            <i data-lucide="home" class="w-4 h-4 text-amber-700 shrink-0 mt-0.5"></i>
+            <div><strong>アサーティブ／訪問</strong><br>通院困難時の外出面接、リンク喪失の予防</div>
+          </div>
+          <div class="team-hub-spoke flex gap-2">
+            <i data-lucide="briefcase" class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5"></i>
+            <div><strong>就学・就労</strong><br>IPS型の支援、学校・雇用主との調整</div>
+          </div>
+          <div class="team-hub-spoke flex gap-2">
+            <i data-lucide="activity" class="w-4 h-4 text-rose-700 shrink-0 mt-0.5"></i>
+            <div><strong>身体的健康</strong><br>喫煙、代謝、運動・生活習慣のモニタ</div>
+          </div>
+          <div class="team-hub-spoke flex gap-2">
+            <i data-lucide="message-square" class="w-4 h-4 text-sky-700 shrink-0 mt-0.5"></i>
+            <div><strong>ケア調整</strong><br>定例カンファ、移行時の引継ぎ設計</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="flag" class="w-5 h-5 text-slate-700"></i>
+            <span class="font-bold text-slate-900">日課・プロセス（一般化した整理）</span>
+          </div>
+          <ol class="list-decimal list-inside space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <li><strong>紹介〜トリアージ</strong>：発症時期・エピソード数・安全評価</li>
+            <li><strong>包括評価</strong>：精神病理、認知・機能、物質、身体、社会適応</li>
+            <li><strong>個人の回復目標</strong>に沿った治療計画（薬理＋心理社会）</li>
+            <li><strong>高頻度コンタクト</strong>開始（外来に加え訪問・連絡）</li>
+            <li><strong>定期的チーム会議</strong>で進捗・離脱リスクを共有</li>
+            <li><strong>地域移行</strong>：2〜3年後の担当・サービス段階の引継ぎ</li>
+          </ol>
+        </div>
+        <div class="rounded-xl border border-indigo-100 bg-indigo-50/60 p-4 text-sm text-slate-800">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="globe" class="w-5 h-5 text-indigo-800"></i>
+            <span class="font-bold text-indigo-950">モデル例（参照用）</span>
+          </div>
+          <ul class="space-y-2 leading-relaxed text-xs sm:text-sm list-disc list-inside marker:text-indigo-500">
+            <li><strong class="text-slate-900">米：</strong>NIMHが公表する初回精神病向けCoordinated Specialty Care（CSC）の実装マニュアルでは、チームリーダー、精神科医、回復支援、就職支援（IPS）などの役割で運用する例が説かれ、若年層へのコミュニティ接触も言及されます（職種構成はサイトにより異なる旨あり）。→ <a class="ei-link" href="coordinated-specialty-care-jp.html">CSC の日本語図解（本リポジトリ）</a></li>
+            <li><strong class="text-slate-900">日：</strong>若年者ワンストップ「SODA」では、医療機関外の窓口で<strong>多職種による早期相談・支援アセスメント</strong>と<strong>臨床型ケースマネジメント</strong>で包括連携を組む、と報告されています。単科病院でのEIでは、アセスメント・心理教育・再発予防・家族支援・早期OT/CBT的介入などをプログラム化する例が紹介されることがあります。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-amber-200 bg-amber-50/90 p-4 text-sm text-amber-950">
+        <div class="flex gap-2">
+          <i data-lucide="triangle-alert" class="w-5 h-5 shrink-0"></i>
+          <div>
+            <p class="font-bold mb-1">読み替えの留意点</p>
+            <p>コクランのSEI定義は<strong>研究の厳密な納入基準</strong>でもあります。日本の現場では、入院急性期＋外来＋地域訪問が分離している施設も多く、「チーム」が1つのユニットとして見えにくい場合があります。重要なのは、<strong>誰がケースをオーナーし、どの頻度で、どの柱（薬・心理・就学就労・家族・身体）が束ねられているか</strong>を症例で明示することです。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidence" class="ei-card ring-1 ring-slate-200">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
+            <i data-lucide="microscope" class="w-5 h-5 text-green-800"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">エビデンスのプロファイル（コクラン・要約）</h2>
+            <p class="text-xs text-slate-500">こころとくらしが引用するレビュー内容の図解。比較対象・対象者がレビューごとに異なります。</p>
+          </div>
+        </div>
+        <span class="badge-level-b">系統的レビュー要約</span>
+      </div>
+
+      <div class="space-y-5">
+        <article class="rounded-xl border border-slate-200 overflow-hidden">
+          <div class="bg-slate-100 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center gap-2">
+            <span class="font-bold text-slate-900 text-sm">1) 精神病に対する早期介入</span>
+            <span class="badge-level-a">Marshall &amp; Rathbone 2011</span>
+          </div>
+          <div class="p-4 text-sm">
+            <p class="text-slate-600 mb-3 leading-relaxed">対象：精神病<strong>発症前兆</strong>または<strong>発症後初期</strong>。サイト掲載では、専門チームの早期介入を<strong>通常支援と比較</strong>。診察室メモとしては「研究は古く、納入研究の方法が多様」という留意が同時に重要。</p>
+            <div class="grid sm:grid-cols-2 gap-2">
+              <div class="rounded-lg bg-green-50 border border-green-100 p-3">
+                <p class="text-xs font-bold text-green-900 mb-1.5">専門チーム優位の方向</p>
+                <ul class="text-slate-700 space-y-1 text-xs sm:text-sm">
+                  <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-green-600 shrink-0"></i>研究からの離脱 <span class="font-semibold text-green-800">減少</span></li>
+                  <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-green-600 shrink-0"></i>治療コンプライアンス <span class="font-semibold text-green-800">改善</span></li>
+                  <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-green-600 shrink-0"></i>生活自立なしの割合 <span class="font-semibold text-green-800">減少</span></li>
+                </ul>
+              </div>
+              <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                <p class="text-xs font-bold text-slate-700 mb-1.5">通常支援と同程度だった項目（サイト表）</p>
+                <ul class="text-slate-700 space-y-1 text-xs sm:text-sm">
+                  <li>就労・就学なしの割合</li>
+                  <li>未入院の割合・平均入院日数</li>
+                </ul>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">ページ上の表は<strong>納入研究のうち最大規模研究の結果中心</strong>など、一般化に制約がある旨の注記あり。</p>
+          </div>
+        </article>
+
+        <article class="rounded-xl border border-slate-200 overflow-hidden">
+          <div class="bg-slate-100 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center gap-2">
+            <span class="font-bold text-slate-900 text-sm">2) 最近発症した精神病 — 専門の早期介入チーム</span>
+            <span class="badge-level-a">Puntis et al. 2020</span>
+          </div>
+          <div class="p-4 text-sm">
+            <p class="text-slate-600 mb-3 leading-relaxed">対象：<strong>発症後初期</strong>（前兆のみの群は除外）。専門早期介入チーム vs 通常支援。</p>
+            <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-3 mb-2">
+              <p class="text-xs font-bold text-emerald-900 mb-2">専門チームで改善・減少したアウトカム（サイト表）</p>
+              <ul class="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-slate-700 text-xs sm:text-sm">
+                <li class="flex gap-2"><i data-lucide="trending-up" class="w-4 h-4 text-emerald-600 shrink-0"></i>全体的な状態、全般的機能</li>
+                <li class="flex gap-2"><i data-lucide="log-out" class="w-4 h-4 text-emerald-600 shrink-0"></i>サービス離脱 <span class="font-semibold">減少</span></li>
+                <li class="flex gap-2"><i data-lucide="building-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>精神科入院率・入院日数 <span class="font-semibold">減少</span></li>
+              </ul>
+            </div>
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+              <p class="text-xs font-bold text-slate-700 mb-1">通常支援と差がつかなかった（サイト表）</p>
+              <p class="text-slate-700 text-xs sm:text-sm">精神症状の重症度、死亡率</p>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">納入研究は主に高所得国。他地域への外挿には慎重さが必要、とサイトは述べています。</p>
+          </div>
+        </article>
+
+        <article class="rounded-xl border border-slate-200 overflow-hidden">
+          <div class="bg-slate-100 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center gap-2">
+            <span class="font-bold text-slate-900 text-sm">3) 専門チームの期間「延長」</span>
+            <span class="badge-level-b">Puntis et al. 2020（延長）</span>
+          </div>
+          <div class="p-4 text-sm text-slate-700 leading-relaxed">
+            <p class="mb-3">比較：<strong>標準期間＋延長</strong> vs <strong>標準期間のみの後に通常支援へ移行</strong>。サイトでは、標準的な専門チームは概ね<strong>2〜3年</strong>で地域サービスへ移行し、移行後に状態が持ちにくい可能性への関心から延長が試された、との文脈が示されています。</p>
+            <div class="grid sm:grid-cols-2 gap-2">
+              <div class="rounded-lg bg-blue-50 border border-blue-100 p-3 text-xs sm:text-sm">
+                <span class="font-bold text-blue-900">延長で減ったもの</span>：サービスからの離脱
+              </div>
+              <div class="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs sm:text-sm">
+                <span class="font-bold text-slate-800">延長でも同程度だったもの</span>：全体状態、入院率・日数、精神症状、死亡率、社会的機能（サイト表）
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">エビデンスは少数国・少数研究に限定、とサイト記載。</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-4 flex items-start gap-2 text-xs text-slate-600">
+        <i data-lucide="info" class="w-4 h-4 shrink-0 mt-0.5"></i>
+        <p>エビデンスレベルの厳密な割付は原著・ガイドラインで確認してください。本セクションは<strong>利用者向け要約サイトの転記図解</strong>です。</p>
+      </div>
+    </section>
+
+    <section id="transition" class="ei-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="shuffle" class="w-6 h-6 text-violet-700"></i>
+        <h2 class="text-lg font-bold text-slate-900">継続・移行の視点</h2>
+      </div>
+      <ul class="text-sm text-slate-700 space-y-2 list-disc list-inside marker:text-violet-600 leading-relaxed">
+        <li>専門早期介入は多くのモデルで<strong>限られた期間</strong>の集約サービスであり、その後は地域の継続診療・リハビリテーション・支援雇用などへ橋渡しが本題になります。</li>
+        <li>延長が「すべてを良くする」わけではない、というレビュー帰結は、<strong>移行計画の質</strong>（情報連携、アドヒアランス、生活の目標設定）が別軸であることを想起させます。</li>
+      </ul>
+      <p class="text-sm mt-3">院内フローとリンク： <a class="ei-link" href="schizophrenia-first-episode-learning.html">初発時対応ハブ</a> ／ <a class="ei-link" href="schizophrenia-algorithm.html">治療アルゴリズム</a></p>
+    </section>
+
+    <section id="refs" class="ei-card bg-slate-100/80 border-slate-200">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="link" class="w-6 h-6 text-slate-700"></i>
+        <h2 class="text-lg font-bold text-slate-900">出典・参考文献（ユーザー指定含む）</h2>
+      </div>
+      <ol class="text-sm space-y-4 text-slate-700 leading-relaxed list-decimal list-inside">
+        <li>
+          <span class="font-semibold text-slate-900">国立精神・神経医療研究センター 精神保健研究所（こころとくらし）</span>：早期介入（再発・入院の予防／支援技法）。コクランレビュー要約を含む。<br>
+          <a class="ei-link break-all" href="https://cocokura.ncnp.go.jp/recurrence/technique-early-intervention/" target="_blank" rel="noopener noreferrer">https://cocokura.ncnp.go.jp/recurrence/technique-early-intervention/</a>
+        </li>
+        <li>
+          <span class="font-semibold text-slate-900">厚生労働科学研究成果（PDF）</span>：ご指定の報告書リンク。ファイル構成上は平成20年度頃の精神保健関連科研の成果報告と思われますが、<strong>本ページ作成時にテキスト抽出は未実施</strong>（画像中心PDFの可能性）のため、詳細は原著PDFでご確認ください。<br>
+          <a class="ei-link break-all" href="https://mhlw-grants.niph.go.jp/system/files/2008/083131/200833060A/200833060A0012.pdf" target="_blank" rel="noopener noreferrer">https://mhlw-grants.niph.go.jp/system/files/2008/083131/200833060A/200833060A0012.pdf</a>
+        </li>
+        <li>
+          <span class="font-semibold text-slate-900">専門早期介入チームの定義・運用（Cochrane・PMC）</span>：Puntis S, et al. <em>Specialised early intervention teams for recent‐onset psychosis.</em> Cochrane Database Syst Rev. 2020;(11):CD013288.<br>
+          <a class="ei-link break-all" href="https://doi.org/10.1002/14651858.CD013288.pub2" target="_blank" rel="noopener noreferrer">https://doi.org/10.1002/14651858.CD013288.pub2</a> ·
+          <a class="ei-link break-all" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8092671/" target="_blank" rel="noopener noreferrer">PMC8092671（全文）</a> ·
+          <a class="ei-link break-all" href="https://www.cochrane.org/ja/evidence/CD013288_recent-onset-psychosis-best-treated-specialist-mental-health-team" target="_blank" rel="noopener noreferrer">Cochrane日本語平易要約</a>
+        </li>
+        <li>
+          <span class="font-semibold text-slate-900">米：CSC（調整型専門ケア）実装マニュアル（NIMH / RAISE）</span>：チーム運営・職種例の説明。<br>
+          <a class="ei-link break-all" href="https://www.nimh.nih.gov/sites/default/files/documents/health/topics/schizophrenia/raise/csc-for-fep-manual-ii-implementation-manual.pdf" target="_blank" rel="noopener noreferrer">csc-for-fep-manual-ii-implementation-manual.pdf</a>
+        </li>
+        <li>
+          <span class="font-semibold text-slate-900">日：地域ワンストップ多職種（SODA）</span>：内野他．若年者に向けたワンストップ相談センター SODA の試み．精神神経学雑誌．2021;123(3):126-137．<br>
+          <a class="ei-link break-all" href="https://journal.jspn.or.jp/jspn/openpdf/1230030126.pdf" target="_blank" rel="noopener noreferrer">https://journal.jspn.or.jp/jspn/openpdf/1230030126.pdf</a>
+        </li>
+        <li class="list-none -ml-0 pl-0 text-xs text-slate-600">
+          こころとくらし内引用の旧版：Marshall M, Rathbone J. <em>Early intervention for psychosis</em>（CD004718）／延長期間レビュー CD013287．単科病院でのチームアプローチ例：<a class="ei-link" href="https://www.jstage.jst.go.jp/article/jseip/3/1/3_43/_article/-char/ja" target="_blank" rel="noopener noreferrer">J-STAGE（JSEIP）</a>
+        </li>
+      </ol>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 py-6">schizophrenia-early-intervention.html · 図解更新日はファイルと同時運用</p>
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
