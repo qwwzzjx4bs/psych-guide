@@ -160,6 +160,27 @@
     table.data-table tbody tr.table-row-focus > td:last-child {
       border-right: 2px solid #2563eb !important;
     }
+    /* 横スクロール時：先頭列（colspanの区分行を除く）を左に固定 */
+    table.data-table th:first-child:not([colspan]),
+    table.data-table td:first-child:not([colspan]) {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background-color: #ffffff;
+      box-shadow: 4px 0 10px -4px rgba(15, 23, 42, 0.18);
+    }
+    table.data-table thead th:first-child:not([colspan]) {
+      z-index: 5;
+      background-color: #f1f5f9;
+    }
+    table.data-table tbody tr.bg-gray-50 > td:first-child:not([colspan]) { background-color: #f9fafb; }
+    table.data-table tbody tr.bg-red-50 > td:first-child:not([colspan]) { background-color: #fef2f2; }
+    table.data-table tbody tr.bg-blue-50 > td:first-child:not([colspan]) { background-color: #eff6ff; }
+    table.data-table tbody tr.bg-purple-50 > td:first-child:not([colspan]) { background-color: #f5f3ff; }
+    table.data-table tbody tr.bg-fuchsia-50 > td:first-child:not([colspan]) { background-color: #fdf4ff; }
+    table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: 3;
+    }
     @media (max-width: 767px) {
       .x-scroll__rail {
         box-shadow: inset -16px 0 20px -10px rgba(30, 41, 59, 0.18);
