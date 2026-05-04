@@ -210,6 +210,17 @@
     table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
       z-index: 3;
     }
+    /* 設定で先頭列固定をオフ：表全体を横スクロール（右側を広く見やすい） */
+    html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+    html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+      position: static !important;
+      left: auto !important;
+      z-index: auto !important;
+      box-shadow: none !important;
+    }
+    html.data-table-sticky-col-off table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: auto !important;
+    }
     @media (max-width: 767px) {
       .x-scroll__rail {
         box-shadow: inset -16px 0 20px -10px rgba(30, 41, 59, 0.18);
@@ -246,6 +257,22 @@
       table.data-table .td-cell {
         padding: 0.45rem 0.32rem;
         font-size: 0.72rem;
+      }
+      html.data-table-sticky-col-off table.data-table .th-drug,
+      html.data-table-sticky-col-off table.data-table .td-drug {
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+      html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        font-size: 0.72rem !important;
+        padding: 0.45rem 0.32rem !important;
+        word-break: normal;
+        overflow-wrap: normal;
+        line-height: normal;
       }
     }
     @media (min-width: 768px) {
@@ -325,6 +352,16 @@
   </nav>
 
   <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
+
+    <div class="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+      <label class="inline-flex cursor-pointer items-start gap-3 select-none">
+        <input type="checkbox" id="data-table-sticky-col-toggle" class="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked />
+        <span>
+          <span class="font-semibold text-slate-800">横スクロール時に薬剤列を左に固定する</span>
+          <span class="mt-1 block text-xs text-slate-500">オン：薬剤名・区分ラベルが常に見える。オフ：列固定なしで表全体をスクロール（狭い画面で右側が広く読みやすいことがあります）。設定はこの端末に保存されます。</span>
+        </span>
+      </label>
+    </div>
 
     <!-- クイックリファレンス -->
     <div class="section-card" id="quickref">
@@ -1801,6 +1838,24 @@
 
   <script>
   (function () {
+    var STICKY_KEY = 'psych-antipsychotics-table-sticky-col-enabled';
+    var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    function syncStickyFromToggle() {
+      var enabled = stickyToggle ? stickyToggle.checked : true;
+      document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
+    }
+    if (stickyToggle) {
+      try {
+        var s = localStorage.getItem(STICKY_KEY);
+        if (s !== null) stickyToggle.checked = s === '1';
+      } catch (err) {}
+      stickyToggle.addEventListener('change', function () {
+        try { localStorage.setItem(STICKY_KEY, stickyToggle.checked ? '1' : '0'); } catch (err) {}
+        syncStickyFromToggle();
+      });
+    }
+    syncStickyFromToggle();
+
     document.querySelectorAll('table.data-table').forEach(function (table) {
       table.querySelectorAll('tbody tr').forEach(function (tr) {
         var first = tr.querySelector('td');
