@@ -350,6 +350,44 @@
       cursor: pointer;
     }
     #portal-search-apply:hover { background: #e2eaf5; }
+
+    /* 主要疾患フィルター（検索と AND） */
+    .portal-disease-filter {
+      border-top: 1px dashed #e5e2dc;
+      margin-top: 2px;
+      padding-top: 8px;
+    }
+    .portal-disease-filter-btn {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.28rem 0.55rem;
+      border-radius: 9999px;
+      border: 1px solid #cfc9bf;
+      background: #fff;
+      color: #44413c;
+      cursor: pointer;
+      line-height: 1.2;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+    }
+    .portal-disease-filter-btn:hover {
+      background: #f5f2ec;
+      border-color: #b8b0a4;
+    }
+    .portal-disease-filter-btn.is-active {
+      border-color: #4c6e9c;
+      background: #eef3f9;
+      color: #1e3a5f;
+      box-shadow: 0 0 0 1px rgba(76, 110, 156, 0.25);
+    }
+    .portal-disease-filter-btn.portal-disease-filter-btn--reset {
+      font-weight: 500;
+      color: #6b6560;
+      border-style: dashed;
+    }
+    .portal-disease-filter-btn.portal-disease-filter-btn--reset.is-active {
+      border-style: solid;
+    }
+
     .portal-search-suggest {
       margin-top: 6px;
       max-height: min(280px, 42vh);
@@ -821,6 +859,18 @@
           <button type="button" id="portal-search-clear" title="検索をクリア">クリア</button>
         </div>
         <div id="portal-search-suggest" class="portal-search-suggest" role="listbox" aria-label="検索候補" hidden></div>
+        <div id="portal-disease-filter" class="portal-disease-filter" aria-label="主要疾患でカードを絞り込み">
+          <div class="flex flex-wrap items-end gap-x-2 gap-y-1.5">
+            <span class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide shrink-0 pt-0.5">主要疾患</span>
+            <div class="flex flex-wrap gap-1.5 items-center" role="toolbar" aria-label="疾患プリセット">
+              <button type="button" class="portal-disease-filter-btn" data-disease="schizophrenia" title="統合失調症関連＋共通計算ツール">統合失調症</button>
+              <button type="button" class="portal-disease-filter-btn" data-disease="depression" title="うつ病関連＋共通計算ツール">うつ病</button>
+              <button type="button" class="portal-disease-filter-btn" data-disease="bipolar" title="双極性障害関連＋共通計算ツール">双極性障害</button>
+              <button type="button" class="portal-disease-filter-btn" data-disease="anxiety" title="不安症関連＋共通計算ツール">不安症</button>
+              <button type="button" class="portal-disease-filter-btn portal-disease-filter-btn--reset" data-disease="" title="疾患フィルターを解除">すべて表示</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -840,6 +890,7 @@
             <li>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</li>
             <li>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。</li>
             <li>ヘッダー下の検索では、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</li>
+            <li>検索バー直下の<strong class="text-gray-600 font-medium">主要疾患</strong>ボタンでは、よく使う疾患別にカードを絞り込めます（<strong class="text-gray-600 font-medium">検索語と併用可</strong>）。「すべて表示」で解除します。</li>
             <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは、直下のコンパクトカードにまとめています（新規掲載日の<strong class="text-gray-600 font-medium">新しい順</strong>・5件ずつ、「次の５件を表示する」で続き）。カードの<strong class="text-gray-600 font-medium">新規</strong>履歴に加え、ポータル告知だけのリンクは同一URLが無い場合に補完表示します。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
           </ul>
         </div>
@@ -1273,6 +1324,54 @@
     };
 
     let portalSearchCommittedQuery = '';
+    /** 主要疾患フィルター（検索語と AND） */
+    let portalDiseaseFilter = '';
+    const PORTAL_SHARED_CALC_IDS = ['card-cp-calc', 'card-dzp-calc', 'card-crcl-psych', 'card-acute-alerts'];
+    const DISEASE_CARD_SETS = {
+      schizophrenia: new Set([
+        ...PORTAL_SHARED_CALC_IDS,
+        'card-schiz-sheets', 'card-schiz-scales', 'card-schiz-diagnosis', 'card-schiz-history', 'card-schiz-algo',
+        'card-bprs-detailed', 'card-panss-detailed', 'card-bfcrs', 'card-bprs-guide',
+        'card-antipsychotics',
+        'card-schiz-fe-learning',
+        'card-psychopath-scales-learning',
+        'card-psychotropics-interactions-learning',
+      ]),
+      depression: new Set([
+        ...PORTAL_SHARED_CALC_IDS,
+        'card-depression', 'card-atypical-depression', 'card-antidepressants',
+        'card-hamd', 'card-madrs',
+        'card-mood-suicide-learning', 'card-cssrs-memo',
+        'card-benzodiazepines',
+        'card-psychopath-scales-learning',
+        'card-psychotropics-interactions-learning',
+      ]),
+      bipolar: new Set([
+        ...PORTAL_SHARED_CALC_IDS,
+        'card-bipolar', 'card-mood-stabilizers', 'card-ymrs',
+        'card-mood-suicide-learning', 'card-cssrs-memo',
+        'card-antipsychotics', 'card-antidepressants',
+        'card-psychopath-scales-learning',
+        'card-psychotropics-interactions-learning',
+      ]),
+      anxiety: new Set([
+        ...PORTAL_SHARED_CALC_IDS,
+        'card-anxiety', 'card-anxiety-scales',
+        'card-benzodiazepines', 'card-antidepressants',
+        'card-psychopath-scales-learning',
+        'card-psychotropics-interactions-learning',
+      ]),
+    };
+
+    function syncDiseaseFilterButtons() {
+      document.querySelectorAll('.portal-disease-filter-btn').forEach((btn) => {
+        const v = btn.getAttribute('data-disease') ?? '';
+        const active = portalDiseaseFilter === v;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }
+
     const PORTAL_NEW_ITEMS_CHUNK = 5;
     let portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
 
@@ -1610,6 +1709,10 @@
             const hay = normSearchText(el.textContent + ' ' + (el.getAttribute('href') || ''));
             show = hay.includes(q);
           }
+          if (show && portalDiseaseFilter) {
+            const allow = DISEASE_CARD_SETS[portalDiseaseFilter];
+            if (!allow || !allow.has(id)) show = false;
+          }
           if (show) el.style.removeProperty('display');
           else el.style.setProperty('display', 'none', 'important');
           if (show) visible++;
@@ -1620,7 +1723,7 @@
         if (jumpCnt) jumpCnt.textContent = String(visible);
         const sectionEl = document.getElementById(sec);
         if (sectionEl) {
-          sectionEl.classList.toggle('portal-section-empty', Boolean(q) && visible === 0);
+          sectionEl.classList.toggle('portal-section-empty', Boolean(q || portalDiseaseFilter) && visible === 0);
         }
       });
       portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
@@ -1654,6 +1757,10 @@
       for (const ids of Object.values(SECTIONS)) {
         for (const id of ids) {
           if (hidden.includes(id)) continue;
+          if (portalDiseaseFilter) {
+            const allow = DISEASE_CARD_SETS[portalDiseaseFilter];
+            if (!allow || !allow.has(id)) continue;
+          }
           const el = document.getElementById(id);
           if (!el) continue;
           const hay = normSearchText(el.textContent + ' ' + (el.getAttribute('href') || ''));
@@ -1761,6 +1868,13 @@
       closeSearchSuggestPanel();
       refreshCardDisplay();
     });
+    document.getElementById('portal-disease-filter')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('.portal-disease-filter-btn');
+      if (!btn) return;
+      portalDiseaseFilter = btn.getAttribute('data-disease') || '';
+      syncDiseaseFilterButtons();
+      refreshCardDisplay();
+    });
     document.addEventListener('click', (e) => {
       const wrap = document.getElementById('portal-search-field-wrap');
       if (wrap && !wrap.contains(e.target)) closeSearchSuggestPanel();
@@ -1863,6 +1977,7 @@
     })();
 
     applyVisibility();
+    syncDiseaseFilterButtons();
 
     /** プレビュー用：各カードの更新履歴（新しい順・最大5件表示） */
     const CARD_UPDATE_HISTORY = {
@@ -2036,6 +2151,7 @@
         { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
       ],
       _portal: [
+        { date: '2026-05-04', kind: '更新', text: 'ポータル本番に主要疾患フィルター（統合失調症・うつ病・双極性障害・不安症＋共通計算ツール）を追加。検索語と併用可', href: 'top.html' },
         { date: '2026-05-04', kind: '更新', text: '更新情報・新規追加の自動反映を拡充（履歴追補：抗うつ・気分安定薬の表行強調、新規一覧にポータル告知の補完マージ）', href: 'top.html' },
         { date: '2026-05-04', kind: '更新', text: 'GitHub Pages に同期（気分安定薬ガイドの用語・臨床記載の整備を反映）', href: 'top.html' },
         { date: '2026-05-03', kind: '更新', text: 'GitHub Pages に同期（気分安定薬ガイド・学習ハブ各種・抗うつガイド・ポータル／admin のローカル更新を反映）', href: 'top.html' },
