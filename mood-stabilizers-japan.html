@@ -52,6 +52,19 @@
       border-radius: 0.75rem;
       margin: 1rem 0;
     }
+    @media (max-width: 639px) {
+      .section-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 0.75rem;
+      }
+      .criteria-box,
+      .danger-box,
+      .warning-box,
+      .recommend-box {
+        padding: 1rem 0.875rem;
+      }
+    }
     .badge-level-a {
       background: linear-gradient(135deg, #15803d, #16a34a);
       color: white;
@@ -86,6 +99,9 @@
     .drug-card-cbz { background:#fff7ed; border-color:#fdba74; }
     .drug-card-ltg { background:#f5f3ff; border-color:#c4b5fd; }
     .drug-card-sga { background:#f0fdfa; border-color:#5eead4; }
+    @media (max-width: 639px) {
+      .drug-card { padding: 0.75rem; }
+    }
     .gen-li { background:#cffafe; color:#0e7490; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
     .gen-vpa { background:#fef3c7; color:#92400e; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
     .gen-cbz { background:#ffedd5; color:#9a3412; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
@@ -180,7 +196,7 @@
 <body class="bg-gray-50">
 
   <header class="header-gradient text-white py-8">
-    <div class="max-w-5xl mx-auto px-4">
+    <div class="max-w-5xl mx-auto px-2 sm:px-4">
       <div class="flex items-center gap-3 mb-2">
         <i data-lucide="activity" class="w-8 h-8 opacity-80"></i>
         <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
@@ -214,7 +230,7 @@
     </ul>
   </nav>
 
-  <main class="max-w-5xl mx-auto px-4 py-8">
+  <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
 
     <div class="section-card" id="quickref">
       <div class="flex items-center gap-3 mb-6">

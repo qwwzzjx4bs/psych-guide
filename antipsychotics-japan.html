@@ -57,6 +57,19 @@
       border-radius: 0.75rem;
       margin: 1rem 0;
     }
+    @media (max-width: 639px) {
+      .section-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 0.75rem;
+      }
+      .criteria-box,
+      .danger-box,
+      .warning-box,
+      .recommend-box {
+        padding: 1rem 0.875rem;
+      }
+    }
     .badge-level-a {
       background: linear-gradient(135deg, #15803d, #16a34a);
       color: white;
@@ -119,6 +132,9 @@
     .drug-card-sga { background:#eff6ff; border-color:#93c5fd; }
     .drug-card-partial { background:#f5f3ff; border-color:#c4b5fd; }
     .drug-card-clozapine { background:#fdf4ff; border-color:#e879f9; }
+    @media (max-width: 639px) {
+      .drug-card { padding: 0.75rem; }
+    }
     .toc {
       position: fixed;
       right: 1.5rem;
@@ -240,7 +256,7 @@
 
   <!-- ヘッダー -->
   <header class="header-gradient text-white py-8">
-    <div class="max-w-5xl mx-auto px-4">
+    <div class="max-w-5xl mx-auto px-2 sm:px-4">
       <div class="flex items-center gap-3 mb-2">
         <i data-lucide="pill" class="w-8 h-8 opacity-80"></i>
         <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
@@ -275,7 +291,7 @@
     </ul>
   </nav>
 
-  <main class="max-w-5xl mx-auto px-4 py-8">
+  <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
 
     <!-- クイックリファレンス -->
     <div class="section-card" id="quickref">
