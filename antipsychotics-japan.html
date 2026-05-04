@@ -215,6 +215,69 @@
       position: sticky;
       top: 0;
       z-index: 45;
+      --toolbar-surface: rgba(255, 255, 255, 0.93);
+      --toolbar-border: rgba(203, 213, 225, 0.95);
+      --toolbar-accent: #0f766e;
+      background: var(--toolbar-surface);
+      border-color: var(--toolbar-border) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    #data-table-toolbar[data-toolbar-section="quickref"] {
+      --toolbar-surface: linear-gradient(135deg, rgba(20, 184, 166, 0.16), rgba(37, 99, 235, 0.13));
+      --toolbar-border: rgba(20, 184, 166, 0.4);
+      --toolbar-accent: #0f766e;
+    }
+    #data-table-toolbar[data-toolbar-section="classification"] {
+      --toolbar-surface: rgba(219, 234, 254, 0.92);
+      --toolbar-border: rgba(29, 78, 216, 0.28);
+      --toolbar-accent: #1d4ed8;
+    }
+    #data-table-toolbar[data-toolbar-section="selection"] {
+      --toolbar-surface: rgba(220, 252, 231, 0.92);
+      --toolbar-border: rgba(21, 128, 61, 0.3);
+      --toolbar-accent: #15803d;
+    }
+    #data-table-toolbar[data-toolbar-section="receptor"] {
+      --toolbar-surface: rgba(224, 231, 255, 0.92);
+      --toolbar-border: rgba(67, 56, 202, 0.28);
+      --toolbar-accent: #4338ca;
+    }
+    #data-table-toolbar[data-toolbar-section="druglist"] {
+      --toolbar-surface: rgba(204, 251, 241, 0.92);
+      --toolbar-border: rgba(15, 118, 110, 0.3);
+      --toolbar-accent: #0f766e;
+    }
+    #data-table-toolbar[data-toolbar-section="lai"] {
+      --toolbar-surface: rgba(237, 233, 254, 0.92);
+      --toolbar-border: rgba(109, 40, 217, 0.28);
+      --toolbar-accent: #6d28d9;
+    }
+    #data-table-toolbar[data-toolbar-section="sideeffects"] {
+      --toolbar-surface: rgba(255, 237, 213, 0.92);
+      --toolbar-border: rgba(234, 88, 12, 0.3);
+      --toolbar-accent: #c2410c;
+    }
+    #data-table-toolbar[data-toolbar-section="monitoring"],
+    #data-table-toolbar[data-toolbar-section="interactions"] {
+      --toolbar-surface: rgba(254, 226, 226, 0.92);
+      --toolbar-border: rgba(220, 38, 38, 0.3);
+      --toolbar-accent: #b91c1c;
+    }
+    .data-table-toolbar__head {
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--toolbar-border);
+      transition: border-color 0.35s ease;
+    }
+    #data-table-section-label {
+      color: var(--toolbar-accent);
+      transition: color 0.35s ease;
     }
     table.data-table tbody tr.table-search-hit > td {
       background-color: rgba(253, 224, 71, 0.48) !important;
@@ -367,7 +430,12 @@
 
   <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
 
-    <div id="data-table-toolbar" class="data-table-toolbar mb-4 flex flex-nowrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white/95 px-2 py-2 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/90 sm:gap-3 sm:px-3 sm:py-2.5" role="region" aria-label="表の検索と表示オプション">
+    <div id="data-table-toolbar" class="data-table-toolbar mb-4 rounded-xl border px-2 py-2 shadow-sm sm:px-3 sm:py-2.5" data-toolbar-section="quickref" role="region" aria-label="表の検索と表示オプション">
+      <div class="data-table-toolbar__head">
+        <span class="min-w-0 truncate text-sm font-bold tracking-tight text-slate-900 sm:text-base">抗精神病薬 選択ガイド</span>
+        <span id="data-table-section-label" class="max-w-[58%] shrink-0 truncate text-right text-xs font-semibold sm:max-w-[min(50vw,20rem)] sm:text-sm" aria-live="polite">外来で押さえる4ポイント</span>
+      </div>
+      <div class="flex flex-nowrap items-center justify-between gap-2 sm:gap-3">
       <label class="flex shrink-0 cursor-pointer select-none items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-2.5 py-1.5 text-sm text-slate-700 hover:bg-slate-100/90 sm:px-3 sm:py-2">
         <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked />
         <span class="font-medium whitespace-nowrap">列固定</span>
@@ -377,12 +445,13 @@
           <i data-lucide="search" class="h-3.5 w-3.5 shrink-0 text-slate-400 sm:h-4 sm:w-4" aria-hidden="true"></i>
           <label for="data-table-search" class="sr-only">表内検索</label>
           <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:text-sm" />
-          <button type="button" id="data-table-search-prev" class="toolbar-icon-btn shrink-0 rounded border border-slate-200 bg-white px-1.5 py-1 text-xs font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:px-2 sm:py-1.5 sm:text-sm" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
           <button type="button" id="data-table-search-clear" class="shrink-0 rounded px-1.5 py-1 text-[0.65rem] font-medium text-slate-600 hover:bg-slate-200/80 hover:text-slate-800 sm:text-xs">クリア</button>
         </div>
+        <button type="button" id="data-table-search-prev" class="toolbar-icon-btn shrink-0 rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
         <button type="button" id="data-table-search-next" class="toolbar-icon-btn shrink-0 rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="次の該当行へ" title="次の該当行" disabled>↓</button>
         <button type="button" id="data-table-search-highlight" class="shrink-0 rounded-md border border-slate-200 bg-amber-50 px-2 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100/90 sm:text-sm" aria-pressed="true" title="該当行の背景色表示を切り替え">ハイライト</button>
         <p id="data-table-search-meta" class="max-w-[4rem] shrink-0 truncate text-[0.65rem] text-slate-500 tabular-nums sm:max-w-[6rem] sm:text-xs" aria-live="polite"></p>
+      </div>
       </div>
     </div>
 
@@ -1889,6 +1958,54 @@
       });
     }
     syncStickyFromToggle();
+
+    var toolbarEl = document.getElementById('data-table-toolbar');
+    var sectionLabelEl = document.getElementById('data-table-section-label');
+    var TOOLBAR_SECTIONS = [
+      { id: 'quickref', label: '外来で押さえる4ポイント' },
+      { id: 'classification', label: '薬剤分類' },
+      { id: 'selection', label: '薬剤選択アルゴリズム' },
+      { id: 'receptor', label: '受容体プロファイル比較' },
+      { id: 'druglist', label: '薬剤詳細・用量・適応' },
+      { id: 'lai', label: 'LAI（持続性注射剤）' },
+      { id: 'sideeffects', label: '副作用プロファイル比較' },
+      { id: 'monitoring', label: 'モニタリング・安全管理' },
+      { id: 'interactions', label: '相互作用・禁忌・注意事項' }
+    ];
+    var lastToolbarSectionLabel = '';
+    var lastToolbarSectionId = '';
+
+    function updateToolbarSectionLabel() {
+      if (!sectionLabelEl || !toolbarEl) return;
+      var threshold = toolbarEl.getBoundingClientRect().bottom + 6;
+      var active = TOOLBAR_SECTIONS[0];
+      for (var i = 0; i < TOOLBAR_SECTIONS.length; i++) {
+        var el = document.getElementById(TOOLBAR_SECTIONS[i].id);
+        if (!el) continue;
+        var top = el.getBoundingClientRect().top;
+        if (top <= threshold) active = TOOLBAR_SECTIONS[i];
+      }
+      if (active.id !== lastToolbarSectionId) {
+        lastToolbarSectionId = active.id;
+        toolbarEl.setAttribute('data-toolbar-section', active.id);
+      }
+      if (active.label !== lastToolbarSectionLabel) {
+        lastToolbarSectionLabel = active.label;
+        sectionLabelEl.textContent = active.label;
+      }
+    }
+
+    var toolbarLabelRaf = null;
+    function scheduleToolbarSectionLabel() {
+      if (toolbarLabelRaf != null) return;
+      toolbarLabelRaf = requestAnimationFrame(function () {
+        toolbarLabelRaf = null;
+        updateToolbarSectionLabel();
+      });
+    }
+    window.addEventListener('scroll', scheduleToolbarSectionLabel, { passive: true });
+    window.addEventListener('resize', scheduleToolbarSectionLabel);
+    updateToolbarSectionLabel();
 
     function syncHighlightClass() {
       document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
