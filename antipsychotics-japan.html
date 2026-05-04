@@ -211,6 +211,7 @@
       z-index: 3;
     }
     /* 表ツールバー：タイトル直下・全幅・スクロール時 sticky。上段のみセクション色 */
+    /* 余白・文字：8pxベース、sm以上で一段階、本文系は 0.875rem→1rem（読みやすさ） */
     .data-table-toolbar {
       position: sticky;
       top: 0;
@@ -236,15 +237,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.5rem max(0.5rem, env(safe-area-inset-left, 0px)) 0.5rem max(0.5rem, env(safe-area-inset-right, 0px));
+      gap: 0.75rem;
+      padding: 0.75rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.625rem max(0.75rem, env(safe-area-inset-right, 0px));
       background: var(--toolbar-head-bg);
       border-bottom: 1px solid var(--toolbar-head-border);
       transition: background 0.35s ease, border-color 0.35s ease;
     }
     @media (min-width: 640px) {
       .data-table-toolbar__head {
-        padding: 0.625rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.5rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+        gap: 1rem;
+        padding: 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
       }
     }
     #data-table-toolbar[data-toolbar-section="quickref"] .data-table-toolbar__head {
@@ -291,19 +293,48 @@
     #data-table-section-label {
       color: var(--toolbar-accent, #0f766e);
       transition: color 0.35s ease;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    @media (min-width: 640px) {
+      #data-table-section-label {
+        font-size: 1rem;
+      }
+    }
+    .data-table-toolbar__head-title {
+      font-size: 1rem;
+      line-height: 1.35;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head-title {
+        font-size: 1.125rem;
+      }
     }
     .data-table-toolbar__controls {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.5rem max(0.5rem, env(safe-area-inset-left, 0px)) 0.5rem max(0.5rem, env(safe-area-inset-right, 0px));
+      gap: 0.625rem;
+      padding: 0.625rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.75rem max(0.75rem, env(safe-area-inset-right, 0px));
     }
     @media (min-width: 640px) {
       .data-table-toolbar__controls {
-        gap: 0.75rem;
-        padding: 0.625rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.625rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+        gap: 0.875rem;
+        padding: 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+      }
+    }
+    .data-table-toolbar__controls input[type="search"] {
+      font-size: 0.9375rem !important;
+      line-height: 1.4;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__controls input[type="search"] {
+        font-size: 1rem !important;
       }
     }
     table.data-table tbody tr.table-search-hit > td {
@@ -441,25 +472,25 @@
 
   <div id="data-table-toolbar" class="data-table-toolbar" data-toolbar-section="quickref" role="region" aria-label="表の検索と表示オプション">
     <div class="data-table-toolbar__head">
-      <span class="min-w-0 truncate text-sm font-bold tracking-tight text-slate-900 sm:text-base">抗精神病薬 選択ガイド</span>
-      <span id="data-table-section-label" class="max-w-[58%] shrink-0 truncate text-right text-xs font-semibold sm:max-w-[min(50vw,20rem)] sm:text-sm" aria-live="polite">外来で押さえる4ポイント</span>
+      <span class="data-table-toolbar__head-title min-w-0 truncate">抗精神病薬 選択ガイド</span>
+      <span id="data-table-section-label" class="max-w-[60%] shrink-0 truncate text-right sm:max-w-[min(50vw,22rem)]" aria-live="polite">外来で押さえる4ポイント</span>
     </div>
     <div class="data-table-toolbar__controls">
-    <label class="flex shrink-0 cursor-pointer select-none items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-2.5 py-1.5 text-sm text-slate-700 hover:bg-slate-100/90 sm:px-3 sm:py-2">
-      <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked />
-      <span class="font-medium whitespace-nowrap">列固定</span>
+    <label class="flex min-h-[2.75rem] shrink-0 cursor-pointer select-none items-center gap-2.5 rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2 text-slate-700 hover:bg-slate-100/90 sm:min-h-0 sm:px-3.5 sm:py-2.5">
+      <input type="checkbox" id="data-table-sticky-col-toggle" class="h-5 w-5 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500 sm:h-4 sm:w-4" checked />
+      <span class="text-sm font-medium leading-snug sm:text-base whitespace-nowrap">列固定</span>
     </label>
-    <div class="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-1.5">
-      <div class="flex min-w-0 max-w-[min(100%,14rem)] flex-1 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50/80 px-1.5 py-0.5 sm:max-w-[min(100%,22rem)] sm:px-2">
-        <i data-lucide="search" class="h-3.5 w-3.5 shrink-0 text-slate-400 sm:h-4 sm:w-4" aria-hidden="true"></i>
+    <div class="flex min-w-0 flex-1 items-center justify-end gap-1.5 sm:gap-2">
+      <div class="flex min-h-[2.75rem] min-w-0 max-w-[min(100%,15rem)] flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-2 py-1 sm:min-h-0 sm:max-w-[min(100%,24rem)] sm:px-2.5 sm:py-1.5">
+        <i data-lucide="search" class="h-4 w-4 shrink-0 text-slate-500 sm:h-4 sm:w-4" aria-hidden="true"></i>
         <label for="data-table-search" class="sr-only">表内検索</label>
-        <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:text-sm" />
-        <button type="button" id="data-table-search-clear" class="shrink-0 rounded px-1.5 py-1 text-[0.65rem] font-medium text-slate-600 hover:bg-slate-200/80 hover:text-slate-800 sm:text-xs">クリア</button>
+        <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-1.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
+        <button type="button" id="data-table-search-clear" class="shrink-0 rounded px-2 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-200/80 hover:text-slate-800">クリア</button>
       </div>
-      <button type="button" id="data-table-search-prev" class="toolbar-icon-btn shrink-0 rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
-      <button type="button" id="data-table-search-next" class="toolbar-icon-btn shrink-0 rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="次の該当行へ" title="次の該当行" disabled>↓</button>
-      <button type="button" id="data-table-search-highlight" class="shrink-0 rounded-md border border-slate-200 bg-amber-50 px-2 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100/90 sm:text-sm" aria-pressed="true" title="該当行の背景色表示を切り替え">ハイライト</button>
-      <p id="data-table-search-meta" class="max-w-[4rem] shrink-0 truncate text-[0.65rem] text-slate-500 tabular-nums sm:max-w-[6rem] sm:text-xs" aria-live="polite"></p>
+      <button type="button" id="data-table-search-prev" class="toolbar-icon-btn flex min-h-[2.75rem] min-w-[2.75rem] shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white px-2.5 text-base font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0 sm:min-w-0 sm:px-3 sm:py-2 sm:text-lg" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
+      <button type="button" id="data-table-search-next" class="toolbar-icon-btn flex min-h-[2.75rem] min-w-[2.75rem] shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white px-2.5 text-base font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-0 sm:min-w-0 sm:px-3 sm:py-2 sm:text-lg" aria-label="次の該当行へ" title="次の該当行" disabled>↓</button>
+      <button type="button" id="data-table-search-highlight" class="shrink-0 rounded-md border border-slate-200 bg-amber-50 px-3 py-2 text-sm font-medium leading-snug text-amber-900 hover:bg-amber-100/90 sm:px-3.5 sm:py-2 sm:text-base" aria-pressed="true" title="該当行の背景色表示を切り替え">ハイライト</button>
+      <p id="data-table-search-meta" class="max-w-[5.5rem] shrink-0 truncate text-xs text-slate-600 tabular-nums sm:max-w-[7.5rem] sm:text-sm" aria-live="polite"></p>
     </div>
     </div>
   </div>
