@@ -210,6 +210,16 @@
     table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
       z-index: 3;
     }
+    /* 表ツールバー（検索・列固定） */
+    .data-table-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 45;
+    }
+    table.data-table tbody tr.table-search-hit > td {
+      background-color: rgba(253, 224, 71, 0.48) !important;
+      box-shadow: inset 0 0 0 1px rgba(202, 138, 4, 0.35);
+    }
     /* 設定で先頭列固定をオフ：表全体を横スクロール（右側を広く見やすい） */
     html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
     html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
@@ -353,13 +363,19 @@
 
   <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
 
-    <div class="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-      <label class="inline-flex cursor-pointer items-start gap-3 select-none">
-        <input type="checkbox" id="data-table-sticky-col-toggle" class="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked />
-        <span>
-          <span class="font-semibold text-slate-800">横スクロール時に薬剤列を左に固定する</span>
-          <span class="mt-1 block text-xs text-slate-500">オン：薬剤名・区分ラベルが常に見える。オフ：列固定なしで表全体をスクロール（狭い画面で右側が広く読みやすいことがあります）。設定はこの端末に保存されます。</span>
-        </span>
+    <div id="data-table-toolbar" class="data-table-toolbar mb-4 flex flex-col gap-2 rounded-xl border border-slate-200 bg-white/95 px-3 py-2.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/90 sm:flex-row sm:items-center sm:justify-between sm:gap-3" role="region" aria-label="表の検索と表示オプション">
+      <div class="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center">
+        <div class="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-2.5 py-1">
+          <i data-lucide="search" class="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true"></i>
+          <label for="data-table-search" class="sr-only">表内検索</label>
+          <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="薬剤名・区分・備考など" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
+          <button type="button" id="data-table-search-clear" class="shrink-0 rounded-md px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200/80 hover:text-slate-800">クリア</button>
+        </div>
+        <p id="data-table-search-meta" class="shrink-0 text-xs text-slate-500 tabular-nums sm:text-right" aria-live="polite"></p>
+      </div>
+      <label class="flex shrink-0 cursor-pointer select-none items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100/90">
+        <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked />
+        <span class="font-medium">先頭列を固定</span>
       </label>
     </div>
 
@@ -1840,6 +1856,11 @@
   (function () {
     var STICKY_KEY = 'psych-antipsychotics-table-sticky-col-enabled';
     var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    var searchInput = document.getElementById('data-table-search');
+    var searchClear = document.getElementById('data-table-search-clear');
+    var searchMeta = document.getElementById('data-table-search-meta');
+    var searchTimer;
+
     function syncStickyFromToggle() {
       var enabled = stickyToggle ? stickyToggle.checked : true;
       document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
@@ -1855,6 +1876,64 @@
       });
     }
     syncStickyFromToggle();
+
+    function clearSearchHits() {
+      document.querySelectorAll('table.data-table tbody tr.table-search-hit').forEach(function (tr) {
+        tr.classList.remove('table-search-hit');
+      });
+    }
+
+    function applySearch() {
+      clearSearchHits();
+      var q = (searchInput && searchInput.value) ? searchInput.value.trim() : '';
+      if (!q) {
+        if (searchMeta) searchMeta.textContent = '';
+        return;
+      }
+      var ql = q.toLowerCase();
+      var n = 0;
+      document.querySelectorAll('table.data-table tbody tr').forEach(function (tr) {
+        var text = (tr.textContent || '').toLowerCase();
+        if (text.indexOf(ql) !== -1) {
+          tr.classList.add('table-search-hit');
+          n++;
+        }
+      });
+      if (searchMeta) {
+        searchMeta.textContent = n ? '該当 ' + n + ' 行' : '該当なし';
+      }
+      var first = document.querySelector('table.data-table tbody tr.table-search-hit');
+      if (first) {
+        requestAnimationFrame(function () {
+          first.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        });
+      }
+    }
+
+    function debouncedSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(applySearch, 100);
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', debouncedSearch);
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          searchInput.value = '';
+          clearSearchHits();
+          if (searchMeta) searchMeta.textContent = '';
+          searchInput.blur();
+        }
+      });
+    }
+    if (searchClear) {
+      searchClear.addEventListener('click', function () {
+        if (searchInput) searchInput.value = '';
+        clearSearchHits();
+        if (searchMeta) searchMeta.textContent = '';
+        if (searchInput) searchInput.focus();
+      });
+    }
 
     document.querySelectorAll('table.data-table').forEach(function (table) {
       table.querySelectorAll('tbody tr').forEach(function (tr) {
