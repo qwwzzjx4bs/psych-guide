@@ -203,6 +203,10 @@
     table.data-table tbody tr.bg-fuchsia-50 > td:first-child:not([colspan]) { background-color: #fdf4ff !important; }
     table.data-table tbody tr.bg-green-50 > td:first-child:not([colspan]) { background-color: #f0fdf4 !important; }
     table.data-table tbody tr.bg-emerald-50 > td:first-child:not([colspan]) { background-color: #ecfdf5 !important; }
+    /* criteria-box 内の表：行に bg が無い行は親の青グラデを透過表示→固定列だけ白抜けするのを防ぐ（CPZ 換算表は行に bg-blue-50 / bg-gray-50 を明示） */
+    .criteria-box table.data-table tbody tr:not([class*="bg-"]) > td:first-child:not([colspan]) {
+      background-color: #eff6ff !important;
+    }
     table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
       z-index: 3;
     }
@@ -482,17 +486,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td class="td-left td-drug">ハロペリドール</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">高力価</td></tr>
+              <tr class="bg-blue-50"><td class="td-left td-drug">ハロペリドール</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">高力価</td></tr>
               <tr class="bg-gray-50"><td class="td-left td-drug">リスペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">—</td></tr>
-              <tr><td class="td-left td-drug">パリペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">リスの活性代謝物</td></tr>
+              <tr class="bg-blue-50"><td class="td-left td-drug">パリペリドン</td><td class="td-cell">×50</td><td class="td-cell">12mg</td><td class="td-cell text-gray-500">リスの活性代謝物</td></tr>
               <tr class="bg-gray-50"><td class="td-left td-drug">オランザピン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">—</td></tr>
-              <tr><td class="td-left td-drug">クエチアピン</td><td class="td-cell">×0.75</td><td class="td-cell">800mg</td><td class="td-cell text-gray-500">低力価</td></tr>
+              <tr class="bg-blue-50"><td class="td-left td-drug">クエチアピン</td><td class="td-cell">×0.75</td><td class="td-cell">800mg</td><td class="td-cell text-gray-500">低力価</td></tr>
               <tr class="bg-gray-50"><td class="td-left td-drug">アリピプラゾール</td><td class="td-cell">×67</td><td class="td-cell">9mg</td><td class="td-cell text-gray-500">参考値</td></tr>
-              <tr><td class="td-left td-drug">ブレクスピプラゾール</td><td class="td-cell">×100</td><td class="td-cell">6mg</td><td class="td-cell text-gray-500">参考値</td></tr>
+              <tr class="bg-blue-50"><td class="td-left td-drug">ブレクスピプラゾール</td><td class="td-cell">×100</td><td class="td-cell">6mg</td><td class="td-cell text-gray-500">参考値</td></tr>
               <tr class="bg-gray-50"><td class="td-left td-drug">ルラシドン</td><td class="td-cell">×3</td><td class="td-cell">200mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
-              <tr><td class="td-left td-drug">ブロナンセリン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
+              <tr class="bg-blue-50"><td class="td-left td-drug">ブロナンセリン</td><td class="td-cell">×40</td><td class="td-cell">15mg</td><td class="td-cell text-gray-500">食後投与必須</td></tr>
               <tr class="bg-gray-50"><td class="td-left td-drug">スルピリド</td><td class="td-cell">×0.5〜1</td><td class="td-cell">600〜1200mg</td><td class="td-cell text-gray-500">換算値に幅あり（参考値）</td></tr>
-              <tr><td class="td-left td-drug">クロルプロマジン</td><td class="td-cell">×1</td><td class="td-cell">600mg</td><td class="td-cell text-gray-500">基準薬</td></tr>
+              <tr class="bg-blue-50"><td class="td-left td-drug">クロルプロマジン</td><td class="td-cell">×1</td><td class="td-cell">600mg</td><td class="td-cell text-gray-500">基準薬</td></tr>
             </tbody>
           </table>
           </div>
