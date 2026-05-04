@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="data-table-sticky-col-off">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -264,7 +264,10 @@
       --toolbar-head-border: rgba(22, 163, 74, 0.35);
       --toolbar-accent: #15803d;
     }
-    #data-table-toolbar[data-toolbar-section="receptor"] .data-table-toolbar__head {
+    #data-table-toolbar[data-toolbar-section="receptor"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="mechanism"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="pk"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="compare"] .data-table-toolbar__head {
       --toolbar-head-bg: rgba(224, 231, 255, 0.88);
       --toolbar-head-border: rgba(79, 70, 229, 0.35);
       --toolbar-accent: #4338ca;
@@ -274,7 +277,10 @@
       --toolbar-head-border: rgba(13, 148, 136, 0.35);
       --toolbar-accent: #0f766e;
     }
-    #data-table-toolbar[data-toolbar-section="lai"] .data-table-toolbar__head {
+    #data-table-toolbar[data-toolbar-section="lai"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="formulations"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="parenteral"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="bzd"] .data-table-toolbar__head {
       --toolbar-head-bg: rgba(237, 233, 254, 0.88);
       --toolbar-head-border: rgba(124, 58, 237, 0.35);
       --toolbar-accent: #6d28d9;
@@ -460,12 +466,17 @@
         justify-content: flex-end;
         font-size: 0.65rem;
         font-weight: 500;
-        padding: 0.2rem 0;
-        background: transparent;
-        border: none;
-        color: #64748b;
+        padding: 0.3rem 0.5rem;
+        margin-top: 0.35rem;
+        background: rgba(241, 245, 249, 0.75);
+        border: 1px dashed #cbd5e1;
+        border-radius: 0.375rem;
+        color: #475569;
       }
-      .x-scroll__hint .x-scroll__hint-icon { display: none; }
+      .x-scroll__hint .x-scroll__hint-icon {
+        display: inline-flex;
+        opacity: 0.55;
+      }
     }
   </style>
 </head>
@@ -499,7 +510,7 @@
     </div>
     <div class="data-table-toolbar__controls">
     <label class="flex min-h-9 shrink-0 cursor-pointer select-none items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50/80 px-2 py-1.5 text-slate-700 hover:bg-slate-100/90 sm:min-h-[2.75rem] sm:gap-2.5 sm:rounded-lg sm:px-3.5 sm:py-2.5">
-      <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500 sm:h-5 sm:w-5" checked />
+      <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500 sm:h-5 sm:w-5" />
       <span class="text-[0.6875rem] font-semibold leading-tight sm:text-sm sm:font-medium sm:leading-snug md:text-base whitespace-nowrap">列固定</span>
     </label>
     <div class="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-2">
@@ -735,7 +746,7 @@
             </tbody>
           </table>
           </div>
-          <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+          <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
         </div>
         <p class="text-xs text-gray-500 mt-2">※換算値は各種文献・ガイドラインにより差があります。臨床的判断に用いる目安値です。</p>
       </div>
@@ -1178,7 +1189,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- 受容体と臨床的意義の解説 -->
@@ -1336,7 +1347,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- FGA詳細テーブル -->
@@ -1406,7 +1417,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <div class="danger-box">
@@ -1508,7 +1519,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <div class="warning-box mt-4">
@@ -1679,7 +1690,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- 重大な副作用 -->
@@ -1807,7 +1818,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <!-- クロザピン特別スケジュール -->
@@ -1835,7 +1846,7 @@
             </tbody>
           </table>
         </div>
-          <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示（スマホはスワイプ）<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+          <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
 
       <div class="mt-4 grid md:grid-cols-3 gap-3 text-xs">
@@ -2038,7 +2049,7 @@
     }
 
     function syncStickyFromToggle() {
-      var enabled = stickyToggle ? stickyToggle.checked : true;
+      var enabled = stickyToggle ? stickyToggle.checked : false;
       document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
     }
     if (stickyToggle) {
@@ -2099,6 +2110,8 @@
     }
     window.addEventListener('scroll', scheduleToolbarSectionLabel, { passive: true });
     window.addEventListener('resize', scheduleToolbarSectionLabel);
+    window.addEventListener('hashchange', scheduleToolbarSectionLabel);
+    window.addEventListener('load', scheduleToolbarSectionLabel);
     updateToolbarSectionLabel();
 
     function syncHighlightClass() {

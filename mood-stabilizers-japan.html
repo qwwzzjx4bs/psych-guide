@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="data-table-sticky-col-off">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://psych-clinical-guide.surge.sh/mood-stabilizers-japan.html">
+  <link rel="canonical" href="https://qwwzzjx4bs.github.io/psych-guide/mood-stabilizers-japan.html">
   <title>気分安定薬 選択ガイド（日本承認薬）- 精神科臨床</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -126,9 +126,14 @@
     .td-cell { padding:0.55rem 0.5rem; text-align:center; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
     .td-left { padding:0.55rem 0.75rem; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
     .th-drug, .td-drug { white-space: nowrap; vertical-align: middle; }
-    table.data-table { width: max-content; min-width: 100%; }
+    /* border-collapse:collapse では先頭列 sticky がブラウザで壊れやすい */
+    table.data-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
     table.data-table tbody tr:not(:has(td[colspan])) { cursor: pointer; }
-    /* 選択行：背景なし・青枠のみ（抗うつ薬 選択ガイドと同様） */
     table.data-table tbody tr.table-row-focus > td {
       border-top: 2px solid #2563eb !important;
       border-bottom: 2px solid #2563eb !important;
@@ -139,10 +144,207 @@
     table.data-table tbody tr.table-row-focus > td:last-child {
       border-right: 2px solid #2563eb !important;
     }
-    .x-scroll { width: 100%; max-width: 100%; }
-    .x-scroll__rail {
-      -webkit-overflow-scrolling: touch;
-      max-width: 100%;
+    /* 横スクロール時：先頭列（区分ラベル・薬剤名）を左に固定。区分行はラベル1セル＋colspanで残列を確保 */
+    table.data-table th:first-child:not([colspan]),
+    table.data-table td:first-child:not([colspan]) {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background-color: #ffffff;
+      box-shadow: 4px 0 10px -4px rgba(15, 23, 42, 0.18);
+    }
+    table.data-table thead th:first-child:not([colspan]) {
+      z-index: 5;
+      background-color: #f1f5f9;
+    }
+    /* 先頭固定列はデフォルトで白。tr のストライプ／色帯は他セルと同色に（Tailwind 読込順に負けないよう !important） */
+    table.data-table tbody tr.bg-gray-50 > td:first-child:not([colspan]) { background-color: #f9fafb !important; }
+    table.data-table tbody tr.bg-red-50 > td:first-child:not([colspan]) { background-color: #fef2f2 !important; }
+    table.data-table tbody tr.bg-blue-50 > td:first-child:not([colspan]) { background-color: #eff6ff !important; }
+    table.data-table tbody tr.bg-purple-50 > td:first-child:not([colspan]) { background-color: #f5f3ff !important; }
+    table.data-table tbody tr.bg-fuchsia-50 > td:first-child:not([colspan]) { background-color: #fdf4ff !important; }
+    table.data-table tbody tr.bg-green-50 > td:first-child:not([colspan]) { background-color: #f0fdf4 !important; }
+    table.data-table tbody tr.bg-emerald-50 > td:first-child:not([colspan]) { background-color: #ecfdf5 !important; }
+    /* criteria-box 内の表：行に bg が無い行は親の青グラデを透過表示→固定列だけ白抜けするのを防ぐ（CPZ 換算表は行に bg-blue-50 / bg-gray-50 を明示） */
+    .criteria-box table.data-table tbody tr:not([class*="bg-"]) > td:first-child:not([colspan]) {
+      background-color: #eff6ff !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: 3;
+    }
+    /* 表ツールバー：タイトル直下・全幅・スクロール時 sticky。上段のみセクション色 */
+    /* 余白・文字：8pxベース、sm以上で一段階、本文系は 0.875rem→1rem（読みやすさ） */
+    .data-table-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 45;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      border-radius: 0;
+      border: none;
+      border-top: 1px solid rgba(203, 213, 225, 0.95);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.12);
+      padding: 0;
+    }
+    .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(249, 250, 251, 0.92);
+      --toolbar-head-border: rgba(203, 213, 225, 0.95);
+      --toolbar-accent: #0f766e;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.625rem max(0.75rem, env(safe-area-inset-right, 0px));
+      background: var(--toolbar-head-bg);
+      border-bottom: 1px solid var(--toolbar-head-border);
+      transition: background 0.35s ease, border-color 0.35s ease;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head {
+        gap: 1rem;
+        padding: 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+      }
+    }
+    #data-table-toolbar[data-toolbar-section="quickref"] .data-table-toolbar__head {
+      --toolbar-head-bg: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(37, 99, 235, 0.16));
+      --toolbar-head-border: rgba(20, 184, 166, 0.45);
+      --toolbar-accent: #0f766e;
+    }
+    #data-table-toolbar[data-toolbar-section="classification"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(219, 234, 254, 0.88);
+      --toolbar-head-border: rgba(37, 99, 235, 0.35);
+      --toolbar-accent: #1d4ed8;
+    }
+    #data-table-toolbar[data-toolbar-section="selection"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(220, 252, 231, 0.88);
+      --toolbar-head-border: rgba(22, 163, 74, 0.35);
+      --toolbar-accent: #15803d;
+    }
+    #data-table-toolbar[data-toolbar-section="receptor"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="mechanism"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="pk"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="compare"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(224, 231, 255, 0.88);
+      --toolbar-head-border: rgba(79, 70, 229, 0.35);
+      --toolbar-accent: #4338ca;
+    }
+    #data-table-toolbar[data-toolbar-section="druglist"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(204, 251, 241, 0.88);
+      --toolbar-head-border: rgba(13, 148, 136, 0.35);
+      --toolbar-accent: #0f766e;
+    }
+    #data-table-toolbar[data-toolbar-section="lai"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="formulations"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="parenteral"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="bzd"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(237, 233, 254, 0.88);
+      --toolbar-head-border: rgba(124, 58, 237, 0.35);
+      --toolbar-accent: #6d28d9;
+    }
+    #data-table-toolbar[data-toolbar-section="sideeffects"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(255, 237, 213, 0.88);
+      --toolbar-head-border: rgba(234, 88, 12, 0.35);
+      --toolbar-accent: #c2410c;
+    }
+    #data-table-toolbar[data-toolbar-section="monitoring"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="interactions"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(254, 226, 226, 0.88);
+      --toolbar-head-border: rgba(220, 38, 38, 0.35);
+      --toolbar-accent: #b91c1c;
+    }
+    #data-table-section-label {
+      color: var(--toolbar-accent, #0f766e);
+      transition: color 0.35s ease;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    @media (min-width: 640px) {
+      #data-table-section-label {
+        font-size: 1rem;
+      }
+    }
+    .data-table-toolbar__head-title {
+      font-size: 1rem;
+      line-height: 1.35;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head-title {
+        font-size: 1.125rem;
+      }
+    }
+    .data-table-toolbar__controls {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.625rem;
+      padding: 0.625rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.75rem max(0.75rem, env(safe-area-inset-right, 0px));
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__controls {
+        gap: 0.875rem;
+        padding: 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+      }
+    }
+    .data-table-toolbar__controls input[type="search"] {
+      font-size: 0.9375rem !important;
+      line-height: 1.4;
+    }
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-cancel-button,
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__controls input[type="search"] {
+        font-size: 1rem !important;
+      }
+    }
+    /* 狭い画面：検索を優先し、周辺コントロールはコンパクトに */
+    @media (max-width: 639px) {
+      .data-table-toolbar__controls {
+        gap: 0.375rem;
+        padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+        padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
+      }
+    }
+    /* 検索：一致テキストのみマーク（表の td・薬剤カード等、main 配下を対象） */
+    main mark.table-search-mark {
+      background-color: rgba(253, 224, 71, 0.88);
+      color: inherit;
+      font-weight: 600;
+      padding: 0 0.04em;
+      border-radius: 0.125rem;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    html.data-table-search-highlight-off main mark.table-search-mark {
+      background: transparent !important;
+      font-weight: inherit;
+      padding: 0;
+      border-radius: 0;
+    }
+    /* 設定で先頭列固定をオフ：表全体を横スクロール（右側を広く見やすい） */
+    html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+    html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+      position: static !important;
+      left: auto !important;
+      z-index: auto !important;
+      box-shadow: none !important;
+    }
+    html.data-table-sticky-col-off table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: auto !important;
     }
     @media (max-width: 767px) {
       .x-scroll__rail {
@@ -155,6 +357,48 @@
         opacity: 0.85;
       }
       .x-scroll__hint .x-scroll__hint-icon--r { animation-delay: 0.2s; }
+      /* 狭い画面：先頭固定列を狭く＋折り返しで右側のスクロール領域を広げる */
+      table.data-table .th-drug,
+      table.data-table .td-drug {
+        white-space: normal;
+        vertical-align: top;
+      }
+      table.data-table thead th:first-child:not([colspan]),
+      table.data-table tbody td:first-child:not([colspan]) {
+        width: min(30vw, 7.25rem) !important;
+        max-width: min(30vw, 7.25rem) !important;
+        min-width: 3.75rem;
+        box-sizing: border-box;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+        font-size: 0.7rem !important;
+        padding: 0.45rem 0.35rem !important;
+      }
+      table.data-table thead th:first-child.th-cell {
+        text-align: left;
+      }
+      table.data-table .th-cell:not(:first-child),
+      table.data-table .td-cell {
+        padding: 0.45rem 0.32rem;
+        font-size: 0.72rem;
+      }
+      html.data-table-sticky-col-off table.data-table .th-drug,
+      html.data-table-sticky-col-off table.data-table .td-drug {
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+      html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        font-size: 0.72rem !important;
+        padding: 0.45rem 0.32rem !important;
+        word-break: normal;
+        overflow-wrap: normal;
+        line-height: normal;
+      }
     }
     @media (min-width: 768px) {
       .x-scroll__rail { box-shadow: none; }
@@ -184,13 +428,19 @@
         justify-content: flex-end;
         font-size: 0.65rem;
         font-weight: 500;
-        padding: 0.2rem 0;
-        background: transparent;
-        border: none;
-        color: #64748b;
+        padding: 0.3rem 0.5rem;
+        margin-top: 0.35rem;
+        background: rgba(241, 245, 249, 0.75);
+        border: 1px dashed #cbd5e1;
+        border-radius: 0.375rem;
+        color: #475569;
       }
-      .x-scroll__hint .x-scroll__hint-icon { display: none; }
+      .x-scroll__hint .x-scroll__hint-icon {
+        display: inline-flex;
+        opacity: 0.55;
+      }
     }
+
   </style>
 </head>
 <body class="bg-gray-50">
@@ -214,6 +464,31 @@
       <p class="mt-3 text-xs opacity-60">参照：「双極性障害 診療ガイドライン」関連（日本うつ病学会 2023 年版系）／各添付文書（<a href="https://www.pmda.go.jp" class="underline opacity-90">PMDA</a>）／<a href="bipolar-diagnosis-treatment.html" class="underline opacity-90">双極性障害：診断・治療選択ツリー</a>／<a href="antipsychotics-japan.html" class="underline opacity-90">抗精神病薬 選択ガイド</a></p>
     </div>
   </header>
+
+  <div id="data-table-toolbar" class="data-table-toolbar" data-toolbar-section="quickref" role="region" aria-label="表の検索と表示オプション">
+    <div class="data-table-toolbar__head">
+      <span class="data-table-toolbar__head-title min-w-0 truncate">気分安定薬 選択ガイド</span>
+      <span id="data-table-section-label" class="max-w-[60%] shrink-0 truncate text-right sm:max-w-[min(50vw,22rem)]" aria-live="polite">外来で押さえる4ポイント</span>
+    </div>
+    <div class="data-table-toolbar__controls">
+    <label class="flex min-h-9 shrink-0 cursor-pointer select-none items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50/80 px-2 py-1.5 text-slate-700 hover:bg-slate-100/90 sm:min-h-[2.75rem] sm:gap-2.5 sm:rounded-lg sm:px-3.5 sm:py-2.5">
+      <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500 sm:h-5 sm:w-5" />
+      <span class="text-[0.6875rem] font-semibold leading-tight sm:text-sm sm:font-medium sm:leading-snug md:text-base whitespace-nowrap">列固定</span>
+    </label>
+    <div class="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-2">
+      <div class="flex min-h-9 min-w-0 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-slate-50/80 px-1.5 py-0.5 sm:min-h-[2.75rem] sm:max-w-[min(100%,24rem)] sm:gap-2 sm:rounded-lg sm:px-2.5 sm:py-1.5">
+        <i data-lucide="search" class="h-3.5 w-3.5 shrink-0 text-slate-500 sm:h-4 sm:w-4" aria-hidden="true"></i>
+        <label for="data-table-search" class="sr-only">表内検索</label>
+        <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:py-1.5" />
+        <button type="button" id="data-table-search-clear" class="flex h-8 w-8 shrink-0 items-center justify-center rounded text-[1.35rem] font-light leading-none text-slate-600 hover:bg-slate-200/80 hover:text-slate-800 sm:h-9 sm:w-9 sm:text-[1.5rem]" aria-label="検索をクリア" title="クリア"><span aria-hidden="true">×</span></button>
+      </div>
+      <button type="button" id="data-table-search-prev" class="toolbar-icon-btn flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-[2.75rem] sm:min-w-[2.75rem] sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-lg" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
+      <button type="button" id="data-table-search-next" class="toolbar-icon-btn flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-[2.75rem] sm:min-w-[2.75rem] sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-lg" aria-label="次の該当行へ" title="次の該当行" disabled>↓</button>
+      <button type="button" id="data-table-search-highlight" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-amber-50 text-amber-900 hover:bg-amber-100/90 sm:h-auto sm:w-auto sm:px-3.5 sm:py-2" aria-pressed="true" aria-label="検索一致のハイライト表示を切り替え" title="ハイライト（検索一致）"><i data-lucide="highlighter" class="h-[1.05rem] w-[1.05rem] sm:h-[1.125rem] sm:w-[1.125rem]" aria-hidden="true"></i></button>
+      <p id="data-table-search-meta" class="max-w-[3.25rem] shrink-0 truncate text-[0.65rem] text-slate-600 tabular-nums sm:max-w-[7.5rem] sm:text-sm" aria-live="polite"></p>
+    </div>
+    </div>
+  </div>
 
   <nav class="toc">
     <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
@@ -557,7 +832,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
       <p class="text-xs text-gray-500 mt-3">※「うつ病相」の列は各薬剤単独での急性期 RCT（無作為化比較試験）の印象を要約したものであり、実臨床では気分安定薬と抗精神病薬の併用評価が一般的です。※クエチアピン即放出製剤の双極適応は日本の最新添付を確認してください。</p>
     </div>
@@ -623,7 +898,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
         <p class="text-[10px] text-gray-500 mt-1">※上限・開始量・ラモトリギンの第1〜2週は<strong>製品ごとの添付文書の漸増表</strong>に必ず従う（バルプロ酸有無・併用薬で異なる）。</p>
       </div>
 
@@ -651,7 +926,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
     </div>
 
@@ -691,7 +966,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
     </div>
 
@@ -728,7 +1003,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="danger-box">
@@ -807,7 +1082,7 @@
           </tbody>
         </table>
         </div>
-        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横スクロールで全列を表示<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
       <p class="text-[10px] text-gray-500">※重症心疾患や高カリ血症リスクへの ECG は施設ポリシーで。</p>
     </div>
@@ -858,11 +1133,326 @@
   </footer>
 
   <script>
-  (function () {
+    var STICKY_KEY = 'psych-mood-stabilizers-table-sticky-col-enabled';
+    var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    var searchInput = document.getElementById('data-table-search');
+    var searchClear = document.getElementById('data-table-search-clear');
+    var searchMeta = document.getElementById('data-table-search-meta');
+    var searchPrev = document.getElementById('data-table-search-prev');
+    var searchNext = document.getElementById('data-table-search-next');
+    var searchHighlightBtn = document.getElementById('data-table-search-highlight');
+    var searchTimer;
+    var searchHitRows = [];
+    var hitIndex = -1;
+    var highlightOn = true;
+    var mainEl = document.querySelector('main');
+
+    /** 入力と本文で indexOf がずれないよう NFC 化し、ゼロ幅文字を除去 */
+    function normalizeSearchString(s) {
+      if (s == null || s === '') return '';
+      s = String(s).replace(/[\u200b-\u200d\ufeff]/g, '');
+      return typeof s.normalize === 'function' ? s.normalize('NFC').trim() : s.trim();
+    }
+
+    function formatSearchMeta(n) {
+      var compact = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 639px)').matches;
+      if (n === 0) return compact ? '0件' : '該当なし';
+      return compact ? (n + '件') : ('該当 ' + n + ' 箇所');
+    }
+
+    function syncStickyFromToggle() {
+      var enabled = stickyToggle ? stickyToggle.checked : false;
+      document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
+    }
+    if (stickyToggle) {
+      try {
+        var s = localStorage.getItem(STICKY_KEY);
+        if (s !== null) stickyToggle.checked = s === '1';
+      } catch (err) {}
+      stickyToggle.addEventListener('change', function () {
+        try { localStorage.setItem(STICKY_KEY, stickyToggle.checked ? '1' : '0'); } catch (err) {}
+        syncStickyFromToggle();
+      });
+    }
+    syncStickyFromToggle();
+
+    var toolbarEl = document.getElementById('data-table-toolbar');
+    var sectionLabelEl = document.getElementById('data-table-section-label');
+    var TOOLBAR_SECTIONS = [
+      { id: 'quickref', label: '外来で押さえる4ポイント' },
+      { id: 'classification', label: '薬剤分類' },
+      { id: 'selection', label: '薬剤選択アルゴリズム' },
+      { id: 'mechanism', label: '薬理・位置づけ（定性）' },
+      { id: 'druglist', label: '薬剤詳細・用量・適応' },
+      { id: 'formulations', label: '製剤・経路' },
+      { id: 'sideeffects', label: '副作用プロファイル比較' },
+      { id: 'monitoring', label: 'モニタリング・安全管理' },
+      { id: 'interactions', label: '相互作用・禁忌・組み替え時' }
+    ];
+    var lastToolbarSectionLabel = '';
+    var lastToolbarSectionId = '';
+
+    function updateToolbarSectionLabel() {
+      if (!sectionLabelEl || !toolbarEl) return;
+      var threshold = toolbarEl.getBoundingClientRect().bottom + 6;
+      var active = TOOLBAR_SECTIONS[0];
+      for (var i = 0; i < TOOLBAR_SECTIONS.length; i++) {
+        var el = document.getElementById(TOOLBAR_SECTIONS[i].id);
+        if (!el) continue;
+        var top = el.getBoundingClientRect().top;
+        if (top <= threshold) active = TOOLBAR_SECTIONS[i];
+      }
+      if (active.id !== lastToolbarSectionId) {
+        lastToolbarSectionId = active.id;
+        toolbarEl.setAttribute('data-toolbar-section', active.id);
+      }
+      if (active.label !== lastToolbarSectionLabel) {
+        lastToolbarSectionLabel = active.label;
+        sectionLabelEl.textContent = active.label;
+      }
+    }
+
+    var toolbarLabelRaf = null;
+    function scheduleToolbarSectionLabel() {
+      if (toolbarLabelRaf != null) return;
+      toolbarLabelRaf = requestAnimationFrame(function () {
+        toolbarLabelRaf = null;
+        updateToolbarSectionLabel();
+      });
+    }
+    window.addEventListener('scroll', scheduleToolbarSectionLabel, { passive: true });
+    window.addEventListener('resize', scheduleToolbarSectionLabel);
+    window.addEventListener('hashchange', scheduleToolbarSectionLabel);
+    window.addEventListener('load', scheduleToolbarSectionLabel);
+    updateToolbarSectionLabel();
+
+    function syncHighlightClass() {
+      document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
+      if (searchHighlightBtn) {
+        searchHighlightBtn.setAttribute('aria-pressed', highlightOn ? 'true' : 'false');
+        searchHighlightBtn.classList.toggle('bg-amber-50', highlightOn);
+        searchHighlightBtn.classList.toggle('text-amber-900', highlightOn);
+        searchHighlightBtn.classList.toggle('bg-slate-100', !highlightOn);
+        searchHighlightBtn.classList.toggle('text-slate-600', !highlightOn);
+      }
+    }
+
+    function updateNavButtons() {
+      var n = searchHitRows.length;
+      var ok = n > 0;
+      if (searchPrev) searchPrev.disabled = !ok;
+      if (searchNext) searchNext.disabled = !ok;
+      if (ok && (hitIndex < 0 || hitIndex >= n)) hitIndex = 0;
+    }
+
+    function scrollToHit(i) {
+      if (i < 0 || i >= searchHitRows.length) return;
+      hitIndex = i;
+      requestAnimationFrame(function () {
+        searchHitRows[hitIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
+    }
+
+    function unwrapSearchMarksInTables() {
+      document.querySelectorAll('main mark.table-search-mark').forEach(function (mark) {
+        var p = mark.parentNode;
+        if (!p) return;
+        while (mark.firstChild) {
+          p.insertBefore(mark.firstChild, mark);
+        }
+        p.removeChild(mark);
+      });
+    }
+
+    function getSearchableTextNodes(el) {
+      var out = [];
+      var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          if (!node.nodeValue) return NodeFilter.FILTER_SKIP;
+          var bel = node.parentElement;
+          if (bel && bel.closest && bel.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+
+    /** main 内で data-table 以外（薬剤カードの span・解説文など）のテキストノード */
+    function getSearchableTextNodesOutsideTables(root) {
+      var out = [];
+      if (!root) return out;
+      var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          if (!node.nodeValue) return NodeFilter.FILTER_SKIP;
+          var bel = node.parentElement;
+          if (!bel || !bel.closest) return NodeFilter.FILTER_SKIP;
+          if (bel.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          if (bel.closest('table.data-table')) return NodeFilter.FILTER_REJECT;
+          if (bel.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+
+    function highlightSearchOutsideTables(mainEl, qLower, sliceLen) {
+      if (!mainEl) return;
+      var nodes = getSearchableTextNodesOutsideTables(mainEl);
+      for (var i = 0; i < nodes.length; i++) {
+        wrapQueryInTextNode(nodes[i], qLower, sliceLen);
+      }
+    }
+
+    function wrapQueryInTextNode(textNode, qLower, sliceLen) {
+      var raw = textNode.textContent;
+      var text = typeof raw.normalize === 'function' ? raw.normalize('NFC') : raw;
+      var lower = text.toLowerCase();
+      var qn = typeof qLower.normalize === 'function' ? qLower.normalize('NFC') : qLower;
+      var idx = lower.indexOf(qn);
+      if (idx === -1) return;
+      var frag = document.createDocumentFragment();
+      var pos = 0;
+      while (idx !== -1) {
+        if (idx > pos) {
+          frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+        }
+        var mk = document.createElement('mark');
+        mk.className = 'table-search-mark';
+        mk.appendChild(document.createTextNode(text.slice(idx, idx + sliceLen)));
+        frag.appendChild(mk);
+        pos = idx + sliceLen;
+        idx = lower.indexOf(qn, pos);
+      }
+      if (pos < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(pos)));
+      }
+      textNode.parentNode.replaceChild(frag, textNode);
+    }
+
+    function highlightSearchInRow(tr, qLower, sliceLen) {
+      tr.querySelectorAll('td').forEach(function (td) {
+        var nodes = getSearchableTextNodes(td);
+        for (var i = 0; i < nodes.length; i++) {
+          wrapQueryInTextNode(nodes[i], qLower, sliceLen);
+        }
+      });
+    }
+
+    function clearSearchHits() {
+      unwrapSearchMarksInTables();
+      document.querySelectorAll('table.data-table tbody tr.table-search-hit').forEach(function (tr) {
+        tr.classList.remove('table-search-hit');
+      });
+      searchHitRows = [];
+      hitIndex = -1;
+      updateNavButtons();
+    }
+
+    function applySearch(options) {
+      options = options || {};
+      var scrollToFirst = options.scrollToFirst === true;
+      clearSearchHits();
+      var q = normalizeSearchString(searchInput && searchInput.value ? searchInput.value : '');
+      if (!q) {
+        if (searchMeta) searchMeta.textContent = '';
+        return;
+      }
+      var ql = q.toLowerCase();
+      var sliceLen = q.length;
+      document.querySelectorAll('table.data-table tbody tr').forEach(function (tr) {
+        var rowText = tr.textContent || '';
+        if (typeof rowText.normalize === 'function') rowText = rowText.normalize('NFC');
+        if (rowText.toLowerCase().indexOf(ql) !== -1) {
+          tr.classList.add('table-search-hit');
+          searchHitRows.push(tr);
+          highlightSearchInRow(tr, ql, sliceLen);
+        }
+      });
+      highlightSearchOutsideTables(mainEl, ql, sliceLen);
+      var markTotal = mainEl ? mainEl.querySelectorAll('mark.table-search-mark').length : 0;
+      if (searchMeta) {
+        searchMeta.textContent = formatSearchMeta(markTotal);
+      }
+      updateNavButtons();
+      if (searchHitRows.length > 0) {
+        hitIndex = 0;
+        if (scrollToFirst) {
+          scrollToHit(0);
+        }
+      }
+    }
+
+    function debouncedSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () {
+        applySearch({ scrollToFirst: false });
+      }, 100);
+    }
+
+    function scheduleSearchInput(e) {
+      if (e && e.isComposing) return;
+      debouncedSearch();
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', scheduleSearchInput);
+      searchInput.addEventListener('compositionend', function () {
+        debouncedSearch();
+      });
+      searchInput.addEventListener('change', debouncedSearch);
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applySearch({ scrollToFirst: false });
+          return;
+        }
+        if (e.key === 'Escape') {
+          searchInput.value = '';
+          clearSearchHits();
+          if (searchMeta) searchMeta.textContent = '';
+          searchInput.blur();
+        }
+      });
+    }
+    if (searchClear) {
+      searchClear.addEventListener('click', function () {
+        if (searchInput) searchInput.value = '';
+        clearSearchHits();
+        if (searchMeta) searchMeta.textContent = '';
+        if (searchInput) searchInput.focus();
+      });
+    }
+    if (searchPrev) {
+      searchPrev.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex <= 0 ? searchHitRows.length - 1 : hitIndex - 1;
+        scrollToHit(i);
+      });
+    }
+    if (searchNext) {
+      searchNext.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex < 0 ? 0 : (hitIndex + 1) % searchHitRows.length;
+        scrollToHit(i);
+      });
+    }
+    if (searchHighlightBtn) {
+      searchHighlightBtn.addEventListener('click', function () {
+        highlightOn = !highlightOn;
+        syncHighlightClass();
+      });
+    }
+    syncHighlightClass();
+
     document.querySelectorAll('table.data-table').forEach(function (table) {
       table.querySelectorAll('tbody tr').forEach(function (tr) {
         var first = tr.querySelector('td');
-        if (!first || first.hasAttribute('colspan')) return;
+        if (!first) return;
+        if (tr.querySelector('td[colspan]')) return;
         tr.addEventListener('click', function (e) {
           if (e.target.closest('a, button, label, input, select, textarea')) return;
           var was = tr.classList.contains('table-row-focus');
@@ -873,7 +1463,6 @@
         });
       });
     });
-  })();
   </script>
   <script>lucide.createIcons();</script>
 </body>
