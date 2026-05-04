@@ -220,6 +220,10 @@
       background-color: rgba(253, 224, 71, 0.48) !important;
       box-shadow: inset 0 0 0 1px rgba(202, 138, 4, 0.35);
     }
+    html.data-table-search-highlight-off table.data-table tbody tr.table-search-hit > td {
+      background-color: revert !important;
+      box-shadow: none !important;
+    }
     /* 設定で先頭列固定をオフ：表全体を横スクロール（右側を広く見やすい） */
     html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
     html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
@@ -363,20 +367,23 @@
 
   <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
 
-    <div id="data-table-toolbar" class="data-table-toolbar mb-4 flex flex-col gap-2 rounded-xl border border-slate-200 bg-white/95 px-3 py-2.5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/90 sm:flex-row sm:items-center sm:justify-between sm:gap-3" role="region" aria-label="表の検索と表示オプション">
-      <div class="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-        <div class="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-2.5 py-1">
-          <i data-lucide="search" class="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true"></i>
-          <label for="data-table-search" class="sr-only">表内検索</label>
-          <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="薬剤名・区分・備考など" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
-          <button type="button" id="data-table-search-clear" class="shrink-0 rounded-md px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200/80 hover:text-slate-800">クリア</button>
-        </div>
-        <p id="data-table-search-meta" class="shrink-0 text-xs text-slate-500 tabular-nums sm:text-right" aria-live="polite"></p>
-      </div>
-      <label class="flex shrink-0 cursor-pointer select-none items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100/90">
+    <div id="data-table-toolbar" class="data-table-toolbar mb-4 flex flex-nowrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white/95 px-2 py-2 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/90 sm:gap-3 sm:px-3 sm:py-2.5" role="region" aria-label="表の検索と表示オプション">
+      <label class="flex shrink-0 cursor-pointer select-none items-center gap-2 rounded-lg border border-slate-200 bg-slate-50/80 px-2.5 py-1.5 text-sm text-slate-700 hover:bg-slate-100/90 sm:px-3 sm:py-2">
         <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked />
-        <span class="font-medium">先頭列を固定</span>
+        <span class="font-medium whitespace-nowrap">列固定</span>
       </label>
+      <div class="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-1.5">
+        <button type="button" id="data-table-search-prev" class="toolbar-icon-btn shrink-0 rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
+        <div class="flex min-w-0 max-w-[min(100%,14rem)] flex-1 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50/80 px-1.5 py-0.5 sm:max-w-[min(100%,22rem)] sm:px-2">
+          <i data-lucide="search" class="h-3.5 w-3.5 shrink-0 text-slate-400 sm:h-4 sm:w-4" aria-hidden="true"></i>
+          <label for="data-table-search" class="sr-only">表内検索</label>
+          <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:text-sm" />
+          <button type="button" id="data-table-search-clear" class="shrink-0 rounded px-1.5 py-1 text-[0.65rem] font-medium text-slate-600 hover:bg-slate-200/80 hover:text-slate-800 sm:text-xs">クリア</button>
+        </div>
+        <button type="button" id="data-table-search-next" class="toolbar-icon-btn shrink-0 rounded-md border border-slate-200 bg-white px-2 py-1.5 text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="次の該当行へ" title="次の該当行" disabled>↓</button>
+        <button type="button" id="data-table-search-highlight" class="shrink-0 rounded-md border border-slate-200 bg-amber-50 px-2 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-100/90 sm:text-sm" aria-pressed="true" title="該当行の背景色表示を切り替え">ハイライト</button>
+        <p id="data-table-search-meta" class="max-w-[4rem] shrink-0 truncate text-[0.65rem] text-slate-500 tabular-nums sm:max-w-[6rem] sm:text-xs" aria-live="polite"></p>
+      </div>
     </div>
 
     <!-- クイックリファレンス -->
@@ -1859,7 +1866,13 @@
     var searchInput = document.getElementById('data-table-search');
     var searchClear = document.getElementById('data-table-search-clear');
     var searchMeta = document.getElementById('data-table-search-meta');
+    var searchPrev = document.getElementById('data-table-search-prev');
+    var searchNext = document.getElementById('data-table-search-next');
+    var searchHighlightBtn = document.getElementById('data-table-search-highlight');
     var searchTimer;
+    var searchHitRows = [];
+    var hitIndex = -1;
+    var highlightOn = true;
 
     function syncStickyFromToggle() {
       var enabled = stickyToggle ? stickyToggle.checked : true;
@@ -1877,10 +1890,40 @@
     }
     syncStickyFromToggle();
 
+    function syncHighlightClass() {
+      document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
+      if (searchHighlightBtn) {
+        searchHighlightBtn.setAttribute('aria-pressed', highlightOn ? 'true' : 'false');
+        searchHighlightBtn.classList.toggle('bg-amber-50', highlightOn);
+        searchHighlightBtn.classList.toggle('text-amber-900', highlightOn);
+        searchHighlightBtn.classList.toggle('bg-slate-100', !highlightOn);
+        searchHighlightBtn.classList.toggle('text-slate-600', !highlightOn);
+      }
+    }
+
+    function updateNavButtons() {
+      var n = searchHitRows.length;
+      var ok = n > 0;
+      if (searchPrev) searchPrev.disabled = !ok;
+      if (searchNext) searchNext.disabled = !ok;
+      if (ok && (hitIndex < 0 || hitIndex >= n)) hitIndex = 0;
+    }
+
+    function scrollToHit(i) {
+      if (i < 0 || i >= searchHitRows.length) return;
+      hitIndex = i;
+      requestAnimationFrame(function () {
+        searchHitRows[hitIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
+    }
+
     function clearSearchHits() {
       document.querySelectorAll('table.data-table tbody tr.table-search-hit').forEach(function (tr) {
         tr.classList.remove('table-search-hit');
       });
+      searchHitRows = [];
+      hitIndex = -1;
+      updateNavButtons();
     }
 
     function applySearch() {
@@ -1891,22 +1934,21 @@
         return;
       }
       var ql = q.toLowerCase();
-      var n = 0;
       document.querySelectorAll('table.data-table tbody tr').forEach(function (tr) {
         var text = (tr.textContent || '').toLowerCase();
         if (text.indexOf(ql) !== -1) {
           tr.classList.add('table-search-hit');
-          n++;
+          searchHitRows.push(tr);
         }
       });
+      var n = searchHitRows.length;
       if (searchMeta) {
         searchMeta.textContent = n ? '該当 ' + n + ' 行' : '該当なし';
       }
-      var first = document.querySelector('table.data-table tbody tr.table-search-hit');
-      if (first) {
-        requestAnimationFrame(function () {
-          first.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-        });
+      updateNavButtons();
+      if (n > 0) {
+        hitIndex = 0;
+        scrollToHit(0);
       }
     }
 
@@ -1934,6 +1976,27 @@
         if (searchInput) searchInput.focus();
       });
     }
+    if (searchPrev) {
+      searchPrev.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex <= 0 ? searchHitRows.length - 1 : hitIndex - 1;
+        scrollToHit(i);
+      });
+    }
+    if (searchNext) {
+      searchNext.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex < 0 ? 0 : (hitIndex + 1) % searchHitRows.length;
+        scrollToHit(i);
+      });
+    }
+    if (searchHighlightBtn) {
+      searchHighlightBtn.addEventListener('click', function () {
+        highlightOn = !highlightOn;
+        syncHighlightClass();
+      });
+    }
+    syncHighlightClass();
 
     document.querySelectorAll('table.data-table').forEach(function (table) {
       table.querySelectorAll('tbody tr').forEach(function (tr) {
