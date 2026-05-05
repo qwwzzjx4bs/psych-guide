@@ -367,11 +367,21 @@
       border-color: #fdba74 !important;
     }
     body.compact-mode .card-fav-btn {
-      width: 28px;
-      height: 28px;
-      font-size: 13px;
-      right: 10px;
-      bottom: 8px;
+      /* 一覧は横並び flex のため、絶対配置をやめてタイトル右端に並べる */
+      position: static !important;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      flex-shrink: 0;
+      align-self: center;
+      width: 26px;
+      height: 26px;
+      font-size: 12px;
+      line-height: 1;
+      border-radius: 8px;
+      margin-left: 4px;
+      z-index: auto;
     }
 
     .portal-search-wrap {
