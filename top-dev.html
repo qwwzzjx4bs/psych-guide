@@ -398,10 +398,27 @@
       margin-left: 4px;
       z-index: auto;
     }
-    /* コンパクト時の .card は overflow:hidden によりお気に入りの外周 box-shadow が切れるため、登録済みのみ可視化 */
+    /* コンパクト＋お気に入り：外周 box-shadow は overflow:hidden で切るが、overflow:visible にすると狭い画面でカード縦に膨らむため、内側リングで強調 */
     body.compact-mode .card.portal-card--favorite {
-      overflow: visible;
-      z-index: 1;
+      overflow: hidden;
+      z-index: auto;
+      box-shadow:
+        inset 0 0 0 2px rgba(234, 88, 12, 0.78),
+        inset 0 0 0 5px rgba(255, 237, 213, 0.75),
+        0 1px 3px rgba(0, 0, 0, 0.06);
+      background-image: linear-gradient(
+        160deg,
+        rgba(255, 237, 213, 0.5) 0%,
+        rgba(255, 251, 235, 0.22) 38%,
+        rgba(255, 255, 255, 0) 58%
+      );
+    }
+    body.compact-mode .card.portal-card--favorite:hover {
+      transform: none;
+      box-shadow:
+        inset 0 0 0 2px rgba(194, 65, 12, 0.88),
+        inset 0 0 0 5px rgba(255, 230, 200, 0.82),
+        0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .portal-search-wrap {
