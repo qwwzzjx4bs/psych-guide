@@ -33,6 +33,7 @@
     /* カテゴリ色 */
     .dot-blue   { background: #3b82f6; }
     .dot-violet { background: #7c3aed; }
+    .dot-indigo  { background: #4f46e5; }
     .dot-teal   { background: #0d9488; }
     .dot-amber   { background: #d97706; }
     .dot-slate   { background: #64748b; }
@@ -358,18 +359,18 @@
         </div>
       </div>
 
-      <!-- 治療・薬 -->
+      <!-- 治療概要 -->
       <div class="cat-header flex items-center gap-2">
         <span class="w-2 h-2 rounded-full dot-violet inline-block"></span>
-        治療・薬（疾患別・ガイドライン）
-        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-portal-therapy"></span>
+        治療概要（ガイドライン・治療フロー）
+        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-portal-tx-overview"></span>
         <div class="flex items-center gap-2 ml-3">
           <span class="text-[10px] text-amber-500 font-semibold normal-case tracking-normal w-[44px] text-center">強調</span>
           <span class="text-[10px] text-green-600 font-semibold normal-case tracking-normal w-[44px] text-center">表示</span>
         </div>
       </div>
       <div class="divide-y divide-gray-100">
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-algo" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-algo" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">統合失調症 薬物治療アルゴリズム 図解版</div>
@@ -380,7 +381,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-depression" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-depression" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">うつ病 診断・治療選択ツリー</div>
@@ -391,7 +392,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-bipolar" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-bipolar" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">双極性障害 診断・治療選択ツリー</div>
@@ -402,7 +403,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-delirium" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-delirium" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">せん妄 治療選択ツリー（日本のガイドライン・実践整理）</div>
@@ -413,7 +414,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-anxiety" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-anxiety" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">不安症群 — 診断ツリー＆治療アルゴリズム</div>
@@ -424,7 +425,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-diagnosis" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-diagnosis" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">統合失調症 診断プロセス完全ガイド</div>
@@ -435,7 +436,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-early-intervention" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-early-intervention" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">統合失調症の早期介入（図解）</div>
@@ -446,7 +447,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-atypical-depression" data-cat="portal-therapy">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-atypical-depression" data-cat="portal-tx-overview">
           <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">非定型うつ病 — 概念・診断・治療アルゴリズム</div>
@@ -457,8 +458,21 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-antipsychotics" data-cat="portal-therapy">
-          <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
+      </div>
+
+      <!-- 薬剤選択 -->
+      <div class="cat-header flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full dot-indigo inline-block"></span>
+        薬剤選択（国内承認薬ガイド）
+        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-portal-drugs"></span>
+        <div class="flex items-center gap-2 ml-3">
+          <span class="text-[10px] text-amber-500 font-semibold normal-case tracking-normal w-[44px] text-center">強調</span>
+          <span class="text-[10px] text-green-600 font-semibold normal-case tracking-normal w-[44px] text-center">表示</span>
+        </div>
+      </div>
+      <div class="divide-y divide-gray-100">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-antipsychotics" data-cat="portal-drugs">
+          <div class="w-2 h-2 rounded-full dot-indigo flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">抗精神病薬 選択ガイド（日本承認薬）</div>
             <div class="text-xs text-gray-400 truncate">antipsychotics-japan.html</div>
@@ -468,8 +482,8 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-benzodiazepines" data-cat="portal-therapy">
-          <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-benzodiazepines" data-cat="portal-drugs">
+          <div class="w-2 h-2 rounded-full dot-indigo flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">ベンゾジアゼピン 選択ガイド（日本承認薬）</div>
             <div class="text-xs text-gray-400 truncate">benzodiazepines-japan.html</div>
@@ -479,8 +493,8 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-antidepressants" data-cat="portal-therapy">
-          <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-antidepressants" data-cat="portal-drugs">
+          <div class="w-2 h-2 rounded-full dot-indigo flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">抗うつ薬 選択ガイド（日本承認薬）</div>
             <div class="text-xs text-gray-400 truncate">antidepressants-japan.html</div>
@@ -490,8 +504,8 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-mood-stabilizers" data-cat="portal-therapy">
-          <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-mood-stabilizers" data-cat="portal-drugs">
+          <div class="w-2 h-2 rounded-full dot-indigo flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">気分安定薬 選択ガイド（日本承認薬）</div>
             <div class="text-xs text-gray-400 truncate">mood-stabilizers-japan.html</div>
@@ -501,8 +515,8 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-hypnotics" data-cat="portal-therapy">
-          <div class="w-2 h-2 rounded-full dot-violet flex-shrink-0"></div>
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-hypnotics" data-cat="portal-drugs">
+          <div class="w-2 h-2 rounded-full dot-indigo flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">不眠症治療薬 選択ガイド（日本承認薬）</div>
             <div class="text-xs text-gray-400 truncate">hypnotics-japan.html</div>
@@ -514,18 +528,18 @@
         </div>
       </div>
 
-      <!-- 概要・資格 -->
+      <!-- 概念・資格 -->
       <div class="cat-header flex items-center gap-2">
         <span class="w-2 h-2 rounded-full dot-amber inline-block"></span>
-        概要・資格
-        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-portal-ref"></span>
+        概念・資格
+        <span class="ml-auto text-gray-400 font-normal normal-case tracking-normal" id="stat-portal-concepts"></span>
         <div class="flex items-center gap-2 ml-3">
           <span class="text-[10px] text-amber-500 font-semibold normal-case tracking-normal w-[44px] text-center">強調</span>
           <span class="text-[10px] text-green-600 font-semibold normal-case tracking-normal w-[44px] text-center">表示</span>
         </div>
       </div>
       <div class="divide-y divide-gray-100">
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-history" data-cat="portal-ref">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-schiz-history" data-cat="portal-concepts">
           <div class="w-2 h-2 rounded-full dot-amber flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">統合失調症の捉え方の歴史（世界×日本）</div>
@@ -536,7 +550,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-cssrs-memo" data-cat="portal-ref">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-cssrs-memo" data-cat="portal-concepts">
           <div class="w-2 h-2 rounded-full dot-amber flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">C-SSRS 手順メモ</div>
@@ -547,7 +561,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-csc-jp" data-cat="portal-ref">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-csc-jp" data-cat="portal-concepts">
           <div class="w-2 h-2 rounded-full dot-amber flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">CSC（調整型専門ケア）日本語図解</div>
@@ -558,7 +572,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-terminology" data-cat="portal-ref">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-terminology" data-cat="portal-concepts">
           <div class="w-2 h-2 rounded-full dot-amber flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">精神医学用語マップ（拡張版）</div>
@@ -569,7 +583,7 @@
             <label class="toggle-wrap toggle-vis"><input type="checkbox" onchange="onToggle(this)"><span class="toggle-slider"></span></label>
           </div>
         </div>
-        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-shiteii" data-cat="portal-ref">
+        <div class="page-row flex items-center gap-3 px-4 py-3 hover:bg-gray-50" data-id="card-shiteii" data-cat="portal-concepts">
           <div class="w-2 h-2 rounded-full dot-amber flex-shrink-0"></div>
           <div class="flex-1 min-w-0">
             <div class="page-title text-sm font-medium text-gray-900 truncate">精神保健指定医 資格取得ガイド</div>
