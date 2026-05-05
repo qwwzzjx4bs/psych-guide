@@ -396,6 +396,11 @@
       margin-left: 4px;
       z-index: auto;
     }
+    /* コンパクト時の .card は overflow:hidden によりお気に入りの外周 box-shadow が切れるため、登録済みのみ可視化 */
+    body.compact-mode .card.portal-card--favorite {
+      overflow: visible;
+      z-index: 1;
+    }
 
     .portal-search-wrap {
       border-top: 1px solid #ebe8e4;
