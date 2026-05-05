@@ -339,6 +339,28 @@
       outline: 2px solid #3b82f6;
       outline-offset: 1px;
     }
+    /* お気に入り済み：ページ全体を★ボタン以外でも判別（今週/強調カードの ::before(::after) と競合しないよう多重 box-shadow） */
+    .card.portal-card--favorite {
+      box-shadow:
+        0 0 0 2px rgba(234, 88, 12, 0.78),
+        0 0 0 4px rgba(255, 237, 213, 0.95),
+        0 2px 6px rgba(0, 0, 0, 0.06),
+        0 6px 18px rgba(234, 88, 12, 0.12);
+      background-image: linear-gradient(
+        160deg,
+        rgba(255, 237, 213, 0.5) 0%,
+        rgba(255, 251, 235, 0.22) 38%,
+        rgba(255, 255, 255, 0) 58%
+      );
+    }
+    .card.portal-card--favorite:hover {
+      box-shadow:
+        0 0 0 2px rgba(194, 65, 12, 0.88),
+        0 0 0 4px rgba(255, 230, 200, 0.98),
+        0 4px 12px rgba(0, 0, 0, 0.09),
+        0 10px 26px rgba(234, 88, 12, 0.16);
+      transform: translateY(-2px);
+    }
     #favorites-only-toggle.active {
       background: #fff7ed !important;
       color: #9a3412 !important;
@@ -947,6 +969,7 @@
             <li>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</li>
             <li>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。</li>
             <li>URL の別名として <a href="top-portal-dev.html" class="text-amber-900/90 underline decoration-amber-700/40 underline-offset-2">top-portal-dev.html</a> からも開けます（内部で <code class="text-[11px] bg-stone-100/80 px-1 rounded">top-dev.html</code> に移動します）。</li>
+            <li>お気に入りにしたカードは<strong class="text-gray-600 font-medium">オレンジの二重枠と淡い暖色の背景</strong>で、未登録のカードと区別できます。</li>
             <li>各カード<strong class="text-gray-600 font-medium">右下（ページリンクの上）</strong>の<strong class="text-gray-600 font-medium">☆／★</strong>で<strong class="text-gray-600 font-medium">お気に入り</strong>（端末内のみ保存）。ヘッダーの<strong class="text-gray-600 font-medium">お気に入りのみ</strong>を押すと、そのカードだけに絞り込み／再押しで解除できます（本ポータル開発版のみ）。</li>
             <li>ヘッダー下の検索では、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</li>
             <li>検索バー直下の<strong class="text-gray-600 font-medium">主要疾患</strong>ボタンは<strong class="text-gray-600 font-medium">開発試行</strong>用です。選択中はその疾患に関連するカードと共通計算ツールのみ表示します（検索語と併用可）。「すべて表示」で解除します。</li>
@@ -1418,6 +1441,11 @@
     }
 
     function syncCardFavButtons() {
+      document.querySelectorAll('main a.card[id^="card-"]').forEach((card) => {
+        const id = card.id;
+        const on = Boolean(id && portalFavSet.has(id));
+        card.classList.toggle('portal-card--favorite', on);
+      });
       document.querySelectorAll('.card-fav-btn').forEach((b) => {
         const id = b.getAttribute('data-card-id');
         const on = id && portalFavSet.has(id);
@@ -2304,8 +2332,8 @@
         { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
       ],
       _portal: [
+        { date: '2026-04-26', kind: '更新', text: '開発版お気に入り：☆／★・一覧絞り込みに加え、登録済みカードをオレンジ二重枠・暖色グラデで未登録と区別', href: 'top-dev.html' },
         { date: '2026-04-26', kind: '新規', text: '開発ポータル別名 top-portal-dev.html（top-dev.html へリダイレクト、クエリ・ハッシュを引き継ぎ）', href: 'top-portal-dev.html' },
-        { date: '2026-04-26', kind: '更新', text: '開発版：カード右下の☆／★およびヘッダー「お気に入りのみ」で一覧オンオフ（端末内 localStorage）', href: 'top-dev.html' },
         { date: '2026-05-05', kind: '更新', text: 'top.html 準拠：更新情報・新規追加（CARD_UPDATE_HISTORY）と掲載日を同期。相対 .html 実在確認・canonical を GitHub Pages に合わせる', href: 'top-dev.html' },
         { date: '2026-05-05', kind: '新規', text: '「せん妄 治療選択ツリー」をポータル「治療・薬」治療選択ツリーに追加（top.html 準拠）', href: 'delirium-treatment-japan.html' },
         { date: '2026-05-07', kind: '更新', text: 'top.html 準拠：早期介入カード・非定型うつローカルリンク・ジャンプ件数と開発用疾患プリセットを同期', href: 'top-dev.html' },
