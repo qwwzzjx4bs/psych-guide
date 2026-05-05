@@ -1545,7 +1545,7 @@
           const href = sanitizePortalNewsHref(row.href || '');
           if (!href) continue;
           const file = href.split(/[?#]/)[0].replace(/^.*\//, '').toLowerCase();
-          if (file === 'top.html' || file === 'top-dev.html' || file === 'index.html') continue;
+          if (file === 'top.html' || file === 'top-dev.html' || file === 'top-portal-dev.html' || file === 'index.html') continue;
           if (seenHref.has(href)) continue;
           seenHref.add(href);
           const title = text.length > 140 ? text.slice(0, 137) + '…' : text;
