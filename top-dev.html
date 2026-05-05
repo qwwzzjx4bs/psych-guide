@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精神科臨床ガイド — ポータル（開発・区分UX試行・お気に入り）</title>
+  <title>精神科臨床ガイド — ポータル（開発・試行・本番お気に入りと同一 storage）</title>
   <link rel="canonical" href="https://qwwzzjx4bs.github.io/psych-guide/top.html">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -304,7 +304,7 @@
     /* トグルボタン：アクティブ状態 */
     #compact-toggle.active { background: #e8eef6 !important; color: #2a4070 !important; }
 
-    /* 開発版：カードお気に入り（ローカル保存） */
+    /* 開発版：本番と同型のカードお気に入り（キーは psychPortalFavorites） */
     .card-fav-btn {
       position: absolute;
       top: auto;
@@ -979,8 +979,9 @@
             <li>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</li>
             <li>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。</li>
             <li>URL の別名として <a href="top-portal-dev.html" class="text-amber-900/90 underline decoration-amber-700/40 underline-offset-2">top-portal-dev.html</a> からも開けます（内部で <code class="text-[11px] bg-stone-100/80 px-1 rounded">top-dev.html</code> に移動します）。</li>
+            <li>お気に入りは本番 <code class="text-[11px] bg-stone-100/80 px-1 rounded">top.html</code> と同じ端末ストレージキー（<code class="text-[11px] bg-stone-100/80 px-1 rounded">psychPortalFavorites</code>）を使います。</li>
             <li>お気に入りにしたカードは<strong class="text-gray-600 font-medium">オレンジの二重枠と淡い暖色の背景</strong>で、未登録のカードと区別できます。</li>
-            <li>各カード<strong class="text-gray-600 font-medium">右下（ページリンクの上）</strong>の<strong class="text-gray-600 font-medium">☆／★</strong>で<strong class="text-gray-600 font-medium">お気に入り</strong>（端末内のみ保存）。ヘッダーの<strong class="text-gray-600 font-medium">お気に入りのみ</strong>を押すと、そのカードだけに絞り込み／再押しで解除できます（本ポータル開発版のみ）。</li>
+            <li>各カード<strong class="text-gray-600 font-medium">右下（ページリンクの上）</strong>の<strong class="text-gray-600 font-medium">☆／★</strong>で<strong class="text-gray-600 font-medium">お気に入り</strong>（端末内）。ヘッダーの<strong class="text-gray-600 font-medium">お気に入りのみ</strong>は本番ポータルと同様です。</li>
             <li>ヘッダー下の検索では、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</li>
             <li>検索バー直下の<strong class="text-gray-600 font-medium">主要疾患</strong>ボタンは<strong class="text-gray-600 font-medium">開発試行</strong>用です。選択中はその疾患に関連するカードと共通計算ツールのみ表示します（検索語と併用可）。「すべて表示」で解除します。</li>
             <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは、直下のコンパクトカードにまとめています（新規掲載日の<strong class="text-gray-600 font-medium">新しい順</strong>・5件ずつ、「次の５件を表示する」で続き）。カードの<strong class="text-gray-600 font-medium">新規</strong>履歴に加え、ポータル告知だけのリンクは同一URLが無い場合に補完表示します。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
@@ -1419,9 +1420,22 @@
     };
 
     let portalSearchCommittedQuery = '';
-    /** 開発版のみ：お気に入りカードID（localStorage） */
-    const PORTAL_FAV_STORAGE = 'psychPortalDevFavorites';
-    const PORTAL_FAV_ONLY_STORAGE = 'psychPortalDevFavoritesOnly';
+    /** お気に入り（本番と同一キー。旧 psychPortalDev* は一度だけ移行） */
+    const PORTAL_FAV_STORAGE = 'psychPortalFavorites';
+    const PORTAL_FAV_ONLY_STORAGE = 'psychPortalFavoritesOnly';
+    (function migratePortalFavFromDevKeys() {
+      try {
+        const cur = localStorage.getItem(PORTAL_FAV_STORAGE);
+        if (cur == null || cur === '' || cur === '[]') {
+          const leg = localStorage.getItem('psychPortalDevFavorites');
+          if (leg && leg !== '[]') localStorage.setItem(PORTAL_FAV_STORAGE, leg);
+        }
+        if (localStorage.getItem(PORTAL_FAV_ONLY_STORAGE) == null) {
+          const leg = localStorage.getItem('psychPortalDevFavoritesOnly');
+          if (leg != null) localStorage.setItem(PORTAL_FAV_ONLY_STORAGE, leg);
+        }
+      } catch (e) { /* ignore */ }
+    })();
     function loadPortalFavSet() {
       try {
         const raw = JSON.parse(localStorage.getItem(PORTAL_FAV_STORAGE) || '[]');
@@ -2342,6 +2356,7 @@
         { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
       ],
       _portal: [
+        { date: '2026-05-08', kind: '更新', text: 'お気に入りの localStorage キーを本番と統一（psychPortalFavorites）。旧 psychPortalDev* は初回のみ自動移行', href: 'top-dev.html' },
         { date: '2026-04-26', kind: '更新', text: '開発版お気に入り：☆／★・一覧絞り込みに加え、登録済みカードをオレンジ二重枠・暖色グラデで未登録と区別', href: 'top-dev.html' },
         { date: '2026-04-26', kind: '新規', text: '開発ポータル別名 top-portal-dev.html（top-dev.html へリダイレクト、クエリ・ハッシュを引き継ぎ）', href: 'top-portal-dev.html' },
         { date: '2026-05-05', kind: '更新', text: 'top.html 準拠：更新情報・新規追加（CARD_UPDATE_HISTORY）と掲載日を同期。相対 .html 実在確認・canonical を GitHub Pages に合わせる', href: 'top-dev.html' },

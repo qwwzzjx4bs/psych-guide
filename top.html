@@ -304,6 +304,84 @@
     /* トグルボタン：アクティブ状態 */
     #compact-toggle.active { background: #e8eef6 !important; color: #2a4070 !important; }
 
+    /* ポータルお気に入り（端末内 localStorage） */
+    .card-fav-btn {
+      position: absolute;
+      top: auto;
+      left: auto;
+      right: 12px;
+      bottom: 40px;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      line-height: 1;
+      color: #a8a29e;
+      transition: color 0.15s, transform 0.15s, background 0.15s;
+    }
+    .card-fav-btn:hover {
+      color: #ea580c;
+      transform: scale(1.06);
+      background: #fff;
+    }
+    .card-fav-btn.is-fav {
+      color: #c2410c;
+    }
+    .card-fav-btn:focus-visible {
+      outline: 2px solid #3b82f6;
+      outline-offset: 1px;
+    }
+    .card.portal-card--favorite {
+      box-shadow:
+        0 0 0 2px rgba(234, 88, 12, 0.78),
+        0 0 0 4px rgba(255, 237, 213, 0.95),
+        0 2px 6px rgba(0, 0, 0, 0.06),
+        0 6px 18px rgba(234, 88, 12, 0.12);
+      background-image: linear-gradient(
+        160deg,
+        rgba(255, 237, 213, 0.5) 0%,
+        rgba(255, 251, 235, 0.22) 38%,
+        rgba(255, 255, 255, 0) 58%
+      );
+    }
+    .card.portal-card--favorite:hover {
+      box-shadow:
+        0 0 0 2px rgba(194, 65, 12, 0.88),
+        0 0 0 4px rgba(255, 230, 200, 0.98),
+        0 4px 12px rgba(0, 0, 0, 0.09),
+        0 10px 26px rgba(234, 88, 12, 0.16);
+      transform: translateY(-2px);
+    }
+    #favorites-only-toggle.active {
+      background: #fff7ed !important;
+      color: #9a3412 !important;
+      border-color: #fdba74 !important;
+    }
+    body.compact-mode .card-fav-btn {
+      position: static !important;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      flex-shrink: 0;
+      align-self: center;
+      width: 26px;
+      height: 26px;
+      font-size: 12px;
+      line-height: 1;
+      border-radius: 8px;
+      margin-left: 4px;
+      z-index: auto;
+    }
+
     .portal-search-wrap {
       border-top: 1px solid #ebe8e4;
       background: rgba(252, 251, 249, 0.94);
@@ -801,6 +879,12 @@
             </svg>
             <span id="compact-label" class="whitespace-nowrap">コンパクト</span>
           </button>
+          <button type="button" id="favorites-only-toggle"
+            title="お気に入りに入れたカードだけを一覧表示（もう一度押すと解除）"
+            class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 font-medium px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200">
+            <span class="text-sm leading-none" aria-hidden="true">★</span>
+            <span id="favorites-only-label" class="whitespace-nowrap">お気に入りのみ</span>
+          </button>
           <span class="text-xs text-gray-400 font-medium tracking-wide select-none">©︎ Psych-tool.Lab</span>
         </div>
       </div>
@@ -891,6 +975,7 @@
             <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span><strong class="text-gray-700 font-medium">NEW</strong>＝掲載から14日以内の追加、<strong class="text-gray-700 font-medium">今週</strong>＝履歴上・カード表記の「更新」から7日以内。</span></li>
             <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</span></li>
             <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください。</span></li>
+            <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>各カード<strong class="text-gray-700 font-medium">右下（ページリンクの上）</strong>の<strong class="text-gray-700 font-medium">☆／★</strong>で<strong class="text-gray-700 font-medium">お気に入り</strong>に登録でき（端末内のみ保存）、登録済みは<strong class="text-gray-700 font-medium">オレンジの枠と淡い暖色</strong>で他と区別できます。ヘッダーの<strong class="text-gray-700 font-medium">お気に入りのみ</strong>で一覧の絞り込み／解除ができます。</span></li>
             <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>検索は、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</span></li>
             <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>検索バー直下の主要疾患ボタンでは、よく使う疾患別にカードを絞り込めます（検索語と併用可）。「すべて表示」で解除します。</span></li>
             <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>履歴が新規のページは、直下のコンパクトカードにまとめています。</span></li>
@@ -1353,6 +1438,79 @@
     };
 
     let portalSearchCommittedQuery = '';
+    /** お気に入り（開発版キー psychPortalDev* からの一回限り移行あり） */
+    const PORTAL_FAV_STORAGE = 'psychPortalFavorites';
+    const PORTAL_FAV_ONLY_STORAGE = 'psychPortalFavoritesOnly';
+    (function migratePortalFavFromDevKeys() {
+      try {
+        const cur = localStorage.getItem(PORTAL_FAV_STORAGE);
+        if (cur == null || cur === '' || cur === '[]') {
+          const leg = localStorage.getItem('psychPortalDevFavorites');
+          if (leg && leg !== '[]') localStorage.setItem(PORTAL_FAV_STORAGE, leg);
+        }
+        if (localStorage.getItem(PORTAL_FAV_ONLY_STORAGE) == null) {
+          const leg = localStorage.getItem('psychPortalDevFavoritesOnly');
+          if (leg != null) localStorage.setItem(PORTAL_FAV_ONLY_STORAGE, leg);
+        }
+      } catch (e) { /* ignore */ }
+    })();
+    function loadPortalFavSet() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(PORTAL_FAV_STORAGE) || '[]');
+        return new Set(Array.isArray(raw) ? raw.filter((x) => typeof x === 'string') : []);
+      } catch {
+        return new Set();
+      }
+    }
+    let portalFavSet = loadPortalFavSet();
+    let portalFavoritesOnly = localStorage.getItem(PORTAL_FAV_ONLY_STORAGE) === '1';
+
+    function persistPortalFavSet() {
+      localStorage.setItem(PORTAL_FAV_STORAGE, JSON.stringify([...portalFavSet]));
+    }
+    function persistPortalFavoritesOnly() {
+      localStorage.setItem(PORTAL_FAV_ONLY_STORAGE, portalFavoritesOnly ? '1' : '0');
+    }
+
+    function syncFavToggleButton() {
+      const btn = document.getElementById('favorites-only-toggle');
+      const lab = document.getElementById('favorites-only-label');
+      if (btn) {
+        btn.classList.toggle('active', portalFavoritesOnly);
+        btn.setAttribute('aria-pressed', portalFavoritesOnly ? 'true' : 'false');
+      }
+      if (lab) lab.textContent = portalFavoritesOnly ? 'お気に入りのみ（解除）' : 'お気に入りのみ';
+    }
+
+    function syncCardFavButtons() {
+      document.querySelectorAll('main a.card[id^="card-"]').forEach((card) => {
+        const id = card.id;
+        const on = Boolean(id && portalFavSet.has(id));
+        card.classList.toggle('portal-card--favorite', on);
+      });
+      document.querySelectorAll('.card-fav-btn').forEach((b) => {
+        const id = b.getAttribute('data-card-id');
+        const on = id && portalFavSet.has(id);
+        b.classList.toggle('is-fav', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        b.setAttribute('aria-label', on ? 'お気に入りから外す' : 'お気に入りに追加');
+        b.textContent = on ? '★' : '☆';
+      });
+    }
+
+    function injectPortalFavButtons() {
+      document.querySelectorAll('main a.card[id^="card-"]').forEach((card) => {
+        if (card.querySelector(':scope > .card-fav-btn')) return;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'card-fav-btn';
+        btn.setAttribute('data-card-id', card.id);
+        btn.setAttribute('tabindex', '0');
+        card.appendChild(btn);
+      });
+      syncCardFavButtons();
+    }
+
     /** 主要疾患フィルター（検索語と AND） */
     let portalDiseaseFilter = '';
     const PORTAL_SHARED_CALC_IDS = ['card-cp-calc', 'card-dzp-calc', 'card-crcl-psych', 'card-acute-alerts'];
@@ -1663,6 +1821,12 @@
       const list = document.getElementById('portal-new-items-list');
       const moreWrap = document.getElementById('portal-new-items-more-wrap');
       if (!wrap || !list) return;
+      if (portalFavoritesOnly) {
+        wrap.classList.add('hidden');
+        list.innerHTML = '';
+        if (moreWrap) moreWrap.classList.add('hidden');
+        return;
+      }
       const history = window.__CARD_UPDATE_HISTORY;
       if (!history) return;
       const allItems = buildLatestNewItemsFromHistory(history);
@@ -1750,6 +1914,7 @@
             const allow = DISEASE_CARD_SETS[portalDiseaseFilter];
             if (!allow || !allow.has(id)) show = false;
           }
+          if (show && portalFavoritesOnly && !portalFavSet.has(id)) show = false;
           if (show) el.style.removeProperty('display');
           else el.style.setProperty('display', 'none', 'important');
           if (show) visible++;
@@ -1760,7 +1925,8 @@
         if (jumpCnt) jumpCnt.textContent = String(visible);
         const sectionEl = document.getElementById(sec);
         if (sectionEl) {
-          sectionEl.classList.toggle('portal-section-empty', Boolean(q || portalDiseaseFilter) && visible === 0);
+          const emptyReason = Boolean(q || portalDiseaseFilter || portalFavoritesOnly);
+          sectionEl.classList.toggle('portal-section-empty', emptyReason && visible === 0);
         }
       });
       portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
@@ -1794,6 +1960,7 @@
       for (const ids of Object.values(SECTIONS)) {
         for (const id of ids) {
           if (hidden.includes(id)) continue;
+          if (portalFavoritesOnly && !portalFavSet.has(id)) continue;
           if (portalDiseaseFilter) {
             const allow = DISEASE_CARD_SETS[portalDiseaseFilter];
             if (!allow || !allow.has(id)) continue;
@@ -1915,6 +2082,27 @@
     document.addEventListener('click', (e) => {
       const wrap = document.getElementById('portal-search-field-wrap');
       if (wrap && !wrap.contains(e.target)) closeSearchSuggestPanel();
+    });
+
+    document.getElementById('favorites-only-toggle')?.addEventListener('click', () => {
+      portalFavoritesOnly = !portalFavoritesOnly;
+      persistPortalFavoritesOnly();
+      syncFavToggleButton();
+      refreshCardDisplay();
+    });
+
+    document.addEventListener('click', (e) => {
+      const star = e.target.closest('.card-fav-btn');
+      if (!star) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const id = star.getAttribute('data-card-id');
+      if (!id) return;
+      if (portalFavSet.has(id)) portalFavSet.delete(id);
+      else portalFavSet.add(id);
+      persistPortalFavSet();
+      syncCardFavButtons();
+      refreshCardDisplay();
     });
 
     // === コンパクトモード ===
@@ -2221,6 +2409,7 @@
         { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
       ],
       _portal: [
+        { date: '2026-05-08', kind: '更新', text: '本番ポータルにお気に入り機能を追加（カード☆／★・「お気に入りのみ」・端末内保存・橙枠で区別）。開発版キーからのデータ移行あり', href: 'top.html' },
         { date: '2026-05-05', kind: '更新', text: '更新情報・新規追加（CARD_UPDATE_HISTORY）とカード掲載日を現行ポータルに同期。ポータル内の相対 .html リンクはリポジトリ上で実在確認済み（GitHub Pages の最新構成に準拠）', href: 'top.html' },
         { date: '2026-05-05', kind: '更新', text: 'ポータル「治療・薬」の下位区分を再編（ガイドライン治療アルゴリズムを先頭、「治療選択ツリー」でせん妄を集約、続けて疾患フロー・薬剤選択）', href: 'top.html' },
         { date: '2026-05-05', kind: '更新', text: 'セクション「用語・資格」を「概要・資格」に改称し、歴史・C-SSRS・CSC を琥珀帯で同欄に集約', href: 'top.html' },
@@ -2347,6 +2536,8 @@
 
     window.__CARD_UPDATE_HISTORY = CARD_UPDATE_HISTORY;
     applyPortalRecencyBadges();
+    injectPortalFavButtons();
+    syncFavToggleButton();
     portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
     renderPortalNews();
     renderPortalNewItems();
@@ -2359,6 +2550,13 @@
         portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
         renderPortalNews();
         renderPortalNewItems();
+      }
+      if (e.key === PORTAL_FAV_STORAGE || e.key === PORTAL_FAV_ONLY_STORAGE) {
+        portalFavSet = loadPortalFavSet();
+        portalFavoritesOnly = localStorage.getItem(PORTAL_FAV_ONLY_STORAGE) === '1';
+        syncCardFavButtons();
+        syncFavToggleButton();
+        refreshCardDisplay();
       }
     });
 
