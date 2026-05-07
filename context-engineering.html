@@ -59,6 +59,7 @@
       font-size: 0.75rem;
       line-height: 1.4;
       width: 260px;
+      max-width: calc(100vw - 2.5rem);
       z-index: 50;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
@@ -100,11 +101,23 @@
       font-weight: 700;
       color: #5b21b6;
       white-space: nowrap;
-      min-width: 200px;
+      min-width: 160px;
     }
     .glossary-item .desc {
       color: #374151;
       line-height: 1.5;
+    }
+
+    /* スマホ時：用語ラベルを縦積みに */
+    @media (max-width: 640px) {
+      .glossary-item {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .glossary-item .label {
+        min-width: unset;
+        white-space: normal;
+      }
     }
 
     /* セクション見出し */
@@ -195,6 +208,29 @@
       font-weight: 700;
     }
 
+    /* 各セクション要点バッジ */
+    .section-summary-badge {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 2px solid #86efac;
+      border-radius: 0.75rem;
+      padding: 0.9rem 1.2rem;
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .section-summary-badge .badge-icon {
+      font-size: 1.3rem;
+      flex-none;
+      line-height: 1.4;
+    }
+    .section-summary-badge p {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #166534;
+      line-height: 1.6;
+    }
+
     /* 印刷 */
     @media print {
       .no-print { display: none; }
@@ -220,7 +256,7 @@
         完全図解ガイド
       </h1>
       <p class="text-blue-100 text-lg max-w-2xl leading-relaxed mb-6">
-        プロンプトエンジニアリングの次世代技術。LLMに「何を・どの順で・いくら渡すか」を最適化する芸術と科学を、専門用語解説付きでわかりやすく図解します。
+        AI（特にAIエージェント）に「何の情報を・どの順で・どれくらい渡すか」を最適化する技術。専門用語には丁寧な解説付きで、図解でわかりやすく説明します。
       </p>
       <div class="text-xs text-purple-200">
         原文: <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" class="underline hover:text-white" target="_blank">Effective context engineering for AI agents — Anthropic</a>
@@ -228,6 +264,27 @@
       </div>
     </div>
   </header>
+
+  <!-- 3行でわかるポイント -->
+  <div class="bg-yellow-50 border-b-4 border-yellow-400 px-4 py-5">
+    <div class="max-w-4xl mx-auto">
+      <p class="text-yellow-800 font-black text-sm mb-3">📌 この記事を読む前に：3行でわかるポイント</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="flex items-start gap-2 bg-white rounded-xl px-4 py-3 shadow-sm border border-yellow-200">
+          <span class="text-2xl flex-none">🤖</span>
+          <p class="text-xs text-gray-700 leading-relaxed"><strong>AIエージェント</strong>は、人間が指示しなくても自分でツールを使いながら複数のステップを踏んでタスクをこなすAIのことです。</p>
+        </div>
+        <div class="flex items-start gap-2 bg-white rounded-xl px-4 py-3 shadow-sm border border-yellow-200">
+          <span class="text-2xl flex-none">📦</span>
+          <p class="text-xs text-gray-700 leading-relaxed"><strong>コンテキスト（Context）</strong>とは「AIに渡す情報のまとまり」です。渡す情報の<strong>質・量・順番</strong>を最適化するのがこの記事のテーマです。</p>
+        </div>
+        <div class="flex items-start gap-2 bg-white rounded-xl px-4 py-3 shadow-sm border border-yellow-200">
+          <span class="text-2xl flex-none">🎯</span>
+          <p class="text-xs text-gray-700 leading-relaxed">「AIには情報を多く渡すほどいい」は<strong>間違い</strong>です。渡す情報が多すぎると精度が下がります。<strong>少量かつ高品質</strong>が正解です。</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ナビゲーション -->
   <nav class="no-print sticky top-0 z-40 bg-white shadow-md border-b border-gray-200 py-3 px-4 overflow-x-auto">
@@ -251,6 +308,19 @@
         <p class="text-purple-100 text-sm mt-1">プロンプトエンジニアリングとの違いを理解する</p>
       </div>
       <div class="p-6">
+
+        <!-- AIエージェント入門 -->
+        <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-xl p-4 mb-5">
+          <p class="font-black text-blue-800 text-sm mb-2">🤖 そもそも「AIエージェント」って何？</p>
+          <p class="text-sm text-blue-700 leading-relaxed mb-2">
+            ChatGPTのような普通のAIは「質問を1つ受けて、1つ答えを返す」という単純なやり取りをします。<br>
+            一方、<strong>AIエージェント</strong>は「目標を与えられたら、自分でツール（検索・コード実行・ファイル操作など）を使いながら、複数のステップを踏んで最終的な結果を出す」AIです。
+          </p>
+          <p class="text-sm text-blue-700 leading-relaxed">
+            たとえば「このプログラムのバグを直して」と頼むと、エージェントは自分でコードを読み・原因を探し・修正し・テストするまでを自動でこなします。
+            このような複雑な動作を支えるのが<strong>コンテキストエンジニアリング</strong>です。
+          </p>
+        </div>
 
         <!-- 用語定義 -->
         <div class="glossary-box">
@@ -319,33 +389,31 @@
             </div>
           </div>
           <div class="mt-4 text-center text-sm text-gray-500 italic">
-            ↑ プロンプト作成は「一回の執筆作業」、コンテキスト管理は「毎ターン行われる編集作業」
+            ↑ プロンプト作成は「最初の一回だけ書く」作業、コンテキスト管理は「AIが応答するたびに最適化する」継続的な作業
           </div>
         </div>
 
         <!-- 進化の図 -->
         <div class="diagram-container">
           <h4 class="font-bold text-gray-700 mb-4 text-sm text-center">AI開発の進化ロードマップ</h4>
-          <div class="flex items-center gap-1 overflow-x-auto pb-2">
-            <div class="flex-1 min-w-[120px] text-center">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="text-center">
               <div class="bg-gray-200 rounded-xl p-3 mb-2">
                 <div class="text-2xl mb-1">🔤</div>
                 <div class="font-bold text-gray-700 text-xs">単発プロンプト</div>
-                <div class="text-gray-500 text-xs">分類・生成</div>
+                <div class="text-gray-500 text-xs">1問1答の分類・生成</div>
               </div>
               <div class="text-xs text-gray-400">2020〜</div>
             </div>
-            <div class="text-gray-400 text-xl flex-none">→</div>
-            <div class="flex-1 min-w-[120px] text-center">
+            <div class="text-center">
               <div class="bg-blue-100 rounded-xl p-3 mb-2">
                 <div class="text-2xl mb-1">✏️</div>
                 <div class="font-bold text-blue-700 text-xs">プロンプトエンジニアリング</div>
-                <div class="text-blue-500 text-xs">RAG・Few-shot</div>
+                <div class="text-blue-500 text-xs">RAG・例示（Few-shot）</div>
               </div>
               <div class="text-xs text-gray-400">2022〜</div>
             </div>
-            <div class="text-gray-400 text-xl flex-none">→</div>
-            <div class="flex-1 min-w-[120px] text-center">
+            <div class="text-center">
               <div class="bg-purple-100 rounded-xl p-3 mb-2 ring-2 ring-purple-400">
                 <div class="text-2xl mb-1">🧠</div>
                 <div class="font-bold text-purple-700 text-xs">コンテキストエンジニアリング</div>
@@ -353,16 +421,26 @@
               </div>
               <div class="text-xs text-purple-600 font-bold">← 今ここ</div>
             </div>
-            <div class="text-gray-400 text-xl flex-none">→</div>
-            <div class="flex-1 min-w-[120px] text-center">
+            <div class="text-center">
               <div class="bg-green-100 rounded-xl p-3 mb-2 border border-dashed border-green-400">
                 <div class="text-2xl mb-1">🚀</div>
                 <div class="font-bold text-green-700 text-xs">完全自律エージェント</div>
-                <div class="text-green-500 text-xs">自己管理</div>
+                <div class="text-green-500 text-xs">AIが自ら管理</div>
               </div>
               <div class="text-xs text-gray-400">近未来</div>
             </div>
           </div>
+          <div class="hidden md:flex justify-around mt-2 px-8">
+            <span class="text-gray-300 text-2xl">→</span>
+            <span class="text-gray-300 text-2xl">→</span>
+            <span class="text-gray-300 text-2xl">→</span>
+          </div>
+        </div>
+
+        <!-- セクション要点 -->
+        <div class="section-summary-badge">
+          <span class="badge-icon">✅</span>
+          <p>このセクションの要点：コンテキストエンジニアリングとは「AIに渡す情報全体（質・量・順番）を最適化する技術」のことで、「どう書くか」だけを考えるプロンプトエンジニアリングとは別物です。</p>
         </div>
 
       </div>
@@ -372,12 +450,13 @@
     <section id="why" class="section-card">
       <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 py-4">
         <h2 class="text-xl font-bold">② なぜコンテキストエンジニアリングが重要か</h2>
-        <p class="text-blue-100 text-sm mt-1">コンテキスト汚染・アテンション予算・n²問題</p>
+        <p class="text-blue-100 text-sm mt-1">コンテキスト汚染・アテンション予算（計算資源の上限）・n²問題（情報量が2倍→計算量4倍）</p>
       </div>
       <div class="p-6">
 
         <!-- コンテキスト汚染の図 -->
-        <h3 class="font-bold text-gray-700 mb-3 text-base">⚠️ コンテキスト汚染（Context Rot）とは</h3>
+        <h3 class="font-bold text-gray-700 mb-1 text-base">⚠️ コンテキスト汚染（Context Rot）とは</h3>
+        <p class="text-sm text-gray-500 mb-3">AIに渡す情報が増えすぎると、かえってAIが情報を正確に使えなくなる現象のことです。</p>
 
         <div class="glossary-box">
           <h4>📖 重要概念</h4>
@@ -449,7 +528,8 @@
 
         <!-- n²問題の図 -->
         <div class="diagram-container">
-          <h4 class="font-bold text-gray-700 mb-4 text-sm">n²問題の直感的理解</h4>
+          <h4 class="font-bold text-gray-700 mb-1 text-sm">n²問題の直感的理解</h4>
+          <p class="text-xs text-gray-500 mb-4">AIはすべての単語（トークン）同士の関係を確認します。単語が増えるほど確認するペアの数が急激に増えます。</p>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="text-center">
               <div class="text-4xl mb-2">4️⃣</div>
@@ -489,10 +569,16 @@
           <h4 class="font-bold text-blue-800 mb-2">💡 コアメッセージ</h4>
           <p class="text-blue-700 text-sm leading-relaxed">
             LLMのコンテキストは「多ければ多いほどいい」ではありません。
-            <strong>「収穫逓減の有限リソース」</strong>として扱う必要があります。
+            <strong>「使えば使うほど効果が薄れる、量に限りがあるリソース」</strong>として扱う必要があります。
             人間が限られた作業記憶の中で重要情報を優先処理するように、
             LLMへの情報提供も厳選が必要です。
           </p>
+        </div>
+
+        <!-- セクション要点 -->
+        <div class="section-summary-badge">
+          <span class="badge-icon">✅</span>
+          <p>このセクションの要点：AIに渡す情報が増えるほど精度は下がります。トークンが2倍になると計算量は4倍になるため、「少ない・精選された情報を渡す」ことが重要です。</p>
         </div>
 
       </div>
@@ -502,7 +588,7 @@
     <section id="anatomy" class="section-card">
       <div class="bg-gradient-to-r from-teal-600 to-green-600 text-white px-6 py-4">
         <h2 class="text-xl font-bold">③ 効果的なコンテキストの構成要素</h2>
-        <p class="text-teal-100 text-sm mt-1">システムプロンプト・ツール・例示の最適化</p>
+        <p class="text-teal-100 text-sm mt-1">AIへの指示文（システムプロンプト）・道具（ツール）・入出力例（例示）の最適化</p>
       </div>
       <div class="p-6">
 
@@ -539,7 +625,7 @@
                   <p>if ユーザーが「注文」と言ったら…</p>
                   <p>else if「キャンセル」なら…</p>
                   <p>else if「変更」なら…</p>
-                  <p class="text-red-400">（ハードコーディング）</p>
+                  <p class="text-red-400">（ハードコーディング＝想定パターンを全部直接書く）</p>
                 </div>
               </div>
               <div class="text-center mt-2">
@@ -556,7 +642,7 @@
                   <p>「注文管理を支援する」</p>
                   <p>「変更には確認を取る」</p>
                   <p>「曖昧な場合は質問する」</p>
-                  <p class="text-green-500">（ヒューリスティック）</p>
+                  <p class="text-green-500">（ヒューリスティック＝経験則・指針による柔軟な指示）</p>
                 </div>
               </div>
               <div class="text-center mt-2">
@@ -581,7 +667,7 @@
               </div>
             </div>
           </div>
-          <p class="text-xs text-gray-500 text-center mt-3">Goldilocks（ゴルディロックス）ゾーン = ちょうどいい特定度・柔軟性のバランス</p>
+          <p class="text-xs text-gray-500 text-center mt-3">Goldilocks（ゴルディロックス）ゾーン = 童話「3匹のくま」でおかゆが「熱すぎず冷たすぎず、ちょうどいい」場面から来た表現。ここでは「細かすぎず曖昧すぎない、ちょうどいい指示レベル」を指します。</p>
         </div>
 
         <!-- ツールの最適化 -->
@@ -591,7 +677,7 @@
             <h4 class="font-bold text-green-700 text-sm mb-2">✅ 良いツール設計</h4>
             <ul class="text-sm text-green-700 space-y-1.5">
               <li>• 機能がシンプルで自己完結している</li>
-              <li>• エラーに強い（ロバスト）</li>
+              <li>• エラーに強い（ロバスト＝予期しない入力にも壊れない）</li>
               <li>• 何をするのか説明が明確</li>
               <li>• パラメータが明確で曖昧さなし</li>
               <li>• トークン効率の良い返答を返す</li>
@@ -643,6 +729,12 @@
           </div>
         </div>
 
+        <!-- セクション要点 -->
+        <div class="section-summary-badge">
+          <span class="badge-icon">✅</span>
+          <p>このセクションの要点：システムプロンプトは「細かすぎず、曖昧すぎない」ちょうどいい指示レベルに、ツールは数を絞りシンプルに、例示は少数でも多様なものを厳選することが大切です。</p>
+        </div>
+
       </div>
     </section>
 
@@ -650,7 +742,7 @@
     <section id="retrieval" class="section-card">
       <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-4">
         <h2 class="text-xl font-bold">④ コンテキスト検索とエージェンティックサーチ</h2>
-        <p class="text-orange-100 text-sm mt-1">Just-in-Time戦略・漸進的開示・ハイブリッドアプローチ</p>
+        <p class="text-orange-100 text-sm mt-1">必要な時だけ情報を取得（JIT）・段階的に情報を深掘り・組み合わせ戦略</p>
       </div>
       <div class="p-6">
 
@@ -679,7 +771,8 @@
         </div>
 
         <!-- 事前取得 vs JIT の比較 -->
-        <h3 class="font-bold text-gray-700 mb-4 text-base mt-4">事前取得（Pre-fetch）vs Just-in-Time 比較</h3>
+        <h3 class="font-bold text-gray-700 mb-1 text-base mt-4">事前取得（Pre-fetch）vs Just-in-Time 比較</h3>
+        <p class="text-sm text-gray-500 mb-4">「最初に全部の情報を詰め込む」vs「必要になったときだけ情報を取りに行く」の比較です。</p>
         <div class="diagram-container">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
@@ -721,7 +814,7 @@
               <div class="mt-3 space-y-1">
                 <div class="text-xs text-green-600">✅ 常に最新データ</div>
                 <div class="text-xs text-green-600">✅ 必要な情報のみ使用</div>
-                <div class="text-xs text-red-600">❌ 実行時のレイテンシがある</div>
+                <div class="text-xs text-red-600">❌ 実行時に取得するので若干遅い（レイテンシ＝処理の遅延）</div>
               </div>
             </div>
           </div>
@@ -772,6 +865,12 @@
           <p class="text-xs text-gray-400 text-center mt-3">人間が「全書籍を暗記」せず「必要な時に図書館で探す」のと同じ考え方</p>
         </div>
 
+        <!-- セクション要点 -->
+        <div class="section-summary-badge">
+          <span class="badge-icon">✅</span>
+          <p>このセクションの要点：AIが必要な情報を「事前に全部渡す」より「必要な時に動的に取得する（Just-in-Time）」ほうがコンテキストの無駄がなく精度も高まります。</p>
+        </div>
+
       </div>
     </section>
 
@@ -779,7 +878,7 @@
     <section id="longhorizon" class="section-card">
       <div class="bg-gradient-to-r from-rose-600 to-pink-600 text-white px-6 py-4">
         <h2 class="text-xl font-bold">⑤ 長期タスクのためのコンテキスト管理技術</h2>
-        <p class="text-rose-100 text-sm mt-1">コンパクション・構造化メモ・サブエージェント</p>
+        <p class="text-rose-100 text-sm mt-1">会話の圧縮（コンパクション）・メモ書き・複数AIへの分担（サブエージェント）</p>
       </div>
       <div class="p-6">
 
@@ -974,6 +1073,12 @@
           </table>
         </div>
 
+        <!-- セクション要点 -->
+        <div class="section-summary-badge">
+          <span class="badge-icon">✅</span>
+          <p>このセクションの要点：長時間かかるタスクには「会話履歴の要約（コンパクション）」「メモファイルへの書き出し」「複数AIに分担（サブエージェント）」の3つの手法を状況に応じて使い分けましょう。</p>
+        </div>
+
       </div>
     </section>
 
@@ -1062,7 +1167,7 @@
             </label>
             <label class="flex items-start gap-2 cursor-pointer">
               <input type="checkbox" class="mt-0.5 accent-purple-600">
-              <span class="text-sm text-gray-700">JITアプローチでメモリを節約している</span>
+              <span class="text-sm text-gray-700">JIT（必要な時だけ情報を取得する）アプローチでコンテキストを節約している</span>
             </label>
             <label class="flex items-start gap-2 cursor-pointer">
               <input type="checkbox" class="mt-0.5 accent-purple-600">
@@ -1073,49 +1178,47 @@
 
         <!-- 全体ロードマップ図 -->
         <h3 class="font-bold text-gray-700 mb-4 text-base mt-6">コンテキストエンジニアリング全体マップ</h3>
-        <div class="diagram-container overflow-x-auto">
-          <div class="min-w-[600px]">
-            <!-- 中心 -->
-            <div class="text-center mb-4">
-              <div class="inline-block bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-2xl px-8 py-4 font-bold shadow-xl">
-                🧠 コンテキストエンジニアリング
-              </div>
+        <div class="diagram-container">
+          <!-- 中心 -->
+          <div class="text-center mb-4">
+            <div class="inline-block bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-2xl px-8 py-4 font-bold shadow-xl text-sm">
+              🧠 コンテキストエンジニアリング
             </div>
-            <div class="grid grid-cols-3 gap-4">
-              <!-- 構成管理 -->
-              <div class="bg-blue-50 border border-blue-200 rounded-xl p-3">
-                <h4 class="font-bold text-blue-700 text-sm mb-2 text-center">📝 構成管理</h4>
-                <ul class="text-xs text-blue-600 space-y-1">
-                  <li>• システムプロンプト最適化</li>
-                  <li>• ツール設計（最小化）</li>
-                  <li>• Few-shot例示の精選</li>
-                  <li>• XMLタグ・Markdown構造化</li>
-                </ul>
-              </div>
-              <!-- 動的取得 -->
-              <div class="bg-orange-50 border border-orange-200 rounded-xl p-3">
-                <h4 class="font-bold text-orange-700 text-sm mb-2 text-center">⚡ 動的取得</h4>
-                <ul class="text-xs text-orange-600 space-y-1">
-                  <li>• 埋め込み検索（RAG）</li>
-                  <li>• Just-in-Timeロード</li>
-                  <li>• 漸進的開示</li>
-                  <li>• ハイブリッド戦略</li>
-                </ul>
-              </div>
-              <!-- 長期管理 -->
-              <div class="bg-rose-50 border border-rose-200 rounded-xl p-3">
-                <h4 class="font-bold text-rose-700 text-sm mb-2 text-center">🔄 長期管理</h4>
-                <ul class="text-xs text-rose-600 space-y-1">
-                  <li>• コンパクション（要約）</li>
-                  <li>• 構造化メモ取り</li>
-                  <li>• サブエージェント分担</li>
-                  <li>• ツール結果クリア</li>
-                </ul>
-              </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- 構成管理 -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3">
+              <h4 class="font-bold text-blue-700 text-sm mb-2 text-center">📝 構成管理</h4>
+              <ul class="text-xs text-blue-600 space-y-1">
+                <li>• システムプロンプト最適化</li>
+                <li>• ツール設計（最小化）</li>
+                <li>• Few-shot例示の精選（入出力例）</li>
+                <li>• 見出し・箇条書きで構造化</li>
+              </ul>
             </div>
-            <div class="text-center mt-3 bg-gray-100 rounded-xl p-3">
-              <p class="text-xs text-gray-600 font-bold">⭐ 共通原則：「最小限の高品質トークン」でコンテキストを常に最適化</p>
+            <!-- 動的取得 -->
+            <div class="bg-orange-50 border border-orange-200 rounded-xl p-3">
+              <h4 class="font-bold text-orange-700 text-sm mb-2 text-center">⚡ 動的取得</h4>
+              <ul class="text-xs text-orange-600 space-y-1">
+                <li>• 意味検索（RAG）</li>
+                <li>• Just-in-Time（必要時）ロード</li>
+                <li>• 段階的な情報深掘り</li>
+                <li>• 組み合わせ（ハイブリッド）戦略</li>
+              </ul>
             </div>
+            <!-- 長期管理 -->
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-3">
+              <h4 class="font-bold text-rose-700 text-sm mb-2 text-center">🔄 長期管理</h4>
+              <ul class="text-xs text-rose-600 space-y-1">
+                <li>• コンパクション（会話の要約圧縮）</li>
+                <li>• 構造化メモ取り（外部記録）</li>
+                <li>• サブエージェント分担</li>
+                <li>• 古いツール結果のクリア</li>
+              </ul>
+            </div>
+          </div>
+          <div class="text-center mt-3 bg-gray-100 rounded-xl p-3">
+            <p class="text-xs text-gray-600 font-bold">⭐ 共通原則：「最小限の高品質トークン（情報）」でコンテキストを常に最適化</p>
           </div>
         </div>
 
@@ -1123,11 +1226,17 @@
         <div class="bg-gradient-to-r from-teal-50 to-green-50 border border-teal-200 rounded-xl p-4 mt-4">
           <h4 class="font-bold text-teal-800 mb-2">🔮 今後の展望（記事より）</h4>
           <ul class="text-sm text-teal-700 space-y-1.5">
-            <li>• モデルが賢くなるにつれ、処方的なエンジニアリングは減少し、エージェントはより自律的に</li>
+            <li>• モデルが賢くなるにつれ、細かい指定（処方的なエンジニアリング）は減少し、エージェントはより自律的に動けるようになる</li>
             <li>• それでも「コンテキストを有限リソースとして扱う」原則は変わらない</li>
-            <li>• 「動く最もシンプルなものから始める」が当面のベストプラクティス</li>
-            <li>• Claude Developer Platformでメモリツール（パブリックベータ）が利用可能に</li>
+            <li>• 「まずシンプルに動くものを作ってから改善する」が当面のベストプラクティス</li>
+            <li>• Claude Developer Platformでメモリツール（試験提供中）が利用可能に</li>
           </ul>
+        </div>
+
+        <!-- セクション要点 -->
+        <div class="section-summary-badge">
+          <span class="badge-icon">✅</span>
+          <p>このセクションの要点：コンテキストエンジニアリングの黄金律は「目的を達成するために必要な、できる限り少量の高品質な情報だけを渡す」こと。まずシンプルに動くものから始め、徐々に改善しましょう。</p>
         </div>
 
       </div>
@@ -1261,6 +1370,22 @@
   </button>
 
   <script>
+    // ツールチップ：タッチデバイスでもタップで開閉できるように
+    document.querySelectorAll('.term').forEach(term => {
+      term.addEventListener('click', (e) => {
+        const tooltip = term.querySelector('.term-tooltip');
+        if (!tooltip) return;
+        const isVisible = tooltip.style.display === 'block';
+        // 他を全部閉じる
+        document.querySelectorAll('.term-tooltip').forEach(t => t.style.display = 'none');
+        tooltip.style.display = isVisible ? 'none' : 'block';
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.term-tooltip').forEach(t => t.style.display = 'none');
+    });
+
     // アコーディオン（将来の拡張用）
     document.querySelectorAll('.accordion-header').forEach(header => {
       header.addEventListener('click', () => {
