@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ICD-10 精神科クイズ | 定義から疾患を当てよう</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --psych-primary: #1e3a5f;
+    --psych-secondary: #0f766e;
+    --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+  }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f0f4f8; }
+
+  .header-gradient { background: var(--psych-gradient); }
+
+  /* カテゴリ色 */
+  .f0-col { --cat: #d97706; --cat-bg: #fef3c7; }
+  .f1-col { --cat: #ef4444; --cat-bg: #fee2e2; }
+  .f2-col { --cat: #8b5cf6; --cat-bg: #ede9fe; }
+  .f3-col { --cat: #3b82f6; --cat-bg: #dbeafe; }
+  .f4-col { --cat: #14b8a6; --cat-bg: #ccfbf1; }
+  .f5-col { --cat: #f97316; --cat-bg: #ffedd5; }
+  .f6-col { --cat: #64748b; --cat-bg: #f1f5f9; }
+  .f7-col { --cat: #9ca3af; --cat-bg: #f3f4f6; }
+  .f8-col { --cat: #22c55e; --cat-bg: #dcfce7; }
+  .f9-col { --cat: #ec4899; --cat-bg: #fce7f3; }
+
+  .cat-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: var(--cat-bg, #f3f4f6);
+    color: var(--cat, #374151);
+    border: 1px solid var(--cat, #9ca3af);
+    letter-spacing: 0.03em;
+  }
+
+  /* 選択肢ボタン */
+  .choice-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.85rem 1.1rem;
+    border-radius: 0.75rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .choice-btn:hover:not(:disabled) {
+    border-color: #3b82f6;
+    background: #eff6ff;
+  }
+  .choice-btn.correct {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #15803d;
+  }
+  .choice-btn.wrong {
+    border-color: #dc2626;
+    background: #fef2f2;
+    color: #b91c1c;
+  }
+  .choice-btn.revealed {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #15803d;
+  }
+  .choice-btn:disabled { cursor: default; }
+
+  .choice-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  /* プログレスバー */
+  .progress-bar-inner {
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--psych-gradient);
+    transition: width 0.4s ease;
+  }
+
+  /* スコアリング */
+  .score-ring {
+    width: 7rem;
+    height: 7rem;
+  }
+
+  /* アニメーション */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.3s ease forwards; }
+
+  @keyframes popIn {
+    0%   { transform: scale(0.85); opacity: 0; }
+    60%  { transform: scale(1.04); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop-in { animation: popIn 0.35s ease forwards; }
+
+  /* 難易度チップ */
+  .diff-chip {
+    cursor: pointer;
+    padding: 0.45rem 1.1rem;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    background: #f1f5f9;
+    color: #475569;
+  }
+  .diff-chip.active {
+    background: var(--psych-primary);
+    color: white;
+    border-color: var(--psych-primary);
+  }
+
+  /* 定義カード */
+  .def-card {
+    background: white;
+    border-radius: 1rem;
+    border-left: 5px solid var(--cat, #3b82f6);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    padding: 1.25rem 1.4rem;
+  }
+
+  /* 結果画面 */
+  .result-bar-outer {
+    height: 0.6rem;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .result-bar-inner {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #16a34a, #4ade80);
+    transition: width 0.6s ease;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ヘッダー -->
+<header class="header-gradient text-white py-5 px-4 shadow-lg">
+  <div class="max-w-2xl mx-auto flex items-center gap-3">
+    <div>
+      <h1 class="text-xl font-bold leading-tight">ICD-10 精神科クイズ</h1>
+      <p class="text-blue-200 text-xs mt-0.5">定義から ICD コード・日本語疾患名を当てよう</p>
+    </div>
+    <div class="ml-auto">
+      <a href="icd10.html" class="text-blue-200 hover:text-white text-xs underline underline-offset-2">← ICD-10 一覧へ</a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-6">
+
+  <!-- スタート画面 -->
+  <section id="start-screen" class="fade-in">
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-4">
+      <h2 class="text-lg font-bold text-gray-800 mb-1">クイズ設定</h2>
+      <p class="text-sm text-gray-500 mb-5">定義文を読んで、対応する ICD コードと日本語疾患名を4択から選んでください。回答後に詳細情報を確認できます。</p>
+
+      <!-- 対象コード -->
+      <div class="mb-5">
+        <p class="text-sm font-semibold text-gray-700 mb-2">対象コード</p>
+        <div class="flex flex-wrap gap-2">
+          <button class="diff-chip active" onclick="setScope(this,'all')">すべて (主+サブ)</button>
+          <button class="diff-chip" onclick="setScope(this,'main')">主コードのみ (F00〜F99)</button>
+          <button class="diff-chip" onclick="setScope(this,'sub')">サブコードのみ</button>
+        </div>
+      </div>
+
+      <!-- カテゴリ絞り込み -->
+      <div class="mb-5">
+        <p class="text-sm font-semibold text-gray-700 mb-2">カテゴリ絞り込み <span class="text-gray-400 font-normal">（複数選択可）</span></p>
+        <div id="cat-filter" class="flex flex-wrap gap-1.5"></div>
+        <button onclick="selectAllCats(true)" class="mt-2 text-xs text-blue-600 underline mr-3">すべて選択</button>
+        <button onclick="selectAllCats(false)" class="mt-2 text-xs text-gray-400 underline">すべて解除</button>
+      </div>
+
+      <!-- 問題数 -->
+      <div class="mb-6">
+        <p class="text-sm font-semibold text-gray-700 mb-2">問題数</p>
+        <div class="flex flex-wrap gap-2">
+          <button class="diff-chip" onclick="setCount(this,10)">10問</button>
+          <button class="diff-chip active" onclick="setCount(this,20)">20問</button>
+          <button class="diff-chip" onclick="setCount(this,30)">30問</button>
+          <button class="diff-chip" onclick="setCount(this,50)">50問</button>
+        </div>
+      </div>
+
+      <button onclick="startQuiz()" class="w-full py-3 rounded-xl font-bold text-white text-base shadow-md transition hover:opacity-90 active:scale-95" style="background: var(--psych-gradient)">
+        クイズをはじめる →
+      </button>
+    </div>
+
+    <!-- 使い方 -->
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+      <p class="font-semibold mb-1">出題形式</p>
+      <ul class="list-disc list-inside space-y-0.5 text-xs text-blue-700">
+        <li>定義文を表示（コードと疾患名は <span class="font-mono bg-blue-100 px-1 rounded">［？］</span> でマスク）</li>
+        <li>4つの選択肢から「ICDコード — 日本語疾患名」を選ぶ</li>
+        <li>回答後に正解・英語名・カテゴリ・定義全文を確認できる</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- クイズ画面 -->
+  <section id="quiz-screen" class="hidden">
+    <!-- プログレス -->
+    <div class="mb-4">
+      <div class="flex justify-between items-center text-xs text-gray-500 mb-1.5">
+        <span id="progress-text">問題 1 / 20</span>
+        <span id="score-text" class="font-semibold text-gray-700">正答: 0</span>
+      </div>
+      <div class="bg-gray-200 rounded-full h-1.5">
+        <div id="progress-bar" class="progress-bar-inner" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- 問題カード -->
+    <div id="question-card" class="def-card mb-4 fade-in">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">定義</span>
+        <span id="q-type-badge" class="text-xs px-2 py-0.5 rounded-full font-semibold" style="background:#f1f5f9;color:#64748b;"></span>
+      </div>
+      <p id="q-definition" class="text-sm text-gray-800 leading-loose"></p>
+    </div>
+
+    <!-- 問い -->
+    <p class="text-sm font-bold text-center text-gray-600 mb-3">この疾患の ICD コードと日本語名はどれ？</p>
+
+    <!-- 選択肢 -->
+    <div id="choices" class="space-y-2 mb-5"></div>
+
+    <!-- 正誤フィードバック（小バナー） -->
+    <div id="feedback" class="hidden rounded-xl px-4 py-3 mb-3 text-sm font-bold fade-in flex items-center gap-2"></div>
+
+    <!-- 解答後の詳細パネル -->
+    <div id="detail-panel" class="hidden rounded-xl mb-4 overflow-hidden border fade-in">
+      <!-- ヘッダー -->
+      <div id="detail-header" class="px-4 py-3 flex items-center gap-3">
+        <span id="detail-code" class="font-mono text-xl font-black"></span>
+        <span id="detail-japanese" class="font-bold text-base"></span>
+      </div>
+      <!-- 詳細行 -->
+      <div class="bg-white px-4 py-3 space-y-2.5 text-sm">
+        <div class="flex gap-3">
+          <span class="text-xs font-bold text-gray-400 w-20 flex-shrink-0 pt-0.5">WHO 英語名</span>
+          <span id="detail-english" class="text-gray-700 italic font-mono"></span>
+        </div>
+        <div class="flex gap-3">
+          <span class="text-xs font-bold text-gray-400 w-20 flex-shrink-0 pt-0.5">カテゴリ</span>
+          <span id="detail-cat" class="text-gray-700"></span>
+        </div>
+        <div id="detail-parent-row" class="hidden gap-3" style="display:none">
+          <span class="text-xs font-bold text-gray-400 w-20 flex-shrink-0 pt-0.5">親カテゴリ</span>
+          <span id="detail-parent" class="text-gray-700 font-mono"></span>
+        </div>
+        <div class="pt-1 border-t border-gray-100">
+          <p class="text-xs font-bold text-gray-400 mb-1">定義全文</p>
+          <p id="detail-full-def" class="text-xs text-gray-600 leading-relaxed"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 次へボタン -->
+    <div class="flex gap-3">
+      <button id="next-btn" onclick="nextQuestion()" class="hidden flex-1 py-3 rounded-xl font-bold text-white shadow-md transition hover:opacity-90 active:scale-95 text-center" style="background: var(--psych-gradient)">
+        次の問題 →
+      </button>
+      <button id="finish-btn" onclick="showResult()" class="hidden flex-1 py-3 rounded-xl font-bold text-white shadow-md transition hover:opacity-90 active:scale-95 text-center bg-emerald-600">
+        結果を見る ✓
+      </button>
+    </div>
+  </section>
+
+  <!-- 結果画面 -->
+  <section id="result-screen" class="hidden fade-in">
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-4 text-center">
+      <div class="text-5xl mb-2" id="result-emoji">🎉</div>
+      <h2 class="text-xl font-bold text-gray-800 mb-1" id="result-title">クイズ完了！</h2>
+      <p class="text-sm text-gray-500 mb-5" id="result-comment"></p>
+
+      <!-- スコア -->
+      <div class="flex justify-center gap-6 mb-5">
+        <div class="text-center">
+          <p class="text-3xl font-bold" id="result-score" style="color: var(--psych-secondary)">0</p>
+          <p class="text-xs text-gray-400 mt-0.5">正解数</p>
+        </div>
+        <div class="text-4xl text-gray-200 self-center">/</div>
+        <div class="text-center">
+          <p class="text-3xl font-bold text-gray-400" id="result-total">0</p>
+          <p class="text-xs text-gray-400 mt-0.5">問題数</p>
+        </div>
+        <div class="text-4xl text-gray-200 self-center">=</div>
+        <div class="text-center">
+          <p class="text-3xl font-bold" id="result-pct" style="color: var(--psych-primary)">0%</p>
+          <p class="text-xs text-gray-400 mt-0.5">正答率</p>
+        </div>
+      </div>
+
+      <!-- 正答率バー -->
+      <div class="result-bar-outer mb-6 max-w-xs mx-auto">
+        <div id="result-bar" class="result-bar-inner" style="width:0%"></div>
+      </div>
+
+      <!-- ランク -->
+      <div id="result-rank" class="inline-block px-4 py-1.5 rounded-full font-bold text-sm mb-6"></div>
+
+      <div class="flex gap-3">
+        <button onclick="restartSame()" class="flex-1 py-3 rounded-xl font-bold text-white shadow-md transition hover:opacity-90 active:scale-95" style="background: var(--psych-gradient)">
+          同じ設定でやり直す
+        </button>
+        <button onclick="backToStart()" class="flex-1 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition active:scale-95">
+          設定を変える
+        </button>
+      </div>
+    </div>
+
+    <!-- 問題ごとの振り返り -->
+    <div class="bg-white rounded-2xl shadow-md p-5">
+      <h3 class="font-bold text-gray-700 text-sm mb-3">振り返り</h3>
+      <div id="review-list" class="space-y-2 text-sm"></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ======= データ管理 =======
+let allQuestions = [];
+let quizQuestions = [];
+let currentIdx = 0;
+let score = 0;
+let answers = [];
+
+let config = {
+  scope: 'all',
+  count: 20,
+  cats: new Set(['F0','F1','F2','F3','F4','F5','F6','F7','F8','F9'])
+};
+
+const CAT_INFO = {
+  'F0': { label: 'F0 器質性', color: '#d97706', bg: '#fef3c7', cls: 'f0-col' },
+  'F1': { label: 'F1 物質',   color: '#ef4444', bg: '#fee2e2', cls: 'f1-col' },
+  'F2': { label: 'F2 統合失調症', color: '#8b5cf6', bg: '#ede9fe', cls: 'f2-col' },
+  'F3': { label: 'F3 気分',   color: '#3b82f6', bg: '#dbeafe', cls: 'f3-col' },
+  'F4': { label: 'F4 神経症', color: '#14b8a6', bg: '#ccfbf1', cls: 'f4-col' },
+  'F5': { label: 'F5 身体表現', color: '#f97316', bg: '#ffedd5', cls: 'f5-col' },
+  'F6': { label: 'F6 人格',   color: '#64748b', bg: '#f1f5f9', cls: 'f6-col' },
+  'F7': { label: 'F7 知的',   color: '#9ca3af', bg: '#f3f4f6', cls: 'f7-col' },
+  'F8': { label: 'F8 発達',   color: '#22c55e', bg: '#dcfce7', cls: 'f8-col' },
+  'F9': { label: 'F9 小児',   color: '#ec4899', bg: '#fce7f3', cls: 'f9-col' },
+};
+
+// ======= 初期化 =======
+async function init() {
+  try {
+    const res = await fetch('icd10-definitions.json');
+    const raw = await res.json();
+    allQuestions = parseDefinitions(raw);
+  } catch(e) {
+    // fetch失敗時のフォールバック（デモ用）
+    allQuestions = [];
+    document.getElementById('start-screen').innerHTML +=
+      '<p class="text-red-500 text-sm mt-4 text-center">⚠ icd10-definitions.json の読み込みに失敗しました。HTTPサーバー経由でアクセスしてください。</p>';
+  }
+  renderCatFilter();
+}
+
+function parseDefinitions(raw) {
+  const out = [];
+  const reMain   = /日本語臨床で「([^」]+)」/;
+  const reSub    = /臨床的に「([^」]+)」/;
+  const reEn1    = /英語表記は[『「]([^』」]+)[』」]/;
+  const reEn2    = /WHO 英語では[『「]([^』」]+)[』」]/;
+  const reParent = /親カテゴリ（([^）]+)）/;
+
+  for (const [code, defi] of Object.entries(raw)) {
+    const isMain = !code.includes('.');
+    const jpM  = isMain ? defi.match(reMain) : defi.match(reSub);
+    const enM  = defi.match(reEn1) || defi.match(reEn2);
+    const parM = defi.match(reParent);
+
+    const parts    = defi.split('。');
+    const category = parts[0] || '';
+    const catKey   = 'F' + code[1];
+
+    // 定義文からコード・疾患名をマスク
+    let masked = defi;
+    if (isMain) {
+      // "コード F00 は日本語臨床で「アルツハイマー病の認知症」と表記される WHO ICD-10 の主区分であり、診療録・研究・統計で標準的に用いられる。"
+      masked = masked.replace(
+        /コード [A-Z]\d+[\w.]* は日本語臨床で「[^」]+」と表記される WHO ICD-10 の主区分であり、診療録・研究・統計で標準的に用いられる。/,
+        'コード ［？］ は日本語臨床で「［？］」と表記される WHO ICD-10 の主区分である。'
+      );
+    } else {
+      // "下位区分 F00.0 は親カテゴリ（F00：アルツハイマー病の認知症）内で、臨床的に「早発型（65歳未満）」を特徴づける症例向け。"
+      masked = masked.replace(
+        /下位区分 [A-Z]\d+[\w.]* は親カテゴリ（[^）]+）内で、臨床的に「[^」]+」を特徴づける症例向け。/,
+        '下位区分 ［？］ は親カテゴリ（［？］）内で、臨床的に「［？］」を特徴づける症例向け。'
+      );
+    }
+
+    out.push({
+      code,
+      japanese: jpM  ? jpM[1]  : code,
+      english:  enM  ? enM[1]  : '',
+      category,
+      parent:   parM ? parM[1] : '',
+      definition: defi,
+      masked,
+      isMain,
+      catKey,
+    });
+  }
+  return out;
+}
+
+// ======= カテゴリフィルター描画 =======
+function renderCatFilter() {
+  const el = document.getElementById('cat-filter');
+  el.innerHTML = '';
+  for (const [key, info] of Object.entries(CAT_INFO)) {
+    const cnt = allQuestions.filter(q => q.catKey === key).length;
+    const btn = document.createElement('button');
+    btn.className = 'diff-chip active';
+    btn.dataset.cat = key;
+    btn.textContent = `${info.label} (${cnt})`;
+    btn.style.setProperty('--act-bg', info.color);
+    btn.onclick = () => toggleCat(btn, key);
+    el.appendChild(btn);
+  }
+  updateCatActive();
+}
+
+function toggleCat(btn, key) {
+  if (config.cats.has(key)) {
+    if (config.cats.size <= 1) return;
+    config.cats.delete(key);
+  } else {
+    config.cats.add(key);
+  }
+  updateCatActive();
+}
+
+function updateCatActive() {
+  document.querySelectorAll('#cat-filter .diff-chip').forEach(btn => {
+    const key = btn.dataset.cat;
+    if (config.cats.has(key)) {
+      btn.classList.add('active');
+      btn.style.background = CAT_INFO[key]?.color || '';
+      btn.style.color = 'white';
+      btn.style.borderColor = CAT_INFO[key]?.color || '';
+    } else {
+      btn.classList.remove('active');
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  });
+}
+
+function selectAllCats(val) {
+  if (val) {
+    Object.keys(CAT_INFO).forEach(k => config.cats.add(k));
+  } else {
+    const keys = [...config.cats];
+    if (keys.length > 1) {
+      config.cats.clear();
+      config.cats.add(keys[0]);
+    }
+  }
+  updateCatActive();
+}
+
+function setScope(btn, val) {
+  config.scope = val;
+  document.querySelectorAll('[onclick^="setScope"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setCount(btn, val) {
+  config.count = val;
+  document.querySelectorAll('[onclick^="setCount"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ======= クイズ開始 =======
+function startQuiz() {
+  // フィルタリング
+  let pool = allQuestions.filter(q => config.cats.has(q.catKey));
+  if (config.scope === 'main') pool = pool.filter(q => q.isMain);
+  if (config.scope === 'sub')  pool = pool.filter(q => !q.isMain);
+
+  if (pool.length < 4) {
+    alert('選択したカテゴリ・コード種別の問題が4問未満です。フィルターを緩めてください。');
+    return;
+  }
+
+  // シャッフル
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  quizQuestions = shuffled.slice(0, Math.min(config.count, shuffled.length));
+
+  currentIdx = 0;
+  score = 0;
+  answers = [];
+
+  show('quiz-screen');
+  renderQuestion();
+}
+
+// ======= 問題描画 =======
+function renderQuestion() {
+  const q = quizQuestions[currentIdx];
+  const total = quizQuestions.length;
+
+  // プログレス
+  document.getElementById('progress-text').textContent = `問題 ${currentIdx + 1} / ${total}`;
+  document.getElementById('score-text').textContent = `正答: ${score}`;
+  document.getElementById('progress-bar').style.width = `${(currentIdx / total) * 100}%`;
+
+  // カード左ボーダー色
+  const info = CAT_INFO[q.catKey] || {};
+  const card = document.getElementById('question-card');
+  card.style.setProperty('--cat', info.color || '#3b82f6');
+
+  // コード種別バッジ
+  const typeBadge = document.getElementById('q-type-badge');
+  typeBadge.textContent = q.isMain ? '主コード' : 'サブコード';
+
+  // マスク済み定義文を表示（［？］を強調）
+  const defEl = document.getElementById('q-definition');
+  defEl.innerHTML = q.masked.replace(/\[？\]|［？］/g,
+    '<span style="background:#fef08a;color:#92400e;font-weight:700;border-radius:3px;padding:0 2px;">［？］</span>'
+  );
+
+  // 選択肢生成（正解1 + 不正解3）
+  const choices = generateChoices(q, quizQuestions);
+  renderChoices(choices, q.code);
+
+  // フィードバック/詳細パネル/ボタン非表示
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('detail-panel').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+  document.getElementById('finish-btn').classList.add('hidden');
+
+  // カードアニメ
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+}
+
+function generateChoices(correct, pool) {
+  const wrong = pool.filter(q => q.code !== correct.code);
+  const shuffledWrong = [...wrong].sort(() => Math.random() - 0.5).slice(0, 3);
+  const all = [correct, ...shuffledWrong].sort(() => Math.random() - 0.5);
+  return all;
+}
+
+function renderChoices(choices, correctCode) {
+  const el = document.getElementById('choices');
+  el.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.dataset.code = c.code;
+    btn.onclick = () => selectAnswer(c.code, correctCode);
+    btn.innerHTML = `
+      <span class="choice-label">${labels[i]}</span>
+      <span>
+        <span class="font-mono font-bold text-gray-700">${c.code}</span>
+        <span class="text-gray-400 mx-1">—</span>
+        <span class="text-gray-800">${c.japanese}</span>
+      </span>
+    `;
+    el.appendChild(btn);
+  });
+}
+
+// ======= 解答処理 =======
+function selectAnswer(selected, correct) {
+  const isCorrect = selected === correct;
+  if (isCorrect) score++;
+
+  answers.push({ q: quizQuestions[currentIdx], selected, isCorrect });
+
+  // ボタン状態更新
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.code === correct) {
+      btn.classList.add(isCorrect ? 'correct' : 'revealed');
+    }
+    if (btn.dataset.code === selected && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  // フィードバック
+  showFeedback(isCorrect, correct);
+
+  // 次へ or 終了
+  const isLast = currentIdx === quizQuestions.length - 1;
+  if (isLast) {
+    document.getElementById('finish-btn').classList.remove('hidden');
+  } else {
+    document.getElementById('next-btn').classList.remove('hidden');
+  }
+}
+
+function showFeedback(isCorrect, correctCode) {
+  const q = quizQuestions[currentIdx];
+  const info = CAT_INFO[q.catKey] || {};
+
+  // ── 小バナー（正誤のみ）──
+  const fb = document.getElementById('feedback');
+  fb.classList.remove('hidden');
+  if (isCorrect) {
+    fb.className = 'rounded-xl px-4 py-3 mb-3 text-sm font-bold fade-in flex items-center gap-2 bg-green-50 border border-green-300 text-green-800';
+    fb.innerHTML = `<span class="text-lg">✅</span> 正解！`;
+  } else {
+    fb.className = 'rounded-xl px-4 py-3 mb-3 text-sm font-bold fade-in flex items-center gap-2 bg-red-50 border border-red-300 text-red-800';
+    fb.innerHTML = `<span class="text-lg">❌</span> 不正解`;
+  }
+
+  // ── 詳細パネル ──
+  const panel = document.getElementById('detail-panel');
+  panel.classList.remove('hidden');
+
+  // ヘッダー色（正解:緑 / 不正解:青系）
+  const header = document.getElementById('detail-header');
+  if (isCorrect) {
+    header.style.cssText = `background:${info.bg || '#dcfce7'};border-bottom:1px solid ${info.color || '#16a34a'}30;`;
+  } else {
+    header.style.cssText = `background:${info.bg || '#dbeafe'};border-bottom:1px solid ${info.color || '#3b82f6'}30;`;
+  }
+  panel.style.borderColor = info.color || '#3b82f6';
+
+  document.getElementById('detail-code').style.color = info.color || '#1e40af';
+  document.getElementById('detail-code').textContent = q.code;
+  document.getElementById('detail-japanese').textContent = q.japanese;
+  document.getElementById('detail-english').textContent = q.english || '—';
+  document.getElementById('detail-cat').textContent = `${info.label || q.catKey}（${q.isMain ? '主コード' : 'サブコード'}）`;
+
+  const parentRow = document.getElementById('detail-parent-row');
+  if (!q.isMain && q.parent) {
+    parentRow.style.display = 'flex';
+    document.getElementById('detail-parent').textContent = q.parent;
+  } else {
+    parentRow.style.display = 'none';
+  }
+
+  document.getElementById('detail-full-def').textContent = q.definition;
+}
+
+// ======= ナビゲーション =======
+function nextQuestion() {
+  currentIdx++;
+  renderQuestion();
+}
+
+function showResult() {
+  show('result-screen');
+
+  const total = quizQuestions.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('result-score').textContent = score;
+  document.getElementById('result-total').textContent = total;
+  document.getElementById('result-pct').textContent = pct + '%';
+
+  setTimeout(() => {
+    document.getElementById('result-bar').style.width = pct + '%';
+  }, 100);
+
+  // ランク
+  const rankEl = document.getElementById('result-rank');
+  let rank, rankStyle;
+  if (pct >= 90) { rank = '🥇 エキスパート'; rankStyle = 'background:#fef9c3;color:#854d0e;'; }
+  else if (pct >= 75) { rank = '🥈 上級者'; rankStyle = 'background:#dbeafe;color:#1e40af;'; }
+  else if (pct >= 60) { rank = '🥉 中級者'; rankStyle = 'background:#dcfce7;color:#166534;'; }
+  else if (pct >= 40) { rank = '📚 学習中'; rankStyle = 'background:#f3f4f6;color:#374151;'; }
+  else               { rank = '💪 もう一度！'; rankStyle = 'background:#fee2e2;color:#991b1b;'; }
+
+  rankEl.textContent = rank;
+  rankEl.style.cssText = rankStyle;
+
+  const comments = {
+    90: 'ICD-10精神科分類を完璧に把握しています！',
+    75: '高い精度で疾患を同定できています。',
+    60: '基本はしっかりしています。苦手なカテゴリを重点練習しましょう。',
+    40: 'もう少しで中級レベル。繰り返し練習が効果的です。',
+    0:  '定義文をよく読んで、ICD-10一覧と照らし合わせてみましょう。',
+  };
+  const key = [90,75,60,40,0].find(k => pct >= k);
+  document.getElementById('result-comment').textContent = comments[key];
+  document.getElementById('result-emoji').textContent = pct >= 75 ? '🎉' : pct >= 50 ? '📖' : '💪';
+  document.getElementById('result-title').textContent = pct >= 75 ? 'お見事！' : pct >= 50 ? 'よく頑張りました！' : 'クイズ完了！';
+
+  // 振り返りリスト
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  answers.forEach((a, i) => {
+    const info = CAT_INFO[a.q.catKey] || {};
+    const selectedQ = allQuestions.find(q => q.code === a.selected);
+    const div = document.createElement('div');
+    div.className = `rounded-xl overflow-hidden border text-xs mb-2 ${a.isCorrect ? 'border-green-200' : 'border-red-200'}`;
+    div.innerHTML = `
+      <div class="flex items-center gap-2 px-3 py-2" style="background:${info.bg || '#f3f4f6'}">
+        <span>${a.isCorrect ? '✅' : '❌'}</span>
+        <span class="font-mono font-black" style="color:${info.color || '#374151'}">${a.q.code}</span>
+        <span class="font-semibold text-gray-800">${a.q.japanese}</span>
+        <span class="ml-auto text-gray-400 text-xs">${info.label || a.q.catKey}</span>
+      </div>
+      <div class="bg-white px-3 py-2 space-y-1">
+        <div class="text-gray-500 italic">英語: ${a.q.english}</div>
+        ${!a.isCorrect ? `<div class="text-red-500">あなたの答え: <span class="font-mono">${a.selected}</span> — ${selectedQ ? selectedQ.japanese : ''}</div>` : ''}
+        <div class="text-gray-400 leading-relaxed pt-1 border-t border-gray-100">${a.q.definition}</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function restartSame() {
+  currentIdx = 0;
+  score = 0;
+  answers = [];
+  quizQuestions = [...quizQuestions].sort(() => Math.random() - 0.5);
+  show('quiz-screen');
+  renderQuestion();
+}
+
+function backToStart() {
+  show('start-screen');
+}
+
+function show(id) {
+  ['start-screen', 'quiz-screen', 'result-screen'].forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.classList.toggle('hidden', s !== id);
+  });
+}
+
+// ======= 起動 =======
+init();
+</script>
+</body>
+</html>
