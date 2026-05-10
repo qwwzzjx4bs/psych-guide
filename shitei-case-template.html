@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ja" class="data-table-sticky-col-off">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神保健指定医 新規申請 ケースレポート症例選定テンプレ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .case-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      border-top: 4px solid #1e3a5f;
+      transition: all 0.2s;
+    }
+    .case-card.ok { border-top-color: #15803d; }
+    .case-card.warn { border-top-color: #d97706; }
+    .case-card.ng { border-top-color: #dc2626; }
+
+    .flow-node {
+      background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+      color: white;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-align: center;
+      position: relative;
+    }
+    .flow-node.check {
+      background: linear-gradient(135deg, #b45309, #d97706);
+    }
+    .flow-node.ok {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+    }
+    .flow-node.danger {
+      background: linear-gradient(135deg, #991b1b, #dc2626);
+    }
+    .flow-arrow {
+      display: flex;
+      justify-content: center;
+      margin: 4px 0;
+      color: #64748b;
+    }
+    .badge-must {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white; padding: 0.15rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700;
+    }
+    .badge-opt {
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      color: white; padding: 0.15rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700;
+    }
+    .badge-note {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white; padding: 0.15rem 0.6rem;
+      border-radius: 9999px; font-size: 0.7rem; font-weight: 700;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input[type="checkbox"] {
+      width: 1.2rem; height: 1.2rem;
+      accent-color: #1e3a5f;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .check-item label { cursor: pointer; font-size: 0.9rem; line-height: 1.5; }
+
+    .input-field {
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.875rem;
+      width: 100%;
+      font-family: 'Noto Sans JP', sans-serif;
+      transition: border-color 0.2s;
+    }
+    .input-field:focus { outline: none; border-color: #1e3a5f; box-shadow: 0 0 0 3px rgba(30,58,95,0.1); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .status-ok { background: #dcfce7; color: #15803d; }
+    .status-warn { background: #fef3c7; color: #b45309; }
+    .status-ng { background: #fee2e2; color: #dc2626; }
+    .status-pending { background: #f1f5f9; color: #64748b; }
+
+    .icd-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+      color: white;
+      border-radius: 0.5rem;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--psych-primary);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .section-title .icon-wrap {
+      background: var(--psych-gradient);
+      border-radius: 0.5rem;
+      padding: 0.4rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .progress-bar-outer {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 0.75rem;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .progress-bar-inner {
+      background: linear-gradient(90deg, #1e3a5f, #0f766e);
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+
+    @media print {
+      body { background: white; }
+      .no-print { display: none !important; }
+      .section-card, .case-card { box-shadow: none; border: 1px solid #e2e8f0; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-8 px-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="flex items-start gap-4">
+        <div class="bg-white/20 rounded-xl p-3 flex-shrink-0 mt-1">
+          <i data-lucide="clipboard-list" class="w-7 h-7 text-white"></i>
+        </div>
+        <div>
+          <p class="text-blue-200 text-sm font-medium mb-1">精神保健指定医 新規申請</p>
+          <h1 class="text-2xl md:text-3xl font-bold leading-tight">ケースレポート 症例5本 選定テンプレ</h1>
+          <p class="text-blue-100 text-sm mt-2">令和元年7月制度見直し後（令和7年度研修会資料準拠）</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- 全体進捗 -->
+    <div class="section-card no-print" id="progress-section">
+      <div class="section-title">
+        <div class="icon-wrap"><i data-lucide="bar-chart-2" class="w-5 h-5 text-white"></i></div>
+        申請要件の充足状況
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+          <div id="cnt-total" class="text-2xl font-bold text-slate-700">0/5</div>
+          <div class="text-xs text-slate-500 mt-1">症例入力済み</div>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+          <div id="cnt-sochi" class="text-2xl font-bold text-slate-700">0</div>
+          <div class="text-xs text-slate-500 mt-1">措置入院（1以上必須）</div>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+          <div id="cnt-iyouho" class="text-2xl font-bold text-slate-700">0</div>
+          <div class="text-xs text-slate-500 mt-1">医療保護入院（1以上必須）</div>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+          <div id="cnt-witness" class="text-2xl font-bold text-slate-700">0</div>
+          <div class="text-xs text-slate-500 mt-1">医保入院時立ち会い（1以上必須）</div>
+        </div>
+      </div>
+      <div id="progress-checks" class="flex flex-wrap gap-2 text-sm"></div>
+    </div>
+
+    <!-- 申請日入力 -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon-wrap"><i data-lucide="calendar" class="w-5 h-5 text-white"></i></div>
+        申請日（基準日）
+      </div>
+      <div class="flex items-center gap-4 flex-wrap">
+        <div>
+          <label class="block text-sm font-medium text-slate-600 mb-1">申請日</label>
+          <input type="date" id="apply-date" class="input-field w-52" oninput="updateAll()">
+        </div>
+        <div id="date-info" class="text-sm text-slate-500"></div>
+      </div>
+      <div class="criteria-box mt-4">
+        <p class="font-semibold text-blue-800 text-sm mb-2">症例の診療開始日の要件</p>
+        <ul class="text-sm text-slate-700 space-y-1">
+          <li class="flex items-start gap-2"><span class="badge-must mt-0.5">必須</span>5症例すべて：申請前7年以内の症例のみ</li>
+          <li class="flex items-start gap-2"><span class="badge-must mt-0.5">必須</span>5症例のうち<strong>1例以上</strong>：申請前<strong>1年以内</strong>に診療開始</li>
+          <li class="flex items-start gap-2"><span class="badge-must mt-0.5">必須</span>5症例のうち<strong>2例以上</strong>：申請日の<strong>1年前の日より前</strong>に診療開始</li>
+        </ul>
+      </div>
+      <div class="mt-3 text-xs text-slate-500" id="date-thresholds"></div>
+    </div>
+
+    <!-- 症例選定フロー -->
+    <div class="section-card no-print">
+      <div class="section-title">
+        <div class="icon-wrap"><i data-lucide="git-branch" class="w-5 h-5 text-white"></i></div>
+        症例選定フロー（確認順序）
+      </div>
+      <div class="max-w-md mx-auto space-y-1">
+        <div class="flow-node">候補症例を列挙する</div>
+        <div class="flow-arrow"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+        <div class="flow-node check">申請前7年以内 ✓ → 対象外を除外</div>
+        <div class="flow-arrow"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+        <div class="flow-node check">措置≥1 かつ 医保≥1 ✓</div>
+        <div class="flow-arrow"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+        <div class="flow-node check">医保のうち1例以上：入院時立ち会い有 ✓</div>
+        <div class="flow-arrow"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+        <div class="flow-node check">診療開始日の配分（1年以内≥1 かつ 1年超≥2）✓</div>
+        <div class="flow-arrow"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+        <div class="flow-node check">5分野（F0/F1依存/F2/F3/F4〜）に割付 ✓</div>
+        <div class="flow-arrow"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+        <div class="flow-node check">担当期間・実務経験証明書との整合 ✓</div>
+        <div class="flow-arrow"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+        <div class="flow-node ok">5症例確定 → ケースレポート作成へ</div>
+      </div>
+    </div>
+
+    <!-- 症例入力カード × 5 -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon-wrap"><i data-lucide="file-text" class="w-5 h-5 text-white"></i></div>
+        症例入力（5症例）
+      </div>
+
+      <!-- 症例ごとのタグ凡例 -->
+      <div class="flex flex-wrap gap-2 mb-4 text-sm items-center">
+        <span class="badge-must">必須</span> 必ず記入
+        <span class="badge-opt">推奨</span> 提出が望ましい
+        <span class="badge-note">参考</span> 参考情報
+      </div>
+
+      <!-- 各症例テンプレを JavaScript で生成 -->
+      <div id="cases-container"></div>
+    </div>
+
+    <!-- 要注意事項チェックリスト -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon-wrap"><i data-lucide="alert-triangle" class="w-5 h-5 text-white"></i></div>
+        提出前 最終確認チェックリスト
+      </div>
+
+      <div class="danger-box">
+        <p class="font-bold text-red-800 mb-2 text-sm">ケースレポート全体の要注意事項</p>
+        <div class="space-y-0">
+          <div class="check-item">
+            <input type="checkbox" id="c1">
+            <label for="c1">実務経験証明書の常時勤務期間に、レポートの外来期間（外来移行症例）が含まれているか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c2">
+            <label for="c2">入院日・退院日のどちらかを担当しているか（どちらも担当していない場合は提出不可）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c3">
+            <label for="c3">第3症例（F2）に誤って気分障害（F3）を提出していないか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c4">
+            <label for="c4">第2症例（F1）が「依存症」に係るものか（依存症でないF1症例は不可）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c5">
+            <label for="c5">患者の年齢を「担当開始時」の年齢で記載しているか（現在の年齢ではない）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c6">
+            <label for="c6">表紙の「自筆署名」欄はパソコン入力ではなく手書き署名になっているか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c7">
+            <label for="c7">入院形態は「措置入院」「医療保護入院」のどちらか一方のみチェックされているか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c8">
+            <label for="c8">入退院年月日に「一般入院（精神保健福祉法以外）」を記載していないか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c9">
+            <label for="c9">表紙と本文で入退院年月日が一致しているか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c10">
+            <label for="c10">研修修了証の発行年月日の翌日から3年以内に申請しているか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c11">
+            <label for="c11">2025年7月以降に担当を開始した症例の場合、指導医の更新研修修了証（写）を添付しているか</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c12">
+            <label for="c12">同一症例について、同一期間に複数医師がケースレポートを作成していないか</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box mt-4">
+        <p class="font-bold text-amber-800 mb-2 text-sm">転院・入院形態変更に関する注意</p>
+        <div class="space-y-0">
+          <div class="check-item">
+            <input type="checkbox" id="c13">
+            <label for="c13">同一入院形態のままの転院は「退院まで担当した」とみなされないことを確認した</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c14">
+            <label for="c14">入院形態の変更（例：措置→医保）は「前の形態の退院」＋「後の形態の入院」として扱われることを確認した</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c15">
+            <label for="c15">措置→医保の切替を「措置症例」として提出する場合、切替時の医保の指定医診察立ち会いは「医保入院時立ち会い」にカウントされないことを確認した</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommend-box mt-4">
+        <p class="font-bold text-green-800 mb-2 text-sm">提出が望ましい症例（未提出時は口頭試問で確認）</p>
+        <div class="space-y-0">
+          <div class="check-item">
+            <input type="checkbox" id="c16">
+            <label for="c16"><span class="badge-opt">推奨</span> 医療保護入院→任意入院へ形態変更後、任意入院による治療を継続した症例</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c17">
+            <label for="c17"><span class="badge-opt">推奨</span> 措置or医保退院後に外来通院治療を行った症例（通院おおむね1ヶ月以上）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="c18">
+            <label for="c18"><span class="badge-opt">推奨</span> 18歳未満（18歳到達後の最初の3月31日まで）の症例</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 提出書類チェックリスト -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon-wrap"><i data-lucide="package" class="w-5 h-5 text-white"></i></div>
+        提出書類チェックリスト（全11種）
+      </div>
+      <div class="grid md:grid-cols-2 gap-x-6">
+        <div>
+          <div class="check-item">
+            <input type="checkbox" id="d1">
+            <label for="d1"><strong>①</strong> 精神保健指定医指定申請書</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d2">
+            <label for="d2"><strong>②</strong> 履歴書</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d3">
+            <label for="d3"><strong>③</strong> 医師免許証（写）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d4">
+            <label for="d4"><strong>④</strong> 実務経験証明書（医師5年以上・精神科3年以上）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d5">
+            <label for="d5"><strong>⑤</strong> 本研修の研修修了証（写）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d6">
+            <label for="d6"><strong>⑥</strong> 常時勤務証明書（週4日以上・1日おおむね8時間以上）</label>
+          </div>
+        </div>
+        <div>
+          <div class="check-item">
+            <input type="checkbox" id="d7">
+            <label for="d7"><strong>⑦</strong> ケースレポート（各症例原本1通 × 5症例）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d8">
+            <label for="d8"><strong>⑧</strong> ケースレポート一覧</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d9">
+            <label for="d9"><strong>⑨</strong> その他の書類（該当者のみ）</label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d10">
+            <label for="d10"><strong>⑩</strong> 指導医の更新研修修了証（写）<br><span class="text-xs text-slate-500">※2025年7月以降担当開始症例のみ。指導医が2025年6月末までに担当開始の症例は不要。</span></label>
+          </div>
+          <div class="check-item">
+            <input type="checkbox" id="d11">
+            <label for="d11"><strong>⑪</strong> 指定医証貼付用写真</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 印刷ボタン -->
+    <div class="text-center mb-8 no-print">
+      <button onclick="window.print()" class="inline-flex items-center gap-2 bg-gradient-to-r from-slate-700 to-slate-800 text-white px-6 py-3 rounded-xl font-semibold hover:from-slate-600 hover:to-slate-700 transition-all shadow-md">
+        <i data-lucide="printer" class="w-5 h-5"></i>
+        印刷する
+      </button>
+    </div>
+
+    <footer class="text-center text-xs text-slate-400 mb-8">
+      令和7年度 精神保健指定医研修会資料（厚生労働省）に基づき作成 ｜ 最終確認は原典をご参照ください
+    </footer>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    const CASE_DOMAINS = [
+      { no: 1, icd: 'F0', label: '症状性を含む器質性精神障害', color: 'from-violet-700 to-violet-500' },
+      { no: 2, icd: 'F1', label: '精神作用物質使用による精神及び行動の障害（依存症に限る）', color: 'from-blue-700 to-blue-500', noteIcd: '※依存症のみ可（依存症でないF1は不可）' },
+      { no: 3, icd: 'F2', label: '統合失調症、統合失調症型障害及び妄想性障害', color: 'from-teal-700 to-teal-500' },
+      { no: 4, icd: 'F3', label: '気分（感情）障害', color: 'from-emerald-700 to-emerald-500' },
+      { no: 5, icd: 'F4〜F90-98', label: '神経症性・ストレス関連・生理的・人格・知的障害・発達・小児青年期など', color: 'from-orange-700 to-orange-500' },
+    ];
+
+    function renderCases() {
+      const container = document.getElementById('cases-container');
+      container.innerHTML = '';
+      CASE_DOMAINS.forEach(d => {
+        container.innerHTML += `
+        <div class="case-card" id="case-card-${d.no}">
+          <div class="flex items-start justify-between gap-2 mb-3 flex-wrap">
+            <div class="flex items-center gap-3">
+              <div class="bg-gradient-to-br ${d.color} text-white rounded-lg w-10 h-10 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                ${d.no}
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="icd-badge">${d.icd}</span>
+                  <span class="font-semibold text-slate-800 text-sm">${d.label}</span>
+                </div>
+                ${d.noteIcd ? `<p class="text-xs text-red-600 mt-0.5 font-semibold">${d.noteIcd}</p>` : ''}
+              </div>
+            </div>
+            <div id="case-status-${d.no}" class="status-badge status-pending flex-shrink-0">
+              <i data-lucide="circle" class="w-3.5 h-3.5"></i> 未入力
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1"><span class="badge-must">必須</span> 入院形態</label>
+              <select id="type-${d.no}" class="input-field" onchange="updateAll()">
+                <option value="">-- 選択 --</option>
+                <option value="措置入院">措置入院</option>
+                <option value="医療保護入院">医療保護入院</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1"><span class="badge-must">必須</span> 診療開始日</label>
+              <input type="date" id="start-${d.no}" class="input-field" oninput="updateAll()">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1"><span class="badge-must">必須</span> 入院日</label>
+              <input type="date" id="admit-${d.no}" class="input-field" oninput="updateAll()">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1"><span class="badge-must">必須</span> 退院日（または形態変更日）</label>
+              <input type="date" id="discharge-${d.no}" class="input-field" oninput="updateAll()">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1"><span class="badge-must">必須</span> 担当開始日</label>
+              <input type="date" id="respon-start-${d.no}" class="input-field" oninput="updateAll()">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1"><span class="badge-must">必須</span> 担当終了日</label>
+              <input type="date" id="respon-end-${d.no}" class="input-field" oninput="updateAll()">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">指導医氏名</label>
+              <input type="text" id="supervisor-${d.no}" class="input-field" placeholder="氏名 指定医番号" oninput="updateAll()">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 mb-1">診断（ICD-10コード）</label>
+              <input type="text" id="icdcode-${d.no}" class="input-field" placeholder="例: F20.0" oninput="updateAll()">
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-4 text-sm">
+            ${d.icd.startsWith('F1') || d.icd.startsWith('F2') || d.icd === 'F3' || d.icd.startsWith('F0') || d.icd.includes('F4') ? `
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="witness-${d.no}" class="w-4 h-4 accent-blue-700" onchange="updateAll()">
+              <span><span class="badge-must">必須条件</span> 医保入院時の指定医診察に立ち会った（医療保護入院の場合のみ対象）</span>
+            </label>` : ''}
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="outpatient-${d.no}" class="w-4 h-4 accent-teal-700" onchange="updateAll()">
+              <span><span class="badge-opt">推奨</span> 外来移行症例（退院後に通院治療あり）</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="minor-${d.no}" class="w-4 h-4 accent-teal-700" onchange="updateAll()">
+              <span><span class="badge-opt">推奨</span> 18歳未満の症例</span>
+            </label>
+          </div>
+
+          <div id="case-alert-${d.no}" class="mt-3 space-y-1"></div>
+        </div>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    function parseDate(str) {
+      if (!str) return null;
+      const d = new Date(str);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function diffDays(a, b) {
+      return Math.round((b - a) / (1000 * 60 * 60 * 24));
+    }
+
+    function dateStr(d) {
+      if (!d) return '—';
+      return d.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function updateAll() {
+      const applyDate = parseDate(document.getElementById('apply-date').value);
+      const infoEl = document.getElementById('date-info');
+      const threshEl = document.getElementById('date-thresholds');
+
+      let threshold7y = null, threshold1yBefore = null, threshold1yAfter = null;
+
+      if (applyDate) {
+        threshold7y = new Date(applyDate); threshold7y.setFullYear(threshold7y.getFullYear() - 7);
+        threshold1yBefore = new Date(applyDate); threshold1yBefore.setFullYear(threshold1yBefore.getFullYear() - 1);
+        threshold1yAfter = new Date(applyDate); threshold1yAfter.setFullYear(threshold1yAfter.getFullYear() - 1); threshold1yAfter.setDate(threshold1yAfter.getDate() + 1);
+        infoEl.textContent = '申請日: ' + dateStr(applyDate);
+        threshEl.innerHTML = `
+          <ul class="list-disc pl-4 space-y-1">
+            <li>7年前（= <strong>${dateStr(threshold7y)}</strong>）より前に診療開始した症例は対象外</li>
+            <li>「申請前1年以内に開始」 = <strong>${dateStr(threshold1yAfter)} 以降</strong>に診療開始</li>
+            <li>「申請日の1年前の日より前に開始」 = <strong>${dateStr(threshold1yBefore)} 以前</strong>に診療開始</li>
+          </ul>`;
+      } else {
+        infoEl.textContent = '';
+        threshEl.innerHTML = '<span class="text-slate-400">申請日を入力すると自動計算します</span>';
+      }
+
+      let cntSochi = 0, cntIyouho = 0, cntWitness = 0, cntFilled = 0;
+      let cnt1yIn = 0, cnt1yOver = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        const type = document.getElementById(`type-${i}`)?.value || '';
+        const startVal = document.getElementById(`start-${i}`)?.value || '';
+        const admitVal = document.getElementById(`admit-${i}`)?.value || '';
+        const dischargeVal = document.getElementById(`discharge-${i}`)?.value || '';
+        const responStartVal = document.getElementById(`respon-start-${i}`)?.value || '';
+        const responEndVal = document.getElementById(`respon-end-${i}`)?.value || '';
+        const witness = document.getElementById(`witness-${i}`)?.checked || false;
+        const icdcode = document.getElementById(`icdcode-${i}`)?.value?.trim() || '';
+
+        const startDate = parseDate(startVal);
+        const admitDate = parseDate(admitVal);
+        const dischargeDate = parseDate(dischargeVal);
+        const responStart = parseDate(responStartVal);
+        const responEnd = parseDate(responEndVal);
+
+        const alerts = [];
+        let cardStatus = 'pending';
+
+        // 入院形態集計
+        if (type === '措置入院') cntSochi++;
+        if (type === '医療保護入院') cntIyouho++;
+        if (type === '医療保護入院' && witness) cntWitness++;
+
+        // 診療開始日の要件
+        if (applyDate && startDate) {
+          if (startDate < threshold7y) {
+            alerts.push({ type: 'ng', msg: '診療開始日が申請前7年以前のため対象外です' });
+          } else if (startDate >= threshold1yAfter) {
+            cnt1yIn++;
+          } else {
+            cnt1yOver++;
+          }
+        }
+
+        // 担当期間チェック
+        if (responStart && responEnd) {
+          const days = diffDays(responStart, responEnd);
+          if (days < 0) {
+            alerts.push({ type: 'ng', msg: '担当終了日が開始日より前になっています' });
+          } else if (admitDate && dischargeDate) {
+            const hasAdmit = responStart <= admitDate && admitDate <= responEnd;
+            const hasDischarge = responStart <= dischargeDate && dischargeDate <= responEnd;
+            if (!hasAdmit && !hasDischarge) {
+              if (days < 90) {
+                alerts.push({ type: 'ng', msg: '入院日・退院日のどちらも担当に含まれておらず、担当期間が3ヶ月未満のため提出不可' });
+              } else {
+                alerts.push({ type: 'warn', msg: '入院日・退院日どちらも担当に含まれていません（3ヶ月以上の担当あり）。転院・形態変更の詳細を確認してください' });
+              }
+            }
+          }
+        }
+
+        // 入院形態と立ち会い
+        if (type === '措置入院' && witness) {
+          alerts.push({ type: 'warn', msg: '措置入院では「医保入院時立ち会い」はカウントされません' });
+        }
+
+        // ICD コード確認（簡易）
+        if (icdcode) {
+          const icdUp = icdcode.toUpperCase();
+          const domainIcd = CASE_DOMAINS[i - 1].icd;
+          let ok = false;
+          if (domainIcd === 'F0' && icdUp.startsWith('F0')) ok = true;
+          if (domainIcd === 'F1' && icdUp.startsWith('F1')) ok = true;
+          if (domainIcd === 'F2' && icdUp.startsWith('F2')) ok = true;
+          if (domainIcd === 'F3' && icdUp.startsWith('F3')) ok = true;
+          if (domainIcd.includes('F4') && (icdUp.startsWith('F4') || icdUp.startsWith('F5') || icdUp.startsWith('F6') || icdUp.startsWith('F7') || icdUp.startsWith('F8') || icdUp.startsWith('F9'))) ok = true;
+          if (!ok && icdUp.startsWith('F')) {
+            alerts.push({ type: 'ng', msg: `ICD-10コード「${icdcode}」はこの症例番号の分野（${domainIcd}）に合致しない可能性があります` });
+          }
+        }
+
+        // カードステータス決定
+        const hasNg = alerts.some(a => a.type === 'ng');
+        const hasWarn = alerts.some(a => a.type === 'warn');
+        const hasBasicInput = type && startVal && admitVal && dischargeVal && responStartVal && responEndVal;
+
+        if (hasNg) cardStatus = 'ng';
+        else if (hasBasicInput && !hasWarn) cardStatus = 'ok';
+        else if (hasWarn || hasBasicInput) cardStatus = 'warn';
+
+        if (hasBasicInput) cntFilled++;
+
+        // カードボーダー更新
+        const card = document.getElementById(`case-card-${i}`);
+        card.className = 'case-card ' + cardStatus;
+
+        // ステータスバッジ更新
+        const statusEl = document.getElementById(`case-status-${i}`);
+        if (cardStatus === 'ok') {
+          statusEl.className = 'status-badge status-ok';
+          statusEl.innerHTML = '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i> OK';
+        } else if (cardStatus === 'ng') {
+          statusEl.className = 'status-badge status-ng';
+          statusEl.innerHTML = '<i data-lucide="x-circle" class="w-3.5 h-3.5"></i> 要修正';
+        } else if (cardStatus === 'warn') {
+          statusEl.className = 'status-badge status-warn';
+          statusEl.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> 要確認';
+        } else {
+          statusEl.className = 'status-badge status-pending';
+          statusEl.innerHTML = '<i data-lucide="circle" class="w-3.5 h-3.5"></i> 未入力';
+        }
+
+        // アラート表示
+        const alertEl = document.getElementById(`case-alert-${i}`);
+        alertEl.innerHTML = alerts.map(a => `
+          <div class="${a.type === 'ng' ? 'danger-box' : 'warning-box'} py-2 px-3 text-xs font-medium">
+            ${a.msg}
+          </div>`).join('');
+
+        lucide.createIcons();
+      }
+
+      // 上部集計カウンター更新
+      document.getElementById('cnt-total').textContent = `${cntFilled}/5`;
+      const socEl = document.getElementById('cnt-sochi');
+      socEl.textContent = cntSochi;
+      socEl.className = `text-2xl font-bold ${cntSochi >= 1 ? 'text-green-700' : 'text-red-600'}`;
+      const iyoEl = document.getElementById('cnt-iyouho');
+      iyoEl.textContent = cntIyouho;
+      iyoEl.className = `text-2xl font-bold ${cntIyouho >= 1 ? 'text-green-700' : 'text-red-600'}`;
+      const witEl = document.getElementById('cnt-witness');
+      witEl.textContent = cntWitness;
+      witEl.className = `text-2xl font-bold ${cntWitness >= 1 ? 'text-green-700' : 'text-red-600'}`;
+
+      // 診療開始日配分チェック
+      const checksEl = document.getElementById('progress-checks');
+      const checks = [];
+
+      if (applyDate) {
+        const ok1 = cnt1yIn >= 1;
+        const ok2 = cnt1yOver >= 2;
+        checks.push({ ok: ok1, label: `申請前1年以内開始 ${cnt1yIn}例（必須: 1以上）` });
+        checks.push({ ok: ok2, label: `1年前の日より前に開始 ${cnt1yOver}例（必須: 2以上）` });
+      }
+      const okType = cntSochi >= 1 && cntIyouho >= 1;
+      const okWitness = cntWitness >= 1;
+      checks.push({ ok: okType, label: '措置≥1 かつ 医保≥1' });
+      checks.push({ ok: okWitness, label: '医保入院時立ち会い≥1' });
+
+      checksEl.innerHTML = checks.map(c => `
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${c.ok ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'}">
+          <i data-lucide="${c.ok ? 'check' : 'x'}" class="w-3 h-3"></i>
+          ${c.label}
+        </span>`).join('');
+
+      lucide.createIcons();
+    }
+
+    renderCases();
+    updateAll();
+  </script>
+</body>
+</html>

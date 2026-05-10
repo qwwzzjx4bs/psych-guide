@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神保健指定医 申請チェックリスト — 令和7年新基準</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f0f4f8; font-feature-settings: 'palt'; }
+    .header-gradient { background: var(--psych-gradient); }
+
+    .cat-card { background: white; border-radius: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.07); margin-bottom: 1.25rem; overflow: hidden; }
+    .cat-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; cursor: pointer; user-select: none; }
+    .cat-body { padding: 0 1.25rem 1.25rem; }
+
+    .check-item { display: flex; align-items: flex-start; gap: .75rem; padding: .65rem .85rem; border-radius: .6rem; cursor: pointer; margin-bottom: .3rem; transition: background .15s; }
+    .check-item:hover { background: #f8fafc; }
+    .check-item.done { background: #f0fdf4; }
+    .check-item.done .check-label { color: #15803d; text-decoration: line-through; text-decoration-color: #86efac; }
+    .check-item.required.done .check-label { color: #15803d; }
+    .custom-checkbox { width: 1.2rem; height: 1.2rem; border-radius: .3rem; border: 2px solid #d1d5db; background: white; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; margin-top: .1rem; }
+    .check-item.done .custom-checkbox { background: #15803d; border-color: #15803d; }
+    .check-label { font-size: .85rem; color: #374151; line-height: 1.5; flex: 1; }
+    .check-hint { font-size: .73rem; color: #6b7280; margin-top: .2rem; }
+    .req-badge { font-size: .65rem; font-weight: 700; background: #dc2626; color: white; padding: .1rem .4rem; border-radius: 9999px; flex-shrink: 0; margin-top: .2rem; }
+
+    .progress-bar-bg { background: #e5e7eb; border-radius: 9999px; height: .5rem; }
+    .progress-bar { background: var(--psych-gradient); border-radius: 9999px; height: .5rem; transition: width .4s ease; }
+
+    .badge-law { background: #1e3a5f; color: white; padding: .1rem .45rem; border-radius: .3rem; font-size: .68rem; font-weight: 700; white-space: nowrap; }
+    .badge-req { background: #dc2626; color: white; padding: .1rem .45rem; border-radius: 9999px; font-size: .68rem; font-weight: 700; }
+    .badge-r7  { background: #7c3aed; color: white; padding: .1rem .45rem; border-radius: 9999px; font-size: .68rem; font-weight: 700; }
+
+    .border-amber-cat  { border-left: 4px solid #d97706; }
+    .border-red-cat    { border-left: 4px solid #dc2626; }
+    .border-purple-cat { border-left: 4px solid #7c3aed; }
+    .border-blue-cat   { border-left: 4px solid #1d4ed8; }
+    .border-teal-cat   { border-left: 4px solid #0f766e; }
+    .border-green-cat  { border-left: 4px solid #15803d; }
+    .border-orange-cat { border-left: 4px solid #ea580c; }
+    .border-violet-cat { border-left: 4px solid #6d28d9; }
+
+    .score-card { background: white; border-radius: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,.07); padding: 1.1rem; text-align: center; }
+    .score-big { font-size: 2rem; font-weight: 800; color: #1e3a5f; line-height: 1; }
+
+    .sticky-nav { position: sticky; top: 0; z-index: 40; background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+
+    .criteria-box { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid #1d4ed8; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+    .warning-box  { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-left: 4px solid #d97706; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+    .recommend-box{ background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 4px solid #15803d; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+    .danger-box   { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-left: 4px solid #dc2626; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+
+    .accordion-arrow { transition: transform .2s; }
+    .accordion-arrow.open { transform: rotate(180deg); }
+
+    /* 症例番号バッジ */
+    .case-badge { width: 1.6rem; height: 1.6rem; border-radius: 9999px; background: var(--psych-gradient); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 700; flex-shrink: 0; }
+
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  </style>
+</head>
+<body>
+
+<header class="header-gradient text-white py-7">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="check-square" class="w-7 h-7 opacity-80"></i>
+      <span class="text-xs font-semibold opacity-70 uppercase tracking-widest">申請準備支援 — 令和7年新基準</span>
+    </div>
+    <h1 class="text-2xl md:text-3xl font-bold">精神保健指定医 申請チェックリスト</h1>
+    <p class="mt-1.5 text-sm opacity-85">5症例の疾患カテゴリ・入院形態要件・各症例の記載要件を確認。進捗はブラウザに自動保存されます。</p>
+  </div>
+</header>
+
+<nav class="sticky-nav">
+  <div class="max-w-4xl mx-auto px-4 py-2 flex gap-1 overflow-x-auto items-center">
+    <a href="seishin-hoken-shitei-overview.html" class="text-xs text-gray-500 hover:text-blue-700 flex items-center gap-1 mr-2 whitespace-nowrap">
+      <i data-lucide="arrow-left" class="w-3 h-3"></i>制度概要
+    </a>
+    <span class="text-gray-300">|</span>
+    <a href="#progress" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">進捗</a>
+    <a href="#cat-overview" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">5症例構成</a>
+    <a href="#cat-c1" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">第1(F0)</a>
+    <a href="#cat-c2" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">第2(F1)</a>
+    <a href="#cat-c3" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">第3(F2)</a>
+    <a href="#cat-c4" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">第4(F3)</a>
+    <a href="#cat-c5" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">第5(F4-9)</a>
+    <a href="#cat-adm" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">入院形態要件</a>
+    <a href="#cat-timing" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">診療期間</a>
+    <a href="#cat-common" class="text-xs px-2 py-1 rounded hover:bg-blue-50 text-gray-600 whitespace-nowrap">共通記載</a>
+    <div class="ml-auto flex-shrink-0">
+      <button id="resetBtn" class="text-xs text-red-500 hover:text-red-700 px-2 py-1 rounded border border-red-200 hover:border-red-400">リセット</button>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+
+  <!-- 進捗 -->
+  <section id="progress" class="mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+      <div class="score-card"><p class="text-xs text-gray-500 mb-1">全体進捗</p><div class="score-big" id="totalPct">0%</div><p class="text-xs text-gray-400 mt-1" id="totalCount">0 / 0</p></div>
+      <div class="score-card"><p class="text-xs text-gray-500 mb-1">5症例構成</p><div class="score-big text-amber-700" id="casesPct">0%</div><p class="text-xs text-gray-400 mt-1" id="casesCount">0 / 0</p></div>
+      <div class="score-card"><p class="text-xs text-gray-500 mb-1">入院形態要件</p><div class="score-big text-red-700" id="admPct">0%</div><p class="text-xs text-gray-400 mt-1" id="admCount">0 / 0</p></div>
+      <div class="score-card"><p class="text-xs text-gray-500 mb-1">共通・書式</p><div class="score-big text-teal-700" id="comPct">0%</div><p class="text-xs text-gray-400 mt-1" id="comCount">0 / 0</p></div>
+    </div>
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+      <div class="flex justify-between text-xs text-gray-500 mb-1"><span>全チェック項目の進捗</span><span id="progressLabel">0%</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+      <p class="text-xs text-gray-400 mt-2">進捗はブラウザの localStorage に自動保存されます（ページを閉じても記録が残ります）。</p>
+    </div>
+  </section>
+
+  <!-- 5症例構成確認 -->
+  <div id="cat-overview" class="cat-card border-amber-cat">
+    <div class="cat-header" onclick="toggleAccordion('overview')">
+      <div class="flex items-center gap-3">
+        <i data-lucide="layers" class="w-5 h-5 text-amber-600"></i>
+        <div><span class="font-bold text-gray-800">5症例の構成確認</span><span class="badge-r7 ml-2">法令固定カテゴリ</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="overview-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="overview-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="overview-body">
+      <div class="warning-box mb-3"><p class="text-xs text-gray-700"><strong>重要：</strong>ケースレポートの疾患カテゴリは法令（昭和63年厚生省告示第124号）で第1〜第5症例が固定されています。順序を変更することはできません。</p></div>
+      <div class="check-item" data-id="ov1" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label"><span class="case-badge mr-1">1</span><strong>第1症例</strong>：症状性を含む器質性精神障害（F0）の症例を確保している</div>
+        <div class="check-hint">せん妄・器質性精神障害など。老年期認知症は不可。</div></div>
+      </div>
+      <div class="check-item" data-id="ov2" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label"><span class="case-badge mr-1">2</span><strong>第2症例</strong>：精神作用物質依存症（F1の依存症のみ）の症例を確保している</div>
+        <div class="check-hint">アルコール依存症（F10.2）・薬物依存症など。有害使用や急性中毒のみでは不可。</div></div>
+      </div>
+      <div class="check-item" data-id="ov3" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label"><span class="case-badge mr-1">3</span><strong>第3症例</strong>：統合失調症・統合失調症型障害・妄想性障害（F2）の症例を確保している</div></div>
+      </div>
+      <div class="check-item" data-id="ov4" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label"><span class="case-badge mr-1">4</span><strong>第4症例</strong>：気分（感情）障害（F3）の症例を確保している</div>
+        <div class="check-hint">双極性感情障害（F31）・うつ病エピソード（F32）など。</div></div>
+      </div>
+      <div class="check-item" data-id="ov5" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label"><span class="case-badge mr-1">5</span><strong>第5症例</strong>：F4〜F9のいずれかの症例を確保している</div>
+        <div class="check-hint">神経症性障害（F4）・生理的障害（F5）・パーソナリティ障害（F6）・知的障害（F7）・発達障害（F8）・小児期の障害（F9）から選択。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第1症例 F0 -->
+  <div id="cat-c1" class="cat-card border-amber-cat">
+    <div class="cat-header" onclick="toggleAccordion('c1')">
+      <div class="flex items-center gap-3">
+        <span class="case-badge">1</span>
+        <div><span class="font-bold text-gray-800">第1症例：器質性精神障害（F0）</span><span class="badge-law ml-2 text-xs">老年期認知症除く</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="c1-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="c1-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="c1-body">
+      <div class="check-item" data-id="c1a" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">ICD-10コードがF00〜F09（老年期認知症を除く）の診断で、依存症は含まないこと</div></div>
+      </div>
+      <div class="check-item" data-id="c1b" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">主評価対象の入院形態が措置入院または医療保護入院である</div>
+        <div class="check-hint">任意入院は主評価対象にならない（様式3-1 ③）</div></div>
+      </div>
+      <div class="check-item" data-id="c1c" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">身体的背景（原因疾患・検査所見）と精神症状の関連を記載している</div></div>
+      </div>
+      <div class="check-item" data-id="c1d" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">器質性疾患との鑑別（せん妄 vs 認知症、器質性 vs 機能性）の根拠を記載している</div></div>
+      </div>
+      <div class="check-item" data-id="c1e" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">（特例）3ヶ月以内の転院の場合、同一入院形態のまま転院したことを確認している</div>
+        <div class="check-hint">F0は転院3ヶ月以内でも可（事務取扱要領 2キ）。様式3-1 ⑨でチェック。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第2症例 F1 -->
+  <div id="cat-c2" class="cat-card border-red-cat">
+    <div class="cat-header" onclick="toggleAccordion('c2')">
+      <div class="flex items-center gap-3">
+        <span class="case-badge">2</span>
+        <div><span class="font-bold text-gray-800">第2症例：精神作用物質依存症（F1依存症）</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="c2-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="c2-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="c2-body">
+      <div class="criteria-box mb-2"><p class="text-xs text-gray-700"><strong>注意：</strong>「依存症に係るもの」に限る。有害使用（F1x.1）・急性中毒（F1x.0）のみの症例は不可。ICD-10で「依存症候群」（F1x.2）以上の診断が必要。</p></div>
+      <div class="check-item" data-id="c2a" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">診断が依存症候群（F1x.2以上）であることを確認している</div>
+        <div class="check-hint">アルコール依存症 F10.2、薬物依存症 F1x.2 など</div></div>
+      </div>
+      <div class="check-item" data-id="c2b" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">主評価対象の入院形態が措置入院または医療保護入院である</div></div>
+      </div>
+      <div class="check-item" data-id="c2c" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">依存症の経過・離脱症状・動機付けへの関わりを記載している</div></div>
+      </div>
+      <div class="check-item" data-id="c2d" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">（特例）転院3ヶ月以内の場合、同一入院形態のまま転院したことを確認している</div>
+        <div class="check-hint">F1依存症も転院3ヶ月以内で可（事務取扱要領 2キ）。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第3症例 F2 -->
+  <div id="cat-c3" class="cat-card border-purple-cat">
+    <div class="cat-header" onclick="toggleAccordion('c3')">
+      <div class="flex items-center gap-3">
+        <span class="case-badge">3</span>
+        <div><span class="font-bold text-gray-800">第3症例：統合失調症スペクトラム（F2）</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="c3-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="c3-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="c3-body">
+      <div class="check-item" data-id="c3a" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">診断がF20〜F29（統合失調症・統合失調症型障害・妄想性障害等）である</div></div>
+      </div>
+      <div class="check-item" data-id="c3b" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">主評価対象の入院形態が措置入院または医療保護入院である</div></div>
+      </div>
+      <div class="check-item" data-id="c3c" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">陽性症状（幻覚・妄想）・陰性症状・思考形式の障害を体系的に記載している</div></div>
+      </div>
+      <div class="check-item" data-id="c3d" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">診断基準（F20の特徴的症状：A群〜D基準）への対応を記載している</div></div>
+      </div>
+      <div class="check-item" data-id="c3e" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">気分障害・器質性疾患など鑑別診断と除外根拠を記載している</div></div>
+      </div>
+      <a href="schizophrenia-diagnosis.html" class="text-xs text-blue-700 underline mt-1 inline-flex items-center gap-1 ml-2"><i data-lucide="external-link" class="w-3 h-3"></i>統合失調症診断ガイド</a>
+    </div>
+  </div>
+
+  <!-- 第4症例 F3 -->
+  <div id="cat-c4" class="cat-card border-blue-cat">
+    <div class="cat-header" onclick="toggleAccordion('c4')">
+      <div class="flex items-center gap-3">
+        <span class="case-badge">4</span>
+        <div><span class="font-bold text-gray-800">第4症例：気分（感情）障害（F3）</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="c4-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="c4-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="c4-body">
+      <div class="check-item" data-id="c4a" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">診断がF30〜F39（双極性感情障害・うつ病エピソード・反復性うつ病等）である</div></div>
+      </div>
+      <div class="check-item" data-id="c4b" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">主評価対象の入院形態が措置入院または医療保護入院である</div></div>
+      </div>
+      <div class="check-item" data-id="c4c" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">希死念慮・自傷行為など自殺リスク評価を具体的に記載している</div>
+        <div class="check-hint">措置入院の場合は「自傷のおそれ」の具体的根拠として必須</div></div>
+      </div>
+      <div class="check-item" data-id="c4d" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">統合失調症・器質性疾患との鑑別診断を記載している</div></div>
+      </div>
+      <div class="check-item" data-id="c4e" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">薬物療法（気分安定薬・抗うつ薬等）の選択根拠と経過を記載している</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第5症例 F4-F9 -->
+  <div id="cat-c5" class="cat-card border-teal-cat">
+    <div class="cat-header" onclick="toggleAccordion('c5')">
+      <div class="flex items-center gap-3">
+        <span class="case-badge">5</span>
+        <div><span class="font-bold text-gray-800">第5症例：F4〜F9のいずれか</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="c5-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="c5-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="c5-body">
+      <p class="text-xs text-gray-500 mb-3">F4（神経症性）・F5（生理的障害）・F6（パーソナリティ障害）・F7（知的障害）・F8（発達障害）・F9（小児期の障害）のいずれか。</p>
+      <div class="check-item" data-id="c5a" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">診断がF40〜F98のいずれかに該当することを確認している</div></div>
+      </div>
+      <div class="check-item" data-id="c5b" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">主評価対象の入院形態が措置入院または医療保護入院である</div></div>
+      </div>
+      <div class="check-item" data-id="c5c" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">18歳未満の症例の場合、発育発達歴・養育環境・就学状況の記載と関係機関連携を含めている</div>
+        <div class="check-hint">評価基準⑪⑫参照。口頭試問で確認される可能性あり。</div></div>
+      </div>
+      <div class="check-item" data-id="c5d" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">パーソナリティ障害（F6）の場合、Axis II的評価と治療関係の構築過程を記載している</div>
+        <div class="check-hint">任意の場合でも、入院形態は措置 or 医療保護が主評価対象</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 入院形態要件（5症例全体） -->
+  <div id="cat-adm" class="cat-card border-orange-cat">
+    <div class="cat-header" onclick="toggleAccordion('adm')">
+      <div class="flex items-center gap-3">
+        <i data-lucide="git-branch" class="w-5 h-5 text-orange-600"></i>
+        <div>
+          <span class="font-bold text-gray-800">入院形態要件（5症例全体で満たすべき必須条件）</span>
+          <span class="badge-req ml-2">3条件すべて必須</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="adm-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="adm-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="adm-body">
+      <div class="danger-box mb-3"><p class="text-xs text-gray-700">以下3条件はすべて必須。事務取扱要領 2エ・2オより。5症例の疾患カテゴリとの組み合わせで達成してください。</p></div>
+
+      <div class="check-item" data-id="adm1" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="check-label font-bold text-red-800">5症例の中に<strong>措置入院を主評価対象とする症例</strong>が1例以上ある</div>
+            <span class="req-badge">必須</span>
+          </div>
+          <div class="check-hint">様式3-1 ③で「措置入院」を選択した症例が1例以上必要（事務取扱要領 2エ）</div>
+        </div>
+      </div>
+      <div class="check-item" data-id="adm2" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="check-label font-bold text-orange-800">5症例の中に<strong>医療保護入院を主評価対象とする症例</strong>が1例以上ある</div>
+            <span class="req-badge">必須</span>
+          </div>
+          <div class="check-hint">様式3-1 ③で「医療保護入院」を選択した症例が1例以上必要（事務取扱要領 2エ）</div>
+        </div>
+      </div>
+      <div class="check-item" data-id="adm3" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="check-label font-bold text-orange-800">医療保護入院症例のうち<strong>入院時から担当し、かつ入院時の指定医診察に立ち会った</strong>症例が1例以上ある</div>
+            <span class="req-badge">必須</span>
+          </div>
+          <div class="check-hint">指導医が「申請者が入院時の指定医診察に立ち会っている」ことを証明する必要あり（事務取扱要領 2オ）</div>
+        </div>
+      </div>
+
+      <h4 class="font-bold text-sm text-gray-700 mt-4 mb-2">望ましい追加要素（口頭試問で確認される可能性あり）</h4>
+      <div class="check-item" data-id="adm4" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">医療保護入院等から<strong>任意入院に入院形態変更後も引き続き治療した症例</strong>が1例以上ある</div>
+        <div class="check-hint">事務取扱要領 2シ：望ましい（なければ口頭試問で確認）</div></div>
+      </div>
+      <div class="check-item" data-id="adm5" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">措置・医療保護入院者の<strong>退院後の通院治療（おおむね1ヶ月以上）を行った症例</strong>が1例以上ある</div>
+        <div class="check-hint">事務取扱要領 2ス：望ましい。様式3-1 ⑧に記載。</div></div>
+      </div>
+      <div class="check-item" data-id="adm6" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">5症例のいずれかに行動制限（隔離または身体的拘束）を実施した症例が含まれている</div>
+        <div class="check-hint">様式3-1 ⑩で「有」をチェック。本文中に行動制限の詳細を記載。独立した症例としての提出は不要。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 診療期間条件 -->
+  <div id="cat-timing" class="cat-card border-violet-cat">
+    <div class="cat-header" onclick="toggleAccordion('timing')">
+      <div class="flex items-center gap-3">
+        <i data-lucide="calendar" class="w-5 h-5 text-violet-600"></i>
+        <div><span class="font-bold text-gray-800">診療期間の条件（別紙1・事務取扱要領）</span><span class="badge-r7 ml-2">令和7年</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="timing-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="timing-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="timing-body">
+      <div class="check-item" data-id="t1" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">5症例すべてが申請日から起算して<strong>7年以内</strong>に診療を開始した症例である</div>
+        <div class="check-hint">事務取扱要領 2ケ。（旧基準の5年から変更）</div></div>
+      </div>
+      <div class="check-item" data-id="t2" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="check-label font-bold">申請前<strong>1年以内</strong>に診療を開始した症例が<strong>1例以上</strong>ある</div>
+            <span class="req-badge">必須</span>
+          </div>
+          <div class="check-hint">事務取扱要領 2コ。育児・介護休業等がある場合は除外期間を申請窓口に確認。</div>
+        </div>
+      </div>
+      <div class="check-item" data-id="t3" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="check-label font-bold">申請日の<strong>1年前より前</strong>に診療を開始した症例が<strong>2例以上</strong>ある</div>
+            <span class="req-badge">必須</span>
+          </div>
+          <div class="check-hint">事務取扱要領 2サ。</div>
+        </div>
+      </div>
+      <div class="check-item" data-id="t4" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">各症例で<strong>入院から退院まで継続担当</strong>（または3ヶ月以上の継続担当）を満たしている</div>
+        <div class="check-hint">事務取扱要領 2ウ。途中から担当した場合は担当期間3ヶ月以上が必要。</div></div>
+      </div>
+      <div class="check-item" data-id="t5" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">各症例で精神病床を有する医療機関での<strong>常時勤務</strong>（週4日以上・1日8時間以上）のもとで担当した</div></div>
+      </div>
+      <div class="check-item" data-id="t6" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">指導医が各症例の担当期間中に<strong>同じ医療機関の常時勤務指定医</strong>として指導していた</div>
+        <div class="check-hint">様式4（常時勤務証明書）と指導医の指定医番号を確認。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 共通記載要件 -->
+  <div id="cat-common" class="cat-card border-green-cat">
+    <div class="cat-header" onclick="toggleAccordion('common')">
+      <div class="flex items-center gap-3">
+        <i data-lucide="file-text" class="w-5 h-5 text-green-600"></i>
+        <div><span class="font-bold text-gray-800">全症例共通：様式・記載要件</span></div>
+      </div>
+      <div class="flex items-center gap-3"><span class="text-sm font-bold text-teal-700" id="common-score">0/0</span><i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 accordion-arrow open" id="common-arrow"></i></div>
+    </div>
+    <div class="cat-body" id="common-body">
+      <p class="text-xs text-gray-500 mb-3">令和7年1月版 様式3-1 に基づく全症例共通の記載・書式要件。</p>
+
+      <h4 class="font-bold text-xs text-gray-600 mb-1">【表紙】</h4>
+      <div class="check-item" data-id="cm1" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">令和7年1月版の様式3-1（最新様式）を使用している</div>
+        <div class="check-hint">令和7年2月1日以降の申請は新様式が必須</div></div>
+      </div>
+      <div class="check-item" data-id="cm2" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">①申請者氏名が<strong>自筆署名</strong>されている（ソフト入力不可）</div></div>
+      </div>
+      <div class="check-item" data-id="cm3" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">②最終診断名とICD-10コード（<strong>F以下2桁</strong>）が記載されている</div>
+        <div class="check-hint">例: F20.0 。2桁記載が必須。</div></div>
+      </div>
+      <div class="check-item" data-id="cm4" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">③主な評価対象の入院形態を「措置入院」または「医療保護入院」から選択している</div></div>
+      </div>
+      <div class="check-item" data-id="cm5" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">⑤患者イニシャル（姓.名）と生年月日（西暦）が記載されている</div>
+        <div class="check-hint">令和7年版から追加項目。個人情報の匿名化に注意。</div></div>
+      </div>
+      <div class="check-item" data-id="cm6" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">⑥すべての入院形態の入退院年月日（西暦）が記載されている</div>
+        <div class="check-hint">緊急措置入院・応急入院を含むすべての入院形態を記載</div></div>
+      </div>
+      <div class="check-item" data-id="cm7" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">⑦-2,3 指導医の氏名・指定医番号・指導期間・<strong>自筆署名</strong>が全員分記載されている</div>
+        <div class="check-hint">複数指導医がいる場合は全員分を記載。最後に指導した指導医が署名。</div></div>
+      </div>
+      <div class="check-item" data-id="cm8" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">⑩行動制限の有無に「有」または「無」のチェックがある</div>
+        <div class="check-hint">「有」の場合、行動制限の種類（隔離・身体的拘束等）にもチェック</div></div>
+      </div>
+
+      <h4 class="font-bold text-xs text-gray-600 mb-1 mt-3">【関係法規に定める手続への対応】</h4>
+      <div class="check-item" data-id="cm9" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">各入院形態に対応する法的手続チェックリスト（措置・医療保護・任意・行動制限）をすべて記入している</div>
+        <div class="check-hint">様式3-1の「関係法規に定める手続への対応」欄（5〜16ページ相当）</div></div>
+      </div>
+      <div class="check-item" data-id="cm10" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">令和6年4月1日以降入院の症例で<strong>退院後生活環境相談員の選任</strong>を記載している</div>
+        <div class="check-hint">措置入院（第29条の6）・医療保護入院（第33条の4）ともに必須（令和6年改正）</div></div>
+      </div>
+
+      <h4 class="font-bold text-xs text-gray-600 mb-1 mt-3">【本文】</h4>
+      <div class="check-item" data-id="cm11" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">本文（「入院時の状況」「入院後経過」「考察」の合計）が<strong>1200〜2500字</strong>の範囲内である</div>
+        <div class="check-hint">文字数は本文末に記載する（様式規定）</div></div>
+      </div>
+      <div class="check-item" data-id="cm12" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">「入院時の状況」に当該入院形態による入院の必要性を法的要件（精神障害者であること・自傷他害・同意能力等）に基づいて記載している</div></div>
+      </div>
+      <div class="check-item" data-id="cm13" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">「入院後経過」に行動制限の種類・開始/解除の日時・開始/解除の判断理由を記載している（行動制限を実施した場合）</div></div>
+      </div>
+      <div class="check-item" data-id="cm14" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">本文中に関係条文の引用はしていない（様式規定：条文引用は不要）</div></div>
+      </div>
+      <div class="check-item" data-id="cm15" onclick="toggleCheck(this)">
+        <div class="custom-checkbox"><i data-lucide="check" class="w-3 h-3 text-white hidden check-icon"></i></div>
+        <div><div class="check-label">5症例の原本（自筆署名あり）各1通、計5通の提出準備ができている</div>
+        <div class="check-hint">ホチキス・クリップ・付箋等は一切使用しない。片面印刷。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 次のステップ -->
+  <div class="bg-white rounded-xl p-5 shadow-sm mt-2">
+    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><i data-lucide="arrow-right-circle" class="w-5 h-5 text-teal-700"></i>次のステップ</h3>
+    <div class="grid md:grid-cols-2 gap-3">
+      <a href="shitei-report-wizard.html" class="flex items-center gap-3 p-3 rounded-lg border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50 transition-all">
+        <i data-lucide="wand-2" class="w-5 h-5 text-blue-700 flex-shrink-0"></i>
+        <div><p class="font-bold text-sm text-blue-900">レポート作成ウィザードへ</p><p class="text-xs text-gray-500">新様式準拠のレポート草案を7ステップで作成</p></div>
+      </a>
+      <a href="seishin-hoken-shitei-overview.html" class="flex items-center gap-3 p-3 rounded-lg border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all">
+        <i data-lucide="book-open" class="w-5 h-5 text-gray-600 flex-shrink-0"></i>
+        <div><p class="font-bold text-sm text-gray-800">制度概要を確認する</p><p class="text-xs text-gray-500">令和7年新基準の詳細を再確認</p></div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="bg-gray-800 text-gray-300 text-xs py-6 mt-4">
+  <div class="max-w-4xl mx-auto px-4 text-center space-y-1">
+    <p>本チェックリストは厚生労働省「精神保健指定医の新規申請等に係る事務取扱要領」（令和7年1月31日改正）に基づいて作成しています。</p>
+    <p>最終的な要件は<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/seishinhokenshiteii.html" class="underline text-gray-400" target="_blank">厚生労働省公式ページ</a>の最新通知をご確認ください。</p>
+    <p class="text-gray-500">精神科臨床ガイド — 精神保健指定医支援ツール</p>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+
+const CATEGORIES = {
+  overview: { ids: ['ov1','ov2','ov3','ov4','ov5'],         group: 'cases'  },
+  c1:       { ids: ['c1a','c1b','c1c','c1d','c1e'],         group: 'cases'  },
+  c2:       { ids: ['c2a','c2b','c2c','c2d'],               group: 'cases'  },
+  c3:       { ids: ['c3a','c3b','c3c','c3d','c3e'],         group: 'cases'  },
+  c4:       { ids: ['c4a','c4b','c4c','c4d','c4e'],         group: 'cases'  },
+  c5:       { ids: ['c5a','c5b','c5c','c5d'],               group: 'cases'  },
+  adm:      { ids: ['adm1','adm2','adm3','adm4','adm5','adm6'], group: 'adm' },
+  timing:   { ids: ['t1','t2','t3','t4','t5','t6'],         group: 'timing' },
+  common:   { ids: ['cm1','cm2','cm3','cm4','cm5','cm6','cm7','cm8','cm9','cm10','cm11','cm12','cm13','cm14','cm15'], group: 'com' },
+};
+
+const STORAGE_KEY = 'shitei_checklist_v2';
+let state = {};
+
+function loadState() { try { const s = localStorage.getItem(STORAGE_KEY); state = s ? JSON.parse(s) : {}; } catch(e) { state = {}; } }
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function toggleCheck(el) {
+  const id = el.dataset.id;
+  state[id] = !state[id];
+  saveState();
+  renderItem(el, state[id]);
+  updateScores();
+}
+
+function renderItem(el, checked) {
+  const icon = el.querySelector('.check-icon');
+  if (checked) { el.classList.add('done'); icon.classList.remove('hidden'); }
+  else { el.classList.remove('done'); icon.classList.add('hidden'); }
+}
+
+function updateScores() {
+  let total = 0, totalDone = 0;
+  let cases = 0, casesDone = 0;
+  let adm = 0, admDone = 0;
+  let com = 0, comDone = 0;
+
+  Object.entries(CATEGORIES).forEach(([cat, { ids, group }]) => {
+    const done = ids.filter(id => state[id]).length;
+    const el = document.getElementById(`${cat}-score`);
+    if (el) el.textContent = `${done}/${ids.length}`;
+    total += ids.length; totalDone += done;
+    if (group === 'cases') { cases += ids.length; casesDone += done; }
+    if (group === 'adm')   { adm   += ids.length; admDone   += done; }
+    if (group === 'com')   { com   += ids.length; comDone   += done; }
+  });
+
+  const pct = total > 0 ? Math.round(totalDone / total * 100) : 0;
+  document.getElementById('totalPct').textContent    = `${pct}%`;
+  document.getElementById('totalCount').textContent  = `${totalDone} / ${total}`;
+  document.getElementById('casesPct').textContent    = `${cases > 0 ? Math.round(casesDone/cases*100) : 0}%`;
+  document.getElementById('casesCount').textContent  = `${casesDone} / ${cases}`;
+  document.getElementById('admPct').textContent      = `${adm > 0 ? Math.round(admDone/adm*100) : 0}%`;
+  document.getElementById('admCount').textContent    = `${admDone} / ${adm}`;
+  document.getElementById('comPct').textContent      = `${com > 0 ? Math.round(comDone/com*100) : 0}%`;
+  document.getElementById('comCount').textContent    = `${comDone} / ${com}`;
+  document.getElementById('progressBar').style.width = `${pct}%`;
+  document.getElementById('progressLabel').textContent = `${pct}%`;
+}
+
+function restoreAll() {
+  document.querySelectorAll('.check-item[data-id]').forEach(el => renderItem(el, !!state[el.dataset.id]));
+  lucide.createIcons();
+  updateScores();
+}
+
+function toggleAccordion(cat) {
+  const body  = document.getElementById(`${cat}-body`);
+  const arrow = document.getElementById(`${cat}-arrow`);
+  if (body.style.display === 'none') { body.style.display = ''; arrow.classList.add('open'); }
+  else { body.style.display = 'none'; arrow.classList.remove('open'); }
+}
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (confirm('すべての進捗をリセットしますか？')) { state = {}; saveState(); restoreAll(); }
+});
+
+loadState();
+restoreAll();
+</script>
+</body>
+</html>

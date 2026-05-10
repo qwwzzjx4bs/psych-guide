@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脳波読影クイズ | EEG学習ツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+  .level-btn {
+    flex: 1; padding: 0.6rem 0.5rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem;
+    border: 2px solid transparent; cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .level-btn.active { color: white; }
+  .level-btn:not(.active) { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+  .choice-btn {
+    width: 100%; text-align: left; padding: 0.8rem 1rem; border-radius: 0.75rem;
+    border: 2px solid #e2e8f0; background: white; cursor: pointer; transition: all 0.15s;
+    font-size: 0.875rem; line-height: 1.4; display: flex; align-items: center; gap: 0.75rem;
+    font-family: inherit;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: #6366f1; background: #eef2ff; }
+  .choice-btn.correct { border-color: #16a34a !important; background: #f0fdf4 !important; color: #15803d !important; }
+  .choice-btn.wrong   { border-color: #dc2626 !important; background: #fef2f2 !important; color: #b91c1c !important; }
+  .choice-btn.revealed { border-color: #16a34a !important; background: #f0fdf4 !important; color: #15803d !important; }
+  .choice-btn:disabled { cursor: default; }
+  .choice-label {
+    width: 1.6rem; height: 1.6rem; border-radius: 50%; background: #f1f5f9; color: #64748b;
+    font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .correct .choice-label { background: #16a34a; color: white; }
+  .wrong .choice-label   { background: #dc2626; color: white; }
+  .revealed .choice-label { background: #16a34a; color: white; }
+  .progress-bar-fill { transition: width 0.4s ease; }
+  .eeg-canvas { display: block; width: 100%; background: #0f172a; border-radius: 0.5rem; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-8 shadow-lg">
+  <div class="max-w-3xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">クイズ</span>
+    </nav>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="target" class="w-5 h-5 text-white"></i>
+      </div>
+      <span class="text-white/70 text-sm font-semibold tracking-wider">STEP 3</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">脳波読影クイズ</h1>
+    <p class="text-white/80 mt-2 text-sm leading-relaxed max-w-2xl">
+      3段階の難易度で脳波パターンの識別力を鍛えます。進捗は自動保存されます。
+    </p>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-6">
+
+  <!-- Top panel: level + stats -->
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-5">
+    <div class="flex gap-2 mb-4">
+      <button class="level-btn active" id="lbtn-1" onclick="setLevel(1)"
+        style="background:#312e81;border-color:#312e81;">
+        Lv.1 正常/異常
+      </button>
+      <button class="level-btn" id="lbtn-2" onclick="setLevel(2)">
+        Lv.2 波形識別
+      </button>
+      <button class="level-btn" id="lbtn-3" onclick="setLevel(3)">
+        Lv.3 臨床相関
+      </button>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex-1">
+        <div class="flex justify-between text-xs text-slate-500 mb-1">
+          <span id="progress-label">問題 1 / 5</span>
+          <span id="score-label">正答: 0</span>
+        </div>
+        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-indigo-500 rounded-full progress-bar-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <button onclick="resetQuiz()" class="text-xs text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>リセット
+      </button>
+    </div>
+  </div>
+
+  <!-- Question area -->
+  <div id="quiz-area"></div>
+
+  <!-- Result panel (hidden until all done) -->
+  <div id="result-panel" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+    <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4">
+      <i data-lucide="award" class="w-8 h-8 text-indigo-600"></i>
+    </div>
+    <h2 class="text-xl font-bold text-slate-800 mb-1">レベルクリア！</h2>
+    <p id="result-score" class="text-3xl font-black text-indigo-700 mb-2"></p>
+    <p id="result-msg" class="text-sm text-slate-500 mb-5"></p>
+    <div class="flex gap-2 justify-center">
+      <button onclick="resetQuiz()" class="px-5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-sm font-bold transition-colors">
+        もう一度
+      </button>
+      <a href="eeg-cases.html" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-bold transition-colors">
+        症例学習へ
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
+    <a href="eeg-waveforms.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      波形図鑑へ
+    </a>
+    <a href="eeg-cases.html" class="flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 transition-colors font-semibold">
+      次: 症例学習
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+lucide.createIcons();
+
+// ===== Waveform drawing (shared utility) =====
+function pseudoNoise(t, seed) {
+  return Math.sin(t * 127.3 + seed * 43.7) * 0.5
+       + Math.sin(t * 83.1 + seed * 29.1) * 0.3
+       + Math.sin(t * 51.7 + seed * 17.9) * 0.2;
+}
+
+const DRAWFNS = {
+  alpha(ctx, W, H) {
+    ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const n = pseudoNoise(t,0)*2;
+      x===0 ? ctx.moveTo(x, H/2-Math.sin(2*Math.PI*10*t)*H*0.35-n)
+            : ctx.lineTo(x, H/2-Math.sin(2*Math.PI*10*t)*H*0.35-n);
+    }
+    ctx.stroke();
+  },
+  delta(ctx, W, H) {
+    ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*8; const n = pseudoNoise(t,1)*5;
+      x===0 ? ctx.moveTo(x, H/2-Math.sin(2*Math.PI*1.5*t)*H*0.40-n)
+            : ctx.lineTo(x, H/2-Math.sin(2*Math.PI*1.5*t)*H*0.40-n);
+    }
+    ctx.stroke();
+  },
+  spikeWave(ctx, W, H) {
+    ctx.strokeStyle = '#f87171'; ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const ph = t*3; const fr = ph - Math.floor(ph);
+      const val = fr < 0.12 ? Math.sin(fr/0.12*Math.PI*2)*H*0.42 : -Math.sin((fr-0.12)/0.88*Math.PI)*H*0.20;
+      x===0 ? ctx.moveTo(x,H/2-(val+pseudoNoise(t,0)*2)) : ctx.lineTo(x,H/2-(val+pseudoNoise(t,0)*2));
+    }
+    ctx.stroke();
+  },
+  spindle(ctx, W, H) {
+    ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*8; const cy = t/3.2; const cf = cy-Math.floor(cy);
+      const env = cf < 0.42 ? Math.sin(cf/0.42*Math.PI) : 0;
+      const n = pseudoNoise(t,2)*2;
+      x===0 ? ctx.moveTo(x, H/2-Math.sin(2*Math.PI*13*t)*H*0.38*env-n*0.5)
+            : ctx.lineTo(x, H/2-Math.sin(2*Math.PI*13*t)*H*0.38*env-n*0.5);
+    }
+    ctx.stroke();
+  },
+  triphasic(ctx, W, H) {
+    ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const ph = t*1.5; const fr = ph-Math.floor(ph);
+      let v = 0;
+      if (fr<0.12) v=-H*0.18*Math.sin(fr/0.12*Math.PI);
+      else if (fr<0.45) v=H*0.40*Math.sin((fr-0.12)/0.33*Math.PI);
+      else if (fr<0.62) v=-H*0.16*Math.sin((fr-0.45)/0.17*Math.PI);
+      x===0 ? ctx.moveTo(x,H/2-(v+pseudoNoise(t,2)*2)) : ctx.lineTo(x,H/2-(v+pseudoNoise(t,2)*2));
+    }
+    ctx.stroke();
+  },
+  polyspike(ctx, W, H) {
+    ctx.strokeStyle = '#fb923c'; ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*5; const ph = t*4; const fr = ph-Math.floor(ph);
+      let v = 0;
+      if (fr<0.05) v=H*0.42*Math.sin(fr/0.05*Math.PI*2);
+      else if (fr<0.10) v=H*0.32*Math.sin((fr-0.05)/0.05*Math.PI*2);
+      else if (fr<0.15) v=H*0.22*Math.sin((fr-0.10)/0.05*Math.PI*2);
+      else v=-H*0.18*Math.sin((fr-0.15)/0.85*Math.PI);
+      x===0 ? ctx.moveTo(x,H/2-(v+pseudoNoise(t,3)*2)) : ctx.lineTo(x,H/2-(v+pseudoNoise(t,3)*2));
+    }
+    ctx.stroke();
+  },
+  burstSupp(ctx, W, H) {
+    ctx.strokeStyle = '#67e8f9'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*10; const cy = t/3.0; const cf = cy-Math.floor(cy);
+      let v = cf < 0.32 ? Math.sin(2*Math.PI*3*t)*H*0.36+pseudoNoise(t,0)*H*0.10 : pseudoNoise(t*5,3)*H*0.02;
+      x===0 ? ctx.moveTo(x,H/2-v) : ctx.lineTo(x,H/2-v);
+    }
+    ctx.stroke();
+  },
+  flatLine(ctx, W, H) {
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*8; const n = pseudoNoise(t*5,8)*H*0.015;
+      x===0 ? ctx.moveTo(x,H/2-n) : ctx.lineTo(x,H/2-n);
+    }
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(148,163,184,0.7)'; ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('平坦（等電位）', W/2, H/2-8); ctx.textAlign = 'left';
+  },
+  focalSlowing(ctx, W, H) {
+    // top = normal, bottom = focal slowing
+    ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*5; const n = pseudoNoise(t,0)*1.5;
+      x===0 ? ctx.moveTo(x, H*0.28-Math.sin(2*Math.PI*10*t)*H*0.14-n)
+            : ctx.lineTo(x, H*0.28-Math.sin(2*Math.PI*10*t)*H*0.14-n);
+    }
+    ctx.stroke();
+    ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*5; const n = pseudoNoise(t,7)*3;
+      x===0 ? ctx.moveTo(x, H*0.72-Math.sin(2*Math.PI*2.5*t)*H*0.20-n)
+            : ctx.lineTo(x, H*0.72-Math.sin(2*Math.PI*2.5*t)*H*0.20-n);
+    }
+    ctx.stroke();
+  },
+  bectsSpike(ctx, W, H) {
+    ctx.strokeStyle = '#34d399'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*5; const n = pseudoNoise(t,5)*2;
+      x===0 ? ctx.moveTo(x, H/2-Math.sin(2*Math.PI*9*t)*H*0.08-n)
+            : ctx.lineTo(x, H/2-Math.sin(2*Math.PI*9*t)*H*0.08-n);
+    }
+    ctx.stroke();
+    for (let i = 0; i < 3; i++) {
+      const sx = W*(0.2+i*0.3);
+      ctx.strokeStyle = '#6ee7b7'; ctx.lineWidth = 2.5; ctx.beginPath();
+      ctx.moveTo(sx-5,H/2); ctx.lineTo(sx,H/2-H*0.42); ctx.lineTo(sx+10,H/2+H*0.22); ctx.lineTo(sx+30,H/2);
+      ctx.stroke();
+    }
+  },
+};
+
+function drawWave(canvas, fnKey) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width; const H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+  for (let x=0; x<W; x+=W/8) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y=0; y<H; y+=H/4) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  if (DRAWFNS[fnKey]) DRAWFNS[fnKey](ctx, W, H);
+}
+
+// ===== Quiz data =====
+const QUIZ_DATA = {
+  1: [
+    {
+      id: 'q1_1',
+      waveKey: 'alpha',
+      context: '35歳男性。目を閉じて安静にしている状態で記録。',
+      question: 'この脳波の主なパターンはどれか？',
+      choices: ['正常 — 後頭部優位α波（覚醒・閉眼）', '異常 — 全般性徐波化', '異常 — てんかん性放電', '異常 — 等電位脳波'],
+      correct: 0,
+      explanation: '規則的な8-13Hzの波形はα波です。閉眼・安静時に後頭部優位に出現する成人の正常所見です。開眼するとこのα波は抑制されます（Berger効果）。',
+    },
+    {
+      id: 'q1_2',
+      waveKey: 'spikeWave',
+      context: '7歳女児。授業中に突然「ぼーっとする」と言われる発作が繰り返す。',
+      question: 'この脳波パターンを正しく説明しているのはどれか？',
+      choices: ['正常 — 睡眠中の正常波形', '正常 — 覚醒時のα波', '異常 — 全般性3Hz棘徐波複合', '異常 — 焦点性δ波'],
+      correct: 2,
+      explanation: '3Hzの規則的な棘波＋徐波複合が全般性に出現しています。これは小児欠神てんかんの典型的所見です。10秒以上持続することで意識消失（欠神発作）が起きます。過呼吸で誘発されやすいです。',
+    },
+    {
+      id: 'q1_3',
+      waveKey: 'spindle',
+      context: '28歳女性。睡眠ポリグラフ記録中。入眠後約20分経過。',
+      question: 'この脳波の解釈として正しいのはどれか？',
+      choices: ['異常 — 全般性てんかん放電', '正常 — 睡眠Stage N2の睡眠紡錘波', '異常 — 三相波（肝性脳症）', '正常 — 覚醒時β波'],
+      correct: 1,
+      explanation: '12-14Hzの紡錘形（spindle）に包まれた速波バーストは睡眠紡錘波です。NREM Stage N2の特徴的所見で、正常睡眠の指標です。K複合を伴うことも多いです。',
+    },
+    {
+      id: 'q1_4',
+      waveKey: 'triphasic',
+      context: '68歳男性。肝硬変で入院中。意識が朦朧とし、はたはた動作が見られる。',
+      question: 'この脳波の解釈として正しいのはどれか？',
+      choices: ['正常 — 深睡眠δ波', '異常 — 三相波（代謝性脳症）', '正常 — REM睡眠', '異常 — 焦点性てんかん放電'],
+      correct: 1,
+      explanation: 'これは三相波です。前頭部優位に1-2Hzで出現する負相-正相-負相の3相性波形が特徴です。肝性脳症・尿毒症などの代謝性脳症で出現します。臨床所見（アンモニア値など）と合わせて判断します。',
+    },
+    {
+      id: 'q1_5',
+      waveKey: 'burstSupp',
+      context: '52歳男性。心肺停止後の蘇生後。ICUで意識なし。',
+      question: 'この脳波パターンはどれか？',
+      choices: ['正常 — 深睡眠', '正常 — REM睡眠', '異常 — 等電位脳波', '異常 — Burst-suppression（バースト抑制）'],
+      correct: 3,
+      explanation: 'バースト（高振幅放電）と電気的抑制（平坦部）が交互に出現するBurst-suppressionパターンです。心停止後、重篤な脳障害、深麻酔時に認められます。蘇生後脳症の予後評価に重要な所見です。',
+    },
+  ],
+  2: [
+    {
+      id: 'q2_1',
+      waveKey: 'polyspike',
+      context: '19歳男性。朝、目が覚めた直後に物を落としたり、コーヒーカップを投げてしまうことがある。',
+      question: 'この脳波パターンの名称はどれか？',
+      choices: ['3Hz棘徐波複合', '多棘徐波複合（Polyspike-wave）', '睡眠紡錘波（Spindle）', '三相波（Triphasic wave）'],
+      correct: 1,
+      explanation: '複数の棘波（2本以上）に続いて徐波が出現する多棘徐波複合です。若年性ミオクローヌスてんかん（JME）の典型的所見。覚醒直後・光刺激・睡眠剥奪で増強します。バルプロ酸が第一選択薬です。',
+    },
+    {
+      id: 'q2_2',
+      waveKey: 'bectsSpike',
+      context: '9歳男児。睡眠中に口の周りをぴくぴくさせ、よだれが出る発作。朝方に多い。',
+      question: 'この脳波パターンの名称として最も適切なのはどれか？',
+      choices: ['後頭部間欠律動性δ活動（OIRDA）', 'ヒプスアリスミア', '中心・側頭部棘波（BECTS）', '一側性周期性放電（LPDs）'],
+      correct: 2,
+      explanation: '中心・側頭部（T5/T6付近）の高振幅棘徐波複合がBECTSの特徴的EEG所見です。睡眠中・傾眠時に増加します。小児良性てんかん（Benign childhood epilepsy with centrotemporal spikes）で予後良好、思春期に自然消失します。',
+    },
+    {
+      id: 'q2_3',
+      waveKey: 'burstSupp',
+      context: '全身麻酔での脳手術後。意識なし。',
+      question: 'この脳波パターンの名称はどれか？',
+      choices: ['等電位脳波（ECS）', 'Burst-suppression（バースト抑制）', '全般性律動性δ活動（GRDA）', 'ヒプスアリスミア'],
+      correct: 1,
+      explanation: '高振幅のバーストと電気的抑制（平坦部）が交互に出現するBurst-suppressionです。等電位脳波（完全平坦）との違いは、バースト部分に活動があること。深麻酔・重篤な脳障害・低体温で出現します。',
+    },
+    {
+      id: 'q2_4',
+      waveKey: 'delta',
+      context: '72歳女性。NREM Stage N3睡眠中。健常者。',
+      question: 'この波形の名称と臨床的意義として正しいのはどれか？',
+      choices: ['α波 — 後頭部覚醒律動', 'δ波 — 深睡眠（NREM Stage N3）の正常所見', 'β波 — 鎮静薬投与による速波増加', '三相波 — 代謝性脳症'],
+      correct: 1,
+      explanation: '0.5-2Hzの高振幅慢波はδ波です。深睡眠（NREM Stage N3）で全般性に出現する正常所見です。覚醒時に同じパターンが出現する場合は全般性徐波化（脳機能低下）として病的意義を持ちます。',
+    },
+    {
+      id: 'q2_5',
+      waveKey: 'focalSlowing',
+      context: '60歳男性。右手の脱力を主訴に入院。頭部MRIで左中大脳動脈領域の梗塞。',
+      question: 'この脳波所見の解釈として正しいのはどれか？（上段=正常側、下段=患側）',
+      choices: ['両側対称性の正常波形', '右半球の全般性てんかん放電', '左半球の焦点性徐波（左大脳梗塞に一致）', '両側の等電位脳波'],
+      correct: 2,
+      explanation: '下段（患側）に焦点性徐波が見られます。左半球の脳梗塞に一致する所見です。局所的な神経細胞の機能低下・喪失を反映しています。急性期には多形性δ活動（PLDA）として高振幅の徐波が出現することがあります。',
+    },
+  ],
+  3: [
+    {
+      id: 'q3_1',
+      waveKey: 'spikeWave',
+      context: '9歳女児。学校の授業参観で先生から「授業中にぼーっとすることが多い、話しかけても反応がない時がある」と指摘。本人は発作の記憶なし。神経学的診察は正常。',
+      question: 'このEEG所見から最も考えられる診断と第一選択薬の組み合わせはどれか？',
+      choices: [
+        '複雑部分発作 — カルバマゼピン',
+        '小児欠神てんかん — エトスクシミドまたはバルプロ酸',
+        '若年性ミオクローヌスてんかん — バルプロ酸',
+        'West症候群 — ACTH療法',
+      ],
+      correct: 1,
+      explanation: '3Hz全般性棘徐波複合＋短い意識消失＋発作の記憶なし＋学童期発症は小児欠神てんかん（CAE）の典型像です。エトスクシミド（欠神発作に特化）またはバルプロ酸（欠神+他発作型への保険）が第一選択。カルバマゼピンは欠神発作を悪化させる可能性があり禁忌に近いです。',
+    },
+    {
+      id: 'q3_2',
+      waveKey: 'triphasic',
+      context: '71歳男性。肝硬変（Child-Pugh C）でフォロー中。1週間前から食欲低下、3日前から会話が噛み合わなくなり、昨日から歩行困難。血中アンモニア 180 μg/dL。「はたはた動作」あり。',
+      question: 'このEEG所見から最も適切な対応はどれか？',
+      choices: [
+        '抗てんかん薬（フェニトイン）を緊急投与する',
+        '肝性脳症としてラクツロース・分岐鎖アミノ酸投与を開始し、誘因（消化管出血・感染）を検索する',
+        '即座に脳波記録を中止し、脳死判定を行う',
+        '睡眠薬を投与して脳波を改善させる',
+      ],
+      correct: 1,
+      explanation: '三相波は肝性脳症の特徴的所見です。アンモニア上昇・はたはた動作・肝硬変歴と合わせて診断を支持します。治療はラクツロース（アンモニア産生抑制）・分岐鎖アミノ酸（窒素源確保）と誘因の検索・除去（消化管出血・感染・脱水・便秘）です。抗てんかん薬は必要ありません。',
+    },
+    {
+      id: 'q3_3',
+      waveKey: 'polyspike',
+      context: '17歳男性。主訴：「朝に物を落とす・飛ばす」。毎朝コーヒーをこぼしたり、携帯電話を投げてしまう。月1回の大発作（全般性強直間代発作）もあり。MRI正常。',
+      question: 'このEEG所見と病歴から最も適切な診断・対応はどれか？',
+      choices: [
+        '側頭葉てんかん — 側頭葉切除術を検討',
+        '若年性ミオクローヌスてんかん（JME）— バルプロ酸を開始。睡眠剥奪・飲酒を避けるよう指導',
+        'West症候群 — ACTH療法を開始',
+        '欠神てんかん — エトスクシミドを開始',
+      ],
+      correct: 1,
+      explanation: '覚醒直後のミオクローヌス＋全般性強直間代発作＋多棘徐波複合＋青年期発症はJME（若年性ミオクローヌスてんかん）の典型像です。バルプロ酸が第一選択（ただし女性では催奇形性に注意）。ラモトリギンも有効。睡眠剥奪・飲酒・光刺激が発作を誘発するため生活指導も重要。生涯にわたる薬物療法が必要なことが多い。',
+    },
+    {
+      id: 'q3_4',
+      waveKey: 'burstSupp',
+      context: '45歳女性。院外心停止（VF）。CPR後10分で自己心拍再開。ICU入室。GCS 3点。低体温療法（33℃）施行中。入院12時間後の脳波。',
+      question: 'このEEG所見とその解釈として正しいのはどれか？',
+      choices: [
+        'Burst-suppressionは正常所見であり、予後良好を示す',
+        'Burst-suppressionは低体温療法・鎮静薬の影響も考慮が必要で、復温後・薬物洗い出し後に再評価が必要',
+        '等電位脳波と同じ意味であり、直ちに治療を中止する',
+        '睡眠紡錘波の延長パターンであり、深睡眠中である',
+      ],
+      correct: 1,
+      explanation: 'Burst-suppressionは低体温療法・プロポフォール・バルビツレートなど薬物によっても出現します。したがって蘇生後早期（特に低体温療法中）の所見のみで予後を確定することはできません。復温完了・鎮静薬洗い出し後（目安：24-72時間後）に再評価することが推奨されます。N20 SEP消失との組み合わせが予後不良の指標として有用です。',
+    },
+    {
+      id: 'q3_5',
+      waveKey: 'bectsSpike',
+      context: '10歳男児。夜中に親が「顔をゆがめ、口からよだれが出て、右腕がぴくぴくしていた」のを目撃。本人は翌朝覚えていない。神経学的診察・MRIは正常。',
+      question: 'この脳波所見と病歴から最も適切な対応はどれか？',
+      choices: [
+        'てんかん外科手術を検討する',
+        '生涯にわたる抗てんかん薬療法を開始する必要がある',
+        '小児良性てんかん（BECTS）として経過観察または一時的な薬物療法を選択し、思春期での自然消失を説明する',
+        '即座にACTH療法を開始する',
+      ],
+      correct: 2,
+      explanation: '睡眠中の焦点性運動発作（口顔面＋一側上肢）＋中心・側頭部棘波＋学童期発症＋MRI正常はBECTS（Benign childhood epilepsy with centrotemporal spikes）の典型です。予後良好で思春期に自然消失するため、発作頻度が低い場合は経過観察も選択肢です。保護者への十分な説明と睡眠確保、スポーツ時の安全管理が重要です。',
+    },
+  ],
+};
+
+// ===== State =====
+const STORAGE_KEY = 'eeg_quiz_state';
+let state = { level: 1, current: 0, scores: {1:0,2:0,3:0}, answered: {} };
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = {...state, ...JSON.parse(saved)};
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function setLevel(n) {
+  state.level = n;
+  state.current = 0;
+  [1,2,3].forEach(i => {
+    const b = document.getElementById('lbtn-'+i);
+    if (i === n) {
+      b.classList.add('active');
+      b.style.background = '#312e81';
+      b.style.borderColor = '#312e81';
+    } else {
+      b.classList.remove('active');
+      b.style.background = '';
+      b.style.borderColor = '';
+    }
+  });
+  renderQuestion();
+}
+
+function resetQuiz() {
+  state.current = 0;
+  state.scores[state.level] = 0;
+  const questions = QUIZ_DATA[state.level];
+  questions.forEach(q => { delete state.answered[q.id]; });
+  saveState();
+  document.getElementById('result-panel').classList.add('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const questions = QUIZ_DATA[state.level];
+  const idx = state.current;
+  if (idx >= questions.length) { showResult(); return; }
+  const q = questions[idx];
+  const total = questions.length;
+  const score = state.scores[state.level] || 0;
+  const answeredData = state.answered[q.id];
+
+  // Update progress
+  document.getElementById('progress-label').textContent = `問題 ${idx+1} / ${total}`;
+  document.getElementById('score-label').textContent = `正答: ${score}`;
+  document.getElementById('progress-bar').style.width = `${(idx/total)*100}%`;
+
+  const area = document.getElementById('quiz-area');
+  area.innerHTML = `
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-4">
+      <div class="p-4 border-b border-slate-100">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">Level ${state.level}</span>
+          <span class="text-xs text-slate-400">問題 ${idx+1}</span>
+        </div>
+        ${q.context ? `<p class="text-sm text-slate-600 bg-slate-50 rounded-lg p-3 border border-slate-200 leading-relaxed mb-3">${q.context}</p>` : ''}
+        <p class="font-bold text-slate-800">${q.question}</p>
+      </div>
+      <canvas id="quiz-canvas" height="110" style="width:100%;background:#0f172a;display:block;"></canvas>
+      <div class="p-4 space-y-2" id="choices-area"></div>
+      ${answeredData ? `<div id="explanation-box" class="mx-4 mb-4 p-4 rounded-xl border ${answeredData.correct ? 'bg-green-50 border-green-200' : 'bg-rose-50 border-rose-200'}">
+        <p class="text-xs font-bold mb-1 ${answeredData.correct ? 'text-green-700' : 'text-rose-700'}">${answeredData.correct ? '正解！' : '不正解'}</p>
+        <p class="text-sm text-slate-700 leading-relaxed">${q.explanation}</p>
+      </div>` : ''}
+    </div>
+    ${answeredData ? `<div class="flex justify-end"><button onclick="nextQuestion()" class="flex items-center gap-1.5 px-5 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-sm font-bold transition-colors">
+      ${idx+1 < total ? '次の問題' : '結果を見る'}
+      <i data-lucide="${idx+1 < total ? 'arrow-right' : 'award'}" class="w-4 h-4"></i>
+    </button></div>` : ''}
+  `;
+
+  // Draw waveform
+  const canvas = document.getElementById('quiz-canvas');
+  if (canvas) {
+    canvas.width = canvas.offsetWidth || 600;
+    drawWave(canvas, q.waveKey);
+  }
+
+  // Render choices
+  const ca = document.getElementById('choices-area');
+  if (ca) {
+    q.choices.forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      let extraClass = '';
+      if (answeredData) {
+        if (i === q.correct) extraClass = ' revealed';
+        else if (answeredData.chosen === i && i !== q.correct) extraClass = ' wrong';
+        btn.disabled = true;
+      }
+      btn.className = 'choice-btn' + extraClass;
+      btn.innerHTML = `
+        <span class="choice-label">${String.fromCharCode(65+i)}</span>
+        <span>${c}</span>
+        ${answeredData && i === q.correct ? '<i data-lucide="check" class="w-4 h-4 ml-auto text-green-600"></i>' : ''}
+        ${answeredData && answeredData.chosen === i && i !== q.correct ? '<i data-lucide="x" class="w-4 h-4 ml-auto text-red-600"></i>' : ''}
+      `;
+      if (!answeredData) {
+        btn.onclick = () => answerQuestion(i);
+      } else {
+        btn.disabled = true;
+      }
+      ca.appendChild(btn);
+    });
+  }
+
+  lucide.createIcons();
+}
+
+function answerQuestion(chosen) {
+  const questions = QUIZ_DATA[state.level];
+  const q = questions[state.current];
+  const correct = chosen === q.correct;
+  state.answered[q.id] = { chosen, correct };
+  if (correct) state.scores[state.level] = (state.scores[state.level] || 0) + 1;
+  saveState();
+  renderQuestion();
+}
+
+function nextQuestion() {
+  state.current++;
+  saveState();
+  renderQuestion();
+}
+
+function showResult() {
+  document.getElementById('quiz-area').innerHTML = '';
+  document.getElementById('result-panel').classList.remove('hidden');
+  const total = QUIZ_DATA[state.level].length;
+  const score = state.scores[state.level] || 0;
+  document.getElementById('result-score').textContent = `${score} / ${total} 問正解`;
+  const pct = score / total;
+  let msg = '';
+  if (pct >= 0.8) msg = '素晴らしい！次のレベルに挑戦しましょう。';
+  else if (pct >= 0.6) msg = '合格ライン。波形図鑑で復習してから再挑戦してみましょう。';
+  else msg = '波形図鑑で基本パターンを再確認してから再挑戦しましょう。';
+  document.getElementById('result-msg').textContent = msg;
+
+  document.getElementById('progress-bar').style.width = `100%`;
+  document.getElementById('progress-label').textContent = `全問完了`;
+  lucide.createIcons();
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  loadState();
+  setLevel(state.level);
+});
+</script>
+</body>
+</html>

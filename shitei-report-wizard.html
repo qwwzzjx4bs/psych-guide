@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神保健指定医 ケースレポート作成ウィザード — 令和7年新基準</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e); }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f0f4f8; font-feature-settings: 'palt'; }
+    .header-gradient { background: var(--psych-gradient); }
+
+    /* steps */
+    .step-dot { width: 2rem; height: 2rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; transition: all .2s; }
+    .step-dot.active  { background: #1e3a5f; color: white; box-shadow: 0 0 0 3px #bfdbfe; }
+    .step-dot.done    { background: #15803d; color: white; }
+    .step-dot.pending { background: #e5e7eb; color: #9ca3af; }
+    .step-label { font-size: .7rem; margin-top: .3rem; text-align: center; }
+    .step-line  { flex: 1; height: 2px; background: #e5e7eb; margin: 0 .2rem; margin-bottom: 1.2rem; }
+    .step-line.done { background: #15803d; }
+
+    /* card */
+    .wizard-card { background: white; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,.08); padding: 2rem; }
+
+    /* form */
+    label.field-label { font-size: .82rem; font-weight: 600; color: #374151; display: block; margin-bottom: .4rem; }
+    input[type=text], input[type=date], select, textarea {
+      width: 100%; border: 1.5px solid #d1d5db; border-radius: .6rem; padding: .55rem .85rem; font-size: .85rem;
+      font-family: inherit; color: #111827; outline: none; transition: border .15s;
+    }
+    input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus { border-color: #1e3a5f; }
+    textarea { resize: vertical; min-height: 90px; }
+    .field-hint { font-size: .73rem; color: #6b7280; margin-top: .3rem; }
+
+    /* info boxes */
+    .criteria-box { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid #1d4ed8; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+    .warning-box  { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-left: 4px solid #d97706; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+    .recommend-box{ background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 4px solid #15803d; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+    .danger-box   { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-left: 4px solid #dc2626; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+    .purple-box   { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border-left: 4px solid #7c3aed; padding: .85rem 1rem; border-radius: .65rem; margin: .75rem 0; }
+
+    .badge-req  { font-size: .65rem; font-weight: 700; background: #dc2626; color: white; padding: .1rem .35rem; border-radius: 9999px; }
+    .badge-r7   { font-size: .65rem; font-weight: 700; background: #7c3aed; color: white; padding: .1rem .35rem; border-radius: 9999px; }
+    .badge-law  { background: #1e3a5f; color: white; padding: .1rem .45rem; border-radius: .3rem; font-size: .68rem; font-weight: 700; white-space: nowrap; }
+
+    .btn-primary  { background: var(--psych-gradient); color: white; font-weight: 600; padding: .65rem 1.75rem; border-radius: .65rem; font-size: .9rem; transition: opacity .15s; cursor: pointer; border: none; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-secondary{ background: #f3f4f6; color: #374151; font-weight: 600; padding: .65rem 1.75rem; border-radius: .65rem; font-size: .9rem; transition: all .15s; cursor: pointer; border: none; }
+    .btn-secondary:hover { background: #e5e7eb; }
+
+    /* output */
+    .output-box { background: #1e293b; color: #e2e8f0; border-radius: .75rem; padding: 1.5rem; font-family: 'Noto Sans JP', monospace; font-size: .82rem; line-height: 1.75; white-space: pre-wrap; }
+    .case-selector { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .case-btn { padding: .5rem 1rem; border-radius: .65rem; border: 2px solid #e5e7eb; font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .15s; background: white; color: #374151; }
+    .case-btn.active { border-color: #1e3a5f; background: #eff6ff; color: #1e3a5f; }
+    .case-btn.done   { border-color: #15803d; background: #f0fdf4; color: #15803d; }
+    .case-num-badge  { width: 1.4rem; height: 1.4rem; border-radius: 9999px; background: var(--psych-gradient); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: .65rem; font-weight: 700; }
+
+    /* icd selector */
+    .icd-group { margin-bottom: 1rem; }
+    .icd-group-title { font-size: .78rem; font-weight: 700; color: #374151; margin-bottom: .4rem; padding: .3rem .6rem; background: #f1f5f9; border-radius: .4rem; }
+    .icd-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .icd-chip { padding: .25rem .65rem; border-radius: 9999px; border: 1.5px solid #d1d5db; font-size: .75rem; cursor: pointer; transition: all .15s; background: white; color: #374151; }
+    .icd-chip:hover { border-color: #1e3a5f; }
+    .icd-chip.selected { background: #1e3a5f; border-color: #1e3a5f; color: white; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .step-page { display: none; }
+    .step-page.active { display: block; }
+
+    .char-counter { font-size: .72rem; text-align: right; color: #9ca3af; margin-top: .2rem; }
+    .char-counter.warn { color: #d97706; }
+    .char-counter.ok   { color: #15803d; }
+    .char-counter.over { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+<header class="header-gradient text-white py-7">
+  <div class="max-w-3xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="wand-2" class="w-7 h-7 opacity-80"></i>
+      <span class="text-xs font-semibold opacity-70 uppercase tracking-widest">ケースレポート作成支援 — 令和7年新基準</span>
+    </div>
+    <h1 class="text-2xl md:text-3xl font-bold">精神保健指定医 レポート作成ウィザード</h1>
+    <p class="mt-1.5 text-sm opacity-85">様式3-1（令和7年1月版）に準拠。5症例を順番に入力してテキスト草案を生成します。</p>
+  </div>
+</header>
+
+<div class="max-w-3xl mx-auto px-4 py-8">
+
+  <!-- 症例セレクター -->
+  <div class="bg-white rounded-xl shadow-sm p-4 mb-5">
+    <p class="text-xs text-gray-500 font-semibold mb-2 uppercase">作成する症例を選択</p>
+    <div class="case-selector" id="caseSelectorBtns">
+      <button class="case-btn active" data-case="1" onclick="selectCase(1)"><span class="case-num-badge mr-1">1</span>第1症例<br><span class="text-xs text-amber-600">F0 器質性</span></button>
+      <button class="case-btn" data-case="2" onclick="selectCase(2)"><span class="case-num-badge mr-1">2</span>第2症例<br><span class="text-xs text-red-600">F1 依存症</span></button>
+      <button class="case-btn" data-case="3" onclick="selectCase(3)"><span class="case-num-badge mr-1">3</span>第3症例<br><span class="text-xs text-purple-600">F2 統合失調症</span></button>
+      <button class="case-btn" data-case="4" onclick="selectCase(4)"><span class="case-num-badge mr-1">4</span>第4症例<br><span class="text-xs text-blue-600">F3 気分障害</span></button>
+      <button class="case-btn" data-case="5" onclick="selectCase(5)"><span class="case-num-badge mr-1">5</span>第5症例<br><span class="text-xs text-teal-600">F4-9 その他</span></button>
+    </div>
+    <div class="warning-box mt-0 mb-0">
+      <p class="text-xs text-gray-700"><strong>重要：</strong>疾患カテゴリは法令で固定。主な評価対象の入院形態は<strong>措置入院または医療保護入院</strong>のみ（任意入院は主評価対象外）。5症例全体で<strong>措置1例以上・医療保護1例以上・医療保護入院時立会い1例以上</strong>が必要。</p>
+    </div>
+  </div>
+
+  <!-- ステップ表示 -->
+  <div class="bg-white rounded-xl shadow-sm px-4 py-4 mb-5" id="stepIndicator">
+    <div class="flex items-end">
+      <div class="flex flex-col items-center">
+        <div class="step-dot active" id="sd1">1</div>
+        <div class="step-label text-gray-700 font-semibold">表紙情報</div>
+      </div>
+      <div class="step-line" id="sl12"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot pending" id="sd2">2</div>
+        <div class="step-label text-gray-400">患者背景</div>
+      </div>
+      <div class="step-line" id="sl23"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot pending" id="sd3">3</div>
+        <div class="step-label text-gray-400">現病歴</div>
+      </div>
+      <div class="step-line" id="sl34"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot pending" id="sd4">4</div>
+        <div class="step-label text-gray-400">精神症状</div>
+      </div>
+      <div class="step-line" id="sl45"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot pending" id="sd5">5</div>
+        <div class="step-label text-gray-400">診断・根拠</div>
+      </div>
+      <div class="step-line" id="sl56"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot pending" id="sd6">6</div>
+        <div class="step-label text-gray-400">法的手続</div>
+      </div>
+      <div class="step-line" id="sl67"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot pending" id="sd7">7</div>
+        <div class="step-label text-gray-400">治療・考察</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ステップ1: 表紙情報 -->
+  <div class="wizard-card step-page active" id="page1">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="step-dot active text-sm">1</div>
+      <div><h2 class="font-bold text-gray-800">表紙情報（様式3-1 ①〜⑩）</h2><p class="text-xs text-gray-500">令和7年1月版の必須記載事項</p></div>
+    </div>
+
+    <div id="caseInfoHint" class="criteria-box mb-4"></div>
+
+    <div class="grid-2">
+      <div>
+        <label class="field-label">申請日 <span class="badge-req">必須</span></label>
+        <input type="date" id="s1_date">
+      </div>
+      <div>
+        <label class="field-label">③ 主な評価対象の入院形態 <span class="badge-req">必須</span></label>
+        <select id="s1_adm_type">
+          <option value="">選択してください</option>
+          <option value="措置入院">措置入院（第29条）</option>
+          <option value="医療保護入院">医療保護入院（第33条）</option>
+        </select>
+        <p class="field-hint">任意入院は主評価対象に選択できません（様式3-1 ③）</p>
+      </div>
+    </div>
+
+    <div id="hogoHint" class="hidden mt-2"></div>
+
+    <div class="grid-2 mt-3">
+      <div>
+        <label class="field-label">② 最終診断名</label>
+        <input type="text" id="s1_dx_name" placeholder="例：統合失調症（妄想型）">
+      </div>
+      <div>
+        <label class="field-label">ICD-10コード <span class="badge-req">F以下2桁必須</span></label>
+        <div id="icdSelector" class="mt-1"></div>
+        <input type="text" id="s1_icd" placeholder="例：F20.0" class="mt-1">
+        <p class="field-hint">F以下2桁記載が必須（例: F20.0, F10.2）</p>
+      </div>
+    </div>
+
+    <div class="grid-2 mt-3">
+      <div>
+        <label class="field-label">④ 医療機関名</label>
+        <input type="text" id="s1_hospital" placeholder="例：○○病院 精神科">
+      </div>
+      <div>
+        <label class="field-label">⑤ 患者イニシャル（姓.名）<span class="badge-r7 ml-1">令和7年追加</span></label>
+        <input type="text" id="s1_initial" placeholder="例：T.H">
+      </div>
+    </div>
+
+    <div class="grid-2 mt-3">
+      <div>
+        <label class="field-label">⑤ 患者生年月日（西暦）<span class="badge-r7 ml-1">令和7年追加</span></label>
+        <input type="date" id="s1_dob">
+      </div>
+      <div>
+        <label class="field-label">⑥ 主な入院形態の入院日（西暦）</label>
+        <input type="date" id="s1_admit_date">
+      </div>
+    </div>
+    <div class="grid-2 mt-3">
+      <div>
+        <label class="field-label">⑥ 退院日（西暦）</label>
+        <input type="date" id="s1_discharge_date">
+      </div>
+      <div>
+        <label class="field-label">⑦-1 主治医・担当医になった期間（開始）</label>
+        <input type="date" id="s1_attend_start">
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <label class="field-label">⑦-2 指導医氏名・指定医番号・指導期間</label>
+      <input type="text" id="s1_supervisor" placeholder="例：田中一郎 指定医番号：12345  指導期間：2022/04/01〜2023/03/31">
+      <p class="field-hint">複数指導医がいる場合は「/」で区切って全員分を記載。最後に指導した指導医が署名。</p>
+    </div>
+
+    <div class="mt-3">
+      <label class="field-label">⑩ 行動制限の有無</label>
+      <div class="flex gap-4 mt-1">
+        <label class="flex items-center gap-2 text-sm cursor-pointer">
+          <input type="radio" name="s1_restriction" value="有" id="s1_rest_yes" class="accent-teal-700"> 有
+        </label>
+        <label class="flex items-center gap-2 text-sm cursor-pointer">
+          <input type="radio" name="s1_restriction" value="無" id="s1_rest_no" class="accent-teal-700"> 無
+        </label>
+      </div>
+    </div>
+    <div id="restrictionTypes" class="hidden mt-2">
+      <p class="text-xs font-semibold text-gray-600 mb-1">行動制限の種類（該当するものをすべて選択）</p>
+      <div class="flex gap-3 flex-wrap">
+        <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" id="rt_kal" class="accent-teal-700"> 隔離</label>
+        <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" id="rt_phy" class="accent-teal-700"> 身体的拘束</label>
+        <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" id="rt_tel" class="accent-teal-700"> 電話の制限</label>
+        <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" id="rt_vis" class="accent-teal-700"> 面会の制限</label>
+        <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" id="rt_opn" class="accent-teal-700"> 任意入院者の開放処遇の制限</label>
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-6">
+      <button class="btn-primary" onclick="goToStep(2)">次へ：患者背景 <i data-lucide="arrow-right" class="w-4 h-4 inline"></i></button>
+    </div>
+  </div>
+
+  <!-- ステップ2: 患者背景 -->
+  <div class="wizard-card step-page" id="page2">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="step-dot active text-sm">2</div>
+      <h2 class="font-bold text-gray-800">患者背景</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <label class="field-label">患者年齢（担当時）</label>
+        <input type="text" id="s2_age" placeholder="例：42">
+      </div>
+      <div>
+        <label class="field-label">患者性別</label>
+        <select id="s2_sex">
+          <option value="">選択</option>
+          <option value="男性">男性</option>
+          <option value="女性">女性</option>
+        </select>
+      </div>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">【家族歴】</label>
+      <textarea id="s2_family" placeholder="精神疾患の家族歴など。特記事項がなければ「精神科的疾患の家族歴なし」等。"></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">【生育・生活歴】</label>
+      <textarea id="s2_life" placeholder="出生地・学歴・職歴・婚姻状況・生活状況など。"></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">【既往歴】</label>
+      <textarea id="s2_hx" placeholder="身体疾患・精神科既往歴・入院歴・アレルギーなど。"></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">【初診時主訴】</label>
+      <input type="text" id="s2_cc" placeholder="例：「眠れない、周りから監視されている」">
+    </div>
+    <div class="flex justify-between mt-6">
+      <button class="btn-secondary" onclick="goToStep(1)"><i data-lucide="arrow-left" class="w-4 h-4 inline"></i> 戻る</button>
+      <button class="btn-primary" onclick="goToStep(3)">次へ：現病歴 <i data-lucide="arrow-right" class="w-4 h-4 inline"></i></button>
+    </div>
+  </div>
+
+  <!-- ステップ3: 現病歴 -->
+  <div class="wizard-card step-page" id="page3">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="step-dot active text-sm">3</div>
+      <h2 class="font-bold text-gray-800">現病歴</h2>
+    </div>
+    <div class="criteria-box mb-3">
+      <p class="text-xs text-gray-700">「入院時の状況」「入院後経過」「考察」の合計が<strong>1200〜2500字</strong>になるよう調整してください。文字数は最終ステップで確認できます。</p>
+    </div>
+    <div class="mt-2">
+      <label class="field-label">【入院前経過】</label>
+      <textarea id="s3_pre" rows="4" placeholder="初診から入院までの経過。症状の発症・増悪の経緯。外来治療の内容。"></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">【入院時の状況】<span class="badge-req ml-1">字数カウント対象</span></label>
+      <div id="hint_admission_situation" class="criteria-box mt-1 mb-2"></div>
+      <textarea id="s3_admission" rows="6" placeholder="入院時の症状・診断根拠・当該入院形態での入院必要性を具体的に記載" oninput="updateCharCount()"></textarea>
+      <div class="char-counter" id="countAdm">0文字</div>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">【入院後経過】<span class="badge-req ml-1">字数カウント対象</span></label>
+      <div id="hint_admission_course" class="recommend-box mt-1 mb-2">
+        <p class="text-xs text-gray-700"><strong>記載のポイント：</strong>治療経過・インフォームドコンセント・担当医としての関わり・行動制限の開始/解除の根拠（日時・種類・症状に基づく判断理由）・入院形態の変更や解除の判断根拠。</p>
+      </div>
+      <textarea id="s3_course" rows="7" placeholder="入院後の治療経過・検査所見・行動制限の経過・形態変更・退院の経緯を記載" oninput="updateCharCount()"></textarea>
+      <div class="char-counter" id="countCourse">0文字</div>
+    </div>
+    <div class="flex justify-between mt-6">
+      <button class="btn-secondary" onclick="goToStep(2)"><i data-lucide="arrow-left" class="w-4 h-4 inline"></i> 戻る</button>
+      <button class="btn-primary" onclick="goToStep(4)">次へ：精神症状 <i data-lucide="arrow-right" class="w-4 h-4 inline"></i></button>
+    </div>
+  </div>
+
+  <!-- ステップ4: 精神症状 -->
+  <div class="wizard-card step-page" id="page4">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="step-dot active text-sm">4</div>
+      <h2 class="font-bold text-gray-800">精神症状・精神医学的所見</h2>
+    </div>
+    <div id="hint_mental_status" class="criteria-box mb-3"></div>
+    <div class="mt-2">
+      <label class="field-label">外観・行動</label>
+      <input type="text" id="s4_behavior" placeholder="例：清潔感あり、落ち着きなく多動、アイコンタクト不良">
+    </div>
+    <div class="grid-2 mt-3">
+      <div>
+        <label class="field-label">意識・見当識</label>
+        <input type="text" id="s4_consciousness" placeholder="例：清明、時間の見当識障害あり">
+      </div>
+      <div>
+        <label class="field-label">知的機能・記憶</label>
+        <input type="text" id="s4_cognition" placeholder="例：年齢相応、短期記憶低下あり">
+      </div>
+    </div>
+    <div class="grid-2 mt-3">
+      <div>
+        <label class="field-label">気分・感情</label>
+        <input type="text" id="s4_mood" placeholder="例：抑うつ気分、感情鈍麻、易刺激性あり">
+      </div>
+      <div>
+        <label class="field-label">思考（形式・内容）</label>
+        <input type="text" id="s4_thought" placeholder="例：思考促迫、被害妄想・関係妄想を認める">
+      </div>
+    </div>
+    <div class="grid-2 mt-3">
+      <div>
+        <label class="field-label">知覚（幻覚等）</label>
+        <input type="text" id="s4_perception" placeholder="例：命令する声の幻聴あり（2〜3名）、幻視なし">
+      </div>
+      <div>
+        <label class="field-label">自傷他害リスク</label>
+        <input type="text" id="s4_risk" placeholder="例：希死念慮あり（手段・計画あり）、他害のおそれあり">
+      </div>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">病識・判断力</label>
+      <input type="text" id="s4_insight" placeholder="例：病識なし、治療の必要性を認識できない状態">
+    </div>
+    <div class="mt-3">
+      <label class="field-label">追記（その他の精神医学的所見）</label>
+      <textarea id="s4_other" rows="3" placeholder="器質性の場合：神経学的所見・画像所見など。依存症の場合：離脱症状・SDS等スケールなど。"></textarea>
+    </div>
+    <div class="flex justify-between mt-6">
+      <button class="btn-secondary" onclick="goToStep(3)"><i data-lucide="arrow-left" class="w-4 h-4 inline"></i> 戻る</button>
+      <button class="btn-primary" onclick="goToStep(5)">次へ：診断・根拠 <i data-lucide="arrow-right" class="w-4 h-4 inline"></i></button>
+    </div>
+  </div>
+
+  <!-- ステップ5: 診断・根拠 -->
+  <div class="wizard-card step-page" id="page5">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="step-dot active text-sm">5</div>
+      <h2 class="font-bold text-gray-800">診断・入院の根拠</h2>
+    </div>
+    <div id="hint_dx_basis" class="criteria-box mb-3"></div>
+    <div class="mt-2">
+      <label class="field-label">診断の根拠（ICD-10診断基準との対応）</label>
+      <textarea id="s5_dx_basis" rows="4" placeholder="ICD-10のどの基準に該当するかを記載。例：A基準（特徴的症状）として①命令する声の幻聴②被害妄想を1ヶ月以上認め、B基準（除外）として..."></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">鑑別診断と除外の根拠</label>
+      <textarea id="s5_diff_dx" rows="3" placeholder="例：気分障害（主たる気分エピソードがない）・器質性疾患（MRI・血液検査異常なし）を除外した根拠を記載"></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label" id="adm_basis_label">入院形態の法的根拠・入院の必要性</label>
+      <div id="hint_adm_basis" class="warning-box mt-1 mb-2"></div>
+      <textarea id="s5_adm_basis" rows="5" placeholder="当該入院形態による入院が必要と判断した理由を法的要件に沿って記載"></textarea>
+    </div>
+    <div class="flex justify-between mt-6">
+      <button class="btn-secondary" onclick="goToStep(4)"><i data-lucide="arrow-left" class="w-4 h-4 inline"></i> 戻る</button>
+      <button class="btn-primary" onclick="goToStep(6)">次へ：法的手続 <i data-lucide="arrow-right" class="w-4 h-4 inline"></i></button>
+    </div>
+  </div>
+
+  <!-- ステップ6: 法的手続 -->
+  <div class="wizard-card step-page" id="page6">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="step-dot active text-sm">6</div>
+      <h2 class="font-bold text-gray-800">関係法規に定める手続への対応</h2>
+    </div>
+    <div class="danger-box mb-3">
+      <p class="text-xs text-gray-700">様式3-1の「関係法規に定める手続への対応」欄は<strong>チェックリスト形式</strong>です。実際の様式で対応欄に✓を付けて提出してください。以下は主要事項の確認です。</p>
+    </div>
+
+    <div id="legal_checks_area"></div>
+
+    <div class="mt-3">
+      <label class="field-label">行動制限を実施した場合の詳細</label>
+      <textarea id="s6_restriction_detail" rows="4" placeholder="例：入院5日目から隔離を開始（理由：他患への暴力行為切迫）。9日目に指定医の判断で解除。身体的拘束は実施せず。"></textarea>
+      <p class="field-hint">行動制限の種類・開始日時・解除日時・開始/解除の判断理由（法的要件に基づく症状記載）</p>
+    </div>
+
+    <div id="r6_section" class="mt-3">
+      <label class="field-label">退院後生活環境相談員の選任 <span class="badge-r7 ml-1">令和6年4月1日以降入院</span></label>
+      <input type="text" id="s6_seisanin" placeholder="例：退院後生活環境相談員として○○PSW（精神保健福祉士）を選任（入院後3日以内）">
+      <p class="field-hint">令和6年4月1日以後の新規入院（措置・医療保護）は必須記載。</p>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="btn-secondary" onclick="goToStep(5)"><i data-lucide="arrow-left" class="w-4 h-4 inline"></i> 戻る</button>
+      <button class="btn-primary" onclick="goToStep(7)">次へ：治療・考察 <i data-lucide="arrow-right" class="w-4 h-4 inline"></i></button>
+    </div>
+  </div>
+
+  <!-- ステップ7: 治療・考察 -->
+  <div class="wizard-card step-page" id="page7">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="step-dot active text-sm">7</div>
+      <h2 class="font-bold text-gray-800">治療計画・経過・考察</h2>
+    </div>
+    <div class="mt-2">
+      <label class="field-label">薬物療法</label>
+      <textarea id="s7_pharma" rows="3" placeholder="例：オランザピン10mg/日（開始）→15mg/日（2週目）。副作用（体重増加・EPS）の有無を説明しインフォームドコンセント取得。"></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">非薬物療法・精神療法・リハビリテーション</label>
+      <textarea id="s7_nonpharma" rows="3" placeholder="例：個人支持的精神療法・集団療法・デイケア参加・作業療法など"></textarea>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">退院後の支援・通院治療（退院後通院を行った場合）</label>
+      <textarea id="s7_aftercare" rows="3" placeholder="例：退院後外来通院（週1回→2週1回）。相談支援専門員・保健所連携。通院期間：●ヶ月。"></textarea>
+      <p class="field-hint">退院後通院治療を行った場合は様式3-1 ⑧に期間・指導医を記載。1ヶ月以上が望ましい（事務取扱要領 2ス）。</p>
+    </div>
+    <div class="mt-3">
+      <label class="field-label">【考察】<span class="text-xs text-gray-400 ml-1">（任意・字数カウント対象）</span></label>
+      <textarea id="s7_consider" rows="4" placeholder="症例を通じて学んだことや、診断・治療上の工夫・課題等。記載は必須ではない（記載なしでも不適当の評価とはならない）。" oninput="updateCharCount()"></textarea>
+      <div class="char-counter" id="countConsider">0文字</div>
+    </div>
+
+    <!-- 字数確認 -->
+    <div class="criteria-box mt-3">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <span class="text-sm font-bold text-blue-900">字数カウント（入院時状況 + 入院後経過 + 考察）</span>
+        <span class="text-2xl font-bold" id="totalCharDisplay">0字</span>
+      </div>
+      <div class="w-full bg-blue-100 rounded-full h-2 mt-2">
+        <div id="charBar" class="h-2 rounded-full bg-blue-600" style="width:0%"></div>
+      </div>
+      <p class="text-xs mt-1" id="charBarLabel">目標：1200〜2500字</p>
+    </div>
+
+    <div class="flex justify-between mt-6 flex-wrap gap-3">
+      <button class="btn-secondary" onclick="goToStep(6)"><i data-lucide="arrow-left" class="w-4 h-4 inline"></i> 戻る</button>
+      <button class="btn-primary" onclick="generateOutput()"><i data-lucide="file-text" class="w-4 h-4 inline mr-1"></i>レポート草案を生成</button>
+    </div>
+  </div>
+
+  <!-- 出力 -->
+  <div class="wizard-card step-page" id="page8">
+    <div class="flex items-center gap-2 mb-4">
+      <i data-lucide="file-check" class="w-6 h-6 text-teal-700"></i>
+      <div><h2 class="font-bold text-gray-800">レポート草案（<span id="outputCaseLabel"></span>）</h2><p class="text-xs text-gray-500">以下の草案をWordやメモ帳にコピーして、様式3-1に転記してください。</p></div>
+    </div>
+    <div class="warning-box mb-3">
+      <p class="text-xs text-gray-700">本草案はあくまで入力補助です。<strong>実際の提出には様式3-1（令和7年1月版）を使用</strong>し、指導医の自筆署名・患者イニシャル・生年月日など必須事項を様式に直接記入してください。</p>
+    </div>
+    <div class="flex justify-end mb-2">
+      <button onclick="copyOutput()" class="flex items-center gap-1.5 text-xs text-teal-700 border border-teal-300 px-3 py-1.5 rounded hover:bg-teal-50"><i data-lucide="copy" class="w-3.5 h-3.5"></i>コピー</button>
+    </div>
+    <pre id="outputText" class="output-box"></pre>
+    <div class="flex justify-between mt-5 flex-wrap gap-3">
+      <button class="btn-secondary" onclick="goToStep(7)"><i data-lucide="arrow-left" class="w-4 h-4 inline"></i> 戻って修正</button>
+      <button class="btn-primary" onclick="newCase()"><i data-lucide="plus-circle" class="w-4 h-4 inline mr-1"></i>次の症例を作成</button>
+    </div>
+  </div>
+
+</div>
+
+<footer class="bg-gray-800 text-gray-300 text-xs py-6 mt-4">
+  <div class="max-w-3xl mx-auto px-4 text-center space-y-1">
+    <p>様式3-1（令和7年1月版）に準拠した入力補助ツールです。実際の申請書類は厚生労働省公式様式を使用してください。</p>
+    <p>精神科臨床ガイド — 精神保健指定医支援ツール</p>
+  </div>
+</footer>
+
+<script>
+lucide.createIcons();
+
+const CASE_CATEGORIES = {
+  1: { label: '第1症例（F0 器質性精神障害）', icdRange: 'F00〜F09', hint: '器質性精神障害（老年期認知症を除く）。せん妄（F05）・器質性精神障害（F06）など。' },
+  2: { label: '第2症例（F1 依存症）',         icdRange: 'F10〜F19（依存症のみ）', hint: '精神作用物質依存症のみ（依存症候群 F1x.2以上）。有害使用・急性中毒のみでは不可。' },
+  3: { label: '第3症例（F2 統合失調症）',      icdRange: 'F20〜F29', hint: '統合失調症・統合失調症型障害・妄想性障害。F20〜F29。' },
+  4: { label: '第4症例（F3 気分障害）',        icdRange: 'F30〜F39', hint: '気分（感情）障害。双極性感情障害（F31）・うつ病エピソード（F32）など。' },
+  5: { label: '第5症例（F4〜F9 その他）',      icdRange: 'F40〜F98', hint: '神経症性障害（F4）・生理的障害（F5）・パーソナリティ障害（F6）・知的障害（F7）・発達障害（F8）・小児期の障害（F9）から選択。' },
+};
+
+const ICD_DATA = {
+  'F0 器質性精神障害': [
+    { code: 'F05.0', label: 'F05.0 せん妄（認知症に重畳しないもの）' },
+    { code: 'F05.1', label: 'F05.1 認知症に重畳するせん妄' },
+    { code: 'F06.0', label: 'F06.0 器質性幻覚症' },
+    { code: 'F06.2', label: 'F06.2 器質性妄想性障害' },
+    { code: 'F06.3', label: 'F06.3 器質性気分障害' },
+    { code: 'F07.0', label: 'F07.0 器質性人格障害' },
+    { code: 'F09',   label: 'F09 特定不能の器質性精神障害' },
+  ],
+  'F1 精神作用物質依存症（依存症のみ）': [
+    { code: 'F10.2', label: 'F10.2 アルコール依存症候群' },
+    { code: 'F11.2', label: 'F11.2 オピオイド依存症候群' },
+    { code: 'F12.2', label: 'F12.2 大麻依存症候群' },
+    { code: 'F13.2', label: 'F13.2 鎮静薬/催眠薬依存症候群' },
+    { code: 'F14.2', label: 'F14.2 コカイン依存症候群' },
+    { code: 'F15.2', label: 'F15.2 覚醒剤等依存症候群' },
+  ],
+  'F2 統合失調症スペクトラム': [
+    { code: 'F20.0', label: 'F20.0 妄想型統合失調症' },
+    { code: 'F20.1', label: 'F20.1 破瓜型統合失調症' },
+    { code: 'F20.2', label: 'F20.2 緊張型統合失調症' },
+    { code: 'F20.5', label: 'F20.5 残遺型統合失調症' },
+    { code: 'F20.9', label: 'F20.9 統合失調症（特定不能）' },
+    { code: 'F21',   label: 'F21 統合失調症型障害' },
+    { code: 'F22',   label: 'F22 持続性妄想性障害' },
+    { code: 'F25',   label: 'F25 統合失調感情障害' },
+  ],
+  'F3 気分障害': [
+    { code: 'F30.1', label: 'F30.1 躁病エピソード（精神病症状なし）' },
+    { code: 'F30.2', label: 'F30.2 精神病症状を伴う躁病エピソード' },
+    { code: 'F31.0', label: 'F31.0 双極性感情障害（軽躁エピソード）' },
+    { code: 'F31.4', label: 'F31.4 双極性感情障害（精神病症状を伴う重うつエピソード）' },
+    { code: 'F31.5', label: 'F31.5 双極性感情障害（重うつエピソード）' },
+    { code: 'F32.2', label: 'F32.2 重症うつ病エピソード（精神病症状なし）' },
+    { code: 'F32.3', label: 'F32.3 重症うつ病エピソード（精神病症状あり）' },
+    { code: 'F33.2', label: 'F33.2 反復性うつ病（重症エピソード）' },
+  ],
+  'F4〜F9 その他': [
+    { code: 'F40.0', label: 'F40.0 広場恐怖' },
+    { code: 'F41.0', label: 'F41.0 パニック障害' },
+    { code: 'F42',   label: 'F42 強迫性障害（OCD）' },
+    { code: 'F43.1', label: 'F43.1 PTSD' },
+    { code: 'F50.0', label: 'F50.0 神経性無食欲症（AN）' },
+    { code: 'F60.3', label: 'F60.3 境界性人格障害（BPD）' },
+    { code: 'F70',   label: 'F70 軽度知的障害' },
+    { code: 'F84.0', label: 'F84.0 小児自閉症（ASD）' },
+    { code: 'F90.0', label: 'F90.0 注意欠陥多動性障害（ADHD）' },
+  ],
+};
+
+let currentCase = 1;
+let currentStep = 1;
+let savedData = {};
+
+function getCaseKey(caseNum) { return `case${caseNum}`; }
+
+function selectCase(n) {
+  currentCase = n;
+  document.querySelectorAll('.case-btn').forEach(b => {
+    b.classList.remove('active');
+    if (parseInt(b.dataset.case) === n) b.classList.add('active');
+  });
+  const key = getCaseKey(n);
+  if (savedData[key]) restoreFormData(savedData[key]);
+  else clearForm();
+  goToStep(1);
+  updateCaseHints();
+}
+
+function updateCaseHints() {
+  const cat = CASE_CATEGORIES[currentCase];
+  // Step1 hint
+  document.getElementById('caseInfoHint').innerHTML = `<p class="text-xs text-gray-700"><strong>対象症例：${cat.label}</strong><br>疾患範囲：${cat.icdRange} — ${cat.hint}</p>`;
+
+  // ICD選択
+  renderIcdSelector();
+
+  // 入院時状況ヒント
+  const admType = document.getElementById('s1_adm_type')?.value || '';
+  updateAdmHints(admType);
+}
+
+function updateAdmHints(admType) {
+  const hogoHint = document.getElementById('hogoHint');
+  if (admType === '医療保護入院') {
+    hogoHint.className = 'warning-box mt-2';
+    hogoHint.innerHTML = '<p class="text-xs text-gray-700"><span class="font-bold text-amber-800">医療保護入院を選択：</span>5症例のうち1例は<strong>入院時から担当し入院時の指定医診察に立ち会った症例</strong>が必要です（事務取扱要領 2オ）。このケースがそれに該当するか確認してください。</p>';
+  } else if (admType === '措置入院') {
+    hogoHint.className = 'criteria-box mt-2';
+    hogoHint.innerHTML = '<p class="text-xs text-gray-700"><span class="font-bold text-blue-800">措置入院を選択：</span>措置診察の契機（第22〜26条の通報・申請等）と自傷他害のおそれの具体的根拠の記載が必須です。</p>';
+  } else {
+    hogoHint.className = 'hidden';
+    hogoHint.innerHTML = '';
+  }
+
+  // Step3 hint_admission_situation
+  const el = document.getElementById('hint_admission_situation');
+  if (admType === '措置入院') {
+    el.innerHTML = '<p class="text-xs text-gray-700"><strong>措置入院の入院時状況で必須記載：</strong>①精神障害者であること（ICD該当疾患）②医療及び保護のために入院させなければ③<strong>精神障害のために自傷他害のおそれ</strong>がある（具体的行為・発言・状況を記載）</p>';
+  } else if (admType === '医療保護入院') {
+    el.innerHTML = '<p class="text-xs text-gray-700"><strong>医療保護入院の入院時状況で必須記載：</strong>①精神障害者であること②医療・保護のために入院の必要③<strong>精神障害のため任意入院が行われる状態にない</strong>（病識欠如・同意能力の欠如を具体的に記載）④任意入院となるよう努めたが困難だった旨⑤告知（令和5年4月以降：患者本人および家族等への告知内容も記載）</p>';
+  } else {
+    el.innerHTML = '<p class="text-xs text-gray-700">ステップ1で入院形態を選択すると、入院時状況の記載要件が表示されます。</p>';
+  }
+
+  // Step4 hint
+  const ms = document.getElementById('hint_mental_status');
+  const cat = CASE_CATEGORIES[currentCase];
+  if (currentCase === 1) ms.innerHTML = '<p class="text-xs text-gray-700"><strong>F0器質性：</strong>意識障害・見当識障害・記憶障害・認知機能変化を重点的に記載。器質性原因（脳器質疾患・代謝異常等）との関連を示す。</p>';
+  else if (currentCase === 2) ms.innerHTML = '<p class="text-xs text-gray-700"><strong>F1依存症：</strong>離脱症状（アルコールの場合：振戦・発汗・けいれん等）・渇望・依存の程度（AUDIT/SDS等スコア）・精神病症状合併の有無。</p>';
+  else if (currentCase === 3) ms.innerHTML = '<p class="text-xs text-gray-700"><strong>F2統合失調症：</strong>陽性症状（幻覚・妄想の内容・強度）・陰性症状（感情鈍麻・意欲低下）・思考形式の障害（連合弛緩等）を体系的に記載。ICD-10のA基準（①〜④）への対応を意識する。</p>';
+  else if (currentCase === 4) ms.innerHTML = '<p class="text-xs text-gray-700"><strong>F3気分障害：</strong>うつ症状（SDS・HAM-D等）・希死念慮の強度と意図・計画・双極性の場合は躁症状の有無・睡眠・食欲・体重変化を記載。</p>';
+  else ms.innerHTML = `<p class="text-xs text-gray-700"><strong>${cat.label}：</strong>当該疾患に特有の精神医学的所見を記載。ICD-10診断基準への対応を意識する。18歳未満の場合は発達段階・養育環境への配慮を追記。</p>`;
+
+  // Step5 hint
+  const dxEl = document.getElementById('hint_dx_basis');
+  if (currentCase === 1) dxEl.innerHTML = '<p class="text-xs text-gray-700"><strong>F0診断根拠：</strong>器質性原因（脳器質・代謝・内分泌等）の存在と、それによる精神症状との時系列的関連を記載。機能性疾患との鑑別も。</p>';
+  else if (currentCase === 2) dxEl.innerHTML = '<p class="text-xs text-gray-700"><strong>F1依存症診断根拠：</strong>依存症候群（ICD-10 F1x.2）の診断基準（強迫的使用・離脱・耐性・他の活動の放棄等）への対応を記載。有害使用のみでない根拠。</p>';
+  else if (currentCase === 3) dxEl.innerHTML = '<p class="text-xs text-gray-700"><strong>F2診断根拠：</strong>ICD-10 F20のA基準（少なくとも1ヶ月以上）①思考反響・させられ体験など ②支配・影響する妄想 ③会話の幻声 ④持続的な奇異な妄想、またはB基準（2つ以上の症状）への対応を記載。</p>';
+  else if (currentCase === 4) dxEl.innerHTML = '<p class="text-xs text-gray-700"><strong>F3診断根拠：</strong>ICD-10の気分エピソード（うつ・躁・軽躁）の診断基準（持続期間・症状数）への対応、器質性・薬物性・統合失調症の除外根拠を記載。</p>';
+  else dxEl.innerHTML = '<p class="text-xs text-gray-700">選択した疾患のICD-10診断基準への対応を具体的に記載してください。</p>';
+
+  // Step5 adm basis hint
+  const admBasis = document.getElementById('hint_adm_basis');
+  if (admType === '措置入院') {
+    admBasis.innerHTML = '<p class="text-xs text-gray-700"><strong>措置入院の根拠として記載：</strong>①精神障害者である（ICD-10診断）②医療・保護のために入院させなければ③<strong>精神障害のため自傷他害のおそれがある</strong>具体的根拠（発言・行動・状況）を記載。措置診察の契機（第22〜26条の通報等）も。</p>';
+  } else if (admType === '医療保護入院') {
+    admBasis.innerHTML = '<p class="text-xs text-gray-700"><strong>医療保護入院の根拠として記載：</strong>①精神障害者である②入院の必要性③<strong>任意入院不可の根拠</strong>（病識欠如等）④任意入院となるよう努めたが不可であった経緯⑤家族等同意者（続柄・同意日）⑤令和5年4月以降：患者と家族等双方への告知内容。</p>';
+  } else {
+    admBasis.innerHTML = '<p class="text-xs text-gray-700">ステップ1で入院形態を選択すると、根拠の記載要件が表示されます。</p>';
+  }
+
+  // Step6 legal checks
+  renderLegalChecks(admType);
+}
+
+function renderLegalChecks(admType) {
+  const area = document.getElementById('legal_checks_area');
+  if (!area) return;
+  let html = '';
+  if (admType === '措置入院') {
+    html = `<div class="criteria-box"><p class="font-bold text-xs text-blue-900 mb-1">措置入院 — 法的手続確認事項（様式3-1に✓を記入）</p><ul class="text-xs text-gray-700 space-y-0.5">
+      <li>✔ 措置診察の契機（第22〜26条等）を確認したか</li>
+      <li>✔ 症状消退届（第29条の5）が提出されたか（退院時）</li>
+      <li>✔ 退院後生活環境相談員が選任されたか（令和6年4月1日以降入院）</li>
+      <li>✔ 地域援助事業者の紹介を行ったか（令和6年4月1日以降入院）</li>
+    </ul></div>`;
+  } else if (admType === '医療保護入院') {
+    html = `<div class="warning-box"><p class="font-bold text-xs text-amber-900 mb-1">医療保護入院 — 法的手続確認事項（様式3-1に✓を記入）</p><ul class="text-xs text-gray-700 space-y-0.5">
+      <li>✔ 指定医による医療保護入院の判定を行ったか</li>
+      <li>✔ 家族等のいずれかまたは市区町村長の同意を得たか（同意者の続柄・同意日）</li>
+      <li>✔ 令和5年4月以降：患者本人および家族等への書面告知（告知内容・告知日）</li>
+      <li>✔ 入院届が10日以内に提出されたか</li>
+      <li>✔ 令和6年4月1日以降：入院時に3ヶ月を超えない範囲で入院期間を定めたか</li>
+      <li>✔ 退院支援委員会が開催されたか（入院期間更新時）</li>
+      <li>✔ 退院後生活環境相談員が選任されたか</li>
+      <li>✔ 退院届が退院10日以内に提出されたか</li>
+    </ul></div>`;
+  } else {
+    html = '<p class="text-xs text-gray-400">ステップ1で入院形態を選択すると確認事項が表示されます。</p>';
+  }
+  area.innerHTML = html;
+}
+
+function renderIcdSelector() {
+  const container = document.getElementById('icdSelector');
+  let html = '';
+  // Show relevant group based on current case
+  const groupKey = Object.keys(ICD_DATA)[currentCase - 1];
+  const items = ICD_DATA[groupKey] || [];
+  html += `<div class="icd-group"><div class="icd-group-title">${groupKey}</div><div class="icd-chips">`;
+  items.forEach(item => {
+    html += `<button type="button" class="icd-chip" onclick="selectIcd('${item.code}', this)">${item.code}</button>`;
+  });
+  html += '</div></div>';
+  container.innerHTML = html;
+  lucide.createIcons();
+}
+
+function selectIcd(code, el) {
+  document.querySelectorAll('.icd-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('s1_icd').value = code;
+}
+
+// restriction toggle
+document.addEventListener('change', function(e) {
+  if (e.target.name === 's1_restriction') {
+    const area = document.getElementById('restrictionTypes');
+    if (e.target.value === '有') area.classList.remove('hidden');
+    else area.classList.add('hidden');
+  }
+  if (e.target.id === 's1_adm_type') {
+    updateAdmHints(e.target.value);
+  }
+});
+
+let currentStep_v = 1;
+function goToStep(n) {
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  document.getElementById(`page${n}`).classList.add('active');
+  currentStep_v = n;
+  updateStepIndicator(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateCharCount();
+}
+
+function updateStepIndicator(active) {
+  for (let i = 1; i <= 7; i++) {
+    const dot = document.getElementById(`sd${i}`);
+    if (!dot) continue;
+    if (i < active) { dot.className = 'step-dot done'; dot.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>'; }
+    else if (i === active) { dot.className = 'step-dot active'; dot.textContent = i; }
+    else { dot.className = 'step-dot pending'; dot.textContent = i; }
+  }
+  for (let i = 1; i <= 6; i++) {
+    const line = document.getElementById(`sl${i}${i+1}`);
+    if (line) line.className = i < active ? 'step-line done' : 'step-line';
+  }
+}
+
+function updateCharCount() {
+  const adm   = (document.getElementById('s3_admission')?.value || '').length;
+  const course = (document.getElementById('s3_course')?.value || '').length;
+  const cons  = (document.getElementById('s7_consider')?.value || '').length;
+  const total = adm + course + cons;
+
+  const el = document.getElementById('totalCharDisplay');
+  if (el) {
+    el.textContent = `${total}字`;
+    el.className = total < 1200 ? 'text-2xl font-bold text-amber-600' : total > 2500 ? 'text-2xl font-bold text-red-600' : 'text-2xl font-bold text-green-700';
+  }
+  const bar = document.getElementById('charBar');
+  if (bar) bar.style.width = `${Math.min(100, total / 25)}%`;
+  const lbl = document.getElementById('charBarLabel');
+  if (lbl) lbl.textContent = total < 1200 ? `目標まで${1200-total}字不足` : total > 2500 ? `2500字を${total-2500}字超過` : '字数：OK（1200〜2500字）';
+
+  const countAdm = document.getElementById('countAdm');
+  if (countAdm) { countAdm.textContent = `${adm}字`; countAdm.className = 'char-counter'; }
+  const countCourse = document.getElementById('countCourse');
+  if (countCourse) { countCourse.textContent = `${course}字`; countCourse.className = 'char-counter'; }
+  const countConsider = document.getElementById('countConsider');
+  if (countConsider) { countConsider.textContent = `${cons}字`; countConsider.className = 'char-counter'; }
+}
+
+function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+function vc(id) { return document.getElementById(id)?.checked ? '✓' : '□'; }
+
+function getRestrictionStr() {
+  const yes = document.querySelector('input[name=s1_restriction][value=有]')?.checked;
+  if (!yes) return '無';
+  const types = [];
+  if (document.getElementById('rt_kal')?.checked) types.push('隔離');
+  if (document.getElementById('rt_phy')?.checked) types.push('身体的拘束');
+  if (document.getElementById('rt_tel')?.checked) types.push('電話の制限');
+  if (document.getElementById('rt_vis')?.checked) types.push('面会の制限');
+  if (document.getElementById('rt_opn')?.checked) types.push('開放処遇の制限');
+  return '有（' + (types.join('・') || '種類未選択') + '）';
+}
+
+function generateOutput() {
+  const cat = CASE_CATEGORIES[currentCase];
+  const adm  = v('s1_adm_type') || '（未選択）';
+  const adm_total = (document.getElementById('s3_admission')?.value||'').length
+                  + (document.getElementById('s3_course')?.value||'').length
+                  + (document.getElementById('s7_consider')?.value||'').length;
+
+  const text = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ケースレポート（${cat.label}）草案
+様式3-1 令和7年1月版 準拠
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【表紙情報】
+① 申請日：${v('s1_date')||'（要記入）'}
+② 最終診断名：${v('s1_dx_name')||'（要記入）'}
+   ICD-10コード：F ${(v('s1_icd')||'（要記入）').replace(/^F/,'')}
+③ 主な評価対象の入院形態：${adm}
+④ 医療機関名：${v('s1_hospital')||'（要記入）'}
+⑤ 患者イニシャル：${v('s1_initial')||'（要記入）'}  生年月日：${v('s1_dob')||'（要記入）'}
+⑥ 入院日：${v('s1_admit_date')||'（要記入）'}  退院日：${v('s1_discharge_date')||'（要記入）'}
+   入院形態：${adm}
+⑦-1 担当医開始：${v('s1_attend_start')||'（要記入）'}
+⑦-2 指導医：${v('s1_supervisor')||'（要記入）'}
+   ※ 指導医の自筆署名が様式に必須
+⑩ 行動制限：${getRestrictionStr()}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【本 文】
+入院時診断名：${v('s1_dx_name')||'（要記入）'}
+最終診断名：${v('s1_dx_name')||'（要記入）'}
+患者の性別：${v('s2_sex')||'（要記入）'}
+担当医になった時の患者の年齢：${v('s2_age')||'（要記入）'}歳
+
+文字数：${adm_total}字（1200〜2500字の範囲内であること）
+
+【初診時主訴】
+${v('s2_cc')||'（要記入）'}
+
+【家族歴】
+${v('s2_family')||'（要記入）'}
+
+【生育・生活歴】
+${v('s2_life')||'（要記入）'}
+
+【既往歴】
+${v('s2_hx')||'（要記入）'}
+
+【現病歴】
+＜入院前経過＞
+${v('s3_pre')||'（要記入）'}
+
+＜入院時の状況＞
+${v('s3_admission')||'（要記入）'}
+
+＜入院後経過＞
+${v('s3_course')||'（要記入）'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【精神医学的所見（本文中に統合して記載）】
+外観・行動：${v('s4_behavior')||''}
+意識・見当識：${v('s4_consciousness')||''}
+知的機能・記憶：${v('s4_cognition')||''}
+気分・感情：${v('s4_mood')||''}
+思考（形式・内容）：${v('s4_thought')||''}
+知覚：${v('s4_perception')||''}
+自傷他害リスク：${v('s4_risk')||''}
+病識・判断力：${v('s4_insight')||''}
+追記：${v('s4_other')||''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【診断根拠・入院根拠（本文中に記載）】
+診断根拠：
+${v('s5_dx_basis')||'（要記入）'}
+
+鑑別診断：
+${v('s5_diff_dx')||'（要記入）'}
+
+${adm}の根拠：
+${v('s5_adm_basis')||'（要記入）'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【法的手続への対応】
+※ 様式3-1の「関係法規に定める手続への対応」欄に✓を記入してください
+
+行動制限詳細：
+${v('s6_restriction_detail')||'（行動制限なし、または詳細を記入）'}
+
+退院後生活環境相談員：
+${v('s6_seisanin')||'（令和6年4月以降入院の場合は記入）'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【治療計画・経過】
+薬物療法：
+${v('s7_pharma')||'（要記入）'}
+
+非薬物療法・精神療法：
+${v('s7_nonpharma')||'（要記入）'}
+
+退院後の支援・通院治療：
+${v('s7_aftercare')||'（要記入）'}
+
+【考察】（任意）
+${v('s7_consider')||'（任意記載）'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【提出時の注意事項】
+・様式3-1（令和7年1月版）を使用すること
+・申請者の自筆署名（①）が必須
+・指導医全員の自筆署名（⑦-3）が必須
+・患者イニシャル・生年月日（⑤）の記入が必須
+・本文字数（1200〜2500字）を様式内に記載すること
+・片面印刷で提出すること
+・ホチキス・クリップ・付箋等は一切使用しないこと
+`.trim();
+
+  document.getElementById('outputText').textContent = text;
+  document.getElementById('outputCaseLabel').textContent = cat.label;
+  goToStep(8);
+}
+
+function copyOutput() {
+  const text = document.getElementById('outputText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('レポート草案をクリップボードにコピーしました。');
+  }).catch(() => {
+    const area = document.createElement('textarea');
+    area.value = text; document.body.appendChild(area); area.select();
+    document.execCommand('copy'); document.body.removeChild(area);
+    alert('コピーしました。');
+  });
+}
+
+function clearForm() {
+  const fields = ['s1_date','s1_adm_type','s1_dx_name','s1_icd','s1_hospital','s1_initial','s1_dob',
+    's1_admit_date','s1_discharge_date','s1_attend_start','s1_supervisor',
+    's2_age','s2_sex','s2_family','s2_life','s2_hx','s2_cc',
+    's3_pre','s3_admission','s3_course','s4_behavior','s4_consciousness','s4_cognition',
+    's4_mood','s4_thought','s4_perception','s4_risk','s4_insight','s4_other',
+    's5_dx_basis','s5_diff_dx','s5_adm_basis','s6_restriction_detail','s6_seisanin',
+    's7_pharma','s7_nonpharma','s7_aftercare','s7_consider'];
+  fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.querySelectorAll('.icd-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('restrictionTypes')?.classList.add('hidden');
+}
+
+function newCase() {
+  const nextCase = currentCase < 5 ? currentCase + 1 : 1;
+  selectCase(nextCase);
+}
+
+// init
+updateCaseHints();
+updateStepIndicator(1);
+updateCharCount();
+</script>
+</body>
+</html>

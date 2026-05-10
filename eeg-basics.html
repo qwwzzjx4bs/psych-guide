@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脳波読影 基礎知識 | EEG学習ツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+  .eeg-card {
+    background: white; border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,.08); border: 1px solid #e2e8f0;
+    padding: 1.5rem; margin-bottom: 1.25rem;
+  }
+  .section-btn {
+    display: flex; align-items: center; gap: 0.75rem;
+    width: 100%; text-align: left; padding: 1rem 1.25rem;
+    border-radius: 0.75rem; cursor: pointer; font-weight: 700;
+    font-size: 0.95rem; border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .section-btn.active { border-color: #6366f1; background: #eef2ff; color: #3730a3; }
+  .section-btn:not(.active) { background: #f8fafc; color: #475569; }
+  .section-btn:not(.active):hover { background: #f1f5f9; border-color: #cbd5e1; }
+  .section-content { display: none; }
+  .section-content.active { display: block; }
+
+  /* Electrode SVG styles */
+  .electrode { cursor: pointer; transition: r 0.15s; }
+  .electrode:hover circle { filter: brightness(1.3); }
+  .elec-frontal { fill: #3b82f6; }
+  .elec-frontal-t { fill: #60a5fa; }
+  .elec-central { fill: #10b981; }
+  .elec-temporal { fill: #f59e0b; }
+  .elec-parietal { fill: #f97316; }
+  .elec-occipital { fill: #8b5cf6; }
+  .elec-selected circle { stroke: #1e293b !important; stroke-width: 2.5 !important; }
+
+  /* Frequency band cards */
+  .freq-card {
+    border-radius: 0.875rem; padding: 1.1rem 1.25rem;
+    border-left: 4px solid; margin-bottom: 0.75rem;
+    transition: box-shadow 0.2s;
+  }
+  .freq-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+  .freq-delta { border-color: #8b5cf6; background: #f5f3ff; }
+  .freq-theta  { border-color: #3b82f6; background: #eff6ff; }
+  .freq-alpha  { border-color: #10b981; background: #ecfdf5; }
+  .freq-beta   { border-color: #f59e0b; background: #fffbeb; }
+  .freq-gamma  { border-color: #ef4444; background: #fef2f2; }
+
+  /* EEG Canvas */
+  #eeg-canvas { display: block; border-radius: 0.5rem; background: #0f172a; }
+  .mode-btn {
+    padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+    border: 1px solid transparent; cursor: pointer; transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .mode-btn.active { background: #312e81; color: white; border-color: #312e81; }
+  .mode-btn:not(.active) { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+  .mode-btn:not(.active):hover { border-color: #94a3b8; background: #e8edf4; }
+
+  /* Glossary */
+  .term-item { border-bottom: 1px solid #f1f5f9; padding: 0.85rem 0; }
+  .term-item:last-child { border-bottom: none; }
+  dt { font-weight: 700; color: #1e293b; font-size: 0.9rem; }
+  dd { color: #475569; font-size: 0.85rem; line-height: 1.7; margin-top: 0.2rem; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-8 shadow-lg">
+  <div class="max-w-3xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">基礎知識</span>
+    </nav>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+      </div>
+      <span class="text-white/70 text-sm font-semibold tracking-wider">STEP 1</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">脳波読影 基礎知識</h1>
+    <p class="text-white/80 mt-2 text-sm leading-relaxed max-w-2xl">
+      電極配置（10-20法）・周波数帯域・波形アニメーター・基本用語を1ページで学習します。
+    </p>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-6">
+
+  <!-- Section nav -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+    <button class="section-btn active" onclick="showSection('electrode', this)">
+      <i data-lucide="circle-dot" class="w-4 h-4 flex-shrink-0"></i>
+      <span>電極配置</span>
+    </button>
+    <button class="section-btn" onclick="showSection('frequency', this)">
+      <i data-lucide="activity" class="w-4 h-4 flex-shrink-0"></i>
+      <span>周波数帯域</span>
+    </button>
+    <button class="section-btn" onclick="showSection('animator', this)">
+      <i data-lucide="play-circle" class="w-4 h-4 flex-shrink-0"></i>
+      <span>波形アニメーター</span>
+    </button>
+    <button class="section-btn" onclick="showSection('glossary', this)">
+      <i data-lucide="book-open" class="w-4 h-4 flex-shrink-0"></i>
+      <span>基本用語</span>
+    </button>
+  </div>
+
+  <!-- === Section 1: Electrode placement === -->
+  <section id="sec-electrode" class="section-content active">
+    <div class="eeg-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="circle-dot" class="w-5 h-5 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">国際10-20法 電極配置</h2>
+          <p class="text-xs text-slate-500">電極をクリックすると詳細情報が表示されます</p>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="flex flex-wrap gap-2 mb-4 text-xs font-semibold">
+        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-blue-500"></span>前頭部</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-emerald-500"></span>中心部</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-amber-500"></span>側頭部</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-orange-500"></span>頭頂部</span>
+        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-violet-500"></span>後頭部</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4">
+        <!-- SVG -->
+        <div class="flex-shrink-0">
+          <svg id="electrode-svg" viewBox="0 0 400 440" width="320" height="352" xmlns="http://www.w3.org/2000/svg"
+               style="background:#f8fafc; border-radius:0.75rem; border:1px solid #e2e8f0;">
+            <!-- Head outline -->
+            <ellipse cx="200" cy="220" rx="172" ry="188" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+            <!-- Midline -->
+            <line x1="200" y1="32" x2="200" y2="408" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4 3"/>
+            <!-- Horizontal midline -->
+            <line x1="28" y1="220" x2="372" y2="220" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4 3"/>
+            <!-- Nasion (front) -->
+            <circle cx="200" cy="34" r="4" fill="#94a3b8"/>
+            <text x="208" y="38" font-size="9" fill="#64748b" font-family="sans-serif">Nasion</text>
+            <!-- Inion (back) -->
+            <circle cx="200" cy="406" r="4" fill="#94a3b8"/>
+            <text x="208" y="410" font-size="9" fill="#64748b" font-family="sans-serif">Inion</text>
+            <!-- Left ear -->
+            <text x="6" y="224" font-size="9" fill="#64748b" font-family="sans-serif">L</text>
+            <!-- Right ear -->
+            <text x="383" y="224" font-size="9" fill="#64748b" font-family="sans-serif">R</text>
+
+            <!-- Electrodes -->
+            <!-- Frontopolar -->
+            <g class="electrode" id="e-Fp1" onclick="selectElectrode('Fp1')" data-region="frontal">
+              <circle cx="158" cy="78" r="11" class="elec-frontal" stroke="white" stroke-width="1.5"/>
+              <text x="158" y="82" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">Fp1</text>
+            </g>
+            <g class="electrode" id="e-Fp2" onclick="selectElectrode('Fp2')" data-region="frontal">
+              <circle cx="242" cy="78" r="11" class="elec-frontal" stroke="white" stroke-width="1.5"/>
+              <text x="242" y="82" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">Fp2</text>
+            </g>
+            <!-- Frontal -->
+            <g class="electrode" id="e-F7" onclick="selectElectrode('F7')" data-region="frontal-t">
+              <circle cx="86" cy="133" r="11" class="elec-frontal-t" stroke="white" stroke-width="1.5"/>
+              <text x="86" y="137" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">F7</text>
+            </g>
+            <g class="electrode" id="e-F3" onclick="selectElectrode('F3')" data-region="frontal">
+              <circle cx="152" cy="125" r="11" class="elec-frontal" stroke="white" stroke-width="1.5"/>
+              <text x="152" y="129" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">F3</text>
+            </g>
+            <g class="electrode" id="e-Fz" onclick="selectElectrode('Fz')" data-region="frontal">
+              <circle cx="200" cy="118" r="11" class="elec-frontal" stroke="white" stroke-width="1.5"/>
+              <text x="200" y="122" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">Fz</text>
+            </g>
+            <g class="electrode" id="e-F4" onclick="selectElectrode('F4')" data-region="frontal">
+              <circle cx="248" cy="125" r="11" class="elec-frontal" stroke="white" stroke-width="1.5"/>
+              <text x="248" y="129" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">F4</text>
+            </g>
+            <g class="electrode" id="e-F8" onclick="selectElectrode('F8')" data-region="frontal-t">
+              <circle cx="314" cy="133" r="11" class="elec-frontal-t" stroke="white" stroke-width="1.5"/>
+              <text x="314" y="137" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">F8</text>
+            </g>
+            <!-- Central/Temporal -->
+            <g class="electrode" id="e-T3" onclick="selectElectrode('T3')" data-region="temporal">
+              <circle cx="52" cy="220" r="11" class="elec-temporal" stroke="white" stroke-width="1.5"/>
+              <text x="52" y="224" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">T3</text>
+            </g>
+            <g class="electrode" id="e-C3" onclick="selectElectrode('C3')" data-region="central">
+              <circle cx="140" cy="220" r="11" class="elec-central" stroke="white" stroke-width="1.5"/>
+              <text x="140" y="224" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">C3</text>
+            </g>
+            <g class="electrode" id="e-Cz" onclick="selectElectrode('Cz')" data-region="central">
+              <circle cx="200" cy="220" r="11" class="elec-central" stroke="white" stroke-width="1.5"/>
+              <text x="200" y="224" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">Cz</text>
+            </g>
+            <g class="electrode" id="e-C4" onclick="selectElectrode('C4')" data-region="central">
+              <circle cx="260" cy="220" r="11" class="elec-central" stroke="white" stroke-width="1.5"/>
+              <text x="260" y="224" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">C4</text>
+            </g>
+            <g class="electrode" id="e-T4" onclick="selectElectrode('T4')" data-region="temporal">
+              <circle cx="348" cy="220" r="11" class="elec-temporal" stroke="white" stroke-width="1.5"/>
+              <text x="348" y="224" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">T4</text>
+            </g>
+            <!-- Posterior temporal/Parietal -->
+            <g class="electrode" id="e-T5" onclick="selectElectrode('T5')" data-region="temporal">
+              <circle cx="86" cy="305" r="11" class="elec-temporal" stroke="white" stroke-width="1.5"/>
+              <text x="86" y="309" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">T5</text>
+            </g>
+            <g class="electrode" id="e-P3" onclick="selectElectrode('P3')" data-region="parietal">
+              <circle cx="152" cy="315" r="11" class="elec-parietal" stroke="white" stroke-width="1.5"/>
+              <text x="152" y="319" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">P3</text>
+            </g>
+            <g class="electrode" id="e-Pz" onclick="selectElectrode('Pz')" data-region="parietal">
+              <circle cx="200" cy="322" r="11" class="elec-parietal" stroke="white" stroke-width="1.5"/>
+              <text x="200" y="326" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">Pz</text>
+            </g>
+            <g class="electrode" id="e-P4" onclick="selectElectrode('P4')" data-region="parietal">
+              <circle cx="248" cy="315" r="11" class="elec-parietal" stroke="white" stroke-width="1.5"/>
+              <text x="248" y="319" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">P4</text>
+            </g>
+            <g class="electrode" id="e-T6" onclick="selectElectrode('T6')" data-region="temporal">
+              <circle cx="314" cy="305" r="11" class="elec-temporal" stroke="white" stroke-width="1.5"/>
+              <text x="314" y="309" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">T6</text>
+            </g>
+            <!-- Occipital -->
+            <g class="electrode" id="e-O1" onclick="selectElectrode('O1')" data-region="occipital">
+              <circle cx="158" cy="363" r="11" class="elec-occipital" stroke="white" stroke-width="1.5"/>
+              <text x="158" y="367" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">O1</text>
+            </g>
+            <g class="electrode" id="e-Oz" onclick="selectElectrode('Oz')" data-region="occipital">
+              <circle cx="200" cy="372" r="11" class="elec-occipital" stroke="white" stroke-width="1.5"/>
+              <text x="200" y="376" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">Oz</text>
+            </g>
+            <g class="electrode" id="e-O2" onclick="selectElectrode('O2')" data-region="occipital">
+              <circle cx="242" cy="363" r="11" class="elec-occipital" stroke="white" stroke-width="1.5"/>
+              <text x="242" y="367" text-anchor="middle" font-size="8.5" fill="white" font-weight="bold" font-family="sans-serif">O2</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Info panel -->
+        <div class="flex-1">
+          <div id="elec-info" class="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-sm min-h-[200px]">
+            <p class="text-indigo-500 text-xs font-semibold mb-2">← 電極をクリック</p>
+            <p class="text-slate-500 leading-relaxed">電極を選択すると、位置・機能・臨床的意義が表示されます。</p>
+            <div class="mt-4 border-t border-indigo-100 pt-3">
+              <p class="text-xs text-slate-500 font-semibold mb-1">命名規則</p>
+              <ul class="text-xs text-slate-600 space-y-1">
+                <li><strong>Fp</strong> = Frontopolar（前頭極）</li>
+                <li><strong>F</strong> = Frontal（前頭）</li>
+                <li><strong>C</strong> = Central（中心）</li>
+                <li><strong>T</strong> = Temporal（側頭）</li>
+                <li><strong>P</strong> = Parietal（頭頂）</li>
+                <li><strong>O</strong> = Occipital（後頭）</li>
+                <li><strong>z</strong> = 正中線上（midline）</li>
+                <li><strong>奇数</strong> = 左半球 / <strong>偶数</strong> = 右半球</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10-20 rule explanation -->
+    <div class="eeg-card border-l-4 border-l-indigo-400">
+      <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <i data-lucide="ruler" class="w-4 h-4 text-indigo-600"></i>
+        10-20法の原則
+      </h3>
+      <div class="grid sm:grid-cols-2 gap-3 text-sm text-slate-700">
+        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+          <p class="font-semibold text-slate-800 mb-1">測定基点</p>
+          <p>鼻根（Nasion）、後頭隆起（Inion）、左右の耳珠（A1/A2）の4点を基準とする</p>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+          <p class="font-semibold text-slate-800 mb-1">間隔の原則</p>
+          <p>電極間隔は頭蓋の長さ・幅の <strong>10%または20%</strong> に設定（→名称の由来）</p>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+          <p class="font-semibold text-slate-800 mb-1">標準電極数</p>
+          <p>通常21電極（A1・A2含む）。高密度EEGでは64〜256電極を用いることも</p>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+          <p class="font-semibold text-slate-800 mb-1">新旧対応</p>
+          <p>T3→T7、T4→T8、T5→P7、T6→P8（国際10-20新表記）</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Section 2: Frequency bands === -->
+  <section id="sec-frequency" class="section-content">
+    <div class="eeg-card">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-9 h-9 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="activity" class="w-5 h-5 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">脳波の周波数帯域</h2>
+          <p class="text-xs text-slate-500">5つの主要な帯域と臨床的意義</p>
+        </div>
+      </div>
+
+      <div class="freq-card freq-delta">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-violet-700">δ（デルタ）</span>
+          <span class="text-sm font-bold bg-violet-200 text-violet-800 px-3 py-0.5 rounded-full">＜ 4 Hz</span>
+        </div>
+        <p class="text-sm text-slate-700 leading-relaxed mb-2">最も遅い周波数帯域。波高が高く、ゆっくりとした大きな波形が特徴。</p>
+        <div class="grid sm:grid-cols-2 gap-2 text-xs">
+          <div class="bg-violet-100 rounded-lg p-2 border border-violet-200">
+            <p class="font-bold text-violet-800 mb-0.5">正常での出現</p>
+            <p class="text-violet-700">深睡眠（NREM Stage N3）。乳幼児期の正常覚醒波形</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-2 border border-red-200">
+            <p class="font-bold text-red-700 mb-0.5">異常での出現</p>
+            <p class="text-red-600">局所的：焦点性病変（腫瘍・梗塞・挫傷）<br>びまん性：重篤な脳症・意識障害</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="freq-card freq-theta">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-blue-700">θ（シータ）</span>
+          <span class="text-sm font-bold bg-blue-200 text-blue-800 px-3 py-0.5 rounded-full">4 – 8 Hz</span>
+        </div>
+        <p class="text-sm text-slate-700 leading-relaxed mb-2">中程度の遅波。記憶・情動処理に関連する帯域。</p>
+        <div class="grid sm:grid-cols-2 gap-2 text-xs">
+          <div class="bg-blue-100 rounded-lg p-2 border border-blue-200">
+            <p class="font-bold text-blue-800 mb-0.5">正常での出現</p>
+            <p class="text-blue-700">軽睡眠（NREM Stage N1）。小児の覚醒時（正常変動）。瞑想・創造的思考中</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-2 border border-red-200">
+            <p class="font-bold text-red-700 mb-0.5">異常での出現</p>
+            <p class="text-red-600">成人覚醒時の過剰なθ波：軽度〜中等度の脳機能低下、薬物（鎮静薬）</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="freq-card freq-alpha">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-emerald-700">α（アルファ）</span>
+          <span class="text-sm font-bold bg-emerald-200 text-emerald-800 px-3 py-0.5 rounded-full">8 – 13 Hz</span>
+        </div>
+        <p class="text-sm text-slate-700 leading-relaxed mb-2">脳波の基本律動。<strong>閉眼・安静時</strong>に後頭部優位に出現し、開眼・思考で抑制される（Berger効果）。</p>
+        <div class="grid sm:grid-cols-2 gap-2 text-xs">
+          <div class="bg-emerald-100 rounded-lg p-2 border border-emerald-200">
+            <p class="font-bold text-emerald-800 mb-0.5">正常での出現</p>
+            <p class="text-emerald-700">覚醒・閉眼・安静時の後頭部（O1/O2）<br>成人正常：8-12 Hz</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-2 border border-red-200">
+            <p class="font-bold text-red-700 mb-0.5">異常での出現</p>
+            <p class="text-red-600">後頭部α消失：意識障害・昏睡<br>前方偏在α：意識障害（α昏睡）<br>非対称：片側性病変</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="freq-card freq-beta">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-amber-700">β（ベータ）</span>
+          <span class="text-sm font-bold bg-amber-200 text-amber-800 px-3 py-0.5 rounded-full">13 – 30 Hz</span>
+        </div>
+        <p class="text-sm text-slate-700 leading-relaxed mb-2">速波帯域。覚醒・精神活動・認知処理と関連。</p>
+        <div class="grid sm:grid-cols-2 gap-2 text-xs">
+          <div class="bg-amber-100 rounded-lg p-2 border border-amber-200">
+            <p class="font-bold text-amber-800 mb-0.5">正常での出現</p>
+            <p class="text-amber-700">覚醒・思考・集中時。前頭〜中心部優位<br>睡眠紡錘波（12-14 Hz）もβ低域</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-2 border border-red-200">
+            <p class="font-bold text-red-700 mb-0.5">異常での出現</p>
+            <p class="text-red-600">全般性β増加：BZD・バルビツレート<br>局所β欠損：硬膜下血腫・頭蓋骨欠損</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="freq-card freq-gamma">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-red-700">γ（ガンマ）</span>
+          <span class="text-sm font-bold bg-red-200 text-red-800 px-3 py-0.5 rounded-full">＞ 30 Hz</span>
+        </div>
+        <p class="text-sm text-slate-700 leading-relaxed mb-2">最も速い帯域。高次認知・感覚統合に関連するが、筋電図アーティファクトとの鑑別が重要。</p>
+        <div class="grid sm:grid-cols-2 gap-2 text-xs">
+          <div class="bg-red-100 rounded-lg p-2 border border-red-200">
+            <p class="font-bold text-red-800 mb-0.5">正常での出現</p>
+            <p class="text-red-700">高次感覚処理・意識・ワーキングメモリ<br>臨床EEGでは通常解析対象外</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-2 border border-red-200">
+            <p class="font-bold text-red-700 mb-0.5">注意事項</p>
+            <p class="text-red-600">筋電図アーティファクト（EMG）と混同しやすい。頭皮筋収縮で同帯域が大量混入</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Section 3: Waveform Animator === -->
+  <section id="sec-animator" class="section-content">
+    <div class="eeg-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 rounded-xl bg-cyan-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="play-circle" class="w-5 h-5 text-cyan-700"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">脳波アニメーター</h2>
+          <p class="text-xs text-slate-500">帯域を選んでリアルタイム波形を観察</p>
+        </div>
+      </div>
+
+      <!-- Mode selector -->
+      <div class="flex flex-wrap gap-2 mb-3">
+        <button class="mode-btn active" onclick="setMode('alpha',this)">α（覚醒）</button>
+        <button class="mode-btn" onclick="setMode('sleep_spindle',this)">睡眠紡錘波</button>
+        <button class="mode-btn" onclick="setMode('delta',this)">δ（深睡眠）</button>
+        <button class="mode-btn" onclick="setMode('spike_wave',this)">棘徐波複合</button>
+        <button class="mode-btn" onclick="setMode('triphasic',this)">三相波</button>
+        <button class="mode-btn" onclick="setMode('burst_supp',this)">Burst-suppression</button>
+      </div>
+
+      <!-- Canvas -->
+      <canvas id="eeg-canvas" width="640" height="300" style="width:100%; max-width:640px;"></canvas>
+
+      <div class="flex items-center gap-3 mt-3">
+        <button id="play-btn" onclick="togglePlay()"
+          class="flex items-center gap-1.5 px-4 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg text-sm font-semibold transition-colors">
+          <i data-lucide="pause" id="play-icon" class="w-4 h-4"></i>
+          <span id="play-label">一時停止</span>
+        </button>
+        <div id="mode-desc" class="text-xs text-slate-500 leading-relaxed flex-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Section 4: Glossary === -->
+  <section id="sec-glossary" class="section-content">
+    <div class="eeg-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="book-open" class="w-5 h-5 text-amber-700"></i>
+        </div>
+        <h2 class="text-lg font-bold text-slate-800">基本用語集</h2>
+      </div>
+
+      <dl>
+        <div class="term-item">
+          <dt>振幅（Amplitude）</dt>
+          <dd>波の高さ。μV（マイクロボルト）で表す。正常脳波の振幅は20〜100μV程度。標準的なゲインは7μV/mm。</dd>
+        </div>
+        <div class="term-item">
+          <dt>周期（Period）/ 周波数（Frequency）</dt>
+          <dd>1回の波形サイクルにかかる時間（秒）が周期、1秒間の繰り返し回数がHz（ヘルツ）。例：10Hz = 周期0.1秒。</dd>
+        </div>
+        <div class="term-item">
+          <dt>モンタージュ（Montage）</dt>
+          <dd>電極の組み合わせ方。<strong>双極誘導（Bipolar）</strong>：隣接2電極の差分を記録（局所性の把握に優れる）。<strong>基準電極誘導（Referential）</strong>：各電極と共通基準点（Cz、平均、耳垂など）との差分を記録。</dd>
+        </div>
+        <div class="term-item">
+          <dt>感度（Sensitivity）</dt>
+          <dd>画面上での波形の大きさの調整。単位はμV/mm。感度を下げる（数値を大きく）と波形は小さく表示される。</dd>
+        </div>
+        <div class="term-item">
+          <dt>紙送り速度（Paper speed）</dt>
+          <dd>時間軸の表示速度。標準は30mm/秒。脳波用紙の1マス（3mm）= 0.1秒。</dd>
+        </div>
+        <div class="term-item">
+          <dt>アーティファクト（Artifact）</dt>
+          <dd>脳由来でない電気活動。主なもの：眼球運動（前頭部の大きな偏位）、筋電図（高周波ノイズ）、心電図（R波形状の周期的波形）、電極ノイズ（高振幅×単一誘導）。</dd>
+        </div>
+        <div class="term-item">
+          <dt>過呼吸賦活（Hyperventilation）</dt>
+          <dd>3〜4分間の過呼吸でCO₂分圧を下げ、脳波変化を誘発する賦活法。欠神発作（3Hz棘徐波）の誘発に有効。</dd>
+        </div>
+        <div class="term-item">
+          <dt>光刺激（Photic stimulation）</dt>
+          <dd>ストロボ光を用いて光駆動反応（photic driving）や光誘発てんかん放電を検出する賦活法。</dd>
+        </div>
+        <div class="term-item">
+          <dt>等電位脳波（ECS：Electrocerebral Silence）</dt>
+          <dd>全誘導で2μV以上の活動がない状態（高感度・長時間記録で確認）。脳死判定の参考所見の一つ。</dd>
+        </div>
+        <div class="term-item">
+          <dt>ACNS用語（2021）</dt>
+          <dd>米国臨床神経生理学会の標準用語。ICU脳波など重症例の記述に使用。例：GRDA（全般性律動性δ活動）、LRDA（一側性律動性δ活動）、LPDs（一側性周期性放電）など。</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
+    <a href="eeg-learning.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      学習ハブへ
+    </a>
+    <a href="eeg-waveforms.html" class="flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 transition-colors font-semibold">
+      次: 波形図鑑
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+// ===== Section switching =====
+function showSection(id, btn) {
+  document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'animator') { startAnimator(); }
+}
+
+// ===== Electrode data =====
+const ELECTRODE_DATA = {
+  Fp1: { name: 'Fp1（左前頭極）', region: '前頭部（左）', color: '#3b82f6',
+    func: '前頭葉前部（眼窩前頭皮質）を反映。眼球運動アーティファクトが混入しやすい。',
+    clinical: '眼球運動（EOG）や眼瞼アーティファクトが顕著。前頭間欠律動性δ活動（FIRDA）に注目。' },
+  Fp2: { name: 'Fp2（右前頭極）', region: '前頭部（右）', color: '#3b82f6',
+    func: '前頭葉前部（眼窩前頭皮質）を反映。Fp1対称性の確認が重要。',
+    clinical: '前頭部の非対称は一側性前頭葉病変を示唆。' },
+  F7: { name: 'F7（左前側頭）', region: '前頭側頭部（左）', color: '#60a5fa',
+    func: 'Broca野（言語野）周辺を反映。左側頭葉てんかんの放電が伝播してくる。',
+    clinical: '側頭葉てんかんの初期伝播部位として重要。' },
+  F8: { name: 'F8（右前側頭）', region: '前頭側頭部（右）', color: '#60a5fa',
+    func: '右前側頭部。F7と合わせて前側頭部の活動を把握。',
+    clinical: 'F7/F8の非対称は側頭葉てんかんの側方化の手掛かり。' },
+  F3: { name: 'F3（左前頭）', region: '前頭部（左）', color: '#3b82f6',
+    func: '左背外側前頭前野（DLPFC）。認知・実行機能・作業記憶に関連。',
+    clinical: '前頭葉てんかんの焦点となりうる。全般性放電でも前頭部優位を示すことがある。' },
+  Fz: { name: 'Fz（前頭正中）', region: '前頭部（正中）', color: '#3b82f6',
+    func: '前頭正中線上。補足運動野（SMA）に近接。',
+    clinical: '頂点鋭波（vertex sharp wave）や睡眠紡錘波の確認部位。' },
+  F4: { name: 'F4（右前頭）', region: '前頭部（右）', color: '#3b82f6',
+    func: '右背外側前頭前野（DLPFC）。F3と左右対称性を比較。',
+    clinical: 'F3/F4の非対称は前頭葉の局所異常を示唆。' },
+  T3: { name: 'T3/T7（左中側頭）', region: '側頭部（左）', color: '#f59e0b',
+    func: 'Wernicke野（言語理解野）を含む左側頭葉中部を反映。記憶に関連。',
+    clinical: '左側頭葉てんかんの焦点となることが多い。海馬てんかんの放電が伝播。' },
+  T4: { name: 'T4/T8（右中側頭）', region: '側頭部（右）', color: '#f59e0b',
+    func: '右側頭葉中部。音楽処理・非言語的記憶に関連。',
+    clinical: '右側頭葉てんかん。精神症状を伴う複雑部分発作。' },
+  C3: { name: 'C3（左中心）', region: '中心部（左）', color: '#10b981',
+    func: '右半身の感覚・運動野（中心溝）。右半身の感覚・運動機能を反映。',
+    clinical: '焦点性感覚・運動発作（右半身）。ミュー律動（μリズム：8-12Hz）の確認。' },
+  Cz: { name: 'Cz（頭頂正中）', region: '中心部（正中）', color: '#10b981',
+    func: '下肢感覚・運動野（旁中心小葉）。頂点鋭波・睡眠紡錘波の最大部位。',
+    clinical: '睡眠評価に必須。頂点鋭波（Stage N1）、K複合（Stage N2）。' },
+  C4: { name: 'C4（右中心）', region: '中心部（右）', color: '#10b981',
+    func: '左半身の感覚・運動野。左半身の感覚・運動機能を反映。',
+    clinical: '焦点性感覚・運動発作（左半身）。C3との非対称に注目。' },
+  T5: { name: 'T5/P7（左後側頭）', region: '後側頭部（左）', color: '#f59e0b',
+    func: '左後側頭葉。視覚・言語の交差点。記憶関連の領域を反映。',
+    clinical: '側頭葉てんかんの後方焦点。BECTS（小児良性てんかん）の起源部位。' },
+  T6: { name: 'T6/P8（右後側頭）', region: '後側頭部（右）', color: '#f59e0b',
+    func: '右後側頭葉。視空間認知・顔認識に関連。',
+    clinical: '右後側頭葉てんかん。T5/T6の棘波はBECTSの典型所見。' },
+  P3: { name: 'P3（左頭頂）', region: '頭頂部（左）', color: '#f97316',
+    func: '左角回・縁上回（Gerstmann症候群領域）。言語・計算・身体図式。',
+    clinical: '頭頂葉てんかん（まれ）。後頭部棘波との連続性。' },
+  Pz: { name: 'Pz（頭頂正中）', region: '頭頂部（正中）', color: '#f97316',
+    func: '頭頂正中。感覚統合・空間処理。ERPのP300成分の最大部位。',
+    clinical: '睡眠評価、Kcomplex。全般性てんかんでの棘徐波複合の確認。' },
+  P4: { name: 'P4（右頭頂）', region: '頭頂部（右）', color: '#f97316',
+    func: '右頭頂葉。左半側空間無視・空間処理。',
+    clinical: 'P3/P4の非対称は頭頂葉病変を示唆。' },
+  O1: { name: 'O1（左後頭）', region: '後頭部（左）', color: '#8b5cf6',
+    func: '左一次視覚野（V1）を反映。α波の最大振幅部位。',
+    clinical: 'α波の評価に最重要。後頭葉てんかん（視覚発作）。後頭部間欠性律動性δ（OIRDA）。' },
+  Oz: { name: 'Oz（後頭正中）', region: '後頭部（正中）', color: '#8b5cf6',
+    func: '後頭正中一次視覚野。光駆動反応（Photic driving）の確認部位。',
+    clinical: '光刺激賦活検査。α波対称性の基準点。' },
+  O2: { name: 'O2（右後頭）', region: '後頭部（右）', color: '#8b5cf6',
+    func: '右一次視覚野（V1）。O1と対称性を比較。',
+    clinical: 'O1/O2の非対称：視覚野の局所病変（梗塞・腫瘍・てんかん焦点）。' },
+};
+
+let selectedElectrode = null;
+function selectElectrode(id) {
+  if (selectedElectrode) {
+    const el = document.getElementById('e-' + selectedElectrode);
+    if (el) el.classList.remove('elec-selected');
+  }
+  selectedElectrode = id;
+  const el = document.getElementById('e-' + id);
+  if (el) el.classList.add('elec-selected');
+
+  const d = ELECTRODE_DATA[id];
+  if (!d) return;
+  document.getElementById('elec-info').innerHTML = `
+    <div class="flex items-center gap-2 mb-3">
+      <span class="w-4 h-4 rounded-full inline-block flex-shrink-0" style="background:${d.color}"></span>
+      <span class="font-bold text-slate-800">${d.name}</span>
+    </div>
+    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-0.5">部位</p>
+    <p class="text-sm text-slate-700 mb-3">${d.region}</p>
+    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-0.5">機能</p>
+    <p class="text-sm text-slate-700 mb-3 leading-relaxed">${d.func}</p>
+    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-0.5">臨床的意義</p>
+    <p class="text-sm text-slate-700 leading-relaxed">${d.clinical}</p>
+  `;
+}
+
+// ===== EEG Animator =====
+const MODES = {
+  alpha: {
+    label: 'α波（覚醒・閉眼）',
+    desc: '後頭部優位に10Hzの規則的なα波。開眼で抑制される（Berger効果）。成人正常所見の基本。',
+    channels: [
+      { name:'Fp1-F3', freq:10, amp:8, noise:4, color:'#34d399' },
+      { name:'F3-C3',  freq:10, amp:10, noise:4, color:'#34d399' },
+      { name:'C3-P3',  freq:10, amp:14, noise:3, color:'#4ade80' },
+      { name:'P3-O1',  freq:10, amp:22, noise:3, color:'#86efac' },
+      { name:'P4-O2',  freq:10, amp:22, noise:3, color:'#86efac' },
+      { name:'C4-P4',  freq:10, amp:14, noise:3, color:'#4ade80' },
+    ]
+  },
+  sleep_spindle: {
+    label: '睡眠紡錘波（Stage N2）',
+    desc: '12-14Hzの紡錘波（spindle）が0.5-2秒持続し周期的に出現。K複合を伴うことも。NREM Stage N2の特徴的所見。',
+    channels: [
+      { name:'Fp1-F3', freq:13, amp:5,  noise:3, color:'#93c5fd', spindle:true, period:3.5 },
+      { name:'F3-C3',  freq:13, amp:16, noise:3, color:'#93c5fd', spindle:true, period:3.5 },
+      { name:'Cz-Fz',  freq:13, amp:18, noise:2, color:'#60a5fa', spindle:true, period:3.0 },
+      { name:'C3-P3',  freq:13, amp:15, noise:3, color:'#93c5fd', spindle:true, period:3.5 },
+      { name:'C4-P4',  freq:13, amp:15, noise:3, color:'#93c5fd', spindle:true, period:3.5 },
+      { name:'P3-O1',  freq:13, amp:4,  noise:3, color:'#93c5fd', spindle:true, period:3.5 },
+    ]
+  },
+  delta: {
+    label: 'δ波（深睡眠 NREM Stage N3）',
+    desc: '2Hz以下の高振幅・緩徐なδ波が全般性に出現。δ波が全体の20%以上を占める深睡眠（慢波睡眠）。',
+    channels: [
+      { name:'Fp1-F3', freq:1.5, amp:28, noise:5, color:'#a78bfa' },
+      { name:'F3-C3',  freq:1.8, amp:32, noise:5, color:'#a78bfa' },
+      { name:'Cz-Fz',  freq:1.6, amp:35, noise:4, color:'#c4b5fd' },
+      { name:'C3-P3',  freq:1.7, amp:30, noise:5, color:'#a78bfa' },
+      { name:'C4-P4',  freq:1.7, amp:30, noise:5, color:'#a78bfa' },
+      { name:'P3-O1',  freq:1.5, amp:26, noise:5, color:'#a78bfa' },
+    ]
+  },
+  spike_wave: {
+    label: '棘徐波複合（Spike-wave，3Hz）',
+    desc: '欠神てんかんの典型的所見。3Hzの規則的な棘波＋徐波複合が全般性に突然出現し、突然終息する。',
+    channels: [
+      { name:'Fp1-F3', freq:3, amp:20, noise:2, color:'#f87171', spikeWave:true },
+      { name:'F3-C3',  freq:3, amp:24, noise:2, color:'#f87171', spikeWave:true },
+      { name:'Cz-Fz',  freq:3, amp:28, noise:1, color:'#fca5a5', spikeWave:true },
+      { name:'C3-P3',  freq:3, amp:24, noise:2, color:'#f87171', spikeWave:true },
+      { name:'C4-P4',  freq:3, amp:24, noise:2, color:'#f87171', spikeWave:true },
+      { name:'P3-O1',  freq:3, amp:22, noise:2, color:'#f87171', spikeWave:true },
+    ]
+  },
+  triphasic: {
+    label: '三相波（Triphasic waves）',
+    desc: '肝性脳症・代謝性脳症で出現する1-2Hzの三相性波形（負-正-負の3相）。前頭部優位で前後方向に伝播遅延を示す。',
+    channels: [
+      { name:'Fp1-F3', freq:1.5, amp:25, noise:4, color:'#fbbf24', triphasic:true, delay:0 },
+      { name:'F3-C3',  freq:1.5, amp:22, noise:4, color:'#fbbf24', triphasic:true, delay:0.04 },
+      { name:'Cz-Fz',  freq:1.5, amp:20, noise:4, color:'#fbbf24', triphasic:true, delay:0.06 },
+      { name:'C3-P3',  freq:1.5, amp:18, noise:4, color:'#fbbf24', triphasic:true, delay:0.10 },
+      { name:'C4-P4',  freq:1.5, amp:18, noise:4, color:'#fbbf24', triphasic:true, delay:0.10 },
+      { name:'P3-O1',  freq:1.5, amp:14, noise:4, color:'#fbbf24', triphasic:true, delay:0.14 },
+    ]
+  },
+  burst_supp: {
+    label: 'Burst-suppression（バースト抑制）',
+    desc: '高振幅のバーストと電気的抑制（平坦部）が交互に出現。重篤な脳機能障害、麻酔深部、低体温時に出現。',
+    channels: [
+      { name:'Fp1-F3', freq:3, amp:30, noise:3, color:'#67e8f9', burstSupp:true },
+      { name:'F3-C3',  freq:3, amp:32, noise:3, color:'#67e8f9', burstSupp:true },
+      { name:'Cz-Fz',  freq:3, amp:34, noise:2, color:'#a5f3fc', burstSupp:true },
+      { name:'C3-P3',  freq:3, amp:32, noise:3, color:'#67e8f9', burstSupp:true },
+      { name:'C4-P4',  freq:3, amp:32, noise:3, color:'#67e8f9', burstSupp:true },
+      { name:'P3-O1',  freq:3, amp:28, noise:3, color:'#67e8f9', burstSupp:true },
+    ]
+  },
+};
+
+let currentMode = 'alpha';
+let animPlaying = true;
+let animTime = 0;
+let animFrame = null;
+
+function setMode(mode, btn) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const m = MODES[mode];
+  document.getElementById('mode-desc').textContent = m ? m.desc : '';
+  if (!animPlaying) { animPlaying = true; updatePlayBtn(); animate(); }
+}
+
+function togglePlay() {
+  animPlaying = !animPlaying;
+  updatePlayBtn();
+  if (animPlaying) animate();
+}
+
+function updatePlayBtn() {
+  const btn = document.getElementById('play-btn');
+  const icon = document.getElementById('play-icon');
+  const label = document.getElementById('play-label');
+  if (animPlaying) {
+    icon.setAttribute('data-lucide', 'pause');
+    label.textContent = '一時停止';
+  } else {
+    icon.setAttribute('data-lucide', 'play');
+    label.textContent = '再生';
+  }
+  lucide.createIcons({ icons: { pause: lucide.icons?.pause, play: lucide.icons?.play } });
+  lucide.createIcons();
+}
+
+function startAnimator() {
+  if (!animFrame) animate();
+  const m = MODES[currentMode];
+  document.getElementById('mode-desc').textContent = m ? m.desc : '';
+}
+
+// Pseudo-random noise (seeded for consistency)
+function pseudoNoise(t, seed) {
+  return Math.sin(t * 127.3 + seed * 43.7) * 0.5
+       + Math.sin(t * 83.1 + seed * 29.1) * 0.3
+       + Math.sin(t * 51.7 + seed * 17.9) * 0.2;
+}
+
+function drawEEG(canvas, mode, t) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  const m = MODES[mode];
+  if (!m) return;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, W, H);
+
+  const nCh = m.channels.length;
+  const chH = H / nCh;
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  const gridPx = W / 10;
+  for (let x = 0; x < W; x += gridPx) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+  }
+
+  m.channels.forEach((ch, i) => {
+    const y0 = i * chH + chH / 2;
+
+    // Channel label
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.font = '10px monospace';
+    ctx.fillText(ch.name, 5, y0 - chH/2 + 13);
+
+    // Baseline
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y0); ctx.stroke();
+
+    // Waveform
+    ctx.strokeStyle = ch.color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    const win = 6; // seconds visible
+    for (let px = 0; px < W; px++) {
+      const tc = t - win + (px / W) * win;
+      let val = 0;
+      const noise = pseudoNoise(tc, i) * ch.noise;
+
+      if (ch.spikeWave) {
+        const phase = tc * ch.freq;
+        const frac = phase - Math.floor(phase);
+        if (frac < 0.10) {
+          val = Math.sin(frac / 0.10 * Math.PI * 2) * ch.amp * 1.6;
+        } else {
+          val = -Math.sin((frac - 0.10) / 0.90 * Math.PI) * ch.amp * 0.8;
+        }
+        val += noise;
+      } else if (ch.spindle) {
+        const spinCycle = tc / ch.period;
+        const sf = spinCycle - Math.floor(spinCycle);
+        const env = sf < 0.45 ? Math.sin(sf / 0.45 * Math.PI) : 0;
+        val = Math.sin(2 * Math.PI * ch.freq * tc) * ch.amp * env + noise;
+      } else if (ch.triphasic) {
+        const delay = ch.delay || 0;
+        const phase = (tc - delay) * ch.freq;
+        const frac = phase - Math.floor(phase);
+        if (frac < 0.15) val = -ch.amp * 0.6 * Math.sin(frac / 0.15 * Math.PI);
+        else if (frac < 0.45) val = ch.amp * Math.sin((frac - 0.15) / 0.30 * Math.PI);
+        else if (frac < 0.65) val = -ch.amp * 0.5 * Math.sin((frac - 0.45) / 0.20 * Math.PI);
+        else val = 0;
+        val += noise * 0.5;
+      } else if (ch.burstSupp) {
+        const bCycle = tc / 3.5;
+        const bf = bCycle - Math.floor(bCycle);
+        if (bf < 0.35) {
+          val = Math.sin(2 * Math.PI * (ch.freq * 0.8 + Math.sin(tc * 1.2)) * tc) * ch.amp + noise * 2;
+          val += Math.sin(2 * Math.PI * 7 * tc) * ch.amp * 0.4;
+        } else {
+          val = noise * 0.5;
+        }
+      } else {
+        val = Math.sin(2 * Math.PI * ch.freq * tc) * ch.amp + noise;
+        if (ch.freq < 4) {
+          val += Math.sin(2 * Math.PI * ch.freq * 0.7 * tc) * ch.amp * 0.3;
+        }
+      }
+
+      const y = y0 - val;
+      const clamped = Math.max(y0 - chH * 0.48, Math.min(y0 + chH * 0.48, y));
+      px === 0 ? ctx.moveTo(px, clamped) : ctx.lineTo(px, clamped);
+    }
+    ctx.stroke();
+  });
+}
+
+function animate() {
+  if (!animPlaying) { animFrame = null; return; }
+  animTime += 0.016;
+  const canvas = document.getElementById('eeg-canvas');
+  if (canvas) drawEEG(canvas, currentMode, animTime);
+  animFrame = requestAnimationFrame(animate);
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  // Pre-draw for animator section
+  const canvas = document.getElementById('eeg-canvas');
+  if (canvas) {
+    drawEEG(canvas, 'alpha', 0);
+    animate();
+  }
+  const m = MODES['alpha'];
+  if (m) document.getElementById('mode-desc').textContent = m.desc;
+});
+</script>
+</body>
+</html>

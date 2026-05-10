@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神保健指定医 制度概要 — 令和7年新基準</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --sticky-offset: 5rem;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f0f4f8; font-feature-settings: 'palt'; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card { background: white; border-radius: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.07); padding: 1.75rem; margin-bottom: 1.5rem; }
+    .criteria-box { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid #1d4ed8; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
+    .danger-box   { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-left: 4px solid #dc2626; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
+    .warning-box  { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-left: 4px solid #d97706; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
+    .recommend-box{ background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 4px solid #15803d; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
+    .purple-box   { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border-left: 4px solid #7c3aed; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
+    .new-box      { background: linear-gradient(135deg, #fff1f2, #ffe4e6); border-left: 4px solid #e11d48; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
+
+    .badge-law  { background: #1e3a5f; color: white; padding: .12rem .5rem; border-radius: .3rem; font-size: .7rem; font-weight: 700; white-space: nowrap; }
+    .badge-new  { background: #e11d48; color: white; padding: .12rem .5rem; border-radius: 9999px; font-size: .68rem; font-weight: 700; }
+    .badge-r7   { background: #7c3aed; color: white; padding: .12rem .5rem; border-radius: 9999px; font-size: .68rem; font-weight: 700; }
+    .badge-cat  { background: linear-gradient(135deg, #0f766e, #15803d); color: white; padding: .12rem .55rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; white-space: nowrap; }
+
+    /* 症例表 */
+    .case-table th { background: #1e3a5f; color: white; padding: .6rem .85rem; font-size: .78rem; font-weight: 600; text-align: left; }
+    .case-table td { padding: .65rem .85rem; font-size: .82rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; line-height: 1.5; }
+    .case-table tr:hover td { background: #f8fafc; }
+    .case-num { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--psych-gradient); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; }
+
+    /* フロー */
+    .flow-node { padding: .65rem 1rem; border-radius: .65rem; text-align: center; font-weight: 600; font-size: .82rem; }
+    .flow-start  { background: #1e3a5f; color: white; }
+    .flow-check  { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
+    .flow-yes    { background: #dcfce7; border: 2px solid #15803d; color: #14532d; }
+    .tree-connector { width: 2px; height: 12px; background: #9ca3af; margin: 0 auto; }
+
+    /* TOC */
+    .toc { position: fixed; right: 1.25rem; top: 50%; transform: translateY(-50%); background: white; padding: .875rem; border-radius: .75rem; box-shadow: 0 4px 12px rgba(0,0,0,.12); z-index: 50; min-width: 148px; }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .toc a { display: block; font-size: .75rem; color: #374151; padding: .25rem .5rem; border-radius: .35rem; text-decoration: none; transition: all .15s; }
+    .toc a:hover { background: #eff6ff; color: #1d4ed8; }
+
+    /* sticky nav */
+    .sticky-nav { position: sticky; top: 0; z-index: 40; background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+    .nav-btn { font-size: .78rem; padding: .4rem .85rem; border-radius: .5rem; color: #374151; font-weight: 500; transition: all .15s; white-space: nowrap; }
+    .nav-btn:hover { background: #eff6ff; color: #1e3a5f; }
+
+    section[id] { scroll-margin-top: var(--sticky-offset); }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+    /* step */
+    .step-num { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--psych-gradient); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; flex-shrink: 0; margin-top: .1rem; }
+  </style>
+</head>
+<body>
+
+<header class="header-gradient text-white py-8">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="shield-check" class="w-7 h-7 opacity-80"></i>
+      <span class="text-xs font-semibold opacity-70 uppercase tracking-widest">精神科専門資格 — 制度概要</span>
+    </div>
+    <h1 class="text-2xl md:text-4xl font-bold">精神保健指定医</h1>
+    <p class="mt-2 text-sm md:text-base opacity-85">制度概要・申請要件・ケースレポート要件 完全ガイド</p>
+    <div class="flex flex-wrap gap-2 mt-3 text-sm">
+      <span class="bg-white/20 px-3 py-1 rounded-full">精神保健福祉法 第18条</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">5症例ケースレポート</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">令和7年2月1日新基準</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">厚生労働省 事務取扱要領準拠</span>
+    </div>
+  </div>
+</header>
+
+<nav class="sticky-nav">
+  <div class="max-w-5xl mx-auto px-4 py-2 flex gap-1 overflow-x-auto">
+    <a href="#newstandard" class="nav-btn text-red-600 font-bold">令和7年新基準</a>
+    <a href="#overview" class="nav-btn">制度概要</a>
+    <a href="#roles" class="nav-btn">権限・役割</a>
+    <a href="#requirements" class="nav-btn">申請要件</a>
+    <a href="#case-categories" class="nav-btn">5症例カテゴリ</a>
+    <a href="#admission-req" class="nav-btn">入院形態要件</a>
+    <a href="#timing" class="nav-btn">診療期間条件</a>
+    <a href="#report-structure" class="nav-btn">レポート構成</a>
+    <a href="#renewal" class="nav-btn">更新</a>
+    <a href="#tools" class="nav-btn">支援ツール</a>
+  </div>
+</nav>
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- ★ 令和7年新基準 お知らせ -->
+  <section id="newstandard" class="section-card">
+    <div class="new-box">
+      <div class="flex items-start gap-3">
+        <i data-lucide="alert-circle" class="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-bold text-sm text-rose-900 mb-1">
+            <span class="badge-new mr-1">NEW</span>
+            令和7年2月1日以降の申請は新様式を使用してください（厚生労働省通知 令和7年1月31日）
+          </p>
+          <p class="text-xs text-rose-800">精神保健指定医の新規申請等に係る事務取扱要領が改正されました。本ページはこの最新基準に基づいて作成されています。公式資料（厚生労働省ウェブサイト）で最新情報を必ずご確認ください。</p>
+          <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/seishinhokenshiteii.html" target="_blank" rel="noopener" class="inline-flex items-center gap-1 mt-1.5 text-xs text-rose-700 underline font-medium">
+            <i data-lucide="external-link" class="w-3 h-3"></i>厚生労働省 精神保健指定医ページ
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-3 mt-4">
+      <div class="criteria-box">
+        <p class="font-bold text-sm text-blue-900 mb-1 flex items-center gap-1"><i data-lucide="file-text" class="w-4 h-4"></i>ケースレポート</p>
+        <p class="text-xs text-gray-700"><strong class="text-2xl text-blue-800">5</strong> 症例<br>第1〜第5症例で疾患カテゴリ固定</p>
+      </div>
+      <div class="warning-box">
+        <p class="font-bold text-sm text-amber-900 mb-1 flex items-center gap-1"><i data-lucide="calendar" class="w-4 h-4"></i>診療期間</p>
+        <p class="text-xs text-gray-700">申請前 <strong>7年以内</strong>に診療した症例<br>（旧：5年以内から変更）</p>
+      </div>
+      <div class="recommend-box">
+        <p class="font-bold text-sm text-green-900 mb-1 flex items-center gap-1"><i data-lucide="user-check" class="w-4 h-4"></i>主評価対象</p>
+        <p class="text-xs text-gray-700">措置入院 または 医療保護入院<br>（任意入院は主評価対象外）</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 制度概要 -->
+  <section id="overview" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="book-open" class="w-5 h-5 text-blue-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">制度概要</h2>
+      <span class="badge-law">精神保健福祉法 第18条</span>
+    </div>
+    <p class="text-sm text-gray-700 leading-relaxed mb-4">
+      精神保健指定医（指定医）は、<strong>精神保健及び精神障害者福祉に関する法律（精神保健福祉法）第18条</strong>に基づき、厚生労働大臣が指定する医師である。精神科入院形態の判定・行動制限の命令など、<strong>患者の自由を制限する行為に法的権限</strong>を付与される唯一の資格であり、精神医療の要となる。
+    </p>
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-1"><i data-lucide="gavel" class="w-4 h-4 text-blue-700"></i><span class="font-bold text-sm text-blue-900">法的根拠</span></div>
+        <p class="text-xs text-gray-700">精神保健福祉法 第18〜21条<br>施行規則 第6〜9条</p>
+      </div>
+      <div class="recommend-box">
+        <div class="flex items-center gap-2 mb-1"><i data-lucide="building-2" class="w-4 h-4 text-green-700"></i><span class="font-bold text-sm text-green-900">指定機関</span></div>
+        <p class="text-xs text-gray-700">厚生労働大臣（申請窓口：都道府県）</p>
+      </div>
+      <div class="warning-box">
+        <div class="flex items-center gap-2 mb-1"><i data-lucide="refresh-cw" class="w-4 h-4 text-amber-700"></i><span class="font-bold text-sm text-amber-900">有効期限</span></div>
+        <p class="text-xs text-gray-700">5年ごとに更新が必要<br>（研修受講・業務実績が条件）</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 権限・役割 -->
+  <section id="roles" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="clipboard-list" class="w-5 h-5 text-teal-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">指定医の権限・役割</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="case-table w-full rounded-lg overflow-hidden">
+        <thead><tr>
+          <th class="rounded-tl-lg">権限・行為</th>
+          <th>根拠条文</th>
+          <th class="rounded-tr-lg">内容</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><strong class="text-red-700">措置入院の診察</strong></td><td><span class="badge-law">第27・29条</span></td><td>都道府県知事の命による診察。2名の指定医が一致して「自傷他害のおそれあり」と判定した場合に成立する。</td></tr>
+          <tr><td><strong class="text-orange-700">医療保護入院の判定</strong></td><td><span class="badge-law">第33条</span></td><td>入院を必要とする精神障害の有無・任意入院が困難かを1名の指定医が判定。家族等の同意または市町村長同意が必要。</td></tr>
+          <tr><td><strong class="text-amber-700">任意入院の管理</strong></td><td><span class="badge-law">第21条</span></td><td>患者が任意入院の同意能力を有するかを確認し、インフォームドコンセントを得る。退院制限（72時間）の判断も行う。</td></tr>
+          <tr><td><strong class="text-purple-700">隔離命令（12時間超）</strong></td><td><span class="badge-law">第36条3項</span></td><td>12時間を超える隔離は指定医の命令が必須。「著しく他の患者を障害するおそれ」等の要件を満たす場合。</td></tr>
+          <tr><td><strong class="text-purple-700">身体的拘束命令</strong></td><td><span class="badge-law">第36条3項</span></td><td>身体的拘束は指定医の命令が必須。「著しく自傷行為のおそれ」等の厳格な要件が求められる。</td></tr>
+          <tr><td><strong class="text-blue-700">応急入院の判定</strong></td><td><span class="badge-law">第33条の6</span></td><td>緊急に入院させる応急入院の判定（72時間以内）。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="danger-box mt-4">
+      <div class="flex gap-2 items-start">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-red-700 flex-shrink-0 mt-0.5"></i>
+        <p class="text-xs text-gray-700"><strong>重要：</strong>行動制限（隔離・身体的拘束）は<strong>医療的必要性の判断かつ最小限の期間</strong>に限られる。継続命令の際も指定医が改めて診察・指示記録を残す義務がある（行動制限最小化委員会への報告含む）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 申請要件 -->
+  <section id="requirements" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="list-checks" class="w-5 h-5 text-blue-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">申請要件（新規指定）</h2>
+    </div>
+
+    <div class="flex flex-col items-center gap-0 max-w-sm mx-auto mb-6">
+      <div class="flow-node flow-start w-full">医師免許取得</div>
+      <div class="tree-connector"></div>
+      <div class="flow-node flow-check w-full">5年以上の臨床経験<br><span class="text-xs font-normal">うち精神科診療経験 3年以上</span></div>
+      <div class="tree-connector"></div>
+      <div class="flow-node flow-check w-full">5症例のケースレポートを作成<br><span class="text-xs font-normal">（第1〜第5症例：疾患カテゴリ固定）</span></div>
+      <div class="tree-connector"></div>
+      <div class="flow-node flow-check w-full">指定医研修（厚生労働省）を修了</div>
+      <div class="tree-connector"></div>
+      <div class="flow-node flow-check w-full">口頭試問（ケースレポート審査後）</div>
+      <div class="tree-connector"></div>
+      <div class="flow-node flow-check w-full">都道府県を通じて厚生労働省へ申請</div>
+      <div class="tree-connector"></div>
+      <div class="flow-node flow-yes w-full">精神保健指定医として指定</div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-2"><i data-lucide="clock" class="w-4 h-4 text-blue-700"></i><span class="font-bold text-sm text-blue-900">経験年数要件</span></div>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>• 医師免許取得後 <strong>5年以上</strong>の臨床経験</li>
+          <li>• うち <strong>精神科診療 3年以上</strong>（週4日以上・1日8時間以上）</li>
+          <li>• 精神病床を有する医療機関での常時勤務が原則</li>
+        </ul>
+      </div>
+      <div class="recommend-box">
+        <div class="flex items-center gap-2 mb-2"><i data-lucide="file-text" class="w-4 h-4 text-green-700"></i><span class="font-bold text-sm text-green-900">ケースレポート要件</span></div>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>• <strong>5症例</strong>（様式3-1 令和7年1月版を使用）</li>
+          <li>• 各症例に指導医（指定医）の自筆署名が必要</li>
+          <li>• 自ら主治医または担当医として3ヶ月以上担当</li>
+        </ul>
+      </div>
+    </div>
+    <div class="purple-box mt-3">
+      <div class="flex gap-2 items-start">
+        <i data-lucide="users" class="w-4 h-4 text-violet-700 flex-shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-bold text-xs text-violet-900 mb-0.5">指導医要件（令和7年7月以降に担当開始の症例から適用）</p>
+          <p class="text-xs text-gray-700">指導医は ①更新研修修了済みの指定医 かつ ②同じ医療機関での常時勤務指定医 であること。指導医の自筆署名がケースレポートに必須。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ★ 5症例カテゴリ（法令固定） -->
+  <section id="case-categories" class="section-card">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="layers" class="w-5 h-5 text-teal-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">ケースレポート 5症例の疾患カテゴリ</h2>
+      <span class="badge-cat">法令による固定順序</span>
+    </div>
+    <div class="warning-box mb-4">
+      <div class="flex gap-2 items-start">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5"></i>
+        <p class="text-xs text-gray-700"><strong>重要：</strong>5症例の疾患カテゴリは<strong>法令（昭和63年厚生省告示第124号）で固定</strong>されており、申請者が自由に選択することはできません。第1〜第5症例の順序も変更できません。</p>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="case-table w-full rounded-lg overflow-hidden">
+        <thead><tr>
+          <th class="w-20 rounded-tl-lg">症例番号</th>
+          <th>疾患カテゴリ（必須）</th>
+          <th>ICD-10コード</th>
+          <th class="rounded-tr-lg">代表的な疾患・ポイント</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="flex items-center gap-2"><span class="case-num">1</span><span class="font-bold text-amber-700">第1症例</span></div></td>
+            <td><span class="font-bold">症状性を含む器質性精神障害</span><br><span class="text-xs text-gray-500">（老年期認知症を除く）</span></td>
+            <td><span class="font-mono text-sm font-bold text-amber-700">F00〜F09</span><br><span class="text-xs text-gray-500">（老年期認知症除く）</span></td>
+            <td class="text-xs">せん妄（F05）・器質性精神障害（F06）・TBI後精神障害など。転院3ヶ月以内でも可（同一入院形態）。</td>
+          </tr>
+          <tr>
+            <td><div class="flex items-center gap-2"><span class="case-num">2</span><span class="font-bold text-red-700">第2症例</span></div></td>
+            <td><span class="font-bold">精神作用物質使用による精神及び行動の障害</span><br><span class="text-xs text-gray-500">依存症に係るものに限る</span></td>
+            <td><span class="font-mono text-sm font-bold text-red-700">F10〜F19</span><br><span class="text-xs text-gray-500">（依存症のみ）</span></td>
+            <td class="text-xs">アルコール依存症（F10.2）・薬物依存症など。「依存症」要件に注意：有害使用や急性中毒のみでは不可。転院3ヶ月以内でも可。</td>
+          </tr>
+          <tr>
+            <td><div class="flex items-center gap-2"><span class="case-num">3</span><span class="font-bold text-purple-700">第3症例</span></div></td>
+            <td><span class="font-bold">統合失調症、統合失調症型障害及び妄想性障害</span></td>
+            <td><span class="font-mono text-sm font-bold text-purple-700">F20〜F29</span></td>
+            <td class="text-xs">妄想型統合失調症（F20.0）・統合失調感情障害（F25）など。精神科入院症例の中核疾患。陽性・陰性症状の記載が重要。</td>
+          </tr>
+          <tr>
+            <td><div class="flex items-center gap-2"><span class="case-num">4</span><span class="font-bold text-blue-700">第4症例</span></div></td>
+            <td><span class="font-bold">気分（感情）障害</span></td>
+            <td><span class="font-mono text-sm font-bold text-blue-700">F30〜F39</span></td>
+            <td class="text-xs">双極性感情障害（F31）・うつ病エピソード（F32）など。希死念慮・自殺リスク評価の記載、入院適応の根拠が審査で重視される。</td>
+          </tr>
+          <tr>
+            <td><div class="flex items-center gap-2"><span class="case-num">5</span><span class="font-bold text-teal-700">第5症例</span></div></td>
+            <td><span class="font-bold">F4〜F9のいずれか</span><br><span class="text-xs text-gray-500">（神経症性・パーソナリティ・知的・発達・小児期等）</span></td>
+            <td><span class="font-mono text-sm font-bold text-teal-700">F40〜F98</span></td>
+            <td class="text-xs">神経症性障害（F4）・生理的障害（F5）・パーソナリティ障害（F6）・知的障害（F7）・発達障害（F8）・ADHD等（F9）から選択可。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="recommend-box mt-3">
+      <div class="flex gap-2">
+        <i data-lucide="lightbulb" class="w-4 h-4 text-green-700 flex-shrink-0 mt-0.5"></i>
+        <p class="text-xs text-gray-700"><strong>実務のポイント：</strong>第1症例（F0器質性）と第2症例（F1依存症）は総合病院精神科・救急精神科・アルコール専門病棟のある施設での経験が有利。第3症例（F2）は措置入院症例として提出するケースが多い。</p>
+      </div>
+    </div>
+    <a href="icd10.html" class="inline-flex items-center gap-1.5 mt-3 text-sm text-blue-700 underline font-medium">
+      <i data-lucide="book" class="w-4 h-4"></i>ICD-10 分類ページで詳細コードを確認する
+    </a>
+  </section>
+
+  <!-- ★ 入院形態要件 -->
+  <section id="admission-req" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="git-branch" class="w-5 h-5 text-blue-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">入院形態要件（5症例で満たすべき条件）</h2>
+    </div>
+
+    <div class="danger-box mb-4">
+      <div class="flex gap-2 items-start">
+        <i data-lucide="alert-circle" class="w-4 h-4 text-red-700 flex-shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-bold text-xs text-red-900 mb-1">ケースレポートの主な評価対象は「措置入院」または「医療保護入院」のみ</p>
+          <p class="text-xs text-gray-700">任意入院は<strong>主評価対象となりません</strong>（様式3-1の③参照）。ただし、医療保護入院等から任意入院に移行した症例は引き続きケースレポートの対象とできます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="case-table w-full rounded-lg overflow-hidden">
+        <thead><tr>
+          <th class="rounded-tl-lg">条件</th>
+          <th>必要数</th>
+          <th>根拠</th>
+          <th class="rounded-tr-lg">詳細</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><strong class="text-red-700">措置入院症例</strong></td>
+            <td><strong class="text-red-700 text-lg">1例以上</strong><span class="text-xs text-red-600 ml-1">必須</span></td>
+            <td><span class="badge-law">事務取扱要領 2エ</span></td>
+            <td class="text-xs">5症例の中に措置入院（または緊急措置入院）を主評価対象とする症例を最低1例含めること。</td>
+          </tr>
+          <tr>
+            <td><strong class="text-orange-700">医療保護入院症例</strong></td>
+            <td><strong class="text-orange-700 text-lg">1例以上</strong><span class="text-xs text-orange-600 ml-1">必須</span></td>
+            <td><span class="badge-law">事務取扱要領 2エ</span></td>
+            <td class="text-xs">5症例の中に医療保護入院を主評価対象とする症例を最低1例含めること。</td>
+          </tr>
+          <tr>
+            <td><strong class="text-orange-700">医療保護入院 — 入院時立会い症例</strong></td>
+            <td><strong class="text-orange-700 text-lg">1例以上</strong><span class="text-xs text-orange-600 ml-1">必須</span></td>
+            <td><span class="badge-law">事務取扱要領 2オ</span></td>
+            <td class="text-xs">医療保護入院症例のうち、<strong>入院時から担当し、かつ入院時の指定医診察に立ち会った</strong>症例を最低1例含めること。指導医がこれを証明する。</td>
+          </tr>
+          <tr>
+            <td><strong class="text-purple-700">行動制限（隔離・身体的拘束）</strong></td>
+            <td class="text-xs text-gray-500">審査上の加点要素</td>
+            <td><span class="badge-law">様式3-1 ⑩</span></td>
+            <td class="text-xs">5症例の中に行動制限（隔離または身体的拘束）を実施した症例があれば、表紙⑩にチェック。<strong>独立した症例として提出は不要</strong>だが、含まれると審査上評価される。行動制限の記載は本文中に含める。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="recommend-box mt-4">
+      <div class="flex gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4 text-green-700 flex-shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-bold text-xs text-green-900 mb-1">望ましい追加要素（口頭試問で確認される可能性あり）</p>
+          <ul class="text-xs text-gray-700 space-y-0.5">
+            <li>• 医療保護入院等から<strong>任意入院に入院形態変更後も治療した症例</strong>を含めること（事務取扱要領 2シ）</li>
+            <li>• 措置・医療保護入院者の<strong>退院後の通院治療を行った症例</strong>（おおむね1ヶ月以上）を含めること（事務取扱要領 2ス）</li>
+            <li>• <strong>18歳未満</strong>の症例（評価基準に18歳未満特有の記載要件あり）</li>
+          </ul>
+          <p class="text-xs text-gray-500 mt-1">※ これらが含まれない場合、口頭試問で一般的な留意点を確認されます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ★ 診療期間条件 -->
+  <section id="timing" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="calendar" class="w-5 h-5 text-amber-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">診療期間の条件（別紙1）</h2>
+      <span class="badge-r7">令和7年改正</span>
+    </div>
+
+    <div class="overflow-x-auto mb-4">
+      <table class="case-table w-full rounded-lg overflow-hidden">
+        <thead><tr>
+          <th class="rounded-tl-lg">条件</th>
+          <th>内容</th>
+          <th class="rounded-tr-lg">根拠</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>全症例の上限</strong></td>
+            <td>申請日から起算して<strong class="text-red-700">7年以内</strong>に診療を開始した症例（申請前7年より前に開始しても、申請前7年以内も引き続き診療していれば可）</td>
+            <td><span class="badge-law">事務取扱要領 2ケ</span></td>
+          </tr>
+          <tr>
+            <td><strong>申請前1年以内の症例</strong></td>
+            <td><strong class="text-orange-700">1例以上</strong>は申請前1年以内に<strong>診療を開始</strong>した症例であること</td>
+            <td><span class="badge-law">事務取扱要領 2コ</span></td>
+          </tr>
+          <tr>
+            <td><strong>申請前1年より前の症例</strong></td>
+            <td><strong class="text-orange-700">2例以上</strong>は申請日の1年前より前に診療を開始した症例であること</td>
+            <td><span class="badge-law">事務取扱要領 2サ</span></td>
+          </tr>
+          <tr>
+            <td><strong>継続担当期間</strong></td>
+            <td>原則として入院から退院まで継続担当。長期入院は入院から<strong>3ヶ月以上</strong>継続担当で可。既存入院患者を引き継いだ場合も担当期間3ヶ月以上が必要。</td>
+            <td><span class="badge-law">事務取扱要領 2ウ</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warning-box">
+      <div class="flex gap-2 items-start">
+        <i data-lucide="info" class="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5"></i>
+        <p class="text-xs text-gray-700"><strong>育児・介護休業による例外：</strong>育児休業・介護休業等やむを得ない理由で診療に従事できない期間は、申請前1年の計算から除くことができます（1ヶ月以上2年以内）。</p>
+      </div>
+    </div>
+    <div class="criteria-box mt-2">
+      <p class="text-xs text-gray-700"><strong>器質性・依存症の特例（事務取扱要領 2キ）：</strong>第1症例（F0器質性）と第2症例（F1依存症）については、入院から3ヶ月以内に同一入院形態で転院した症例でもケースレポートの対象にできます。</p>
+    </div>
+  </section>
+
+  <!-- レポート構成 -->
+  <section id="report-structure" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="file-pen" class="w-5 h-5 text-teal-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">ケースレポートの構成（様式3-1 令和7年1月版）</h2>
+    </div>
+    <p class="text-sm text-gray-600 mb-4">各ケースレポートは<strong>表紙 + 関係法規に定める手続への対応 + 本文</strong>の3部構成。本文は現病歴中の<em>「入院時の状況」「入院後経過」</em>および考察の合計<strong>1200〜2500字</strong>とすること。</p>
+
+    <h3 class="font-bold text-sm text-gray-700 mb-2 mt-4">【表紙】記載必須事項（様式3-1 ①〜⑩）</h3>
+    <div class="overflow-x-auto">
+      <table class="case-table w-full rounded-lg overflow-hidden">
+        <thead><tr><th class="rounded-tl-lg w-8">項目</th><th>内容</th><th class="rounded-tr-lg">備考</th></tr></thead>
+        <tbody>
+          <tr><td>①</td><td>申請者氏名（<strong>自筆署名</strong>）</td><td class="text-xs">文書作成ソフトによる入力不可</td></tr>
+          <tr><td>②</td><td>最終診断名 + ICD-10コード（<strong>F以下2桁必須</strong>）</td><td class="text-xs">例: F20.0</td></tr>
+          <tr><td>③</td><td>主な評価対象の入院形態（<strong>措置入院 or 医療保護入院</strong>）</td><td class="text-xs">任意入院は選択不可</td></tr>
+          <tr><td>④</td><td>症例を経験した医療機関名</td><td class="text-xs"></td></tr>
+          <tr><td>⑤</td><td>患者イニシャル（姓.名）+ 生年月日（西暦）</td><td class="text-xs text-red-600">令和7年版から追加</td></tr>
+          <tr><td>⑥</td><td>入退院年月日（全入院形態）</td><td class="text-xs">緊急措置・応急入院を含む全形態を記載</td></tr>
+          <tr><td>⑦-1</td><td>主治医または担当医になった期間</td><td class="text-xs"></td></tr>
+          <tr><td>⑦-2,3</td><td>指導を行った指定医氏名・指定医番号・指導期間 + <strong>自筆署名</strong></td><td class="text-xs text-red-600">指導医全員分を記載</td></tr>
+          <tr><td>⑧-1〜3</td><td>退院後通院治療を行った場合の期間・指導医（該当者のみ）</td><td class="text-xs"></td></tr>
+          <tr><td>⑨</td><td>同一入院形態のまま転院した場合のチェック</td><td class="text-xs">該当者のみ</td></tr>
+          <tr><td>⑩</td><td>行動制限の有無（隔離・身体的拘束・電話制限・面会制限等）</td><td class="text-xs">有無どちらかに必ずチェック</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="font-bold text-sm text-gray-700 mb-2 mt-5">【本文】必須記載項目</h3>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="criteria-box">
+        <p class="font-bold text-xs text-blue-900 mb-1">記載必須セクション</p>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>• 初診時主訴</li>
+          <li>• 家族歴</li>
+          <li>• 生育・生活歴</li>
+          <li>• 既往歴（【病前性格】は必要に応じて）</li>
+          <li>• 現病歴：入院前経過</li>
+          <li>• 現病歴：<strong>入院時の状況</strong>（字数カウント対象）</li>
+          <li>• 現病歴：<strong>入院後経過</strong>（字数カウント対象）</li>
+          <li>• 【考察】は任意（ただし字数カウント対象）</li>
+        </ul>
+      </div>
+      <div class="danger-box">
+        <p class="font-bold text-xs text-red-900 mb-1">入院時の状況で特に説明すべき事項</p>
+        <p class="text-xs text-gray-700 mb-1"><strong>措置入院の場合：</strong></p>
+        <ul class="text-xs text-gray-700 space-y-0.5 mb-2">
+          <li>① 精神障害者であること（ICD-10に該当する疾患）</li>
+          <li>② 医療保護のために入院させなければ、精神障害のために自傷他害のおそれがあること</li>
+        </ul>
+        <p class="text-xs text-gray-700 mb-1"><strong>医療保護入院の場合：</strong></p>
+        <ul class="text-xs text-gray-700 space-y-0.5">
+          <li>① 精神障害者であること</li>
+          <li>② 医療・保護のために入院の必要があること</li>
+          <li>③ 精神障害のために任意入院が行われる状態にないこと（同意能力の欠如）</li>
+          <li>④ 任意入院となるよう努めたこと・告知の実施</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="warning-box mt-3">
+      <div class="flex gap-2 items-start">
+        <i data-lucide="info" class="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5"></i>
+        <p class="text-xs text-gray-700"><strong>字数カウントの注意：</strong>現病歴の「入院時の状況」「入院後経過」および「考察」の合計が<strong>1200〜2500字</strong>の範囲内であること。本文において関係条文の引用は不要。</p>
+      </div>
+    </div>
+
+    <!-- 令和6年法改正追記 -->
+    <h3 class="font-bold text-sm text-gray-700 mb-2 mt-5">令和6年4月1日施行の改正対応（令和6年以降入院の症例に必須）</h3>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="new-box">
+        <p class="font-bold text-xs text-rose-900 mb-1">医療保護入院の入院期間上限制</p>
+        <p class="text-xs text-gray-700">令和6年4月1日以後の新規入院は、入院時に<strong>3ヶ月を超えない範囲で入院期間を定める</strong>こと。更新は退院支援委員会の審議後に実施。</p>
+      </div>
+      <div class="new-box">
+        <p class="font-bold text-xs text-rose-900 mb-1">退院後生活環境相談員の選任</p>
+        <p class="text-xs text-gray-700">令和6年4月1日以後の新規入院（措置・医療保護）では<strong>退院後生活環境相談員の選任</strong>が必要。ケースレポートに記載すること。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 更新 -->
+  <section id="renewal" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="refresh-cw" class="w-5 h-5 text-amber-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">指定の更新（5年毎）</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="warning-box">
+        <div class="flex items-center gap-2 mb-2"><i data-lucide="calendar" class="w-4 h-4 text-amber-700"></i><span class="font-bold text-sm text-amber-900">更新要件</span></div>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>• 指定後 <strong>5年ごと</strong>に厚生労働大臣へ申請</li>
+          <li>• <strong>更新研修</strong>（厚労省登録機関）の受講修了</li>
+          <li>• 過去5年間における精神科診療実績</li>
+          <li>• 倫理的問題等がないこと</li>
+        </ul>
+      </div>
+      <div class="danger-box">
+        <div class="flex items-center gap-2 mb-2"><i data-lucide="alert-circle" class="w-4 h-4 text-red-700"></i><span class="font-bold text-sm text-red-900">失効・取消し</span></div>
+        <ul class="text-xs text-gray-700 space-y-1">
+          <li>• 更新申請漏れ → 期限切れで自動失効</li>
+          <li>• 法令違反・患者権利侵害 → 取消し処分</li>
+          <li>• 有効期限切れでの指定医職務行為は<strong>取り消しうる</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div class="purple-box mt-3">
+      <div class="flex gap-2 items-start">
+        <i data-lucide="info" class="w-4 h-4 text-violet-700 flex-shrink-0 mt-0.5"></i>
+        <p class="text-xs text-gray-700">令和7年7月以降に担当開始の症例の指導医は、<strong>更新研修修了済みの指定医</strong>であることが新たに要件化されました（事務取扱要領 3(1)ア）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 支援ツール -->
+  <section id="tools" class="section-card">
+    <div class="flex items-center gap-3 mb-4">
+      <i data-lucide="wrench" class="w-5 h-5 text-teal-700"></i>
+      <h2 class="text-xl font-bold text-gray-800">申請支援ツール</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-3">
+      <a href="shitei-checklist.html" class="block p-4 rounded-xl border-2 border-teal-200 hover:border-teal-400 hover:bg-teal-50 transition-all">
+        <div class="flex items-center gap-2 mb-2"><i data-lucide="check-square" class="w-5 h-5 text-teal-700"></i><span class="font-bold text-sm text-teal-900">要件チェックリスト</span></div>
+        <p class="text-xs text-gray-600">5症例の要件・各入院形態の記載チェックリスト。localStorage で進捗保存。</p>
+      </a>
+      <a href="shitei-report-wizard.html" class="block p-4 rounded-xl border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50 transition-all">
+        <div class="flex items-center gap-2 mb-2"><i data-lucide="wand-2" class="w-5 h-5 text-blue-700"></i><span class="font-bold text-sm text-blue-900">レポート作成ウィザード</span></div>
+        <p class="text-xs text-gray-600">7ステップで新様式に準拠したレポート草案を作成・テキスト生成。</p>
+      </a>
+      <a href="icd10.html" class="block p-4 rounded-xl border-2 border-purple-200 hover:border-purple-400 hover:bg-purple-50 transition-all">
+        <div class="flex items-center gap-2 mb-2"><i data-lucide="book" class="w-5 h-5 text-purple-700"></i><span class="font-bold text-sm text-purple-900">ICD-10 分類</span></div>
+        <p class="text-xs text-gray-600">疾患カテゴリ確認・コード検索。F0〜F9 全カテゴリ対応。</p>
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<nav class="toc">
+  <p class="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">目次</p>
+  <a href="#newstandard" class="text-rose-600 font-bold">令和7年新基準</a>
+  <a href="#overview">制度概要</a>
+  <a href="#roles">権限・役割</a>
+  <a href="#requirements">申請要件</a>
+  <a href="#case-categories">5症例カテゴリ</a>
+  <a href="#admission-req">入院形態要件</a>
+  <a href="#timing">診療期間条件</a>
+  <a href="#report-structure">レポート構成</a>
+  <a href="#renewal">更新</a>
+  <a href="#tools">支援ツール</a>
+</nav>
+
+<footer class="bg-gray-800 text-gray-300 text-xs py-6 mt-4">
+  <div class="max-w-5xl mx-auto px-4 text-center space-y-1">
+    <p>本ページは厚生労働省「精神保健指定医の新規申請等に係る事務取扱要領」（令和7年1月31日改正）および様式3-1（令和7年1月版）に基づいて作成しています。</p>
+    <p>最終的な申請要件は<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/seishinhokenshiteii.html" class="underline text-gray-400" target="_blank">厚生労働省公式ページ</a>の最新通知を必ずご確認ください。</p>
+    <p class="text-gray-500 mt-1">精神科臨床ガイド — 精神保健指定医支援ツール</p>
+  </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

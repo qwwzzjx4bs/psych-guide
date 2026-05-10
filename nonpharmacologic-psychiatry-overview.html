@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神医学における非薬物療法マップ — 心理・社会・環境の三分類</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-teal: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f 0%, #0f766e 100%);
+      --level-a: #15803d;
+      --level-b: #1d4ed8;
+      --level-c: #6b7280;
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e2e8f0;
+      padding: 1.5rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .badge-rec-strong {
+      background: #14532d;
+      color: #dcfce7;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .badge-rec {
+      background: #1e3a8a;
+      color: #dbeafe;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .badge-rec-cond {
+      background: #92400e;
+      color: #ffedd5;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .badge-rec-consider {
+      background: #475569;
+      color: #f1f5f9;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .hub-core {
+      background: var(--psych-gradient);
+      color: white;
+      border-radius: 1rem;
+      padding: 1rem 1.15rem;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      box-shadow: 0 10px 28px rgba(30, 58, 95, 0.25);
+    }
+    .pillar {
+      border-radius: 0.85rem;
+      border: 2px solid #e2e8f0;
+      background: #fff;
+      padding: 1rem 1.1rem;
+      height: 100%;
+    }
+    .intervention-row {
+      border-left: 3px solid #cbd5e1;
+      padding-left: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    .intervention-row.psych { border-left-color: #4f46e5; }
+    .intervention-row.social { border-left-color: #0d9488; }
+    .intervention-row.env { border-left-color: #ca8a04; }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 4.5rem; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="heart-handshake" class="w-9 h-9 opacity-90"></i>
+        <span class="text-sm font-medium opacity-80 uppercase tracking-wider">非薬物療法クイックマップ</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">精神医学領域の非薬物療法</h1>
+      <p class="mt-2 text-white/95 text-base max-w-3xl leading-relaxed">
+        <strong class="text-white">心理系・社会系・環境系</strong>に分類し、代表的条件ごとに<strong class="text-white">エビデンスレベル（A/B/C）</strong>と<strong class="text-white">推奨度</strong>を併記。個人の重症度・リソース・文化言語に応じて選択（いずれも医学的管理・安全配慮が前提）。
+      </p>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <span class="bg-white/18 text-white text-xs px-3 py-1 rounded-full font-medium">心理療法</span>
+        <span class="bg-white/18 text-white text-xs px-3 py-1 rounded-full font-medium">社会復帰・役割訓練</span>
+        <span class="bg-white/18 text-white text-xs px-3 py-1 rounded-full font-medium">心理教育・家族・環境調整</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="max-w-5xl mx-auto px-4 py-3 border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-30 shadow-sm text-sm font-medium text-slate-600">
+    <ul class="flex flex-wrap gap-x-4 gap-y-1">
+      <li><a href="#legend" class="hover:text-teal-700">凡例</a></li>
+      <li><a href="#diagram" class="hover:text-teal-700">全体像</a></li>
+      <li><a href="#psych" class="hover:text-teal-700">心理系</a></li>
+      <li><a href="#social" class="hover:text-teal-700">社会系</a></li>
+      <li><a href="#environment" class="hover:text-teal-700">環境系</a></li>
+      <li><a href="#matrix" class="hover:text-teal-700">疾患横断</a></li>
+      <li><a href="#refs" class="hover:text-teal-700">出典</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <section id="legend" class="section-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="book-open" class="w-6 h-6 text-slate-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">凡例：エビデンスと推奨度</h2>
+          <p class="text-slate-500 text-sm">本ページのラベルはメタ解析・RCT群・主要ガイドラインの<strong>要約表現</strong>であり、施設・国・版により文言は異なります。</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <h3 class="font-bold text-slate-800 mb-2 text-sm">エビデンスレベル（抜粋）</h3>
+          <ul class="text-sm space-y-2 text-slate-700">
+            <li class="flex flex-wrap items-center gap-2"><span class="badge-level-a">A</span> 複数の高質RCT・系統的レビューで一貫した利益。第一候補になりやすい。</li>
+            <li class="flex flex-wrap items-center gap-2"><span class="badge-level-b">B</span> 限定的だが有力なデータ、または対象・施行条件が限定される。</li>
+            <li class="flex flex-wrap items-center gap-2"><span class="badge-level-c">C</span> コンセンサス・観察研究中心。補助的・個別判断の比重が大きい。</li>
+          </ul>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <h3 class="font-bold text-slate-800 mb-2 text-sm">推奨度（本ページでの用語）</h3>
+          <ul class="text-sm space-y-2 text-slate-700">
+            <li><span class="badge-rec-strong">強く推奨</span> 主要ガイドラインで中枢的（しばしば薬物と併用で最優先クラス）。</li>
+            <li><span class="badge-rec">推奨</span> 標準的選択肢として積極的に検討。</li>
+            <li><span class="badge-rec-cond">条件付き推奨</span> 特定条件（例：再発予防、専門家あり、家族協働）で優先度が上がる。</li>
+            <li><span class="badge-rec-consider">考慮</span> エビデンスはあるが第一線ではない、または質のばらつきが大きい。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="warning-box mt-4 rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-950">
+        <div class="flex gap-2">
+          <i data-lucide="triangle-alert" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+          <p><strong>臨床留意</strong>：心理療法は「話を聴くだけ」とは異なり、テーマ・手技・頻度が標準化されている場合ほど再現性が高い。自殺危機・精神病症状・摂食失調重症例などは<strong>医学的危険度評価と併走</strong>が前提です。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="diagram" class="section-card">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="layout-grid" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">三分類の位置づけ（概念図）</h2>
+          <p class="text-slate-500 text-sm">入口は「個人の症状・機能」と「環境・資源」。実際のプログラムは複数柱を組み合わせることが多い（例：家族心理教育＋SST）。</p>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-3 py-2">
+        <div class="hub-core w-full max-w-md">
+          <i data-lucide="user-round" class="w-6 h-6 mx-auto mb-1 opacity-90"></i>
+          本人中心のケア設計<br>
+          <span class="text-white/85 text-sm font-normal">医学的管理 · リスク評価 · セルフマネジメント支援</span>
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-slate-400"></i>
+        <div class="grid sm:grid-cols-3 gap-3 w-full">
+          <div class="pillar border-indigo-200 bg-indigo-50/40">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="brain" class="w-5 h-5 text-indigo-600"></i>
+              <span class="font-bold text-indigo-900 text-sm">心理系</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">標準化された心理療法（CBT・DBT・トラウマ焦点など）。認知・感情・行動のメカニズムに働きかける。</p>
+          </div>
+          <div class="pillar border-teal-200 bg-teal-50/40">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="users" class="w-5 h-5 text-teal-600"></i>
+              <span class="font-bold text-teal-900 text-sm">社会系</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">対人スキル・職業復帰・ピア支援など、<strong>役割・参加・社会関係</strong>を再構築する。</p>
+          </div>
+          <div class="pillar border-amber-200 bg-amber-50/40">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="home" class="w-5 h-5 text-amber-700"></i>
+              <span class="font-bold text-amber-900 text-sm">環境系</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">心理教育・家族プログラム・学校/職場連携・居住環境。回復を支える<strong>文脈</strong>を整える。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="psych" class="section-card">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="brain" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">心理系：構造化心理療法</h2>
+          <p class="text-slate-500 text-sm">エビデンスの核は「手技が定義され、訓練された施術者が実施する」こと。併用薬は疾患により標準。</p>
+        </div>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">認知行動療法（CBT）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-strong">強く推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：大うつ、不安症群（パニック・社交不安・GAD等）、強迫症、不眠（CBT-I）、摂食障害の一部、統合失調症の補助（幻聴・再発予防のプログラム群を含む）。</p>
+        <p class="text-xs text-slate-500">系統的レビュー・ガイドラインで中核的心理社会療法として位置づけられる領域が広い。</p>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">行動療法：曝露・反応妨害（ERP）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-strong">強く推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：強迫症（OCD）。恐怖症群の行動介入としてもエビデンス強い。</p>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">トラウマ焦点心理療法（TF-CBT / PE / CPT 等）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-strong">強く推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：PTSD。安定化・安全計画の後に段階的に導入。併用薬物もガイドラインで検討。</p>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">弁証的行動療法（DBT）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-strong">強く推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：境界性パーソナリティ障害（自傷・感情調整困難）。技能訓練＋電話コーチング等の構造が特徴。</p>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">対人関係療法（IPT）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec">推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：大うつ。喪失・役割紛争・役割転換・対人欠落の4問題領域を扱う時間限定療法。</p>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">マインドフルネス認知療法（MBCT）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-cond">条件付き推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：うつ病の<strong>再発予防</strong>（既往複数回など）。急性期単独第一選択ではないことが多い。</p>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">受容コミットメント療法（ACT）・その他第三の波</h3>
+          <span class="badge-level-b">B</span>
+          <span class="badge-rec">推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1">不安・うつ・慢性痛の文脈でRCT累積。CBTと同等群を主張するメタ解析もあるが領域差あり → <span class="badge-rec-consider">考慮</span>から<span class="badge-rec">推奨</span>まで運用は施設により異なる。</p>
+      </div>
+
+      <div class="intervention-row psych">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">精神分析的心理療法（長期・高頻度）</h3>
+          <span class="badge-level-c">C</span>
+          <span class="badge-rec-consider">考慮</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1">特定適応・施行形態では有益報告も、エビデンスカテゴリは不均一。資源配分・適応設定が重要。</p>
+      </div>
+    </section>
+
+    <section id="social" class="section-card">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="users" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">社会系：スキル・参加・復職</h2>
+          <p class="text-slate-500 text-sm">「症状のみ」から「生活・役割の再構築」へ。多くはチーム・アウトリーチと組み合わせる。</p>
+        </div>
+      </div>
+
+      <div class="intervention-row social">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">ソーシャルスキルトレーニング（SST）</h3>
+          <span class="badge-level-b">B</span>
+          <span class="badge-rec">推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：統合失調症スペクトラムの陰性症状・社会機能。RCT・メタ解析で社会機能改善のエビデンス（効果量は中程度程度の報告が多い）。</p>
+      </div>
+
+      <div class="intervention-row social">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">個別就労支援（IPS型：迅速・競争的就労原則）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-strong">強く推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：重症精神疾患（統合失調症・双極性等）における<strong>就労獲得率</strong>。リハビリテーション研究で一貫して強い。</p>
+      </div>
+
+      <div class="intervention-row social">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">アサートive Community Treatment（ACT）等インテンシブケース管理</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-cond">条件付き推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：再入院多・非アドヒアランス・ホームレスリスク等の高ニーズ群。入院・無宿泊利用減少のエビデンス（対象限定）。</p>
+      </div>
+
+      <div class="intervention-row social">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">ピアサポート・当事者支援</h3>
+          <span class="badge-level-b">B</span>
+          <span class="badge-rec">推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1">回復志向ケアの中核要素として拡大。質指標（教育・倫理・境界）整備が効果を左右。研究は領域により変動。</p>
+      </div>
+
+      <div class="intervention-row social">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">クラブハウス・デイプログラム</h3>
+          <span class="badge-level-b">B</span>
+          <span class="badge-rec-consider">考慮</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1">参加・意味づけ・職域訓練の文脈で有用性報告。エビデンスはプログラム質・対照設定によりばらつき。</p>
+      </div>
+    </section>
+
+    <section id="environment" class="section-card">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-amber-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="home" class="w-6 h-6 text-amber-800"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">環境系：心理教育・家族・連携</h2>
+          <p class="text-slate-500 text-sm">疾患理解・コミュニケーション・刺激コントロール・回復環境の設計。しばしば再発予防で強い位置づけ。</p>
+        </div>
+      </div>
+
+      <div class="intervention-row env">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">本人向け心理教育（疾患知識・再発早期兆候・対処）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-strong">強く推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：双極性障害、統合失調症スペクトラム、大うつ病の維持期など。再発入院減少などの有益性が繰り返し報告（プログラム要素により差）。</p>
+      </div>
+
+      <div class="intervention-row env">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">家族心理教育・家族ワーク（統合プログラム）</h3>
+          <span class="badge-level-a">A</span>
+          <span class="badge-rec-strong">強く推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1"><strong>主な対象</strong>：統合失調症・双極性など。高情動（expressed emotion）軽減や再発関連アウトカムの改善が、系統的レビュー等で繰り返し報告されている。単発説明会より<strong>段階的・技能志向</strong>プログラムが望ましい。</p>
+      </div>
+
+      <div class="intervention-row env">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">学校・職場連携（合理的配慮・段階復帰）</h3>
+          <span class="badge-level-b">B</span>
+          <span class="badge-rec">推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1">社会参加の実装層。直接RCTは限定的だが、実臨床の転帰（休職期間・復職成功率）に効く実務パッケージとしては必須に近い。</p>
+      </div>
+
+      <div class="intervention-row env">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">躁うつ病における人際社会リズム療法（IPSRT）</h3>
+          <span class="badge-level-b">B</span>
+          <span class="badge-rec-cond">条件付き推奨</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1">日常生活リズムと対人誘発因子を扱う。双極性の維持療法の選択肢（薬物療法と併用が原則）。</p>
+      </div>
+
+      <div class="intervention-row env">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-slate-800">居住・危機代替（クライシス住宅、シェアード意思決定等）</h3>
+          <span class="badge-level-c">C ~ B</span>
+          <span class="badge-rec-consider">考慮</span>
+        </div>
+        <p class="text-sm text-slate-700 mb-1">入院代替として各国で拡大。研究デザインや制度差が大きく一括エビデンスは難しいが、回復志向ケアでは重要。</p>
+      </div>
+    </section>
+
+    <section id="matrix" class="section-card">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-slate-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">疾患横断クイック対応表</h2>
+          <p class="text-slate-500 text-sm">外来で「何を勧めるか」のたたき台。個別化は必須。</p>
+        </div>
+      </div>
+      <div class="overflow-x-auto rounded-xl border border-slate-200">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-slate-100 text-left">
+              <th class="px-3 py-2 font-bold text-slate-800">疾患・文脈</th>
+              <th class="px-3 py-2 font-bold text-slate-800">心理系（例）</th>
+              <th class="px-3 py-2 font-bold text-slate-800">社会系（例）</th>
+              <th class="px-3 py-2 font-bold text-slate-800">環境系（例）</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            <tr>
+              <td class="px-3 py-2 font-medium">大うつ病</td>
+              <td class="px-3 py-2">CBT <span class="badge-level-a">A</span>、IPT <span class="badge-level-a">A</span>、MBCT（再発予防）<span class="badge-level-a">A</span></td>
+              <td class="px-3 py-2">職域復帰支援 <span class="badge-level-b">B</span></td>
+              <td class="px-3 py-2">心理教育 <span class="badge-level-b">B~A</span>、職場連携 <span class="badge-level-b">B</span></td>
+            </tr>
+            <tr class="bg-slate-50/80">
+              <td class="px-3 py-2 font-medium">不安症群</td>
+              <td class="px-3 py-2">CBT＋曝露 <span class="badge-level-a">A</span></td>
+              <td class="px-3 py-2">ピア支援 <span class="badge-level-b">B</span></td>
+              <td class="px-3 py-2">家族の行動面支援（行動活性化・曝露の協力等） <span class="badge-level-b">B</span></td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 font-medium">OCD</td>
+              <td class="px-3 py-2">ERP <span class="badge-level-a">A</span>、CBT <span class="badge-level-a">A</span></td>
+              <td class="px-3 py-2">機能回復訓練（併用） <span class="badge-level-b">B</span></td>
+              <td class="px-3 py-2">家族が関与する儀式への関与軽減 <span class="badge-level-b">B</span></td>
+            </tr>
+            <tr class="bg-slate-50/80">
+              <td class="px-3 py-2 font-medium">PTSD</td>
+              <td class="px-3 py-2">TF-CBT / PE / CPT <span class="badge-level-a">A</span></td>
+              <td class="px-3 py-2">ピア・グループ（施設により） <span class="badge-level-b">B</span></td>
+              <td class="px-3 py-2">安全・トリガー管理の心理教育 <span class="badge-level-b">B</span></td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 font-medium">統合失調症</td>
+              <td class="px-3 py-2">CBT（精神病症状） <span class="badge-level-b">B~A</span></td>
+              <td class="px-3 py-2">SST <span class="badge-level-b">B</span>、IPS <span class="badge-level-a">A</span></td>
+              <td class="px-3 py-2">家族心理教育 <span class="badge-level-a">A</span>、本人心理教育 <span class="badge-level-a">A</span></td>
+            </tr>
+            <tr class="bg-slate-50/80">
+              <td class="px-3 py-2 font-medium">双極性障害</td>
+              <td class="px-3 py-2">IPSRT <span class="badge-level-b">B</span>、CBT / FFT系（再発予防） <span class="badge-level-b">B</span></td>
+              <td class="px-3 py-2">IPS（就労） <span class="badge-level-a">A</span></td>
+              <td class="px-3 py-2">本人・家族心理教育 <span class="badge-level-a">A</span></td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 font-medium">境界性パーソナリティ</td>
+              <td class="px-3 py-2">DBT <span class="badge-level-a">A</span>、MBT <span class="badge-level-b">B</span></td>
+              <td class="px-3 py-2">ピア支援 <span class="badge-level-b">B</span></td>
+              <td class="px-3 py-2">家族療法（適応により） <span class="badge-level-b">B</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-slate-500 mt-3">注：「CBT（精神病症状）」のグレードは対象症状（急性期／予後）、プロトコル、対照群設定で Reviews の結論が揺れるため A/B の併記とした。</p>
+    </section>
+
+    <section id="refs" class="section-card">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="library" class="w-7 h-7 text-slate-600"></i>
+        <h2 class="text-xl font-bold text-slate-900">主要参照の方向性（詳細は各最新版へ）</h2>
+      </div>
+      <ul class="text-sm text-slate-700 space-y-2 list-disc pl-5">
+        <li>NICEガイドライン（うつ病、不安症、精神病、双極性、人格障害など各版）</li>
+        <li>APA / VA・DoD Practice Guideline（PTSD、うつなど）</li>
+        <li>WPA・WFSBP等のレビュー論文（心理社会療法の位置づけ）</li>
+        <li>日本うつ病学会治療ガイドライン（心理療法・電気けいれん療法等の章）</li>
+        <li>Cochrane Reviews（家族介入、心理教育、SST、IPS 等）</li>
+      </ul>
+      <p class="text-xs text-slate-500 mt-4">本HTMLは教育・自己整理用の要約であり、個別診療の代替ではありません。</p>
+    </section>
+  </main>
+
+  <footer class="max-w-5xl mx-auto px-4 pb-10 text-center text-xs text-slate-500">
+    nonpharmacologic-psychiatry-overview.html · 精神医学非薬物療法マップ
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精神医学 最新論文検索 — 精神科臨床ガイド</title>
+  <link rel="canonical" href="https://qwwzzjx4bs.github.io/psych-guide/literature-search.html">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background: #f4f2ef;
+      color: #232323;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'palt';
+    }
+    a { text-decoration: none; }
+
+    /* Paper result card */
+    .paper-card {
+      background: white;
+      border-radius: 0.75rem;
+      border: 1px solid #e0ddd8;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      transition: box-shadow 0.18s, transform 0.18s;
+    }
+    .paper-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+      transform: translateY(-1px);
+    }
+
+    /* Source badges */
+    .source-badge-pubmed  { background: #e8f4fd; color: #1a5276; border: 1px solid #85c1e9; }
+    .source-badge-medrxiv { background: #fef9e7; color: #7d6608; border: 1px solid #f9e79f; }
+    .source-badge-jstage  { background: #eafaf1; color: #1e8449; border: 1px solid #82e0aa; }
+
+    /* Abstract */
+    .abstract-text {
+      font-size: 0.8rem;
+      line-height: 1.85;
+      color: #505050;
+    }
+
+    /* Translation */
+    .title-ja {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 700;
+      line-height: 1.5;
+      color: #1e3a5f;
+    }
+    .title-en {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #93c5fd;
+      margin-top: 0.15rem;
+    }
+    .title-skeleton {
+      display: inline-block;
+      height: 1em;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      vertical-align: middle;
+    }
+    @keyframes shimmer { 0%{ background-position: 200% 0 } 100%{ background-position: -200% 0 } }
+    .translate-off .title-ja { display: none; }
+    .translate-off .title-en { font-size: 0.875rem; font-weight: 700; color: #1e3a5f; margin-top: 0; }
+    .abstract-ja { }
+    .abstract-en-toggle {
+      font-size: 0.68rem;
+      color: #9ca3af;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      display: inline-block;
+      margin-top: 0.4rem;
+    }
+    .abstract-en-toggle:hover { color: #6b7280; }
+    .translate-btn-active {
+      background: #ecfdf5 !important;
+      color: #065f46 !important;
+      border-color: #6ee7b7 !important;
+    }
+
+    /* Topic preset buttons */
+    .topic-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .topic-btn:hover { transform: translateY(-1px); filter: brightness(0.96); }
+    .topic-btn.active { outline: 2.5px solid #4c6e9c; outline-offset: 2px; }
+
+    /* Tabs */
+    .tab-btn {
+      padding: 0.65rem 1.25rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-bottom: 2.5px solid transparent;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+    .tab-btn.active {
+      border-bottom-color: #4c6e9c;
+      color: #1e3a5f;
+    }
+    .tab-btn:hover:not(.active) {
+      border-bottom-color: #9ca3af;
+      color: #374151;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 2.25rem; height: 2.25rem;
+      border: 3px solid #e5e7eb;
+      border-top-color: #4c6e9c;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Alert boxes */
+    .alert-info  { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a5f; }
+    .alert-warn  { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+
+    /* Journal card */
+    .journal-btn {
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .journal-btn:hover {
+      filter: brightness(0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .journal-btn.ring-2 {
+      box-shadow: 0 0 0 3px #60a5fa, 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .journal-topic-btn {
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .journal-topic-btn:hover { filter: brightness(0.93); }
+
+    /* Settings panel */
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* Toggle switch */
+    #translate-track { transition: background 0.2s; }
+    #translate-dot { transition: transform 0.2s; }
+    #auto-translate-checkbox:checked ~ #translate-track,
+    .translate-checked #translate-track { background: #059669; }
+    #auto-translate-checkbox:checked ~ #translate-dot,
+    .translate-checked #translate-dot { transform: translateX(1rem); }
+
+    /* Smooth transitions for abstract sections */
+    .abstract-container { overflow: hidden; }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <a href="top.html" class="shrink-0 flex items-center gap-1 text-gray-500 hover:text-gray-800 text-xs font-medium px-2 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+          ポータル
+        </a>
+        <div class="w-px h-4 bg-gray-200 shrink-0"></div>
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center shadow-sm shrink-0" style="background:#3c7e76">
+            <span class="text-white text-xs font-bold">📄</span>
+          </div>
+          <div class="min-w-0">
+            <span class="font-bold text-gray-900 text-sm tracking-tight truncate block">精神医学 最新論文</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- Translation toggle -->
+        <button id="translate-toggle"
+          onclick="toggleAutoTranslate()"
+          title="タイトル・抄録を日本語に自動翻訳する（Google Translate）"
+          class="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-green-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors translate-btn-active">
+          <span class="text-sm leading-none" aria-hidden="true">🇯🇵</span>
+          <span id="translate-label" class="hidden sm:inline whitespace-nowrap">日本語表示 ON</span>
+        </button>
+        <!-- API mode indicator -->
+        <div class="hidden sm:flex items-center gap-1.5 text-xs text-gray-400" id="api-mode-badge">
+          <span class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
+          <span id="api-mode-label">PubMed Direct</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-5 sm:py-8">
+
+    <!-- Page Title -->
+    <div class="mb-5">
+      <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5 tracking-tight">精神医学 最新情報・論文検索</h1>
+      <p class="text-sm text-gray-500 leading-relaxed max-w-3xl">
+        PubMed（NCBI）から精神医学の最新論文・エビデンスをリアルタイム検索。キーワード検索・疾患別ブラウズ・主要ジャーナル別閲覧に対応。抄録の展開表示、DOI・PubMedリンクへのワンクリックアクセスが可能です。
+      </p>
+    </div>
+
+    <!-- Main Search & Tab Panel -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-5">
+
+      <!-- Tabs -->
+      <div class="flex border-b border-gray-100 overflow-x-auto">
+        <button class="tab-btn active" data-tab="search" onclick="switchTab('search')">🔍 論文検索</button>
+        <button class="tab-btn" data-tab="recent" onclick="switchTab('recent')">📰 最新論文</button>
+        <button class="tab-btn" data-tab="journals" onclick="switchTab('journals')">📚 ジャーナル</button>
+        <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">⚙️ 設定</button>
+      </div>
+
+      <!-- ========== SEARCH TAB ========== -->
+      <div id="tab-search" class="tab-content p-4 sm:p-5">
+        <div class="flex flex-col gap-3">
+
+          <!-- Search input -->
+          <div class="flex gap-2">
+            <div class="flex-1 relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none select-none" aria-hidden="true">🔍</span>
+              <input type="search" id="search-input"
+                placeholder="例: schizophrenia treatment, depression biomarker, 統合失調症 抗精神病薬..."
+                autocomplete="off" autocapitalize="off"
+                class="w-full pl-8 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
+                onkeydown="if(event.key==='Enter') doSearch()">
+            </div>
+            <button onclick="doSearch()"
+              class="shrink-0 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-semibold text-sm px-4 py-2.5 rounded-lg transition-colors">
+              検索
+            </button>
+            <button onclick="clearSearch()"
+              class="shrink-0 text-gray-500 hover:text-gray-800 font-medium text-sm px-3 py-2.5 rounded-lg hover:bg-gray-100 transition-colors">
+              クリア
+            </button>
+          </div>
+
+          <!-- Filter accordion -->
+          <details class="group">
+            <summary class="cursor-pointer select-none text-xs font-semibold text-gray-500 hover:text-gray-700 flex items-center gap-1.5 py-0.5">
+              <svg class="w-3.5 h-3.5 group-open:rotate-90 transition-transform duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+              絞り込みフィルター（発行年・論文種別・件数）
+            </summary>
+            <div class="mt-2.5 pt-2.5 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <label class="text-xs text-gray-500 font-medium block mb-1" for="year-from">発行年 From</label>
+                <input type="number" id="year-from" placeholder="2020" min="1990" max="2030"
+                  class="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-300">
+              </div>
+              <div>
+                <label class="text-xs text-gray-500 font-medium block mb-1" for="year-to">発行年 To</label>
+                <input type="number" id="year-to" placeholder="2026" min="1990" max="2030"
+                  class="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-300">
+              </div>
+              <div>
+                <label class="text-xs text-gray-500 font-medium block mb-1" for="article-type">論文種別</label>
+                <select id="article-type"
+                  class="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                  <option value="">すべて</option>
+                  <option value="Randomized Controlled Trial[pt]">RCT</option>
+                  <option value="Meta-Analysis[pt]">メタアナリシス</option>
+                  <option value="Systematic Review[pt]">システマティックレビュー</option>
+                  <option value="Review[pt]">レビュー</option>
+                  <option value="Clinical Trial[pt]">臨床試験</option>
+                  <option value="Guideline[pt]">ガイドライン</option>
+                  <option value="Case Reports[pt]">症例報告</option>
+                  <option value="Multicenter Study[pt]">多施設研究</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-gray-500 font-medium block mb-1" for="result-count">表示件数</label>
+                <select id="result-count"
+                  class="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                  <option value="10">10件</option>
+                  <option value="20" selected>20件</option>
+                  <option value="50">50件</option>
+                </select>
+              </div>
+            </div>
+          </details>
+
+          <!-- Topic preset buttons -->
+          <div>
+            <p class="text-[10px] text-gray-400 font-semibold mb-2 tracking-wide uppercase">疾患別クイック検索</p>
+            <div class="flex flex-wrap gap-1.5" id="topic-buttons">
+              <button class="topic-btn" style="background:#eeeaf8;color:#443688;border-color:#8575b8"
+                data-query="schizophrenia[MeSH]" onclick="setTopic(this)">統合失調症</button>
+              <button class="topic-btn" style="background:#fdf2f8;color:#831843;border-color:#c2789a"
+                data-query="depressive disorder, major[MeSH]" onclick="setTopic(this)">うつ病</button>
+              <button class="topic-btn" style="background:#fffbeb;color:#92400e;border-color:#fcd34d"
+                data-query="bipolar disorder[MeSH]" onclick="setTopic(this)">双極性障害</button>
+              <button class="topic-btn" style="background:#ecfdf5;color:#065f46;border-color:#6ee7b7"
+                data-query="anxiety disorders[MeSH]" onclick="setTopic(this)">不安症</button>
+              <button class="topic-btn" style="background:#eff6ff;color:#1e3a5f;border-color:#93c5fd"
+                data-query="dementia[MeSH]" onclick="setTopic(this)">認知症</button>
+              <button class="topic-btn" style="background:#fef2f2;color:#991b1b;border-color:#fca5a5"
+                data-query="autism spectrum disorder[MeSH]" onclick="setTopic(this)">ASD</button>
+              <button class="topic-btn" style="background:#f0fdf4;color:#14532d;border-color:#86efac"
+                data-query="attention deficit disorder with hyperactivity[MeSH]" onclick="setTopic(this)">ADHD</button>
+              <button class="topic-btn" style="background:#f5f3ff;color:#4c1d95;border-color:#c4b5fd"
+                data-query="stress disorders, post-traumatic[MeSH]" onclick="setTopic(this)">PTSD</button>
+              <button class="topic-btn" style="background:#fff7ed;color:#9a3412;border-color:#fdba74"
+                data-query="sleep wake disorders[MeSH]" onclick="setTopic(this)">睡眠障害</button>
+              <button class="topic-btn" style="background:#f0f9ff;color:#0c4a6e;border-color:#7dd3fc"
+                data-query="feeding and eating disorders[MeSH]" onclick="setTopic(this)">摂食障害</button>
+              <button class="topic-btn" style="background:#fdf4ff;color:#701a75;border-color:#e879f9"
+                data-query="substance-related disorders[MeSH]" onclick="setTopic(this)">依存症</button>
+              <button class="topic-btn" style="background:#ecf2f8;color:#284470;border-color:#6f93bd"
+                data-query="psychiatry[MeSH] AND Japan[Affiliation]" onclick="setTopic(this)">日本精神科</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== RECENT TAB ========== -->
+      <div id="tab-recent" class="tab-content p-4 sm:p-5 hidden">
+        <div class="flex flex-col gap-3">
+          <div class="flex flex-wrap items-center gap-3">
+            <p class="text-sm font-semibold text-gray-700">直近の精神医学論文（PubMed）</p>
+            <div class="flex gap-1.5" id="recent-period-btns">
+              <button class="text-xs font-semibold px-3 py-1.5 rounded-full bg-teal-700 text-white" onclick="loadRecent(30)" id="rbtn-30">30日</button>
+              <button class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors" onclick="loadRecent(60)" id="rbtn-60">60日</button>
+              <button class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors" onclick="loadRecent(90)" id="rbtn-90">90日</button>
+            </div>
+          </div>
+          <div class="alert-info rounded-lg px-3 py-2.5 text-xs leading-relaxed">
+            精神医学（psychiatry[MeSH]）の直近論文をPubMedから取得します。Phase 2 では RSS フィード直接取得・複数ソース統合に対応予定です。
+          </div>
+          <div>
+            <button onclick="loadRecent(30)"
+              class="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors">
+              直近30日の論文を読み込む
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== JOURNALS TAB ========== -->
+      <div id="tab-journals" class="tab-content hidden">
+
+        <!-- ジャーナル一覧グリッド -->
+        <div class="p-4 sm:p-5 border-b border-gray-100">
+          <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
+            <p class="text-sm font-semibold text-gray-700">主要精神医学ジャーナル</p>
+            <div class="flex items-center gap-2">
+              <select id="jrnl-filter-type" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <option value="">すべての論文種別</option>
+                <option value="Randomized Controlled Trial[pt]">RCT</option>
+                <option value="Meta-Analysis[pt]">メタアナリシス</option>
+                <option value="Systematic Review[pt]">システマティックレビュー</option>
+                <option value="Review[pt]">レビュー</option>
+                <option value="Clinical Trial[pt]">臨床試験</option>
+                <option value="Guideline[pt]">ガイドライン</option>
+              </select>
+              <select id="jrnl-filter-count" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <option value="20">20件</option>
+                <option value="30" selected>30件</option>
+                <option value="50">50件</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5" id="journal-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- ジャーナル結果エリア（タブ内に表示） -->
+        <div id="journal-results-wrap" class="p-4 sm:p-5">
+          <!-- 初期状態 -->
+          <div id="journal-initial" class="text-center py-10 text-gray-400">
+            <div class="text-4xl mb-2 select-none" aria-hidden="true">📚</div>
+            <p class="text-sm font-medium">上のジャーナルをクリックしてください</p>
+            <p class="text-xs mt-1">PubMedから最新論文をリアルタイム取得します</p>
+          </div>
+
+          <!-- 読込中 -->
+          <div id="journal-loading" class="hidden flex-col items-center justify-center py-10 gap-3">
+            <div class="spinner"></div>
+            <p class="text-sm text-gray-500 font-medium" id="journal-loading-msg">取得中…</p>
+          </div>
+
+          <!-- エラー -->
+          <div id="journal-error" class="hidden alert-error rounded-xl px-4 py-3 text-sm">
+            <p class="font-semibold">取得エラー</p>
+            <p id="journal-error-msg" class="text-xs mt-0.5"></p>
+          </div>
+
+          <!-- 結果ヘッダー -->
+          <div id="journal-header" class="hidden mb-3">
+            <div class="flex items-center gap-3 flex-wrap mb-2">
+              <!-- ジャーナル名バッジ -->
+              <div id="journal-active-badge" class="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-1.5">
+                <span class="text-sm font-bold text-blue-800" id="journal-active-name"></span>
+                <button onclick="clearJournalResults()" class="text-blue-400 hover:text-blue-700 text-lg leading-none" title="クリア">×</button>
+              </div>
+              <span class="text-xs text-gray-400" id="journal-count-label"></span>
+            </div>
+            <!-- 追加フィルター（疾患キーワード絞り込み） -->
+            <div class="flex flex-wrap gap-1.5" id="journal-disease-btns">
+              <span class="text-[10px] text-gray-400 font-semibold self-center uppercase tracking-wide">疾患絞り込み:</span>
+              <button class="journal-topic-btn text-[11px] px-2 py-0.5 rounded-full border"
+                style="background:#eeeaf8;color:#443688;border-color:#8575b8"
+                onclick="refineJournal('schizophrenia')">統合失調症</button>
+              <button class="journal-topic-btn text-[11px] px-2 py-0.5 rounded-full border"
+                style="background:#fdf2f8;color:#831843;border-color:#c2789a"
+                onclick="refineJournal('depression')">うつ病</button>
+              <button class="journal-topic-btn text-[11px] px-2 py-0.5 rounded-full border"
+                style="background:#fffbeb;color:#92400e;border-color:#fcd34d"
+                onclick="refineJournal('bipolar')">双極性障害</button>
+              <button class="journal-topic-btn text-[11px] px-2 py-0.5 rounded-full border"
+                style="background:#ecfdf5;color:#065f46;border-color:#6ee7b7"
+                onclick="refineJournal('anxiety')">不安症</button>
+              <button class="journal-topic-btn text-[11px] px-2 py-0.5 rounded-full border"
+                style="background:#f4f4f5;color:#3f3f46;border-color:#d4d4d8"
+                onclick="refineJournal('')">すべて</button>
+            </div>
+          </div>
+
+          <!-- 結果リスト -->
+          <div id="journal-list" class="space-y-3"></div>
+
+          <!-- もっと読み込む -->
+          <div id="journal-load-more" class="hidden mt-4 text-center">
+            <button onclick="loadMoreJournal()"
+              class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium text-sm px-6 py-2.5 rounded-lg transition-colors shadow-sm">
+              さらに読み込む
+            </button>
+          </div>
+          <div id="journal-end" class="hidden text-center py-3">
+            <p class="text-xs text-gray-400">— すべての結果を表示しました —</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== SETTINGS TAB ========== -->
+      <div id="tab-settings" class="tab-content p-4 sm:p-5 hidden">
+        <p class="text-sm font-semibold text-gray-700 mb-3">APIとデータソース設定</p>
+        <div class="space-y-4">
+          <!-- Translation settings -->
+          <div>
+            <p class="text-xs font-semibold text-gray-600 mb-1.5">日本語自動翻訳</p>
+            <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-3 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium text-gray-700">自動翻訳</p>
+                  <p class="text-[11px] text-gray-400">検索結果のタイトル・抄録を日本語に自動翻訳します</p>
+                </div>
+                <label class="flex items-center cursor-pointer select-none">
+                  <div class="relative">
+                    <input type="checkbox" id="auto-translate-checkbox" class="sr-only" checked onchange="syncTranslateCheckbox()">
+                    <div class="block bg-gray-300 w-10 h-6 rounded-full" id="translate-track"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition" id="translate-dot"></div>
+                  </div>
+                </label>
+              </div>
+              <div>
+                <label class="text-[11px] font-medium text-gray-600 block mb-1" for="deepl-api-key">
+                  DeepL API Key（任意・高精度翻訳）
+                </label>
+                <div class="flex gap-2">
+                  <input type="password" id="deepl-api-key" placeholder="DeepL Free APIキー（省略時はGoogle翻訳を使用）"
+                    class="flex-1 text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-300 bg-white">
+                  <button onclick="saveDeepl()"
+                    class="shrink-0 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">保存</button>
+                </div>
+                <p class="text-[11px] text-gray-400 mt-1">
+                  <a href="https://www.deepl.com/ja/pro-api" target="_blank" rel="noopener" class="text-emerald-600 hover:underline">DeepL Freeプラン</a>で月50万文字まで無料。未設定時はGoogle翻訳（gtx）を使用します。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- NCBI API Key -->
+          <div>
+            <label class="text-xs font-semibold text-gray-600 block mb-1" for="ncbi-api-key">
+              NCBI API Key（省略可・レート制限緩和）
+            </label>
+            <div class="flex gap-2">
+              <input type="password" id="ncbi-api-key" placeholder="NCBI My NCBIで取得できます（任意）"
+                class="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300">
+              <button onclick="saveApiKey()"
+                class="shrink-0 bg-gray-700 hover:bg-gray-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors">保存</button>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">APIキーなし: 3 req/s, あり: 10 req/s。<a href="https://www.ncbi.nlm.nih.gov/account/" target="_blank" rel="noopener" class="text-blue-500 hover:underline">NCBIアカウントで取得</a></p>
+          </div>
+
+          <!-- Backend API (Phase 2) -->
+          <div class="border border-dashed border-gray-300 rounded-lg p-3">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Phase 2</span>
+              <p class="text-xs font-semibold text-gray-600">バックエンドAPI設定（開発中）</p>
+            </div>
+            <label class="text-xs font-medium text-gray-500 block mb-1" for="backend-url">
+              バックエンドAPI URL
+            </label>
+            <div class="flex gap-2">
+              <input type="url" id="backend-url" placeholder="http://localhost:8000（開発）または https://your-app.railway.app（本番）"
+                class="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50">
+              <button onclick="saveBackendUrl()"
+                class="shrink-0 bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors">保存</button>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">バックエンドAPIが設定されると PubMed・RSS・medRxiv・J-STAGE の統合検索が有効になります。</p>
+            <div class="mt-2 flex items-center gap-2">
+              <label class="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer select-none">
+                <input type="checkbox" id="use-backend" class="rounded" disabled>
+                バックエンドAPIを使用する（設定後に有効化）
+              </label>
+            </div>
+          </div>
+
+          <!-- Current API status -->
+          <div>
+            <p class="text-xs font-semibold text-gray-600 mb-1.5">現在のデータソース</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> PubMed
+              </span>
+              <span class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-gray-50 text-gray-400 border border-gray-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> RSS (Phase 2)
+              </span>
+              <span class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-gray-50 text-gray-400 border border-gray-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> medRxiv (Phase 2)
+              </span>
+              <span class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-gray-50 text-gray-400 border border-gray-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> J-STAGE (Phase 2)
+              </span>
+              <span class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-gray-50 text-gray-400 border border-gray-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span> ガイドライン更新 (Phase 2)
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== RESULTS AREA ========== -->
+    <div id="results-area">
+
+      <!-- Initial placeholder -->
+      <div id="results-initial" class="text-center py-16 text-gray-400">
+        <div class="text-5xl mb-3 select-none" aria-hidden="true">📖</div>
+        <p class="text-sm font-medium text-gray-500">キーワードを入力するか、疾患ボタンを選択してください</p>
+        <p class="text-xs mt-1 text-gray-400">PubMedからリアルタイムで精神医学論文を取得します</p>
+      </div>
+
+      <!-- Loading -->
+      <div id="results-loading" class="hidden flex-col items-center justify-center py-16 gap-3">
+        <div class="spinner"></div>
+        <p class="text-sm text-gray-500 font-medium" id="loading-message">PubMedを検索中...</p>
+      </div>
+
+      <!-- Error -->
+      <div id="results-error" class="hidden alert-error rounded-xl px-4 py-3.5 text-sm leading-relaxed">
+        <p class="font-semibold mb-0.5">取得エラー</p>
+        <p id="error-message" class="text-xs"></p>
+      </div>
+
+      <!-- Results header -->
+      <div id="results-header" class="hidden flex items-center justify-between mb-3 flex-wrap gap-2">
+        <p class="text-sm font-semibold text-gray-700" id="results-count-label"></p>
+        <div class="flex items-center gap-3 text-xs text-gray-400">
+          <span>ソース: <span id="results-source-label">PubMed (NCBI)</span></span>
+          <button onclick="clearSearch()" class="text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors">クリア</button>
+        </div>
+      </div>
+
+      <!-- Results list -->
+      <div id="results-list" class="space-y-3"></div>
+
+      <!-- Load more -->
+      <div id="load-more-area" class="hidden mt-4 text-center">
+        <button onclick="loadMore()"
+          class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium text-sm px-6 py-2.5 rounded-lg transition-colors shadow-sm">
+          さらに読み込む
+        </button>
+      </div>
+
+      <!-- End marker -->
+      <div id="results-end" class="hidden text-center py-4">
+        <p class="text-xs text-gray-400">— すべての結果を表示しました —</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 bg-white mt-8">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-md bg-blue-700 flex items-center justify-center">
+          <span class="text-white text-xs font-bold">Ψ</span>
+        </div>
+        <span class="text-sm text-gray-600 font-medium">精神科臨床ガイド</span>
+      </div>
+      <div class="flex flex-col items-center sm:items-end gap-1.5 text-center sm:text-right">
+        <p class="text-xs text-gray-400 m-0">
+          論文情報はPubMed（NCBI）から取得しています。診療上の判断は最新のガイドラインと原著論文をご確認ください。
+        </p>
+        <p class="text-[10px] text-gray-400 font-medium tracking-wide select-none m-0">©︎ Psych-tool.Lab</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================
+    // Configuration
+    // =========================================================
+    const NCBI_BASE = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
+    let currentQuery = '';
+    let currentOffset = 0;
+    let totalResults = 0;
+    const PAGE_SIZE = () => parseInt(document.getElementById('result-count').value) || 20;
+    let ncbiApiKey   = localStorage.getItem('ncbi_api_key') || '';
+    let backendUrl   = localStorage.getItem('backend_url') || '';
+    let deeplApiKey  = localStorage.getItem('deepl_api_key') || '';
+    let autoTranslate = localStorage.getItem('auto_translate') !== 'off';  // ON by default
+
+    // Restore saved settings
+    if (ncbiApiKey)  document.getElementById('ncbi-api-key').value  = ncbiApiKey;
+    if (backendUrl)  document.getElementById('backend-url').value   = backendUrl;
+    if (deeplApiKey) document.getElementById('deepl-api-key').value = deeplApiKey;
+    // 初期状態を body クラスと UI に反映
+    if (!autoTranslate) document.body.classList.add('translate-off');
+    syncTranslateUI();
+
+    // ジャーナルフィルタ変更 → 即再検索
+    document.getElementById('jrnl-filter-type').addEventListener('change', () => {
+      if (jrnlCurrentName) { jrnlCurrentOffset = 0; fetchJournalResults(jrnlCurrentName, jrnlCurrentRefine, 0, true); }
+    });
+    document.getElementById('jrnl-filter-count').addEventListener('change', () => {
+      if (jrnlCurrentName) { jrnlCurrentOffset = 0; fetchJournalResults(jrnlCurrentName, jrnlCurrentRefine, 0, true); }
+    });
+
+    // =========================================================
+    // Journal list data
+    // =========================================================
+    const JOURNALS = [
+      { name: 'World Psychiatry',               meta: 'WPA / Wiley',         if_: '~73', color: 'purple', abbr: 'WP'  },
+      { name: 'Lancet Psychiatry',               meta: 'Elsevier',            if_: '~50', color: 'red',    abbr: 'LP'  },
+      { name: 'JAMA Psychiatry',                 meta: 'JAMA Network',        if_: '~25', color: 'blue',   abbr: 'JAP' },
+      { name: 'American Journal of Psychiatry',  meta: 'APA',                 if_: '~20', color: 'blue',   abbr: 'AJP' },
+      { name: 'Molecular Psychiatry',            meta: 'Nature Publishing',   if_: '~11', color: 'blue',   abbr: 'MP'  },
+      { name: 'Biological Psychiatry',           meta: 'Elsevier',            if_: '~10', color: 'blue',   abbr: 'BP'  },
+      { name: 'British Journal of Psychiatry',   meta: 'RCPsych',             if_: '~8',  color: 'blue',   abbr: 'BJP' },
+      { name: 'Schizophrenia Bulletin',          meta: 'Oxford Academic',     if_: '~7',  color: 'blue',   abbr: 'SB'  },
+      { name: 'Neuropsychopharmacology',         meta: 'Nature Publishing',   if_: '~7',  color: 'blue',   abbr: 'NPP' },
+      { name: 'Acta Psychiatrica Scandinavica',  meta: 'Wiley',               if_: '~6',  color: 'blue',   abbr: 'APS' },
+      { name: 'Journal of Affective Disorders',  meta: 'Elsevier',            if_: '~5',  color: 'blue',   abbr: 'JAD' },
+      { name: 'Bipolar Disorders',               meta: 'Wiley',               if_: '~5',  color: 'blue',   abbr: 'BD'  },
+      { name: 'Psychiatry Research',             meta: 'Elsevier',            if_: '~4',  color: 'blue',   abbr: 'PR'  },
+      { name: 'Psychiatry and Clinical Neurosciences', meta: 'JSPN / Wiley', if_: '~4',  color: 'green',  abbr: 'PCN' },
+      { name: 'Schizophrenia Research',          meta: 'Elsevier',            if_: '~4',  color: 'blue',   abbr: 'SR'  },
+      { name: 'Depression and Anxiety',          meta: 'Wiley',               if_: '~5',  color: 'blue',   abbr: 'DA'  },
+    ];
+
+    // ジャーナル専用の検索状態
+    let jrnlCurrentName    = '';
+    let jrnlCurrentRefine  = '';
+    let jrnlCurrentOffset  = 0;
+    let jrnlTotalResults   = 0;
+
+    const JRNL_COLOR = {
+      blue:   { btn: '#dbeafe', text: '#1e40af', border: '#93c5fd', badge: 'bg-blue-100 text-blue-700' },
+      purple: { btn: '#ede9fe', text: '#5b21b6', border: '#c4b5fd', badge: 'bg-purple-100 text-purple-700' },
+      red:    { btn: '#fee2e2', text: '#991b1b', border: '#fca5a5', badge: 'bg-red-100 text-red-700' },
+      green:  { btn: '#dcfce7', text: '#166534', border: '#86efac', badge: 'bg-green-100 text-green-700' },
+    };
+
+    function buildJournalGrid() {
+      const grid = document.getElementById('journal-grid');
+      grid.innerHTML = JOURNALS.map((j, idx) => {
+        const c = JRNL_COLOR[j.color] || JRNL_COLOR.blue;
+        return `
+          <button id="jrnl-btn-${idx}" class="journal-btn text-left p-2.5 rounded-lg border transition-all"
+            style="border-color:${c.border};background:${c.btn}"
+            onclick="searchJournalInTab(${JSON.stringify(j.name)}, ${idx})">
+            <div class="flex items-start gap-2">
+              <span class="shrink-0 w-7 h-7 rounded-md flex items-center justify-center text-[10px] font-bold"
+                style="background:${c.border};color:${c.text}">${escapeHtml(j.abbr)}</span>
+              <div class="min-w-0">
+                <p class="text-xs font-semibold leading-snug truncate" style="color:${c.text}">${escapeHtml(j.name)}</p>
+                <p class="text-[10px] text-gray-400 leading-tight mt-0.5">IF ${escapeHtml(j.if_)} · ${escapeHtml(j.meta)}</p>
+              </div>
+            </div>
+          </button>`;
+      }).join('');
+    }
+    buildJournalGrid();
+
+    // =========================================================
+    // Tab management
+    // =========================================================
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+    }
+
+    // =========================================================
+    // Search actions
+    // =========================================================
+    async function doSearch() {
+      const input = document.getElementById('search-input').value.trim();
+      if (!input) { document.getElementById('search-input').focus(); return; }
+
+      const yearFrom   = document.getElementById('year-from').value.trim();
+      const yearTo     = document.getElementById('year-to').value.trim();
+      const artType    = document.getElementById('article-type').value;
+
+      let query = input;
+      if (artType)              query += ` AND ${artType}`;
+      if (yearFrom || yearTo)   query += ` AND ${yearFrom || '1900'}[PDAT]:${yearTo || '2030'}[PDAT]`;
+
+      currentQuery  = query;
+      currentOffset = 0;
+      await fetchAndDisplay({ query, offset: 0, count: PAGE_SIZE(), reset: true });
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('year-from').value = '';
+      document.getElementById('year-to').value = '';
+      document.getElementById('article-type').value = '';
+      document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+      showInitial();
+    }
+
+    function setTopic(btn) {
+      document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const query = btn.dataset.query;
+      const label = btn.textContent.trim();
+      document.getElementById('search-input').value = label;
+      switchTab('search');
+      currentQuery  = query;
+      currentOffset = 0;
+      fetchAndDisplay({ query, offset: 0, count: PAGE_SIZE(), reset: true, sourceLabel: `疾患: ${label}` });
+    }
+
+    // searchJournal: 検索タブ経由の旧API（後方互換）
+    async function searchJournal(journalName) {
+      await searchJournalInTab(journalName);
+    }
+
+    async function searchJournalInTab(journalName, btnIdx) {
+      // ジャーナルボタンのアクティブ表示
+      document.querySelectorAll('#journal-grid .journal-btn').forEach((b, i) => {
+        b.classList.toggle('ring-2', i === btnIdx);
+        b.classList.toggle('ring-offset-1', i === btnIdx);
+        b.classList.toggle('ring-blue-400', i === btnIdx);
+      });
+
+      jrnlCurrentName   = journalName;
+      jrnlCurrentRefine = '';
+      jrnlCurrentOffset = 0;
+
+      // ジャーナル結果ヘッダーに名前をセット
+      document.getElementById('journal-active-name').textContent = journalName;
+      document.getElementById('journal-header').classList.remove('hidden');
+      // 疾患絞り込みボタンのアクティブ解除
+      document.querySelectorAll('.journal-topic-btn').forEach(b => b.style.fontWeight = '');
+
+      await fetchJournalResults(journalName, '', 0, true);
+    }
+
+    async function refineJournal(disease) {
+      if (!jrnlCurrentName) return;
+      jrnlCurrentRefine  = disease;
+      jrnlCurrentOffset  = 0;
+      // アクティブ表示
+      document.querySelectorAll('.journal-topic-btn').forEach(b => {
+        const isActive = b.getAttribute('onclick')?.includes(`'${disease}'`);
+        b.style.fontWeight = isActive ? '700' : '';
+        b.style.outline    = isActive ? '2px solid #4c6e9c' : '';
+        b.style.outlineOffset = isActive ? '1px' : '';
+      });
+      await fetchJournalResults(jrnlCurrentName, disease, 0, true);
+    }
+
+    async function loadMoreJournal() {
+      const count = parseInt(document.getElementById('jrnl-filter-count').value) || 30;
+      jrnlCurrentOffset += count;
+      await fetchJournalResults(jrnlCurrentName, jrnlCurrentRefine, jrnlCurrentOffset, false);
+    }
+
+    function clearJournalResults() {
+      jrnlCurrentName = '';
+      jrnlCurrentRefine = '';
+      document.getElementById('journal-initial').classList.remove('hidden');
+      document.getElementById('journal-header').classList.add('hidden');
+      document.getElementById('journal-list').innerHTML = '';
+      document.getElementById('journal-load-more').classList.add('hidden');
+      document.getElementById('journal-end').classList.add('hidden');
+      document.getElementById('journal-error').classList.add('hidden');
+      document.querySelectorAll('#journal-grid .journal-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-offset-1', 'ring-blue-400');
+      });
+    }
+
+    async function fetchJournalResults(journalName, disease, offset, reset) {
+      const count   = parseInt(document.getElementById('jrnl-filter-count').value) || 30;
+      const artType = document.getElementById('jrnl-filter-type').value;
+
+      let query = `"${journalName}"[Journal]`;
+      if (disease) {
+        const diseaseMap = {
+          schizophrenia: 'schizophrenia[MeSH]',
+          depression:    'depressive disorder, major[MeSH]',
+          bipolar:       'bipolar disorder[MeSH]',
+          anxiety:       'anxiety disorders[MeSH]',
+        };
+        if (diseaseMap[disease]) query += ` AND ${diseaseMap[disease]}`;
+      }
+      if (artType) query += ` AND ${artType}`;
+
+      // UI: loading
+      showJournalLoading(`${journalName} を検索中…`);
+      if (reset) document.getElementById('journal-list').innerHTML = '';
+
+      try {
+        const searchUrl = ncbiUrl('esearch', {
+          db: 'pubmed', term: query, retmax: count, retstart: offset,
+          sort: 'pub date', retmode: 'json',
+        });
+        const sResp = await fetch(searchUrl);
+        if (!sResp.ok) throw new Error(`HTTP ${sResp.status}`);
+        const sData = await sResp.json();
+        const ids = sData.esearchresult?.idlist || [];
+        jrnlTotalResults = parseInt(sData.esearchresult?.count || 0);
+
+        if (ids.length === 0) {
+          showJournalNoResults(journalName, disease);
+          return;
+        }
+
+        showJournalLoading(`${ids.length}件のメタデータを取得中…`);
+        const sumUrl = ncbiUrl('esummary', { db: 'pubmed', id: ids.join(','), retmode: 'json' });
+        const sumResp = await fetch(sumUrl);
+        if (!sumResp.ok) throw new Error(`HTTP ${sumResp.status}`);
+        const sumData = await sumResp.json();
+        const articles = ids.map(id => sumData.result?.[id]).filter(Boolean);
+
+        renderJournalResults(articles, offset + count < jrnlTotalResults, jrnlTotalResults, journalName, disease);
+
+        if (autoTranslate) translateJournalTitles();
+
+      } catch (err) {
+        showJournalError(err.message);
+      }
+    }
+
+    function renderJournalResults(articles, hasMore, total, journalName, disease) {
+      hideJournalLoading();
+      document.getElementById('journal-initial').classList.add('hidden');
+      document.getElementById('journal-error').classList.add('hidden');
+
+      const label = disease
+        ? `${journalName} / ${disease} — ${total.toLocaleString()}件`
+        : `${journalName} — ${total.toLocaleString()}件`;
+      document.getElementById('journal-count-label').textContent = label;
+
+      const list = document.getElementById('journal-list');
+      articles.forEach(a => list.insertAdjacentHTML('beforeend', renderJournalCard(a)));
+
+      document.getElementById('journal-load-more').classList.toggle('hidden', !hasMore);
+      document.getElementById('journal-end').classList.toggle('hidden', hasMore);
+    }
+
+    function showJournalLoading(msg) {
+      document.getElementById('journal-initial').classList.add('hidden');
+      document.getElementById('journal-error').classList.add('hidden');
+      document.getElementById('journal-loading').classList.remove('hidden');
+      document.getElementById('journal-loading').classList.add('flex');
+      document.getElementById('journal-loading-msg').textContent = msg || '取得中…';
+    }
+    function hideJournalLoading() {
+      document.getElementById('journal-loading').classList.add('hidden');
+      document.getElementById('journal-loading').classList.remove('flex');
+    }
+    function showJournalNoResults(journalName, disease) {
+      hideJournalLoading();
+      document.getElementById('journal-list').innerHTML = `
+        <div class="text-center py-8 text-gray-400">
+          <div class="text-2xl mb-1.5">🔎</div>
+          <p class="text-sm">${escapeHtml(journalName)}${disease ? ` / ${disease}` : ''} の論文は見つかりませんでした。</p>
+        </div>`;
+    }
+    function showJournalError(msg) {
+      hideJournalLoading();
+      document.getElementById('journal-error').classList.remove('hidden');
+      document.getElementById('journal-error-msg').textContent = msg;
+    }
+
+    /** ジャーナルタブ用カードレンダラー（メインカードと共通構造） */
+    function renderJournalCard(a) {
+      // メインの renderCard と同一ロジック、ただし ID プレフィックスを j_ にして衝突回避
+      const pmid    = a.uid || '';
+      const title   = a.title || '(タイトルなし)';
+      const authors = (a.authors || []).slice(0, 5).map(x => x.name).join(', ')
+                    + ((a.authors || []).length > 5 ? ' ほか' : '');
+      const journal = a.fulljournalname || a.source || '';
+      const year    = (a.pubdate || '').split(' ')[0] || '';
+      const doi     = (a.articleids || []).find(x => x.idtype === 'doi')?.value || '';
+      const pmcid   = (a.articleids || []).find(x => x.idtype === 'pmc')?.value || '';
+      const pubTypes = a.pubtype || [];
+      const pubmedUrl = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`;
+      const cardId  = `j_${pmid}`;   // ジャーナルタブ専用 ID
+
+      let typeBadge = '';
+      if (pubTypes.some(t => /Randomized|RCT/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-800">RCT</span>';
+      else if (pubTypes.some(t => /Meta-Analysis/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-800">Meta</span>';
+      else if (pubTypes.some(t => /Systematic/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800">SR</span>';
+      else if (pubTypes.some(t => /\bReview\b/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800">Review</span>';
+      else if (pubTypes.some(t => /Guideline/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Guideline</span>';
+      else if (pubTypes.some(t => /Clinical Trial/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">CT</span>';
+      else if (pubTypes.some(t => /Case Reports/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-100 text-orange-800">Case</span>';
+
+      const oaBadge = pmcid
+        ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-yellow-50 text-yellow-700 border border-yellow-200">OA</span>'
+        : '';
+      const titleEnStr = escapeHtml(title);
+
+      return `
+<div class="paper-card p-4">
+  <div class="flex items-start justify-between gap-3 mb-2">
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <span class="source-badge-pubmed text-[10px] font-bold px-2 py-0.5 rounded-full">PubMed</span>
+      ${typeBadge}
+      ${oaBadge}
+      ${year ? `<span class="text-[11px] text-gray-400 font-semibold tabular-nums">${escapeHtml(year)}</span>` : ''}
+    </div>
+    <span class="text-[10px] text-gray-300 font-mono shrink-0 select-all">PMID ${escapeHtml(pmid)}</span>
+  </div>
+  <a href="${escapeHtml(pubmedUrl)}" target="_blank" rel="noopener noreferrer"
+    class="paper-title hover:underline underline-offset-2 block mb-1.5"
+    data-pmid="${escapeHtml(cardId)}"
+    data-title-en="${titleEnStr}">
+    <span id="title-ja-${escapeHtml(cardId)}" class="title-ja">${autoTranslate && !isJapanese(title) ? '<span class="title-skeleton" style="width:70%">&nbsp;</span>' : titleEnStr}</span>
+    <span class="title-en">${autoTranslate && !isJapanese(title) ? titleEnStr : ''}</span>
+  </a>
+  ${authors ? `<p class="text-xs text-gray-500 mb-0.5 leading-snug">${escapeHtml(authors)}</p>` : ''}
+  <div id="abstract-${escapeHtml(cardId)}" class="hidden abstract-container"></div>
+  <div class="flex items-center gap-1.5 mt-3 flex-wrap">
+    <button onclick="fetchAbstractById('${escapeHtml(pmid)}', '${escapeHtml(cardId)}', this)"
+      class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200">
+      抄録を表示
+    </button>
+    <a href="${escapeHtml(pubmedUrl)}" target="_blank" rel="noopener noreferrer"
+      class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors border border-gray-200">
+      PubMed ↗
+    </a>
+    ${doi ? `<a href="https://doi.org/${escapeHtml(doi)}" target="_blank" rel="noopener noreferrer"
+      class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors border border-gray-200">DOI ↗</a>` : ''}
+    ${pmcid ? `<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/${escapeHtml(pmcid)}/" target="_blank" rel="noopener noreferrer"
+      class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-colors border border-yellow-200">全文(PMC) ↗</a>` : ''}
+  </div>
+</div>`;
+    }
+
+    /** ジャーナルタブ内のタイトルを翻訳 */
+    async function translateJournalTitles() {
+      const links = document.querySelectorAll('#journal-list .paper-title[data-title-en]:not([data-translated])');
+      for (const link of links) {
+        const en = link.dataset.titleEn || '';
+        const id = link.dataset.pmid   || '';
+        const jaEl = link.querySelector(`#title-ja-${id}`) || link.querySelector('.title-ja');
+        const enEl = link.querySelector('.title-en');
+        if (!en || isJapanese(en)) {
+          if (jaEl) jaEl.innerHTML = escapeHtml(en);
+          if (enEl) enEl.textContent = '';
+          link.dataset.translated = '1';
+          continue;
+        }
+        link.dataset.translated = '1';
+        const ja = await translateText(en);
+        if (jaEl) jaEl.textContent = ja;
+        if (enEl) enEl.textContent = (ja !== en) ? en : '';
+        await new Promise(r => setTimeout(r, 60));
+      }
+    }
+
+    /** ジャーナルタブ用: PMID で抄録を取得（ID プレフィックス考慮） */
+    async function fetchAbstractById(pmid, cardId, btn) {
+      btn.disabled = true;
+      btn.textContent = '読込中…';
+      try {
+        const url = ncbiUrl('efetch', { db: 'pubmed', id: pmid, rettype: 'abstract', retmode: 'xml' });
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const text = await resp.text();
+        const doc  = new DOMParser().parseFromString(text, 'text/xml');
+        const nodes = doc.querySelectorAll('AbstractText');
+
+        let rawEnglish = '', htmlEn = '';
+        if (nodes.length === 0) {
+          htmlEn = '<span class="text-gray-400 italic">この論文には抄録が登録されていません。</span>';
+        } else if (nodes.length === 1) {
+          rawEnglish = nodes[0].textContent;
+          htmlEn = escapeHtml(rawEnglish);
+        } else {
+          rawEnglish = Array.from(nodes).map(el => {
+            const lbl = el.getAttribute('Label') || el.getAttribute('NlmCategory');
+            return lbl ? `${lbl}: ${el.textContent}` : el.textContent;
+          }).join('\n\n');
+          htmlEn = Array.from(nodes).map(el => {
+            const lbl = el.getAttribute('Label') || el.getAttribute('NlmCategory');
+            return lbl
+              ? `<span class="font-semibold text-gray-700">${escapeHtml(lbl)}:</span> ${escapeHtml(el.textContent)}`
+              : escapeHtml(el.textContent);
+          }).join('<br><br>');
+        }
+
+        const container = document.getElementById(`abstract-${cardId}`);
+        if (!container) { btn.textContent = '取得失敗'; btn.disabled = false; return; }
+
+        if (autoTranslate && rawEnglish && !isJapanese(rawEnglish)) {
+          container.innerHTML = `
+            <div class="abstract-text mt-2.5 pt-2.5 border-t border-gray-100">
+              <div id="abstract-ja-${escapeHtml(cardId)}" class="abstract-ja text-gray-700">
+                <span class="text-[11px] text-emerald-600 font-semibold">翻訳中…</span>
+              </div>
+              <details class="mt-1.5">
+                <summary class="abstract-en-toggle">原文（English）を表示</summary>
+                <div class="mt-1.5 text-gray-400 text-[0.75rem] leading-relaxed">${htmlEn}</div>
+              </details>
+            </div>`;
+          container.classList.remove('hidden');
+          btn.textContent = '抄録を閉じる';
+          btn.disabled = false;
+          btn.setAttribute('onclick', `toggleAbstractById('${cardId}', this)`);
+          translateAbstractAsync(rawEnglish, cardId);
+        } else {
+          container.innerHTML = `<div class="abstract-text mt-2.5 pt-2.5 border-t border-gray-100">${htmlEn}</div>`;
+          container.classList.remove('hidden');
+          btn.textContent = '抄録を閉じる';
+          btn.disabled = false;
+          btn.setAttribute('onclick', `toggleAbstractById('${cardId}', this)`);
+        }
+      } catch (err) {
+        btn.textContent = '取得失敗';
+        btn.disabled = false;
+      }
+    }
+
+    function toggleAbstractById(cardId, btn) {
+      const c = document.getElementById(`abstract-${cardId}`);
+      if (!c) return;
+      const hidden = c.classList.toggle('hidden');
+      btn.textContent = hidden ? '抄録を表示' : '抄録を閉じる';
+    }
+
+    async function loadRecent(days) {
+      ['30','60','90'].forEach(d => {
+        const b = document.getElementById(`rbtn-${d}`);
+        b.className = d === String(days)
+          ? 'text-xs font-semibold px-3 py-1.5 rounded-full bg-teal-700 text-white'
+          : 'text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors';
+      });
+      const query = `psychiatry[MeSH]`;
+      const today = new Date();
+      const from  = new Date(today); from.setDate(today.getDate() - days);
+      const fmt   = d => `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+      const dateQuery = `${query} AND ("${fmt(from)}"[PDat]:"${fmt(today)}"[PDat])`;
+
+      currentQuery  = dateQuery;
+      currentOffset = 0;
+      await fetchAndDisplay({ query: dateQuery, offset: 0, count: PAGE_SIZE(), reset: true, sourceLabel: `直近${days}日の精神医学論文` });
+    }
+
+    async function loadMore() {
+      currentOffset += PAGE_SIZE();
+      await fetchAndDisplay({ query: currentQuery, offset: currentOffset, count: PAGE_SIZE(), reset: false });
+    }
+
+    // =========================================================
+    // Backend API helpers (Phase 2)
+    // =========================================================
+    async function fetchFromBackend({ query, offset, count, reset, sourceLabel }) {
+      const useBackend = document.getElementById('use-backend')?.checked && backendUrl;
+      if (!useBackend) return null;  // fallthrough to PubMed Direct
+
+      const params = new URLSearchParams({
+        q: query,
+        offset: String(offset),
+        limit: String(count),
+      });
+      const yearFrom = document.getElementById('year-from').value;
+      const yearTo   = document.getElementById('year-to').value;
+      const artType  = document.getElementById('article-type').value;
+      if (yearFrom) params.set('year_from', yearFrom);
+      if (yearTo)   params.set('year_to', yearTo);
+
+      const url = `${backendUrl.replace(/\/$/, '')}/api/search?${params.toString()}`;
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(`Backend HTTP ${resp.status}`);
+      const data = await resp.json();
+
+      // Convert backend format to internal format
+      const articles = (data.items || []).map(item => ({
+        uid: item.source_id,
+        title: item.title,
+        authors: (item.authors || []).map(a => ({ name: a })),
+        fulljournalname: item.journal,
+        pubdate: item.pub_date || String(item.pub_year || ''),
+        articleids: [
+          ...(item.doi  ? [{ idtype: 'doi',  value: item.doi  }] : []),
+          ...(item.pmc_id ? [{ idtype: 'pmc', value: item.pmc_id }] : []),
+        ],
+        pubtype: item.article_types || [],
+        source: item.source,
+        summary_ja: item.summary_ja || null,
+        _backendId: item.id,
+        _backendUrl: backendUrl,
+      }));
+
+      totalResults = data.total || articles.length;
+      return {
+        articles,
+        hasMore: (offset + count) < totalResults,
+        totalCount: totalResults,
+        sourceLabel: sourceLabel || 'Backend API (統合DB)',
+      };
+    }
+
+    // =========================================================
+    // PubMed API helpers
+    // =========================================================
+    function ncbiUrl(endpoint, params) {
+      const base = `${NCBI_BASE}/${endpoint}.fcgi`;
+      const p = new URLSearchParams(params);
+      if (ncbiApiKey) p.set('api_key', ncbiApiKey);
+      return `${base}?${p.toString()}`;
+    }
+
+    async function fetchAndDisplay({ query, offset, count, reset, sourceLabel }) {
+      showLoading(`検索中…`);
+      try {
+        // バックエンドAPIが有効なら優先的に使用
+        const backendResult = await fetchFromBackend({ query, offset, count, reset, sourceLabel });
+        if (backendResult) {
+          showResults({ ...backendResult, reset });
+          return;
+        }
+
+        showLoading(`PubMedを検索中…`);
+        // --- Step 1: esearch ---
+        const searchUrl = ncbiUrl('esearch', {
+          db: 'pubmed', term: query, retmax: count, retstart: offset,
+          sort: 'pub date', retmode: 'json'
+        });
+        const sResp = await fetch(searchUrl);
+        if (!sResp.ok) throw new Error(`HTTP ${sResp.status} (esearch)`);
+        const sData = await sResp.json();
+
+        const ids = sData.esearchresult?.idlist || [];
+        totalResults = parseInt(sData.esearchresult?.count || 0);
+
+        if (ids.length === 0) { showNoResults(query); return; }
+
+        // --- Step 2: esummary ---
+        showLoading(`${ids.length}件のメタデータを取得中…`);
+        const sumUrl = ncbiUrl('esummary', { db: 'pubmed', id: ids.join(','), retmode: 'json' });
+        const sumResp = await fetch(sumUrl);
+        if (!sumResp.ok) throw new Error(`HTTP ${sumResp.status} (esummary)`);
+        const sumData = await sumResp.json();
+
+        const articles = ids.map(id => sumData.result?.[id]).filter(Boolean);
+        const hasMore  = (offset + count) < totalResults;
+
+        showResults({ articles, reset, hasMore, totalCount: totalResults, sourceLabel: sourceLabel || 'PubMed (NCBI)' });
+
+      } catch (err) {
+        showError(`PubMedへの接続に失敗しました。ネットワーク接続を確認してください。\n詳細: ${err.message}`);
+      }
+    }
+
+    async function fetchAbstract(pmid, btn) {
+      btn.disabled = true;
+      btn.textContent = '読込中…';
+      try {
+        const url = ncbiUrl('efetch', { db: 'pubmed', id: pmid, rettype: 'abstract', retmode: 'xml' });
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const text = await resp.text();
+        const doc  = new DOMParser().parseFromString(text, 'text/xml');
+        const nodes = doc.querySelectorAll('AbstractText');
+
+        let rawEnglish = '';
+        let htmlEn = '';
+        if (nodes.length === 0) {
+          htmlEn = '<span class="text-gray-400 italic">この論文には抄録が登録されていません。</span>';
+        } else if (nodes.length === 1) {
+          rawEnglish = nodes[0].textContent;
+          htmlEn = escapeHtml(rawEnglish);
+        } else {
+          rawEnglish = Array.from(nodes).map(el => {
+            const lbl = el.getAttribute('Label') || el.getAttribute('NlmCategory');
+            return lbl ? `${lbl}: ${el.textContent}` : el.textContent;
+          }).join('\n\n');
+          htmlEn = Array.from(nodes).map(el => {
+            const lbl = el.getAttribute('Label') || el.getAttribute('NlmCategory');
+            return lbl
+              ? `<span class="font-semibold text-gray-700">${escapeHtml(lbl)}:</span> ${escapeHtml(el.textContent)}`
+              : escapeHtml(el.textContent);
+          }).join('<br><br>');
+        }
+
+        const container = document.getElementById(`abstract-${pmid}`);
+        if (!container) { btn.textContent = '取得失敗'; btn.disabled = false; return; }
+
+        // 翻訳ONかつ英語テキストがある場合は翻訳して表示
+        if (autoTranslate && rawEnglish && !isJapanese(rawEnglish)) {
+          // まず英語抄録を表示（翻訳中）
+          container.innerHTML = `
+            <div class="abstract-text mt-2.5 pt-2.5 border-t border-gray-100">
+              <div id="abstract-ja-${pmid}" class="abstract-ja text-gray-700">
+                <span class="text-[11px] text-emerald-600 font-semibold">翻訳中…</span>
+              </div>
+              <details class="mt-1.5">
+                <summary class="abstract-en-toggle">原文（English）を表示</summary>
+                <div class="mt-1.5 text-gray-400 text-[0.75rem] leading-relaxed">${htmlEn}</div>
+              </details>
+            </div>`;
+          container.classList.remove('hidden');
+          btn.textContent = '抄録を閉じる';
+          btn.disabled = false;
+          btn.setAttribute('onclick', `toggleAbstract('${pmid}', this)`);
+
+          // バックグラウンドで翻訳
+          translateAbstractAsync(rawEnglish, pmid);
+        } else {
+          container.innerHTML = `<div class="abstract-text mt-2.5 pt-2.5 border-t border-gray-100">${htmlEn}</div>`;
+          container.classList.remove('hidden');
+          btn.textContent = '抄録を閉じる';
+          btn.disabled = false;
+          btn.setAttribute('onclick', `toggleAbstract('${pmid}', this)`);
+        }
+      } catch (err) {
+        btn.textContent = '取得失敗';
+        btn.disabled = false;
+      }
+    }
+
+    async function translateAbstractAsync(rawEnglish, pmid) {
+      const jaText = await translateText(rawEnglish);
+      const el = document.getElementById(`abstract-ja-${pmid}`);
+      if (el && jaText) {
+        el.innerHTML = escapeHtml(jaText).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+      }
+    }
+
+    function toggleAbstract(pmid, btn) {
+      const c = document.getElementById(`abstract-${pmid}`);
+      if (!c) return;
+      const hidden = c.classList.toggle('hidden');
+      btn.textContent = hidden ? '抄録を表示' : '抄録を閉じる';
+    }
+
+    // =========================================================
+    // UI state helpers
+    // =========================================================
+    function showInitial() {
+      document.getElementById('results-initial').classList.remove('hidden');
+      document.getElementById('results-loading').classList.add('hidden');
+      document.getElementById('results-loading').classList.remove('flex');
+      document.getElementById('results-error').classList.add('hidden');
+      document.getElementById('results-header').classList.add('hidden');
+      document.getElementById('results-list').innerHTML = '';
+      document.getElementById('load-more-area').classList.add('hidden');
+      document.getElementById('results-end').classList.add('hidden');
+    }
+
+    function showLoading(msg) {
+      document.getElementById('results-initial').classList.add('hidden');
+      document.getElementById('results-loading').classList.remove('hidden');
+      document.getElementById('results-loading').classList.add('flex');
+      document.getElementById('results-error').classList.add('hidden');
+      document.getElementById('results-header').classList.add('hidden');
+      if (msg) document.getElementById('loading-message').textContent = msg;
+    }
+
+    function showError(msg) {
+      document.getElementById('results-loading').classList.add('hidden');
+      document.getElementById('results-loading').classList.remove('flex');
+      document.getElementById('results-error').classList.remove('hidden');
+      document.getElementById('error-message').textContent = msg;
+      document.getElementById('results-header').classList.add('hidden');
+    }
+
+    function showNoResults(query) {
+      document.getElementById('results-loading').classList.add('hidden');
+      document.getElementById('results-loading').classList.remove('flex');
+      document.getElementById('results-header').classList.remove('hidden');
+      document.getElementById('results-count-label').textContent = '0件';
+      document.getElementById('results-list').innerHTML = `
+        <div class="text-center py-10 text-gray-400">
+          <div class="text-3xl mb-2 select-none" aria-hidden="true">🔎</div>
+          <p class="text-sm font-medium">「${escapeHtml(query)}」に一致する論文は見つかりませんでした。</p>
+          <p class="text-xs mt-1">英語の医学用語（MeSH termなど）もお試しください。</p>
+        </div>`;
+      document.getElementById('load-more-area').classList.add('hidden');
+    }
+
+    function showResults({ articles, reset, hasMore, totalCount, sourceLabel }) {
+      document.getElementById('results-loading').classList.add('hidden');
+      document.getElementById('results-loading').classList.remove('flex');
+      document.getElementById('results-initial').classList.add('hidden');
+      document.getElementById('results-error').classList.add('hidden');
+      document.getElementById('results-header').classList.remove('hidden');
+      document.getElementById('results-count-label').textContent = `${sourceLabel} — ${totalCount.toLocaleString()}件`;
+      document.getElementById('results-source-label').textContent = 'PubMed (NCBI)';
+
+      const list = document.getElementById('results-list');
+      if (reset) list.innerHTML = '';
+
+      articles.forEach(article => list.insertAdjacentHTML('beforeend', renderCard(article)));
+
+      document.getElementById('load-more-area').classList.toggle('hidden', !hasMore);
+      document.getElementById('results-end').classList.toggle('hidden', hasMore);
+
+      // 自動翻訳（ON の場合、非同期でタイトルを翻訳）
+      if (autoTranslate) {
+        translateVisibleTitles();
+      }
+    }
+
+    // =========================================================
+    // Card rendering
+    // =========================================================
+    function renderCard(a) {
+      const pmid    = a.uid || '';
+      const title   = a.title || '(タイトルなし)';
+      const authors = (a.authors || []).slice(0, 6).map(x => x.name).join(', ')
+                    + ((a.authors || []).length > 6 ? ' ほか' : '');
+      const journal = a.fulljournalname || a.source || '';
+      const pubdate = a.pubdate || '';
+      const year    = pubdate.split(' ')[0] || '';
+      const doi     = (a.articleids || []).find(x => x.idtype === 'doi')?.value || '';
+      const pmcid   = (a.articleids || []).find(x => x.idtype === 'pmc')?.value || '';
+      const pubTypes = a.pubtype || [];
+      const pubmedUrl = `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`;
+
+      // Article type badge
+      let typeBadge = '';
+      if (pubTypes.some(t => /Randomized|RCT/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-800">RCT</span>';
+      else if (pubTypes.some(t => /Meta-Analysis/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-800">Meta</span>';
+      else if (pubTypes.some(t => /Systematic/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800">SR</span>';
+      else if (pubTypes.some(t => /\bReview\b/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800">Review</span>';
+      else if (pubTypes.some(t => /Guideline/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Guideline</span>';
+      else if (pubTypes.some(t => /Clinical Trial/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">CT</span>';
+      else if (pubTypes.some(t => /Case Reports/i.test(t)))
+        typeBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-100 text-orange-800">Case</span>';
+
+      const backendId  = a._backendId;
+      const backendBase = a._backendUrl || '';
+      const summaryJa  = a.summary_ja || null;
+
+      // Open Access indicator (if PMC ID exists, likely OA)
+      const oaBadge = pmcid
+        ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-yellow-50 text-yellow-700 border border-yellow-200">OA</span>'
+        : '';
+
+      // 日本語タイトルのプレースホルダー（翻訳後に上書き）
+      const titleId = `title-ja-${pmid}`;
+      const titleEnStr = escapeHtml(title);
+
+      return `
+<div class="paper-card p-4">
+  <div class="flex items-start justify-between gap-3 mb-2">
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <span class="source-badge-pubmed text-[10px] font-bold px-2 py-0.5 rounded-full">PubMed</span>
+      ${typeBadge}
+      ${oaBadge}
+      ${year ? `<span class="text-[11px] text-gray-400 font-semibold tabular-nums">${escapeHtml(year)}</span>` : ''}
+    </div>
+    <span class="text-[10px] text-gray-300 font-mono shrink-0 select-all">PMID ${escapeHtml(pmid)}</span>
+  </div>
+
+  <a href="${escapeHtml(pubmedUrl)}" target="_blank" rel="noopener noreferrer"
+    class="paper-title hover:underline underline-offset-2 block mb-1.5"
+    data-pmid="${escapeHtml(pmid)}"
+    data-title-en="${titleEnStr}">
+    <span id="${titleId}" class="title-ja">${autoTranslate && !isJapanese(title) ? '<span class="title-skeleton" style="width:70%">&nbsp;</span>' : titleEnStr}</span>
+    <span class="title-en">${autoTranslate && !isJapanese(title) ? titleEnStr : ''}</span>
+  </a>
+
+  ${authors  ? `<p class="text-xs text-gray-500 mb-0.5 leading-snug">${escapeHtml(authors)}</p>` : ''}
+  ${journal  ? `<p class="text-xs text-gray-400 italic mb-0">${escapeHtml(journal)}</p>` : ''}
+
+  <div id="abstract-${escapeHtml(pmid)}" class="hidden abstract-container"></div>
+  <div id="summary-${escapeHtml(pmid)}" class="${summaryJa ? '' : 'hidden'} abstract-container">
+    ${summaryJa ? `<div class="mt-2.5 pt-2.5 border-t border-teal-100">
+      <p class="text-[10px] font-bold text-teal-600 mb-1 uppercase tracking-wide">AI要約（日本語）</p>
+      <div class="abstract-text text-gray-600">${escapeHtml(summaryJa)}</div>
+    </div>` : ''}
+  </div>
+
+  <div class="flex items-center gap-1.5 mt-3 flex-wrap">
+    <button onclick="fetchAbstract('${escapeHtml(pmid)}', this)"
+      class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors border border-blue-200">
+      抄録を表示
+    </button>
+    <a href="${escapeHtml(pubmedUrl)}" target="_blank" rel="noopener noreferrer"
+      class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors border border-gray-200">
+      PubMed ↗
+    </a>
+    ${doi ? `<a href="https://doi.org/${escapeHtml(doi)}" target="_blank" rel="noopener noreferrer"
+      class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors border border-gray-200">
+      DOI ↗
+    </a>` : ''}
+    ${pmcid ? `<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/${escapeHtml(pmcid)}/" target="_blank" rel="noopener noreferrer"
+      class="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-colors border border-yellow-200">
+      全文 (PMC) ↗
+    </a>` : ''}
+    ${backendId && backendBase ? (summaryJa
+      ? `<button onclick="toggleSummary('${escapeHtml(pmid)}')"
+          class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors border border-teal-200">
+          日本語要約
+        </button>`
+      : `<button onclick="requestSummary(${backendId}, '${escapeHtml(pmid)}', this, '${escapeHtml(backendBase)}')"
+          class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors border border-teal-200">
+          AI要約（日本語）
+        </button>`
+    ) : ''}
+  </div>
+</div>`;
+    }
+
+    // =========================================================
+    // AI Summary (Phase 3 — Backend required)
+    // =========================================================
+    function toggleSummary(pmid) {
+      const c = document.getElementById(`summary-${pmid}`);
+      if (c) c.classList.toggle('hidden');
+    }
+
+    async function requestSummary(backendId, pmid, btn, base) {
+      btn.disabled = true;
+      btn.textContent = '生成中…';
+      try {
+        const resp = await fetch(`${base.replace(/\/$/, '')}/api/papers/${backendId}/summarize`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        if (data.summary_ja) {
+          const c = document.getElementById(`summary-${pmid}`);
+          if (c) {
+            c.innerHTML = `<div class="mt-2.5 pt-2.5 border-t border-teal-100">
+              <p class="text-[10px] font-bold text-teal-600 mb-1 uppercase tracking-wide">AI要約（日本語）</p>
+              <div class="abstract-text text-gray-600">${escapeHtml(data.summary_ja)}</div>
+            </div>`;
+            c.classList.remove('hidden');
+          }
+          btn.textContent = '日本語要約';
+          btn.setAttribute('onclick', `toggleSummary('${pmid}')`);
+          btn.disabled = false;
+        } else {
+          btn.textContent = '生成中（しばらくお待ちください）';
+          setTimeout(() => { btn.disabled = false; btn.textContent = 'AI要約（日本語）'; }, 5000);
+        }
+      } catch (err) {
+        btn.textContent = '取得失敗';
+        btn.disabled = false;
+      }
+    }
+
+    // =========================================================
+    // Alert registration (Phase 3 — Backend required)
+    // =========================================================
+    async function registerAlert(email, keyword) {
+      if (!backendUrl) {
+        showToast('バックエンドAPIが設定されていません（設定タブを確認）');
+        return;
+      }
+      try {
+        const resp = await fetch(`${backendUrl.replace(/\/$/, '')}/api/alerts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, keyword }),
+        });
+        if (resp.status === 409) { showToast('同じキーワードのアラートが既に登録されています'); return; }
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        showToast(`✓ アラートを登録しました: "${keyword}"`);
+      } catch (err) {
+        showToast(`アラート登録に失敗しました: ${err.message}`);
+      }
+    }
+
+    // =========================================================
+    // Settings
+    // =========================================================
+    function saveApiKey() {
+      ncbiApiKey = document.getElementById('ncbi-api-key').value.trim();
+      localStorage.setItem('ncbi_api_key', ncbiApiKey);
+      showToast('NCBI APIキーを保存しました');
+    }
+
+    function saveBackendUrl() {
+      backendUrl = document.getElementById('backend-url').value.trim();
+      localStorage.setItem('backend_url', backendUrl);
+      const cb = document.getElementById('use-backend');
+      if (backendUrl) cb.disabled = false;
+      showToast('バックエンドURLを保存しました');
+      updateApiModeBadge();
+    }
+
+    function saveDeepl() {
+      deeplApiKey = document.getElementById('deepl-api-key').value.trim();
+      localStorage.setItem('deepl_api_key', deeplApiKey);
+      showToast('DeepL APIキーを保存しました');
+    }
+
+    // =========================================================
+    // Auto-translation engine
+    // =========================================================
+
+    /** テキストが日本語を含むかチェック（翻訳不要判定） */
+    function isJapanese(text) {
+      return /[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(text);
+    }
+
+    /** 簡易ハッシュ（キャッシュキー用） */
+    function hashStr(str) {
+      let h = 0;
+      for (let i = 0; i < Math.min(str.length, 200); i++) {
+        h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+      }
+      return Math.abs(h).toString(36);
+    }
+
+    /**
+     * テキストを日本語に翻訳する。
+     * 優先順位: DeepL API（キーあり）> Google Translate（非公式 gtx エンドポイント）
+     * 翻訳結果は sessionStorage にキャッシュ。
+     */
+    async function translateText(text) {
+      if (!text || !text.trim()) return text;
+      if (isJapanese(text)) return text;   // 既に日本語
+      const key = 'tr_' + hashStr(text);
+      const cached = sessionStorage.getItem(key);
+      if (cached) return cached;
+
+      try {
+        // --- DeepL Free API ---
+        if (deeplApiKey) {
+          const r = await fetch('https://api-free.deepl.com/v2/translate', {
+            method: 'POST',
+            headers: {
+              'Authorization': `DeepL-Auth-Key ${deeplApiKey}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ text, target_lang: 'JA' }),
+          });
+          if (r.ok) {
+            const d = await r.json();
+            const ja = d.translations?.[0]?.text || '';
+            if (ja) { sessionStorage.setItem(key, ja); return ja; }
+          }
+        }
+
+        // --- Google Translate（非公式 gtx エンドポイント、認証不要） ---
+        const gtUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ja&dt=t&q=${encodeURIComponent(text)}`;
+        const gr = await fetch(gtUrl);
+        if (gr.ok) {
+          const gd = await gr.json();
+          // レスポンス構造: [[[翻訳テキスト, 原文, ...], ...], ...]
+          const ja = gd[0]?.map(seg => seg[0] || '').join('') || '';
+          if (ja) { sessionStorage.setItem(key, ja); return ja; }
+        }
+      } catch (e) {
+        // 翻訳失敗時は原文を返す（サイレント）
+      }
+      return text;
+    }
+
+    /**
+     * 現在表示中のすべての paper-card タイトルを日本語化する。
+     * 50ms ずつずらして Google Translate のレート制限を回避。
+     */
+    async function translateVisibleTitles() {
+      const links = document.querySelectorAll('.paper-title[data-title-en]:not([data-translated])');
+      for (const link of links) {
+        const en = link.dataset.titleEn || '';
+        if (!en || isJapanese(en)) {
+          // 元から日本語 or 空: スケルトン解除して英語を表示
+          const jaEl = link.querySelector('.title-ja');
+          const enEl = link.querySelector('.title-en');
+          if (jaEl) jaEl.innerHTML = escapeHtml(en);
+          if (enEl) enEl.textContent = '';
+          link.dataset.translated = '1';
+          continue;
+        }
+        link.dataset.translated = '1'; // 重複リクエスト防止
+        const pmid = link.dataset.pmid || '';
+        const jaEl = link.querySelector(`#title-ja-${pmid}`) || link.querySelector('.title-ja');
+        const enEl = link.querySelector('.title-en');
+
+        // 翻訳実行
+        const ja = await translateText(en);
+        if (jaEl) jaEl.textContent = ja;
+        if (enEl) enEl.textContent = (ja !== en) ? en : '';  // 翻訳前と同じならen副題不要
+
+        await new Promise(r => setTimeout(r, 60));  // 60ms delay (≈16 req/s)
+      }
+    }
+
+    /**
+     * 翻訳ON/OFFトグル: 既存カードのタイトルも即時更新
+     */
+    function toggleAutoTranslate() {
+      autoTranslate = !autoTranslate;
+      localStorage.setItem('auto_translate', autoTranslate ? 'on' : 'off');
+      document.body.classList.toggle('translate-off', !autoTranslate);
+      syncTranslateUI();
+      reapplyTranslation();
+    }
+
+    function syncTranslateUI() {
+      const btn   = document.getElementById('translate-toggle');
+      const label = document.getElementById('translate-label');
+      const cb    = document.getElementById('auto-translate-checkbox');
+      const track = document.getElementById('translate-track');
+      const dot   = document.getElementById('translate-dot');
+      if (autoTranslate) {
+        btn?.classList.add('translate-btn-active');
+        if (label) label.textContent = '日本語表示 ON';
+        if (cb) cb.checked = true;
+        if (track) track.style.background = '#059669';
+        if (dot)   dot.style.transform = 'translateX(1rem)';
+      } else {
+        btn?.classList.remove('translate-btn-active');
+        btn?.classList.add('bg-gray-50', 'text-gray-500', 'border-gray-200');
+        if (label) label.textContent = '日本語表示 OFF';
+        if (cb) cb.checked = false;
+        if (track) track.style.background = '';
+        if (dot)   dot.style.transform = '';
+      }
+    }
+
+    function syncTranslateCheckbox() {
+      autoTranslate = document.getElementById('auto-translate-checkbox').checked;
+      localStorage.setItem('auto_translate', autoTranslate ? 'on' : 'off');
+      document.body.classList.toggle('translate-off', !autoTranslate);
+      syncTranslateUI();
+      reapplyTranslation();
+    }
+
+    /**
+     * トグル変更時: 既にレンダリングされているカードを再処理
+     */
+    async function reapplyTranslation() {
+      const links = document.querySelectorAll('.paper-title[data-title-en]');
+      for (const link of links) {
+        const en   = link.dataset.titleEn || '';
+        const pmid = link.dataset.pmid || '';
+        const jaEl = link.querySelector(`#title-ja-${pmid}`) || link.querySelector('.title-ja');
+        const enEl = link.querySelector('.title-en');
+        if (!jaEl) continue;
+
+        if (!autoTranslate) {
+          // OFF: タイトルを英語のみに戻す
+          jaEl.innerHTML = escapeHtml(en);
+          if (enEl) enEl.textContent = '';
+          delete link.dataset.translated;
+        } else {
+          // ON: 翻訳（キャッシュがあれば即時）
+          delete link.dataset.translated;
+          if (!isJapanese(en)) {
+            jaEl.innerHTML = '<span class="title-skeleton" style="width:70%">&nbsp;</span>';
+            if (enEl) enEl.textContent = en;
+          }
+        }
+      }
+      if (autoTranslate) {
+        translateVisibleTitles();
+      }
+    }
+
+    function updateApiModeBadge() {
+      const useBackend = document.getElementById('use-backend')?.checked && backendUrl;
+      const badge = document.getElementById('api-mode-badge');
+      const dot   = badge?.querySelector('span:first-child');
+      document.getElementById('api-mode-label').textContent = useBackend ? 'Backend API' : 'PubMed Direct';
+      if (dot) dot.className = `w-2 h-2 rounded-full inline-block ${useBackend ? 'bg-teal-400' : 'bg-green-400'}`;
+    }
+
+    document.getElementById('use-backend').addEventListener('change', updateApiModeBadge);
+
+    // =========================================================
+    // Toast notification
+    // =========================================================
+    function showToast(msg) {
+      let t = document.getElementById('toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast';
+        t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#232323;color:#fff;font-size:0.78rem;font-weight:600;padding:0.6rem 1rem;border-radius:0.6rem;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:opacity 0.3s;z-index:100;';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.opacity = '1';
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2500);
+    }
+
+    // =========================================================
+    // Utility
+    // =========================================================
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+    }
+  </script>
+  <style>
+    /* 翻訳OFF時: title-en をメインタイトルスタイルに昇格 */
+    body.translate-off .title-ja { display: none !important; }
+    body.translate-off .title-en {
+      font-size: 0.875rem !important;
+      font-weight: 700 !important;
+      color: #1e3a5f !important;
+      margin-top: 0 !important;
+    }
+    body.translate-off .paper-title { color: #1e3a5f; }
+    body.translate-off .paper-title:hover { color: #2563eb; }
+  </style>
+</body>
+</html>

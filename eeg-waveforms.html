@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脳波パターン図鑑 | EEG学習ツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+
+  .filter-btn {
+    padding: 0.35rem 0.9rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s; border: 1.5px solid transparent;
+    letter-spacing: 0.02em;
+  }
+  .filter-btn.active { color: white; }
+  .filter-btn:not(.active) { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+
+  .wave-card {
+    background: white; border-radius: 1rem; border: 1.5px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .wave-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); transform: translateY(-1px); }
+  .wave-canvas { display: block; width: 100%; background: #0f172a; }
+
+  .cat-badge {
+    display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+  }
+  .cat-normal  { background: #dcfce7; color: #14532d; }
+  .cat-epilepsy { background: #fee2e2; color: #7f1d1d; }
+  .cat-diffuse  { background: #fef3c7; color: #78350f; }
+  .cat-focal    { background: #e0e7ff; color: #3730a3; }
+  .cat-special  { background: #f3e8ff; color: #581c87; }
+  .cat-sleep    { background: #dbeafe; color: #1e3a5f; }
+
+  /* Modal */
+  #modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    z-index: 50; display: none; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  #modal-overlay.open { display: flex; }
+  #modal-box {
+    background: white; border-radius: 1.25rem; max-width: 640px; width: 100%;
+    max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-8 shadow-lg">
+  <div class="max-w-4xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">波形図鑑</span>
+    </nav>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="library" class="w-5 h-5 text-white"></i>
+      </div>
+      <span class="text-white/70 text-sm font-semibold tracking-wider">STEP 2</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">脳波パターン図鑑</h1>
+    <p class="text-white/80 mt-2 text-sm leading-relaxed max-w-2xl">
+      正常波形・てんかん性放電・脳症・焦点性異常・特殊パターンを網羅。カードをクリックして詳細を確認できます。
+    </p>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-6">
+
+  <!-- Filter bar -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button class="filter-btn active" style="background:#374151" onclick="filterCards('all',this)">すべて</button>
+    <button class="filter-btn" onclick="filterCards('normal',this)" style="">正常</button>
+    <button class="filter-btn" onclick="filterCards('sleep',this)">睡眠</button>
+    <button class="filter-btn" onclick="filterCards('epilepsy',this)">てんかん性</button>
+    <button class="filter-btn" onclick="filterCards('diffuse',this)">びまん性異常</button>
+    <button class="filter-btn" onclick="filterCards('focal',this)">焦点性異常</button>
+    <button class="filter-btn" onclick="filterCards('special',this)">特殊パターン</button>
+  </div>
+
+  <!-- Wave card grid -->
+  <div id="wave-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-8 pt-4 border-t border-slate-200">
+    <a href="eeg-basics.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      基礎知識へ
+    </a>
+    <a href="eeg-quiz.html" class="flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 transition-colors font-semibold">
+      次: クイズで練習
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<!-- Modal -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-box">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+// ===== Waveform drawing utilities =====
+function pseudoNoise(t, seed) {
+  return Math.sin(t * 127.3 + seed * 43.7) * 0.5
+       + Math.sin(t * 83.1 + seed * 29.1) * 0.3
+       + Math.sin(t * 51.7 + seed * 17.9) * 0.2;
+}
+
+function drawPattern(canvas, patternId) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += W/8) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += H/4) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  const p = PATTERNS[patternId];
+  if (!p || !p.draw) return;
+  p.draw(ctx, W, H);
+}
+
+function sineWave(ctx, W, H, freq, amp, color, noise=2, lineW=1.5, phaseOff=0, win=6) {
+  ctx.strokeStyle = color; ctx.lineWidth = lineW; ctx.beginPath();
+  for (let x = 0; x < W; x++) {
+    const t = (x / W) * win + phaseOff;
+    const n = pseudoNoise(t, phaseOff * 7) * noise;
+    const y = H/2 - (Math.sin(2 * Math.PI * freq * t) * amp + n);
+    x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+}
+
+// ===== Pattern data =====
+const PATTERNS = {
+  // NORMAL
+  alpha_normal: {
+    name: 'α波（正常覚醒・閉眼）', cat: 'normal', catLabel: '正常', short: '8-13Hz、後頭部優位、閉眼安静時',
+    detail: {
+      freq: '8–13 Hz', amplitude: '20–100 μV',
+      appear: '後頭部（O1/O2）優位。閉眼・安静時に増大し、開眼・思考・計算で抑制される（Berger効果）。',
+      clinical: '成人正常脳波の基本律動。後頭部α波の消失や非対称は病的。α波が8Hz未満（成人）は脳機能低下のサイン。',
+      tip: '脳波読影の最初に後頭部α波の有無・対称性・周波数を確認する習慣をつける。'
+    },
+    draw(ctx, W, H) {
+      sineWave(ctx, W, H, 10, H*0.38, '#4ade80', 2, 1.5);
+    }
+  },
+  eyes_open: {
+    name: 'α抑制（開眼）', cat: 'normal', catLabel: '正常', short: 'α波が抑制され低振幅βに移行',
+    detail: {
+      freq: '13–30 Hz（β）', amplitude: '5–20 μV',
+      appear: '開眼・思考・感覚刺激によりα波が消失し、低振幅の混合周波数活動になる。',
+      clinical: 'α抑制の欠如（開眼でも後頭部αが持続）は後頭部病変や意識障害を示唆。',
+      tip: '記録中に「開眼」の指示を行い、前後の変化を比較することが重要。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#86efac'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x / W) * 6;
+        const env = x < W * 0.35 ? 1 : Math.max(0.1, 1 - (x - W*0.35) / (W * 0.5));
+        const n = pseudoNoise(t, 0) * 2;
+        const y = H/2 - (Math.sin(2*Math.PI*10*t) * H*0.35 * env + n + pseudoNoise(t*2, 3)*H*0.08*(1-env));
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.font = '10px sans-serif';
+      ctx.fillText('開眼', W*0.35 + 4, 16);
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(W*0.35, 0); ctx.lineTo(W*0.35, H); ctx.stroke();
+    }
+  },
+  mu_rhythm: {
+    name: 'μリズム（ミュー律動）', cat: 'normal', catLabel: '正常', short: '中心部8-12Hz、手の運動で抑制',
+    detail: {
+      freq: '8–12 Hz', amplitude: '20–70 μV',
+      appear: '中心部（C3/C4）に出現するα帯域律動。アーチ形（negative arch）の形状が特徴的。',
+      clinical: '反対側の手の運動・想像で抑制される。正常変動であり、てんかんとの鑑別が重要。μリズム単独は病的意義なし。',
+      tip: 'アーチ形の形状（αのなめらかなサインカーブとは異なる）が識別の鍵。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#6ee7b7'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x / W) * 5;
+        const n = pseudoNoise(t, 5) * 2;
+        const base = Math.sin(2*Math.PI*10*t);
+        const arch = base < 0 ? base * 0.3 : base;
+        const y = H/2 - (arch * H*0.35 + n);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+  },
+  // SLEEP
+  sleep_n1: {
+    name: '睡眠 Stage N1（θ波）', cat: 'sleep', catLabel: '睡眠', short: '4-8Hz θ波、頂点鋭波',
+    detail: {
+      freq: '4–8 Hz（θ波）、頂点鋭波（200μV以上）', amplitude: '20–100 μV',
+      appear: '入眠期。後頭部α波が消失し、全般性θ波が出現。Cz周囲に頂点鋭波（Vertex sharp wave）が散発。',
+      clinical: '総睡眠の5-10%。睡眠ポリグラフ（PSG）の記録段階判定に使用。頂点鋭波の過剰出現は鑑別が必要。',
+      tip: '頂点鋭波はCzで最大振幅。後頭部αの消失＋θ波への移行がN1の指標。'
+    },
+    draw(ctx, W, H) {
+      // Background theta
+      sineWave(ctx, W, H, 6, H*0.22, '#60a5fa', 3, 1.2);
+      // Vertex sharp wave at center
+      ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 2; ctx.beginPath();
+      const vx = W * 0.52;
+      ctx.moveTo(vx - 12, H/2);
+      ctx.lineTo(vx, H/2 - H*0.42);
+      ctx.lineTo(vx + 18, H/2 + H*0.18);
+      ctx.lineTo(vx + 30, H/2);
+      ctx.stroke();
+    }
+  },
+  sleep_spindle: {
+    name: '睡眠紡錘波（Sleep spindle）', cat: 'sleep', catLabel: '睡眠', short: '12-14Hz、紡錘形包絡、Stage N2',
+    detail: {
+      freq: '12–14 Hz', amplitude: '20–100 μV',
+      appear: 'NREM Stage N2の特徴的所見。前頭〜中心部（Cz優位）に0.5-2秒の紡錘形の速波バーストが周期的に出現。',
+      clinical: 'K複合とともにStage N2の判定に必須。紡錘波の消失・非対称は視床病変（脳梗塞等）を示唆する。',
+      tip: '紡錘波は「ゆりかご」形の包絡線が特徴。K複合（高振幅の二相性徐波）が先行することも。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x / W) * 8;
+        const cycle = t / 3.2;
+        const cf = cycle - Math.floor(cycle);
+        const env = cf < 0.42 ? Math.sin(cf / 0.42 * Math.PI) : 0;
+        const n = pseudoNoise(t, 2) * 2;
+        const y = H/2 - (Math.sin(2*Math.PI*13*t) * H*0.38 * env + n * (1-env*0.7));
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+  },
+  k_complex: {
+    name: 'K複合（K-complex）', cat: 'sleep', catLabel: '睡眠', short: '高振幅二相性徐波、Stage N2',
+    detail: {
+      freq: '0.5–1 Hz（複合波）', amplitude: '75 μV以上（定義）',
+      appear: 'Stage N2に出現する高振幅（≥75μV）の二相性複合波。前頭部（Fz/Cz）に最大。外部刺激（音）でも誘発される。',
+      clinical: 'K複合は外部刺激に対する脳の「防衛反応」とも言われる。睡眠紡錘波を伴うことも多い。',
+      tip: '負相（下向き）＋正相（上向き）の急峻な変化が特徴。振幅75μV以上が定義。'
+    },
+    draw(ctx, W, H) {
+      // Background low-amp activity
+      ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*6; const n = pseudoNoise(t,4)*3;
+        const y = H/2 - (Math.sin(2*Math.PI*13*(t-0.3))*H*0.06 + n);
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      // K-complex at center
+      ctx.strokeStyle = '#bfdbfe'; ctx.lineWidth = 2; ctx.beginPath();
+      const cx = W*0.45;
+      const pts = [
+        [cx-5, H/2], [cx+5, H/2 - H*0.08], [cx+12, H/2 + H*0.45],
+        [cx+25, H/2 - H*0.32], [cx+42, H/2 + H*0.06], [cx+58, H/2]
+      ];
+      pts.forEach(([x,y],i) => i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+      ctx.stroke();
+    }
+  },
+  delta_sleep: {
+    name: 'δ波（Stage N3・深睡眠）', cat: 'sleep', catLabel: '睡眠', short: '0.5-2Hz、高振幅、慢波睡眠',
+    detail: {
+      freq: '0.5–2 Hz', amplitude: '75 μV以上',
+      appear: 'NREM Stage N3（慢波睡眠・深睡眠）。75μV以上のδ波が全体の20%以上を占める。全般性。',
+      clinical: '睡眠の記憶固定・免疫機能に重要。高齢では減少。δ波増加は成長ホルモン分泌と関連。',
+      tip: 'δ波と病的な全般性徐波化の鑑別には臨床背景（睡眠中か、覚醒しているか）が重要。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 2; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*8;
+        const n = pseudoNoise(t,1)*4;
+        const y = H/2 - (Math.sin(2*Math.PI*1.5*t)*H*0.42 + Math.sin(2*Math.PI*1.0*t)*H*0.12 + n);
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+  },
+  rem_sleep: {
+    name: 'REM睡眠波形', cat: 'sleep', catLabel: '睡眠', short: '低振幅混合周波数、鋸歯状波',
+    detail: {
+      freq: '混合（θ/β優位）', amplitude: '低振幅 5–30 μV',
+      appear: '低振幅の混合周波数活動。覚醒脳波に似ている（逆説睡眠）。鋸歯状波（2-3Hz）が前頭〜中心部に散発。',
+      clinical: '夢の大部分はREM睡眠中。REM睡眠行動障害（RBD）ではα-SAN減少・筋電図活動増加。ナルコレプシーではREM直入。',
+      tip: '低振幅＋眼球運動アーティファクト（EOG）＋筋弛緩（オトガイ筋EMG）の組み合わせがREM判定の基準。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#7dd3fc'; ctx.lineWidth = 1.3; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*6;
+        const n = pseudoNoise(t,6)*3;
+        const saw = ((t*2.5) % 1) * H*0.10;
+        const y = H/2 - (Math.sin(2*Math.PI*8*t)*H*0.10 + Math.sin(2*Math.PI*16*t)*H*0.06 + saw + n);
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+  },
+  // EPILEPSY
+  spike: {
+    name: '棘波（Spike）', cat: 'epilepsy', catLabel: 'てんかん性', short: '持続20-70ms、鋭頭、てんかん焦点',
+    detail: {
+      freq: '単発または反復', amplitude: '通常100 μV以上',
+      appear: '持続20-70msの急峻な波形。焦点性または全般性に出現。後続緩徐波を伴うことが多い。',
+      clinical: 'てんかん性異常放電の基本。焦点性棘波は局所てんかん（側頭葉、前頭葉等）の焦点同定に重要。発作間欠期放電（IED）として記録される。',
+      tip: '棘波の定義：持続70ms未満、周囲背景から明確に突出した尖頭波形。70-200msは鋭波（Sharp wave）。'
+    },
+    draw(ctx, W, H) {
+      sineWave(ctx, W, H, 10, H*0.06, '#f87171', 1.5, 1.0);
+      // Spike
+      for (let s = 0; s < 3; s++) {
+        const sx = W*(0.2 + s*0.32);
+        ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 2.5; ctx.beginPath();
+        ctx.moveTo(sx-4, H/2);
+        ctx.lineTo(sx, H/2 - H*0.45);
+        ctx.lineTo(sx+8, H/2 + H*0.2);
+        ctx.lineTo(sx+20, H/2);
+        ctx.stroke();
+      }
+    }
+  },
+  sharp_wave: {
+    name: '鋭波（Sharp wave）', cat: 'epilepsy', catLabel: 'てんかん性', short: '持続70-200ms、棘波より幅広',
+    detail: {
+      freq: '単発または反復', amplitude: '通常50 μV以上',
+      appear: '持続70-200msの尖頭波形。棘波より幅広く、後続緩徐波を伴うことが多い。',
+      clinical: '局所てんかんの焦点（特に側頭葉・後頭部）でよく認められる。BECTSでは中心・側頭部に出現。',
+      tip: '棘波（<70ms）vs 鋭波（70-200ms）の区別は持続時間。どちらもてんかん性放電として重要。'
+    },
+    draw(ctx, W, H) {
+      sineWave(ctx, W, H, 10, H*0.06, '#f87171', 1.5, 1.0);
+      for (let s = 0; s < 2; s++) {
+        const sx = W*(0.25 + s*0.42);
+        ctx.strokeStyle = '#fda4af'; ctx.lineWidth = 2; ctx.beginPath();
+        ctx.moveTo(sx-8, H/2);
+        ctx.lineTo(sx, H/2 - H*0.40);
+        ctx.lineTo(sx+16, H/2 + H*0.22);
+        ctx.lineTo(sx+38, H/2);
+        ctx.stroke();
+      }
+    }
+  },
+  spike_wave_3hz: {
+    name: '3Hz棘徐波複合', cat: 'epilepsy', catLabel: 'てんかん性', short: '欠神てんかん典型。全般性3Hz',
+    detail: {
+      freq: '3 Hz', amplitude: '高振幅 100–500 μV',
+      appear: '全般性に突然出現し突然終息する規則的な3Hzの棘波＋徐波複合。過呼吸で誘発されやすい。',
+      clinical: '小児欠神てんかん（CAE）の典型的所見。10秒以上持続で意識消失（欠神発作）を起こす。バルプロ酸・エトスクシミド・ラモトリギンが有効。',
+      tip: '突然の開始と終息、規則的な3Hzが欠神てんかんの特徴。発作中に過呼吸を行うと容易に誘発。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#f87171'; ctx.lineWidth = 1.8; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*6;
+        const phase = t * 3;
+        const frac = phase - Math.floor(phase);
+        let val;
+        if (frac < 0.12) val = Math.sin(frac/0.12*Math.PI*2)*H*0.45;
+        else val = -Math.sin((frac-0.12)/0.88*Math.PI)*H*0.22;
+        val += pseudoNoise(t, 0)*2;
+        x===0 ? ctx.moveTo(x, H/2-val) : ctx.lineTo(x, H/2-val);
+      }
+      ctx.stroke();
+    }
+  },
+  polyspike_wave: {
+    name: '多棘徐波複合（Polyspike-wave）', cat: 'epilepsy', catLabel: 'てんかん性', short: 'JMEの典型。複数棘波+徐波',
+    detail: {
+      freq: '3.5–6 Hz', amplitude: '高振幅',
+      appear: '複数の棘波（2本以上）に続いて徐波が出現する複合。全般性に出現。',
+      clinical: '若年性ミオクローヌスてんかん（JME）の典型的所見。覚醒直後・光刺激・睡眠剥奪で増強。バルプロ酸が第一選択。',
+      tip: '1本の棘波→単純棘徐波複合、2本以上→多棘徐波複合。JMEは「目が覚めてすぐにものを落とす」病歴が手掛かり。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#fb923c'; ctx.lineWidth = 1.8; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*5;
+        const phase = t * 4;
+        const frac = phase - Math.floor(phase);
+        let val = 0;
+        if (frac < 0.05) val = H*0.45*Math.sin(frac/0.05*Math.PI*2);
+        else if (frac < 0.10) val = H*0.35*Math.sin((frac-0.05)/0.05*Math.PI*2);
+        else if (frac < 0.15) val = H*0.25*Math.sin((frac-0.10)/0.05*Math.PI*2);
+        else val = -H*0.20*Math.sin((frac-0.15)/0.85*Math.PI);
+        val += pseudoNoise(t,3)*2;
+        x===0 ? ctx.moveTo(x,H/2-val) : ctx.lineTo(x,H/2-val);
+      }
+      ctx.stroke();
+    }
+  },
+  hypsarrhythmia: {
+    name: 'ヒプスアリスミア（Hypsarrhythmia）', cat: 'epilepsy', catLabel: 'てんかん性', short: 'West症候群。無秩序高振幅異常',
+    detail: {
+      freq: '混合（全帯域）', amplitude: '超高振幅 200–1000 μV',
+      appear: '混沌とした高振幅の多形性徐波・棘波・鋭波が無秩序に持続する特徴的なパターン。',
+      clinical: 'West症候群（点頭てんかん）の発作間欠期所見。乳児期（3-12ヶ月）に発症。ACTHまたはビガバトリンが第一選択。',
+      tip: '「カオス」とも表現される。発作（点頭発作）前後に一時的にパターンが平坦化することがある（electrodecrement）。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*5;
+        const chaos = Math.sin(2*Math.PI*2*t)*H*0.3 +
+                      Math.sin(2*Math.PI*1.3*t + 1.2)*H*0.22 +
+                      pseudoNoise(t,0)*H*0.18 +
+                      pseudoNoise(t*3,5)*H*0.15;
+        const spikes = (Math.sin(2*Math.PI*7*t) > 0.85 ? H*0.3 : 0);
+        x===0 ? ctx.moveTo(x,H/2-(chaos+spikes)) : ctx.lineTo(x,H/2-(chaos+spikes));
+      }
+      ctx.stroke();
+    }
+  },
+  // DIFFUSE
+  generalized_slowing: {
+    name: '全般性徐波化', cat: 'diffuse', catLabel: 'びまん性異常', short: '脳機能低下の汎用マーカー',
+    detail: {
+      freq: '2–7 Hz（δ/θ）', amplitude: '様々',
+      appear: '全誘導でα波が消失し、θ〜δ帯域の徐波が全般性に出現。脳機能低下の程度に対応。',
+      clinical: '代謝性脳症（肝・腎・糖尿病）、感染症、薬物（鎮静薬）、意識障害。可逆性であれば原因治療で改善する。',
+      tip: '徐波の程度（θ<δ）と振幅（高<低振幅）は意識障害の重症度に対応。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#fde68a'; ctx.lineWidth = 1.8; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*6;
+        const n = pseudoNoise(t,0)*5;
+        const y = H/2-(Math.sin(2*Math.PI*3*t)*H*0.30 + Math.sin(2*Math.PI*1.8*t)*H*0.12 + n);
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+  },
+  triphasic: {
+    name: '三相波（Triphasic waves）', cat: 'diffuse', catLabel: 'びまん性異常', short: '肝性・代謝性脳症。前頭部優位',
+    detail: {
+      freq: '1–2.5 Hz', amplitude: '高振幅 100–300 μV',
+      appear: '負相・正相・負相の3相性波形（前相に小さな負相、後相にも負相）が前頭部優位に出現。前後方向の伝播遅延が特徴的。',
+      clinical: '肝性脳症が最も典型的。尿毒症・低ナトリウム血症・甲状腺機能低下・薬物でも出現。CJDとの鑑別（CJDはより周期的）。',
+      tip: '「前頭部優位」「前後伝播遅延」「三相性」の3点セットで認識。肝機能・アンモニア値を確認する。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*6;
+        const phase = t * 1.5;
+        const frac = phase - Math.floor(phase);
+        let val = 0;
+        if (frac < 0.12) val = -H*0.18*Math.sin(frac/0.12*Math.PI);
+        else if (frac < 0.45) val = H*0.40*Math.sin((frac-0.12)/0.33*Math.PI);
+        else if (frac < 0.62) val = -H*0.16*Math.sin((frac-0.45)/0.17*Math.PI);
+        val += pseudoNoise(t,2)*2;
+        x===0 ? ctx.moveTo(x,H/2-val) : ctx.lineTo(x,H/2-val);
+      }
+      ctx.stroke();
+    }
+  },
+  grda: {
+    name: 'GRDA（全般性律動性δ活動）', cat: 'diffuse', catLabel: 'びまん性異常', short: '重篤な脳障害。非けいれん性てんかん重積との境界',
+    detail: {
+      freq: '0.5–3 Hz（律動性δ）', amplitude: '高振幅',
+      appear: '全般性に律動的（同一形状の繰り返し）なδ波が持続。ACNS用語（2021）。',
+      clinical: 'ICU患者に多い。非けいれん性てんかん重積（NCSE）との鑑別が重要（抗てんかん薬の試験的投与）。予後不良の指標となりうる。',
+      tip: '"G"=全般性、"R"=律動性、"D"=δ、"A"=活動。ACNSの標準用語で記述することが重要。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#f97316'; ctx.lineWidth = 2; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*8;
+        const n = pseudoNoise(t,1)*2;
+        const y = H/2-(Math.sin(2*Math.PI*1.8*t)*H*0.38 + n);
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+  },
+  // FOCAL
+  focal_slowing: {
+    name: '焦点性徐波', cat: 'focal', catLabel: '焦点性異常', short: '局所病変（梗塞・腫瘍・外傷）',
+    detail: {
+      freq: 'θ〜δ帯域', amplitude: '様々',
+      appear: '一側性・限局性に徐波が出現。局所的な神経細胞の機能低下または喪失を反映。',
+      clinical: '局所病変（脳梗塞・腫瘍・挫傷・硬膜下血腫）の指標。多形性δ活動（PLDA）は活動性病変を示唆。',
+      tip: '左右の対称性を比較することが読影の基本。焦点性徐波は病変側を示す（ただし深部病変では対側に出ることも）。'
+    },
+    draw(ctx, W, H) {
+      // Normal side (top half of canvas)
+      ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*5; const n = pseudoNoise(t,0)*2;
+        const y = H*0.28 - Math.sin(2*Math.PI*10*t)*H*0.16 - n;
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      // Abnormal side (focal slowing)
+      ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*5; const n = pseudoNoise(t,7)*4;
+        const y = H*0.72 - Math.sin(2*Math.PI*2.5*t)*H*0.22 - n;
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '9px sans-serif';
+      ctx.fillText('正常側', 5, H*0.15);
+      ctx.fillText('患側（焦点性徐波）', 5, H*0.60);
+    }
+  },
+  lpds: {
+    name: 'LPDs（一側性周期性放電）', cat: 'focal', catLabel: '焦点性異常', short: '旧称PLEDs。急性脳病変・てんかん重積',
+    detail: {
+      freq: '0.5–3 Hz（周期的）', amplitude: '高振幅',
+      appear: '一側性に周期的（0.5-3Hz）に棘波・鋭波・複合波が出現。ACNS用語（旧PLEDs）。',
+      clinical: '急性〜亜急性の局所脳病変（脳梗塞・ヘルペス脳炎・腫瘍）に伴うことが多い。けいれん性・非けいれん性てんかん重積と関連。',
+      tip: '"L"=Lateralized（一側性）、"P"=Periodic（周期的）、"D"=Discharges（放電）。周期的であることがポイント。'
+    },
+    draw(ctx, W, H) {
+      sineWave(ctx, W, H, 10, H*0.04, '#60a5fa', 1.5, 0.8);
+      // Periodic discharges
+      for (let i = 0; i < 5; i++) {
+        const sx = W*(0.1 + i*0.19);
+        ctx.strokeStyle = '#f87171'; ctx.lineWidth = 2; ctx.beginPath();
+        ctx.moveTo(sx, H/2);
+        ctx.lineTo(sx+3, H/2 - H*0.38);
+        ctx.lineTo(sx+7, H/2 + H*0.18);
+        ctx.lineTo(sx+16, H/2 + H*0.06);
+        ctx.lineTo(sx+26, H/2);
+        ctx.stroke();
+      }
+    }
+  },
+  bects_spikes: {
+    name: '中心・側頭部棘波（BECTS）', cat: 'focal', catLabel: '焦点性異常', short: '小児良性てんかん（BECTS）の典型所見',
+    detail: {
+      freq: '単発または連続', amplitude: '高振幅（水平双極誘導で最大）',
+      appear: 'T5/T6（P7/P8）付近を中心とした高振幅の棘徐波複合。睡眠中・傾眠時に増加。水平ダイポール（水平方向の電気双極子）が特徴。',
+      clinical: '小児良性てんかん（BECTS = Benign childhood epilepsy with centrotemporal spikes / Rolandic epilepsy）。5-12歳に発症、思春期に自然消失する予後良好なてんかん。',
+      tip: '水平双極誘導では「正相が前頭部、負相が中心・側頭部」のダイポールが特徴的。睡眠記録が重要。'
+    },
+    draw(ctx, W, H) {
+      sineWave(ctx, W, H, 9, H*0.05, '#34d399', 2, 0.8);
+      for (let i = 0; i < 3; i++) {
+        const sx = W*(0.2 + i*0.3);
+        ctx.strokeStyle = '#6ee7b7'; ctx.lineWidth = 2.5; ctx.beginPath();
+        ctx.moveTo(sx-5, H/2);
+        ctx.lineTo(sx, H/2 - H*0.42);
+        ctx.lineTo(sx+10, H/2 + H*0.22);
+        ctx.lineTo(sx+30, H/2);
+        ctx.stroke();
+      }
+    }
+  },
+  // SPECIAL
+  burst_suppression: {
+    name: 'Burst-suppression（バースト抑制）', cat: 'special', catLabel: '特殊パターン', short: '重篤な脳障害・深麻酔',
+    detail: {
+      freq: '混合（バースト部）/ 平坦（抑制部）', amplitude: '高振幅バースト ↔ 平坦',
+      appear: '高振幅の多形性放電（バースト）と電気的抑制（平坦部）が交互に出現。バースト間隔と抑制比が重症度の指標。',
+      clinical: '重篤な脳機能障害（心停止後、重症頭部外傷）、深麻酔（プロポフォール・バルビツレート）、低体温。予後不良の指標だが可逆的な場合も。',
+      tip: '計画的なBurst-suppression（てんかん重積治療）では「抑制比」（抑制時間/総時間）を目標に管理する。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#67e8f9'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*10;
+        const cycle = t / 3.0;
+        const cf = cycle - Math.floor(cycle);
+        let val = 0;
+        if (cf < 0.32) {
+          val = Math.sin(2*Math.PI*3*t)*H*0.38 + Math.sin(2*Math.PI*8*t)*H*0.12 + pseudoNoise(t,0)*H*0.12;
+        } else {
+          val = pseudoNoise(t*5, 3)*H*0.02;
+        }
+        x===0 ? ctx.moveTo(x,H/2-val) : ctx.lineTo(x,H/2-val);
+      }
+      ctx.stroke();
+    }
+  },
+  periodic_discharges_cjd: {
+    name: '周期性複合波（CJD）', cat: 'special', catLabel: '特殊パターン', short: 'CJD特徴的所見。1-2Hz規則的複合波',
+    detail: {
+      freq: '0.5–2 Hz（規則的）', amplitude: '高振幅 100–300 μV',
+      appear: '1-2秒ごとに規則的に出現する全般性の鋭波・棘波複合。疾患進行に伴い出現頻度が増加し、末期には不規則化する。',
+      clinical: 'クロイツフェルト・ヤコブ病（CJD）の支持所見の一つ。他の所見（MRI拡散強調像、CSF 14-3-3蛋白）と組み合わせて判断。三相波との鑑別が重要。',
+      tip: 'CJDの「PSWC（Periodic Sharp Wave Complexes）」は1-2Hzの規則性が特徴。三相波より規則的で、背景脳波の全般性抑制を伴う。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#e879f9'; ctx.lineWidth = 0.8; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*8;
+        const n = pseudoNoise(t,9)*2;
+        const y = H/2-(Math.sin(2*Math.PI*8*t)*H*0.04 + n);
+        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      // Periodic complexes
+      for (let i = 0; i < 5; i++) {
+        const sx = W*(0.08 + i*0.2);
+        ctx.strokeStyle = '#f0abfc'; ctx.lineWidth = 2; ctx.beginPath();
+        ctx.moveTo(sx, H/2);
+        ctx.lineTo(sx+4, H/2 - H*0.35);
+        ctx.lineTo(sx+10, H/2 + H*0.20);
+        ctx.lineTo(sx+18, H/2 - H*0.12);
+        ctx.lineTo(sx+26, H/2);
+        ctx.stroke();
+      }
+    }
+  },
+  firda: {
+    name: 'FIRDA（前頭間欠律動性δ）', cat: 'special', catLabel: '特殊パターン', short: '深部病変・代謝性障害',
+    detail: {
+      freq: '1.5–3.5 Hz', amplitude: '高振幅',
+      appear: '前頭部優位の間欠的な律動性δ波。両側性・対称性に出現する。',
+      clinical: '深部正中構造（間脳・中脳）の病変や代謝性障害（肝性脳症・低血糖・水頭症）で出現。予後と相関することが多い。',
+      tip: '"F"=Frontal（前頭部）"I"=Intermittent（間欠性）"R"=Rhythmic（律動性）"D"=Delta"A"=Activity。'
+    },
+    draw(ctx, W, H) {
+      ctx.strokeStyle = '#f97316'; ctx.lineWidth = 1.5; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*8;
+        const cycle = t / 2.5;
+        const cf = cycle - Math.floor(cycle);
+        const on = cf < 0.5;
+        const n = pseudoNoise(t,4)*3;
+        const val = on ? Math.sin(2*Math.PI*2.5*t)*H*0.35 + n : n;
+        x===0 ? ctx.moveTo(x,H/2-val) : ctx.lineTo(x,H/2-val);
+      }
+      ctx.stroke();
+    }
+  },
+  ecs: {
+    name: '等電位脳波（ECS）', cat: 'special', catLabel: '特殊パターン', short: '脳死判定参考所見',
+    detail: {
+      freq: '電気的活動なし', amplitude: '< 2 μV',
+      appear: '全誘導において2μV以上の脳由来活動が認められない状態。高感度設定（2μV/mm以上）・長時間記録が必要。',
+      clinical: '脳死判定の参考所見の一つ（日本では条件付き）。薬物（バルビツレート・プロポフォール）・低体温（<30℃）・代謝障害でも出現しうる可逆性ECSに注意。',
+      tip: '脳死判定のEEGは「確認検査」であり、臨床的基準（無呼吸・脳幹反射消失）が主体。記録条件（ゲイン・アーティファクト）の厳密な確認が必要。'
+    },
+    draw(ctx, W, H) {
+      // Flat line with minimal artifact
+      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x/W)*8;
+        const artifact = pseudoNoise(t*5,8)*H*0.015;
+        x===0 ? ctx.moveTo(x,H/2-artifact) : ctx.lineTo(x,H/2-artifact);
+      }
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(148,163,184,0.7)'; ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText('等電位（平坦）', W/2, H/2-12); ctx.textAlign = 'left';
+    }
+  },
+};
+
+// ===== Filter & render =====
+const filterColors = {
+  all:     { active: '#374151', label: 'すべて' },
+  normal:  { active: '#15803d', label: '正常' },
+  sleep:   { active: '#1e40af', label: '睡眠' },
+  epilepsy:{ active: '#b91c1c', label: 'てんかん性' },
+  diffuse: { active: '#92400e', label: 'びまん性異常' },
+  focal:   { active: '#3730a3', label: '焦点性異常' },
+  special: { active: '#6b21a8', label: '特殊パターン' },
+};
+
+let currentFilter = 'all';
+
+function filterCards(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '';
+    b.style.borderColor = '';
+  });
+  btn.classList.add('active');
+  btn.style.background = filterColors[cat]?.active || '#374151';
+  btn.style.borderColor = filterColors[cat]?.active || '#374151';
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById('wave-grid');
+  grid.innerHTML = '';
+  Object.entries(PATTERNS).forEach(([id, p]) => {
+    if (currentFilter !== 'all' && p.cat !== currentFilter) return;
+    const card = document.createElement('div');
+    card.className = 'wave-card';
+    card.innerHTML = `
+      <canvas class="wave-canvas" data-id="${id}" height="90"></canvas>
+      <div class="p-3">
+        <div class="flex items-start justify-between gap-2 mb-1">
+          <h3 class="font-bold text-slate-800 text-sm leading-snug">${p.name}</h3>
+          <span class="cat-badge cat-${p.cat} flex-shrink-0">${p.catLabel}</span>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">${p.short}</p>
+        <div class="mt-2 text-xs text-indigo-600 font-medium flex items-center gap-1">
+          詳細を見る <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => openModal(id));
+    grid.appendChild(card);
+  });
+
+  // Draw all canvases
+  lucide.createIcons();
+  grid.querySelectorAll('canvas[data-id]').forEach(cv => {
+    const id = cv.getAttribute('data-id');
+    cv.width = cv.offsetWidth || 300;
+    drawPattern(cv, id);
+  });
+}
+
+function openModal(id) {
+  const p = PATTERNS[id];
+  if (!p) return;
+  const d = p.detail;
+  document.getElementById('modal-content').innerHTML = `
+    <div class="p-5">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <span class="cat-badge cat-${p.cat} mb-2 inline-block">${p.catLabel}</span>
+          <h2 class="text-xl font-bold text-slate-800">${p.name}</h2>
+          <p class="text-sm text-slate-500 mt-0.5">${p.short}</p>
+        </div>
+        <button onclick="closeModalBtn()" class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <canvas id="modal-canvas" height="110" style="width:100%;background:#0f172a;border-radius:0.5rem;display:block;margin-bottom:1rem;"></canvas>
+      <div class="space-y-3 text-sm">
+        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">周波数 / 振幅</p>
+          <p class="text-slate-700"><strong>${d.freq}</strong> / ${d.amplitude}</p>
+        </div>
+        <div class="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
+          <p class="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-1">出現様式</p>
+          <p class="text-slate-700 leading-relaxed">${d.appear}</p>
+        </div>
+        <div class="bg-rose-50 rounded-lg p-3 border border-rose-200">
+          <p class="text-xs font-bold text-rose-500 uppercase tracking-wide mb-1">臨床的意義</p>
+          <p class="text-slate-700 leading-relaxed">${d.clinical}</p>
+        </div>
+        <div class="bg-amber-50 rounded-lg p-3 border border-amber-200">
+          <p class="text-xs font-bold text-amber-600 uppercase tracking-wide mb-1">読影のコツ</p>
+          <p class="text-slate-700 leading-relaxed">${d.tip}</p>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+  lucide.createIcons();
+  // Draw on modal canvas
+  requestAnimationFrame(() => {
+    const mc = document.getElementById('modal-canvas');
+    mc.width = mc.offsetWidth || 600;
+    drawPattern(mc, id);
+  });
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalBtn();
+}
+function closeModalBtn() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  // Set initial filter button color
+  const allBtn = document.querySelector('.filter-btn.active');
+  if (allBtn) { allBtn.style.background = '#374151'; allBtn.style.borderColor = '#374151'; }
+  renderGrid();
+});
+
+window.addEventListener('resize', () => {
+  document.querySelectorAll('canvas[data-id]').forEach(cv => {
+    const id = cv.getAttribute('data-id');
+    cv.width = cv.offsetWidth;
+    drawPattern(cv, id);
+  });
+});
+</script>
+</body>
+</html>

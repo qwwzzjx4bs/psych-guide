@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EEG症例学習 | EEG学習ツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+  .case-card {
+    background: white; border-radius: 1.25rem; border: 1.5px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07); margin-bottom: 1.25rem; overflow: hidden;
+  }
+  .case-header {
+    padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center;
+    gap: 0.875rem; user-select: none;
+  }
+  .case-header:hover { background: #f8fafc; }
+  .case-body { display: none; padding: 0 1.25rem 1.25rem; }
+  .case-body.open { display: block; }
+  .stage-btn {
+    padding: 0.45rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s; border: 1.5px solid #e2e8f0;
+    background: #f8fafc; color: #64748b;
+  }
+  .stage-btn.active { background: #312e81; color: white; border-color: #312e81; }
+  .stage-btn.unlocked:not(.active) { border-color: #6366f1; color: #4338ca; background: #eef2ff; }
+  .stage-panel { display: none; }
+  .stage-panel.active { display: block; }
+  .reveal-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 1.25rem; border-radius: 0.75rem; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; border: none; transition: all 0.2s;
+    background: #312e81; color: white;
+  }
+  .reveal-btn:hover { background: #3730a3; }
+  .reveal-box { display: none; }
+  .reveal-box.open { display: block; }
+  .eeg-canvas { display: block; width: 100%; background: #0f172a; border-radius: 0.5rem; }
+  .dx-badge {
+    display: inline-block; padding: 0.3rem 0.8rem; border-radius: 0.5rem;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-8 shadow-lg">
+  <div class="max-w-3xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">症例学習</span>
+    </nav>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="stethoscope" class="w-5 h-5 text-white"></i>
+      </div>
+      <span class="text-white/70 text-sm font-semibold tracking-wider">STEP 4</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">EEG症例学習</h1>
+    <p class="text-white/80 mt-2 text-sm leading-relaxed max-w-2xl">
+      5症例の臨床シナリオ。病歴を読み → 脳波を見て → 自分で考え → 答えを確認する段階的学習法。
+    </p>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-6">
+
+  <div class="rounded-xl border border-amber-200 bg-amber-50/90 p-3.5 mb-5 text-xs text-amber-900 leading-relaxed">
+    <strong>学習上の注意：</strong>各症例は教育目的のモデル症例です。実際の診療では最新ガイドライン・施設プロトコルに従ってください。
+  </div>
+
+  <div id="cases-container"></div>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
+    <a href="eeg-quiz.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      クイズへ
+    </a>
+    <a href="eeg-learning.html" class="flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 transition-colors font-semibold">
+      学習ハブへ
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+lucide.createIcons();
+
+// ===== Waveform drawing =====
+function pseudoNoise(t, seed) {
+  return Math.sin(t * 127.3 + seed * 43.7) * 0.5
+       + Math.sin(t * 83.1 + seed * 29.1) * 0.3
+       + Math.sin(t * 51.7 + seed * 17.9) * 0.2;
+}
+
+function drawCanvas(canvas, type) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width; const H = canvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for (let x=0; x<W; x+=W/8) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y=0; y<H; y+=H/4) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  const draws = {
+    spike_wave(ctx,W,H) {
+      ctx.strokeStyle='#f87171'; ctx.lineWidth=1.8; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*6; const ph=t*3; const fr=ph-Math.floor(ph);
+        const v=fr<0.12?Math.sin(fr/0.12*Math.PI*2)*H*0.42:-Math.sin((fr-0.12)/0.88*Math.PI)*H*0.20;
+        x===0?ctx.moveTo(x,H/2-(v+pseudoNoise(t,0)*2)):ctx.lineTo(x,H/2-(v+pseudoNoise(t,0)*2));
+      }
+      ctx.stroke();
+    },
+    triphasic(ctx,W,H) {
+      ctx.strokeStyle='#fbbf24'; ctx.lineWidth=2; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*6; const ph=t*1.5; const fr=ph-Math.floor(ph);
+        let v=0;
+        if(fr<0.12) v=-H*0.18*Math.sin(fr/0.12*Math.PI);
+        else if(fr<0.45) v=H*0.40*Math.sin((fr-0.12)/0.33*Math.PI);
+        else if(fr<0.62) v=-H*0.16*Math.sin((fr-0.45)/0.17*Math.PI);
+        x===0?ctx.moveTo(x,H/2-(v+pseudoNoise(t,2)*2)):ctx.lineTo(x,H/2-(v+pseudoNoise(t,2)*2));
+      }
+      ctx.stroke();
+    },
+    bects(ctx,W,H) {
+      ctx.strokeStyle='#34d399'; ctx.lineWidth=1; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*5; const n=pseudoNoise(t,5)*2;
+        x===0?ctx.moveTo(x,H/2-Math.sin(2*Math.PI*9*t)*H*0.06-n):ctx.lineTo(x,H/2-Math.sin(2*Math.PI*9*t)*H*0.06-n);
+      }
+      ctx.stroke();
+      for(let i=0;i<3;i++){
+        const sx=W*(0.2+i*0.3);
+        ctx.strokeStyle='#6ee7b7'; ctx.lineWidth=2.5; ctx.beginPath();
+        ctx.moveTo(sx-5,H/2); ctx.lineTo(sx,H/2-H*0.42); ctx.lineTo(sx+10,H/2+H*0.22); ctx.lineTo(sx+30,H/2);
+        ctx.stroke();
+      }
+    },
+    periodic_cjd(ctx,W,H) {
+      ctx.strokeStyle='#e879f9'; ctx.lineWidth=0.8; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*8; const n=pseudoNoise(t,9)*2;
+        x===0?ctx.moveTo(x,H/2-Math.sin(2*Math.PI*8*t)*H*0.03-n):ctx.lineTo(x,H/2-Math.sin(2*Math.PI*8*t)*H*0.03-n);
+      }
+      ctx.stroke();
+      for(let i=0;i<5;i++){
+        const sx=W*(0.08+i*0.2);
+        ctx.strokeStyle='#f0abfc'; ctx.lineWidth=2; ctx.beginPath();
+        ctx.moveTo(sx,H/2); ctx.lineTo(sx+4,H/2-H*0.35); ctx.lineTo(sx+10,H/2+H*0.20); ctx.lineTo(sx+18,H/2-H*0.12); ctx.lineTo(sx+26,H/2);
+        ctx.stroke();
+      }
+    },
+    polyspike(ctx,W,H) {
+      ctx.strokeStyle='#fb923c'; ctx.lineWidth=1.8; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*5; const ph=t*4; const fr=ph-Math.floor(ph);
+        let v=0;
+        if(fr<0.05) v=H*0.42*Math.sin(fr/0.05*Math.PI*2);
+        else if(fr<0.10) v=H*0.32*Math.sin((fr-0.05)/0.05*Math.PI*2);
+        else if(fr<0.15) v=H*0.22*Math.sin((fr-0.10)/0.05*Math.PI*2);
+        else v=-H*0.18*Math.sin((fr-0.15)/0.85*Math.PI);
+        x===0?ctx.moveTo(x,H/2-(v+pseudoNoise(t,3)*2)):ctx.lineTo(x,H/2-(v+pseudoNoise(t,3)*2));
+      }
+      ctx.stroke();
+    },
+  };
+  if (draws[type]) draws[type](ctx,W,H);
+}
+
+// ===== Cases data =====
+const CASES = [
+  {
+    id: 'case1',
+    num: 1,
+    title: '欠神てんかん（小児欠神てんかん）',
+    patient: '30歳女性',
+    badge: { text: 'てんかん', color: 'bg-red-100 text-red-800' },
+    waveType: 'spike_wave',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>突然の意識消失発作（秒単位）が繰り返す</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>8歳頃より授業中に「ぼーっとする」ことを指摘されていた。10秒程度で元に戻り、発作中の記憶がない。1日10〜50回起こることもあった。成人後も発作が続いており、今回専門医を受診。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">身体所見・検査</p>
+              <p>神経学的診察：正常。MRI：正常。血液・生化学：異常なし。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① どのような脳波所見が予想されますか？<br>② 鑑別すべき疾患は何ですか？</p>
+          </div>
+        `
+      },
+      {
+        id: 'eeg',
+        label: '脳波',
+        icon: 'activity',
+        content: null,
+        isEEG: true,
+      },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-red-100 text-red-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">小児欠神てんかん（Childhood Absence Epilepsy: CAE）</span>
+            </div>
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+              <p class="font-bold text-red-800 mb-2">脳波所見の解釈</p>
+              <ul class="space-y-1.5 text-slate-700">
+                <li class="flex gap-2"><span class="text-red-600 font-bold">◆</span>全般性3Hz棘徐波複合（Generalized 3Hz spike-wave complexes）</li>
+                <li class="flex gap-2"><span class="text-red-600 font-bold">◆</span>突然の開始・突然の終息（abrupt onset/offset）</li>
+                <li class="flex gap-2"><span class="text-red-600 font-bold">◆</span>発作期には意識消失を伴う（10秒以上で顕著）</li>
+                <li class="flex gap-2"><span class="text-red-600 font-bold">◆</span>過呼吸で誘発されやすい</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療方針</p>
+              <div class="grid sm:grid-cols-2 gap-2 text-xs">
+                <div class="bg-white rounded p-2 border border-emerald-100">
+                  <p class="font-bold text-emerald-700">第一選択</p>
+                  <p>エトスクシミド（Ethosuximide）500-1000mg/日<br>バルプロ酸（Valproate）500-1500mg/日</p>
+                </div>
+                <div class="bg-white rounded p-2 border border-emerald-100">
+                  <p class="font-bold text-emerald-700">第二選択</p>
+                  <p>ラモトリギン（Lamotrigine）<br>※カルバマゼピンは欠神発作を悪化させる可能性</p>
+                </div>
+              </div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <p class="font-bold text-amber-800 mb-2">補足・鑑別</p>
+              <p class="text-slate-700">複雑部分発作との鑑別：欠神発作は通常10秒以内、後遺症なく意識回復、自動症は通常少ない。過呼吸での誘発が鑑別に有用。</p>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case2',
+    num: 2,
+    title: '肝性脳症（三相波）',
+    patient: '65歳男性',
+    badge: { text: '代謝性脳症', color: 'bg-amber-100 text-amber-800' },
+    waveType: 'triphasic',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>意識障害・反応鈍化（2日前から）</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>肝硬変（Child-Pugh C、HCV関連）で通院中。1週間前から食欲低下・傾眠傾向。2日前より家族が「話しかけても返事が遅い、同じことを繰り返す」と気付き救急搬送。来院時、GCS E3V4M5。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">身体所見・検査</p>
+              <p>黄疸（+）、腹水（+）、肝性口臭（+）、flapping tremor（はたはた動作）（+）。<br>血液：NH₃ 210 μg/dL（↑）、AST/ALT 軽度上昇、T.Bil 3.8 mg/dL、PT-INR 1.8。MRI：新規梗塞・出血なし。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① アンモニア上昇・肝疾患・意識障害の組み合わせで予想される脳波所見は？<br>② どのような波形名を知っていますか？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-amber-100 text-amber-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">肝性脳症 Grade III（三相波）</span>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <p class="font-bold text-amber-800 mb-2">三相波（Triphasic waves）の特徴</p>
+              <ul class="space-y-1.5 text-slate-700">
+                <li class="flex gap-2"><span class="text-amber-600 font-bold">◆</span>1-2Hzの前頭部優位な三相性波形（負-正-負）</li>
+                <li class="flex gap-2"><span class="text-amber-600 font-bold">◆</span>前頭部→後頭部への伝播遅延（lagging）が特徴的</li>
+                <li class="flex gap-2"><span class="text-amber-600 font-bold">◆</span>背景活動の全般性徐波化を伴う</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療方針</p>
+              <div class="space-y-2 text-xs text-slate-700">
+                <p><strong>誘因の検索・除去：</strong>消化管出血・感染・脱水・便秘・タンパク過剰摂取・薬剤（鎮静薬・BZD）</p>
+                <p><strong>アンモニア低下：</strong>ラクツロース（Lactulose）1日3回経口または浣腸 / リファキシミン（Rifaximin）腸管内細菌叢抑制</p>
+                <p><strong>栄養：</strong>分岐鎖アミノ酸（BCAA）製剤、夜食（LES）による窒素バランス改善</p>
+              </div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <p class="font-bold text-slate-700 mb-2">CJDとの鑑別ポイント</p>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div><p class="font-bold text-amber-700">三相波（肝性脳症）</p><p>可逆性、病歴明確、アンモニア↑、前後伝播遅延、治療で改善</p></div>
+                <div><p class="font-bold text-purple-700">周期性複合波（CJD）</p><p>進行性認知症、MRI DWI高信号、1-2Hz規則的、背景抑制、予後不良</p></div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case3',
+    num: 3,
+    title: '小児良性てんかん（BECTS）',
+    patient: '5歳男児',
+    badge: { text: '小児てんかん', color: 'bg-green-100 text-green-800' },
+    waveType: 'bects',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>睡眠中のけいれん（初回）</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>昨夜、就寝後2時間で両親が「息子の部屋からうめき声がした」ため確認。右口角がぴくぴくし、よだれが出ており、左上肢が強直していた。約2分で自然終息。翌朝の様子は正常で発作の記憶なし。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">身体所見・検査</p>
+              <p>身体診察：正常。神経学的診察：正常。MRI：正常。血液・電解質：正常。家族歴：父に10代でのてんかん既往（自然消失）。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① 睡眠中の焦点性発作（口顔面＋一側上肢）＋正常MRI＋学童期。どのてんかん症候群を考えますか？<br>② どの脳波所見が診断を支持しますか？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-green-100 text-green-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">BECTS（Benign Childhood Epilepsy with Centrotemporal Spikes）</span>
+            </div>
+            <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+              <p class="font-bold text-green-800 mb-2">BECTS脳波の特徴</p>
+              <ul class="space-y-1.5 text-slate-700">
+                <li class="flex gap-2"><span class="text-green-600 font-bold">◆</span>中心部・側頭部（C3/T5または C4/T6）の高振幅棘徐波複合</li>
+                <li class="flex gap-2"><span class="text-green-600 font-bold">◆</span>睡眠中・傾眠時に増加（覚醒時は少ない）</li>
+                <li class="flex gap-2"><span class="text-green-600 font-bold">◆</span>水平ダイポール（前頭部正相、中心側頭部負相）が特徴的</li>
+                <li class="flex gap-2"><span class="text-green-600 font-bold">◆</span>発作間欠期に豊富に記録されることが多い</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療・予後</p>
+              <div class="space-y-2 text-xs text-slate-700">
+                <p><strong>予後：</strong>思春期（14-16歳）に自然消失する予後良好なてんかん。てんかん外科は不要。</p>
+                <p><strong>治療方針：</strong>年間1-2回以内の発作であれば経過観察も可。発作頻度が高い・日常生活に支障がある場合はカルバマゼピンまたはレベチラセタムを選択。</p>
+                <p><strong>家族指導：</strong>睡眠中の発作が多いため、溺水予防（入浴時の見守り）・ストレス・睡眠不足の回避。</p>
+              </div>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <p class="font-bold text-blue-800 mb-2">診断のポイント（ILAE基準）</p>
+              <ul class="text-xs text-slate-700 space-y-1">
+                <li>✓ 3-13歳発症</li><li>✓ 睡眠関連焦点性発作（口顔面＋一側上肢）</li>
+                <li>✓ 中心・側頭部棘波（EEG）</li><li>✓ 正常MRI・正常神経診察</li>
+                <li>✓ 家族歴あり（10-40%）</li>
+              </ul>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case4',
+    num: 4,
+    title: 'クロイツフェルト・ヤコブ病（CJD）',
+    patient: '80歳女性',
+    badge: { text: 'プリオン病', color: 'bg-purple-100 text-purple-800' },
+    waveType: 'periodic_cjd',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>急速進行性の認知機能低下（3ヶ月）</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>3ヶ月前から急速に物忘れが進行。歩行困難・ミオクローヌス（びくつき）も出現。2ヶ月前からほぼ寝たきり。言語も発話困難になってきている。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">検査</p>
+              <p>MRI（DWI）：大脳皮質および基底核に拡散制限（高信号）あり（ribboning sign）。髄液：14-3-3蛋白（+）、RT-QuIC（+）。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>急速進行性認知症 ＋ DWI高信号 ＋ ミオクローヌスという組み合わせ。CJDの脳波にはどのような特徴的所見がありますか？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・鑑別',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-purple-100 text-purple-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">クロイツフェルト・ヤコブ病（散発性CJD）</span>
+            </div>
+            <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+              <p class="font-bold text-purple-800 mb-2">CJD脳波所見（PSWC）</p>
+              <ul class="space-y-1.5 text-slate-700">
+                <li class="flex gap-2"><span class="text-purple-600 font-bold">◆</span>Periodic Sharp Wave Complexes（PSWC）：1-2秒ごとに規則的に出現する鋭波・複合波</li>
+                <li class="flex gap-2"><span class="text-purple-600 font-bold">◆</span>全般性・対称性（散発性CJD）</li>
+                <li class="flex gap-2"><span class="text-purple-600 font-bold">◆</span>背景活動の全般性抑制を伴う</li>
+                <li class="flex gap-2"><span class="text-purple-600 font-bold">◆</span>病期が進むにつれ規則性が失われる（末期）</li>
+              </ul>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <p class="font-bold text-slate-700 mb-2">WHO診断基準（散発性CJD：Probable）</p>
+              <div class="text-xs text-slate-600 space-y-1">
+                <p>急速進行性認知症＋以下の2つ以上：</p>
+                <ul class="ml-3 space-y-0.5">
+                  <li>① ミオクローヌス</li><li>② 視覚症状</li><li>③ 小脳症状</li>
+                  <li>④ 錐体路/錐体外路症状</li><li>⑤ 無動性無言症</li>
+                </ul>
+                <p class="mt-1">＋ EEG（PSWC）またはCSF 14-3-3（+）またはMRI DWI高信号</p>
+              </div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <p class="font-bold text-amber-800 mb-2">三相波との鑑別</p>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div><p class="font-bold text-purple-700">CJD（PSWC）</p><p>規則的1-2Hz、進行性認知症、DWI高信号、14-3-3(+)、予後不良（1年以内死亡）</p></div>
+                <div><p class="font-bold text-amber-700">肝性脳症（三相波）</p><p>不規則1-2Hz、可逆性、アンモニア↑、前後伝播遅延、治療で改善</p></div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case5',
+    num: 5,
+    title: '若年性ミオクローヌスてんかん（JME）',
+    patient: '20歳男性',
+    badge: { text: 'てんかん', color: 'bg-orange-100 text-orange-800' },
+    waveType: 'polyspike',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>朝の手のびくつき・物を落とす（半年前から）</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>半年前から毎朝、目が覚めた直後に両手がびくつき、コーヒーカップを落としたり、歯ブラシを飛ばすことが起きている。2週間前に全身がこわばって意識を失う大発作が初めて起きた（全般性強直間代発作）。深夜まで勉強して睡眠不足だった。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">身体所見・検査</p>
+              <p>神経学的診察：正常。MRI：正常。家族歴：母に「若い頃のてんかん」の既往あり。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① 朝の手のびくつき（ミオクローヌス）＋全般性強直間代発作＋睡眠剥奪との関係。どのてんかん症候群が考えられますか？<br>② 期待される脳波所見は？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-orange-100 text-orange-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">若年性ミオクローヌスてんかん（JME）</span>
+            </div>
+            <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+              <p class="font-bold text-orange-800 mb-2">JME脳波の特徴</p>
+              <ul class="space-y-1.5 text-slate-700">
+                <li class="flex gap-2"><span class="text-orange-600 font-bold">◆</span>多棘徐波複合（Polyspike-wave：2〜6本の棘波＋徐波）</li>
+                <li class="flex gap-2"><span class="text-orange-600 font-bold">◆</span>3.5-6Hzの全般性放電</li>
+                <li class="flex gap-2"><span class="text-orange-600 font-bold">◆</span>覚醒直後・睡眠剥奪・光刺激で増強</li>
+                <li class="flex gap-2"><span class="text-orange-600 font-bold">◆</span>背景活動は正常（発作間欠期）</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療・長期管理</p>
+              <div class="space-y-2 text-xs text-slate-700">
+                <p><strong>第一選択：</strong>バルプロ酸（Valproate）※女性では催奇形性（神経管閉鎖障害）に注意、十分なインフォームドコンセント</p>
+                <p><strong>代替薬：</strong>ラモトリギン（ミオクローヌスに有効）、レベチラセタム</p>
+                <p><strong>生活指導（最重要）：</strong>十分な睡眠（睡眠剥奪は最大の誘発因子）、飲酒制限、光刺激回避（光感受性あり）</p>
+                <p><strong>長期予後：</strong>成人後も薬物療法が必要なことが多い（自然消失率は低い）。</p>
+              </div>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <p class="font-bold text-blue-800 mb-2">JMEの発作3徴</p>
+              <div class="grid grid-cols-3 gap-2 text-xs text-center">
+                <div class="bg-white rounded p-2 border"><p class="font-bold text-orange-600">①ミオクローヌス</p><p>朝・覚醒直後に両側手・前腕のびくつき</p></div>
+                <div class="bg-white rounded p-2 border"><p class="font-bold text-red-600">②GTCS</p><p>全般性強直間代発作（大発作）</p></div>
+                <div class="bg-white rounded p-2 border"><p class="font-bold text-blue-600">③欠神発作</p><p>短い意識消失（30%に合併）</p></div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+];
+
+// ===== State per case: unlocked stages =====
+const CASE_STATE_KEY = 'eeg_case_state';
+let caseState = {};
+function loadCaseState() {
+  try { const s = localStorage.getItem(CASE_STATE_KEY); if(s) caseState = JSON.parse(s); } catch(e) {}
+}
+function saveCaseState() {
+  try { localStorage.setItem(CASE_STATE_KEY, JSON.stringify(caseState)); } catch(e) {}
+}
+
+function getCaseState(caseId) {
+  if (!caseState[caseId]) caseState[caseId] = { openStage: 0, unlocked: [0] };
+  return caseState[caseId];
+}
+
+function renderCases() {
+  const container = document.getElementById('cases-container');
+  container.innerHTML = '';
+  CASES.forEach((c, ci) => {
+    const cs = getCaseState(c.id);
+    const el = document.createElement('div');
+    el.className = 'case-card';
+    el.id = 'casecard-' + c.id;
+    el.innerHTML = `
+      <div class="case-header" onclick="toggleCase('${c.id}')">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0 font-black text-indigo-700">${c.num}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-slate-800 text-sm">${c.title}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full font-semibold ${c.badge.color}">${c.badge.text}</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">${c.patient}</p>
+        </div>
+        <i data-lucide="chevron-down" id="chevron-${c.id}" class="w-5 h-5 text-slate-400 flex-shrink-0 transition-transform"></i>
+      </div>
+      <div class="case-body" id="casebody-${c.id}">
+        <!-- Stage tabs -->
+        <div class="flex gap-2 mb-4" id="stage-tabs-${c.id}">
+          ${c.stages.map((s,si) => `
+            <button id="stagebtn-${c.id}-${si}" onclick="showStage('${c.id}',${si})"
+              class="stage-btn ${cs.unlocked.includes(si) && si !== cs.openStage ? 'unlocked' : ''} ${si === cs.openStage ? 'active' : ''} ${!cs.unlocked.includes(si) ? 'opacity-40 cursor-not-allowed' : ''}"
+              ${!cs.unlocked.includes(si) ? 'disabled title="前のステップを完了してください"' : ''}>
+              ${s.label}
+            </button>
+          `).join('')}
+        </div>
+        <!-- Stage panels -->
+        ${c.stages.map((s,si) => `
+          <div id="stagepanel-${c.id}-${si}" class="stage-panel ${si === cs.openStage ? 'active' : ''}">
+            ${s.isEEG ? `
+              <canvas id="eegcanvas-${c.id}-${si}" height="120" class="eeg-canvas mb-3"></canvas>
+              <div class="mt-2 p-3 bg-slate-800 rounded-xl mb-4">
+                <p class="text-xs font-bold text-slate-300 mb-1">読影のポイント</p>
+                <ul class="text-xs text-slate-400 space-y-1">
+                  <li>・周波数（速いか、遅いか）</li>
+                  <li>・出現様式（全般性か、焦点性か）</li>
+                  <li>・波形の形（正弦波・棘波・三相波・複合波）</li>
+                  <li>・背景活動の状態</li>
+                </ul>
+              </div>
+              <button onclick="unlockNextStage('${c.id}',${si})" class="reveal-btn mb-2">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+                診断・解説を見る
+              </button>
+            ` : s.content || ''}
+            ${si === c.stages.length - 2 ? `
+              <div class="mt-4 pt-4 border-t border-slate-200 flex justify-end">
+                <button onclick="unlockNextStage('${c.id}',${si})" class="reveal-btn">
+                  診断・解説を見る
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `;
+    container.appendChild(el);
+  });
+
+  lucide.createIcons();
+
+  // Draw EEG canvases for visible stages
+  CASES.forEach(c => {
+    const cs = getCaseState(c.id);
+    if (cs.unlocked.includes(1)) {
+      drawEEGForCase(c.id, c.waveType);
+    }
+  });
+}
+
+function toggleCase(caseId) {
+  const body = document.getElementById('casebody-' + caseId);
+  const chevron = document.getElementById('chevron-' + caseId);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+  if (!isOpen) {
+    // Draw EEG if unlocked
+    const cs = getCaseState(caseId);
+    if (cs.unlocked.includes(1)) {
+      const c = CASES.find(x => x.id === caseId);
+      if (c) setTimeout(() => drawEEGForCase(caseId, c.waveType), 50);
+    }
+  }
+}
+
+function showStage(caseId, stageIdx) {
+  const cs = getCaseState(caseId);
+  if (!cs.unlocked.includes(stageIdx)) return;
+  cs.openStage = stageIdx;
+  saveCaseState();
+
+  const c = CASES.find(x => x.id === caseId);
+  c.stages.forEach((_,si) => {
+    const panel = document.getElementById(`stagepanel-${caseId}-${si}`);
+    const btn = document.getElementById(`stagebtn-${caseId}-${si}`);
+    if (panel) panel.classList.toggle('active', si === stageIdx);
+    if (btn) {
+      btn.classList.toggle('active', si === stageIdx);
+      btn.classList.toggle('unlocked', cs.unlocked.includes(si) && si !== stageIdx);
+    }
+  });
+
+  // Draw EEG if this is the EEG stage
+  if (c.stages[stageIdx].isEEG) {
+    setTimeout(() => drawEEGForCase(caseId, c.waveType), 50);
+  }
+}
+
+function unlockNextStage(caseId, currentStageIdx) {
+  const cs = getCaseState(caseId);
+  const nextIdx = currentStageIdx + 1;
+  if (!cs.unlocked.includes(nextIdx)) cs.unlocked.push(nextIdx);
+  saveCaseState();
+  showStage(caseId, nextIdx);
+  lucide.createIcons();
+}
+
+function drawEEGForCase(caseId, waveType) {
+  const c = CASES.find(x => x.id === caseId);
+  if (!c) return;
+  const eegStageIdx = c.stages.findIndex(s => s.isEEG);
+  if (eegStageIdx < 0) return;
+  const canvas = document.getElementById(`eegcanvas-${caseId}-${eegStageIdx}`);
+  if (!canvas) return;
+  canvas.width = canvas.offsetWidth || 600;
+  drawCanvas(canvas, waveType);
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  loadCaseState();
+  renderCases();
+});
+</script>
+</body>
+</html>
