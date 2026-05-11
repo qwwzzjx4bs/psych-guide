@@ -108,6 +108,13 @@
     .receptor-bar-bg { flex:1; background:#f1f5f9; border-radius:9999px; height:18px; overflow:hidden; }
     .receptor-bar { height:18px; border-radius:9999px; display:flex; align-items:center; padding-left:6px; font-size:0.65rem; color:white; font-weight:700; }
     .receptor-ki { font-size:0.75rem; color:#6b7280; width:90px; flex-shrink:0; text-align:right; }
+    @media(max-width:639px){
+      .receptor-row { gap:0.4rem; }
+      .receptor-label { width:108px; font-size:0.68rem; }
+      .receptor-bar-bg { height:16px; }
+      .receptor-bar { height:16px; font-size:0; padding-left:0; }
+      .receptor-ki { width:64px; font-size:0.65rem; }
+    }
     .case-card { border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.5rem; background:white; margin-bottom:1rem; transition:box-shadow 0.2s; }
     .case-card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.08); }
     .adme-box { background:#f5f3ff; border:2px solid #7c3aed; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#3b1f6e; }
