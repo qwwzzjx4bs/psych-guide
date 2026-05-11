@@ -6,6 +6,7 @@
 <title>脳波読影学習ハブ | EEG学習ツール</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="eeg-srs.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -79,11 +80,11 @@
       </div>
       <div class="bg-white/15 rounded-xl px-3 py-2 text-center">
         <p class="text-white/60 text-xs">クイズ問題</p>
-        <p class="font-black text-white text-xl">15問</p>
+        <p class="font-black text-white text-xl">30問</p>
       </div>
       <div class="bg-white/15 rounded-xl px-3 py-2 text-center">
         <p class="text-white/60 text-xs">症例</p>
-        <p class="font-black text-white text-xl">5例</p>
+        <p class="font-black text-white text-xl">10例</p>
       </div>
     </div>
   </div>
@@ -98,6 +99,41 @@
 
 <main class="max-w-3xl mx-auto px-4 py-6 -mt-4 relative z-10">
 
+  <!-- SRS Review Banner -->
+  <div id="srs-banner" class="hidden rounded-2xl border shadow-sm p-4 mb-5 flex items-center justify-between gap-3" style="background:linear-gradient(135deg,#312e81,#0f766e);border-color:#3730a3;">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+        <i data-lucide="repeat" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <p class="font-bold text-white text-sm" id="srs-banner-title">本日の復習</p>
+        <p class="text-white/70 text-xs" id="srs-banner-sub"></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <span id="srs-streak-badge" class="hidden text-white/90 text-xs bg-white/20 px-2 py-1 rounded-full font-bold"></span>
+      <a href="eeg-review.html" class="px-4 py-2 bg-white text-indigo-900 rounded-xl text-sm font-black hover:bg-indigo-50 transition-colors flex items-center gap-1.5">
+        復習開始 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- SRS Quick Stats (compact row) -->
+  <div id="srs-stats-row" class="hidden grid grid-cols-3 gap-2 mb-5">
+    <a href="eeg-review.html" class="bg-white rounded-xl border border-indigo-200 p-3 text-center hover:shadow-md transition-shadow">
+      <p class="text-xl font-black text-indigo-700" id="srs-due-count">0</p>
+      <p class="text-xs text-slate-500">期限カード</p>
+    </a>
+    <a href="eeg-stats.html" class="bg-white rounded-xl border border-teal-200 p-3 text-center hover:shadow-md transition-shadow">
+      <p class="text-xl font-black text-teal-700" id="srs-mature-count">0</p>
+      <p class="text-xs text-slate-500">定着済み</p>
+    </a>
+    <a href="eeg-stats.html" class="bg-white rounded-xl border border-amber-200 p-3 text-center hover:shadow-md transition-shadow">
+      <p class="text-xl font-black text-amber-700" id="srs-streak-num">0</p>
+      <p class="text-xs text-slate-500">🔥 連続日</p>
+    </a>
+  </div>
+
   <!-- Progress Dashboard -->
   <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-6">
     <div class="flex items-center justify-between mb-3">
@@ -109,7 +145,7 @@
         <i data-lucide="trash-2" class="w-3 h-3"></i>リセット
       </button>
     </div>
-    <div class="grid grid-cols-3 gap-3" id="progress-dashboard">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="progress-dashboard">
       <!-- Rendered by JS -->
     </div>
   </div>
@@ -178,7 +214,7 @@
       <p class="text-sm text-slate-600 leading-relaxed mb-3">3段階の難易度（正常/異常識別 → 波形名 → 臨床相関）。進捗はブラウザに保存</p>
       <div class="flex flex-wrap gap-1.5">
         <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-0.5">Level 1〜3</span>
-        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-0.5">15問</span>
+        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-0.5">30問</span>
         <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-0.5" id="quiz-progress-badge">進捗保存</span>
       </div>
       <div class="mt-3 text-xs font-semibold text-amber-600 flex items-center gap-1">
@@ -198,14 +234,60 @@
           <h3 class="font-bold text-slate-800 text-base">症例学習</h3>
         </div>
       </div>
-      <p class="text-sm text-slate-600 leading-relaxed mb-3">欠神てんかん・肝性脳症・BECTS・CJD・JMEの5症例を段階的に読影</p>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">欠神てんかん・肝性脳症・BECTS・CJD・JME・West症候群・HSV脳炎・NCSE・自己免疫性脳炎・深麻酔の10症例を段階的に読影</p>
       <div class="flex flex-wrap gap-1.5">
-        <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded px-2 py-0.5">5症例</span>
+        <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded px-2 py-0.5">10症例</span>
         <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded px-2 py-0.5">段階的開示</span>
         <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded px-2 py-0.5">治療方針まで</span>
       </div>
       <div class="mt-3 text-xs font-semibold text-rose-600 flex items-center gap-1">
         症例を解く <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+
+    <!-- Module 5: Artifacts (Phase 2 NEW) -->
+    <a href="eeg-artifacts.html" class="module-card" style="border-color:#fed7aa;">
+      <div class="module-num" style="color:#ea580c;">05</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-orange-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-orange-600 uppercase tracking-wide mb-0.5">STEP 5 <span class="text-xs bg-orange-500 text-white px-1.5 py-0.5 rounded-full font-bold ml-1">NEW</span></p>
+          <h3 class="font-bold text-slate-800 text-base">アーティファクト識別</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">EOG・筋電図・ECG・電極の6種アーティファクト図示＋病的所見との鑑別10問クイズ</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 rounded px-2 py-0.5">6種アーティファクト</span>
+        <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 rounded px-2 py-0.5">鑑別比較</span>
+        <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 rounded px-2 py-0.5">識別クイズ10問</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-orange-600 flex items-center gap-1">
+        識別ドリルへ <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+
+    <!-- Module 6: Montage (Phase 2 NEW) -->
+    <a href="eeg-montage.html" class="module-card" style="border-color:#a7f3d0;">
+      <div class="module-num" style="color:#0f766e;">06</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="git-branch" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-teal-600 uppercase tracking-wide mb-0.5">STEP 6 <span class="text-xs bg-teal-500 text-white px-1.5 py-0.5 rounded-full font-bold ml-1">NEW</span></p>
+          <h3 class="font-bold text-slate-800 text-base">モンタージュ理解</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">双極誘導/基準電極誘導の比較＋位相逆転インタラクティブ解説で「なぜ見え方が違うのか」を理解する</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-teal-50 text-teal-700 border border-teal-200 rounded px-2 py-0.5">双極/基準比較</span>
+        <span class="text-xs bg-teal-50 text-teal-700 border border-teal-200 rounded px-2 py-0.5">位相逆転</span>
+        <span class="text-xs bg-teal-50 text-teal-700 border border-teal-200 rounded px-2 py-0.5">焦点同定</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-teal-600 flex items-center gap-1">
+        モンタージュを学ぶ <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
       </div>
     </a>
   </div>
@@ -240,6 +322,18 @@
           <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-700"></i>
         </span>
         脳症・ICUパターン集
+      </a>
+      <a href="eeg-review.html" class="quick-ref-link" style="border-color:#c7d2fe;background:#eef2ff;">
+        <span class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="repeat" class="w-4 h-4 text-indigo-700"></i>
+        </span>
+        <span>本日の復習 <span id="quick-due-badge" class="ml-1 text-indigo-700 font-bold"></span></span>
+      </a>
+      <a href="eeg-stats.html" class="quick-ref-link">
+        <span class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-teal-700"></i>
+        </span>
+        学習統計・ヒートマップ
       </a>
     </div>
   </div>
@@ -279,29 +373,32 @@ lucide.createIcons();
 function loadProgress() {
   let quizState = null;
   let caseState = null;
+  let artifactState = null;
   try {
     const qs = localStorage.getItem('eeg_quiz_state');
     if (qs) quizState = JSON.parse(qs);
     const cs = localStorage.getItem('eeg_case_state');
     if (cs) caseState = JSON.parse(cs);
+    const as = localStorage.getItem('eeg_artifact_drill');
+    if (as) artifactState = JSON.parse(as);
   } catch(e) {}
-  return { quizState, caseState };
+  return { quizState, caseState, artifactState };
 }
 
 function renderDashboard() {
-  const { quizState, caseState } = loadProgress();
+  const { quizState, caseState, artifactState } = loadProgress();
   const dash = document.getElementById('progress-dashboard');
   if (!dash) return;
 
-  // Quiz progress
-  let quizTotal = 15; // 5 per level × 3
+  // Quiz progress (expanded to 30 questions)
+  let quizTotal = 30;
   let quizDone = 0;
   if (quizState?.answered) {
     quizDone = Object.keys(quizState.answered).length;
   }
 
-  // Case progress
-  const totalCases = 5;
+  // Case progress (expanded to 10 cases)
+  const totalCases = 10;
   let casesDone = 0;
   if (caseState) {
     Object.keys(caseState).forEach(caseId => {
@@ -310,10 +407,20 @@ function renderDashboard() {
     });
   }
 
+  // Artifact drill
+  let artTotal = 10;
+  let artDone = 0;
+  let artScore = 0;
+  if (artifactState?.answered) {
+    artDone = Object.keys(artifactState.answered).length;
+    artScore = artifactState.score || 0;
+  }
+
   const items = [
     { label: 'クイズ進捗', done: quizDone, total: quizTotal, color: '#d97706', bg: '#fef3c7' },
     { label: '症例完了', done: casesDone, total: totalCases, color: '#059669', bg: '#d1fae5' },
-    { label: '総合達成率', done: quizDone + casesDone * 3, total: quizTotal + totalCases * 3, color: '#4338ca', bg: '#e0e7ff' },
+    { label: 'アーティファクト', done: artScore, total: artTotal, color: '#ea580c', bg: '#ffedd5', sub: `${artDone}問回答` },
+    { label: '総合達成率', done: quizDone + casesDone * 3 + artScore, total: quizTotal + totalCases * 3 + artTotal, color: '#4338ca', bg: '#e0e7ff' },
   ];
 
   dash.innerHTML = items.map(item => {
@@ -325,7 +432,7 @@ function renderDashboard() {
         <div class="mt-2 h-1.5 rounded-full overflow-hidden" style="background:${item.bg}">
           <div class="h-full rounded-full" style="width:${pct}%;background:${item.color};transition:width 0.5s ease;"></div>
         </div>
-        <div class="text-xs text-slate-400 mt-1">${item.done} / ${item.total}</div>
+        <div class="text-xs text-slate-400 mt-1">${item.sub || (item.done + ' / ' + item.total)}</div>
       </div>
     `;
   }).join('');
@@ -335,12 +442,53 @@ function clearProgress() {
   if (!confirm('学習進捗をリセットしますか？')) return;
   localStorage.removeItem('eeg_quiz_state');
   localStorage.removeItem('eeg_case_state');
+  localStorage.removeItem('eeg_artifact_drill');
   renderDashboard();
+}
+
+function renderSRSBanner() {
+  if (typeof srsDueTodayCount !== 'function') return;
+  const dueCount = srsDueTodayCount();
+  const stats = srsGetStats ? srsGetStats() : null;
+  const meta = stats ? stats.meta : {};
+  const streak = meta.streak || 0;
+  const mature = stats ? stats.matureCount : 0;
+
+  // Always show quick stats row if any cards exist
+  const totalCards = stats ? stats.total : 0;
+  if (totalCards > 0) {
+    document.getElementById('srs-stats-row').classList.remove('hidden');
+    document.getElementById('srs-stats-row').classList.add('grid');
+    document.getElementById('srs-due-count').textContent = dueCount;
+    document.getElementById('srs-mature-count').textContent = mature;
+    document.getElementById('srs-streak-num').textContent = streak;
+  }
+
+  // Show banner when there are due cards
+  if (dueCount > 0) {
+    const banner = document.getElementById('srs-banner');
+    banner.classList.remove('hidden');
+    banner.classList.add('flex');
+    document.getElementById('srs-banner-title').textContent = `本日の復習カード: ${dueCount}枚`;
+    document.getElementById('srs-banner-sub').textContent = streak > 0
+      ? `🔥 ${streak}日連続学習中！継続しましょう`
+      : '忘却曲線に基づく最適なタイミングで復習しましょう';
+    if (streak > 1) {
+      const sb = document.getElementById('srs-streak-badge');
+      sb.classList.remove('hidden');
+      sb.textContent = `🔥 ${streak}日`;
+    }
+  }
+
+  // Update quick reference badge
+  const qb = document.getElementById('quick-due-badge');
+  if (qb && dueCount > 0) qb.textContent = `(${dueCount}枚)`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
   renderDashboard();
+  renderSRSBanner();
 });
 </script>
 </body>

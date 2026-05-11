@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学習統計 | EEG学習ツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="eeg-srs.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+  .stat-card { background: white; border-radius: 1rem; border: 1.5px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,.06); padding: 1.25rem; }
+  /* Heatmap */
+  .hm-cell {
+    width: 11px; height: 11px; border-radius: 2px; flex-shrink: 0;
+    transition: transform 0.1s;
+  }
+  .hm-cell:hover { transform: scale(1.4); cursor: default; }
+  .hm-row { display: flex; flex-direction: column; gap: 2px; }
+  .hm-grid { display: flex; gap: 2px; overflow-x: auto; padding-bottom: 4px; }
+  /* Bar chart */
+  .bar-track { height: 12px; background: #f1f5f9; border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+  /* Forecast chart */
+  .fc-bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 36px; }
+  .fc-bar-inner { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.5s ease; background: #6366f1; min-height: 2px; }
+  .accuracy-bar { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; flex: 1; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-8 shadow-lg">
+  <div class="max-w-3xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">学習統計</span>
+    </nav>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="bar-chart-2" class="w-5 h-5 text-white"></i>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">学習統計</h1>
+    </div>
+    <p class="text-white/75 text-sm">忘却曲線に基づくスペースド・リピティション（SM-2）の学習進捗</p>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-6">
+
+  <!-- Top stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" id="top-stats"></div>
+
+  <!-- Heatmap -->
+  <div class="stat-card mb-5">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-slate-800 flex items-center gap-2">
+        <i data-lucide="calendar-days" class="w-4 h-4 text-indigo-600"></i>
+        学習活動（過去90日間）
+      </h2>
+      <div class="flex items-center gap-1.5 text-xs text-slate-400">
+        <span>少</span>
+        <div class="flex gap-0.5">
+          <div class="w-2.5 h-2.5 rounded-sm bg-slate-100"></div>
+          <div class="w-2.5 h-2.5 rounded-sm bg-indigo-200"></div>
+          <div class="w-2.5 h-2.5 rounded-sm bg-indigo-400"></div>
+          <div class="w-2.5 h-2.5 rounded-sm bg-indigo-600"></div>
+          <div class="w-2.5 h-2.5 rounded-sm bg-indigo-900"></div>
+        </div>
+        <span>多</span>
+      </div>
+    </div>
+    <div class="hm-grid" id="heatmap"></div>
+    <p class="text-xs text-slate-400 mt-2" id="heatmap-caption"></p>
+  </div>
+
+  <!-- Card mastery -->
+  <div class="stat-card mb-5">
+    <h2 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <i data-lucide="layers" class="w-4 h-4 text-teal-600"></i>
+      カード習熟度分布
+    </h2>
+    <div class="space-y-3" id="mastery-chart"></div>
+    <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-4 text-xs text-slate-500">
+      <span><span class="inline-block w-3 h-3 rounded-sm bg-slate-200 mr-1"></span>新規</span>
+      <span><span class="inline-block w-3 h-3 rounded-sm bg-amber-400 mr-1"></span>学習中（21日未満）</span>
+      <span><span class="inline-block w-3 h-3 rounded-sm bg-teal-500 mr-1"></span>定着済み（21日以上）</span>
+    </div>
+  </div>
+
+  <!-- 7-day forecast -->
+  <div class="stat-card mb-5">
+    <h2 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <i data-lucide="calendar-clock" class="w-4 h-4 text-amber-600"></i>
+      今後7日間の復習予定
+    </h2>
+    <div id="forecast-chart" class="flex items-end gap-1.5" style="height:80px;"></div>
+    <div class="flex gap-1.5 mt-1" id="forecast-labels" style=""></div>
+  </div>
+
+  <!-- Worst cards (苦手TOP5) -->
+  <div class="stat-card mb-5">
+    <h2 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+      <i data-lucide="trending-down" class="w-4 h-4 text-rose-600"></i>
+      苦手カード TOP 5（復習優先）
+    </h2>
+    <div id="worst-cards" class="space-y-2"></div>
+  </div>
+
+  <!-- All cards table -->
+  <div class="stat-card mb-5">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-slate-800 flex items-center gap-2">
+        <i data-lucide="table" class="w-4 h-4 text-slate-600"></i>
+        全カード一覧
+      </h2>
+      <div class="flex gap-2">
+        <select id="filter-source" onchange="renderAllCards()" class="text-xs border border-slate-200 rounded-lg px-2 py-1 bg-white">
+          <option value="all">すべて</option>
+          <option value="quiz">クイズ</option>
+          <option value="artifact">アーティファクト</option>
+        </select>
+        <select id="filter-status" onchange="renderAllCards()" class="text-xs border border-slate-200 rounded-lg px-2 py-1 bg-white">
+          <option value="all">全状態</option>
+          <option value="due">期限切れ</option>
+          <option value="learning">学習中</option>
+          <option value="mature">定着済み</option>
+          <option value="new">新規</option>
+        </select>
+      </div>
+    </div>
+    <div id="cards-table" class="text-xs space-y-1.5 max-h-80 overflow-y-auto"></div>
+  </div>
+
+  <!-- Reset -->
+  <div class="bg-white rounded-xl border border-rose-200 p-4 mb-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="font-bold text-rose-700 text-sm">SRSデータをリセット</p>
+        <p class="text-xs text-slate-500">復習スケジュールと学習履歴が全て削除されます</p>
+      </div>
+      <button onclick="confirmReset()" class="px-4 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5">
+        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>リセット
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-200">
+    <a href="eeg-learning.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      学習ハブへ
+    </a>
+    <a href="eeg-review.html" class="flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 transition-colors font-semibold">
+      本日の復習へ
+      <i data-lucide="repeat" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+lucide.createIcons();
+
+// Question labels (for card table)
+const Q_LABELS = {
+  q1_1:'正常/異常 Lv.1 - αリズム',q1_2:'正常/異常 Lv.1 - 睡眠紡錘波',q1_3:'正常/異常 Lv.1 - 棘徐波複合',q1_4:'正常/異常 Lv.1 - 三相波',q1_5:'正常/異常 Lv.1 - Burst-suppression',
+  q1_6:'正常/異常 Lv.1 - μリズム',q1_7:'正常/異常 Lv.1 - FIRDA',q1_8:'正常/異常 Lv.1 - REM睡眠',q1_9:'正常/異常 Lv.1 - GRDA',q1_10:'正常/異常 Lv.1 - 全般性徐波化',
+  q2_1:'波形識別 Lv.2 - 多棘徐波複合',q2_2:'波形識別 Lv.2 - BECTS棘波',q2_3:'波形識別 Lv.2 - Burst-suppression',q2_4:'波形識別 Lv.2 - δ波（深睡眠）',q2_5:'波形識別 Lv.2 - 焦点性徐波',
+  q2_6:'波形識別 Lv.2 - K複合',q2_7:'波形識別 Lv.2 - 等電位脳波',q2_8:'波形識別 Lv.2 - LPDs',q2_9:'波形識別 Lv.2 - Hypsarrhythmia',q2_10:'波形識別 Lv.2 - 鋭波',
+  q3_1:'臨床相関 Lv.3 - 欠神てんかん',q3_2:'臨床相関 Lv.3 - 肝性脳症',q3_3:'臨床相関 Lv.3 - CJD',q3_4:'臨床相関 Lv.3 - BECTS',q3_5:'臨床相関 Lv.3 - JME',
+  q3_6:'臨床相関 Lv.3 - West症候群',q3_7:'臨床相関 Lv.3 - HSV脳炎',q3_8:'臨床相関 Lv.3 - NCSE',q3_9:'臨床相関 Lv.3 - 自己免疫性脳炎',q3_10:'臨床相関 Lv.3 - 蘇生後脳症',
+  aq1:'アーティファクト - EOG',aq2:'アーティファクト - EMG',aq3:'アーティファクト - ECG',aq4:'アーティファクト - 電極',aq5:'アーティファクト - 眼瞼',
+  aq6:'アーティファクト - 体動',aq7:'アーティファクト - 前頭棘波',aq8:'アーティファクト - 三相波',aq9:'アーティファクト - 前頭EMG',aq10:'アーティファクト - GPDs',
+};
+
+function cardStatus(card) {
+  if (!card || (card.repetitions === 0 && card.lastScore === null)) return 'new';
+  if (card.interval >= 21) return 'mature';
+  if (card.dueDate <= todayStr()) return 'due';
+  return 'learning';
+}
+
+function statusLabel(s) {
+  const m = { new:['新規','bg-slate-100 text-slate-600'], due:['期限切れ','bg-red-100 text-red-700'], learning:['学習中','bg-amber-100 text-amber-700'], mature:['定着済み','bg-teal-100 text-teal-700'] };
+  return m[s] || m.new;
+}
+
+// ===== Top stats =====
+function renderTopStats() {
+  const stats = srsGetStats();
+  const meta = stats.meta;
+  const items = [
+    { label:'連続学習', value:(meta.streak||0)+'日', sub:'🔥 Streak', color:'text-amber-600' },
+    { label:'総復習数', value:(meta.totalReviews||0)+'回', sub:'累計', color:'text-indigo-600' },
+    { label:'登録カード', value:stats.total+'枚', sub:`定着: ${stats.matureCount}`, color:'text-teal-600' },
+    { label:'本日の期限', value:stats.dueCount+'枚', sub:'要復習', color:'text-rose-600' },
+  ];
+  document.getElementById('top-stats').innerHTML = items.map(item => `
+    <div class="stat-card text-center">
+      <p class="text-2xl font-black mb-0.5 ${item.color}">${item.value}</p>
+      <p class="text-xs text-slate-500">${item.label}</p>
+      <p class="text-xs text-slate-400">${item.sub}</p>
+    </div>
+  `).join('');
+}
+
+// ===== Heatmap =====
+function renderHeatmap() {
+  const meta = srsGetStats().meta;
+  const log = meta.dailyLog || {};
+  const today = new Date(todayStr()+'T00:00:00');
+  const maxCount = Math.max(1, ...Object.values(log));
+
+  function colorFor(count) {
+    if (!count) return '#f1f5f9';
+    const pct = count / maxCount;
+    if (pct < 0.25) return '#c7d2fe';
+    if (pct < 0.5)  return '#818cf8';
+    if (pct < 0.75) return '#4f46e5';
+    return '#312e81';
+  }
+
+  // Build 13 weeks of data (91 days), grouped by week (columns)
+  const weeks = [];
+  // Start from 13 * 7 = 91 days ago, aligned to Sunday
+  const startDate = new Date(today);
+  startDate.setDate(startDate.getDate() - 90);
+  // Align to Sunday
+  const dayOfWeek = startDate.getDay();
+  startDate.setDate(startDate.getDate() - dayOfWeek);
+
+  let current = new Date(startDate);
+  while (current <= today) {
+    const week = [];
+    for (let d = 0; d < 7; d++) {
+      const dateStr = current.toISOString().slice(0,10);
+      const count = log[dateStr] || 0;
+      const isFuture = current > today;
+      week.push({ dateStr, count, isFuture });
+      current.setDate(current.getDate() + 1);
+    }
+    weeks.push(week);
+  }
+
+  const grid = document.getElementById('heatmap');
+  grid.innerHTML = '';
+
+  // Month labels row
+  let lastMonth = -1;
+  const monthRow = document.createElement('div');
+  monthRow.style.cssText = 'display:flex;gap:2px;margin-bottom:2px;';
+  weeks.forEach((week, wi) => {
+    const m = new Date(week[0].dateStr+'T00:00:00').getMonth();
+    const lbl = document.createElement('div');
+    lbl.style.cssText = `width:11px;font-size:9px;color:#94a3b8;text-align:center;`;
+    if (m !== lastMonth) {
+      lbl.textContent = ['1','2','3','4','5','6','7','8','9','10','11','12'][m];
+      lastMonth = m;
+    }
+    monthRow.appendChild(lbl);
+  });
+
+  // Days of week label
+  const dowLabels = ['日','月','火','水','木','金','土'];
+  const leftLabels = document.createElement('div');
+  leftLabels.style.cssText = 'display:flex;flex-direction:column;gap:2px;margin-right:4px;';
+  dowLabels.forEach((d,i) => {
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'height:11px;font-size:8px;color:#94a3b8;line-height:11px;';
+    lbl.textContent = i % 2 === 1 ? d : '';
+    leftLabels.appendChild(lbl);
+  });
+
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'display:flex;gap:0;';
+  wrapper.appendChild(leftLabels);
+
+  const cols = document.createElement('div');
+  cols.className = 'hm-grid';
+
+  weeks.forEach(week => {
+    const col = document.createElement('div');
+    col.className = 'hm-row';
+    week.forEach(day => {
+      const cell = document.createElement('div');
+      cell.className = 'hm-cell';
+      cell.style.background = day.isFuture ? 'transparent' : colorFor(day.count);
+      cell.title = `${day.dateStr}: ${day.count}回`;
+      col.appendChild(cell);
+    });
+    cols.appendChild(col);
+  });
+
+  wrapper.appendChild(cols);
+  grid.appendChild(wrapper);
+
+  const totalDays = Object.values(log).filter(v => v > 0).length;
+  const totalReviews = Object.values(log).reduce((a,b) => a+b, 0);
+  document.getElementById('heatmap-caption').textContent = `過去90日間: ${totalDays}日学習、合計${totalReviews}回復習`;
+}
+
+// ===== Mastery chart =====
+function renderMasteryChart() {
+  const stats = srsGetStats();
+  const cards = Object.values(srsGetAllCards());
+  const total = cards.length || 1;
+
+  const items = [
+    { label:'新規（未学習）', count:stats.newCount, color:'#cbd5e1', bg:'bg-slate-200' },
+    { label:'学習中（〜21日）', count:stats.learningCount, color:'#fbbf24', bg:'bg-amber-400' },
+    { label:'定着済み（21日〜）', count:stats.matureCount, color:'#14b8a6', bg:'bg-teal-500' },
+  ];
+
+  document.getElementById('mastery-chart').innerHTML = items.map(item => `
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-slate-600 w-28 flex-shrink-0">${item.label}</span>
+      <div class="bar-track flex-1">
+        <div class="bar-fill" style="width:${Math.round(item.count/total*100)}%;background:${item.color};"></div>
+      </div>
+      <span class="text-xs font-bold text-slate-700 w-12 text-right">${item.count}枚</span>
+    </div>
+  `).join('');
+}
+
+// ===== Forecast chart =====
+function renderForecastChart() {
+  const forecast = srsForecast7();
+  const entries = Object.entries(forecast);
+  const maxVal = Math.max(1, ...entries.map(([,n]) => n));
+  const maxH = 60; // px
+
+  const chart = document.getElementById('forecast-chart');
+  const labels = document.getElementById('forecast-labels');
+  chart.innerHTML = ''; labels.innerHTML = '';
+
+  entries.forEach(([d, n]) => {
+    const isToday = d === todayStr();
+    const h = Math.max(2, Math.round((n / maxVal) * maxH));
+
+    const col = document.createElement('div');
+    col.className = 'fc-bar';
+    col.style.flex = '1';
+    col.style.display = 'flex';
+    col.style.flexDirection = 'column';
+    col.style.alignItems = 'center';
+    col.style.justifyContent = 'flex-end';
+    col.style.height = maxH + 'px';
+    col.title = `${d}: ${n}枚`;
+
+    const bar = document.createElement('div');
+    bar.className = 'fc-bar-inner';
+    bar.style.width = '80%';
+    bar.style.height = h + 'px';
+    bar.style.background = isToday ? '#dc2626' : '#6366f1';
+    bar.style.borderRadius = '3px 3px 0 0';
+
+    if (n > 0) {
+      const lbl = document.createElement('div');
+      lbl.style.cssText = 'font-size:9px;color:#64748b;font-weight:700;margin-bottom:2px;';
+      lbl.textContent = n;
+      col.appendChild(lbl);
+    }
+    col.appendChild(bar);
+    chart.appendChild(col);
+
+    const dayLabel = document.createElement('div');
+    dayLabel.style.cssText = `flex:1;text-align:center;font-size:9px;color:${isToday?'#dc2626':'#94a3b8'};font-weight:${isToday?'700':'400'};`;
+    const weekdays = ['日','月','火','水','木','金','土'];
+    const dow = new Date(d+'T00:00:00').getDay();
+    dayLabel.textContent = isToday ? '今日' : weekdays[dow];
+    labels.appendChild(dayLabel);
+  });
+}
+
+// ===== Worst cards =====
+function renderWorstCards() {
+  const cards = Object.values(srsGetAllCards());
+  const withHistory = cards.filter(c => c.history && c.history.length >= 2);
+  withHistory.sort((a, b) => {
+    const accA = srsCardAccuracy(a) ?? 100;
+    const accB = srsCardAccuracy(b) ?? 100;
+    return accA - accB;
+  });
+  const worst = withHistory.slice(0, 5);
+
+  const el = document.getElementById('worst-cards');
+  if (worst.length === 0) {
+    el.innerHTML = '<p class="text-sm text-slate-400 text-center py-3">まだデータが少ないです。問題を解いて記録を積み重ねましょう。</p>';
+    return;
+  }
+
+  el.innerHTML = worst.map(card => {
+    const acc = srsCardAccuracy(card) ?? 0;
+    const label = Q_LABELS[card.id] || card.id;
+    const srcClr = card.source === 'artifact' ? 'bg-orange-100 text-orange-700' : 'bg-indigo-100 text-indigo-700';
+    return `
+      <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+        <span class="text-xs font-bold ${srcClr} px-1.5 py-0.5 rounded-full flex-shrink-0">${card.source === 'artifact' ? 'ART' : 'Q'}</span>
+        <span class="text-xs text-slate-700 flex-1 min-w-0 truncate">${label}</span>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <div class="accuracy-bar w-16">
+            <div class="h-full rounded bg-rose-400" style="width:${acc}%"></div>
+          </div>
+          <span class="text-xs font-bold text-rose-700 w-8 text-right">${acc}%</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== All cards table =====
+function renderAllCards() {
+  const filterSource = document.getElementById('filter-source').value;
+  const filterStatus = document.getElementById('filter-status').value;
+  let cards = Object.values(srsGetAllCards());
+
+  if (filterSource !== 'all') cards = cards.filter(c => c.source === filterSource);
+  if (filterStatus !== 'all') cards = cards.filter(c => cardStatus(c) === filterStatus);
+
+  // Sort: due first, then by dueDate
+  cards.sort((a, b) => {
+    const sa = cardStatus(a), sb = cardStatus(b);
+    if (sa === 'due' && sb !== 'due') return -1;
+    if (sb === 'due' && sa !== 'due') return 1;
+    return (a.dueDate || '').localeCompare(b.dueDate || '');
+  });
+
+  const today = todayStr();
+  const el = document.getElementById('cards-table');
+  if (cards.length === 0) {
+    el.innerHTML = '<p class="text-slate-400 text-center py-4">カードがありません</p>';
+    return;
+  }
+
+  el.innerHTML = cards.map(card => {
+    const st = cardStatus(card);
+    const [stLabel, stClass] = statusLabel(st);
+    const acc = srsCardAccuracy(card);
+    const label = Q_LABELS[card.id] || card.id;
+    const diffDays = card.dueDate ? Math.round((new Date(card.dueDate+'T00:00:00')-new Date(today+'T00:00:00'))/86400000) : 0;
+    const dueTxt = st === 'new' ? '未挑戦' : diffDays <= 0 ? '期限切れ' : `${diffDays}日後`;
+    return `
+      <div class="flex items-center gap-2 p-2 rounded-lg border border-slate-100 hover:border-slate-200 bg-white">
+        <span class="text-xs px-1.5 py-0.5 rounded-full font-bold ${stClass} flex-shrink-0">${stLabel}</span>
+        <span class="flex-1 truncate text-slate-700">${label}</span>
+        <span class="text-slate-400 flex-shrink-0 w-14 text-right">${acc !== null ? acc+'%' : '—'}</span>
+        <span class="text-slate-400 flex-shrink-0 w-14 text-right">${dueTxt}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function confirmReset() {
+  if (!confirm('SRSデータを全て削除しますか？\nこの操作は取り消せません。')) return;
+  srsReset();
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  renderTopStats();
+  renderHeatmap();
+  renderMasteryChart();
+  renderForecastChart();
+  renderWorstCards();
+  renderAllCards();
+});
+</script>
+</body>
+</html>

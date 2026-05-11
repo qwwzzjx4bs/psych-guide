@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="data-table-sticky-col-off">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -101,9 +101,343 @@
       max-height: 80vh; overflow-y: auto; z-index: 50; min-width: 160px;
     }
     @media (max-width: 1280px) { .toc { display: none; } }
-    .compare-table th { background: linear-gradient(135deg, #1e3a5f, #0f766e); color: white; padding: 0.75rem 1rem; font-size: 0.875rem; }
-    .compare-table td { padding: 0.75rem 1rem; border: 1px solid #e5e7eb; font-size: 0.875rem; vertical-align: top; }
-    .compare-table tr:nth-child(even) td { background: #f9fafb; }
+    /* ---- 横スクロール明示（ライン下部ヒント・レール強調）---- */
+    .x-scroll { width: 100%; max-width: 100%; }
+    .x-scroll__rail {
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+    }
+    .x-scroll__hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      margin-top: 0.4rem;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: #475569;
+      line-height: 1.35;
+      text-align: center;
+      background: rgba(241, 245, 249, 0.95);
+      border: 1px dashed #94a3b8;
+      border-radius: 0.375rem;
+    }
+    @media (min-width: 768px) {
+      .x-scroll__hint {
+        justify-content: flex-end;
+        font-size: 0.65rem;
+        font-weight: 500;
+        padding: 0.3rem 0.5rem;
+        margin-top: 0.35rem;
+        background: rgba(241, 245, 249, 0.75);
+        border: 1px dashed #cbd5e1;
+        color: #475569;
+      }
+      .x-scroll__hint .x-scroll__hint-icon { display: inline-flex; opacity: 0.55; }
+    }
+    @keyframes x-scroll-hint-nudge {
+      0%, 100% { transform: translateX(0); opacity: 0.55; }
+      50% { transform: translateX(5px); opacity: 1; }
+    }
+    /* ---- data-table（先頭列固定・行クリック枠強調・横スクロール）---- */
+    table.data-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    table.data-table tbody tr:not(:has(td[colspan])) { cursor: pointer; }
+    table.data-table tbody tr.table-row-focus > td {
+      border-top: 2px solid #2563eb !important;
+      border-bottom: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child {
+      border-left: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:last-child {
+      border-right: 2px solid #2563eb !important;
+    }
+    html:not(.data-table-search-highlight-off) main table.data-table tbody tr.table-search-hit td {
+      background-color: rgba(253, 224, 71, 0.22) !important;
+    }
+    table.data-table thead th:first-child:not([colspan]),
+    table.data-table tbody td:first-child:not([colspan]) {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      box-shadow: 4px 0 10px -4px rgba(15, 23, 42, 0.18);
+    }
+    table.data-table thead th:first-child:not([colspan]) {
+      z-index: 5;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: 3;
+    }
+    html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+    html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+      position: static !important;
+      left: auto !important;
+      z-index: auto !important;
+      box-shadow: none !important;
+    }
+    html.data-table-sticky-col-off table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: auto !important;
+    }
+    /* 比較表 */
+    table.data-table.compare-table { min-width: 52rem; }
+    table.data-table.compare-table th {
+      background: linear-gradient(135deg, #1e3a5f, #0f766e);
+      color: white;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+    table.data-table.compare-table thead th:first-child:not([colspan]) {
+      background: linear-gradient(135deg, #1e3a5f, #0f766e) !important;
+      color: #fff;
+    }
+    table.data-table.compare-table td {
+      padding: 0.75rem 1rem;
+      border: 1px solid #e5e7eb;
+      font-size: 0.875rem;
+      vertical-align: top;
+      white-space: nowrap;
+      background: #ffffff;
+    }
+    table.data-table.compare-table tbody tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+    table.data-table.compare-table tbody tr:nth-child(even) td:first-child:not([colspan]) {
+      background-color: #f9fafb !important;
+    }
+    /* 鑑別表 */
+    table.data-table.diff-table { min-width: 48rem; width: max(100%, 48rem); }
+    table.data-table.diff-table th, table.data-table.diff-table td {
+      white-space: nowrap;
+      vertical-align: top;
+    }
+    table.data-table.diff-table thead tr.bg-yellow-200 th:first-child:not([colspan]) {
+      background-color: #fef08a !important;
+    }
+    table.data-table.diff-table tbody tr.bg-white > td:first-child:not([colspan]) {
+      background-color: #ffffff !important;
+    }
+    table.data-table.diff-table tbody tr.bg-yellow-50 > td:first-child:not([colspan]) {
+      background-color: #fefce8 !important;
+    }
+    /* NMDA 鑑別表 */
+    table.data-table.ae-compare-table { min-width: 36rem; width: max(100%, 36rem); }
+    table.data-table.ae-compare-table th, table.data-table.ae-compare-table td {
+      white-space: nowrap;
+      vertical-align: top;
+    }
+    table.data-table.ae-compare-table thead tr.bg-yellow-200 th:first-child:not([colspan]) {
+      background-color: #fef08a !important;
+    }
+    table.data-table.ae-compare-table tbody tr.bg-white td:first-child:not([colspan]) {
+      background-color: #ffffff !important;
+    }
+    table.data-table.ae-compare-table tbody tr:not(.bg-white) td {
+      background-color: #f9fafb;
+    }
+    table.data-table.ae-compare-table tbody tr:not(.bg-white) td:first-child:not([colspan]) {
+      background-color: #f9fafb !important;
+    }
+    /* ---- 上部固定ツールバー（抗精神病薬選択ガイドと同等） ---- */
+    .data-table-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 45;
+      box-sizing: border-box;
+      width: 100%;
+      margin: 0;
+      border: none;
+      border-top: 1px solid rgba(203, 213, 225, 0.95);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.12);
+      padding: 0;
+    }
+    .data-table-toolbar__head {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.625rem max(0.75rem, env(safe-area-inset-right, 0px));
+      border-bottom: 1px solid var(--toolbar-head-border, rgba(203, 213, 225, 0.95));
+      background: var(--toolbar-head-bg, rgba(249, 250, 251, 0.92));
+      transition: background 0.35s ease, border-color 0.35s ease;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head {
+        gap: 1rem;
+        padding: 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+      }
+    }
+    #data-table-toolbar[data-toolbar-section="quickref"] .data-table-toolbar__head {
+      --toolbar-head-bg: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(37, 99, 235, 0.16));
+      --toolbar-head-border: rgba(20, 184, 166, 0.45);
+      --toolbar-accent: #0f766e;
+    }
+    #data-table-toolbar[data-toolbar-section="classic-vs-operational"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="staging"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(237, 233, 254, 0.88);
+      --toolbar-head-border: rgba(124, 58, 237, 0.35);
+      --toolbar-accent: #6d28d9;
+    }
+    #data-table-toolbar[data-toolbar-section="dsm5tr"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="icd10"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="scales"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(219, 234, 254, 0.88);
+      --toolbar-head-border: rgba(37, 99, 235, 0.35);
+      --toolbar-accent: #1d4ed8;
+    }
+    #data-table-toolbar[data-toolbar-section="diag-flow"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(224, 231, 255, 0.88);
+      --toolbar-head-border: rgba(79, 70, 229, 0.35);
+      --toolbar-accent: #4338ca;
+    }
+    #data-table-toolbar[data-toolbar-section="differential"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="tests"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(255, 237, 213, 0.88);
+      --toolbar-head-border: rgba(234, 88, 12, 0.35);
+      --toolbar-accent: #c2410c;
+    }
+    #data-table-toolbar[data-toolbar-section="autoimmune"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(254, 226, 226, 0.88);
+      --toolbar-head-border: rgba(220, 38, 38, 0.35);
+      --toolbar-accent: #b91c1c;
+    }
+    #data-table-section-label {
+      color: var(--toolbar-accent, #0f172a);
+      transition: color 0.35s ease;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    @media (min-width: 640px) {
+      #data-table-section-label { font-size: 1rem; }
+    }
+    .data-table-toolbar__head-title {
+      font-size: 1rem;
+      line-height: 1.35;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head-title { font-size: 1.125rem; }
+    }
+    .data-table-toolbar__controls {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.625rem;
+      padding: 0.625rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.75rem max(0.75rem, env(safe-area-inset-right, 0px));
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__controls {
+        gap: 0.875rem;
+        padding: 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+      }
+    }
+    @media (max-width: 639px) {
+      .data-table-toolbar__controls {
+        gap: 0.375rem;
+        padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+        padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
+      }
+      .data-table-toolbar__controls input[type="search"] { font-size: 0.9375rem !important; line-height: 1.4; }
+    }
+    .data-table-toolbar__controls input[type="search"] {
+      font-size: 1rem !important;
+      line-height: 1.4;
+    }
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-cancel-button,
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+    main mark.table-search-mark {
+      background-color: rgba(253, 224, 71, 0.88);
+      color: inherit;
+      font-weight: 600;
+      padding: 0 0.04em;
+      border-radius: 0.125rem;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    html.data-table-search-highlight-off main mark.table-search-mark {
+      background: transparent !important;
+      font-weight: inherit;
+      padding: 0;
+      border-radius: 0;
+    }
+    html.data-table-search-highlight-off main table.data-table tbody tr.table-search-hit td {
+      background-color: transparent !important;
+    }
+    @media (max-width: 767px) {
+      .x-scroll__rail {
+        box-shadow: inset -16px 0 20px -10px rgba(30, 41, 59, 0.18);
+        border-radius: 0.375rem;
+      }
+      .x-scroll__hint .x-scroll__hint-icon {
+        display: inline-flex;
+        animation: x-scroll-hint-nudge 1.65s ease-in-out infinite;
+        opacity: 0.85;
+      }
+      .x-scroll__hint .x-scroll__hint-icon--r { animation-delay: 0.2s; }
+      table.data-table thead th:first-child:not([colspan]),
+      table.data-table tbody td:first-child:not([colspan]) {
+        width: min(32vw, 8rem) !important;
+        max-width: min(32vw, 8rem) !important;
+        min-width: 3.5rem;
+        box-sizing: border-box;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+        font-size: 0.7rem !important;
+        padding-left: 0.4rem !important;
+        padding-right: 0.4rem !important;
+      }
+      html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+      html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        white-space: nowrap;
+        font-size: inherit;
+        overflow-wrap: normal;
+        word-break: normal;
+        padding-left: revert !important;
+        padding-right: revert !important;
+      }
+      html.data-table-sticky-col-off table.data-table.compare-table thead th:first-child:not([colspan]),
+      html.data-table-sticky-col-off table.data-table.compare-table tbody td:first-child:not([colspan]) {
+        font-size: 0.875rem !important;
+        padding: 0.75rem 1rem !important;
+      }
+    }
+    @media (min-width: 768px) {
+      .x-scroll__rail { box-shadow: none; }
+    }
+
+    @media (max-width: 640px) {
+      .section-card { padding: 1rem 0.75rem; margin-bottom: 1rem; }
+      .criteria-box, .danger-box, .warning-box, .recommend-box {
+        padding: 1rem 0.75rem;
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
     .step-arrow { display: flex; align-items: center; justify-content: center; color: #94a3b8; }
     .flow-step {
       border-radius: 0.75rem; padding: 1rem 1.25rem;
@@ -114,13 +448,13 @@
 <body class="bg-gray-50">
 
   <!-- ヘッダー -->
-  <header class="header-gradient text-white py-8">
-    <div class="max-w-5xl mx-auto px-4">
+  <header class="header-gradient text-white py-6 sm:py-8">
+    <div class="max-w-5xl mx-auto px-3 sm:px-4">
       <div class="flex items-center gap-3 mb-2">
         <i data-lucide="brain" class="w-8 h-8 opacity-80"></i>
         <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
       </div>
-      <h1 class="text-3xl md:text-4xl font-bold">統合失調症 — 診断プロセス完全ガイド</h1>
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold leading-snug">統合失調症 — 診断プロセス完全ガイド</h1>
       <p class="mt-2 text-lg opacity-85">ICD-10: F20 ／ DSM-5-TR: 統合失調症スペクトラム障害群</p>
       <div class="flex gap-2 mt-3 flex-wrap">
         <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">古典的診断 vs 操作的基準</span>
@@ -130,6 +464,31 @@
       </div>
     </div>
   </header>
+
+  <div id="data-table-toolbar" class="data-table-toolbar" data-toolbar-section="quickref" role="region" aria-label="表の検索と表示オプション">
+    <div class="data-table-toolbar__head">
+      <span class="data-table-toolbar__head-title min-w-0 truncate">統合失調症 診断プロセス完全ガイド</span>
+      <span id="data-table-section-label" class="max-w-[60%] shrink-0 truncate text-right sm:max-w-[min(50vw,22rem)]" aria-live="polite">外来で押さえる3ポイント</span>
+    </div>
+    <div class="data-table-toolbar__controls">
+      <label class="flex min-h-9 shrink-0 cursor-pointer select-none items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50/80 px-2 py-1.5 text-slate-700 hover:bg-slate-100/90 sm:min-h-[2.75rem] sm:gap-2.5 sm:rounded-lg sm:px-3.5 sm:py-2.5">
+        <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500 sm:h-5 sm:w-5" />
+        <span class="text-[0.6875rem] font-semibold leading-tight sm:text-sm sm:font-medium sm:leading-snug md:text-base whitespace-nowrap">先頭列固定</span>
+      </label>
+      <div class="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-2">
+        <div class="flex min-h-9 min-w-0 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-slate-50/80 px-1.5 py-0.5 sm:min-h-[2.75rem] sm:max-w-[min(100%,24rem)] sm:gap-2 sm:rounded-lg sm:px-2.5 sm:py-1.5">
+          <i data-lucide="search" class="h-3.5 w-3.5 shrink-0 text-slate-500 sm:h-4 sm:w-4" aria-hidden="true"></i>
+          <label for="data-table-search" class="sr-only">ページ内検索</label>
+          <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:py-1.5" />
+          <button type="button" id="data-table-search-clear" class="flex h-8 w-8 shrink-0 items-center justify-center rounded text-[1.35rem] font-light leading-none text-slate-600 hover:bg-slate-200/80 hover:text-slate-800 sm:h-9 sm:w-9 sm:text-[1.5rem]" aria-label="検索をクリア" title="クリア"><span aria-hidden="true">×</span></button>
+        </div>
+        <button type="button" id="data-table-search-prev" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-[2.75rem] sm:min-w-[2.75rem] sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-lg" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
+        <button type="button" id="data-table-search-next" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-[2.75rem] sm:min-w-[2.75rem] sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-lg" aria-label="次の該当行へ" title="次の該当行" disabled>↓</button>
+        <button type="button" id="data-table-search-highlight" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-amber-50 text-amber-900 hover:bg-amber-100/90 sm:h-auto sm:w-auto sm:px-3.5 sm:py-2" aria-pressed="true" aria-label="該当行のハイライト表示を切り替え" title="ハイライト（該当行の背景）"><i data-lucide="highlighter" class="h-[1.05rem] w-[1.05rem] sm:h-[1.125rem] sm:w-[1.125rem]" aria-hidden="true"></i></button>
+        <p id="data-table-search-meta" class="max-w-[3.25rem] shrink-0 truncate text-[0.65rem] text-slate-600 tabular-nums sm:max-w-[7.5rem] sm:text-sm" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
 
   <!-- フローティング目次 -->
   <nav class="toc">
@@ -148,7 +507,7 @@
     </ul>
   </nav>
 
-  <main class="max-w-5xl mx-auto px-4 py-8">
+  <main class="max-w-5xl mx-auto px-2.5 sm:px-4 py-6 sm:py-8">
 
     <!-- 外来クイックリファレンス -->
     <div class="section-card" id="quickref">
@@ -310,8 +669,9 @@
         <span class="badge-level-b">比較対照表</span>
         <span class="text-gray-500 text-sm font-normal">古典的概念 vs 現行操作的基準</span>
       </h3>
-      <div class="overflow-x-auto rounded-xl border border-gray-200">
-        <table class="w-full compare-table">
+      <div class="x-scroll rounded-xl border border-gray-200 bg-white">
+        <div class="x-scroll__rail rounded-t-xl">
+        <table class="data-table compare-table w-full">
           <thead>
             <tr>
               <th class="rounded-tl-xl text-left">観点</th>
@@ -352,10 +712,10 @@
               <td>ICD-10: 亜型あり(F20.0〜F20.9) ICD-11: 亜型廃止→次元記述</td>
             </tr>
             <tr>
-              <td class="font-bold text-gray-700">感情障害との境界</td>
+              <td class="font-bold text-gray-700">気分障害との境界</td>
               <td>理論的に分離（クレペリン二分法）</td>
               <td>D基準で気分エピソードとの時間的関係を定式化</td>
-              <td>G2で感情障害優先を規定</td>
+              <td>G2で気分障害優先を規定</td>
             </tr>
             <tr>
               <td class="font-bold text-gray-700">信頼性・再現性</td>
@@ -365,6 +725,8 @@
             </tr>
           </tbody>
         </table>
+        </div>
+        <p class="x-scroll__hint mb-0 rounded-b-xl rounded-t-none border-t-0"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>この表は<strong>横スクロール</strong>で全列を表示できます（スマホはスワイプ）。上の固定バー「<strong>先頭列固定</strong>」で左端列（観点など）を固定できます。行をタップすると<strong>枠線で強調</strong>のオンオフができます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
       </div>
     </div>
 
@@ -393,7 +755,7 @@
               <span class="font-bold text-gray-800">妄想</span>
               <span class="text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full">必須項目のいずれか</span>
             </div>
-            <p class="text-sm text-gray-600">被害妄想・関係妄想・誇大妄想・思考奪取・思考吹入・妄想知覚等</p>
+            <p class="text-sm text-gray-600">被害妄想・関係妄想・誇大妄想・思考奪取・思考挿入・妄想知覚等</p>
           </div>
           <div class="bg-white rounded-lg p-3 border-2 border-red-200">
             <div class="flex items-center gap-2 mb-1">
@@ -465,9 +827,9 @@
         <div class="bg-white rounded-xl p-4 border-2 border-orange-200">
           <div class="flex items-center gap-2 mb-2">
             <span class="font-bold text-orange-800 text-base">D基準</span>
-            <span class="text-sm text-gray-600">— 感情障害の除外（鑑別の要）</span>
+            <span class="text-sm text-gray-600">— 気分障害の除外（鑑別の要）</span>
           </div>
-          <p class="text-sm text-gray-600">活動期症状と同時に大うつ病/躁/混合エピソードがない。または気分エピソードが全病程の一部に限定される。</p>
+          <p class="text-sm text-gray-600">活動期症状と同時に大うつ病エピソード・躁病エピソード・混合エピソードがない。または気分エピソードが全病程の一部に限定される。</p>
         </div>
         <div class="bg-white rounded-xl p-4 border-2 border-red-200">
           <div class="flex items-center gap-2 mb-2">
@@ -483,7 +845,7 @@
           <i data-lucide="alert-circle" class="w-4 h-4"></i>
           DSM-5-TRとICD-10の期間要件の違い
         </div>
-        <div class="flex gap-6 text-sm text-gray-700">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-6 text-sm text-gray-700">
           <div><span class="font-bold text-blue-700">DSM-5-TR:</span> 活動期1か月以上 + 全病程6か月以上（C基準）</div>
           <div><span class="font-bold text-green-700">ICD-10:</span> 症状1か月以上（G1）</div>
           <div><span class="font-bold text-teal-700">ICD-11:</span> 症状1か月以上</div>
@@ -595,10 +957,10 @@
             <div class="w-6 h-6 bg-white/30 rounded-full flex items-center justify-center text-xs font-bold">1</div>
             <span class="font-bold">初期評価（初回診察）</span>
           </div>
-          <div class="grid grid-cols-3 gap-2 text-xs mt-2">
-            <div class="bg-white/20 rounded p-1.5">主訴・発症経緯<br>生活歴・家族歴</div>
-            <div class="bg-white/20 rounded p-1.5">自傷・他害リスク<br>緊急介入の判断</div>
-            <div class="bg-white/20 rounded p-1.5">物質使用歴<br>既往歴・内服歴</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs mt-2">
+            <div class="bg-white/20 rounded p-1.5">主訴・発症経過／生活歴・家族歴</div>
+            <div class="bg-white/20 rounded p-1.5">自傷・他害リスク／緊急介入の判断</div>
+            <div class="bg-white/20 rounded p-1.5">物質使用歴／既往歴・内服歴</div>
           </div>
           <div class="mt-2 bg-white/15 rounded p-2 text-xs">
             <span class="font-bold">発症年齢の性差：</span>男性 15〜25歳 / 女性 25〜35歳がピーク（第2ピーク：女性 45〜50歳代）
@@ -616,7 +978,7 @@
           <div class="grid md:grid-cols-2 gap-2 text-sm">
             <div class="flex items-center gap-2 text-gray-700">
               <i data-lucide="activity" class="w-4 h-4 text-red-500"></i>
-              <span>血液検査（CBC・代謝・甲状腺・B12等）</span>
+              <span>血液検査（血算／代謝・甲状腺・B12等）</span>
             </div>
             <div class="flex items-center gap-2 text-gray-700">
               <i data-lucide="scan" class="w-4 h-4 text-blue-500"></i>
@@ -637,12 +999,12 @@
 
         <!-- 分岐: 器質性あり / なし -->
         <div class="w-full max-w-2xl">
-          <div class="flex gap-4 items-start">
+          <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-start">
             <div class="flex-1 bg-red-50 border-2 border-red-300 rounded-xl p-3 text-center">
               <div class="text-red-700 font-bold text-sm mb-1">器質性疾患を示唆</div>
-              <div class="text-xs text-gray-600">神経内科・内科と連携<br>原疾患の治療を優先</div>
+              <div class="text-xs text-gray-600">神経内科・内科と連携／原疾患の治療を優先</div>
             </div>
-            <div class="flex items-center pt-8">
+            <div class="flex items-center justify-center py-1 sm:py-0 sm:pt-8 flex-shrink-0">
               <div class="text-gray-400 font-bold text-sm">or</div>
             </div>
             <div class="flex-1 bg-green-50 border-2 border-green-300 rounded-xl p-3 text-center">
@@ -715,7 +1077,7 @@
               </ul>
             </div>
             <div>
-              <div class="font-bold text-teal-700 mb-1">D基準（感情障害の鑑別）</div>
+              <div class="font-bold text-teal-700 mb-1">D基準（気分障害の鑑別）</div>
               <ul class="space-y-0.5">
                 <li>・精神病症状と気分エピソードは同時か？</li>
                 <li>・気分症状は全病程の一部か？</li>
@@ -733,22 +1095,22 @@
             <div class="w-6 h-6 bg-white/30 rounded-full flex items-center justify-center text-xs font-bold">5</div>
             <span class="font-bold text-lg">診断の確定と病期分類</span>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
             <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
-              <div class="font-bold">A基準満たす<br>1か月未満</div>
-              <div class="mt-1 text-white/80">短期精神病性障害<br>(F23/DSM)</div>
+              <div class="font-bold whitespace-nowrap sm:whitespace-normal">A基準満たす・1か月未満</div>
+              <div class="mt-1 text-white/80 whitespace-nowrap sm:whitespace-normal">短期精神病性障害（F23／DSM）</div>
             </div>
             <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
-              <div class="font-bold">A基準満たす<br>1〜6か月</div>
-              <div class="mt-1 text-white/80">統合失調症様障害<br>(暫定)</div>
+              <div class="font-bold whitespace-nowrap sm:whitespace-normal">A基準満たす・1〜6か月</div>
+              <div class="mt-1 text-white/80 whitespace-nowrap sm:whitespace-normal">統合失調症様障害（暫定）</div>
             </div>
             <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
-              <div class="font-bold">A基準満たす<br>6か月以上</div>
-              <div class="mt-1 text-white/80">統合失調症<br>F20 / DSM-5-TR</div>
+              <div class="font-bold whitespace-nowrap sm:whitespace-normal">A基準満たす・6か月以上</div>
+              <div class="mt-1 text-white/80 whitespace-nowrap sm:whitespace-normal">統合失調症（F20／DSM-5-TR）</div>
             </div>
             <div class="bg-white/20 rounded-lg p-2 text-center text-xs">
-              <div class="font-bold">精神病症状 +<br>気分エピソード</div>
-              <div class="mt-1 text-white/80">統合失調感情障害<br>F25</div>
+              <div class="font-bold whitespace-nowrap sm:whitespace-normal">精神病症状＋気分エピソード</div>
+              <div class="mt-1 text-white/80 whitespace-nowrap">統合失調症性感情障害（F25）</div>
             </div>
           </div>
         </div>
@@ -795,7 +1157,7 @@
               </li>
               <li class="flex items-start gap-1.5">
                 <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
-                <span>梅毒神経症（神経梅毒）</span>
+                <span>神経梅毒</span>
               </li>
             </ul>
           </div>
@@ -816,7 +1178,7 @@
               </li>
               <li class="flex items-start gap-1.5">
                 <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
-                <span><strong>Wilson病（肝レンズ核変性症）</strong> — 銅・セルロプラスミン、角膜KF環</span>
+                <span><strong>Wilson病（肝豆状核変性症）</strong> — 血清銅・セルロプラスミン、角膜KF（Kayser-Fleischer）環</span>
               </li>
               <li class="flex items-start gap-1.5">
                 <i data-lucide="chevron-right" class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"></i>
@@ -854,9 +1216,9 @@
           <div>
             <div class="font-bold text-sm text-red-700 mb-1.5">処方薬・その他</div>
             <ul class="text-sm space-y-0.5 text-gray-700">
-              <li>・高用量ステロイド — 精神病性症状</li>
-              <li>・インターフェロン（IFN）</li>
-              <li>・抗コリン薬（過量）</li>
+              <li>・副腎皮質ステロイド（高用量）— 精神病様症状</li>
+              <li>・インターフェロン製剤（IFN）</li>
+              <li>・抗コリン性薬（過量）</li>
               <li>・アルコール離脱 — 振戦せん妄との鑑別</li>
             </ul>
           </div>
@@ -869,8 +1231,9 @@
           <i data-lucide="brain" class="w-5 h-5"></i>
           優先度3：鑑別すべき精神疾患
         </div>
-        <div class="overflow-x-auto rounded-lg">
-          <table class="w-full text-sm">
+        <div class="x-scroll rounded-lg border border-gray-200 bg-white">
+          <div class="x-scroll__rail rounded-t-lg">
+          <table class="data-table diff-table text-sm">
             <thead>
               <tr class="bg-yellow-200">
                 <th class="text-left p-2.5 font-bold text-yellow-900">疾患</th>
@@ -885,7 +1248,7 @@
                 <td class="p-2.5 text-gray-500">F31</td>
               </tr>
               <tr class="bg-yellow-50">
-                <td class="p-2.5 font-medium">統合失調感情障害</td>
+                <td class="p-2.5 font-medium">統合失調症性感情障害</td>
                 <td class="p-2.5 text-gray-600">精神病症状と気分エピソードが気分に一致しない形で同時存在；気分症状が全病程に比し相当な比率</td>
                 <td class="p-2.5 text-gray-500">F25</td>
               </tr>
@@ -931,6 +1294,8 @@
               </tr>
             </tbody>
           </table>
+          </div>
+          <p class="x-scroll__hint mb-0 rounded-b-lg rounded-t-none border-t-0"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>この表は<strong>横スクロール</strong>／<strong>先頭列固定</strong>／<strong>行タップで枠強調</strong>に対応（固定バーと同様）。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
         </div>
       </div>
     </div>
@@ -962,7 +1327,7 @@
           <div class="space-y-2">
             <div class="bg-white rounded-lg p-2.5 border">
               <div class="font-bold text-xs text-gray-600 mb-1">血算・凝固</div>
-              <div class="text-sm text-gray-700">CBC（白血球分画含む）、血小板</div>
+              <div class="text-sm text-gray-700">血算（全血球計算〔CBC〕／白血球分画含む）、血小板</div>
             </div>
             <div class="bg-white rounded-lg p-2.5 border">
               <div class="font-bold text-xs text-gray-600 mb-1">生化学・代謝</div>
@@ -982,7 +1347,7 @@
             </div>
             <div class="bg-white rounded-lg p-2.5 border">
               <div class="font-bold text-xs text-gray-600 mb-1">追加（疑いに応じて）</div>
-              <div class="text-sm text-gray-700">銅・セルロプラスミン（Wilson病スクリーニング）、プロラクチン（高PRL血症・抗精神病薬前ベースライン）、脂質（LDL/HDL/TG）</div>
+              <div class="text-sm text-gray-700">銅・セルロプラスミン（Wilson病／肝豆状核変性症のスクリーニング）、プロラクチン（高PRL血症・抗精神病薬導入前ベースライン）、脂質（LDL／HDL／TG）</div>
             </div>
           </div>
         </div>
@@ -995,7 +1360,7 @@
               <span class="font-bold text-yellow-800">尿検査</span>
             </div>
             <ul class="text-sm space-y-1 text-gray-700">
-              <li>・<strong>尿中薬物スクリーニング</strong>（覚醒剤・大麻・ベンゾ・オピオイド等）</li>
+              <li>・<strong>尿中薬物スクリーニング</strong>（覚醒剤・大麻・ベンゾジアゼピン系・オピオイド系等）</li>
               <li>・尿一般（蛋白・糖・潜血）</li>
               <li>・必要に応じて特定薬物の定量検査</li>
             </ul>
@@ -1169,7 +1534,7 @@
             </div>
             <ul class="text-xs space-y-0.5 text-gray-700">
               <li>・バイタル・意識レベル確認</li>
-              <li>・血糖・電解質・CBC</li>
+              <li>・血糖・電解質・血算（CBC）</li>
               <li>・尿中薬物スクリーニング</li>
               <li>・必要に応じてCT</li>
             </ul>
@@ -1243,8 +1608,9 @@
             <i data-lucide="search" class="w-4 h-4"></i>
             統合失調症との鑑別ポイント
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs">
+          <div class="x-scroll rounded-lg border border-yellow-100 bg-white">
+            <div class="x-scroll__rail rounded-t-lg">
+            <table class="data-table ae-compare-table text-xs">
               <thead>
                 <tr class="bg-yellow-200">
                   <th class="text-left p-1.5">観点</th>
@@ -1255,8 +1621,8 @@
               <tbody class="divide-y divide-yellow-100">
                 <tr class="bg-white">
                   <td class="p-1.5 font-bold text-gray-600">患者背景</td>
-                  <td class="p-1.5">若年女性に多い（抗NMDA）<br>高齢男性に多い（LGI1）</td>
-                  <td class="p-1.5">生涯有病率1%（性差ほぼなし）<br>遺伝因子は関与するが必須ではない</td>
+                  <td class="p-1.5">若年女性に多い（抗NMDA）／高齢男性に多い（LGI1）</td>
+                  <td class="p-1.5">生涯有病率約1%（性差ほぼなし）／遺伝は関与するが必須ではない</td>
                 </tr>
                 <tr>
                   <td class="p-1.5 font-bold text-gray-600">発症経過</td>
@@ -1290,6 +1656,8 @@
                 </tr>
               </tbody>
             </table>
+            </div>
+            <p class="x-scroll__hint mb-0 rounded-b-lg rounded-t-none border-t-0"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>この表は<strong>横スクロール</strong>／<strong>先頭列固定</strong>／<strong>行タップで枠強調</strong>。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
           </div>
         </div>
       </div>
@@ -1337,7 +1705,7 @@
             <span class="text-sm text-gray-600">— 陽性・陰性症状評価尺度</span>
             <span class="badge-level-a ml-auto">Level A</span>
           </div>
-          <div class="grid grid-cols-3 gap-2 mb-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
             <div class="bg-white rounded-lg p-2 border text-center">
               <div class="font-bold text-red-700 text-lg">7項目</div>
               <div class="text-xs text-gray-600">陽性症状尺度(P)</div>
@@ -1517,6 +1885,333 @@
 
   </main>
 
+  <script>
+  (function () {
+    var STICKY_KEY = 'psych-schizophrenia-diagnosis-table-sticky-col-enabled';
+    var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    var searchInput = document.getElementById('data-table-search');
+    var searchClear = document.getElementById('data-table-search-clear');
+    var searchMeta = document.getElementById('data-table-search-meta');
+    var searchPrev = document.getElementById('data-table-search-prev');
+    var searchNext = document.getElementById('data-table-search-next');
+    var searchHighlightBtn = document.getElementById('data-table-search-highlight');
+    var searchTimer;
+    var searchHitRows = [];
+    var hitIndex = -1;
+    var highlightOn = true;
+    var mainEl = document.querySelector('main');
+
+    function normalizeSearchString(s) {
+      if (s == null || s === '') return '';
+      s = String(s).replace(/[\u200b-\u200d\ufeff]/g, '');
+      return typeof s.normalize === 'function' ? s.normalize('NFC').trim() : s.trim();
+    }
+
+    function formatSearchMeta(n) {
+      var compact = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 639px)').matches;
+      if (n === 0) return compact ? '0件' : '該当なし';
+      return compact ? (n + '件') : ('該当 ' + n + ' 箇所');
+    }
+
+    function syncStickyFromToggle() {
+      var enabled = stickyToggle ? stickyToggle.checked : false;
+      document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
+    }
+    if (stickyToggle) {
+      try {
+        var s = localStorage.getItem(STICKY_KEY);
+        if (s !== null) stickyToggle.checked = s === '1';
+      } catch (err) {}
+      stickyToggle.addEventListener('change', function () {
+        try { localStorage.setItem(STICKY_KEY, stickyToggle.checked ? '1' : '0'); } catch (err2) {}
+        syncStickyFromToggle();
+      });
+    }
+    syncStickyFromToggle();
+
+    var toolbarEl = document.getElementById('data-table-toolbar');
+    var sectionLabelEl = document.getElementById('data-table-section-label');
+    var TOOLBAR_SECTIONS = [
+      { id: 'quickref', label: '外来で押さえる3ポイント' },
+      { id: 'classic-vs-operational', label: '古典的 vs 操作的診断' },
+      { id: 'dsm5tr', label: 'DSM-5-TR 診断基準' },
+      { id: 'icd10', label: 'ICD-10 F20 診断基準' },
+      { id: 'diag-flow', label: '診断プロセスフロー' },
+      { id: 'differential', label: '鑑別・除外診断' },
+      { id: 'tests', label: '除外のための検査' },
+      { id: 'autoimmune', label: '自己免疫性脳炎の鑑別' },
+      { id: 'scales', label: '診断補助・評価スケール' },
+      { id: 'staging', label: '病期分類・参照ガイドライン' }
+    ];
+    var lastToolbarSectionLabel = '';
+    var lastToolbarSectionId = '';
+
+    function updateToolbarSectionLabel() {
+      if (!sectionLabelEl || !toolbarEl) return;
+      var threshold = toolbarEl.getBoundingClientRect().bottom + 6;
+      var active = TOOLBAR_SECTIONS[0];
+      for (var i = 0; i < TOOLBAR_SECTIONS.length; i++) {
+        var el = document.getElementById(TOOLBAR_SECTIONS[i].id);
+        if (!el) continue;
+        var top = el.getBoundingClientRect().top;
+        if (top <= threshold) active = TOOLBAR_SECTIONS[i];
+      }
+      if (active.id !== lastToolbarSectionId) {
+        lastToolbarSectionId = active.id;
+        toolbarEl.setAttribute('data-toolbar-section', active.id);
+      }
+      if (active.label !== lastToolbarSectionLabel) {
+        lastToolbarSectionLabel = active.label;
+        sectionLabelEl.textContent = active.label;
+      }
+    }
+
+    var toolbarLabelRaf = null;
+    function scheduleToolbarSectionLabel() {
+      if (toolbarLabelRaf != null) return;
+      toolbarLabelRaf = requestAnimationFrame(function () {
+        toolbarLabelRaf = null;
+        updateToolbarSectionLabel();
+      });
+    }
+    window.addEventListener('scroll', scheduleToolbarSectionLabel, { passive: true });
+    window.addEventListener('resize', scheduleToolbarSectionLabel);
+    window.addEventListener('hashchange', scheduleToolbarSectionLabel);
+    window.addEventListener('load', scheduleToolbarSectionLabel);
+    updateToolbarSectionLabel();
+
+    function syncHighlightClass() {
+      document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
+      if (searchHighlightBtn) {
+        searchHighlightBtn.setAttribute('aria-pressed', highlightOn ? 'true' : 'false');
+        searchHighlightBtn.classList.toggle('bg-amber-50', highlightOn);
+        searchHighlightBtn.classList.toggle('text-amber-900', highlightOn);
+        searchHighlightBtn.classList.toggle('bg-slate-100', !highlightOn);
+        searchHighlightBtn.classList.toggle('text-slate-600', !highlightOn);
+      }
+    }
+
+    function updateNavButtons() {
+      var n = searchHitRows.length;
+      var ok = n > 0;
+      if (searchPrev) searchPrev.disabled = !ok;
+      if (searchNext) searchNext.disabled = !ok;
+      if (ok && (hitIndex < 0 || hitIndex >= n)) hitIndex = 0;
+    }
+
+    function scrollToHit(i) {
+      if (i < 0 || i >= searchHitRows.length) return;
+      hitIndex = i;
+      requestAnimationFrame(function () {
+        searchHitRows[hitIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
+    }
+
+    function unwrapSearchMarksInTables() {
+      document.querySelectorAll('main mark.table-search-mark').forEach(function (mark) {
+        var p = mark.parentNode;
+        if (!p) return;
+        while (mark.firstChild) {
+          p.insertBefore(mark.firstChild, mark);
+        }
+        p.removeChild(mark);
+      });
+    }
+
+    function getSearchableTextNodes(el) {
+      var out = [];
+      var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          if (!node.nodeValue) return NodeFilter.FILTER_SKIP;
+          var bel = node.parentElement;
+          if (bel && bel.closest && bel.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+
+    function getSearchableTextNodesOutsideTables(root) {
+      var out = [];
+      if (!root) return out;
+      var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          if (!node.nodeValue) return NodeFilter.FILTER_SKIP;
+          var bel = node.parentElement;
+          if (!bel || !bel.closest) return NodeFilter.FILTER_SKIP;
+          if (bel.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          if (bel.closest('table.data-table')) return NodeFilter.FILTER_REJECT;
+          if (bel.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+
+    function wrapQueryInTextNode(textNode, qLower, sliceLen) {
+      var raw = textNode.textContent;
+      var text = typeof raw.normalize === 'function' ? raw.normalize('NFC') : raw;
+      var lower = text.toLowerCase();
+      var qn = typeof qLower.normalize === 'function' ? qLower.normalize('NFC') : qLower;
+      var idx = lower.indexOf(qn);
+      if (idx === -1) return;
+      var frag = document.createDocumentFragment();
+      var pos = 0;
+      while (idx !== -1) {
+        if (idx > pos) {
+          frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+        }
+        var mk = document.createElement('mark');
+        mk.className = 'table-search-mark';
+        mk.appendChild(document.createTextNode(text.slice(idx, idx + sliceLen)));
+        frag.appendChild(mk);
+        pos = idx + sliceLen;
+        idx = lower.indexOf(qn, pos);
+      }
+      if (pos < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(pos)));
+      }
+      textNode.parentNode.replaceChild(frag, textNode);
+    }
+
+    function highlightSearchOutsideTables(root, qLower, sliceLen) {
+      if (!root) return;
+      var nodes = getSearchableTextNodesOutsideTables(root);
+      for (var i = 0; i < nodes.length; i++) {
+        wrapQueryInTextNode(nodes[i], qLower, sliceLen);
+      }
+    }
+
+    function highlightSearchInRow(tr, qLower, sliceLen) {
+      tr.querySelectorAll('td').forEach(function (td) {
+        var nodes = getSearchableTextNodes(td);
+        for (var i = 0; i < nodes.length; i++) {
+          wrapQueryInTextNode(nodes[i], qLower, sliceLen);
+        }
+      });
+    }
+
+    function clearSearchHits() {
+      unwrapSearchMarksInTables();
+      document.querySelectorAll('table.data-table tbody tr.table-search-hit').forEach(function (tr) {
+        tr.classList.remove('table-search-hit');
+      });
+      searchHitRows = [];
+      hitIndex = -1;
+      updateNavButtons();
+    }
+
+    function applySearch(options) {
+      options = options || {};
+      var scrollToFirst = options.scrollToFirst === true;
+      clearSearchHits();
+      var q = normalizeSearchString(searchInput && searchInput.value ? searchInput.value : '');
+      if (!q) {
+        if (searchMeta) searchMeta.textContent = '';
+        return;
+      }
+      var ql = q.toLowerCase();
+      var sliceLen = q.length;
+      document.querySelectorAll('table.data-table tbody tr').forEach(function (tr) {
+        var rowText = tr.textContent || '';
+        if (typeof rowText.normalize === 'function') rowText = rowText.normalize('NFC');
+        if (rowText.toLowerCase().indexOf(ql) !== -1) {
+          tr.classList.add('table-search-hit');
+          searchHitRows.push(tr);
+          highlightSearchInRow(tr, ql, sliceLen);
+        }
+      });
+      highlightSearchOutsideTables(mainEl, ql, sliceLen);
+      var markTotal = mainEl ? mainEl.querySelectorAll('mark.table-search-mark').length : 0;
+      if (searchMeta) searchMeta.textContent = formatSearchMeta(markTotal);
+      updateNavButtons();
+      if (searchHitRows.length > 0) {
+        hitIndex = 0;
+        if (scrollToFirst) scrollToHit(0);
+      }
+    }
+
+    function debouncedSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () {
+        applySearch({ scrollToFirst: false });
+      }, 100);
+    }
+
+    function scheduleSearchInput(e) {
+      if (e && e.isComposing) return;
+      debouncedSearch();
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', scheduleSearchInput);
+      searchInput.addEventListener('compositionend', function () { debouncedSearch(); });
+      searchInput.addEventListener('change', debouncedSearch);
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applySearch({ scrollToFirst: false });
+          return;
+        }
+        if (e.key === 'Escape') {
+          searchInput.value = '';
+          clearSearchHits();
+          if (searchMeta) searchMeta.textContent = '';
+          searchInput.blur();
+        }
+      });
+    }
+    if (searchClear) {
+      searchClear.addEventListener('click', function () {
+        if (searchInput) searchInput.value = '';
+        clearSearchHits();
+        if (searchMeta) searchMeta.textContent = '';
+        if (searchInput) searchInput.focus();
+      });
+    }
+    if (searchPrev) {
+      searchPrev.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex <= 0 ? searchHitRows.length - 1 : hitIndex - 1;
+        scrollToHit(i);
+      });
+    }
+    if (searchNext) {
+      searchNext.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex < 0 ? 0 : (hitIndex + 1) % searchHitRows.length;
+        scrollToHit(i);
+      });
+    }
+    if (searchHighlightBtn) {
+      searchHighlightBtn.addEventListener('click', function () {
+        highlightOn = !highlightOn;
+        syncHighlightClass();
+      });
+    }
+    syncHighlightClass();
+
+    document.querySelectorAll('table.data-table').forEach(function (table) {
+      table.querySelectorAll('tbody tr').forEach(function (tr) {
+        var first = tr.querySelector('td');
+        if (!first) return;
+        if (tr.querySelector('td[colspan]')) return;
+        tr.addEventListener('click', function (e) {
+          if (e.target.closest && e.target.closest('a, button, label, input, select, textarea')) return;
+          var was = tr.classList.contains('table-row-focus');
+          table.querySelectorAll('tbody tr.table-row-focus').forEach(function (r) {
+            r.classList.remove('table-row-focus');
+          });
+          if (!was) tr.classList.add('table-row-focus');
+        });
+      });
+    });
+  })();
+  </script>
   <script>lucide.createIcons();</script>
 </body>
 </html>

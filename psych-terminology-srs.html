@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>精神医学用語 SRS 学習</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    body { font-family: 'Noto Sans JP', system-ui, sans-serif; padding-bottom: var(--safe-bottom); }
+    .header-gradient { background: var(--psych-gradient); }
+
+    /* Flip card */
+    .flip-scene { perspective: 1200px; }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      min-height: 260px;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card-inner.is-flipped { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    /* Animations */
+    .tap-hint { animation: pulse-soft 2.2s ease-in-out infinite; }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .bar-fill { transition: width 0.5s ease; }
+
+    /* Touch targets */
+    .action-btn { min-height: 48px; touch-action: manipulation; }
+
+    /* MCQ buttons */
+    .choice-btn {
+      min-height: 52px;
+      touch-action: manipulation;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .choice-btn.correct {
+      background: #d1fae5 !important;
+      border-color: #10b981 !important;
+      color: #065f46 !important;
+    }
+    .choice-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #991b1b !important;
+    }
+    .choice-btn:disabled { cursor: default; }
+
+    /* 取り込みHTML（ソースと同様の見やすさ） */
+    .srs-detail-root { font-size: 0.8125rem; line-height: 1.65; color: #334155; }
+    .srs-detail-root .example-box {
+      margin-top: 0.65rem;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 3px solid #2563eb;
+      padding: 0.55rem 0.85rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+    .srs-detail-root .contrast-box {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <!-- ── Header ── -->
+  <header class="header-gradient text-white sticky top-0 z-10
+                 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 px-4">
+    <div class="max-w-lg mx-auto">
+      <div class="flex items-center justify-between gap-2">
+        <div>
+          <h1 class="text-lg font-bold leading-tight">精神医学用語 SRS</h1>
+          <p class="text-xs text-white/70 mt-0.5">Leitner 間隔反復・学習ツール</p>
+        </div>
+        <div id="header-progress" class="hidden text-right shrink-0">
+          <p class="text-[10px] text-white/70 uppercase tracking-wide">今日の進捗</p>
+          <p class="text-base font-bold tabular-nums leading-tight">
+            <span id="prog-done">0</span>
+            <span class="text-white/60 font-normal text-sm"> / </span>
+            <span id="prog-total">0</span>
+          </p>
+        </div>
+      </div>
+      <div id="progress-bar-wrap" class="hidden mt-2.5">
+        <div class="h-1.5 bg-white/20 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-white/80 rounded-full bar-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-lg mx-auto px-4 py-4">
+
+    <!-- ══════════════════════════════════════════
+         DASHBOARD
+    ══════════════════════════════════════════ -->
+    <div id="dashboard">
+
+      <!-- Loading -->
+      <div id="loading" class="text-center py-16 text-slate-400">
+        <div class="animate-spin w-8 h-8 border-2 border-teal-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p class="text-sm">用語データを読み込み中…</p>
+      </div>
+
+      <!-- Dashboard content -->
+      <div id="dashboard-content" class="hidden space-y-4">
+
+        <!-- Today's count -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-700
+                        flex items-center justify-center text-white text-2xl shrink-0">
+              📅
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 font-medium mb-0.5">今日の学習カード</p>
+              <p class="text-3xl font-bold text-slate-900 tabular-nums leading-none">
+                <span id="today-count">0</span>
+                <span class="text-lg font-semibold text-slate-400 ml-1">枚</span>
+              </p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+            全 <span id="total-count" class="font-semibold">0</span> 語収録。
+            期日を迎えたカードと未学習カードが今日の対象です。
+          </p>
+        </div>
+
+        <!-- Leitner boxes -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+            <span class="text-base">📦</span> Leitner ボックス
+          </h2>
+          <div id="leitner-boxes" class="space-y-3"></div>
+        </div>
+
+        <!-- Session size -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-3">今回の問題数</h2>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+            今日対象になるカード（期日済み・未学習）から、ランダムに出題します。
+          </p>
+          <div id="session-size-chips" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- Mode toggle -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-3">出題モード</h2>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" data-mode="flip"
+              class="mode-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              🔄 フリップ
+            </button>
+            <button type="button" data-mode="mcq"
+              class="mode-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              🎯 4 択
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-2.5 leading-relaxed" id="mode-desc"></p>
+        </div>
+
+        <!-- Start button -->
+        <button type="button" id="btn-start"
+          class="w-full py-4 rounded-2xl font-bold text-white text-base shadow-lg
+                 active:scale-[0.98] transition"
+          style="background: var(--psych-gradient);">
+          学習を始める →
+        </button>
+
+        <!-- Footer links -->
+        <div class="flex justify-between items-center pt-1 pb-8">
+          <button type="button" id="btn-export"
+            class="text-xs text-slate-400 hover:text-slate-600 underline decoration-slate-300">
+            進捗をエクスポート
+          </button>
+          <button type="button" id="btn-reset"
+            class="text-xs text-red-400 hover:text-red-600 underline decoration-red-200">
+            ログをリセット
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SESSION
+    ══════════════════════════════════════════ -->
+    <div id="session" class="hidden space-y-4">
+
+      <!-- Top bar -->
+      <div class="flex items-center justify-between">
+        <button type="button" id="btn-back"
+          class="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1 py-1 -ml-1 px-1 rounded-lg">
+          ← 戻る
+        </button>
+        <p class="text-xs text-slate-400 tabular-nums">
+          残り <span id="remaining" class="font-semibold text-slate-600">0</span> 枚
+        </p>
+      </div>
+
+      <!-- ── Flip card ── -->
+      <div id="flip-area" class="flip-scene">
+        <div id="flip-inner"
+          class="flip-card-inner cursor-pointer select-none"
+          role="button" tabindex="0" aria-label="タップして定義を表示">
+
+          <!-- Front (term) -->
+          <div class="flip-face bg-white border border-slate-200 shadow-md p-6">
+            <div class="flex items-center justify-between mb-3">
+              <p id="flip-cat" class="text-[11px] font-bold tracking-wide text-teal-700"></p>
+              <span id="flip-box-badge"></span>
+            </div>
+            <p id="flip-term" class="text-xl font-bold text-slate-900 text-center leading-snug mt-6 mb-8"></p>
+            <p class="text-center text-xs text-slate-400 tap-hint">タップで定義を表示</p>
+          </div>
+
+          <!-- Back (definition) -->
+          <div class="flip-face flip-back bg-gradient-to-br from-slate-50 to-slate-100
+                      border border-slate-200 shadow-inner p-6 overflow-hidden flex flex-col justify-start"
+               style="max-height:65vh;">
+            <p class="text-[11px] font-bold tracking-widest text-slate-400 uppercase mb-2 shrink-0">定義</p>
+            <p id="flip-def" class="text-sm text-slate-800 leading-relaxed shrink-0"></p>
+            <div id="flip-detail-wrap" class="mt-3 min-h-0 flex-1 overflow-y-auto hidden">
+              <p class="text-[11px] font-bold text-slate-500 uppercase mb-1.5">詳細・使用例・鑑別</p>
+              <div id="flip-detail" class="srs-detail-root rounded-lg bg-white/60 border border-slate-100 p-3"></div>
+            </div>
+            <p class="text-center text-xs text-slate-400 mt-3 tap-hint shrink-0 pt-1">タップで表に戻す</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flip rating buttons -->
+      <div id="flip-rating" class="hidden space-y-2">
+        <p class="text-xs text-center text-slate-400">定義を確認して、記憶の確かさを記録</p>
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" data-rating="known"
+            class="action-btn rounded-xl bg-emerald-50 text-emerald-900
+                   border border-emerald-200 font-bold text-sm active:scale-[0.97] transition">
+            ✓ 知ってた
+          </button>
+          <button type="button" data-rating="fuzzy"
+            class="action-btn rounded-xl bg-amber-50 text-amber-900
+                   border border-amber-200 font-bold text-sm active:scale-[0.97] transition">
+            △ 怪しい
+          </button>
+          <button type="button" data-rating="unknown"
+            class="action-btn rounded-xl bg-red-50 text-red-900
+                   border border-red-200 font-bold text-sm active:scale-[0.97] transition">
+            ✗ 知らなかった
+          </button>
+        </div>
+      </div>
+
+      <!-- ── MCQ ── -->
+      <div id="mcq-area" class="hidden space-y-3">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+          <p id="mcq-cat" class="text-[11px] font-bold tracking-wide text-teal-700 mb-1"></p>
+          <p class="text-xs font-semibold text-slate-500 mb-3">次の説明にあてはまる用語はどれか？</p>
+          <p id="mcq-def" class="text-sm text-slate-800 leading-relaxed"></p>
+        </div>
+        <div id="mcq-choices" class="space-y-2"></div>
+
+        <div id="mcq-feedback" class="hidden space-y-3" aria-live="polite">
+          <div id="mcq-verdict" class="rounded-2xl border-2 px-4 py-3 text-center font-bold text-base"></div>
+          <div id="mcq-explain-body" class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 text-left space-y-3"></div>
+        </div>
+
+        <button type="button" id="mcq-next"
+          class="hidden w-full action-btn rounded-xl bg-slate-800 hover:bg-slate-700
+                 text-white font-semibold text-sm active:scale-[0.98] transition">
+          次のカード →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         COMPLETION
+    ══════════════════════════════════════════ -->
+    <div id="completion" class="hidden text-center space-y-4 py-8">
+      <div class="text-5xl mb-2">🎉</div>
+      <h2 class="text-xl font-bold text-slate-900">今日の学習完了！</h2>
+      <p class="text-sm text-slate-500 leading-relaxed px-4">
+        お疲れ様でした。<br>
+        明日以降もカードが期日を迎えたら自動で出題されます。
+      </p>
+      <div id="completion-stats"
+        class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-left space-y-2 mx-auto max-w-xs">
+      </div>
+      <button type="button" id="btn-to-dashboard"
+        class="w-full py-3.5 rounded-2xl font-bold text-white text-sm shadow-md
+               active:scale-[0.98] transition mx-auto"
+        style="background: var(--psych-gradient);">
+        ダッシュボードに戻る
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // Constants
+    // ─────────────────────────────────────────────────────────
+    const STORAGE_KEY = 'psychTermsSRS_v2';
+
+    const SESSION_SIZE_OPTIONS = [
+      { value: '5',  label: '5 問',  numeric: 5 },
+      { value: '10', label: '10 問', numeric: 10 },
+      { value: '20', label: '20 問', numeric: 20 },
+      { value: 'all', label: 'すべて', numeric: Infinity }
+    ];
+
+    const CAT_LABELS = {
+      psychiatry:     '精神医学',
+      pathology:      '精神病理学',
+      semiology:      '精神症候学',
+      psychoanalysis: '精神分析学'
+    };
+
+    /** Leitner box intervals in days (index = box-1) */
+    const LEITNER_INTERVALS = [0, 1, 3, 7, 14];
+    const LEITNER_LABELS    = ['新規・苦手', '覚えはじめ', '定着中', 'ほぼ習得', '習得済み'];
+    const LEITNER_COLORS    = [
+      { bar: 'bg-red-400',     text: 'text-red-700',     bg: 'bg-red-50',     border: 'border-red-200' },
+      { bar: 'bg-orange-400',  text: 'text-orange-700',  bg: 'bg-orange-50',  border: 'border-orange-200' },
+      { bar: 'bg-yellow-400',  text: 'text-yellow-700',  bg: 'bg-yellow-50',  border: 'border-yellow-200' },
+      { bar: 'bg-blue-400',    text: 'text-blue-700',    bg: 'bg-blue-50',    border: 'border-blue-200' },
+      { bar: 'bg-emerald-400', text: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200' }
+    ];
+
+    // ─────────────────────────────────────────────────────────
+    // Runtime state
+    // ─────────────────────────────────────────────────────────
+    let CARDS         = [];
+    let appState      = loadState();
+    let queue         = [];
+    let queueIndex    = 0;
+    let sessionDone   = 0;
+    let sessionTotal  = 0;
+    let flipRevealed  = false;
+
+    // ─────────────────────────────────────────────────────────
+    // localStorage
+    // ─────────────────────────────────────────────────────────
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { version: 2, mode: 'flip', sessionSize: '10', cards: {} };
+        const p = JSON.parse(raw);
+        const validSz = SESSION_SIZE_OPTIONS.some((x) => x.value === p.sessionSize);
+        return {
+          version:    2,
+          mode:       p.mode === 'mcq' ? 'mcq' : 'flip',
+          sessionSize: validSz ? p.sessionSize : '10',
+          cards:      (p.cards && typeof p.cards === 'object') ? p.cards : {}
+        };
+      } catch {
+        return { version: 2, mode: 'flip', sessionSize: '10', cards: {} };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Leitner engine
+    // ─────────────────────────────────────────────────────────
+    function getCardState(cardId) {
+      const s = appState.cards[cardId];
+      return s ? { box: s.box || 1, due: s.due || 0 } : { box: 1, due: 0 };
+    }
+
+    function todayMidnight() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.getTime();
+    }
+
+    function isDue(cardId) {
+      const { due } = getCardState(cardId);
+      if (!due) return true;
+      return due <= todayMidnight();
+    }
+
+    /**
+     * rating: 'known' | 'fuzzy' | 'unknown'
+     * known   → box + 1 (max 5), schedule per new box
+     * fuzzy   → box unchanged, reset due to today
+     * unknown → box = 1, due = today
+     */
+    function applyRating(cardId, rating) {
+      const cs = getCardState(cardId);
+      let newBox;
+
+      if (rating === 'known') {
+        newBox = Math.min(5, cs.box + 1);
+      } else if (rating === 'fuzzy') {
+        newBox = cs.box;
+      } else {
+        newBox = 1;
+      }
+
+      const intervalDays = LEITNER_INTERVALS[newBox - 1];
+      const dayMs = 24 * 60 * 60 * 1000;
+      const due = intervalDays === 0 ? 0 : todayMidnight() + intervalDays * dayMs;
+
+      appState.cards[cardId] = { box: newBox, due };
+      saveState();
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Data fetch: psych-terminology-jp.html → CARDS[]
+    // ─────────────────────────────────────────────────────────
+    /** .term-card 直下からタイトル行・一行目の定義段落を除いた詳細 HTML（例・類似語・参考文献） */
+    function extractDetailHtml(termCardEl) {
+      let skippedTitle = false;
+      let skippedDef = false;
+      const parts = [];
+      for (const child of termCardEl.children) {
+        const el = /** @type {Element} */ (child);
+        if (!skippedTitle && el.matches && el.matches('div.font-bold')) {
+          skippedTitle = true;
+          continue;
+        }
+        if (
+          !skippedDef && el.matches &&
+          el.matches('p.text-gray-600.mt-1') &&
+          el.classList.contains('text-sm')
+        ) {
+          skippedDef = true;
+          continue;
+        }
+        parts.push(el.outerHTML);
+      }
+      return parts.join('').trim();
+    }
+
+    async function fetchCards() {
+      try {
+        const res  = await fetch('psych-terminology-jp.html');
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const result = [];
+        doc.querySelectorAll('.section-card .term-card').forEach((card) => {
+          const id = card.getAttribute('id');
+          if (!id) return;
+          const section = card.closest('.section-card');
+          const cat = section ? section.getAttribute('id') : 'unknown';
+          const termEl = card.querySelector(':scope > div.font-bold');
+          const defEl  = card.querySelector(':scope > p.text-sm.text-gray-600.mt-1');
+          if (!termEl || !defEl) return;
+          const term = termEl.textContent.trim();
+          const def  = defEl.textContent.trim();
+          const detailHtml = extractDetailHtml(card);
+          if (term && def) result.push({ id, cat, term, def, detailHtml });
+        });
+        return result;
+      } catch (e) {
+        console.error('fetchCards failed:', e);
+        return [];
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Queue
+    // ─────────────────────────────────────────────────────────
+    function sessionSizeNumeric() {
+      const opt = SESSION_SIZE_OPTIONS.find((x) => x.value === appState.sessionSize);
+      return opt ? opt.numeric : 10;
+    }
+
+    /**
+     * 期限到来・未学習カードをシャッフル後、問題数だけ切り詰める
+     */
+    function buildQueue() {
+      let dueCards = CARDS.filter((c) => isDue(c.id));
+      dueCards.sort(() => Math.random() - 0.5);
+      const lim = sessionSizeNumeric();
+      if (Number.isFinite(lim) && lim < dueCards.length) dueCards = dueCards.slice(0, lim);
+
+      queue        = dueCards;
+      queueIndex   = 0;
+      sessionDone  = 0;
+      sessionTotal = dueCards.length;
+    }
+
+    /** 詳細 HTML を表示用に包む（空なら注記のみ） */
+    function detailSectionHtml(card, heading) {
+      const inner = card.detailHtml && card.detailHtml.trim().length > 0;
+      if (!inner) {
+        return `<p class="text-xs text-slate-400 italic">※参照ページでは続きに使用例・類似語・文献メモがあることがありますが、この語からは抽出されていません。</p>`;
+      }
+      return `<p class="text-xs font-bold text-slate-700">${heading}</p>` +
+        `<div class="srs-detail-root text-sm text-slate-700">${card.detailHtml}</div>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /** MCQ：回答直後に正誤バナーと詳細解説パネルを表示 */
+    function showMcqFeedback(isCorrect, correctCard, wrongChosenCard) {
+      const wrap = document.getElementById('mcq-feedback');
+      const verdict = document.getElementById('mcq-verdict');
+      const body = document.getElementById('mcq-explain-body');
+      wrap.classList.remove('hidden');
+
+      if (isCorrect) {
+        verdict.textContent = '正解です';
+        verdict.className =
+          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base ' +
+          'border-emerald-400 bg-emerald-50 text-emerald-900';
+        body.innerHTML =
+          `<p class="text-sm font-bold text-slate-900">解説（正解の場合）</p>` +
+          `<p class="text-sm text-slate-700 leading-relaxed">正しい用語「<strong class="text-emerald-800">${escapeHtml(
+            correctCard.term
+          )}</strong>」を選べました。この語の<strong>一文定義</strong>をもう一度整理します。</p>` +
+          `<div class="rounded-xl bg-white border border-slate-200 p-3 text-sm text-slate-800">${escapeHtml(
+            correctCard.def
+          )}</div>` +
+          detailSectionHtml(correctCard, 'さらに深く（使用例・類似語の違い・DSM／ICD 文献メモ）');
+      } else {
+        verdict.textContent = '不正解です';
+        verdict.className =
+          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base ' +
+          'border-red-400 bg-red-50 text-red-900';
+        let wrongBlock = '';
+        if (wrongChosenCard && wrongChosenCard.id !== correctCard.id) {
+          wrongBlock =
+            `<p class="text-sm font-bold text-slate-900">解説（不正解の場合）</p>` +
+            `<p class="text-sm text-slate-700 leading-relaxed">選択した「<strong class="text-red-800">${escapeHtml(
+              wrongChosenCard.term
+            )}</strong>」は、この<b>定義文</b>に最も合致する用語ではありません。次の要点で混同しやすいことがあります。</p>` +
+            `<div class="rounded-xl bg-amber-50/80 border border-amber-200 p-3 text-sm text-amber-950">` +
+            `<p class="font-semibold text-amber-900 mb-1">誤答候補の要点</p>` +
+            `<p>${escapeHtml(wrongChosenCard.def)}</p></div>`;
+        } else {
+          wrongBlock =
+            `<p class="text-sm font-bold text-slate-900">解説（不正解の場合）</p>` +
+            `<p class="text-sm text-slate-700 leading-relaxed">設問の定義に合う用語を選び直してください。下記が<strong>正解</strong>です。</p>`;
+        }
+        body.innerHTML =
+          wrongBlock +
+          `<div class="rounded-xl bg-emerald-50/90 border border-emerald-200 p-3 text-sm">` +
+          `<p class="font-semibold text-emerald-900 mb-1">正解の用語と定義</p>` +
+          `<p class="font-bold text-slate-900 mb-1">${escapeHtml(correctCard.term)}</p>` +
+          `<p class="text-slate-800">${escapeHtml(correctCard.def)}</p></div>` +
+          detailSectionHtml(correctCard, '正解語の詳細（使用例・類似語・文献メモ）');
+      }
+
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Dashboard render
+    // ─────────────────────────────────────────────────────────
+    function renderDashboard() {
+      const todayCount = CARDS.filter(c => isDue(c.id)).length;
+      document.getElementById('today-count').textContent = todayCount;
+      document.getElementById('total-count').textContent = CARDS.length;
+
+      // Box distribution
+      const boxCounts = [0, 0, 0, 0, 0];
+      for (const c of CARDS) {
+        const { box } = getCardState(c.id);
+        boxCounts[box - 1]++;
+      }
+
+      const container = document.getElementById('leitner-boxes');
+      container.innerHTML = '';
+      LEITNER_LABELS.forEach((label, i) => {
+        const col = LEITNER_COLORS[i];
+        const pct = CARDS.length > 0 ? (boxCounts[i] / CARDS.length) * 100 : 0;
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-3';
+        row.innerHTML = `
+          <span class="w-6 h-6 rounded-full ${col.bg} ${col.text} ${col.border}
+                       border text-[11px] font-bold flex items-center justify-center shrink-0">
+            ${i + 1}
+          </span>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs text-slate-600 truncate">${label}</span>
+              <span class="text-xs font-bold tabular-nums ${col.text} ml-2 shrink-0">${boxCounts[i]}</span>
+            </div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full bar-fill ${col.bar}" style="width:${pct.toFixed(1)}%"></div>
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      renderSessionSizeChips();
+      renderModeButtons();
+    }
+
+    function renderSessionSizeChips() {
+      const host = document.getElementById('session-size-chips');
+      if (!host) return;
+      host.innerHTML = '';
+      SESSION_SIZE_OPTIONS.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const active = appState.sessionSize === opt.value;
+        btn.className =
+          'rounded-xl border-2 px-3.5 py-2.5 text-xs font-semibold transition min-h-[44px] touch-manipulation ' +
+          (active
+            ? 'border-teal-600 bg-teal-50 text-teal-900'
+            : 'border-slate-200 bg-white text-slate-600');
+        btn.textContent = opt.label;
+        btn.addEventListener('click', () => {
+          appState.sessionSize = opt.value;
+          saveState();
+          renderSessionSizeChips();
+        });
+        host.appendChild(btn);
+      });
+    }
+
+    function renderModeButtons() {
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        const active = btn.dataset.mode === appState.mode;
+        btn.className = `mode-btn action-btn flex-1 rounded-xl border-2 py-3 text-sm font-semibold transition ${
+          active
+            ? 'border-teal-600 bg-teal-50 text-teal-800'
+            : 'border-slate-200 bg-white text-slate-600'
+        }`;
+      });
+      document.getElementById('mode-desc').textContent = appState.mode === 'flip'
+        ? '表面の用語を見てから裏を開くと、一文定義のほかに使用例・鑑別・文献メモ（抽出分）も読めます。そのうえで記憶の確かさを記録してください。'
+        : '選択した瞬間に正解／不正解が表示されます。正解時・不正解時で内容の異なる解説と、詳細ブロックが続きます。';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Progress bar
+    // ─────────────────────────────────────────────────────────
+    function updateProgress() {
+      document.getElementById('prog-done').textContent  = sessionDone;
+      document.getElementById('prog-total').textContent = sessionTotal;
+      const pct = sessionTotal > 0 ? (sessionDone / sessionTotal) * 100 : 0;
+      document.getElementById('progress-bar').style.width = pct.toFixed(1) + '%';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Flip card render
+    // ─────────────────────────────────────────────────────────
+    function renderFlipCard(card) {
+      const cs  = getCardState(card.id);
+      const col = LEITNER_COLORS[cs.box - 1];
+
+      document.getElementById('flip-cat').textContent  = CAT_LABELS[card.cat] || card.cat;
+      document.getElementById('flip-term').textContent = card.term;
+      document.getElementById('flip-def').textContent  = card.def;
+
+      document.getElementById('flip-box-badge').innerHTML =
+        `<span class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full
+                      border ${col.bg} ${col.text} ${col.border}">
+           Box ${cs.box} · ${LEITNER_LABELS[cs.box - 1]}
+         </span>`;
+
+      const dw = document.getElementById('flip-detail-wrap');
+      const d  = document.getElementById('flip-detail');
+      if (card.detailHtml && card.detailHtml.trim().length > 0) {
+        dw.classList.remove('hidden');
+        d.innerHTML = card.detailHtml;
+      } else {
+        dw.classList.add('hidden');
+        d.innerHTML = '';
+      }
+
+      document.getElementById('flip-inner').classList.remove('is-flipped');
+      document.getElementById('flip-rating').classList.add('hidden');
+      flipRevealed = false;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // MCQ render
+    // ─────────────────────────────────────────────────────────
+    function renderMCQ(card) {
+      document.getElementById('mcq-cat').textContent = CAT_LABELS[card.cat] || card.cat;
+      document.getElementById('mcq-def').textContent = card.def;
+      document.getElementById('mcq-next').classList.add('hidden');
+      document.getElementById('mcq-feedback').classList.add('hidden');
+
+      const others  = CARDS.filter((c) => c.id !== card.id);
+      const diffCat = others.filter((c) => c.cat !== card.cat);
+      const sameCat = others.filter((c) => c.cat === card.cat);
+      let pool = diffCat.length >= 3 ? diffCat : [...diffCat, ...sameCat];
+      pool.sort(() => Math.random() - 0.5);
+      const distractors = pool.slice(0, 3);
+
+      const choices = [
+        { pick: card, correct: true },
+        ...distractors.map((d) => ({ pick: d, correct: false }))
+      ].sort(() => Math.random() - 0.5);
+
+      const container = document.getElementById('mcq-choices');
+      container.innerHTML = '';
+
+      choices.forEach((choice) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.cardId = choice.pick.id;
+        btn.className =
+          'choice-btn w-full text-left rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-800 active:scale-[0.98]';
+        btn.textContent = choice.pick.term;
+
+        btn.addEventListener('click', () => {
+          container.querySelectorAll('.choice-btn').forEach((b) => { b.disabled = true; });
+
+          if (choice.correct) {
+            btn.classList.add('correct');
+            applyRating(card.id, 'known');
+            showMcqFeedback(true, card, null);
+          } else {
+            btn.classList.add('wrong');
+            container.querySelectorAll('.choice-btn').forEach((b) => {
+              if (b.dataset.cardId === card.id) b.classList.add('correct');
+            });
+            applyRating(card.id, 'unknown');
+            showMcqFeedback(false, card, choice.pick);
+          }
+
+          sessionDone++;
+          updateProgress();
+          document.getElementById('mcq-next').classList.remove('hidden');
+        });
+
+        container.appendChild(btn);
+      });
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Screen transitions
+    // ─────────────────────────────────────────────────────────
+    function showDashboard() {
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('session').classList.add('hidden');
+      document.getElementById('completion').classList.add('hidden');
+      document.getElementById('header-progress').classList.add('hidden');
+      document.getElementById('progress-bar-wrap').classList.add('hidden');
+      renderDashboard();
+    }
+
+    function showSession() {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('session').classList.remove('hidden');
+      document.getElementById('completion').classList.add('hidden');
+      document.getElementById('header-progress').classList.remove('hidden');
+      document.getElementById('progress-bar-wrap').classList.remove('hidden');
+      showCurrentCard();
+    }
+
+    function showCompletion() {
+      document.getElementById('session').classList.add('hidden');
+      document.getElementById('completion').classList.remove('hidden');
+      document.getElementById('header-progress').classList.add('hidden');
+      document.getElementById('progress-bar-wrap').classList.add('hidden');
+
+      const boxCounts = [0, 0, 0, 0, 0];
+      for (const c of CARDS) {
+        const { box } = getCardState(c.id);
+        boxCounts[box - 1]++;
+      }
+
+      const statsEl = document.getElementById('completion-stats');
+      statsEl.innerHTML =
+        `<p class="text-sm font-bold text-slate-700 mb-3">ボックス分布</p>` +
+        LEITNER_LABELS.map((label, i) => {
+          const col = LEITNER_COLORS[i];
+          return `<div class="flex items-center justify-between text-xs py-0.5">
+            <span class="${col.text} font-medium">Box ${i + 1}　${label}</span>
+            <span class="tabular-nums font-semibold text-slate-700">${boxCounts[i]} 語</span>
+          </div>`;
+        }).join('') +
+        `<div class="border-t border-slate-100 mt-2 pt-2 flex justify-between text-xs">
+           <span class="text-slate-500">今日完了</span>
+           <span class="font-bold text-teal-700">${sessionDone} 枚</span>
+         </div>`;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Session: show current card
+    // ─────────────────────────────────────────────────────────
+    function showCurrentCard() {
+      if (queueIndex >= queue.length) {
+        showCompletion();
+        return;
+      }
+
+      const card = queue[queueIndex];
+      document.getElementById('remaining').textContent = queue.length - queueIndex;
+      updateProgress();
+
+      if (appState.mode === 'flip') {
+        document.getElementById('flip-area').classList.remove('hidden');
+        document.getElementById('mcq-area').classList.add('hidden');
+        renderFlipCard(card);
+      } else {
+        document.getElementById('flip-area').classList.add('hidden');
+        document.getElementById('mcq-area').classList.remove('hidden');
+        renderMCQ(card);
+      }
+    }
+
+    function advance() {
+      queueIndex++;
+      showCurrentCard();
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Event listeners
+    // ─────────────────────────────────────────────────────────
+
+    // Start
+    document.getElementById('btn-start').addEventListener('click', () => {
+      buildQueue();
+      if (queue.length === 0) {
+        alert('今日の学習カードはありません。明日また来てください！');
+        return;
+      }
+      showSession();
+    });
+
+    // Back to dashboard
+    document.getElementById('btn-back').addEventListener('click', () => {
+      if (confirm('セッションを中断してダッシュボードに戻りますか？')) showDashboard();
+    });
+
+    // Completion → dashboard
+    document.getElementById('btn-to-dashboard').addEventListener('click', showDashboard);
+
+    // Flip card toggle
+    const flipInnerEl = document.getElementById('flip-inner');
+    flipInnerEl.addEventListener('click', () => {
+      if (queueIndex >= queue.length) return;
+      flipRevealed = !flipRevealed;
+      flipInnerEl.classList.toggle('is-flipped', flipRevealed);
+      document.getElementById('flip-rating').classList.toggle('hidden', !flipRevealed);
+    });
+    flipInnerEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipInnerEl.click(); }
+    });
+
+    // Flip rating buttons
+    document.querySelectorAll('[data-rating]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = queue[queueIndex];
+        if (!card) return;
+        applyRating(card.id, btn.dataset.rating);
+        sessionDone++;
+        advance();
+      });
+    });
+
+    // MCQ next
+    document.getElementById('mcq-next').addEventListener('click', advance);
+
+    // Mode toggle
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        appState.mode = btn.dataset.mode;
+        saveState();
+        renderModeButtons();
+      });
+    });
+
+    // Export JSON
+    document.getElementById('btn-export').addEventListener('click', () => {
+      const payload = JSON.stringify({ exportedAt: new Date().toISOString(), state: appState }, null, 2);
+      const blob = new Blob([payload], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = Object.assign(document.createElement('a'), { href: url, download: 'psych-srs-progress.json' });
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Reset
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (!confirm('学習ログをすべてリセットしますか？\n（Leitnerボックスの進捗がすべて消えます）')) return;
+      appState.cards = {};
+      saveState();
+      renderDashboard();
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // Init
+    // ─────────────────────────────────────────────────────────
+    (async () => {
+      CARDS = await fetchCards();
+      document.getElementById('loading').classList.add('hidden');
+
+      if (CARDS.length === 0) {
+        document.getElementById('dashboard-content').innerHTML =
+          `<div class="bg-red-50 rounded-2xl border border-red-200 p-5 text-center">
+             <p class="text-red-700 font-semibold text-sm mb-1">用語データの読み込みに失敗しました</p>
+             <p class="text-red-500 text-xs leading-relaxed">
+               <code>psych-terminology-jp.html</code> と同じサーバーから開いてください。<br>
+               ファイルを直接開く（<code>file://</code>）場合は動作しません。
+             </p>
+           </div>`;
+        document.getElementById('dashboard-content').classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('dashboard-content').classList.remove('hidden');
+      renderDashboard();
+    })();
+  </script>
+</body>
+</html>

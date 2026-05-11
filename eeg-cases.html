@@ -174,6 +174,89 @@ function drawCanvas(canvas, type) {
       }
       ctx.stroke();
     },
+    hypsarrhythmia(ctx,W,H) {
+      ctx.strokeStyle='#f472b6'; ctx.lineWidth=1.5; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*8;
+        const v=pseudoNoise(t,12)*H*0.38+pseudoNoise(t*2.5,7)*H*0.20+Math.sin(2*Math.PI*1.2*t)*H*0.15;
+        x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);
+      }
+      ctx.stroke();
+      ctx.fillStyle='rgba(244,114,182,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';
+      ctx.fillText('Hypsarrhythmia（混沌・高振幅）',W/2,14);ctx.textAlign='left';
+    },
+    lpds(ctx,W,H) {
+      ctx.strokeStyle='#818cf8'; ctx.lineWidth=1; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*6; const n=pseudoNoise(t,7)*H*0.03;
+        x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);
+      }
+      ctx.stroke();
+      for(let i=0;i<5;i++){
+        const sx=W*(0.08+i*0.20);
+        ctx.strokeStyle='#a5b4fc'; ctx.lineWidth=2; ctx.beginPath();
+        ctx.moveTo(sx,H/2); ctx.lineTo(sx+3,H/2-H*0.40); ctx.lineTo(sx+8,H/2+H*0.20); ctx.lineTo(sx+18,H/2-H*0.10); ctx.lineTo(sx+26,H/2);
+        ctx.stroke();
+      }
+      ctx.fillStyle='rgba(165,180,252,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';
+      ctx.fillText('LPDs 一側性周期性放電（左側頭部）',W/2,14);ctx.textAlign='left';
+    },
+    spikeWave(ctx,W,H) {
+      ctx.strokeStyle='#f87171'; ctx.lineWidth=1.8; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*6; const ph=t*3; const fr=ph-Math.floor(ph);
+        const v=fr<0.12?Math.sin(fr/0.12*Math.PI*2)*H*0.42:-Math.sin((fr-0.12)/0.88*Math.PI)*H*0.20;
+        x===0?ctx.moveTo(x,H/2-(v+pseudoNoise(t,0)*2)):ctx.lineTo(x,H/2-(v+pseudoNoise(t,0)*2));
+      }
+      ctx.stroke();
+      ctx.fillStyle='rgba(248,113,113,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';
+      ctx.fillText('持続的棘徐波複合（NCSE）',W/2,14);ctx.textAlign='left';
+    },
+    extremeDeltaBrush(ctx,W,H) {
+      // Delta base
+      ctx.strokeStyle='#c4b5fd'; ctx.lineWidth=2; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*8;
+        const dv=Math.sin(2*Math.PI*1.5*t)*H*0.36+pseudoNoise(t,5)*H*0.04;
+        x===0?ctx.moveTo(x,H/2-dv):ctx.lineTo(x,H/2-dv);
+      }
+      ctx.stroke();
+      // Beta superimposed on delta peaks
+      ctx.strokeStyle='rgba(251,191,36,0.85)'; ctx.lineWidth=1; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*8;
+        const dv=Math.sin(2*Math.PI*1.5*t)*H*0.36;
+        const beta=Math.sin(2*Math.PI*25*t)*H*0.10*(0.5+0.5*Math.sin(2*Math.PI*1.5*t+Math.PI/2));
+        x===0?ctx.moveTo(x,H/2-dv-beta):ctx.lineTo(x,H/2-dv-beta);
+      }
+      ctx.stroke();
+      ctx.fillStyle='rgba(196,181,253,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';
+      ctx.fillText('Extreme Delta Brush（δ+β重畳）',W/2,14);ctx.textAlign='left';
+    },
+    deepAnesthesia(ctx,W,H) {
+      // Left half: burst-suppression, right half: flat
+      ctx.strokeStyle='#67e8f9'; ctx.lineWidth=1.5; ctx.beginPath();
+      for(let x=0;x<W;x++){
+        const t=x/W*10;
+        let v;
+        if(x<W*0.52){
+          const cy=t/3.0; const cf=cy-Math.floor(cy);
+          v=cf<0.32?Math.sin(2*Math.PI*3*t)*H*0.36+pseudoNoise(t,0)*H*0.10:pseudoNoise(t*5,3)*H*0.02;
+        } else {
+          v=pseudoNoise(t*5,3)*H*0.015;
+        }
+        x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);
+      }
+      ctx.stroke();
+      // Labels
+      ctx.fillStyle='rgba(103,232,249,0.7)';ctx.font='10px sans-serif';
+      ctx.fillText('Burst-Suppression',4,14);
+      ctx.fillStyle='rgba(148,163,184,0.7)';
+      ctx.fillText('→ 等電位（ECS）',W*0.55,14);
+      // Divider
+      ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+      ctx.beginPath();ctx.moveTo(W*0.52,0);ctx.lineTo(W*0.52,H);ctx.stroke();ctx.setLineDash([]);
+    },
   };
   if (draws[type]) draws[type](ctx,W,H);
 }
@@ -558,9 +641,366 @@ const CASES = [
       },
     ]
   },
+  // ===== 追加症例 Case 6-10 =====
+  {
+    id: 'case6',
+    num: 6,
+    title: 'West症候群（点頭てんかん）',
+    patient: '4ヶ月男児',
+    badge: { text: '小児てんかん', color: 'bg-pink-100 text-pink-800' },
+    waveType: 'hypsarrhythmia',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>1週間前から頭部を前屈しながら両腕を挙げる発作（シリーズ形成）</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>在胎38週・正常分娩。生後2ヶ月まで正常発達。3ヶ月ごろから寝起きに頭を前屈し、両腕を挙げる動作が数秒続くことがあった。1週間前からシリーズ（数十回の連続発作）を形成し、小児科を受診。発達退行（追視の消失）も両親が気づいていた。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">身体所見・検査</p>
+              <p>体重・身長：正常。大泉門：正常。神経学的：筋緊張低下（フロッピーインファント）。MRI：正常（特発性）。代謝スクリーニング・染色体：異常なし。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① 点頭発作（Infantile spasms）の特徴を挙げよ。<br>② この月齢・症状から最も考えられるてんかん症候群は？<br>③ 期待される脳波所見と治療法は？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-pink-100 text-pink-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">West症候群（点頭てんかん）</span>
+            </div>
+            <div class="bg-pink-50 border border-pink-200 rounded-xl p-4">
+              <p class="font-bold text-pink-800 mb-2">三徴（診断基準）</p>
+              <div class="grid grid-cols-3 gap-2 text-xs text-center">
+                <div class="bg-white rounded p-2 border"><p class="font-bold text-pink-700">①点頭発作</p><p>Infantile spasms（シリーズ形成）</p></div>
+                <div class="bg-white rounded p-2 border"><p class="font-bold text-pink-700">②Hypsarrhythmia</p><p>混沌とした高振幅多形性EEG</p></div>
+                <div class="bg-white rounded p-2 border"><p class="font-bold text-pink-700">③発達退行</p><p>既存発達の後退</p></div>
+              </div>
+            </div>
+            <div class="bg-pink-50 border border-pink-200 rounded-xl p-4">
+              <p class="font-bold text-pink-800 mb-2">EEG特徴：Hypsarrhythmia</p>
+              <ul class="space-y-1 text-xs text-slate-700">
+                <li>• 高振幅（＞200μV）の不規則多形性δ・θ波が混在</li>
+                <li>• 多焦点性棘波・鋭波が不規則に出現</li>
+                <li>• チャンネル間に同期性がない（asynchronous）</li>
+                <li>• <strong>発作時：</strong>突然の波形抑制（Electrodecrement）</li>
+                <li>• 睡眠中は断片化し、バーストパターンに近づく</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療</p>
+              <div class="space-y-1.5 text-xs text-slate-700">
+                <p><strong>第一選択：</strong>ACTH療法（合成ACTH / テトラコサクチド筋注）または経口ビガバトリン</p>
+                <p><strong>結節性硬化症合併例：</strong>ビガバトリンが特に有効（ファーストライン）</p>
+                <p><strong>治療効果指標：</strong>EEGのhypsarrhythmia消失＋発作停止</p>
+                <p><strong>予後：</strong>早期治療開始が発達予後に直結。特発性（正常MRI）は最良。症候性は発達障害残存率が高い。</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case7',
+    num: 7,
+    title: 'HSV脳炎（ヘルペス脳炎）',
+    patient: '55歳男性',
+    badge: { text: '感染性脳炎', color: 'bg-red-100 text-red-800' },
+    waveType: 'lpds',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>発熱・頭痛・意識混濁（急性発症、2日間で急速増悪）</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>2日前から38.5℃の発熱と頭痛。昨日から言動がおかしく（側頭葉症状：記憶障害・幻嗅）、本日、意識混濁（GCS 13点）で救急搬送。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">身体所見・検査</p>
+              <p>体温38.8℃。項部硬直（±）。CSF：白血球200/μL（リンパ球優位）、蛋白85mg/dL、糖正常。MRI：左側頭葉〜辺縁系（海馬）FLAIR高信号。HSV-PCR（髄液）：陽性。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800">
+            <p class="font-bold mb-1">緊急対応が必要！</p>
+            <p>PCR結果を待たず、直ちにアシクロビル点滴を開始する。治療開始が数時間遅れるだけで予後が悪化する。</p>
+          </div>
+          <div class="mt-3 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① 側頭葉優位のEEG変化は何を示唆するか？<br>② LPDsとは何か、なぜ出現するか？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-red-100 text-red-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">HSV脳炎（ヘルペス脳炎）</span>
+            </div>
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+              <p class="font-bold text-red-800 mb-2">EEG特徴：LPDs（一側性周期性放電）</p>
+              <ul class="space-y-1 text-xs text-slate-700">
+                <li>• 側頭部・前頭側頭部（T3/F7/F3周辺）に一側性の周期性放電</li>
+                <li>• 0.5〜3Hzの規則的繰り返し（旧称：PLEDS）</li>
+                <li>• 二相性の鋭波形状、後続徐波を伴うことあり</li>
+                <li>• <strong>HSV脳炎の70-80%</strong>に出現（早期診断の補助）</li>
+                <li>• てんかん重積のリスク：抗てんかん薬予防投与を検討</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療</p>
+              <div class="space-y-1 text-xs text-slate-700">
+                <p><strong>第一選択：</strong>アシクロビル 10mg/kg × 8時間ごと（21日間）</p>
+                <p><strong>開始タイミング：</strong>PCR結果を待たず、臨床診断で即開始</p>
+                <p><strong>てんかん対策：</strong>LPDsがある場合、レベチラセタム・フェニトイン等</p>
+                <p><strong>ステロイド：</strong>高度脳浮腫の場合に補助的使用を検討</p>
+                <p><strong>予後：</strong>早期治療で死亡率10〜20%。未治療では70%以上。後遺症（記憶障害）残存例あり。</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case8',
+    num: 8,
+    title: '非けいれん性てんかん重積（NCSE）',
+    patient: '70歳男性・術後ICU',
+    badge: { text: 'てんかん重積', color: 'bg-purple-100 text-purple-800' },
+    waveType: 'spikeWave',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>大腸手術後ICU。術後2日、意識回復が遷延（GCS変動：8-12点）</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>70歳男性。大腸切除術後ICU管理中。術翌日から意識回復が遷延し、GCSが8-12点で変動。明らかなけいれんはない。眼球偏移・自動症（口唇の反復運動）を時々認める。代謝・電解質：正常。CT：術前の軽度白質変化以外、新規病変なし。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">EEGオーダーの理由</p>
+              <p>「意識障害の原因不明」→ 神経内科コンサルトでEEGを施行。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-purple-50 border border-purple-200 rounded-lg text-sm text-purple-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① NCSEとは何か？なぜ「見逃されやすい」か？<br>② ICU意識障害の何%にNCSEが潜在するといわれているか？<br>③ EEGで何を見つければNCSEと診断できるか？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-purple-100 text-purple-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">非けいれん性てんかん重積（NCSE）</span>
+            </div>
+            <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+              <p class="font-bold text-purple-800 mb-2">NCSEとは</p>
+              <p class="text-xs text-slate-700 mb-2">持続的なてんかん放電（≥5分、間歇的なら総時間が30分以上）があるにも関わらず、明らかなけいれんを伴わない状態。意識変容・自動症・眼球偏移・失語など非特異的症状のみ。</p>
+              <ul class="space-y-1 text-xs text-slate-700">
+                <li>• <strong>ICU意識障害の約18-20%</strong>にNCSEが潜在</li>
+                <li>• EEGなしに診断不可能</li>
+                <li>• 診断基準：Salzburg criteria（持続棘波・リズム性δ>3Hz等）</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療</p>
+              <div class="space-y-1 text-xs text-slate-700">
+                <p><strong>第一選択：</strong>ロラゼパム 0.1mg/kg 静注（または IV ジアゼパム）</p>
+                <p><strong>第二選択：</strong>レベチラセタム 60mg/kg or ラコサミド / バルプロ酸 IV</p>
+                <p><strong>難治性NCSE：</strong>ICU全身麻酔（ミダゾラム・プロポフォール）+EEGモニタリング</p>
+                <p><strong>治療目標：</strong>EEGでのてんかん放電消失を確認する（臨床症状のみでは判断できない）</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case9',
+    num: 9,
+    title: '自己免疫性脳炎（抗NMDAR抗体）',
+    patient: '38歳女性',
+    badge: { text: '自己免疫性脳炎', color: 'bg-violet-100 text-violet-800' },
+    waveType: 'extremeDeltaBrush',
+    stages: [
+      {
+        id: 'history',
+        label: '病歴',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">主訴</p>
+              <p>急速に進行する精神症状（幻覚・興奮・口唇自動症）→意識障害</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">現病歴</p>
+              <p>2週間前から「声が聞こえる」「誰かが追いかけてくる」という幻覚・妄想状態で精神科を受診。抗精神病薬で改善なし。日増しに悪化し、口唇・手の自動症（常同運動）が出現。搬送当日、意識混濁（GCS 9点）となり神経内科入院。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">身体所見・検査</p>
+              <p>体温37.2℃。髄液：軽度細胞増多（リンパ球）。MRI：海馬FLAIR軽度高信号。血清・髄液抗NMDA受容体抗体：陽性。骨盤CT：右卵巣に嚢胞性腫瘤。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-violet-50 border border-violet-200 rounded-lg text-sm text-violet-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① 抗NMDAR脳炎の特徴的EEG所見「Extreme delta brush」とは？<br>② 治療の柱は何か（免疫療法＋腫瘍検索の意義）？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '診断・治療',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-violet-100 text-violet-800">診断</span>
+              <span class="font-bold text-lg text-slate-800">抗NMDA受容体脳炎</span>
+            </div>
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+              <p class="font-bold text-violet-800 mb-2">EEG特徴：Extreme Delta Brush（EDB）</p>
+              <ul class="space-y-1 text-xs text-slate-700">
+                <li>• δ波（1-3Hz）の各波の上に<strong>β帯域の速波（20-30Hz）が重畳</strong></li>
+                <li>• 「δ波の上にβが乗っている」という独特の形状</li>
+                <li>• 抗NMDAR脳炎の<strong>約30%</strong>に出現（高特異度）</li>
+                <li>• 重篤な経過（ICU入室・人工呼吸管理）の例に多い</li>
+                <li>• 全般性徐波化・多形性δも一般的所見</li>
+              </ul>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <p class="font-bold text-emerald-800 mb-2">治療（可逆性！早期治療が重要）</p>
+              <div class="space-y-1 text-xs text-slate-700">
+                <p><strong>腫瘍検索と摘出：</strong>卵巣奇形腫（若年女性の50%）→ 腫瘍摘出が治療の根幹</p>
+                <p><strong>第一選択免疫療法：</strong>ステロイドパルス＋IVIG＋血漿交換（triple therapy）</p>
+                <p><strong>第二選択：</strong>リツキシマブ、ミコフェノール酸モフェチル</p>
+                <p><strong>予後：</strong>治療で80%以上が回復（可逆性）。ただし再発（25%）に注意。</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
+  {
+    id: 'case10',
+    num: 10,
+    title: '全身麻酔管理・Burst-Suppression → 等電位',
+    patient: '65歳男性・全身麻酔中',
+    badge: { text: '麻酔管理', color: 'bg-slate-100 text-slate-700' },
+    waveType: 'deepAnesthesia',
+    stages: [
+      {
+        id: 'history',
+        label: '臨床状況',
+        icon: 'file-text',
+        content: `
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">状況</p>
+              <p>65歳男性。左側頭葉グリオーマの摘出術中。術中EEGモニタリングを施行している。麻酔薬増量に伴いEEGが変化している。</p>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+              <p class="font-bold text-slate-800 mb-1">麻酔薬使用</p>
+              <p>プロポフォール（TCI）＋レミフェンタニル。麻酔深度（BIS）モニタリング中。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200">
+              <p class="font-bold text-amber-800 mb-1">麻酔深度とEEGの関係</p>
+              <p>麻酔が深くなるにつれ：浅麻酔（β増加）→ 中等度（α増加）→ 深麻酔（Burst-suppression）→ 超深麻酔（等電位）の順に変化する。</p>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-800">
+            <p class="font-bold mb-1">考えてみましょう</p>
+            <p>① Burst-suppressionが出現したとき、麻酔科医はどう判断するか？<br>② 等電位（ECS）と脳死ECSは何が異なるか？<br>③ 術中てんかん発作が起きたときの対処は？</p>
+          </div>
+        `
+      },
+      { id: 'eeg', label: '脳波', icon: 'activity', content: null, isEEG: true },
+      {
+        id: 'diagnosis',
+        label: '解説・管理方針',
+        icon: 'clipboard-check',
+        content: `
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="dx-badge bg-slate-100 text-slate-700">管理方針</span>
+              <span class="font-bold text-lg text-slate-800">深麻酔管理とEEGモニタリング</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <p class="font-bold text-slate-700 mb-2">麻酔深度段階とEEG所見</p>
+              <div class="space-y-1.5 text-xs">
+                <div class="flex gap-2 items-center"><span class="w-24 font-bold text-blue-700">浅麻酔</span><span class="text-slate-600">β波増加（paradoxical activation）、速波優位</span></div>
+                <div class="flex gap-2 items-center"><span class="w-24 font-bold text-teal-700">中等度麻酔</span><span class="text-slate-600">α・θ波優位、振幅増大</span></div>
+                <div class="flex gap-2 items-center"><span class="w-24 font-bold text-amber-700">深麻酔</span><span class="text-slate-600"><strong>Burst-suppression：</strong>バースト（0.5-30秒）＋抑制（1-30秒）</span></div>
+                <div class="flex gap-2 items-center"><span class="w-24 font-bold text-red-700">超深麻酔</span><span class="text-slate-600"><strong>ECS（等電位）：</strong>完全平坦（可逆性）</span></div>
+              </div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <p class="font-bold text-amber-800 mb-2">術中EEGの意義</p>
+              <ul class="space-y-1 text-xs text-slate-700">
+                <li>• <strong>Burst-suppression比率（BSR）</strong>による麻酔深度の客観的評価</li>
+                <li>• 術中てんかん発作の検出（皮質切除術・SEEG留置中）</li>
+                <li>• 脳虚血の早期検出（頸動脈内膜切除術・神経血管手術）</li>
+                <li>• BIS（Bispectral Index）はEEGのアルゴリズム指標</li>
+              </ul>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+              <p class="font-bold text-indigo-800 mb-1">麻酔性ECSと病的ECS（脳死）の違い</p>
+              <div class="grid sm:grid-cols-2 gap-2 text-xs">
+                <div><p class="font-bold text-indigo-700 mb-0.5">麻酔性ECS</p><ul class="text-slate-600 space-y-0.5"><li>• 麻酔薬減量で回復</li><li>• 完全に可逆性</li><li>• BIS 0〜5</li></ul></div>
+                <div><p class="font-bold text-red-700 mb-0.5">脳死ECS</p><ul class="text-slate-600 space-y-0.5"><li>• 薬物洗い出し後も持続</li><li>• 無呼吸・脳幹反射消失</li><li>• 法的脳死判定基準の一つ</li></ul></div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+    ]
+  },
 ];
-
-// ===== State per case: unlocked stages =====
 const CASE_STATE_KEY = 'eeg_case_state';
 let caseState = {};
 function loadCaseState() {
@@ -625,6 +1065,14 @@ function renderCases() {
                 診断・解説を見る
               </button>
             ` : s.content || ''}
+            ${!s.isEEG && si < c.stages.length - 1 ? `
+              <div class="mt-4 pt-4 border-t border-slate-200 flex justify-end">
+                <button type="button" onclick="unlockNextStage('${c.id}',${si})" class="reveal-btn">
+                  次のステップへ：${c.stages[si + 1].label}
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            ` : ''}
             ${si === c.stages.length - 2 ? `
               <div class="mt-4 pt-4 border-t border-slate-200 flex justify-end">
                 <button onclick="unlockNextStage('${c.id}',${si})" class="reveal-btn">
@@ -679,8 +1127,14 @@ function showStage(caseId, stageIdx) {
     const btn = document.getElementById(`stagebtn-${caseId}-${si}`);
     if (panel) panel.classList.toggle('active', si === stageIdx);
     if (btn) {
+      const locked = !cs.unlocked.includes(si);
+      btn.disabled = locked;
+      btn.classList.toggle('opacity-40', locked);
+      btn.classList.toggle('cursor-not-allowed', locked);
       btn.classList.toggle('active', si === stageIdx);
-      btn.classList.toggle('unlocked', cs.unlocked.includes(si) && si !== stageIdx);
+      btn.classList.toggle('unlocked', !locked && si !== stageIdx);
+      if (locked) btn.setAttribute('title', '前のステップを完了してください');
+      else btn.removeAttribute('title');
     }
   });
 

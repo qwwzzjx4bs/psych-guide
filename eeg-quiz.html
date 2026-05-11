@@ -6,6 +6,7 @@
 <title>脳波読影クイズ | EEG学習ツール</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="eeg-srs.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -84,7 +85,7 @@
     <div class="flex items-center gap-3">
       <div class="flex-1">
         <div class="flex justify-between text-xs text-slate-500 mb-1">
-          <span id="progress-label">問題 1 / 5</span>
+          <span id="progress-label">問題 1 / 10</span>
           <span id="score-label">正答: 0</span>
         </div>
         <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden">
@@ -256,6 +257,128 @@ const DRAWFNS = {
       ctx.stroke();
     }
   },
+  muRhythm(ctx, W, H) {
+    ctx.strokeStyle = '#a3e635'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const n = pseudoNoise(t,6)*2;
+      const mu = Math.sin(2*Math.PI*10*t)*H*0.30 + Math.sin(2*Math.PI*10*t*2)*H*0.08;
+      x===0 ? ctx.moveTo(x, H/2-mu-n) : ctx.lineTo(x, H/2-mu-n);
+    }
+    ctx.stroke();
+    ctx.fillStyle='rgba(163,230,53,0.7)'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('C3/C4（中心部）', W/2, 14); ctx.textAlign='left';
+  },
+  firda(ctx, W, H) {
+    ctx.strokeStyle = '#f0abfc'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const cy = t/1.5; const cf = cy-Math.floor(cy);
+      const burst = cf < 0.50;
+      let v = burst ? Math.sin(2*Math.PI*1.5*t)*H*0.38+pseudoNoise(t,4)*H*0.05 : pseudoNoise(t,4)*H*0.04;
+      x===0 ? ctx.moveTo(x, H/2-v) : ctx.lineTo(x, H/2-v);
+    }
+    ctx.stroke();
+    ctx.fillStyle='rgba(240,171,252,0.7)'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('前頭部優位', W/2, 14); ctx.textAlign='left';
+  },
+  remSleep(ctx, W, H) {
+    ctx.strokeStyle = '#7dd3fc'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6;
+      const v = Math.sin(2*Math.PI*7*t)*H*0.10+Math.sin(2*Math.PI*4*t)*H*0.08+pseudoNoise(t,9)*H*0.08;
+      x===0 ? ctx.moveTo(x, H/2-v) : ctx.lineTo(x, H/2-v);
+    }
+    ctx.stroke();
+    // Saw-tooth eye movement markers
+    ctx.strokeStyle = '#f97316'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const rem = (t*2)%1;
+      const eye = rem < 0.5 ? H*0.28*rem*2 : H*0.28*(1-rem)*2;
+      x===0 ? ctx.moveTo(x, H*0.12+eye) : ctx.lineTo(x, H*0.12+eye);
+    }
+    ctx.stroke();
+    ctx.fillStyle='rgba(253,186,116,0.8)'; ctx.font='9px sans-serif'; ctx.fillText('眼球運動（REM）',4,12);
+    ctx.fillStyle='rgba(125,211,252,0.8)'; ctx.fillText('混合周波数・低振幅EEG',4,H-6);
+  },
+  grda(ctx, W, H) {
+    ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*8;
+      const v = Math.sin(2*Math.PI*1.5*t)*H*0.40+pseudoNoise(t,5)*H*0.04;
+      x===0 ? ctx.moveTo(x, H/2-v) : ctx.lineTo(x, H/2-v);
+    }
+    ctx.stroke();
+    ctx.fillStyle='rgba(196,181,253,0.7)'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('全般性律動性δ（GRDA）', W/2, 14); ctx.textAlign='left';
+  },
+  kComplex(ctx, W, H) {
+    ctx.strokeStyle = '#86efac'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const n = pseudoNoise(t,11)*H*0.03;
+      x===0 ? ctx.moveTo(x, H/2-n) : ctx.lineTo(x, H/2-n);
+    }
+    ctx.stroke();
+    // K-complex at t~2
+    ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const dt = t-2.0;
+      let kc = 0;
+      if (dt >= -0.12 && dt < 0) kc = -H*0.36*(dt+0.12)/0.12;
+      else if (dt >= 0 && dt < 0.25) kc = H*0.36*Math.sin(dt/0.25*Math.PI);
+      x===0 ? ctx.moveTo(x, H/2-kc) : ctx.lineTo(x, H/2-kc);
+    }
+    ctx.stroke();
+    // spindle after K
+    ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const dt = t-2.8; const sp = dt>=0&&dt<0.5?Math.sin(dt/0.5*Math.PI)*H*0.22:0;
+      x===0 ? ctx.moveTo(x, H/2-Math.sin(2*Math.PI*13*(x/W*6))*sp) : ctx.lineTo(x, H/2-Math.sin(2*Math.PI*13*(x/W*6))*sp);
+    }
+    ctx.stroke();
+  },
+  lpds(ctx, W, H) {
+    ctx.strokeStyle = '#818cf8'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const n = pseudoNoise(t,7)*H*0.03;
+      x===0 ? ctx.moveTo(x, H/2-n) : ctx.lineTo(x, H/2-n);
+    }
+    ctx.stroke();
+    for (let i = 0; i < 5; i++) {
+      const sx = W*(0.08+i*0.20);
+      ctx.strokeStyle = '#a5b4fc'; ctx.lineWidth = 2; ctx.beginPath();
+      ctx.moveTo(sx,H/2); ctx.lineTo(sx+3,H/2-H*0.40); ctx.lineTo(sx+8,H/2+H*0.20); ctx.lineTo(sx+18,H/2-H*0.10); ctx.lineTo(sx+26,H/2);
+      ctx.stroke();
+    }
+    ctx.fillStyle='rgba(165,180,252,0.7)'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('一側性周期性放電（LPDs）', W/2, 14); ctx.textAlign='left';
+  },
+  sharpWave(ctx, W, H) {
+    ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6; const n = pseudoNoise(t,8)*H*0.025;
+      x===0 ? ctx.moveTo(x, H/2-n) : ctx.lineTo(x, H/2-n);
+    }
+    ctx.stroke();
+    for (let i = 0; i < 3; i++) {
+      const sx = W*(0.18+i*0.30);
+      ctx.strokeStyle = '#fcd34d'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(sx-6,H/2); ctx.lineTo(sx,H/2-H*0.38); ctx.lineTo(sx+14,H/2+H*0.22); ctx.lineTo(sx+38,H/2);
+      ctx.stroke();
+    }
+    ctx.fillStyle='rgba(252,211,77,0.7)'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('鋭波（Sharp wave, 70-200ms）', W/2, 14); ctx.textAlign='left';
+  },
+  hypsarrhythmia(ctx, W, H) {
+    ctx.strokeStyle = '#f472b6'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*8;
+      const v = pseudoNoise(t,12)*H*0.38 + pseudoNoise(t*2.5,7)*H*0.20 + Math.sin(2*Math.PI*1.2*t)*H*0.15;
+      x===0 ? ctx.moveTo(x, H/2-v) : ctx.lineTo(x, H/2-v);
+    }
+    ctx.stroke();
+    ctx.fillStyle='rgba(244,114,182,0.7)'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('Hypsarrhythmia（混沌・高振幅）', W/2, 14); ctx.textAlign='left';
+  },
 };
 
 function drawWave(canvas, fnKey) {
@@ -317,6 +440,52 @@ const QUIZ_DATA = {
       correct: 3,
       explanation: 'バースト（高振幅放電）と電気的抑制（平坦部）が交互に出現するBurst-suppressionパターンです。心停止後、重篤な脳障害、深麻酔時に認められます。蘇生後脳症の予後評価に重要な所見です。',
     },
+    // ===== Level 1 追加問題（q1_6〜q1_10）=====
+    {
+      id: 'q1_6',
+      waveKey: 'muRhythm',
+      context: '28歳男性。覚醒・安静・閉眼中。中心部（C3/C4）に左右対称に8-12Hzの律動が見られる。手を動かすと消失する。',
+      question: 'この脳波所見の解釈として正しいのはどれか？',
+      choices: ['異常 — 焦点性てんかん放電（中心部）', '異常 — 中心部α変異', '正常 — μリズム（感覚運動律動）', '正常 — 後頭部α律動'],
+      correct: 2,
+      explanation: 'μリズム（Mu rhythm）は覚醒・安静・閉眼時に中心部（C3/C4）に出現する8-12Hzの律動で正常所見です。随意運動・他者の運動観察（ミラーニューロン関連）で消失（event-related desynchronization）します。後頭部α律動との違いは出現部位（中心部 vs 後頭部）と消失条件（運動 vs 開眼）です。',
+    },
+    {
+      id: 'q1_7',
+      waveKey: 'firda',
+      context: '58歳女性。原発性くも膜下出血後。覚醒時。前頭部優位に間欠的な1-2Hzの律動性δ活動が出現する。',
+      question: 'この脳波所見の解釈として最も適切なのはどれか？',
+      choices: ['正常 — 覚醒時の前頭部優位θ活動', '正常 — 眼球運動アーティファクト', '異常 — FIRDA（前頭間欠律動性δ活動）', '正常 — K複合（NREM N2期）'],
+      correct: 2,
+      explanation: 'FIRDA（Frontal Intermittent Rhythmic Delta Activity）は前頭部優位の間欠的律動性δ活動です。び漫性脳障害・深部白質・橋・視床の病変を示唆します。くも膜下出血後や代謝性脳症、視床病変で出現します。EOGとの鑑別：FIRDAは全誘導に広がり、後方でも出現します。',
+    },
+    {
+      id: 'q1_8',
+      waveKey: 'remSleep',
+      context: '睡眠ポリグラフ記録中。混合周波数（α＋θ）、低振幅の脳波。急速眼球運動（REM）あり。筋電図（EMG）は最小（骨格筋弛緩）。',
+      question: 'この記録は睡眠のどのステージを示しているか？',
+      choices: ['NREM Stage N1（入眠期）', 'NREM Stage N2（浅睡眠）', 'NREM Stage N3（深睡眠）', 'REM睡眠（夢を見る睡眠）'],
+      correct: 3,
+      explanation: 'REM睡眠の特徴：①混合周波数・低振幅EEG（覚醒に似た脳波）、②急速眼球運動（REM）、③骨格筋の弛緩（EMG最小）。夢を見るのはほぼREM睡眠中。成人の睡眠の約20-25%を占める。NREM N2との鑑別：N2には睡眠紡錘波・K複合がある。てんかん手術前評価でREM睡眠中の棘波は覚醒時棘波との比較に重要。',
+    },
+    {
+      id: 'q1_9',
+      waveKey: 'grda',
+      context: '65歳男性。ICU入院中（敗血症性脳症）。EEGで後頭部優位に1-2Hzの律動性δ活動が持続的・全般性に出現している。',
+      question: 'この脳波所見の解釈として最も適切なのはどれか？',
+      choices: ['正常 — δ波（深睡眠）', '異常 — GRDA（全般性律動性δ活動）/ 代謝性脳症', '正常 — μリズム', '異常 — 3Hz棘徐波複合（欠神てんかん）'],
+      correct: 1,
+      explanation: 'GRDA（Generalized Rhythmic Delta Activity）は全般性の律動性δ活動で、脳機能の全般的低下（代謝性脳症、敗血症性脳症、薬物中毒など）を示唆します。深睡眠との違い：GRDAは覚醒時にも出現し、刺激で変化しない。臨床的文脈（ICU・敗血症）との合致が重要。',
+    },
+    {
+      id: 'q1_10',
+      waveKey: 'delta',
+      context: '72歳男性。急性発症の意識障害。EEGで全誘導に2-3Hzの高振幅徐波が全般性・持続的に出現。覚醒時の記録。後頭部α律動は消失。',
+      question: 'この脳波所見の解釈として正しいのはどれか？',
+      choices: ['正常 — 深睡眠（NREM N3）', '異常 — 全般性徐波化（びまん性脳機能低下）', '正常 — 高齢者のα波減衰', '異常 — 焦点性てんかん放電'],
+      correct: 1,
+      explanation: '覚醒中に全般性の高振幅δ活動（後頭部α消失）が見られる場合は全般性徐波化（Generalized slowing）として病的所見です。代謝性・中毒性脳症、頭蓋内圧亢進、低血糖、肝性脳症などの原因を検索します。深睡眠との違いは記録状況（覚醒/睡眠）と刺激への反応性です。',
+    },
   ],
   2: [
     {
@@ -363,6 +532,52 @@ const QUIZ_DATA = {
       choices: ['両側対称性の正常波形', '右半球の全般性てんかん放電', '左半球の焦点性徐波（左大脳梗塞に一致）', '両側の等電位脳波'],
       correct: 2,
       explanation: '下段（患側）に焦点性徐波が見られます。左半球の脳梗塞に一致する所見です。局所的な神経細胞の機能低下・喪失を反映しています。急性期には多形性δ活動（PLDA）として高振幅の徐波が出現することがあります。',
+    },
+    // ===== Level 2 追加問題（q2_6〜q2_10）=====
+    {
+      id: 'q2_6',
+      waveKey: 'kComplex',
+      context: '30歳女性。健常者の睡眠ポリグラフ。眠りについてから20分後。Cz（頭頂部）に突発性の大振幅二相性波形が出現している。続いて睡眠紡錘波も見られる。',
+      question: 'この波形の名称はどれか？',
+      choices: ['K複合（K-complex）', '三相波（Triphasic wave）', '棘徐波複合（Spike-wave）', 'λ波'],
+      correct: 0,
+      explanation: 'K複合はNREM Stage N2（浅睡眠）に出現する特徴的波形です。Cz（頭頂部）最大の大振幅二相性波（負→正）で、持続0.5秒以上。睡眠紡錘波と一緒に出現することが多い。外部刺激（音など）で誘発されることもあります。三相波との違い：三相波は覚醒時・代謝性脳症で出現し、前頭部優位で3相性（負-正-負）です。',
+    },
+    {
+      id: 'q2_7',
+      waveKey: 'flatLine',
+      context: '68歳男性。心停止後蘇生。5日後。体温管理療法終了・鎮静薬完全洗い出し後。全誘導が2μV以下の完全な平坦波形。',
+      question: 'この脳波所見の名称として正しいのはどれか？',
+      choices: ['Burst-suppression（バースト抑制）', '全般性徐波化', '等電位脳波（ECS / Electrocerebral Silence）', '深睡眠（NREM N3）'],
+      correct: 2,
+      explanation: '全電極で2μV以下の連続した平坦波形は等電位脳波（ECS: Electrocerebral Silence）です。脳死判定の補助基準として用いられますが、ECSのみで脳死診断はできません。バースト抑制との違い：ECSはバーストが全くなく完全平坦。記録時には低インピーダンス・感度最大設定（2μV/mm）での確認が必要。',
+    },
+    {
+      id: 'q2_8',
+      waveKey: 'lpds',
+      context: '58歳男性。左側頭部〜前頭部に1-2秒ごとの規則的な二相性鋭波が連続している。ヘルペス脳炎の疑いで入院中。',
+      question: 'この脳波所見の名称として最も適切なのはどれか？',
+      choices: ['GPDs（全般性周期性放電）', 'LPDs（一側性周期性放電 / PLEDS）', '欠神てんかんの3Hz棘徐波複合', 'ECGアーティファクト'],
+      correct: 1,
+      explanation: 'LPDs（Lateralized Periodic Discharges、旧称PLEDS）は一側性の周期性放電で、ヘルペス脳炎・脳梗塞・脳腫瘍などの局所脳病変で出現します。0.5-3Hzの規則的繰り返し。てんかん重積の一形態ともなりうる。GPDsとの違い：LPDsは一側性（左右非対称）です。',
+    },
+    {
+      id: 'q2_9',
+      waveKey: 'hypsarrhythmia',
+      context: '5ヶ月男児。点頭発作（シリーズ形成）・発達退行。EEGで極めて不規則な高振幅徐波・多棘波が混在している。',
+      question: 'この脳波パターンの名称はどれか？',
+      choices: ['Burst-suppression（バースト抑制）', 'ヒプスアリスミア（Hypsarrhythmia）', '全般性棘徐波複合（3Hz）', 'OIRDA（後頭部間欠律動性δ活動）'],
+      correct: 1,
+      explanation: 'Hypsarrhythmia（ヒプスアリスミア）はWest症候群の特徴的EEGパターンです。混沌とした高振幅（hyps=高）・不規則な（arrhythmia=不整）多形性波形で、θ・δ・多棘波・棘徐波が混在します。点頭発作時には突然の波形抑制（electrodecrement）が特徴的です。',
+    },
+    {
+      id: 'q2_10',
+      waveKey: 'sharpWave',
+      context: '43歳男性。右手のしびれ・ジャーキングが時々ある。EEGで左中心部（C3）に70-200msの緩やかな傾斜を持つ一相性の波形が出現している。',
+      question: 'この波形の名称として最も適切なのはどれか？',
+      choices: ['棘波（Spike）', '鋭波（Sharp wave）', '睡眠紡錘波', 'K複合'],
+      correct: 1,
+      explanation: '鋭波（Sharp wave）は持続70-200msで棘波（20-70ms）より緩やかな立ち上がりを持つてんかん性波形です。後続徐波を伴い、棘波と同様にてんかん性放電として扱います。左中心部（C3）の焦点は右体性感覚・運動野に対応します。棘波との違いは持続時間のみ（両者の臨床的意義は同等）。',
     },
   ],
   3: [
@@ -436,6 +651,77 @@ const QUIZ_DATA = {
       correct: 2,
       explanation: '睡眠中の焦点性運動発作（口顔面＋一側上肢）＋中心・側頭部棘波＋学童期発症＋MRI正常はBECTS（Benign childhood epilepsy with centrotemporal spikes）の典型です。予後良好で思春期に自然消失するため、発作頻度が低い場合は経過観察も選択肢です。保護者への十分な説明と睡眠確保、スポーツ時の安全管理が重要です。',
     },
+    // ===== Level 3 追加問題（q3_6〜q3_10）=====
+    {
+      id: 'q3_6',
+      waveKey: 'hypsarrhythmia',
+      context: '3ヶ月男児。1週間前から頭部を前屈させ、両腕を挙げる発作（点頭発作）が1日数十回起きる。シリーズ形成あり。発達退行も見られる。',
+      question: 'この脳波所見と臨床像から最も適切な診断・治療の組み合わせはどれか？',
+      choices: [
+        '小児欠神てんかん — エトスクシミド',
+        'West症候群 — ACTH療法（または合成ACTH / ビガバトリン）',
+        '若年性ミオクローヌスてんかん — バルプロ酸',
+        'BECTS — 経過観察',
+      ],
+      correct: 1,
+      explanation: '混沌とした高振幅多形性波形はhypsarrhythmiaです。点頭発作（infantile spasms）＋hypsarrhythmia＋発達退行の三徴がWest症候群の診断基準。ACTH療法（合成ACTH筋注）またはビガバトリン（結節性硬化症ではビガバトリン優先）が第一選択。早期治療開始が発達予後に直結する。',
+    },
+    {
+      id: 'q3_7',
+      waveKey: 'delta',
+      context: '55歳男性。発熱・頭痛・意識障害が急性に発症。CSF検査：細胞数↑（リンパ球優位）、蛋白↑。髄液PCR検査中。EEGで左側頭部優位の周期性放電と徐波を認める。',
+      question: 'この脳波所見と臨床像から最も疑うべき診断と初期対応はどれか？',
+      choices: [
+        '細菌性髄膜炎 — 抗菌薬を待ってから治療開始',
+        'ヘルペス脳炎（HSV-1）— 直ちにアシクロビル経静脈投与を開始する',
+        '自己免疫性脳炎 — ステロイドパルス療法を開始',
+        '代謝性脳症 — 支持療法のみ',
+      ],
+      correct: 1,
+      explanation: '急性辺縁系脳炎（発熱＋意識障害＋側頭部優位EEG変化）はヘルペス脳炎（HSV-1）を強く示唆します。HSV脳炎はEEGで側頭部〜前頭部の周期性放電（PLEDs/LPDs）を呈することが多い。PCR結果を待たず直ちにアシクロビル（10mg/kg×8時間ごと）を開始することが推奨される。治療の遅れが予後を決定的に悪化させる。',
+    },
+    {
+      id: 'q3_8',
+      waveKey: 'spikeWave',
+      context: '70歳男性。術後ICUで意識変容が持続している。けいれん発作はないが、GCSが変動する。EEGを施行すると全般性の棘徐波複合が持続的に記録された（≥30分以上）。',
+      question: 'この所見の解釈と最も適切な対応はどれか？',
+      choices: [
+        '睡眠中のK複合であり、治療不要',
+        '非けいれん性てんかん重積（NCSE）として抗てんかん薬（ロラゼパム/レベチラセタム等）を投与する',
+        'ECGアーティファクトであり、電極を確認する',
+        'バースト抑制パターンであり、鎮静薬を増量する',
+      ],
+      correct: 1,
+      explanation: '持続的な棘徐波複合（≥30分）＋意識変容はNCSE（非けいれん性てんかん重積）の診断基準を満たします（Salzburg criteria）。けいれんがなくても脳では持続的なてんかん放電が起きています。早期にベンゾジアゼピン系（ロラゼパム）またはレベチラセタム、バルプロ酸などの抗てんかん薬を投与する必要があります。ICU患者の意識変容の約20%にNCSEが隠れているとされます。',
+    },
+    {
+      id: 'q3_9',
+      waveKey: 'delta',
+      context: '38歳女性。2週間で急速に進行する精神症状（幻覚・興奮）・口唇自動症・意識障害。MRI：辺縁系（海馬）T2高信号。抗NMDA受容体抗体（+）。',
+      question: 'この患者のEEGで最も特徴的に見られるとされる所見はどれか？',
+      choices: [
+        '3Hz全般性棘徐波複合（欠神てんかん様）',
+        'Extreme delta brush（δ波にβ波が重畳するパターン）',
+        '等電位脳波（完全平坦）',
+        '睡眠紡錘波の増加',
+      ],
+      correct: 1,
+      explanation: '抗NMDA受容体脳炎の特徴的EEG所見として「Extreme delta brush（EDB）」—δ波の上にβ帯域の速波が重畳するパターン—が報告されています（感度約30%）。全般性徐波化も一般的。治療は免疫療法（ステロイド・IVIG・血漿交換）＋卵巣奇形腫の検索・摘出。若年女性に多い可逆性の自己免疫性脳炎。',
+    },
+    {
+      id: 'q3_10',
+      waveKey: 'flatLine',
+      context: '62歳男性。院外心停止（VF）。蘇生後72時間後。体温管理療法（33℃）完了・復温済み。鎮静薬洗い出し後。GCS 3点（深昏睡）。EEGは等電位（2μV以下）。上肢のN20 SEP（体性感覚誘発電位）両側消失。',
+      question: 'この状況での脳波所見の解釈として最も適切なのはどれか？',
+      choices: [
+        '低体温の影響が残っており、等電位は一時的。現時点での予後判定は不可。',
+        '復温・薬物洗い出し後のN20両側消失＋等電位脳波は、蘇生後脳症の予後不良の高信頼性指標となりうる',
+        '等電位脳波は深麻酔と同じ意味であり、鎮静を再開すれば回復する',
+        '睡眠中であるため等電位は正常所見',
+      ],
+      correct: 1,
+      explanation: '復温完了・鎮静薬洗い出し後（目安72時間以上）のECS（等電位脳波）＋N20体性感覚誘発電位両側消失の組み合わせは、欧州蘇生協議会（ERC）2021ガイドラインでも不良予後の高信頼性指標とされています。単独のEEG所見よりも複数の神経学的マーカーを組み合わせた総合判断が重要。家族への十分な説明と倫理的配慮が必要です。',
+    },
   ],
 };
 
@@ -508,10 +794,11 @@ function renderQuestion() {
       </div>
       <canvas id="quiz-canvas" height="110" style="width:100%;background:#0f172a;display:block;"></canvas>
       <div class="p-4 space-y-2" id="choices-area"></div>
-      ${answeredData ? `<div id="explanation-box" class="mx-4 mb-4 p-4 rounded-xl border ${answeredData.correct ? 'bg-green-50 border-green-200' : 'bg-rose-50 border-rose-200'}">
+      ${answeredData ? `<div id="explanation-box" class="mx-4 mb-2 p-4 rounded-xl border ${answeredData.correct ? 'bg-green-50 border-green-200' : 'bg-rose-50 border-rose-200'}">
         <p class="text-xs font-bold mb-1 ${answeredData.correct ? 'text-green-700' : 'text-rose-700'}">${answeredData.correct ? '正解！' : '不正解'}</p>
         <p class="text-sm text-slate-700 leading-relaxed">${q.explanation}</p>
-      </div>` : ''}
+      </div>
+      <div id="srs-badge-area" class="mx-4 mb-4"></div>` : ''}
     </div>
     ${answeredData ? `<div class="flex justify-end"><button onclick="nextQuestion()" class="flex items-center gap-1.5 px-5 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-sm font-bold transition-colors">
       ${idx+1 < total ? '次の問題' : '結果を見る'}
@@ -555,6 +842,23 @@ function renderQuestion() {
   }
 
   lucide.createIcons();
+
+  // Show SRS next-review badge after answer
+  if (answeredData) {
+    const badgeArea = document.getElementById('srs-badge-area');
+    if (badgeArea && typeof srsGetCard === 'function') {
+      const card = srsGetCard(q.id);
+      if (card) {
+        const due = card.dueDate;
+        const today = typeof todayStr === 'function' ? todayStr() : new Date().toISOString().slice(0,10);
+        const diff = Math.round((new Date(due+'T00:00:00') - new Date(today+'T00:00:00')) / 86400000);
+        const label = diff <= 0 ? '今日また出題されます' : diff === 1 ? '明日復習予定' : `${diff}日後に復習予定`;
+        badgeArea.innerHTML = `<span class="inline-flex items-center gap-1.5 text-xs bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-full px-3 py-1 font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          ${label} (SRS)</span>`;
+      }
+    }
+  }
 }
 
 function answerQuestion(chosen) {
@@ -564,6 +868,11 @@ function answerQuestion(chosen) {
   state.answered[q.id] = { chosen, correct };
   if (correct) state.scores[state.level] = (state.scores[state.level] || 0) + 1;
   saveState();
+  // SRS: register card on first answer
+  if (typeof srsRegister === 'function') {
+    srsRegister(q.id, 'quiz');
+    srsAnswer(q.id, correct ? SRS_SCORE.GOOD : SRS_SCORE.INCORRECT_HARD, 'quiz');
+  }
   renderQuestion();
 }
 

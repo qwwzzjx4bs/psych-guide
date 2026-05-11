@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アーティファクト識別ドリル | EEG学習ツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="eeg-srs.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+
+  .tab-btn {
+    padding: 0.5rem 1rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem;
+    cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+  }
+  .tab-btn.active { background: #312e81; color: white; border-color: #312e81; }
+  .tab-btn:not(.active) { background: #f1f5f9; color: #475569; }
+  .tab-btn:not(.active):hover { border-color: #94a3b8; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Artifact cards */
+  .artifact-card {
+    background: white; border-radius: 1rem; border: 1.5px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden;
+    transition: box-shadow 0.2s; margin-bottom: 1.25rem;
+  }
+  .artifact-canvas { display: block; width: 100%; background: #0f172a; }
+
+  /* Comparison table */
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .compare-cell { padding: 0.75rem 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+  .compare-cell:first-child { border-right: 1px solid #f1f5f9; background: #fef2f2; }
+  .compare-cell:last-child { background: #f0fdf4; }
+
+  /* Quiz */
+  .q-card { background: white; border-radius: 1rem; border: 1.5px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 1rem; }
+  .q-canvas { display: block; width: 100%; background: #0f172a; }
+  .choice-btn {
+    width: 100%; text-align: left; padding: 0.75rem 1rem; border-radius: 0.75rem;
+    border: 2px solid #e2e8f0; background: white; cursor: pointer; transition: all 0.15s;
+    font-size: 0.875rem; display: flex; align-items: center; gap: 0.75rem; font-family: inherit;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: #6366f1; background: #eef2ff; }
+  .choice-btn.correct { border-color: #16a34a !important; background: #f0fdf4 !important; color: #15803d !important; }
+  .choice-btn.wrong   { border-color: #dc2626 !important; background: #fef2f2 !important; color: #b91c1c !important; }
+  .choice-btn.revealed { border-color: #16a34a !important; background: #f0fdf4 !important; color: #15803d !important; }
+  .choice-label { width: 1.6rem; height: 1.6rem; border-radius: 50%; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .correct .choice-label { background: #16a34a; color: white; }
+  .wrong .choice-label   { background: #dc2626; color: white; }
+  .revealed .choice-label { background: #16a34a; color: white; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-8 shadow-lg">
+  <div class="max-w-3xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">アーティファクト識別</span>
+    </nav>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="shield-alert" class="w-5 h-5 text-white"></i>
+      </div>
+      <span class="text-white/70 text-sm font-semibold tracking-wider">STEP 5</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">アーティファクト識別ドリル</h1>
+    <p class="text-white/80 mt-2 text-sm leading-relaxed max-w-2xl">
+      「これは病的所見か、アーティファクトか」—脳波読影で最初に直面する壁を突破するための集中トレーニング。
+    </p>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-6">
+
+  <!-- Tab nav -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button class="tab-btn active" onclick="showTab('atlas', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="book-open" class="w-4 h-4"></i>アーティファクト図鑑</span>
+    </button>
+    <button class="tab-btn" onclick="showTab('compare', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="columns" class="w-4 h-4"></i>病的 vs アーティファクト</span>
+    </button>
+    <button class="tab-btn" onclick="showTab('drill', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="target" class="w-4 h-4"></i>識別クイズ（10問）</span>
+    </button>
+  </div>
+
+  <!-- ===== TAB 1: Atlas ===== -->
+  <div id="tab-atlas" class="tab-panel active">
+
+    <div class="rounded-xl bg-amber-50 border border-amber-200 p-3.5 mb-5 text-xs text-amber-900 leading-relaxed">
+      <strong>読影の第一原則：</strong>アーティファクトを除外してから病的所見を判断する。特に前頭部・側頭部の異常波形は眼球運動・筋電図と混同しやすい。
+    </div>
+
+    <!-- EOG -->
+    <div class="artifact-card">
+      <canvas class="artifact-canvas" id="cv-eog" height="100"></canvas>
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">眼球運動</span>
+          <h3 class="font-bold text-slate-800">眼球運動アーティファクト（EOG）</h3>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-xs mt-3">
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">出現部位</p>
+            <p class="text-slate-600">前頭部（Fp1/Fp2）に最大。横方向の眼球運動はFp1とFp2で逆相</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">波形特徴</p>
+            <p class="text-slate-600">低周波（＜1Hz）の高振幅偏位。眼球は角膜（+）・網膜（−）で双極子をなす</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-200">
+            <p class="font-bold text-amber-700 mb-1">鑑別ポイント</p>
+            <p class="text-amber-700">後方（O1/O2）には出現しない。開閉眼の指示で変化することで確認</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blink -->
+    <div class="artifact-card">
+      <canvas class="artifact-canvas" id="cv-blink" height="100"></canvas>
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">眼瞼</span>
+          <h3 class="font-bold text-slate-800">眼瞼アーティファクト（Blink）</h3>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-xs mt-3">
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">出現部位</p>
+            <p class="text-slate-600">Fp1/Fp2に両側性・対称性に出現</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">波形特徴</p>
+            <p class="text-slate-600">まばたきに同期した正相（上向き）の急峻な波形。0.5〜2秒ごとに規則的に繰り返す</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-200">
+            <p class="font-bold text-amber-700 mb-1">鑑別ポイント</p>
+            <p class="text-amber-700">前頭極棘波との混同に注意。閉眼記録中は減少し、開眼記録で出現増加</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMG -->
+    <div class="artifact-card">
+      <canvas class="artifact-canvas" id="cv-emg" height="100"></canvas>
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold bg-red-100 text-red-800 px-2 py-0.5 rounded-full">筋電図</span>
+          <h3 class="font-bold text-slate-800">筋電図アーティファクト（EMG）</h3>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-xs mt-3">
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">出現部位</p>
+            <p class="text-slate-600">側頭部（T3/T4）・前頭部に多い。咀嚼・歯ぎしり・体動で増強</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">波形特徴</p>
+            <p class="text-slate-600">30Hz以上の高周波ノイズが局所的に重畳。β帯域のフィルタ設定で強調される</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-200">
+            <p class="font-bold text-amber-700 mb-1">鑑別ポイント</p>
+            <p class="text-amber-700">筋弛緩（患者に力を抜かせる）で消失。γ帯域活動との混同に注意。局所に限局する</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ECG -->
+    <div class="artifact-card">
+      <canvas class="artifact-canvas" id="cv-ecg" height="100"></canvas>
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">心電図</span>
+          <h3 class="font-bold text-slate-800">心電図アーティファクト（ECG）</h3>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-xs mt-3">
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">出現部位</p>
+            <p class="text-slate-600">全誘導または特定誘導に出現。側頭・後頭部や耳垂基準誘導に顕著</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">波形特徴</p>
+            <p class="text-slate-600">心拍（60-100回/分）に同期した規則的なスパイク。QRS波形状に似る</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-200">
+            <p class="font-bold text-amber-700 mb-1">鑑別ポイント</p>
+            <p class="text-amber-700">ECGチャンネルとの同期で確認。周期性放電（LPDs等）との鑑別が重要</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Electrode -->
+    <div class="artifact-card">
+      <canvas class="artifact-canvas" id="cv-electrode" height="100"></canvas>
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">電極</span>
+          <h3 class="font-bold text-slate-800">電極アーティファクト（Electrode pop）</h3>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-xs mt-3">
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">出現部位</p>
+            <p class="text-slate-600">単一電極が含まれる全誘導に出現（双極誘導では隣接2誘導）</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">波形特徴</p>
+            <p class="text-slate-600">急峻な超高振幅スパイク（数百〜千μV以上）。後続波なし。突発的</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-200">
+            <p class="font-bold text-amber-700 mb-1">鑑別ポイント</p>
+            <p class="text-amber-700">電極インピーダンス確認で診断。再装着・固定で消失。焦点性棘波との鑑別</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movement -->
+    <div class="artifact-card">
+      <canvas class="artifact-canvas" id="cv-movement" height="100"></canvas>
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">体動</span>
+          <h3 class="font-bold text-slate-800">体動・動きアーティファクト</h3>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-xs mt-3">
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">出現部位</p>
+            <p class="text-slate-600">全誘導に広汎性に出現。患者の体動・頭部の揺れ・搬送中など</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <p class="font-bold text-slate-700 mb-1">波形特徴</p>
+            <p class="text-slate-600">不規則な低周波・高振幅の変動。全誘導が同時に乱れる</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-2.5 border border-amber-200">
+            <p class="font-bold text-amber-700 mb-1">鑑別ポイント</p>
+            <p class="text-amber-700">全誘導同時性が特徴。けいれん発作時とは記録状況・同時ビデオで鑑別</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end tab-atlas -->
+
+  <!-- ===== TAB 2: Compare ===== -->
+  <div id="tab-compare" class="tab-panel">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-5">
+      <div class="bg-slate-800 px-4 py-3 flex items-center gap-3">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+        <span class="font-bold text-white text-sm">病的所見 vs アーティファクト — 鑑別の要点</span>
+      </div>
+      <!-- Header -->
+      <div class="compare-row text-xs font-bold">
+        <div class="compare-cell" style="background:#fee2e2;color:#7f1d1d;">病的所見（脳由来）</div>
+        <div class="compare-cell" style="background:#dcfce7;color:#14532d;">アーティファクト（非脳由来）</div>
+      </div>
+      <!-- Rows -->
+      <div class="compare-row">
+        <div class="compare-cell">後方（後頭部）にも出現しうる</div>
+        <div class="compare-cell">EOG・筋電図は前頭・側頭部に限局</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">背景脳波との波形の連続性がある</div>
+        <div class="compare-cell">背景脳波から唐突に「浮き上がる」</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">賦活（過呼吸・光刺激）で増加しうる</div>
+        <div class="compare-cell">患者への指示（開眼・力を抜く）で消失</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">多チャンネルに波形の伝播が見られる</div>
+        <div class="compare-cell">単一電極に限局（electrode pop）</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell">電極インピーダンスと無関係</div>
+        <div class="compare-cell">高インピーダンスで増悪することがある</div>
+      </div>
+      <div class="compare-row" style="border-bottom:none;">
+        <div class="compare-cell">生理的なECGとは無関係</div>
+        <div class="compare-cell">ECGアーティファクトはECGと同期</div>
+      </div>
+    </div>
+
+    <!-- Specific comparisons with canvases -->
+    <div class="space-y-4">
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 bg-slate-50 border-b border-slate-200">
+          <p class="font-bold text-slate-800 text-sm">前頭部の正相スパイク：眼球運動 vs 前頭葉焦点</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-0">
+          <div>
+            <canvas class="artifact-canvas" id="cv-cmp-eog" height="80"></canvas>
+            <div class="p-3">
+              <p class="text-xs font-bold text-orange-700 mb-1">EOGアーティファクト</p>
+              <ul class="text-xs text-slate-600 space-y-0.5">
+                <li>• Fp1/Fp2のみ。後方電極に出現なし</li>
+                <li>• 低周波（＜1Hz）、ゆっくりとした偏位</li>
+                <li>• 開眼・眼球運動指示で変化</li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t sm:border-t-0 sm:border-l border-slate-200">
+            <canvas class="artifact-canvas" id="cv-cmp-fp-spike" height="80"></canvas>
+            <div class="p-3">
+              <p class="text-xs font-bold text-red-700 mb-1">前頭葉焦点性棘波</p>
+              <ul class="text-xs text-slate-600 space-y-0.5">
+                <li>• 後続徐波を伴う（複合波）</li>
+                <li>• 持続20-70ms（鋭い）</li>
+                <li>• 電場が後方に伝播しうる</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 bg-slate-50 border-b border-slate-200">
+          <p class="font-bold text-slate-800 text-sm">規則的な反復波形：ECGアーティファクト vs 周期性放電（LPDs）</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-0">
+          <div>
+            <canvas class="artifact-canvas" id="cv-cmp-ecg" height="80"></canvas>
+            <div class="p-3">
+              <p class="text-xs font-bold text-rose-700 mb-1">ECGアーティファクト</p>
+              <ul class="text-xs text-slate-600 space-y-0.5">
+                <li>• QRS形状。心拍数（60-100/分）と同期</li>
+                <li>• ECGチャンネルと完全同期</li>
+                <li>• 後続徐波なし</li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t sm:border-t-0 sm:border-l border-slate-200">
+            <canvas class="artifact-canvas" id="cv-cmp-lpds" height="80"></canvas>
+            <div class="p-3">
+              <p class="text-xs font-bold text-indigo-700 mb-1">LPDs（一側性周期性放電）</p>
+              <ul class="text-xs text-slate-600 space-y-0.5">
+                <li>• 0.5-3Hzの周期（心拍より遅い）</li>
+                <li>• 一側性・ECGと非同期</li>
+                <li>• 後続徐波・複合波形</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 bg-slate-50 border-b border-slate-200">
+          <p class="font-bold text-slate-800 text-sm">高周波ノイズ：筋電図 vs γ帯域活動</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-0">
+          <div>
+            <canvas class="artifact-canvas" id="cv-cmp-emg" height="80"></canvas>
+            <div class="p-3">
+              <p class="text-xs font-bold text-red-700 mb-1">筋電図アーティファクト（EMG）</p>
+              <ul class="text-xs text-slate-600 space-y-0.5">
+                <li>• 側頭・前頭部に局所的</li>
+                <li>• 筋収縮時に出現、弛緩で消失</li>
+                <li>• 不規則な爆発状のバースト</li>
+              </ul>
+            </div>
+          </div>
+          <div class="border-t sm:border-t-0 sm:border-l border-slate-200">
+            <canvas class="artifact-canvas" id="cv-cmp-hfb" height="80"></canvas>
+            <div class="p-3">
+              <p class="text-xs font-bold text-emerald-700 mb-1">高周波発振（HFO / 病的γ）</p>
+              <ul class="text-xs text-slate-600 space-y-0.5">
+                <li>• 脳波背景に埋め込まれた規則的振動</li>
+                <li>• 弛緩しても持続</li>
+                <li>• てんかん焦点と関連</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end tab-compare -->
+
+  <!-- ===== TAB 3: Drill ===== -->
+  <div id="tab-drill" class="tab-panel">
+    <!-- Score bar -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-5">
+      <div class="flex items-center justify-between mb-2">
+        <p class="font-bold text-slate-700 text-sm flex items-center gap-2">
+          <i data-lucide="target" class="w-4 h-4 text-indigo-600"></i>
+          識別クイズ（10問）
+        </p>
+        <button onclick="resetDrill()" class="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 transition-colors">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>リセット
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex-1">
+          <div class="flex justify-between text-xs text-slate-500 mb-1">
+            <span id="drill-progress-label">0 / 10 完了</span>
+            <span id="drill-score-label">正答: 0</span>
+          </div>
+          <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div id="drill-progress-bar" class="h-full bg-indigo-500 rounded-full transition-all duration-300" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="drill-area"></div>
+
+    <div id="drill-result" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+      <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="shield-check" class="w-8 h-8 text-indigo-600"></i>
+      </div>
+      <h2 class="text-xl font-bold text-slate-800 mb-1">クイズ完了！</h2>
+      <p id="drill-result-score" class="text-3xl font-black text-indigo-700 mb-2"></p>
+      <p id="drill-result-msg" class="text-sm text-slate-500 mb-5"></p>
+      <div class="flex gap-2 justify-center">
+        <button onclick="resetDrill()" class="px-5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-sm font-bold transition-colors">もう一度</button>
+        <a href="eeg-montage.html" class="px-5 py-2 bg-teal-700 hover:bg-teal-800 text-white rounded-xl text-sm font-bold transition-colors">次: モンタージュ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-8 pt-4 border-t border-slate-200">
+    <a href="eeg-cases.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      症例学習へ
+    </a>
+    <a href="eeg-montage.html" class="flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 transition-colors font-semibold">
+      次: モンタージュ
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+lucide.createIcons();
+
+// ===== Tab switching =====
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'compare') { setTimeout(drawCompareCanvases, 30); }
+}
+
+// ===== Noise utility =====
+function pnoise(t, seed) {
+  return Math.sin(t*127.3+seed*43.7)*0.5 + Math.sin(t*83.1+seed*29.1)*0.3 + Math.sin(t*51.7+seed*17.9)*0.2;
+}
+
+// ===== Atlas canvases =====
+function drawArtifact(canvas, type) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width; const H = canvas.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=W/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=H/4){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  const fns = {
+    eog(ctx,W,H) {
+      // Multiple channels: Fp1 (big EOG), Fz (less), O1 (none)
+      const channels = [
+        {y0:H*0.2, amp:H*0.14, label:'Fp1', col:'#fb923c', eog:true},
+        {y0:H*0.5, amp:H*0.06, label:'Fz', col:'#fbbf24', eog:true, scale:0.3},
+        {y0:H*0.8, amp:H*0.04, label:'O1', col:'#4ade80', eog:false},
+      ];
+      channels.forEach(ch => {
+        ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5;
+        ctx.beginPath(); ctx.moveTo(0,ch.y0); ctx.lineTo(W,ch.y0); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='9px monospace'; ctx.fillText(ch.label,4,ch.y0-3);
+        ctx.strokeStyle=ch.col; ctx.lineWidth=1.5; ctx.beginPath();
+        for(let x=0;x<W;x++){
+          const t=x/W*5;
+          const eogWave=ch.eog?(Math.sin(2*Math.PI*0.4*t)*ch.amp*(ch.scale||1)):0;
+          const bg=pnoise(t,ch.y0)*ch.amp*0.15;
+          x===0?ctx.moveTo(x,ch.y0-(eogWave+bg)):ctx.lineTo(x,ch.y0-(eogWave+bg));
+        }
+        ctx.stroke();
+      });
+    },
+    blink(ctx,W,H) {
+      const channels=[
+        {y0:H*0.2,label:'Fp1',col:'#fb923c',blink:true},
+        {y0:H*0.5,label:'Fp2',col:'#fbbf24',blink:true},
+        {y0:H*0.8,label:'C3',col:'#4ade80',blink:false},
+      ];
+      channels.forEach(ch=>{
+        ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5;
+        ctx.beginPath(); ctx.moveTo(0,ch.y0); ctx.lineTo(W,ch.y0); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='9px monospace'; ctx.fillText(ch.label,4,ch.y0-3);
+        ctx.strokeStyle=ch.col; ctx.lineWidth=1.5; ctx.beginPath();
+        for(let x=0;x<W;x++){
+          const t=x/W*6; const n=pnoise(t,ch.y0)*H*0.025;
+          let v=n;
+          if(ch.blink){
+            const bt=t%1.2;
+            if(bt<0.08) v+=H*0.14*Math.sin(bt/0.08*Math.PI);
+          }
+          x===0?ctx.moveTo(x,ch.y0-v):ctx.lineTo(x,ch.y0-v);
+        }
+        ctx.stroke();
+      });
+    },
+    emg(ctx,W,H) {
+      const channels=[
+        {y0:H*0.2,label:'T3',col:'#f87171',emg:true},
+        {y0:H*0.5,label:'T4',col:'#fb923c',emg:true},
+        {y0:H*0.8,label:'Cz',col:'#4ade80',emg:false},
+      ];
+      channels.forEach(ch=>{
+        ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5;
+        ctx.beginPath(); ctx.moveTo(0,ch.y0); ctx.lineTo(W,ch.y0); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='9px monospace'; ctx.fillText(ch.label,4,ch.y0-3);
+        ctx.strokeStyle=ch.col; ctx.lineWidth=1; ctx.beginPath();
+        for(let x=0;x<W;x++){
+          const t=x/W*5; const n=pnoise(t,ch.y0)*H*0.03;
+          let v=n;
+          if(ch.emg){
+            v+=Math.sin(2*Math.PI*60*t)*H*0.08+Math.sin(2*Math.PI*85*t)*H*0.06+pnoise(t*10,3)*H*0.06;
+          }
+          x===0?ctx.moveTo(x,ch.y0-v):ctx.lineTo(x,ch.y0-v);
+        }
+        ctx.stroke();
+      });
+    },
+    ecg(ctx,W,H) {
+      const channels=[
+        {y0:H*0.2,label:'Fp1',col:'#f87171',ecg:true,phase:0},
+        {y0:H*0.5,label:'T4',col:'#fb923c',ecg:true,phase:0.01},
+        {y0:H*0.8,label:'ECG',col:'#34d399',ecg:true,phase:0,big:true},
+      ];
+      channels.forEach(ch=>{
+        ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5;
+        ctx.beginPath(); ctx.moveTo(0,ch.y0); ctx.lineTo(W,ch.y0); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='9px monospace'; ctx.fillText(ch.label,4,ch.y0-3);
+        ctx.strokeStyle=ch.col; ctx.lineWidth=1.5; ctx.beginPath();
+        const hr=1.1; // ~66bpm
+        for(let x=0;x<W;x++){
+          const t=x/W*5; const n=pnoise(t,ch.y0)*H*0.02;
+          const beat=(t+ch.phase)*hr; const bf=beat-Math.floor(beat);
+          let qrs=0;
+          if(bf<0.04) qrs=(ch.big?H*0.35:H*0.12)*Math.sin(bf/0.04*Math.PI*2);
+          x===0?ctx.moveTo(x,ch.y0-(qrs+n)):ctx.lineTo(x,ch.y0-(qrs+n));
+        }
+        ctx.stroke();
+      });
+    },
+    electrode(ctx,W,H) {
+      const channels=[
+        {y0:H*0.2,label:'Fp1-F3',col:'#f87171',pop:true},
+        {y0:H*0.5,label:'F3-C3',col:'#fb923c',pop:true},
+        {y0:H*0.8,label:'C3-P3',col:'#4ade80',pop:false},
+      ];
+      channels.forEach(ch=>{
+        ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5;
+        ctx.beginPath(); ctx.moveTo(0,ch.y0); ctx.lineTo(W,ch.y0); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='9px monospace'; ctx.fillText(ch.label,4,ch.y0-3);
+        ctx.strokeStyle=ch.col; ctx.lineWidth=1.5; ctx.beginPath();
+        for(let x=0;x<W;x++){
+          const t=x/W*5; const n=pnoise(t,ch.y0)*H*0.025;
+          let v=n;
+          if(ch.pop && Math.abs(t-2.0)<0.012) v+=H*0.42*(ch.y0===H*0.2?1:-1);
+          if(ch.pop && Math.abs(t-3.8)<0.010) v+=H*0.32*(ch.y0===H*0.2?-1:1);
+          x===0?ctx.moveTo(x,ch.y0-v):ctx.lineTo(x,ch.y0-v);
+        }
+        ctx.stroke();
+      });
+    },
+    movement(ctx,W,H) {
+      const channels=[
+        {y0:H*0.2,label:'Fp1',col:'#94a3b8'},
+        {y0:H*0.5,label:'C3',col:'#94a3b8'},
+        {y0:H*0.8,label:'O1',col:'#94a3b8'},
+      ];
+      channels.forEach((ch,i)=>{
+        ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5;
+        ctx.beginPath(); ctx.moveTo(0,ch.y0); ctx.lineTo(W,ch.y0); ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='9px monospace'; ctx.fillText(ch.label,4,ch.y0-3);
+        ctx.strokeStyle=ch.col; ctx.lineWidth=1.5; ctx.beginPath();
+        for(let x=0;x<W;x++){
+          const t=x/W*5;
+          const mov=Math.sin(2*Math.PI*0.6*t+i*0.8)*H*0.15+pnoise(t,i)*H*0.10+Math.sin(2*Math.PI*1.2*t+i)*H*0.08;
+          x===0?ctx.moveTo(x,ch.y0-mov):ctx.lineTo(x,ch.y0-mov);
+        }
+        ctx.stroke();
+      });
+    },
+  };
+  if(fns[type]) fns[type](ctx,W,H);
+}
+
+function drawCompareCanvases() {
+  const specs = [
+    { id:'cv-cmp-eog', fn(ctx,W,H){
+      ctx.strokeStyle='#fb923c'; ctx.lineWidth=1.5; ctx.beginPath();
+      for(let x=0;x<W;x++){const t=x/W*4; const v=Math.sin(2*Math.PI*0.4*t)*H*0.38+pnoise(t,0)*H*0.04; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}
+      ctx.stroke();
+    }},
+    { id:'cv-cmp-fp-spike', fn(ctx,W,H){
+      ctx.strokeStyle='#f87171'; ctx.lineWidth=1; ctx.beginPath();
+      for(let x=0;x<W;x++){const t=x/W*5; const n=pnoise(t,0)*H*0.04; x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);} ctx.stroke();
+      for(let s=0;s<3;s++){const sx=W*(0.18+s*0.3); ctx.strokeStyle='#fca5a5'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(sx-3,H/2); ctx.lineTo(sx,H/2-H*0.42); ctx.lineTo(sx+7,H/2+H*0.22); ctx.lineTo(sx+22,H/2); ctx.stroke();}
+    }},
+    { id:'cv-cmp-ecg', fn(ctx,W,H){
+      ctx.strokeStyle='#f87171'; ctx.lineWidth=1.5; ctx.beginPath();
+      for(let x=0;x<W;x++){const t=x/W*5; const bf=(t*1.1)%1; const qrs=bf<0.04?Math.sin(bf/0.04*Math.PI*2)*H*0.38:0; const n=pnoise(t,0)*H*0.02; x===0?ctx.moveTo(x,H/2-(qrs+n)):ctx.lineTo(x,H/2-(qrs+n));} ctx.stroke();
+    }},
+    { id:'cv-cmp-lpds', fn(ctx,W,H){
+      ctx.strokeStyle='#818cf8'; ctx.lineWidth=1; ctx.beginPath();
+      for(let x=0;x<W;x++){const t=x/W*5; const n=pnoise(t,0)*H*0.02; x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);} ctx.stroke();
+      for(let i=0;i<5;i++){const sx=W*(0.08+i*0.2); ctx.strokeStyle='#a5b4fc'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(sx,H/2); ctx.lineTo(sx+3,H/2-H*0.38); ctx.lineTo(sx+8,H/2+H*0.18); ctx.lineTo(sx+18,H/2-H*0.10); ctx.lineTo(sx+26,H/2); ctx.stroke();}
+    }},
+    { id:'cv-cmp-emg', fn(ctx,W,H){
+      ctx.strokeStyle='#f87171'; ctx.lineWidth=1; ctx.beginPath();
+      for(let x=0;x<W;x++){const t=x/W*5; const v=Math.sin(2*Math.PI*60*t)*H*0.18+Math.sin(2*Math.PI*85*t)*H*0.10+pnoise(t*10,3)*H*0.10; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);} ctx.stroke();
+    }},
+    { id:'cv-cmp-hfb', fn(ctx,W,H){
+      ctx.strokeStyle='#34d399'; ctx.lineWidth=1; ctx.beginPath();
+      for(let x=0;x<W;x++){const t=x/W*5; const bg=Math.sin(2*Math.PI*10*t)*H*0.15; const hf=Math.sin(2*Math.PI*80*t)*H*0.06+Math.sin(2*Math.PI*120*t)*H*0.04; x===0?ctx.moveTo(x,H/2-(bg+hf)):ctx.lineTo(x,H/2-(bg+hf));} ctx.stroke();
+    }},
+  ];
+  specs.forEach(s=>{const cv=document.getElementById(s.id);if(!cv)return;cv.width=cv.offsetWidth||400;drawBase(cv);s.fn(cv.getContext('2d'),cv.width,cv.height);});
+}
+
+function drawBase(canvas){
+  const ctx=canvas.getContext('2d'); const W=canvas.width; const H=canvas.height;
+  ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=W/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=H/4){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+}
+
+// ===== Quiz data =====
+const DRILL_QUESTIONS = [
+  { id:'aq1', waveType:'eog_q', context:'30歳男性。覚醒状態で記録中。前頭部（Fp1/Fp2）に低周波・高振幅の偏位が周期的に出現する。後頭部には出現していない。',
+    q:'この所見はどれか？', choices:['前頭葉てんかん焦点（棘波）','眼球運動アーティファクト（EOG）','FIRDA（前頭間欠律動性δ活動）','K複合（Stage N2）'],
+    correct:1, explanation:'前頭部（Fp1/Fp2）限局の低周波・高振幅偏位は眼球運動アーティファクト（EOG）の典型です。後頭部に出現しないこと、低周波（＜1Hz）であることが鑑別の鍵。患者に眼球を固定させると消失します。'
+  },
+  { id:'aq2', waveType:'emg_q', context:'50歳男性。記録中に顎を食いしばっていた。側頭部（T3/T4）に30Hz以上の高周波ノイズが突発的に出現する。後頭部は正常。',
+    q:'この所見の最も可能性が高い原因はどれか？', choices:['側頭葉てんかん焦点','ECGアーティファクト','筋電図アーティファクト（EMG）','電極アーティファクト'],
+    correct:2, explanation:'高周波（>30Hz）ノイズの側頭部限局・咀嚼筋収縮との関連は筋電図（EMG）アーティファクトの特徴です。患者に力を抜くよう指示すると消失します。γ帯域のてんかん放電との鑑別に注意。'
+  },
+  { id:'aq3', waveType:'ecg_q', context:'72歳男性。心房細動既往あり。全誘導にQRS類似形状の波形が規則的に出現（約75回/分に一致）。',
+    q:'この所見の解釈として正しいのはどれか？', choices:['全般性周期性放電（GPDs）—脳由来','ECGアーティファクト—電気的漏れ込み','全般性律動性δ（GRDA）','睡眠紡錘波'],
+    correct:1, explanation:'心拍数と完全一致した規則的波形はECGアーティファクトです。GPDsとの鑑別は：①心拍数との同期（ECGチャンネルで確認）、②波形がQRS形状に類似、③後続徐波なし。'
+  },
+  { id:'aq4', waveType:'electrode_q', context:'記録中に単一誘導（Fp1が含まれる全誘導）に突発的な超高振幅スパイクが出現した。波形は後続徐波なし。インピーダンス計測値が高値を示している。',
+    q:'この所見の最も可能性が高い原因はどれか？', choices:['前頭極てんかん焦点（焦点性棘波）','電極アーティファクト（Electrode pop）','眼球運動アーティファクト','FIRDA'],
+    correct:1, explanation:'単一電極の高インピーダンス＋後続徐波なしの超高振幅スパイクは電極アーティファクト（Electrode pop）です。焦点性棘波との鑑別：①後続徐波の有無（棘波は有り）、②インピーダンス確認、③電極再装着で消失。'
+  },
+  { id:'aq5', waveType:'blink_q', context:'25歳女性。記録中、Fp1/Fp2に約0.3-0.5秒ごとの両側対称性の正相偏位が繰り返す。',
+    q:'この所見の解釈として最も適切なのはどれか？', choices:['小児欠神てんかんの3Hz棘徐波複合','眼瞼アーティファクト（まばたき）','K複合（Stage N2）','前頭部棘波（焦点性）'],
+    correct:1, explanation:'規則的な両側対称性Fp1/Fp2の正相偏位はまばたきアーティファクトです。K複合との鑑別：①K複合はCzに最大、高振幅な二相性（負→正）、②まばたきはFp1/Fp2のみ、単相（正向き）、③閉眼記録では減少。'
+  },
+  { id:'aq6', waveType:'movement_q', context:'搬送直後のICU患者（救急ストレッチャー移動後）。全誘導が同時に不規則な大振幅低周波変動を示す。',
+    q:'この所見の解釈として正しいのはどれか？', choices:['全般性てんかん重積（GCSE）','非けいれん性てんかん重積（NCSE）','体動アーティファクト','全般性徐波化（代謝性脳症）'],
+    correct:2, explanation:'全誘導同時性の不規則な大振幅変動は体動アーティファクトです。てんかん重積との鑑別：①記録状況（搬送中・体動）、②全誘導同時に乱れる（てんかんは通常から徐々に伝播）、③体動が止まると消失。'
+  },
+  { id:'aq7', waveType:'spike_art_q', context:'55歳男性。正常覚醒背景。前頭部に高振幅の短い鋭波が散発。後続する緩徐波（0.2-0.5秒）を伴う。後頭部α波は正常。',
+    q:'この所見の解釈として最も適切なのはどれか？', choices:['アーティファクト—EOG','前頭葉焦点性棘波（てんかん性放電）','アーティファクト—EMG','正常所見—μリズム'],
+    correct:1, explanation:'後続徐波（後続緩徐波）を伴う棘波はてんかん性放電です。アーティファクトとの鑑別：①EOGは低周波で後続徐波なし、②後続徐波の有無が最重要の鑑別点、③後方電極への伝播があれば脳由来の確率が高い。'
+  },
+  { id:'aq8', waveType:'triple_art_q', context:'68歳男性。肝硬変・意識障害。全誘導に前頭部優位の1-2Hz三相性波形が出現している。',
+    q:'この所見について正しい説明はどれか？', choices:['ECGアーティファクト（心拍数と同期）','体動アーティファクト','三相波（Triphasic waves）—代謝性脳症を示す病的所見','睡眠紡錘波の変型'],
+    correct:2, explanation:'三相波（負-正-負の3相性、前頭部優位、前後伝播遅延）は病的所見であり、アーティファクトではありません。肝性脳症・代謝性脳症の特徴的脳波所見です。ECGとの同期なし、全誘導に及ぶ点が鑑別のポイント。'
+  },
+  { id:'aq9', waveType:'hf_art_q', context:'記録中、患者が額にしわを寄せた直後に前頭部に高周波ノイズが突然出現し、表情が戻ると消失した。',
+    q:'この所見の最も可能性が高い原因はどれか？', choices:['FIRDA（前頭間欠律動性δ）','全般性てんかん発作の開始','前頭部筋電図アーティファクト（EMG）','眼瞼アーティファクト'],
+    correct:2, explanation:'表情筋（前頭筋）の収縮と完全に連動した高周波ノイズは筋電図アーティファクトです。FIRDAはδ波（低周波）です。EMGは筋収縮の開始・終了と時間的に一致することが鑑別の決め手。'
+  },
+  { id:'aq10', waveType:'periodic_art_q', context:'ICU患者（敗血症・意識障害）。全誘導に約1秒ごと規則的な複合波が出現。心拍数は90回/分。同時記録のECGチャンネルとは同期していない。',
+    q:'この所見の解釈として正しいのはどれか？', choices:['ECGアーティファクト（心拍と一致）','体動アーティファクト','全般性周期性放電（GPDs）—脳由来の病的所見','睡眠紡錘波'],
+    correct:2, explanation:'①ECGと非同期、②1Hz（心拍より遅い）、③ICU患者（敗血症・意識障害）、④複合波形はGPDs（全般性周期性放電）として病的所見です。CJD・敗血症性脳症・無酸素性脳症・代謝性脳症などで出現します。抗てんかん薬の試験的投与（治療的診断）も検討されます。'
+  },
+];
+
+// ===== Draw functions for quiz questions =====
+const Q_DRAWFNS = {
+  eog_q(ctx,W,H) {
+    ctx.strokeStyle='#fb923c'; ctx.lineWidth=1.5; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const v=Math.sin(2*Math.PI*0.4*t)*H*0.36+pnoise(t,0)*H*0.04; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);} ctx.stroke();
+    ctx.fillStyle='rgba(255,165,0,0.5)'; ctx.font='10px sans-serif'; ctx.fillText('Fp1 (前頭部)',5,15);
+  },
+  emg_q(ctx,W,H) {
+    ctx.strokeStyle='#f87171'; ctx.lineWidth=1; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const v=Math.sin(2*Math.PI*60*t)*H*0.22+Math.sin(2*Math.PI*85*t)*H*0.14+pnoise(t*10,3)*H*0.12; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);} ctx.stroke();
+    ctx.fillStyle='rgba(255,100,100,0.6)'; ctx.font='10px sans-serif'; ctx.fillText('T3 (左側頭部)',5,15);
+  },
+  ecg_q(ctx,W,H) {
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const n=pnoise(t,0)*H*0.02; x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);} ctx.stroke();
+    ctx.strokeStyle='#f87171'; ctx.lineWidth=1.5; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const bf=(t*1.25)%1; const qrs=bf<0.035?Math.sin(bf/0.035*Math.PI*2)*H*0.38:0; x===0?ctx.moveTo(x,H/2-qrs):ctx.lineTo(x,H/2-qrs);} ctx.stroke();
+  },
+  electrode_q(ctx,W,H) {
+    ctx.strokeStyle='#4ade80'; ctx.lineWidth=1.2; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const n=pnoise(t,0)*H*0.025; x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);} ctx.stroke();
+    const px=W*0.45; ctx.strokeStyle='#f0abfc'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(px,H/2); ctx.lineTo(px+2,H/2-H*0.45); ctx.lineTo(px+4,H/2); ctx.stroke();
+    const px2=W*0.72; ctx.beginPath(); ctx.moveTo(px2,H/2); ctx.lineTo(px2+2,H/2-H*0.38); ctx.lineTo(px2+4,H/2); ctx.stroke();
+  },
+  blink_q(ctx,W,H) {
+    ctx.strokeStyle='#fb923c'; ctx.lineWidth=1.5; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const bt=t%1.0; const v=(bt<0.08?Math.sin(bt/0.08*Math.PI)*H*0.35:0)+pnoise(t,0)*H*0.02; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);} ctx.stroke();
+    ctx.fillStyle='rgba(255,165,0,0.5)'; ctx.font='10px sans-serif'; ctx.fillText('Fp1/Fp2（対称性）',5,15);
+  },
+  movement_q(ctx,W,H) {
+    ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1.5; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const v=Math.sin(2*Math.PI*0.7*t)*H*0.38+pnoise(t,0)*H*0.15+Math.sin(2*Math.PI*1.3*t)*H*0.12; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);} ctx.stroke();
+  },
+  spike_art_q(ctx,W,H) {
+    ctx.strokeStyle='#4ade80'; ctx.lineWidth=1; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const n=pnoise(t,0)*H*0.025; x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);} ctx.stroke();
+    for(let s=0;s<2;s++){const sx=W*(0.28+s*0.38); ctx.strokeStyle='#fca5a5'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(sx-4,H/2); ctx.lineTo(sx,H/2-H*0.40); ctx.lineTo(sx+8,H/2+H*0.22); ctx.lineTo(sx+28,H/2); ctx.stroke();}
+  },
+  triple_art_q(ctx,W,H) {
+    ctx.strokeStyle='#fbbf24'; ctx.lineWidth=2; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*6; const ph=t*1.5; const fr=ph-Math.floor(ph); let v=0; if(fr<0.12)v=-H*0.16*Math.sin(fr/0.12*Math.PI); else if(fr<0.45)v=H*0.38*Math.sin((fr-0.12)/0.33*Math.PI); else if(fr<0.62)v=-H*0.14*Math.sin((fr-0.45)/0.17*Math.PI); v+=pnoise(t,2)*H*0.02; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);} ctx.stroke();
+  },
+  hf_art_q(ctx,W,H) {
+    ctx.strokeStyle='#f97316'; ctx.lineWidth=1; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*5; const on=t>1.5&&t<3.8; const v=on?(Math.sin(2*Math.PI*55*t)*H*0.20+pnoise(t*8,0)*H*0.12):pnoise(t,0)*H*0.03; x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);} ctx.stroke();
+    ctx.fillStyle='rgba(255,165,0,0.5)'; ctx.font='10px sans-serif'; ctx.fillText('前頭部 (Fz)',5,15);
+  },
+  periodic_art_q(ctx,W,H) {
+    ctx.strokeStyle='#818cf8'; ctx.lineWidth=1; ctx.beginPath();
+    for(let x=0;x<W;x++){const t=x/W*6; const n=pnoise(t,0)*H*0.02; x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);} ctx.stroke();
+    for(let i=0;i<6;i++){const sx=W*(0.06+i*0.165); ctx.strokeStyle='#c7d2fe'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(sx,H/2); ctx.lineTo(sx+4,H/2-H*0.38); ctx.lineTo(sx+8,H/2+H*0.18); ctx.lineTo(sx+16,H/2-H*0.10); ctx.lineTo(sx+24,H/2); ctx.stroke();}
+  },
+};
+
+function drawDrillCanvas(canvas, waveType) {
+  const W = canvas.offsetWidth || 600; canvas.width = W;
+  const ctx = canvas.getContext('2d'); const H = canvas.height;
+  ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=W/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=H/4){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  if(Q_DRAWFNS[waveType]) Q_DRAWFNS[waveType](ctx,W,H);
+}
+
+// ===== Drill state =====
+const DRILL_KEY = 'eeg_artifact_drill';
+let drillState = { current:0, score:0, answered:{} };
+
+function loadDrillState(){try{const s=localStorage.getItem(DRILL_KEY);if(s)drillState={...drillState,...JSON.parse(s)};}catch(e){}}
+function saveDrillState(){try{localStorage.setItem(DRILL_KEY,JSON.stringify(drillState));}catch(e){}}
+
+function renderDrill(){
+  const idx=drillState.current;
+  if(idx>=DRILL_QUESTIONS.length){showDrillResult();return;}
+  const q=DRILL_QUESTIONS[idx];
+  const answered=drillState.answered[q.id];
+  const total=DRILL_QUESTIONS.length;
+
+  document.getElementById('drill-progress-label').textContent=`${Object.keys(drillState.answered).length} / ${total} 完了`;
+  document.getElementById('drill-score-label').textContent=`正答: ${drillState.score}`;
+  document.getElementById('drill-progress-bar').style.width=`${(Object.keys(drillState.answered).length/total)*100}%`;
+
+  const area=document.getElementById('drill-area');
+  area.innerHTML=`
+    <div class="q-card">
+      <canvas id="drill-canvas" class="q-canvas" height="110"></canvas>
+      <div class="p-4">
+        ${q.context?`<p class="text-sm text-slate-600 bg-slate-50 rounded-lg p-3 border border-slate-200 leading-relaxed mb-3">${q.context}</p>`:''}
+        <p class="font-bold text-slate-800 mb-3">${q.q}</p>
+        <div class="space-y-2" id="drill-choices"></div>
+        ${answered?`<div class="mt-3 p-3 rounded-xl border text-sm leading-relaxed ${answered.correct?'bg-green-50 border-green-200':'bg-rose-50 border-rose-200'}">
+          <p class="font-bold mb-1 ${answered.correct?'text-green-700':'text-rose-700'}">${answered.correct?'正解！':'不正解'}</p>
+          <p class="text-slate-700">${q.explanation}</p>
+        </div>
+        <div id="srs-drill-badge-${q.id}" class="mt-2"></div>`:''}
+      </div>
+    </div>
+    ${answered?`<div class="flex justify-end mt-2"><button onclick="drillNext()" class="flex items-center gap-1.5 px-5 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-sm font-bold transition-colors">${idx+1<total?'次の問題':'結果を見る'}<i data-lucide="${idx+1<total?'arrow-right':'award'}" class="w-4 h-4"></i></button></div>`:''}
+  `;
+  lucide.createIcons();
+  const cv=document.getElementById('drill-canvas'); if(cv) drawDrillCanvas(cv,q.waveType);
+  // SRS badge
+  if(answered && typeof srsGetCard==='function'){
+    const card=srsGetCard(q.id);
+    if(card){
+      const badgeEl=document.getElementById('srs-drill-badge-'+q.id);
+      if(badgeEl){
+        const today=(typeof todayStr==='function'?todayStr():new Date().toISOString().slice(0,10));
+        const diff=Math.round((new Date(card.dueDate+'T00:00:00')-new Date(today+'T00:00:00'))/86400000);
+        const label=diff<=0?'今日また出題':diff===1?'明日復習予定':`${diff}日後に復習予定`;
+        badgeEl.innerHTML=`<span class="inline-flex items-center gap-1 text-xs bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-full px-3 py-0.5 font-medium">⏱ ${label} (SRS)</span>`;
+      }
+    }
+  }
+  const ca=document.getElementById('drill-choices');
+  if(ca && q.choices){
+    q.choices.forEach((c,i)=>{
+      const btn=document.createElement('button');
+      let cls='choice-btn';
+      if(answered){if(i===q.correct)cls+=' revealed';else if(answered.chosen===i&&i!==q.correct)cls+=' wrong'; btn.disabled=true;}
+      btn.className=cls;
+      btn.innerHTML=`<span class="choice-label">${String.fromCharCode(65+i)}</span><span>${c}</span>${answered&&i===q.correct?'<i data-lucide="check" class="w-4 h-4 ml-auto text-green-600"></i>':''}${answered&&answered.chosen===i&&i!==q.correct?'<i data-lucide="x" class="w-4 h-4 ml-auto text-red-600"></i>':''}`;
+      if(!answered) btn.onclick=()=>drillAnswer(i);
+      ca.appendChild(btn);
+    });
+    lucide.createIcons();
+  }
+}
+
+function drillAnswer(chosen){
+  const q=DRILL_QUESTIONS[drillState.current];
+  const correct=chosen===q.correct;
+  drillState.answered[q.id]={chosen,correct};
+  if(correct) drillState.score++;
+  // SRS: register and record answer
+  if(typeof srsRegister==='function'){
+    srsRegister(q.id,'artifact');
+    srsAnswer(q.id, correct ? SRS_SCORE.GOOD : SRS_SCORE.INCORRECT_HARD, 'artifact');
+  }
+  saveDrillState(); renderDrill();
+}
+function drillNext(){drillState.current++;saveDrillState();renderDrill();}
+function resetDrill(){drillState={current:0,score:0,answered:{}};saveDrillState();document.getElementById('drill-result').classList.add('hidden');renderDrill();}
+function showDrillResult(){
+  document.getElementById('drill-area').innerHTML='';
+  document.getElementById('drill-result').classList.remove('hidden');
+  const t=DRILL_QUESTIONS.length; const s=drillState.score;
+  document.getElementById('drill-result-score').textContent=`${s} / ${t} 問正解`;
+  const pct=s/t;
+  document.getElementById('drill-result-msg').textContent=pct>=0.8?'優秀です！アーティファクト識別の基本が身につきました。':pct>=0.6?'合格ライン。図鑑を見返して再挑戦しましょう。':'図鑑タブでパターンを確認してから再挑戦しましょう。';
+  lucide.createIcons();
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', ()=>{
+  lucide.createIcons();
+  // Draw all atlas canvases
+  const map={
+    'cv-eog':'eog','cv-blink':'blink','cv-emg':'emg',
+    'cv-ecg':'ecg','cv-electrode':'electrode','cv-movement':'movement'
+  };
+  Object.entries(map).forEach(([id,type])=>{
+    const cv=document.getElementById(id); if(!cv) return;
+    cv.width=cv.offsetWidth||600; drawArtifact(cv,type);
+  });
+  loadDrillState(); renderDrill();
+});
+
+window.addEventListener('resize',()=>{
+  const map={'cv-eog':'eog','cv-blink':'blink','cv-emg':'emg','cv-ecg':'ecg','cv-electrode':'electrode','cv-movement':'movement'};
+  Object.entries(map).forEach(([id,type])=>{const cv=document.getElementById(id);if(!cv)return;cv.width=cv.offsetWidth;drawArtifact(cv,type);});
+});
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 .DS_Store
+.cursor/
 
 # ICD-10 ミニ版はこのリポジトリとは別管理（icd10mini/ 内で git init 済み）
 /icd10mini/

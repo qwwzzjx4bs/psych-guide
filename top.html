@@ -946,6 +946,191 @@
       outline: 2px solid #4c6e9c;
       outline-offset: 2px;
     }
+
+    /* ===================================
+       目的別ゴールセクション
+       =================================== */
+    .sec-goals { background: #2d6a4f; }
+
+    .goals-subtitle {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin: -0.5rem 0 1rem;
+      max-width: 48rem;
+      line-height: 1.6;
+    }
+
+    .goals-grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 768px) {
+      .goals-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .goal-card {
+      background: #fff;
+      border-radius: 1rem;
+      border: 1.5px solid #e5e7eb;
+      overflow: hidden;
+      transition: box-shadow 0.18s;
+    }
+
+    .goal-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.09); }
+
+    .goal-card > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      outline: none;
+      user-select: none;
+    }
+
+    .goal-card > summary::-webkit-details-marker { display: none; }
+
+    .goal-card__icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    .goal-card__title-wrap { flex: 1; min-width: 0; }
+
+    .goal-card__title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: 0.015em;
+      line-height: 1.4;
+    }
+
+    .goal-card__tagline {
+      font-size: 0.72rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+      line-height: 1.5;
+    }
+
+    .goal-card__chevron {
+      flex-shrink: 0;
+      margin-top: 0.3rem;
+      color: #9ca3af;
+      transition: transform 0.2s;
+      font-style: normal;
+      font-size: 0.7rem;
+    }
+
+    details[open].goal-card > summary .goal-card__chevron { transform: rotate(90deg); }
+
+    details[open].goal-card > summary { background: #f9fafb; }
+
+    .goal-card__body {
+      padding: 0.75rem 1.25rem 1.25rem;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    @keyframes goalSlideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    details[open].goal-card .goal-card__body {
+      animation: goalSlideDown 0.18s ease;
+    }
+
+    .goal-target {
+      font-size: 0.72rem;
+      color: #6b7280;
+      margin: 0 0 0.65rem;
+      padding: 0.45rem 0.7rem;
+      background: #f9fafb;
+      border-radius: 0.5rem;
+      border-left: 3px solid #d1d5db;
+      line-height: 1.65;
+    }
+
+    .goal-target strong {
+      display: inline;
+      color: #374151;
+      font-weight: 700;
+    }
+
+    .goal-steps-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #374151;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 0.7rem 0 0.4rem;
+    }
+
+    .goal-steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: goal-step;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .goal-steps li {
+      counter-increment: goal-step;
+      display: flex;
+      align-items: baseline;
+      gap: 0.55rem;
+      font-size: 0.79rem;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    .goal-steps li::before {
+      content: counter(goal-step);
+      flex-shrink: 0;
+      width: 1.4em;
+      height: 1.4em;
+      border-radius: 50%;
+      background: #2d6a4f;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.12em;
+    }
+
+    .goal-steps a {
+      color: #1d4ed8;
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-color: #bfdbfe;
+      text-underline-offset: 2px;
+      transition: color 0.12s;
+    }
+
+    .goal-steps a:hover {
+      color: #1e40af;
+      text-decoration-color: #93c5fd;
+    }
+
+    .goal-steps .step-note {
+      color: #9ca3af;
+      font-size: 0.68rem;
+      font-weight: 400;
+    }
+
+    /* ジャンプバー — 目的別 */
+    a[href="#portal-goals"] {
+      background: #d1fae5 !important;
+      color: #064e3b !important;
+    }
+    a[href="#portal-goals"]:hover { background: #a7f3d0 !important; }
+    a[href="#portal-goals"] span { background: #6ee7b7 !important; color: #065f46 !important; }
   </style>
 </head>
 <body class="min-h-screen">
@@ -991,6 +1176,11 @@
     <!-- ジャンプバー：左から「診療の流れ」に近い順 -->
     <div class="border-b border-gray-100 bg-white">
       <div class="flex flex-wrap gap-1.5 px-4 sm:px-6 py-2">
+          <a href="#portal-goals"
+             class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition-colors text-xs font-medium whitespace-nowrap">
+            🎯 目的別
+            <span id="jump-cnt-portal-goals" class="px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">6</span>
+          </a>
           <a href="#portal-calc"
              class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyan-100 hover:bg-cyan-200 transition-colors text-xs font-medium text-teal-900 whitespace-nowrap">
             🧮 計算ツール
@@ -1038,7 +1228,7 @@
           </a>
         </div>
       </div>
-      <p class="portal-jump-hint">上のタブは左から「計算 → 数値評価 → 診断 → <strong>治療概要</strong> → <strong>薬剤選択</strong> → <strong>概念・資格</strong> → 学習・ドリル → <strong>最新論文</strong> → その他」のイメージです（9区分）。迷ったら検索バーでページ名を決定してください。</p>
+      <p class="portal-jump-hint">上のタブは左から「<strong>目的別</strong>（学びたい目標から入る入口）→ 計算 → 数値評価 → 診断 → <strong>治療概要</strong> → <strong>薬剤選択</strong> → <strong>概念・資格</strong> → 学習・ドリル → <strong>最新論文</strong> → その他」（10区分）。初めての方は「目的別」から、特定ページを探す場合は検索バーをご利用ください。</p>
     </div>
     <div class="portal-search-wrap">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2" id="portal-search-field-wrap">
@@ -1096,6 +1286,162 @@
             <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>検索バー直下の主要疾患ボタンでは、よく使う疾患別にカードを絞り込めます（検索語と併用可）。「すべて表示」で解除します。</span></li>
           </ul>
         </div>
+      </div>
+    </section>
+
+    <!-- 目的別ゴールガイド -->
+    <section id="portal-goals" class="mb-8 sm:mb-12">
+      <div class="sec-header sec-goals">
+        <div class="sec-icon">🎯</div>
+        <span>目的・ゴール別ガイド</span>
+        <span class="sec-count">6 コース</span>
+      </div>
+      <p class="goals-subtitle">「何を学びたいか」「何を目指しているか」を起点に、関連ページを順番に辿れます。各コースをクリックして詳細とステップを確認してください。</p>
+
+      <div class="goals-grid">
+
+        <!-- ① 脳波（EEG）を学ぶ -->
+        <details class="goal-card" id="goal-eeg">
+          <summary class="goal-card__header">
+            <span class="goal-card__icon">🧠</span>
+            <div class="goal-card__title-wrap">
+              <div class="goal-card__title">脳波（EEG）を学ぶ</div>
+              <div class="goal-card__tagline">基礎から症例読影・アーティファクト識別まで 7 ステップ</div>
+            </div>
+            <i class="goal-card__chevron">▶</i>
+          </summary>
+          <div class="goal-card__body">
+            <p class="goal-target"><strong>こんな方に：</strong>脳波を一から学びたい研修医・専攻医、てんかん・せん妄の評価に自信をつけたい方</p>
+            <p class="goal-steps-label">推奨ステップ</p>
+            <ol class="goal-steps">
+              <li><a href="eeg-basics.html">EEG 基礎知識</a> <span class="step-note">— 正常脳波・基本リズム・電極配置の概要</span></li>
+              <li><a href="eeg-waveforms.html">波形の種類と正常値</a> <span class="step-note">— α・β・θ・δ・睡眠紡錘波など主要波形を一覧整理</span></li>
+              <li><a href="eeg-montage.html">モンタージュを理解する</a> <span class="step-note">— 縦・横・双極・参照導出の切り替えと読み方</span></li>
+              <li><a href="eeg-learning.html">学習ガイド＋概要まとめ</a> <span class="step-note">— ここまでの知識を整理する総合解説</span></li>
+              <li><a href="eeg-quiz.html">基本クイズ</a> <span class="step-note">— 知識の定着確認（〇×・択一形式）</span></li>
+              <li><a href="eeg-cases.html">症例読影ドリル</a> <span class="step-note">— 実際の波形パターンから病態を推論</span></li>
+              <li><a href="eeg-artifacts.html">アーティファクト識別</a> <span class="step-note">— 筋電図・眼球運動・電極ノイズを見分ける</span></li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- ② 精神保健指定医を取ろう -->
+        <details class="goal-card" id="goal-shitei">
+          <summary class="goal-card__header">
+            <span class="goal-card__icon">📋</span>
+            <div class="goal-card__title-wrap">
+              <div class="goal-card__title">精神保健指定医を取ろう</div>
+              <div class="goal-card__tagline">制度把握 → 申請要件 → 症例記録まで 5 ステップ</div>
+            </div>
+            <i class="goal-card__chevron">▶</i>
+          </summary>
+          <div class="goal-card__body">
+            <p class="goal-target"><strong>こんな方に：</strong>指定医申請を準備中の精神科専攻医、申請経験者でも要件を再確認したい方</p>
+            <p class="goal-steps-label">推奨ステップ</p>
+            <ol class="goal-steps">
+              <li><a href="shiteii-guide.html">指定医制度ガイド</a> <span class="step-note">— 指定医とは何か・申請要件・更新の全体像</span></li>
+              <li><a href="seishin-hoken-shitei-overview.html">精神保健福祉法の全体像</a> <span class="step-note">— 措置入院・医療保護入院の法的根拠を整理</span></li>
+              <li><a href="shitei-checklist.html">申請要件チェックリスト</a> <span class="step-note">— 経験症例数・書類要件を漏れなく確認</span></li>
+              <li><a href="shitei-report-wizard.html">症例記録ウィザード</a> <span class="step-note">— 記載すべき項目をガイド付きで入力・確認</span></li>
+              <li><a href="shitei-case-template.html">症例テンプレート</a> <span class="step-note">— 実際の申請書に沿ったサンプル構成を参照</span></li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- ③ 統合失調症の初発に対応する -->
+        <details class="goal-card" id="goal-schiz">
+          <summary class="goal-card__header">
+            <span class="goal-card__icon">🏥</span>
+            <div class="goal-card__title-wrap">
+              <div class="goal-card__title">統合失調症の初発に対応する</div>
+              <div class="goal-card__tagline">診断 → 早期介入 → 治療 → 評価まで 5 ステップ</div>
+            </div>
+            <i class="goal-card__chevron">▶</i>
+          </summary>
+          <div class="goal-card__body">
+            <p class="goal-target"><strong>こんな方に：</strong>初発統合失調症の診断・治療を担当する研修医・専攻医、早期介入の枠組みを体系的に学びたい方</p>
+            <p class="goal-steps-label">推奨ステップ</p>
+            <ol class="goal-steps">
+              <li><a href="schizophrenia-diagnosis.html">診断基準と鑑別</a> <span class="step-note">— ICD-10/DSM-5-TR の診断基準・陽性・陰性症状の整理</span></li>
+              <li><a href="schizophrenia-early-intervention.html">早期介入の枠組み</a> <span class="step-note">— UHR・DUP・包括的ケアの考え方</span></li>
+              <li><a href="schizophrenia-algorithm.html">治療アルゴリズム</a> <span class="step-note">— 急性期〜安定期の薬物・非薬物療法の選択フロー</span></li>
+              <li><a href="schizophrenia-scales.html">症状評価スケール</a> <span class="step-note">— BPRS・PANSS・CGI の使い分けと採点ポイント</span></li>
+              <li><a href="schizophrenia-first-episode-learning.html">初発症例 学習ドリル</a> <span class="step-note">— 実践的ケース演習で臨床判断を鍛える</span></li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- ④ 向精神薬を使いこなす -->
+        <details class="goal-card" id="goal-drugs">
+          <summary class="goal-card__header">
+            <span class="goal-card__icon">💊</span>
+            <div class="goal-card__title-wrap">
+              <div class="goal-card__title">向精神薬を使いこなす</div>
+              <div class="goal-card__tagline">各薬剤クラス → 相互作用 → 換算計算まで 6 ステップ</div>
+            </div>
+            <i class="goal-card__chevron">▶</i>
+          </summary>
+          <div class="goal-card__body">
+            <p class="goal-target"><strong>こんな方に：</strong>薬の使い方・使い分けを体系的に学びたい研修医、処方設計の自信をつけたい方</p>
+            <p class="goal-steps-label">推奨ステップ</p>
+            <ol class="goal-steps">
+              <li><a href="antipsychotics-japan.html">抗精神病薬 国内一覧</a> <span class="step-note">— 第1世代・第2世代の特性比較と選択指針</span></li>
+              <li><a href="antidepressants-japan.html">抗うつ薬 国内一覧</a> <span class="step-note">— SSRI・SNRI・NaSSA・TCA の特性と使い分け</span></li>
+              <li><a href="mood-stabilizers-japan.html">気分安定薬</a> <span class="step-note">— リチウム・バルプロ酸・ラモトリギン等の概要</span></li>
+              <li><a href="benzodiazepines-japan.html">ベンゾジアゼピン系</a> <span class="step-note">— 半減期・力価・依存リスクの整理</span></li>
+              <li><a href="psychotropics-interactions-learning.html">薬物相互作用 学習</a> <span class="step-note">— CYP・QT 延長・中枢抑制の主要組み合わせを演習</span></li>
+              <li><a href="cp-calculator.html">CP 換算計算機</a> <span class="step-note">— 外来でのリアルタイム等価換算ツール</span></li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- ⑤ 評価スケールを習得する -->
+        <details class="goal-card" id="goal-scales">
+          <summary class="goal-card__header">
+            <span class="goal-card__icon">📊</span>
+            <div class="goal-card__title-wrap">
+              <div class="goal-card__title">評価スケールを習得する</div>
+              <div class="goal-card__tagline">BPRS 基礎から PANSS・HAMD・MADRS・YMRS・BFCRS まで 6 ステップ</div>
+            </div>
+            <i class="goal-card__chevron">▶</i>
+          </summary>
+          <div class="goal-card__body">
+            <p class="goal-target"><strong>こんな方に：</strong>診察で評価スケールを活用したい医師・研修医、研究・指定医申請に向けて採点の精度を高めたい方</p>
+            <p class="goal-steps-label">推奨ステップ</p>
+            <ol class="goal-steps">
+              <li><a href="bprs-guide.html">BPRS 解説</a> <span class="step-note">— 18 項目の意味・採点基準・臨床での使い方</span></li>
+              <li><a href="bprs-sheet-detailed.html">BPRS 採点練習シート</a> <span class="step-note">— 対話型 WEB 採点フォームで実際に採点</span></li>
+              <li><a href="panss-sheet-detailed.html">PANSS 採点シート</a> <span class="step-note">— 30 項目の陽性・陰性・総合精神病理スケール</span></li>
+              <li><a href="hamd-sheet-detailed.html">HAMD 採点シート</a> <span class="step-note">— うつ病重症度の標準的評価（17 項目版）</span></li>
+              <li><a href="ymrs-sheet-detailed.html">YMRS 採点シート</a> <span class="step-note">— 躁状態重症度の評価（11 項目）</span></li>
+              <li><a href="bfcrs-sheet.html">BFCRS（緊張病評価）</a> <span class="step-note">— Bush–Francis Catatonia Rating Scale の採点フォーム</span></li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- ⑥ うつ病・双極性障害を診る -->
+        <details class="goal-card" id="goal-mood">
+          <summary class="goal-card__header">
+            <span class="goal-card__icon">😔</span>
+            <div class="goal-card__title-wrap">
+              <div class="goal-card__title">うつ病・双極性障害を診る</div>
+              <div class="goal-card__tagline">ガイドライン → 診断 → 薬剤選択 → スケールまで 5 ステップ</div>
+            </div>
+            <i class="goal-card__chevron">▶</i>
+          </summary>
+          <div class="goal-card__body">
+            <p class="goal-target"><strong>こんな方に：</strong>気分障害の外来診療の基礎を固めたい医師、双極性障害の診断に迷うことがある研修医・専攻医</p>
+            <p class="goal-steps-label">推奨ステップ</p>
+            <ol class="goal-steps">
+              <li><a href="depression-guideline2025.html">うつ病診療ガイドライン 2025</a> <span class="step-note">— 国内最新ガイドラインの要点と治療フロー</span></li>
+              <li><a href="bipolar-diagnosis-treatment.html">双極性障害の診断・治療</a> <span class="step-note">— 双極Ⅰ型・Ⅱ型の診断基準と薬物療法の基本</span></li>
+              <li><a href="atypical-depression.html">非定型うつ病</a> <span class="step-note">— 非定型うつの特徴・双極との鑑別・治療戦略</span></li>
+              <li><a href="antidepressants-japan.html">抗うつ薬 国内一覧</a> <span class="step-note">— 薬剤クラス別の特性比較と選択フロー</span></li>
+              <li><a href="hamd-sheet-detailed.html">HAMD / MADRS 採点シート</a> <span class="step-note">— 治療効果の客観的評価ツール</span></li>
+            </ol>
+          </div>
+        </details>
+
       </div>
     </section>
 
@@ -1396,11 +1742,17 @@
           <div class="mt-3 text-xs link-indigo font-medium">hypnotics-japan.html →</div>
         </a>
         <div class="portal-grid-divider sm:col-span-2"><span>向精神薬 単剤詳解シリーズ</span></div>
-        <a id="card-venlafaxine" href="venlafaxine.html" class="card block border border-indigo-100 rounded-xl p-4 border-indigo bg-indigo sm:col-span-2">
+        <a id="card-venlafaxine" href="venlafaxine.html" class="card block border border-indigo-100 rounded-xl p-4 border-indigo bg-indigo">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-indigo px-2 py-0.5 rounded-full">SNRI 単剤詳解</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-10 新規</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ベンラファキシン（イフェクサーSR）— 分子構造・薬理・エビデンス 詳解</h3>
           <p class="text-xs text-gray-500 leading-relaxed">SNRI の代表薬ベンラファキシンを分子構造・受容体プロファイル（Ki 値）・用量依存性メカニズム・薬物動態（ADME・CYP2D6多型）・日本承認情報・ガイドライン推奨度マトリクス・主要 RCT・具体的症例・副作用管理（血圧・中止症候群）・相互作用・特殊集団・海外比較・最新研究まで専門医向けに一本化した単剤詳解ページ。</p>
           <div class="mt-3 text-xs link-indigo font-medium">venlafaxine.html →</div>
+        </a>
+        <a id="card-olanzapine" href="olanzapine.html" class="card block border border-violet-100 rounded-xl p-4 border-violet bg-violet">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-violet px-2 py-0.5 rounded-full" style="background:#f5f3ff;color:#5b21b6;">SGA 単剤詳解</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-11 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">オランザピン（ジプレキサ）— 分子構造・薬理・エビデンス 詳解</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">SGA（MARTA）の代表薬オランザピンを分子構造・受容体プロファイル（D2/5-HT2A/H1/M1/α1 Ki 値）・薬物動態（UGT1A4/CYP1A2・喫煙影響）・4適応の日本承認情報・ガイドライン推奨度マトリクス・CATIE 試験・Leucht 2013 等の主要エビデンス・具体的症例・代謝モニタリングフロー・薬物相互作用・特殊集団（糖尿病禁忌・認知症警告）・海外比較・最新研究まで一本化した単剤詳解ページ。</p>
+          <div class="mt-3 text-xs font-medium" style="color:#7c3aed;">olanzapine.html →</div>
         </a>
       </div>
     </section>
@@ -1486,6 +1838,12 @@
       </div>
       <p class="text-xs text-gray-500 -mt-2 mb-4 max-w-3xl leading-relaxed">臨床の合間ではなく、知識の確認・試験対策向けのコンテンツです。</p>
       <div class="grid sm:grid-cols-2 gap-3" id="grid-portal-study">
+        <a id="card-terminology-srs" href="psych-terminology-srs.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">SRS</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-11 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神医学用語 SRS 学習（間隔反復）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">精神医学・精神病理・症候学・精神分析の全用語をLeitner 5段階で間隔反復。フリップカード（自己評価）と4択MCQを切替可能。進捗はブラウザに保存。</p>
+          <div class="mt-3 text-xs link-study font-medium">psych-terminology-srs.html →</div>
+        </a>
         <a id="card-icd10-quiz" href="icd10-quiz.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">クイズ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-10 精神科クイズ</h3>
@@ -1525,13 +1883,15 @@
         <a id="card-eeg-learning" href="eeg-learning.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">学習ハブ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-10 新規</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">脳波読影（EEG）— 初学者学習ハブ</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">10-20法電極配置・周波数帯域（δ/θ/α/β/γ）・波形アニメーターの基礎知識から、20+波形パターン図鑑（正常・てんかん性・脳症・焦点性異常・特殊）、3難易度クイズ（15問）、5症例の段階的読影（欠神てんかん・肝性脳症・BECTS・CJD・JME）まで1ハブに統合。</p>
+          <p class="text-xs text-gray-500 leading-relaxed">10-20法電極配置・周波数帯域（δ/θ/α/β/γ）・波形アニメーターの基礎知識から、20+波形パターン図鑑（正常・てんかん性・脳症・焦点性異常・特殊）、3難易度クイズ（30問）、10症例の段階的読影、6種アーティファクト識別・モンタージュ解説まで1ハブに統合（Phase 2）。</p>
           <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
             <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">電極配置SVG</span>
             <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">波形アニメーター</span>
             <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">20+パターン図鑑</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">3難易度クイズ</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">5症例</span>
+            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">3難易度クイズ（30問）</span>
+            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">10症例</span>
+            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">アーティファクト</span>
+            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">モンタージュ</span>
           </div>
           <div class="mt-3 text-xs link-study font-medium">eeg-learning.html →</div>
         </a>
@@ -1688,10 +2048,11 @@
         'card-antidepressants',
         'card-mood-stabilizers',
         'card-hypnotics',
-        'card-venlafaxine'
+        'card-venlafaxine',
+        'card-olanzapine'
       ],
       'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool'],
-      'portal-study': ['card-icd10-quiz', 'card-mood-suicide-learning', 'card-schiz-fe-learning', 'card-psychopath-scales-learning', 'card-psychotropics-interactions-learning', 'card-asd-schizophrenia-learning', 'card-eeg-learning', 'card-eeg-basics', 'card-eeg-waveforms', 'card-eeg-quiz', 'card-eeg-cases'],
+      'portal-study': ['card-terminology-srs', 'card-icd10-quiz', 'card-mood-suicide-learning', 'card-schiz-fe-learning', 'card-psychopath-scales-learning', 'card-psychotropics-interactions-learning', 'card-asd-schizophrenia-learning', 'card-eeg-learning', 'card-eeg-basics', 'card-eeg-waveforms', 'card-eeg-quiz', 'card-eeg-cases'],
       'portal-other': ['card-context', 'card-cursor'],
       'portal-literature': ['card-literature-search']
     };
@@ -2430,6 +2791,7 @@
       'card-icd10mini':        ['🏥 外来参照', '⚡ 軽量版'],
       'card-dsm5tr':           ['🏥 外来参照', '📘 DSM'],
       'card-dsm5trmini':       ['🏥 外来参照', '📘 DSM', '⚡ 軽量版'],
+      'card-terminology-srs':  ['🎓 学習・確認', '用語', 'SRS', '間隔反復'],
       'card-icd10-quiz':       ['🎓 学習・確認', '📖 ICD-10', 'クイズ'],
       'card-mood-suicide-learning': ['🎓 学習・確認', '📉 気分障害', '🛡 自殺リスク'],
       'card-cssrs-memo':        ['📚 概念・資格', '🛡 自殺リスク', '📋 手順'],
@@ -2448,6 +2810,7 @@
       'card-mood-stabilizers': ['🏥 外来参照', '💊 薬剤選択', '⚡ 双極・気分安定'],
       'card-hypnotics':       ['🏥 外来参照', '💊 薬剤選択', '💤 不眠'],
       'card-venlafaxine':    ['🏥 外来参照', '💊 薬剤詳解', '📉 抗うつ薬', 'SNRI'],
+      'card-olanzapine':     ['🏥 外来参照', '💊 薬剤詳解', '🧠 抗精神病薬', 'SGA'],
       'card-delirium':        ['🏥 外来参照', '📋 治療フロー', 'せん妄'],
       'card-anxiety':          ['🏥 外来参照', '📋 診断・治療'],
       'card-schiz-diagnosis':  ['🏥 外来参照', '📋 診断フロー'],
@@ -2532,6 +2895,9 @@
       'card-icd10mini': [
         { date: '2026-04-13', kind: '新規', text: 'ICD-10 ミニ版（軽量参照・印刷向け）として初版公開' },
         { date: '2026-04-08', kind: '更新', text: 'F章一覧の可読性を改善' },
+      ],
+      'card-terminology-srs': [
+        { date: '2026-05-11', kind: '新規', text: '精神医学用語 SRS 学習ツール（Leitner 5段階・フリップ/4択・localStorage 進捗保存）として初版公開' },
       ],
       'card-icd10-quiz': [
         { date: '2026-05-06', kind: '更新', text: 'ポータル「学習・ドリル」にカードを再掲載。定義JSON（icd10-definitions.json）をリポジトリに復元' },
