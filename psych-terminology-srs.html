@@ -185,6 +185,23 @@
           <p class="text-xs text-slate-400 mt-2.5 leading-relaxed" id="mode-desc"></p>
         </div>
 
+        <!-- MCQ format toggle (visible only when MCQ is active) -->
+        <div id="mcq-format-section" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-1">問題形式 <span class="text-xs font-normal text-slate-400">（4択モード時）</span></h2>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">症例形式は各用語に対応した臨床記述を問題文として使います。</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" data-mcqformat="definition"
+              class="mcqformat-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              📖 定義文
+            </button>
+            <button type="button" data-mcqformat="case"
+              class="mcqformat-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              🏥 症例形式
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-2.5 leading-relaxed" id="mcqformat-desc"></p>
+        </div>
+
         <!-- Start button -->
         <button type="button" id="btn-start"
           class="w-full py-4 rounded-2xl font-bold text-white text-base shadow-lg
@@ -280,7 +297,8 @@
       <div id="mcq-area" class="hidden space-y-3">
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
           <p id="mcq-cat" class="text-[11px] font-bold tracking-wide text-teal-700 mb-1"></p>
-          <p class="text-xs font-semibold text-slate-500 mb-3">次の説明にあてはまる用語はどれか？</p>
+          <p class="mcq-question-label text-xs font-semibold text-slate-500 mb-3">次の説明にあてはまる用語はどれか？</p>
+          <p id="mcq-fallback-note" class="hidden text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 mb-3"></p>
           <p id="mcq-def" class="text-sm text-slate-800 leading-relaxed"></p>
         </div>
         <div id="mcq-choices" class="space-y-2"></div>
@@ -335,6 +353,11 @@
       { value: 'all', label: 'すべて', numeric: Infinity }
     ];
 
+    const MCQ_FORMAT_OPTIONS = [
+      { value: 'definition', label: '定義文', desc: '用語の定義文から正しい用語を選びます。' },
+      { value: 'case',       label: '症例形式', desc: '臨床場面の記述から最も適切な用語を選びます。症例記述がない語は定義文で代替します。' }
+    ];
+
     const CAT_LABELS = {
       psychiatry:     '精神医学',
       pathology:      '精神病理学',
@@ -370,17 +393,19 @@
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return { version: 2, mode: 'flip', sessionSize: '10', cards: {} };
+        if (!raw) return { version: 2, mode: 'flip', sessionSize: '10', mcqFormat: 'definition', cards: {} };
         const p = JSON.parse(raw);
-        const validSz = SESSION_SIZE_OPTIONS.some((x) => x.value === p.sessionSize);
+        const validSz  = SESSION_SIZE_OPTIONS.some((x) => x.value === p.sessionSize);
+        const validFmt = MCQ_FORMAT_OPTIONS.some((x) => x.value === p.mcqFormat);
         return {
-          version:    2,
-          mode:       p.mode === 'mcq' ? 'mcq' : 'flip',
-          sessionSize: validSz ? p.sessionSize : '10',
-          cards:      (p.cards && typeof p.cards === 'object') ? p.cards : {}
+          version:     2,
+          mode:        p.mode === 'mcq' ? 'mcq' : 'flip',
+          sessionSize: validSz  ? p.sessionSize : '10',
+          mcqFormat:   validFmt ? p.mcqFormat   : 'definition',
+          cards:       (p.cards && typeof p.cards === 'object') ? p.cards : {}
         };
       } catch {
-        return { version: 2, mode: 'flip', sessionSize: '10', cards: {} };
+        return { version: 2, mode: 'flip', sessionSize: '10', mcqFormat: 'definition', cards: {} };
       }
     }
 
@@ -463,10 +488,29 @@
 
     async function fetchCards() {
       try {
-        const res  = await fetch('psych-terminology-jp.html');
-        const html = await res.text();
+        const [htmlRes, casesRes] = await Promise.all([
+          fetch('psych-terminology-jp.html'),
+          fetch('psych-terminology-cases.json').catch(() => null)
+        ]);
+
+        const html = await htmlRes.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
+
+        // Build case map: termId → { caseDescription, explanation }
+        const caseMap = new Map();
+        if (casesRes && casesRes.ok) {
+          try {
+            const casesData = await casesRes.json();
+            if (Array.isArray(casesData)) {
+              casesData.forEach((item) => {
+                if (item.termId) caseMap.set(item.termId, item);
+              });
+            }
+          } catch (e) {
+            console.warn('cases JSON parse failed:', e);
+          }
+        }
 
         const result = [];
         doc.querySelectorAll('.section-card .term-card').forEach((card) => {
@@ -480,7 +524,14 @@
           const term = termEl.textContent.trim();
           const def  = defEl.textContent.trim();
           const detailHtml = extractDetailHtml(card);
-          if (term && def) result.push({ id, cat, term, def, detailHtml });
+          const caseEntry = caseMap.get(id) || {};
+          if (term && def) {
+            result.push({
+              id, cat, term, def, detailHtml,
+              caseDescription: caseEntry.caseDescription || null,
+              caseExplanation: caseEntry.explanation || null
+            });
+          }
         });
         return result;
       } catch (e) {
@@ -532,52 +583,87 @@
 
     /** MCQ：回答直後に正誤バナーと詳細解説パネルを表示 */
     function showMcqFeedback(isCorrect, correctCard, wrongChosenCard) {
-      const wrap = document.getElementById('mcq-feedback');
+      const wrap    = document.getElementById('mcq-feedback');
       const verdict = document.getElementById('mcq-verdict');
-      const body = document.getElementById('mcq-explain-body');
+      const body    = document.getElementById('mcq-explain-body');
       wrap.classList.remove('hidden');
 
+      // 症例形式時の解説テキスト
+      const isCaseMode = appState.mcqFormat === 'case' && correctCard.caseDescription;
+      const primaryExplanation = isCaseMode && correctCard.caseExplanation
+        ? correctCard.caseExplanation
+        : null;
+
       if (isCorrect) {
-        verdict.textContent = '正解です';
+        verdict.innerHTML =
+          '<span class="text-2xl mr-1">✓</span> 正解です！';
         verdict.className =
-          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base ' +
+          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base flex items-center justify-center gap-1 ' +
           'border-emerald-400 bg-emerald-50 text-emerald-900';
-        body.innerHTML =
-          `<p class="text-sm font-bold text-slate-900">解説（正解の場合）</p>` +
-          `<p class="text-sm text-slate-700 leading-relaxed">正しい用語「<strong class="text-emerald-800">${escapeHtml(
-            correctCard.term
-          )}</strong>」を選べました。この語の<strong>一文定義</strong>をもう一度整理します。</p>` +
-          `<div class="rounded-xl bg-white border border-slate-200 p-3 text-sm text-slate-800">${escapeHtml(
-            correctCard.def
-          )}</div>` +
-          detailSectionHtml(correctCard, 'さらに深く（使用例・類似語の違い・DSM／ICD 文献メモ）');
-      } else {
-        verdict.textContent = '不正解です';
-        verdict.className =
-          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base ' +
-          'border-red-400 bg-red-50 text-red-900';
-        let wrongBlock = '';
-        if (wrongChosenCard && wrongChosenCard.id !== correctCard.id) {
-          wrongBlock =
-            `<p class="text-sm font-bold text-slate-900">解説（不正解の場合）</p>` +
-            `<p class="text-sm text-slate-700 leading-relaxed">選択した「<strong class="text-red-800">${escapeHtml(
-              wrongChosenCard.term
-            )}</strong>」は、この<b>定義文</b>に最も合致する用語ではありません。次の要点で混同しやすいことがあります。</p>` +
-            `<div class="rounded-xl bg-amber-50/80 border border-amber-200 p-3 text-sm text-amber-950">` +
-            `<p class="font-semibold text-amber-900 mb-1">誤答候補の要点</p>` +
-            `<p>${escapeHtml(wrongChosenCard.def)}</p></div>`;
-        } else {
-          wrongBlock =
-            `<p class="text-sm font-bold text-slate-900">解説（不正解の場合）</p>` +
-            `<p class="text-sm text-slate-700 leading-relaxed">設問の定義に合う用語を選び直してください。下記が<strong>正解</strong>です。</p>`;
+
+        let html = '';
+
+        // 1. 解説ブロック（症例形式専用 > 詳細HTMLの要約 の優先順）
+        if (primaryExplanation) {
+          html += `<div class="rounded-xl bg-emerald-50 border border-emerald-200 p-3.5 space-y-1">
+            <p class="text-xs font-bold text-emerald-800 uppercase tracking-wide">解説</p>
+            <p class="text-sm text-emerald-950 leading-relaxed">${escapeHtml(primaryExplanation)}</p>
+          </div>`;
         }
-        body.innerHTML =
-          wrongBlock +
-          `<div class="rounded-xl bg-emerald-50/90 border border-emerald-200 p-3 text-sm">` +
-          `<p class="font-semibold text-emerald-900 mb-1">正解の用語と定義</p>` +
-          `<p class="font-bold text-slate-900 mb-1">${escapeHtml(correctCard.term)}</p>` +
-          `<p class="text-slate-800">${escapeHtml(correctCard.def)}</p></div>` +
-          detailSectionHtml(correctCard, '正解語の詳細（使用例・類似語・文献メモ）');
+
+        // 2. 正解用語の定義確認
+        html += `<div class="rounded-xl bg-white border border-slate-200 p-3.5 space-y-1.5">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">正解の用語</p>
+          <p class="text-base font-bold text-slate-900">${escapeHtml(correctCard.term)}</p>
+          <p class="text-xs font-bold text-slate-500 mt-2 uppercase tracking-wide">一文定義</p>
+          <p class="text-sm text-slate-700 leading-relaxed">${escapeHtml(correctCard.def)}</p>
+        </div>`;
+
+        // 3. さらに詳細ブロック
+        html += detailSectionHtml(correctCard, '使用例・類似語の違い・DSM／ICD 文献メモ');
+
+        body.innerHTML = html;
+
+      } else {
+        verdict.innerHTML =
+          '<span class="text-2xl mr-1">✗</span> 不正解です';
+        verdict.className =
+          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base flex items-center justify-center gap-1 ' +
+          'border-red-400 bg-red-50 text-red-900';
+
+        let html = '';
+
+        // 1. 誤答語の解説（なぜ間違いか）
+        if (wrongChosenCard && wrongChosenCard.id !== correctCard.id) {
+          html += `<div class="rounded-xl bg-red-50/80 border border-red-200 p-3.5 space-y-1.5">
+            <p class="text-xs font-bold text-red-800 uppercase tracking-wide">選択した用語</p>
+            <p class="text-base font-bold text-red-900">${escapeHtml(wrongChosenCard.term)}</p>
+            <p class="text-xs font-bold text-red-700 mt-1.5">この語の定義</p>
+            <p class="text-sm text-red-950 leading-relaxed">${escapeHtml(wrongChosenCard.def)}</p>
+            <p class="text-xs text-red-600 mt-1 italic">この定義は今回の問題文と異なる概念です。混同しやすい場合は両語の違いを比較してみてください。</p>
+          </div>`;
+        }
+
+        // 2. 正解語 + 解説
+        html += `<div class="rounded-xl bg-emerald-50/90 border border-emerald-200 p-3.5 space-y-1.5">
+          <p class="text-xs font-bold text-emerald-800 uppercase tracking-wide">正解の用語</p>
+          <p class="text-base font-bold text-emerald-900">${escapeHtml(correctCard.term)}</p>
+          <p class="text-xs font-bold text-slate-500 mt-1.5">一文定義</p>
+          <p class="text-sm text-slate-700 leading-relaxed">${escapeHtml(correctCard.def)}</p>
+        </div>`;
+
+        // 3. 症例解説 or 詳細解説
+        if (primaryExplanation) {
+          html += `<div class="rounded-xl bg-indigo-50 border border-indigo-200 p-3.5 space-y-1">
+            <p class="text-xs font-bold text-indigo-800 uppercase tracking-wide">解説</p>
+            <p class="text-sm text-indigo-950 leading-relaxed">${escapeHtml(primaryExplanation)}</p>
+          </div>`;
+        }
+
+        // 4. 詳細HTML
+        html += detailSectionHtml(correctCard, '使用例・類似語・DSM／ICD 文献メモ');
+
+        body.innerHTML = html;
       }
 
       wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -625,6 +711,7 @@
 
       renderSessionSizeChips();
       renderModeButtons();
+      renderMcqFormatButtons();
     }
 
     function renderSessionSizeChips() {
@@ -662,6 +749,26 @@
       document.getElementById('mode-desc').textContent = appState.mode === 'flip'
         ? '表面の用語を見てから裏を開くと、一文定義のほかに使用例・鑑別・文献メモ（抽出分）も読めます。そのうえで記憶の確かさを記録してください。'
         : '選択した瞬間に正解／不正解が表示されます。正解時・不正解時で内容の異なる解説と、詳細ブロックが続きます。';
+
+      // MCQ format section の表示/非表示
+      const fmtSection = document.getElementById('mcq-format-section');
+      if (fmtSection) {
+        fmtSection.classList.toggle('hidden', appState.mode !== 'mcq');
+      }
+    }
+
+    function renderMcqFormatButtons() {
+      document.querySelectorAll('.mcqformat-btn').forEach((btn) => {
+        const active = btn.dataset.mcqformat === appState.mcqFormat;
+        btn.className =
+          'mcqformat-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition ' +
+          (active
+            ? 'border-indigo-600 bg-indigo-50 text-indigo-900'
+            : 'border-slate-200 bg-white text-slate-600');
+      });
+      const opt = MCQ_FORMAT_OPTIONS.find((x) => x.value === appState.mcqFormat);
+      const descEl = document.getElementById('mcqformat-desc');
+      if (descEl && opt) descEl.textContent = opt.desc;
     }
 
     // ─────────────────────────────────────────────────────────
@@ -711,9 +818,30 @@
     // ─────────────────────────────────────────────────────────
     function renderMCQ(card) {
       document.getElementById('mcq-cat').textContent = CAT_LABELS[card.cat] || card.cat;
-      document.getElementById('mcq-def').textContent = card.def;
       document.getElementById('mcq-next').classList.add('hidden');
       document.getElementById('mcq-feedback').classList.add('hidden');
+
+      // 問題形式の選択：症例形式が選ばれていて症例データがある場合は症例を表示、なければ定義文に fallback
+      const useCase = appState.mcqFormat === 'case' && card.caseDescription;
+      const questionText = useCase ? card.caseDescription : card.def;
+
+      const labelEl = document.querySelector('#mcq-area .mcq-question-label');
+      if (labelEl) {
+        labelEl.textContent = useCase ? '次の臨床場面に当てはまる用語はどれか？' : '次の説明にあてはまる用語はどれか？';
+      }
+
+      // 症例形式フォールバック注記
+      const fallbackEl = document.getElementById('mcq-fallback-note');
+      if (fallbackEl) {
+        if (appState.mcqFormat === 'case' && !card.caseDescription) {
+          fallbackEl.textContent = '※この語には症例記述がないため定義文形式で出題しています。';
+          fallbackEl.classList.remove('hidden');
+        } else {
+          fallbackEl.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('mcq-def').textContent = questionText;
 
       const others  = CARDS.filter((c) => c.id !== card.id);
       const diffCat = others.filter((c) => c.cat !== card.cat);
@@ -890,11 +1018,21 @@
     document.getElementById('mcq-next').addEventListener('click', advance);
 
     // Mode toggle
-    document.querySelectorAll('.mode-btn').forEach(btn => {
+    document.querySelectorAll('.mode-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         appState.mode = btn.dataset.mode;
         saveState();
         renderModeButtons();
+        renderMcqFormatButtons();
+      });
+    });
+
+    // MCQ format toggle
+    document.querySelectorAll('.mcqformat-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        appState.mcqFormat = btn.dataset.mcqformat;
+        saveState();
+        renderMcqFormatButtons();
       });
     });
 
