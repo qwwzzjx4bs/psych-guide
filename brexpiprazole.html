@@ -138,9 +138,9 @@
             <div class="text-xs text-rose-200">うつ病（補助）</div>
           </div>
           <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
-            <div class="text-xs text-rose-200 mb-1">最大用量（統合失調症）</div>
-            <div class="text-lg font-bold">4 mg</div>
-            <div class="text-xs text-rose-200">/日</div>
+            <div class="text-xs text-rose-200 mb-1">標準用量（統合失調症）</div>
+            <div class="text-lg font-bold">2 mg</div>
+            <div class="text-xs text-rose-200">/日（国内承認）</div>
           </div>
           <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
             <div class="text-xs text-rose-200 mb-1">半減期</div>
@@ -233,8 +233,8 @@
           </div>
           <div class="text-sm text-rose-800 space-y-0.5">
             <div>• 開始：<strong>1 mg/日</strong></div>
-            <div>• 目標：<strong>2 mg/日</strong>（2週後に増量）</div>
-            <div>• 最大：<strong>4 mg/日</strong></div>
+            <div>• 標準：<strong>2 mg/日</strong>（4日以上の間隔で増量）</div>
+            <div>• 最大：<strong>2 mg/日</strong>（国内承認用量の上限）</div>
             <div>• 1日1回服用（食事の影響なし）</div>
           </div>
         </div>
@@ -244,10 +244,22 @@
             <span class="font-bold text-pink-800 text-sm">F32/33 / 2023年承認</span>
           </div>
           <div class="text-sm text-pink-800 space-y-0.5">
-            <div>• 開始：<strong>0.5〜1 mg/日</strong></div>
-            <div>• 目標：<strong>1〜2 mg/日</strong></div>
-            <div>• 最大：<strong>3 mg/日</strong></div>
+            <div>• 開始：<strong>1 mg/日</strong>（通常）</div>
+            <div>• 最大：<strong>2 mg/日</strong>（忍容性良好・効果不十分時に増量）</div>
             <div>• 既存の抗うつ薬の効果が不十分な場合に限る</div>
+            <div>• 抗うつ薬（SSRI/SNRI/ミルタザピン）との<strong>併用必須</strong></div>
+          </div>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-4 border-2 border-amber-300">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-amber-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">認知症BPSD</span>
+            <span class="font-bold text-amber-800 text-sm">F00 / 2024年9月承認</span>
+          </div>
+          <div class="text-sm text-amber-800 space-y-0.5">
+            <div>• 開始：<strong>0.5 mg/日</strong></div>
+            <div>• 目標：<strong>1 mg/日</strong>（1週間以上の間隔で増量）</div>
+            <div>• 最大：<strong>2 mg/日</strong>（忍容性良好・効果不十分時）</div>
+            <div>• アルツハイマー型認知症に伴う焦燥・攻撃的言動</div>
           </div>
         </div>
       </div>
@@ -268,21 +280,28 @@
             <tr>
               <td class="font-semibold">統合失調症（F20）</td>
               <td>1 mg/日（1日1回）</td>
-              <td>2 mg/日（2週後増量）</td>
-              <td>4 mg/日</td>
+              <td>2 mg/日（4日以上の間隔で増量）</td>
+              <td>2 mg/日</td>
               <td><span class="badge-approved">2018年</span></td>
             </tr>
             <tr>
               <td class="font-semibold">うつ病・うつ状態（補助療法）</td>
-              <td>0.5〜1 mg/日</td>
-              <td>1〜2 mg/日</td>
-              <td>3 mg/日</td>
+              <td>1 mg/日</td>
+              <td>1 mg/日（効果不十分時は2mgへ）</td>
+              <td>2 mg/日</td>
               <td><span class="badge-approved">2023年</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">アルツハイマー型認知症 BPSD</td>
+              <td>0.5 mg/日</td>
+              <td>1 mg/日（1週間以上の間隔で増量）</td>
+              <td>2 mg/日</td>
+              <td><span class="badge-approved">2024年</span></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="text-xs text-gray-400 mb-5">※ CYP3A4/2D6 阻害薬・誘導薬との併用時は用量調整必要。詳細は添付文書参照。食事の影響は最小限（空腹・満腹いずれでも服用可）。</p>
+      <p class="text-xs text-gray-400 mb-5">※ 国内承認用量は添付文書（2024年9月改訂・第5版）に基づく。CYP3A4/2D6 阻害薬・誘導薬との併用時は用量調整必要。食事の影響は最小限（空腹・満腹いずれでも服用可）。</p>
 
       <!-- 4 key clinical points -->
       <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">外来で必ず押さえる4点</h3>
@@ -637,17 +656,25 @@
               <td class="font-semibold">統合失調症</td>
               <td><code class="text-xs bg-gray-100 px-1 rounded">F20</code></td>
               <td>1 mg/日</td>
-              <td>2 mg/日（2週後に増量）</td>
-              <td>4 mg/日</td>
-              <td>1週毎に 1 mg ずつ増量可</td>
+              <td>2 mg/日（4日以上の間隔で増量）</td>
+              <td>2 mg/日</td>
+              <td>安全性が確立しているのは最大4mgまで（§7.1）。国内標準は2mg</td>
             </tr>
             <tr>
               <td class="font-semibold">うつ病・うつ状態（補助療法）</td>
               <td><code class="text-xs bg-gray-100 px-1 rounded">F32/F33</code></td>
-              <td>0.5〜1 mg/日</td>
-              <td>1〜2 mg/日</td>
-              <td>3 mg/日</td>
+              <td>1 mg/日</td>
+              <td>1 mg/日（効果不十分・忍容性良好なら2mgへ）</td>
+              <td>2 mg/日</td>
               <td>既存の抗うつ薬の効果が不十分な場合のみ（抗うつ薬との<strong>併用が必須</strong>）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">アルツハイマー型認知症 BPSD</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F00</code></td>
+              <td>0.5 mg/日</td>
+              <td>1 mg/日（1週間以上の間隔で増量）</td>
+              <td>2 mg/日</td>
+              <td>焦燥感・易刺激性・興奮に起因する過活動・攻撃的言動。2024年9月承認（添付文書第5版）</td>
             </tr>
           </tbody>
         </table>
@@ -671,8 +698,8 @@
           <div class="text-gray-400 text-xl">→</div>
           <div class="text-center">
             <div class="text-xs text-gray-500 mb-1">必要時（反応不十分）</div>
-            <div class="bg-pink-100 border-2 border-pink-500 rounded-lg px-4 py-2 font-bold text-pink-800">3 mg</div>
-            <div class="text-xs text-gray-500 mt-1">最大用量</div>
+            <div class="bg-pink-100 border-2 border-pink-500 rounded-lg px-4 py-2 font-bold text-pink-800">2 mg</div>
+            <div class="text-xs text-gray-500 mt-1">最大用量（国内承認）</div>
           </div>
         </div>
         <p class="text-xs text-gray-400 mt-3 text-center">半減期が約 91h と長いため、効果の確認は 2〜4 週ごとに行う。定常状態到達に約 2 週間かかることを考慮。</p>

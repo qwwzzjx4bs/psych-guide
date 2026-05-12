@@ -63,6 +63,7 @@
     .badge-1st { background: linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
     .badge-2nd { background: linear-gradient(135deg,#0369a1,#0284c7); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
     .badge-na { background: #f3f4f6; color:#9ca3af; border:1px solid #e5e7eb; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:600; white-space:nowrap; display:inline-block; }
+    .badge-overseas { background: linear-gradient(135deg,#b45309,#d97706); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
     .toc { position:fixed; right:1.5rem; top:50%; transform:translateY(-50%); background:white; padding:1rem; border-radius:0.75rem; box-shadow:0 4px 12px rgba(0,0,0,0.12); max-height:80vh; overflow-y:auto; z-index:50; min-width:160px; }
     @media (max-width:1280px) { .toc { display:none; } }
     .toc-link { display:block; font-size:0.725rem; color:#6b7280; padding:0.25rem 0.5rem; border-radius:0.375rem; margin-bottom:0.1rem; transition:all 0.15s; text-decoration:none; }
@@ -97,7 +98,7 @@
       .guide-table th { padding: 0.5rem 0.6rem; font-size: 0.72rem; }
       .guide-table td { padding: 0.5rem 0.6rem; }
       .badge-level-a, .badge-level-b, .badge-level-c, .badge-approved,
-      .badge-off-label, .badge-1st, .badge-2nd, .badge-na, .badge-ir, .badge-xr {
+      .badge-off-label, .badge-1st, .badge-2nd, .badge-na, .badge-ir, .badge-xr, .badge-overseas {
         font-size: 0.68rem; padding: 0.15rem 0.5rem;
       }
     }
@@ -399,21 +400,21 @@
               <td>750 mg/日</td>
               <td><span class="badge-approved">承認</span></td>
             </tr>
-            <tr>
+            <tr class="opacity-60">
               <td class="font-semibold">統合失調症</td>
               <td><span class="tag-xr">XR</span></td>
               <td>300 mg 就寝前</td>
               <td>400–800 mg/日</td>
               <td>800 mg/日</td>
-              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-overseas">海外のみ</span><div class="text-xs text-amber-700 mt-0.5">日本未承認（XRの統合失調症適応なし）</div></td>
             </tr>
-            <tr>
+            <tr class="opacity-60">
               <td class="font-semibold">双極性障害 躁症状</td>
               <td><span class="tag-ir">IR</span> / <span class="tag-xr">XR</span></td>
               <td>100 mg/日（漸増）</td>
               <td>400–800 mg/日</td>
               <td>800 mg/日</td>
-              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-overseas">海外のみ</span><div class="text-xs text-amber-700 mt-0.5">日本未承認（FDA/EMA承認）</div></td>
             </tr>
             <tr>
               <td class="font-semibold">双極性障害 うつ症状</td>
@@ -421,20 +422,21 @@
               <td>50 mg → 漸増</td>
               <td>150–300 mg/日</td>
               <td>300 mg/日</td>
-              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-approved">承認</span><div class="text-xs text-green-700 mt-0.5">ビプレッソ®（2017年）</div></td>
             </tr>
-            <tr>
+            <tr class="opacity-60">
               <td class="font-semibold">双極性障害 再発・再燃抑制</td>
               <td><span class="tag-xr">XR のみ</span></td>
               <td>直前用量を維持</td>
               <td>300–800 mg/日</td>
               <td>800 mg/日</td>
-              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-overseas">海外のみ</span><div class="text-xs text-amber-700 mt-0.5">日本未承認（FDA/EMA承認）</div></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p class="text-xs text-gray-400 mb-5">※ 用量は最新の添付文書（PMDA）を必ずご確認ください。糖尿病患者（既往含む）には禁忌。XR錠は噛み砕かずそのまま服用。</p>
+      <p class="text-xs text-gray-400 mb-2">※ 用量は最新の添付文書（PMDA）を必ずご確認ください。糖尿病患者（既往含む）には禁忌。XR錠は噛み砕かずそのまま服用。</p>
+      <p class="text-xs text-amber-700 mb-5"><span class="badge-overseas" style="font-size:0.65rem;padding:0.1rem 0.45rem;">海外のみ</span> は日本国内未承認（FDA・EMA 承認）。統合失調症は IR（セロクエル®, 最大750mg）のみ国内承認。双極性障害うつ症状は XR（ビプレッソ®, 推奨300mg）のみ国内承認。</p>
 
       <!-- 4 key monitoring points -->
       <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">外来で必ず押さえる4点</h3>
