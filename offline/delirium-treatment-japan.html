@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>せん妄 治療選択ツリー（日本のガイドライン・実践整理）</title>
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f 0%, #0f766e 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid #1d4ed8; padding: 1.1rem 1.25rem; border-radius: .75rem; margin: .75rem 0; }
+    .danger-box   { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-left: 4px solid #dc2626; padding: 1.1rem 1.25rem; border-radius: .75rem; margin: .75rem 0; }
+    .warning-box  { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-left: 4px solid #d97706; padding: 1.1rem 1.25rem; border-radius: .75rem; margin: .75rem 0; }
+    .recommend-box{ background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 4px solid #15803d; padding: 1.1rem 1.25rem; border-radius: .75rem; margin: .75rem 0; }
+    .purple-box   { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border-left: 4px solid #7c3aed; padding: 1.1rem 1.25rem; border-radius: .75rem; margin: .75rem 0; }
+    .badge-level-a { background: linear-gradient(135deg, #15803d, #16a34a); color: white; padding: .18rem .6rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; white-space: nowrap; }
+    .badge-level-b { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: white; padding: .18rem .6rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; white-space: nowrap; }
+    .badge-level-c { background: linear-gradient(135deg, #4b5563, #6b7280); color: white; padding: .18rem .6rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; white-space: nowrap; }
+    .dx-node { padding: .75rem 1.1rem; border-radius: .75rem; text-align: center; font-weight: 600; font-size: .875rem; }
+    .dx-node-start { background: #1e3a5f; color: white; }
+    .dx-node-check { background: #fef3c7; border: 2px solid #d97706; color: #92400e; }
+    .dx-node-yes   { background: #dcfce7; border: 2px solid #15803d; color: #14532d; }
+    .dx-node-no    { background: #f3f4f6; border: 2px solid #9ca3af; color: #374151; }
+    .dx-node-branch{ background: linear-gradient(135deg, #1e3a5f, #0f766e); color: white; }
+    .toc { position: fixed; right: 1.25rem; top: 50%; transform: translateY(-50%); background: white; padding: .875rem; border-radius: .75rem; box-shadow: 0 4px 12px rgba(0,0,0,.12); max-height: 80vh; overflow-y: auto; z-index: 50; min-width: 148px; }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .tree-connector { width: 2px; height: 14px; background: #9ca3af; margin: 0 auto; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<header class="header-gradient text-white py-8">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="flex items-center gap-3 mb-2">
+      <i data-lucide="git-branch" class="w-7 h-7 opacity-80"></i>
+      <span class="text-xs font-semibold opacity-70 uppercase tracking-widest">総合病院・クリティカルケア／コンサルト参照用</span>
+    </div>
+    <h1 class="text-2xl md:text-4xl font-bold">せん妄：治療選択ツリー（日本のガイドライン整合）</h1>
+    <p class="mt-2 text-sm opacity-85">ICD-10: F05（アルコールやその他の精神作用物質によらないせん妄ほか）／ DSM-5-TR: Delirium（過活動・低活動・混合型）</p>
+    <div class="flex flex-wrap gap-2 mt-3 text-sm">
+      <span class="bg-white/20 px-3 py-1 rounded-full">鑑別・評価</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">原因対策（直接・促進因子）</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">多角的非薬物介入</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">薬物は「目的限定」</span>
+    </div>
+    <p class="mt-4 text-xs opacity-75 border-t border-white/20 pt-3">本ページは教育・症例整理用の要点整理であり、個別診療の代替ではありません。薬剤は製造販売業者の承認情報・各施設の薬剤委員会方針に従ってください。</p>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">目次</div>
+  <ul class="space-y-1.5 text-xs">
+    <li><a href="#quick" class="text-gray-600 hover:text-blue-700 block">クイック原則</a></li>
+    <li><a href="#dx" class="text-gray-600 hover:text-blue-700 block">診断・鑑別</a></li>
+    <li><a href="#tree" class="text-gray-600 hover:text-blue-700 block">治療選択ツリー</a></li>
+    <li><a href="#nonpharma" class="text-gray-600 hover:text-blue-700 block">非薬物（具体策）</a></li>
+    <li><a href="#pharma" class="text-gray-600 hover:text-blue-700 block">薬物分岐</a></li>
+    <li><a href="#icu" class="text-gray-600 hover:text-blue-700 block">ICU・術後</a></li>
+    <li><a href="#monitor" class="text-gray-600 hover:text-blue-700 block">モニタリング</a></li>
+    <li><a href="#refs" class="text-gray-600 hover:text-blue-700 block">主要参照</a></li>
+  </ul>
+</nav>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- クイック -->
+  <div class="section-card" id="quick">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="zap" class="w-5 h-5 text-amber-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">臨床の「最初の5分」</h2>
+        <p class="text-gray-500 text-xs">日本の総論・ICUガイドラインで繰り返される中核メッセージ</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="recommend-box">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="badge-level-a">Level A寄り</span>
+          <span class="font-bold text-sm text-green-900">非薬物の多角的介入が中核</span>
+        </div>
+        <p class="text-xs text-gray-700">入院患者のせん妄予防では、単一の薬理学的介入を「強く推奨」できるエビデンスは限定的で、環境・ケア・原因管理を束ねた<strong>多角的非薬理介入</strong>が推奨の中心となる（メタアナリシス・各ガイドライン総論）。</p>
+      </div>
+      <div class="danger-box">
+        <div class="flex items-center gap-2 mb-1">
+          <i data-lucide="triangle-alert" class="w-4 h-4 text-red-600"></i>
+          <span class="font-bold text-sm text-red-900">ICUにおけるルーチン抗精神病薬・スタチン系薬</span>
+        </div>
+        <p class="text-xs text-gray-700">PADIS（2018）では、せん妄<strong>治療目的</strong>でのハロペリドール・非定型抗精神病薬・スタチン系薬の<strong>ルーチン使用を推奨しない</strong>（推奨は暫定的、エビデンスの質は低）。薬物は<strong>危害予防・ケア実施・苦痛</strong>など明確な目的がある場合に限定する。</p>
+      </div>
+      <div class="warning-box">
+        <div class="font-bold text-sm text-amber-900 mb-1">低活動型は見逃しやすい</div>
+        <p class="text-xs text-gray-700">がん・一般病棟で低活動型は不穏が目立たず放置されやすいが、苦痛・転帰への影響は軽視できない。日本語CAMの検証や各学会総論でも、スクリーニングの徹底が強調される。</p>
+      </div>
+      <div class="criteria-box">
+        <div class="font-bold text-sm text-blue-900 mb-1">レビー小体型認知症／パーキンソン病では定型抗精神病薬に注意</div>
+        <p class="text-xs text-gray-700">抗ドパミン作用の強い薬剤は悪性症候群様反応や意識悪化のリスクが高い。必要なら専門と相談し、薬剤選択を慎重に（各臨床指針・神経内科併存例の常識）。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 診断 -->
+  <div class="section-card" id="dx">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="stethoscope" class="w-5 h-5 text-blue-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">診断の入口と鑑別</h2>
+        <p class="text-gray-500 text-xs">スクリーニング感度と鑑別の実務ポイント</p>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div class="criteria-box">
+        <div class="font-bold text-blue-800 text-sm mb-2 flex items-center gap-1.5">
+          <i data-lucide="clipboard-list" class="w-4 h-4"></i> DSM-5-TR 診断の骨子
+        </div>
+        <ul class="text-xs text-gray-700 space-y-1.5">
+          <li><strong>A</strong> 注意障害と意識障害（覚醒・環境との関係の障害）</li>
+          <li><strong>B</strong> 短期間での発症・日内変動</li>
+          <li><strong>C</strong> 追加の認知障害（記憶・見当識・言語・知覚など）</li>
+          <li><strong>D</strong> 既存の大うつ病エピソード・認知症単独などでは説明しづらい（昏睡下は診断しない）</li>
+          <li><strong>E</strong> 身体疾患・物質・薬物等の生理学的原因の裏付け</li>
+        </ul>
+      </div>
+      <div class="purple-box">
+        <div class="font-bold text-violet-900 text-sm mb-2">現場ツール（例）</div>
+        <ul class="text-xs text-gray-700 space-y-1.5">
+          <li><strong>一般病棟・緩和</strong>：CAM（日本語版妥当性報告あり）、3D-CAM、DRS-R-98日本語版、MDAS日本語版、DST など</li>
+          <li><strong>ICU</strong>：CAM-ICU、ICDSC（PADISで定期的評価を推奨）</li>
+          <li><strong>鑑別</strong>：認知症（急性加重・レビー小体型〈DLB〉）、うつ病、物質離脱／中毒、見逃されやすい薬剤性のせん妄 など。「たき火モデル」（直接因子・準備因子・促進因子）で原因を整理（学会総論で紹介）。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- メインツリー -->
+  <div class="section-card" id="tree">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-11 h-11 bg-teal-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="git-branch" class="w-5 h-5 text-teal-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">治療選択ツリー（フローチャート）</h2>
+        <p class="text-gray-500 text-xs">「全患者に抗精神病薬」ではなく、非薬物＋原因治療を先に組み立てる</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-0 my-4 overflow-x-auto pb-2">
+      <div class="dx-node dx-node-start w-full max-w-md">せん妄が疑われる／スクリーニング陽性</div>
+      <div class="tree-connector"></div>
+      <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 -mt-1"></i>
+
+      <div class="dx-node dx-node-check w-full max-w-lg mt-1">STEP 0：安全（誤嚥・転倒・抜管・他害）＋ バイタル・酸素・血糖・電解質の一次確認</div>
+      <div class="tree-connector"></div>
+      <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 -mt-1"></i>
+
+      <div class="dx-node dx-node-check w-full max-w-lg">STEP 1：サブタイプ（過活動／低活動／混合）と重症度。併存：認知症・感覚器・睡眠・疼痛・拘束の有無</div>
+      <div class="tree-connector"></div>
+      <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 -mt-1"></i>
+
+      <div class="dx-node dx-node-yes w-full max-w-2xl text-left px-4 py-3">
+        <span class="badge-level-a mr-2">常に並走</span>
+        <strong>STEP 2：原因指向のマルチヒット</strong>
+        <ul class="mt-2 text-xs font-normal text-left list-disc pl-4 space-y-0.5">
+          <li>感染・脱水・電解質・内分泌・肝腎・脳血管イベントなどの<strong>直接因子</strong>を疑い検査</li>
+          <li>新規／変更薬の見直し（抗コリン作用を有する薬・ベンゾジアゼピン系薬・オピオイド鎮痛薬・糖質コルチコステロイド等は代表的なトリガー。可能なら減量・中止・代替）</li>
+          <li>疼痛・尿便貯留・便秘・低酸素の評価と処置</li>
+          <li><strong>促進因子</strong>：睡眠断片化、感覚補助具の未使用、身体拘束、ICU環境などを最小化</li>
+        </ul>
+      </div>
+      <div class="tree-connector"></div>
+      <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 -mt-1"></i>
+
+      <div class="dx-node dx-node-yes w-full max-w-2xl text-left px-4 py-3">
+        <span class="badge-level-a mr-2">Level A寄り</span>
+        <strong>STEP 3：多角的非薬物介入パッケージ</strong>（個別化して束ねる）
+        <p class="text-xs font-normal mt-2 text-gray-700">再オリエンテーション、眼鏡・補聴器、昼夜リズム（光・騒音）、早期離床・リハ、家族参加、低侵襲ケアへ。日本クリティカルケア看護学会「せん妄ケアリスト」は予防／発症後／離脱後に具体例を列挙（PADIS・J-PADと対応付け）。</p>
+      </div>
+      <div class="tree-connector"></div>
+      <i data-lucide="arrow-down" class="w-5 h-5 text-gray-400 -mt-1"></i>
+
+      <div class="dx-node dx-node-check w-full max-w-xl">STEP 4：上記のみで<strong>危害・強い苦痛・必需ケア不能</strong>が解消されるか？</div>
+
+      <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-start justify-center mt-4 w-full max-w-4xl">
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="text-green-700 font-bold text-sm">YES（安全管理・ケア可能）</span>
+          <i data-lucide="arrow-down" class="w-5 h-5 text-green-600"></i>
+          <div class="dx-node dx-node-yes w-full">非薬物＋原因治療を継続。日数ごとにスケールで経過評価。退院時は家族へ説明・再発兆候の共有</div>
+          <span class="badge-level-b mt-2">睡眠調整はCQ多数（JPOS）</span>
+          <p class="text-[11px] text-gray-600 text-center px-1">メラトニンMT<sub>1</sub>/MT<sub>2</sub>受容体作動薬（ラメルテオン〈ロゼレム〉など）、オレキシン受容体拮抗薬（レンボレキサント〈デイビゴ〉、スボレキサント〈ベルソムラ〉など）はガイドライン上も論点化（がん関連せん妄GL）。処方は相互作用・転倒・日中嗜眠を踏まえ個別判断。</p>
+        </div>
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="text-red-700 font-bold text-sm">NO（過活動／危険行為／パニック的錯覚等）</span>
+          <i data-lucide="arrow-down" class="w-5 h-5 text-red-600"></i>
+          <div class="dx-node dx-node-branch w-full">STEP 5：薬物は<strong>短期・最低有効量・目的限定</strong>（ルーチン全例投与は非推奨：PADIS）</div>
+          <i data-lucide="arrow-down" class="w-4 h-4 text-gray-400"></i>
+          <p class="text-xs text-gray-600 text-center">下記「薬物分岐」へ。アルコール／ベンゾジアゼピン系薬離脱・抗コリン作用による毒性は特殊経路。</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-start justify-center mt-6 w-full max-w-4xl border-t border-gray-200 pt-6">
+        <div class="flex flex-col items-center gap-2 flex-1">
+          <span class="text-gray-600 font-bold text-sm">低活動型メイン</span>
+          <i data-lucide="arrow-down" class="w-5 h-5 text-gray-500"></i>
+          <div class="dx-node dx-node-no w-full">原則は原因＋非薬物。うつ病との鑑別。症例により低用量抗精神病薬を試す報告はあるがエビデンスは限定的—精神科コンサルテーションを考慮</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 非薬物具体 -->
+  <div class="section-card" id="nonpharma">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="heart-handshake" class="w-5 h-5 text-emerald-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">非薬物介入チェックリスト（病棟で即実行）</h2>
+        <p class="text-gray-500 text-xs">PADISの「多角的要素」と日本のせん妄ケアリストの精神に沿った例</p>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> 認知・環境</div>
+        <ul class="text-xs space-y-1 list-disc pl-4">
+          <li>名乗り・日付・場所の反復、大きな時計・カレンダー</li>
+          <li>眼鏡・補聴器の常時装着、説明は短文・一貫したスタッフ</li>
+          <li>夜間は照明過多を避けつつ転倒防止、日中は覚醒促進</li>
+        </ul>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> 身体・ケア</div>
+        <ul class="text-xs space-y-1 list-disc pl-4">
+          <li>早期座位・歩行、可能な範囲のOT/PT</li>
+          <li>静脈ライン・膀胱瘻・拘束の必要性を毎日見直し</li>
+          <li>水分・栄養、尿便・疼痛（顔面スコア等）の最適化</li>
+        </ul>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> 家族・コミュニケーション</div>
+        <ul class="text-xs space-y-1 list-disc pl-4">
+          <li>家族の安心感、現実志向の会話、写真・思い出の品の活用（過剰刺激に注意）</li>
+          <li>多職種で目標共有（せん妄デイリーゴール）</li>
+        </ul>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-4">
+        <div class="font-bold text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="pill" class="w-4 h-4"></i> 薬剤レビュー</div>
+        <ul class="text-xs space-y-1 list-disc pl-4">
+          <li>抗コリン作用を有する薬剤、睡眠導入に用いたベンゾジアゼピン系薬、複数の向精神薬の重ね掛けを疑う</li>
+          <li>オピオイド鎮痛薬は鎮痛効果と呼吸抑制のバランスを再評価</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 薬物 -->
+  <div class="section-card" id="pharma">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-rose-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="pill" class="w-5 h-5 text-rose-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">薬物療法：分岐ロジック（日本の開業医・病院の典型的選択肢）</h2>
+        <p class="text-gray-500 text-xs">承認外使用・施設プロトコルに従い、説明・文書化を徹底</p>
+      </div>
+    </div>
+
+    <div class="warning-box mb-4">
+      <p class="text-xs text-gray-800"><strong>先に読む：</strong>ICUでは「せん妄だから」という理由だけの抗精神病薬ルーチン投与は推奨されない（PADIS）。一般病棟・緩和でも、可能な限りSTEP 2–3と併用し、投与期間を短く保つ。</p>
+    </div>
+
+    <div class="space-y-4">
+      <div class="border-2 border-amber-200 rounded-xl p-4 bg-amber-50/50">
+        <div class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-2">
+          <i data-lucide="wine" class="w-4 h-4"></i> 分岐A：アルコール／ベンゾジアゼピン系薬離脱が疑われる
+        </div>
+        <p class="text-xs text-gray-700 mb-2">日本の救急・一般病棟では、離脱せん妄の第一選択に<strong>ベンゾジアゼピン系薬（例：ジアゼパム〈ホリゾンほか〉、ロラゼパム〈ワイパックスほか〉）</strong>を用い、併存疾患に応じてICU管理・チアミン（ビタミンB<sub>1</sub>）補充・電解質管理を行うのが標準的。抗精神病薬単独では不十分なことが多い。</p>
+        <span class="badge-level-b">専門（救急・神経・精神科）とICUレベルを早めに検討</span>
+      </div>
+
+      <div class="border-2 border-violet-200 rounded-xl p-4 bg-violet-50/50">
+        <div class="font-bold text-violet-900 text-sm mb-2 flex items-center gap-2">
+          <i data-lucide="brain" class="w-4 h-4"></i> 分岐B：レビー小体型認知症・パーキンソン病・NMS素因
+        </div>
+        <p class="text-xs text-gray-700 mb-2"><strong>ハロペリドールなど定型抗精神病薬は避ける</strong>のが安全。どうしても必要なら非定型の中でもQT・代謝・鎮静を比較検討し、専門医と協議。根本原因（感染、薬剤）の除去を最優先。</p>
+        <span class="badge-level-c">エビデンスは症例依存</span>
+      </div>
+
+      <div class="border-2 border-blue-200 rounded-xl p-4 bg-blue-50/30">
+        <div class="font-bold text-blue-900 text-sm mb-2">分岐C：過活動・危険行為・錯覚に基づく激越（非離脱・非NMS高リスク）</div>
+        <p class="text-xs text-gray-600 mb-3">いずれも<strong>低用量から開始・短時間使用・毎日減薬可否を検討</strong>。高齢では特に低用量。</p>
+        <div class="grid md:grid-cols-3 gap-3 text-xs">
+          <div class="drug-card bg-white border border-gray-200 rounded-lg p-3 border-l-4 border-l-gray-600">
+            <div class="font-bold text-gray-800 mb-1">ハロペリドール〈セレネースほか〉</div>
+            <p class="text-gray-600">経口／筋注／静注（施設ルール・血圧・QT監視）。例：高齢では0.25–0.5mgから、必要時数時間おきに追加。急性期でも日量は保守的に。</p>
+            <p class="text-gray-500 mt-1"><span class="badge-level-c">錐体外路症状・QT延長</span></p>
+          </div>
+          <div class="drug-card bg-white border border-gray-200 rounded-lg p-3 border-l-4 border-l-blue-500">
+            <div class="font-bold text-gray-800 mb-1">リスペリドン〈リスペルダール・ドライミウスなど〉／オランザピン〈ジプレキサほか〉</div>
+            <p class="text-gray-600">細粒製剤や経口崩壊錠〈ドライミウスなど〉で少量から調整する例が多い（製品ごとの分割可否は添付文書で確認）。QT・代謝・鎮静に留意。</p>
+            <p class="text-gray-500 mt-1"><span class="badge-level-b">錐体外路症状は定型薬より軽めのことが多いが個差</span></p>
+          </div>
+          <div class="drug-card bg-white border border-gray-200 rounded-lg p-3 border-l-4 border-l-teal-500">
+            <div class="font-bold text-gray-800 mb-1">クエチアピン〈セロクエルほか〉</div>
+            <p class="text-gray-600">鎮静・抗コリン作用に注意しつつ、激越や睡眠断片化への併用で選ばれることがある（症例による）。</p>
+            <p class="text-gray-500 mt-1"><span class="badge-level-c">起床・転倒・QT</span></p>
+          </div>
+        </div>
+        <p class="text-[11px] text-gray-500 mt-3">効果乏しければ<strong>原因再探索</strong>（隠れ感染・代謝・薬物相互作用）を優先。ベンゾジアゼピンは離脱以外ではせん妄を悪化させうるため慎重（ガイドライン総論の共通警告）。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ICU -->
+  <div class="section-card" id="icu">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-sky-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="heart-pulse" class="w-5 h-5 text-sky-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">ICU・術後の追加視点（日本）</h2>
+        <p class="text-gray-500 text-xs">J-PAD・PADIS・ABCDEFバンドルとの整合</p>
+      </div>
+    </div>
+    <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5">
+      <li><strong>評価</strong>：CAM-ICU／ICDSCをルーチンで（PADISのグッドプラクティス）。</li>
+      <li><strong>鎮痛・鎮静の見直し</strong>：過鎮静はせん妄リスク。疼痛コントロールを最適化し、可能なら鎮静目標を明示。</li>
+      <li><strong>デキスメデトミジン〈プレセデックスほか〉</strong>：ベンゾジアゼピン系薬中心の鎮静からの移行など、施設プロトコルで検討される領域（原疾患・循環動態・相互作用の専門判断）。</li>
+      <li><strong>早期リハ・離床</strong>：J-PADでも非薬理的せん妄対策として位置づけられる志向と整合。</li>
+      <li><strong>術後せん妄</strong>：がん関連せん妄ガイドライン2025年版総論がテーマとして追加（術後経路では疼痛・オピオイド鎮痛・睡眠・離床を束ねて管理）。</li>
+    </ul>
+  </div>
+
+  <!-- モニタリング -->
+  <div class="section-card" id="monitor">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="activity" class="w-5 h-5 text-orange-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">モニタリング・記録</h2>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-3 text-xs text-gray-700">
+      <div class="border border-gray-200 rounded-lg p-3">
+        <div class="font-bold mb-2">非薬物・原因</div>
+        <ul class="list-disc pl-4 space-y-1">
+          <li>スケール（ICDSC点数、DRS-R-98、MDASなど施設統一）を同一時刻帯で反復</li>
+          <li>鎮静深度評価（RASS・SASなど）や拘束時間の監査</li>
+        </ul>
+      </div>
+      <div class="border border-gray-200 rounded-lg p-3">
+        <div class="font-bold mb-2">抗精神病薬使用時</div>
+        <ul class="list-disc pl-4 space-y-1">
+          <li>QTc（ベースラインと経過）、錐体外路症状（EPS）、嚥下機能・鎮静による誤嚥リスク</li>
+          <li>インフォームドコンセント・カルテ記載（目的・期限・代替案）</li>
+          <li>AID-ICU試験など、ハロペリドールの「せん妄持続時間短縮効果が認められなかった」報告を踏まえ、効果不十分時は早期に戦略転換</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 参照 -->
+  <div class="section-card" id="refs">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <i data-lucide="book-open" class="w-5 h-5 text-indigo-700"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">主要参照（日本／日本語整理）</h2>
+      </div>
+    </div>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li>日本サイコオンコロジー学会・日本がんサポーティブケア学会「<a class="text-blue-700 underline hover:text-blue-900" href="https://jpos-society.org/guideline/delirium/">がん患者におけるせん妄ガイドライン</a>」（2025年第3版発行情報ほか）</li>
+      <li>Barr J, et al. PADIS Guidelines（Pain, Agitation, Delirium）—日本語レビュー・教育資料として広く引用（ICU）</li>
+      <li>日本集中治療医学会「成人重症患者の痛み・不穏・せん妄管理のための臨床ガイドライン（J-PAD）」— PADISと本国実情の橋渡し</li>
+      <li>日本クリティカルケア看護学会「<a class="text-blue-700 underline hover:text-blue-900" href="https://jaccn.jp/">せん妄ケアリスト Ver.1</a>」（2020）— 非薬物ケアの具体化</li>
+      <li>日本総合病院精神医学会ほか「せん妄の治療指針」第2版（DELIR-Jを背景にした総説）</li>
+      <li>Inouye SK ほか multicomponent nonpharmacological interventions のメタアナリシス（多角的非薬物介入のエビデンス）</li>
+      <li>N Engl J Med: AID-ICU trial（ハロペリドール routine の位置づけを見直す材料）</li>
+    </ul>
+  </div>
+
+</main>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

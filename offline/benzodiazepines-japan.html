@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ja" class="data-table-sticky-col-off">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ベンゾジアゼピン 選択ガイド（日本承認薬）- 精神科臨床</title>
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0c4a6e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0369a1);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 639px) {
+      .section-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 0.75rem;
+      }
+      .criteria-box,
+      .danger-box,
+      .warning-box,
+      .recommend-box {
+        padding: 1rem 0.875rem;
+      }
+    }
+    .badge-level-a {
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-level-b {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-level-c {
+      background: linear-gradient(135deg, #4b5563, #6b7280);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-first {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-second {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .pk-dot-hi { background:#dc2626; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+    .pk-dot-md { background:#d97706; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+    .pk-dot-lo { background:#22c55e; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+    .pk-dot-no { background:#e5e7eb; border-radius:50%; width:0.65rem; height:0.65rem; display:inline-block; }
+    .drug-card { border-radius: 0.75rem; padding: 1rem; border: 1px solid; }
+    .drug-card-ultra { background:#ecfeff; border-color:#22d3ee; }
+    .drug-card-short { background:#eff6ff; border-color:#93c5fd; }
+    .drug-card-mid { background:#f0fdf4; border-color:#6ee7b7; }
+    .drug-card-long { background:#fff7ed; border-color:#fdba74; }
+    @media (max-width: 639px) {
+      .drug-card { padding: 0.75rem; }
+    }
+    .toc {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 50;
+      min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .th-cell { background:#f1f5f9; font-weight:700; font-size:0.78rem; padding:0.6rem 0.5rem; text-align:center; color:#374151; }
+    .td-cell { padding:0.55rem 0.5rem; text-align:center; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .td-left { padding:0.55rem 0.75rem; font-size:0.82rem; border-bottom:1px solid #f1f5f9; }
+    .badge-dur-ultra { background:#cffafe; color:#155e75; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .badge-dur-short { background:#dbeafe; color:#1e40af; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .badge-dur-mid { background:#dcfce7; color:#166534; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .badge-dur-long { background:#ffedd5; color:#9a3412; font-size:0.7rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:9999px; }
+    .x-scroll { width: 100%; max-width: 100%; }
+    .x-scroll__rail {
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }
+    @media (max-width: 767px) {
+      .x-scroll__rail {
+        box-shadow: inset -16px 0 20px -10px rgba(30, 41, 59, 0.18);
+        border-radius: 0.375rem;
+      }
+      .x-scroll__hint .x-scroll__hint-icon {
+        display: inline-flex;
+        animation: x-scroll-hint-nudge 1.65s ease-in-out infinite;
+        opacity: 0.85;
+      }
+      .x-scroll__hint .x-scroll__hint-icon--r { animation-delay: 0.2s; }
+    }
+    @media (min-width: 768px) {
+      .x-scroll__rail { box-shadow: none; }
+    }
+    @keyframes x-scroll-hint-nudge {
+      0%, 100% { transform: translateX(0); opacity: 0.55; }
+      50% { transform: translateX(5px); opacity: 1; }
+    }
+    .th-drug, .td-drug { white-space: nowrap; vertical-align: middle; }
+    /* border-collapse:collapse では先頭列 sticky がブラウザで壊れやすい */
+    table.data-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    table.data-table tbody tr:not(:has(td[colspan])) { cursor: pointer; }
+    table.data-table tbody tr.table-row-focus > td {
+      border-top: 2px solid #2563eb !important;
+      border-bottom: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child {
+      border-left: 2px solid #2563eb !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:last-child {
+      border-right: 2px solid #2563eb !important;
+    }
+    /* 横スクロール時：先頭列（区分ラベル・薬剤名）を左に固定。区分行はラベル1セル＋colspanで残列を確保 */
+    table.data-table th:first-child:not([colspan]),
+    table.data-table td:first-child:not([colspan]) {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background-color: #ffffff;
+      box-shadow: 4px 0 10px -4px rgba(15, 23, 42, 0.18);
+    }
+    table.data-table thead th:first-child:not([colspan]) {
+      z-index: 5;
+      background-color: #f1f5f9;
+    }
+    /* 先頭固定列はデフォルトで白。tr のストライプ／色帯は他セルと同色に（Tailwind 読込順に負けないよう !important） */
+    table.data-table tbody tr.bg-gray-50 > td:first-child:not([colspan]) { background-color: #f9fafb !important; }
+    table.data-table tbody tr.bg-red-50 > td:first-child:not([colspan]) { background-color: #fef2f2 !important; }
+    table.data-table tbody tr.bg-blue-50 > td:first-child:not([colspan]) { background-color: #eff6ff !important; }
+    table.data-table tbody tr.bg-purple-50 > td:first-child:not([colspan]) { background-color: #f5f3ff !important; }
+    table.data-table tbody tr.bg-fuchsia-50 > td:first-child:not([colspan]) { background-color: #fdf4ff !important; }
+    table.data-table tbody tr.bg-green-50 > td:first-child:not([colspan]) { background-color: #f0fdf4 !important; }
+    table.data-table tbody tr.bg-emerald-50 > td:first-child:not([colspan]) { background-color: #ecfdf5 !important; }
+    /* criteria-box 内の表：行に bg が無い行は親の青グラデを透過表示→固定列だけ白抜けするのを防ぐ（CPZ 換算表は行に bg-blue-50 / bg-gray-50 を明示） */
+    .criteria-box table.data-table tbody tr:not([class*="bg-"]) > td:first-child:not([colspan]) {
+      background-color: #eff6ff !important;
+    }
+    table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: 3;
+    }
+    /* 表ツールバー：タイトル直下・全幅・スクロール時 sticky。上段のみセクション色 */
+    /* 余白・文字：8pxベース、sm以上で一段階、本文系は 0.875rem→1rem（読みやすさ） */
+    .data-table-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 45;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      border-radius: 0;
+      border: none;
+      border-top: 1px solid rgba(203, 213, 225, 0.95);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.12);
+      padding: 0;
+    }
+    .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(249, 250, 251, 0.92);
+      --toolbar-head-border: rgba(203, 213, 225, 0.95);
+      --toolbar-accent: #0f766e;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.625rem max(0.75rem, env(safe-area-inset-right, 0px));
+      background: var(--toolbar-head-bg);
+      border-bottom: 1px solid var(--toolbar-head-border);
+      transition: background 0.35s ease, border-color 0.35s ease;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head {
+        gap: 1rem;
+        padding: 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+      }
+    }
+    #data-table-toolbar[data-toolbar-section="quickref"] .data-table-toolbar__head {
+      --toolbar-head-bg: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(37, 99, 235, 0.16));
+      --toolbar-head-border: rgba(20, 184, 166, 0.45);
+      --toolbar-accent: #0f766e;
+    }
+    #data-table-toolbar[data-toolbar-section="classification"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(219, 234, 254, 0.88);
+      --toolbar-head-border: rgba(37, 99, 235, 0.35);
+      --toolbar-accent: #1d4ed8;
+    }
+    #data-table-toolbar[data-toolbar-section="selection"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(220, 252, 231, 0.88);
+      --toolbar-head-border: rgba(22, 163, 74, 0.35);
+      --toolbar-accent: #15803d;
+    }
+    #data-table-toolbar[data-toolbar-section="receptor"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="mechanism"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="pk"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="compare"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(224, 231, 255, 0.88);
+      --toolbar-head-border: rgba(79, 70, 229, 0.35);
+      --toolbar-accent: #4338ca;
+    }
+    #data-table-toolbar[data-toolbar-section="druglist"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(204, 251, 241, 0.88);
+      --toolbar-head-border: rgba(13, 148, 136, 0.35);
+      --toolbar-accent: #0f766e;
+    }
+    #data-table-toolbar[data-toolbar-section="lai"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="formulations"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="parenteral"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="bzd"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(237, 233, 254, 0.88);
+      --toolbar-head-border: rgba(124, 58, 237, 0.35);
+      --toolbar-accent: #6d28d9;
+    }
+    #data-table-toolbar[data-toolbar-section="sideeffects"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(255, 237, 213, 0.88);
+      --toolbar-head-border: rgba(234, 88, 12, 0.35);
+      --toolbar-accent: #c2410c;
+    }
+    #data-table-toolbar[data-toolbar-section="monitoring"] .data-table-toolbar__head,
+    #data-table-toolbar[data-toolbar-section="interactions"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(254, 226, 226, 0.88);
+      --toolbar-head-border: rgba(220, 38, 38, 0.35);
+      --toolbar-accent: #b91c1c;
+    }
+    #data-table-section-label {
+      color: var(--toolbar-accent, #0f766e);
+      transition: color 0.35s ease;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    @media (min-width: 640px) {
+      #data-table-section-label {
+        font-size: 1rem;
+      }
+    }
+    .data-table-toolbar__head-title {
+      font-size: 1rem;
+      line-height: 1.35;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head-title {
+        font-size: 1.125rem;
+      }
+    }
+    .data-table-toolbar__controls {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.625rem;
+      padding: 0.625rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.75rem max(0.75rem, env(safe-area-inset-right, 0px));
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__controls {
+        gap: 0.875rem;
+        padding: 0.75rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-left, 0px)) 0.875rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem), env(safe-area-inset-right, 0px));
+      }
+    }
+    .data-table-toolbar__controls input[type="search"] {
+      font-size: 0.9375rem !important;
+      line-height: 1.4;
+    }
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-cancel-button,
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__controls input[type="search"] {
+        font-size: 1rem !important;
+      }
+    }
+    /* 狭い画面：検索を優先し、周辺コントロールはコンパクトに */
+    @media (max-width: 639px) {
+      .data-table-toolbar__controls {
+        gap: 0.375rem;
+        padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+        padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
+      }
+    }
+    /* 検索：一致テキストのみマーク（表の td・薬剤カード等、main 配下を対象） */
+    main mark.table-search-mark {
+      background-color: rgba(253, 224, 71, 0.88);
+      color: inherit;
+      font-weight: 600;
+      padding: 0 0.04em;
+      border-radius: 0.125rem;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    html.data-table-search-highlight-off main mark.table-search-mark {
+      background: transparent !important;
+      font-weight: inherit;
+      padding: 0;
+      border-radius: 0;
+    }
+    /* 設定で先頭列固定をオフ：表全体を横スクロール（右側を広く見やすい） */
+    html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+    html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+      position: static !important;
+      left: auto !important;
+      z-index: auto !important;
+      box-shadow: none !important;
+    }
+    html.data-table-sticky-col-off table.data-table tbody tr.table-row-focus > td:first-child:not([colspan]) {
+      z-index: auto !important;
+    }
+    @media (max-width: 767px) {
+      .x-scroll__rail {
+        box-shadow: inset -16px 0 20px -10px rgba(30, 41, 59, 0.18);
+        border-radius: 0.375rem;
+      }
+      .x-scroll__hint .x-scroll__hint-icon {
+        display: inline-flex;
+        animation: x-scroll-hint-nudge 1.65s ease-in-out infinite;
+        opacity: 0.85;
+      }
+      .x-scroll__hint .x-scroll__hint-icon--r { animation-delay: 0.2s; }
+      /* 狭い画面：先頭固定列を狭く＋折り返しで右側のスクロール領域を広げる */
+      table.data-table .th-drug,
+      table.data-table .td-drug {
+        white-space: normal;
+        vertical-align: top;
+      }
+      table.data-table thead th:first-child:not([colspan]),
+      table.data-table tbody td:first-child:not([colspan]) {
+        width: min(30vw, 7.25rem) !important;
+        max-width: min(30vw, 7.25rem) !important;
+        min-width: 3.75rem;
+        box-sizing: border-box;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+        font-size: 0.7rem !important;
+        padding: 0.45rem 0.35rem !important;
+      }
+      table.data-table thead th:first-child.th-cell {
+        text-align: left;
+      }
+      table.data-table .th-cell:not(:first-child),
+      table.data-table .td-cell {
+        padding: 0.45rem 0.32rem;
+        font-size: 0.72rem;
+      }
+      html.data-table-sticky-col-off table.data-table .th-drug,
+      html.data-table-sticky-col-off table.data-table .td-drug {
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+      html.data-table-sticky-col-off table.data-table thead th:first-child:not([colspan]),
+      html.data-table-sticky-col-off table.data-table tbody td:first-child:not([colspan]) {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        font-size: 0.72rem !important;
+        padding: 0.45rem 0.32rem !important;
+        word-break: normal;
+        overflow-wrap: normal;
+        line-height: normal;
+      }
+    }
+    @media (min-width: 768px) {
+      .x-scroll__rail { box-shadow: none; }
+    }
+    @keyframes x-scroll-hint-nudge {
+      0%, 100% { transform: translateX(0); opacity: 0.55; }
+      50% { transform: translateX(5px); opacity: 1; }
+    }
+    .x-scroll__hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      margin-top: 0.4rem;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: #475569;
+      line-height: 1.35;
+      text-align: center;
+      background: rgba(241, 245, 249, 0.95);
+      border: 1px dashed #94a3b8;
+      border-radius: 0.375rem;
+    }
+    @media (min-width: 768px) {
+      .x-scroll__hint {
+        justify-content: flex-end;
+        font-size: 0.65rem;
+        font-weight: 500;
+        padding: 0.3rem 0.5rem;
+        margin-top: 0.35rem;
+        background: rgba(241, 245, 249, 0.75);
+        border: 1px dashed #cbd5e1;
+        border-radius: 0.375rem;
+        color: #475569;
+      }
+      .x-scroll__hint .x-scroll__hint-icon {
+        display: inline-flex;
+        opacity: 0.55;
+      }
+    }
+
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <header class="header-gradient text-white py-8">
+    <div class="max-w-5xl mx-auto px-2 sm:px-4">
+      <div class="flex items-center gap-3 mb-2">
+        <i data-lucide="pill" class="w-8 h-8 opacity-80"></i>
+        <span class="text-sm font-medium opacity-70 uppercase tracking-wider">精神科臨床ガイド</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold">ベンゾジアゼピン 選択ガイド</h1>
+      <p class="mt-2 text-lg opacity-85">日本承認のベンゾジアゼピン骨格薬 — 作用時間・薬物動態・使い分け・依存・安全対策</p>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">作用時間分類</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">GABA-A・PK</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">選択アルゴリズム</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">注射・口腔内剤</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">副作用比較</span>
+        <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">漸減・モニタリング</span>
+      </div>
+      <p class="mt-3 text-xs opacity-60">参照：各添付文書（PMDA）/ 日本うつ病学会・不安障害診療ガイドライン等 / ベンゾジアゼピン適正使用の手引き（厚労省関連資料）</p>
+    </div>
+  </header>
+
+  <div id="data-table-toolbar" class="data-table-toolbar" data-toolbar-section="quickref" role="region" aria-label="表の検索と表示オプション">
+    <div class="data-table-toolbar__head">
+      <span class="data-table-toolbar__head-title min-w-0 truncate">ベンゾジアゼピン 選択ガイド</span>
+      <span id="data-table-section-label" class="max-w-[60%] shrink-0 truncate text-right sm:max-w-[min(50vw,22rem)]" aria-live="polite">外来で押さえる4ポイント</span>
+    </div>
+    <div class="data-table-toolbar__controls">
+    <label class="flex min-h-9 shrink-0 cursor-pointer select-none items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50/80 px-2 py-1.5 text-slate-700 hover:bg-slate-100/90 sm:min-h-[2.75rem] sm:gap-2.5 sm:rounded-lg sm:px-3.5 sm:py-2.5">
+      <input type="checkbox" id="data-table-sticky-col-toggle" class="h-4 w-4 shrink-0 rounded border-gray-300 text-blue-600 focus:ring-blue-500 sm:h-5 sm:w-5" />
+      <span class="text-[0.6875rem] font-semibold leading-tight sm:text-sm sm:font-medium sm:leading-snug md:text-base whitespace-nowrap">列固定</span>
+    </label>
+    <div class="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-2">
+      <div class="flex min-h-9 min-w-0 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-slate-50/80 px-1.5 py-0.5 sm:min-h-[2.75rem] sm:max-w-[min(100%,24rem)] sm:gap-2 sm:rounded-lg sm:px-2.5 sm:py-1.5">
+        <i data-lucide="search" class="h-3.5 w-3.5 shrink-0 text-slate-500 sm:h-4 sm:w-4" aria-hidden="true"></i>
+        <label for="data-table-search" class="sr-only">表内検索</label>
+        <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-1 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 sm:py-1.5" />
+        <button type="button" id="data-table-search-clear" class="flex h-8 w-8 shrink-0 items-center justify-center rounded text-[1.35rem] font-light leading-none text-slate-600 hover:bg-slate-200/80 hover:text-slate-800 sm:h-9 sm:w-9 sm:text-[1.5rem]" aria-label="検索をクリア" title="クリア"><span aria-hidden="true">×</span></button>
+      </div>
+      <button type="button" id="data-table-search-prev" class="toolbar-icon-btn flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-[2.75rem] sm:min-w-[2.75rem] sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-lg" aria-label="前の該当行へ" title="前の該当行" disabled>↑</button>
+      <button type="button" id="data-table-search-next" class="toolbar-icon-btn flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:min-h-[2.75rem] sm:min-w-[2.75rem] sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-lg" aria-label="次の該当行へ" title="次の該当行" disabled>↓</button>
+      <button type="button" id="data-table-search-highlight" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-amber-50 text-amber-900 hover:bg-amber-100/90 sm:h-auto sm:w-auto sm:px-3.5 sm:py-2" aria-pressed="true" aria-label="検索一致のハイライト表示を切り替え" title="ハイライト（検索一致）"><i data-lucide="highlighter" class="h-[1.05rem] w-[1.05rem] sm:h-[1.125rem] sm:w-[1.125rem]" aria-hidden="true"></i></button>
+      <p id="data-table-search-meta" class="max-w-[3.25rem] shrink-0 truncate text-[0.65rem] text-slate-600 tabular-nums sm:max-w-[7.5rem] sm:text-sm" aria-live="polite"></p>
+    </div>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">目次</div>
+    <ul class="space-y-1">
+      <li><a href="#quickref" class="text-sm text-gray-600 hover:text-blue-700 block">クイックリファレンス</a></li>
+      <li><a href="#classification" class="text-sm text-gray-600 hover:text-blue-700 block">作用時間・分類</a></li>
+      <li><a href="#selection" class="text-sm text-gray-600 hover:text-blue-700 block">選択アルゴリズム</a></li>
+      <li><a href="#pk" class="text-sm text-gray-600 hover:text-blue-700 block">薬物動態・GABA-A</a></li>
+      <li><a href="#druglist" class="text-sm text-gray-600 hover:text-blue-700 block">薬剤詳細</a></li>
+      <li><a href="#parenteral" class="text-sm text-gray-600 hover:text-blue-700 block">注射・口腔内・鼻腔</a></li>
+      <li><a href="#sideeffects" class="text-sm text-gray-600 hover:text-blue-700 block">副作用比較</a></li>
+      <li><a href="#monitoring" class="text-sm text-gray-600 hover:text-blue-700 block">漸減・モニタリング</a></li>
+      <li><a href="#interactions" class="text-sm text-gray-600 hover:text-blue-700 block">相互作用・禁忌</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-2 sm:px-4 py-6 sm:py-8">
+
+    <div class="section-card" id="quickref">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
+          <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">外来で押さえる4ポイント</h2>
+          <p class="text-gray-500 text-sm">BZD処方の前に必ず確認</p>
+        </div>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-l-4 border-red-600">
+          <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">短期・必要最小量で再評価</div>
+            <p class="text-gray-600 text-sm">漫然とした長期処方は依存・離脱・認知機能低下・転倒リスクを増やす。2〜4週を目安に効果と必要性を文書化して見直す。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-l-4 border-orange-600">
+          <div class="w-10 h-10 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">高齢者は「蓄積」と「転倒」が本体</div>
+            <p class="text-gray-600 text-sm">長時間型・活性代謝物を避け、少量から。可能なら非薬物・SSRI/SNRI等への移行を検討。Beers照準で見直し。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-cyan-50 to-cyan-100 rounded-xl border-l-4 border-cyan-600">
+          <div class="w-10 h-10 bg-cyan-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">オピオイド・アルコールは呼吸抑制</div>
+            <p class="text-gray-600 text-sm">併用で致死的事象が報告。可能なら回避。やむを得ない場合は用量・短期・家族教育。米国FDAボックス警告の考え方を踏まえる。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-violet-50 to-violet-100 rounded-xl border-l-4 border-violet-600">
+          <div class="w-10 h-10 bg-violet-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-lg text-gray-800 mb-1">中止は漸減 — 急速中止厳禁</div>
+            <p class="text-gray-600 text-sm">身体依存が数日〜週単位で成立しうる。離脱（不安・不眠・振戦）に加え、けいれん閾値低下に注意。減量計画を具体的に。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="classification">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="layers" class="w-6 h-6 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">作用時間・臨床分類</h2>
+          <p class="text-gray-500 text-sm">排出半減期・活性代謝物を踏まえた使い分けの軸</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="drug-card drug-card-ultra">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="badge-dur-ultra">超短〜短時間</span>
+            <span class="text-xs text-gray-500">中途覚醒対策・IV鎮静</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">翌日残留が比較的少ない群。不眠の「入眠」や手技時鎮静に。耐性・反跳性不眠に注意。</p>
+          <div class="grid grid-cols-2 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-cyan-200">ミダゾラム<br><span class="text-gray-400">ドルミカム（IV等）</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-cyan-200">トリアゾラム<br><span class="text-gray-400">ハルシオン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-cyan-200">ブロチゾラム<br><span class="text-gray-400">レンドルミン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-cyan-200">ロルメタゼパム<br><span class="text-gray-400">エバミール</span></span>
+          </div>
+        </div>
+        <div class="drug-card drug-card-short">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="badge-dur-short">短〜中時間</span>
+            <span class="text-xs text-gray-500">抗不安・入眠・睡眠維持</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">外来で最多。パニック発作・GAD様症状の対症にも。CYP3A4や年齢で濃度変動しやすい薬剤あり。</p>
+          <div class="grid grid-cols-2 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">アルプラゾラム<br><span class="text-gray-400">ソラナックス他</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ロラゼパム<br><span class="text-gray-400">ワイパックス他</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ブロマゼパム<br><span class="text-gray-400">レキソタン他</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">オキサゼパム<br><span class="text-gray-400">ソーリフ他</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">エスタゾラム<br><span class="text-gray-400">ユーロジン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">ニトラゼパム<br><span class="text-gray-400">ベンザリン他</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">テマゼパム<br><span class="text-gray-400">メタモール</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-blue-200">フルニトラゼパム<br><span class="text-gray-400">サイレース</span></span>
+          </div>
+          <div class="mt-2 text-xs text-amber-800 bg-amber-50 rounded p-2">
+            <i data-lucide="info" class="w-3 h-3 inline-block mr-1"></i>
+            フルニトラゼパムは自治体・施設で処方制限・管理強化の取り組みあり。依存・乱用リスクを説明。
+          </div>
+        </div>
+        <div class="drug-card drug-card-mid">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="badge-dur-mid">中〜長時間</span>
+            <span class="text-xs text-gray-500">持続不安・抗痙攣・活性代謝物</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">1日1〜2回投与で日内変動を抑えやすい一方、蓄積・離脱が長引きやすい。</p>
+          <div class="grid grid-cols-2 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-green-200">クロナゼパム<br><span class="text-gray-400">リボトリール他</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-green-200">クロキサゾラム<br><span class="text-gray-400">セパゾン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-green-200">リルマザフォン<br><span class="text-gray-400">リスミー</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-green-200">ロフラゼプ酸エチル<br><span class="text-gray-400">メイラックス</span></span>
+          </div>
+        </div>
+        <div class="drug-card drug-card-long">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="badge-dur-long">長時間〜超長時間</span>
+            <span class="text-xs text-gray-500">アラコール離脱・筋痙攣・日内安定化</span>
+          </div>
+          <p class="text-xs text-gray-600 mb-3">デスメチルジアゼパム等<strong>活性代謝物が蓄積</strong>。高齢・肝障害で著明に延効。反跳・離脱が長期化。</p>
+          <div class="grid grid-cols-2 gap-1 text-xs">
+            <span class="bg-white rounded px-2 py-1 border border-orange-200">ジアゼパム / 製品<br><span class="text-gray-400">セルシン等</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-orange-200">クロルジアゼポキシド<br><span class="text-gray-400">コントール他</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-orange-200">クロラゼプ酸<br><span class="text-gray-400">メンドン</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-orange-200">フルラゼパム<br><span class="text-gray-400">ダルメール</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-orange-200">クアゼパム<br><span class="text-gray-400">ドラール</span></span>
+            <span class="bg-white rounded px-2 py-1 border border-orange-200">メダゼパム / フルジアゼパム / フルトプラゼパム<br><span class="text-gray-400">ノルソラン・エリスパン・レスタス</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="criteria-box">
+        <div class="flex items-center gap-2 mb-2">
+          <i data-lucide="book-marked" class="w-5 h-5 text-blue-700"></i>
+          <span class="font-bold text-blue-800">参考：チアゼノジアゼピン類（本ページの表からは除外）</span>
+        </div>
+        <p class="text-xs text-gray-700">エチゾラム（デパス）、クロチアゼパム（トレニール等）は化学構造が<strong>ベンゾジアゼピン骨格と異なる</strong>が、GABA-A作動性で臨床的には同様に依存・呼吸抑制・高齢者リスクを要する。選択・漸減原則は本ガイドと同じ。</p>
+      </div>
+    </div>
+
+    <div class="section-card" id="selection">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="git-branch" class="w-6 h-6 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤選択アルゴリズム</h2>
+          <p class="text-gray-500 text-sm">主訴・病態別の指針（併用・禁忌は添付文書優先）</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-2 mb-8">
+        <div class="bg-gray-800 text-white rounded-xl px-6 py-3 text-center font-bold text-sm w-72">BZD が検討される状況</div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+        <div class="bg-yellow-100 border-2 border-yellow-500 rounded-xl px-4 py-3 text-center text-sm w-full max-w-lg font-medium text-yellow-900">
+          <i data-lucide="alert-circle" class="w-4 h-4 inline-block mr-1 text-yellow-600"></i>
+          呼吸不全・重度睡眠時無呼吸・オピオイド多剤・妊娠・授乳・重症筋無力などは慎重〜禁忌になり得る
+        </div>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-gray-400"></i>
+
+        <div class="grid md:grid-cols-2 gap-4 w-full">
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div class="font-bold text-blue-800 text-sm mb-2">入眠障害・早期不眠</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li><span class="badge-first text-xs">第一</span> トリアゾラム、ブロチゾラム、ロルメタゼパム（添付用量の最小から）</li>
+              <li><span class="badge-second text-xs">代替</span> ニトラゼパム、エスタゾラム（残留に注意）</li>
+              <li class="text-gray-500">非薬物（睡眠衛生・CBT-I）とセットが推奨</li>
+            </ul>
+            <div class="mt-2"><span class="badge-level-b">ガイドライン整合</span></div>
+          </div>
+          <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+            <div class="font-bold text-indigo-800 text-sm mb-2">広場恐怖・予期不安・GAD様（対症）</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li><span class="badge-first text-xs">第一</span> アルプラゾラム（発作頻度に応じ分割）、ブロマゼパム</li>
+              <li><span class="badge-second text-xs">代替</span> ロラゼパム、ロフラゼプ酸エチル</li>
+              <li>長期はSSRI/SNRIへ移行を計画（BZDは橋渡し）</li>
+            </ul>
+          </div>
+          <div class="bg-teal-50 border border-teal-200 rounded-xl p-4">
+            <div class="font-bold text-teal-800 text-sm mb-2">てんかん・自律神経発作・筋痙攣</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li><span class="badge-first text-xs">抗痙攣</span> クロナゼパム（添付の発作型に合わせて）</li>
+              <li><span class="badge-second text-xs">補助</span> クロキサゾラム / ニトラゼパム（適応・用法は添付文書）</li>
+              <li>ジアゼパムは急性痙攣（直肠・静注製剤）や離脱にも</li>
+            </ul>
+          </div>
+          <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+            <div class="font-bold text-red-800 text-sm mb-2">急性興奮・せん妄・緊張病・アルコール離脱</div>
+            <ul class="text-xs text-gray-700 space-y-1">
+              <li><span class="badge-first text-xs">急性</span> ロラゼパム（経口・IM）、ジアゼパム（IM・静注は施設次第）</li>
+              <li><span class="badge-first text-xs">手技・ICU</span> ミダゾラム IV（呼吸・血圧モニタ必須）</li>
+              <li class="text-red-700 font-bold">オランザピン筋注とBZD筋注の同時は呼吸抑制リスク — 間隔厳守（抗精神病薬ガイドと同趣旨）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="font-bold text-gray-700 text-lg mb-4 flex items-center gap-2">
+        <i data-lucide="user-check" class="w-5 h-5 text-blue-600"></i>
+        患者背景別の推奨・回避
+      </h3>
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 text-sm mb-2">高齢者（≥75）</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li><span class="badge-first text-xs">推奨</span> オキサゼパム、ロラゼパム（活性代謝物が少ない経路を優先する考え方が多い）</li>
+            <li><span class="text-red-600 text-xs font-bold">回避</span> 長半減期＋活性代謝物（ジアゼパム、フルラゼパム、フルトプラゼパム等）</li>
+            <li>転倒・骨折・認知：可能なら非BZDへ</li>
+          </ul>
+        </div>
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+          <div class="font-bold text-orange-800 text-sm mb-2">肝障害・多併用（CYP3A4）</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li><span class="badge-first text-xs">注意</span> アルプラゾラム、ミダゾラム、ブロチゾラム、トリアゾラム（3A4の影響大）</li>
+            <li>クラリスロマイシン等強力阻害薬併用で濃度上昇予測</li>
+          </ul>
+        </div>
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <div class="font-bold text-green-800 text-sm mb-2">「効き目」を素早く要するが在宅</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li>速やかな経口吸収が比較的良好な剤・用量を検討（個人差大）</li>
+            <li>過鎮静・誤嚥：食事・歩行のタイミングで調整</li>
+          </ul>
+        </div>
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+          <div class="font-bold text-purple-800 text-sm mb-2">妊婦・授乳</div>
+          <ul class="text-xs text-gray-700 space-y-1">
+            <li>致畸性・新生児離脱・哺乳移行は薬剤差あり。産科・小児科と必ず連携</li>
+            <li>原則は非薬物・より安全プロファイル薬への切替を検討</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" id="pk">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="activity" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">GABA-A・薬物動態プロファイル</h2>
+          <p class="text-gray-500 text-sm">ω1優位性は概念補助（定量比較ではない）。主要CYP・活性代謝物は添付文書で確認。</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mb-4 text-xs">
+        <span class="flex items-center gap-1"><span class="pk-dot-hi"></span> 高（蓄積・残留傾向）</span>
+        <span class="flex items-center gap-1"><span class="pk-dot-md"></span> 中等度</span>
+        <span class="flex items-center gap-1"><span class="pk-dot-lo"></span> 低（高齢で比較的选择肢に）</span>
+        <span class="flex items-center gap-1"><span class="pk-dot-no"></span> なし／ごく弱い</span>
+      </div>
+      <div class="x-scroll">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">薬剤</th>
+              <th class="th-cell">ω1寄り<br><span class="font-normal text-gray-500">鎮静・入眠</span></th>
+              <th class="th-cell">活性代謝物</th>
+              <th class="th-cell">主要CYP</th>
+              <th class="th-cell rounded-tr-lg">臨床的留意</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-medium td-drug">トリアゾラム</td><td class="td-cell"><span class="pk-dot-hi"></span></td><td class="td-cell"><span class="pk-dot-no"></span></td><td class="td-cell">3A4</td><td class="td-cell text-left">反跳性不眠・短期限定</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ブロチゾラム</td><td class="td-cell"><span class="pk-dot-hi"></span></td><td class="td-cell"><span class="pk-dot-no"></span></td><td class="td-cell">3A4</td><td class="td-cell text-left">相互作用に注意</td></tr>
+            <tr><td class="td-left font-medium td-drug">ミダゾラム</td><td class="td-cell"><span class="pk-dot-hi"></span></td><td class="td-cell text-left text-gray-600">短時間だが施設・投与路で変動</td><td class="td-cell">3A4</td><td class="td-cell text-left">呼吸抑制、フルマゼニル使用は専門管理下</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">アルプラゾラム</td><td class="td-cell"><span class="pk-dot-md"></span></td><td class="td-cell"><span class="pk-dot-no"></span></td><td class="td-cell">3A4</td><td class="td-cell text-left">離脱・用量増加に注意</td></tr>
+            <tr><td class="td-left font-medium td-drug">ロラゼパム</td><td class="td-cell"><span class="pk-dot-md"></span></td><td class="td-cell"><span class="pk-dot-no"></span></td><td class="td-cell">UGT主</td><td class="td-cell text-left">急性期経口・IM、肝不全で相対的優位なことが多い</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">クロナゼパム</td><td class="td-cell"><span class="pk-dot-lo"></span></td><td class="td-cell"><span class="pk-dot-no"></span></td><td class="td-cell">3A4等</td><td class="td-cell text-left">長い、蓄積、抗痙攣の主役</td></tr>
+            <tr><td class="td-left font-medium td-drug">ジアゼパム</td><td class="td-cell"><span class="pk-dot-md"></span></td><td class="td-cell"><span class="pk-dot-hi"></span></td><td class="td-cell">2C19等</td><td class="td-cell text-left">デスメチル体長残留、高齢に不適になりやすい</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ニトラゼパム</td><td class="td-cell"><span class="pk-dot-hi"></span></td><td class="td-cell"><span class="pk-dot-md"></span></td><td class="td-cell">—</td><td class="td-cell text-left">翌日ささくれ・転倒</td></tr>
+            <tr><td class="td-left font-medium td-drug">リルマザフォン</td><td class="td-cell"><span class="pk-dot-md"></span></td><td class="td-cell"><span class="pk-dot-hi"></span></td><td class="td-cell text-left text-gray-600">肝内活性化</td><td class="td-cell text-left">就寝前、日中傾眠に注意</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+    </div>
+
+    <div class="section-card" id="druglist">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="pill" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">薬剤詳細・特徴（日本承認・ベンゾジアゼピン骨格）</h2>
+          <p class="text-gray-500 text-sm">用量は一般例。必ず最新添付文書で確認。</p>
+        </div>
+      </div>
+      <div class="x-scroll">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">成分（商品例）</th>
+              <th class="th-cell">時間像</th>
+              <th class="th-cell">主な用途</th>
+              <th class="th-cell">用量の目安</th>
+              <th class="th-cell rounded-tr-lg">薬剤固有の特徴</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-medium td-drug">アルプラゾラム<span class="text-gray-400">（ソラナックス、コンスタン）</span></td><td class="td-cell"><span class="badge-dur-mid">中</span></td><td class="td-cell">不安・抑うつ・恐怖</td><td class="td-cell">0.8〜2.4mg/日分割</td><td class="td-cell text-left">パニック対症に多用。3A4。離脱厳重。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ブロマゼパム<span class="text-gray-400">（レキソタン）</span></td><td class="td-cell"><span class="badge-dur-mid">中</span></td><td class="td-cell">不安・強迫・恐怖</td><td class="td-cell">5〜30mg/日分割</td><td class="td-cell text-left">日中大きめ用量も。眠気プロファイルは個人差。</td></tr>
+            <tr><td class="td-left font-medium td-drug">ブロチゾラム<span class="text-gray-400">（レンドルミン）</span></td><td class="td-cell"><span class="badge-dur-ultra">短</span></td><td class="td-cell">不眠・麻酔前</td><td class="td-cell">0.25mg就寝前</td><td class="td-cell text-left">中間覚醒向け。3A4相互作用。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">クロナゼパム<span class="text-gray-400">（リボトリール）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">発作・自律神経発作</td><td class="td-cell">0.5〜1mg/日〜（発作型）</td><td class="td-cell text-left">血中半減期長い。唾液分泌等に注意。</td></tr>
+            <tr><td class="td-left font-medium td-drug">クロキサゾラム<span class="text-gray-400">（セパゾン）</span></td><td class="td-cell"><span class="badge-dur-mid">中長</span></td><td class="td-cell">不安・抑うつ</td><td class="td-cell">1〜2mg/日分割</td><td class="td-cell text-left">抗痙攣用途も（添付に準拠）。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">クロラゼプ酸<span class="text-gray-400">（メンドン）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不安・焦躁・抑うつ</td><td class="td-cell">10〜30mg/日分割</td><td class="td-cell text-left">体内でノルジアゼパム等に変換、作用長い。</td></tr>
+            <tr><td class="td-left font-medium td-drug">クロルジアゼポキシド<span class="text-gray-400">（コントール）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不安・抑うつ</td><td class="td-cell">10〜100mg/日分割</td><td class="td-cell text-left">デスメチル等活性体。高齢蓄積。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ジアゼパム<span class="text-gray-400">（セルシン）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不安・痙攣・筋痙攣</td><td class="td-cell">2〜10mg/日〜</td><td class="td-cell text-left">注射で急性期。活性代謝物が超長。</td></tr>
+            <tr><td class="td-left font-medium td-drug">エスタゾラム<span class="text-gray-400">（ユーロジン）</span></td><td class="td-cell"><span class="badge-dur-short">短中</span></td><td class="td-cell">不眠・麻酔前</td><td class="td-cell">1〜3mg就寝前</td><td class="td-cell text-left">翌日倦怠の中程度。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">フルジアゼパム<span class="text-gray-400">（エリスパン）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不安・抑うつ</td><td class="td-cell">0.25mg〜/日</td><td class="td-cell text-left">長時間、蓄積性。</td></tr>
+            <tr><td class="td-left font-medium td-drug">フルニトラゼパム<span class="text-gray-400">（サイレース）</span></td><td class="td-cell"><span class="badge-dur-short">短中</span></td><td class="td-cell">入眠困難</td><td class="td-cell">1〜2mg就寝前</td><td class="td-cell text-left">依存・管制強化地域あり。説明必須。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">フルラゼパム<span class="text-gray-400">（ダルメール）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不眠</td><td class="td-cell">15〜30mg就寝前</td><td class="td-cell text-left">活性代謝物des-alkylフルラゼパムが長い。</td></tr>
+            <tr><td class="td-left font-medium td-drug">フルトプラゼパム<span class="text-gray-400">（レスタス）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不安・不眠</td><td class="td-cell">1〜3mg/日</td><td class="td-cell text-left">長時間型Daytime sedation注意。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ミダゾラム<span class="text-gray-400">（ドルミカム）</span></td><td class="td-cell"><span class="badge-dur-ultra">超短</span></td><td class="td-cell">麻酔・鎮静</td><td class="td-cell">手技・年齢で</td><td class="td-cell text-left">水溶性プロドラッグ。口内・鼻内製剤あり。</td></tr>
+            <tr><td class="td-left font-medium td-drug">ニトラゼパム<span class="text-gray-400">（ベンザリン）</span></td><td class="td-cell"><span class="badge-dur-mid">中</span></td><td class="td-cell">不眠・小発作</td><td class="td-cell">5〜10mg就寝前等</td><td class="td-cell text-left">日本人で広く使用。翌日ささくれ。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">オキサゼパム<span class="text-gray-400">（ソーリフ）</span></td><td class="td-cell"><span class="badge-dur-mid">中</span></td><td class="td-cell">不安・醉酒・離脱補助</td><td class="td-cell">10〜40mg/日</td><td class="td-cell text-left">グルクロン酸結合で排泄、高齢で比較的選ばれがち。</td></tr>
+            <tr><td class="td-left font-medium td-drug">クアゼパム<span class="text-gray-400">（ドラール）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不眠</td><td class="td-cell">10〜30mg就寝前</td><td class="td-cell text-left">長い。翌日障害。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ロフラゼプ酸エチル<span class="text-gray-400">（メイラックス）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不安・抑うつ</td><td class="td-cell">1〜2mg/日</td><td class="td-cell text-left">低用量開始、蓄積。</td></tr>
+            <tr><td class="td-left font-medium td-drug">ロラゼパム<span class="text-gray-400">（ワイパックス）</span></td><td class="td-cell"><span class="badge-dur-mid">中</span></td><td class="td-cell">不安・急性興奮</td><td class="td-cell">0.5〜3mg/日分割</td><td class="td-cell text-left">IM可。緊張病・Offアルコールにエビデンス。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">ロルメタゼパム<span class="text-gray-400">（エバミール）</span></td><td class="td-cell"><span class="badge-dur-ultra">短</span></td><td class="td-cell">不眠</td><td class="td-cell">1mg就寝前</td><td class="td-cell text-left">反跳に注意、短期。</td></tr>
+            <tr><td class="td-left font-medium td-drug">メダゼパム<span class="text-gray-400">（ノルソラン）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不安・抑うつ</td><td class="td-cell">2〜6mg/日</td><td class="td-cell text-left">ジアゼパムへの前駆体的代謝。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">リルマザフォン<span class="text-gray-400">（リスミー）</span></td><td class="td-cell"><span class="badge-dur-long">長</span></td><td class="td-cell">不眠</td><td class="td-cell">1〜4mg就寝前</td><td class="td-cell text-left">ベンゾジアゼピン様代謝物へ変換、日内眠気。</td></tr>
+            <tr><td class="td-left font-medium td-drug">テマゼパム<span class="text-gray-400">（メタモール）</span></td><td class="td-cell"><span class="badge-dur-mid">中</span></td><td class="td-cell">不眠</td><td class="td-cell">5〜15mg就寝前</td><td class="td-cell text-left">ジアゼパム代謝系に位置、活性体はテマゼパム自体。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-medium td-drug">トリアゾラム<span class="text-gray-400">（ハルシオン）</span></td><td class="td-cell"><span class="badge-dur-ultra">短</span></td><td class="td-cell">不眠・麻酔前</td><td class="td-cell">0.25mg就寝前</td><td class="td-cell text-left">反跳・異常行動報告。3A4。</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">※ニメタゼパム等、市場縮小品は省略。必要ならPMDA検索で補完。</p>
+    </div>
+
+    <div class="section-card" id="parenteral">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="syringe" class="w-6 h-6 text-violet-700"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">注射・口内・鼻腔製剤（急性期・周術期）</h2>
+          <p class="text-gray-500 text-sm">経口が困難な場合の選択。施設・モニタリング体制が前提。</p>
+        </div>
+      </div>
+      <div class="x-scroll">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">成分</th>
+              <th class="th-cell">剤形例</th>
+              <th class="th-cell">主用途</th>
+              <th class="th-cell rounded-tr-lg">特徴・注意</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-bold text-violet-800 td-drug">ミダゾラム</td><td class="td-cell">静注・筋注・口内・鼻腔ジェル等</td><td class="td-cell">けいれん重積・麻酔・PICU</td><td class="td-cell text-left">3A4。呼吸抑制。フルマゼニルは専門管理下。</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold text-violet-800 td-drug">ロラゼパム</td><td class="td-cell">静注・筋注・経口</td><td class="td-cell">急性興奮・けいれん・せん妄</td><td class="td-cell text-left">propylene glycol溶媒の注射剤は大量で酸中毒報告。添付に従う。</td></tr>
+            <tr><td class="td-left font-bold text-violet-800 td-drug">ジアゼパム</td><td class="td-cell">静注・坐剤</td><td class="td-cell">急性痙攣・離脱</td><td class="td-cell text-left">静注は血管痛・呼吸抑制。長い作用。</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+      <div class="warning-box mt-4">
+        <div class="font-bold text-yellow-800 mb-2 flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i>オピオイド・他抑制薬との併用</div>
+        <p class="text-sm text-gray-700">急性期でもオピオイド静脈内併用はでき得る限り避ける。やむを得ない場合は低用量・短時間・換気可能床上で。</p>
+      </div>
+    </div>
+
+    <div class="section-card" id="sideeffects">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">副作用プロファイル比較</h2>
+          <p class="text-gray-500 text-sm">相対比較（〇多い △中等度 ✕少ない〜ごく少ない）</p>
+        </div>
+      </div>
+      <div class="x-scroll">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg th-drug">薬剤</th>
+              <th class="th-cell">依存・用量増加</th>
+              <th class="th-cell">反跳不眠・離脱</th>
+              <th class="th-cell">日中傾眠</th>
+              <th class="th-cell">認知機能</th>
+              <th class="th-cell">転倒・骨折</th>
+              <th class="th-cell rounded-tr-lg">呼吸抑制リスク</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left font-bold td-drug">トリアゾラム・ブロチゾラム</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-green-600">✕</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕（単独）</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold td-drug">アルプラゾラム</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△＋オピオイド</td></tr>
+            <tr><td class="td-left font-bold td-drug">ロラゼパム</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△＋オピオイド</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold td-drug">クロナゼパム</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td></tr>
+            <tr><td class="td-left font-bold td-drug">ジアゼパム・長時間群</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-red-600 font-bold">〇</td><td class="td-cell text-orange-500">△（IV）</td></tr>
+            <tr class="bg-gray-50"><td class="td-left font-bold td-drug">ミダゾラム（IV）</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕（単回）</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-gray-400">✕</td><td class="td-cell text-red-600 font-bold">〇〇</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+      <div class="danger-box mt-4">
+        <div class="font-bold text-red-800 mb-2 flex items-center gap-2"><i data-lucide="triangle-alert" class="w-4 h-4"></i>重大なリスク</div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li><strong>呼吸抑制・気道閉塞</strong>：OSA、COPD、神経筋疾患、オピオイド併用で増大。</li>
+          <li><strong>離脱けいれん</strong>：長期高用量・短時間型の急速減量で起こりうる。</li>
+          <li><strong>複雑睡眠関連行動</strong>：夜間の行動脱抑制（他ベンゾ系催眠でも報告）。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-card" id="monitoring">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">漸減・モニタリング・文書化</h2>
+          <p class="text-gray-500 text-sm">診療報酬上の長期投与評価とも整合する運用を</p>
+        </div>
+      </div>
+      <div class="x-scroll mb-6">
+        <div class="overflow-x-auto x-scroll__rail">
+        <table class="w-full text-xs border-collapse min-w-max data-table">
+          <thead>
+            <tr>
+              <th class="th-cell text-left pl-3 rounded-tl-lg">項目</th>
+              <th class="th-cell">初回処方時</th>
+              <th class="th-cell">2〜4週</th>
+              <th class="th-cell">3ヶ月</th>
+              <th class="th-cell rounded-tr-lg">長期継続時</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-left">適応・目標（入眠／日中不安等）の明文化</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">転倒・骨折・歩行・認知</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+            <tr><td class="td-left">オピオイド・アルコール併用の有無</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+            <tr class="bg-gray-50"><td class="td-left">非薬物（CBT-I・心理療法）の案内</td><td class="td-cell text-green-600">●</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-orange-500">△</td></tr>
+            <tr><td class="td-left">漸減スケジュール（10〜25%/2〜4週等の個別化）</td><td class="td-cell text-gray-400">—</td><td class="td-cell text-orange-500">△</td><td class="td-cell text-green-600">●</td><td class="td-cell text-green-600">●</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="x-scroll__hint"><span class="x-scroll__hint-icon" aria-hidden="true">◀</span>表は横にスクロールすると全列を表示できます（スマホはスワイプ）。上部固定バー左の「列固定」で薬剤名列を左に固定できます。<span class="x-scroll__hint-icon x-scroll__hint-icon--r" aria-hidden="true">▶</span></p>
+      </div>
+      <div class="recommend-box">
+        <div class="font-bold text-green-800 mb-2">減薬のヒント</div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>まず<strong>1日総量を削る</strong>より、就寝のみの剤から減らし日中を非BZDへ移行しやすくする。</li>
+          <li>短時間型に切り替えた上でゆっくり漸減する方法もあるが、ショート型の離脱症状が強い患者もいる。</li>
+          <li>メラトニン受容体作動薬、一部抗うつ薬は不眠への移行補助として検討（適応外含む—エビデンスと説明）。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-card" id="interactions">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+          <i data-lucide="x-circle" class="w-6 h-6 text-red-600"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">相互作用・禁忌・注意</h2>
+          <p class="text-gray-500 text-sm">添付文書の併用禁忌・慎重投与を最優先</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-800 mb-2">深刻な併用</div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>オピオイド系鎮痛薬（トラマドール含む）との中枢抑制増強</li>
+            <li>アルコール・他の催眠薬・抗ヒスタミンの重ねがけ</li>
+            <li>重症筋無力症、閉塞性換気不全（相対禁忌に近い）</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <div class="font-bold text-yellow-800 mb-2">CYP3A4</div>
+          <p class="text-xs text-gray-700">アルプラゾラム、ミダゾラム、ブロチゾラム、トリアゾラム等：マクロライド、イトラコナゾール、グレープフルーツで濃度上昇の可能性。</p>
+        </div>
+      </div>
+      <div class="recommend-box mt-4">
+        <div class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i>参照</div>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>不安障害診療ガイドライン（日本うつ病学会）</li>
+          <li>Beers Criteria（高齢者ポリファーマシー） — BZDの位置づけ</li>
+          <li>PMDA医薬品検索 <a href="https://www.pmda.go.jp" class="text-green-700 underline">pmda.go.jp</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center py-6 text-xs text-gray-400 border-t border-gray-200">
+    <p>本資料は医療専門職向け参照資料です。処方判断には最新の各薬剤添付文書を必ず参照してください。</p>
+    <p class="mt-1">参照：PMDA医薬品医療機器総合機構 添付文書 / 2026年5月現在</p>
+  </footer>
+
+  <script>
+    var STICKY_KEY = 'psych-bzd-table-sticky-col-enabled';
+    var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    var searchInput = document.getElementById('data-table-search');
+    var searchClear = document.getElementById('data-table-search-clear');
+    var searchMeta = document.getElementById('data-table-search-meta');
+    var searchPrev = document.getElementById('data-table-search-prev');
+    var searchNext = document.getElementById('data-table-search-next');
+    var searchHighlightBtn = document.getElementById('data-table-search-highlight');
+    var searchTimer;
+    var searchHitRows = [];
+    var hitIndex = -1;
+    var highlightOn = true;
+    var mainEl = document.querySelector('main');
+
+    /** 入力と本文で indexOf がずれないよう NFC 化し、ゼロ幅文字を除去 */
+    function normalizeSearchString(s) {
+      if (s == null || s === '') return '';
+      s = String(s).replace(/[\u200b-\u200d\ufeff]/g, '');
+      return typeof s.normalize === 'function' ? s.normalize('NFC').trim() : s.trim();
+    }
+
+    function formatSearchMeta(n) {
+      var compact = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 639px)').matches;
+      if (n === 0) return compact ? '0件' : '該当なし';
+      return compact ? (n + '件') : ('該当 ' + n + ' 箇所');
+    }
+
+    function syncStickyFromToggle() {
+      var enabled = stickyToggle ? stickyToggle.checked : false;
+      document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
+    }
+    if (stickyToggle) {
+      try {
+        var s = localStorage.getItem(STICKY_KEY);
+        if (s !== null) stickyToggle.checked = s === '1';
+      } catch (err) {}
+      stickyToggle.addEventListener('change', function () {
+        try { localStorage.setItem(STICKY_KEY, stickyToggle.checked ? '1' : '0'); } catch (err) {}
+        syncStickyFromToggle();
+      });
+    }
+    syncStickyFromToggle();
+
+    var toolbarEl = document.getElementById('data-table-toolbar');
+    var sectionLabelEl = document.getElementById('data-table-section-label');
+    var TOOLBAR_SECTIONS = [
+      { id: 'quickref', label: '外来で押さえる4ポイント' },
+      { id: 'classification', label: '作用時間・臨床分類' },
+      { id: 'selection', label: '薬剤選択アルゴリズム' },
+      { id: 'pk', label: '薬物動態・GABA-A' },
+      { id: 'druglist', label: '薬剤詳細・用量・適応' },
+      { id: 'parenteral', label: '注射・口腔内・鼻腔' },
+      { id: 'sideeffects', label: '副作用プロファイル比較' },
+      { id: 'monitoring', label: '漸減・モニタリング' },
+      { id: 'interactions', label: '相互作用・禁忌' }
+    ];
+    var lastToolbarSectionLabel = '';
+    var lastToolbarSectionId = '';
+
+    function updateToolbarSectionLabel() {
+      if (!sectionLabelEl || !toolbarEl) return;
+      var threshold = toolbarEl.getBoundingClientRect().bottom + 6;
+      var active = TOOLBAR_SECTIONS[0];
+      for (var i = 0; i < TOOLBAR_SECTIONS.length; i++) {
+        var el = document.getElementById(TOOLBAR_SECTIONS[i].id);
+        if (!el) continue;
+        var top = el.getBoundingClientRect().top;
+        if (top <= threshold) active = TOOLBAR_SECTIONS[i];
+      }
+      if (active.id !== lastToolbarSectionId) {
+        lastToolbarSectionId = active.id;
+        toolbarEl.setAttribute('data-toolbar-section', active.id);
+      }
+      if (active.label !== lastToolbarSectionLabel) {
+        lastToolbarSectionLabel = active.label;
+        sectionLabelEl.textContent = active.label;
+      }
+    }
+
+    var toolbarLabelRaf = null;
+    function scheduleToolbarSectionLabel() {
+      if (toolbarLabelRaf != null) return;
+      toolbarLabelRaf = requestAnimationFrame(function () {
+        toolbarLabelRaf = null;
+        updateToolbarSectionLabel();
+      });
+    }
+    window.addEventListener('scroll', scheduleToolbarSectionLabel, { passive: true });
+    window.addEventListener('resize', scheduleToolbarSectionLabel);
+    window.addEventListener('hashchange', scheduleToolbarSectionLabel);
+    window.addEventListener('load', scheduleToolbarSectionLabel);
+    updateToolbarSectionLabel();
+
+    function syncHighlightClass() {
+      document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
+      if (searchHighlightBtn) {
+        searchHighlightBtn.setAttribute('aria-pressed', highlightOn ? 'true' : 'false');
+        searchHighlightBtn.classList.toggle('bg-amber-50', highlightOn);
+        searchHighlightBtn.classList.toggle('text-amber-900', highlightOn);
+        searchHighlightBtn.classList.toggle('bg-slate-100', !highlightOn);
+        searchHighlightBtn.classList.toggle('text-slate-600', !highlightOn);
+      }
+    }
+
+    function updateNavButtons() {
+      var n = searchHitRows.length;
+      var ok = n > 0;
+      if (searchPrev) searchPrev.disabled = !ok;
+      if (searchNext) searchNext.disabled = !ok;
+      if (ok && (hitIndex < 0 || hitIndex >= n)) hitIndex = 0;
+    }
+
+    function scrollToHit(i) {
+      if (i < 0 || i >= searchHitRows.length) return;
+      hitIndex = i;
+      requestAnimationFrame(function () {
+        searchHitRows[hitIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
+    }
+
+    function unwrapSearchMarksInTables() {
+      document.querySelectorAll('main mark.table-search-mark').forEach(function (mark) {
+        var p = mark.parentNode;
+        if (!p) return;
+        while (mark.firstChild) {
+          p.insertBefore(mark.firstChild, mark);
+        }
+        p.removeChild(mark);
+      });
+    }
+
+    function getSearchableTextNodes(el) {
+      var out = [];
+      var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          if (!node.nodeValue) return NodeFilter.FILTER_SKIP;
+          var bel = node.parentElement;
+          if (bel && bel.closest && bel.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+
+    /** main 内で data-table 以外（薬剤カードの span・解説文など）のテキストノード */
+    function getSearchableTextNodesOutsideTables(root) {
+      var out = [];
+      if (!root) return out;
+      var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          if (!node.nodeValue) return NodeFilter.FILTER_SKIP;
+          var bel = node.parentElement;
+          if (!bel || !bel.closest) return NodeFilter.FILTER_SKIP;
+          if (bel.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          if (bel.closest('table.data-table')) return NodeFilter.FILTER_REJECT;
+          if (bel.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+
+    function highlightSearchOutsideTables(mainEl, qLower, sliceLen) {
+      if (!mainEl) return;
+      var nodes = getSearchableTextNodesOutsideTables(mainEl);
+      for (var i = 0; i < nodes.length; i++) {
+        wrapQueryInTextNode(nodes[i], qLower, sliceLen);
+      }
+    }
+
+    function wrapQueryInTextNode(textNode, qLower, sliceLen) {
+      var raw = textNode.textContent;
+      var text = typeof raw.normalize === 'function' ? raw.normalize('NFC') : raw;
+      var lower = text.toLowerCase();
+      var qn = typeof qLower.normalize === 'function' ? qLower.normalize('NFC') : qLower;
+      var idx = lower.indexOf(qn);
+      if (idx === -1) return;
+      var frag = document.createDocumentFragment();
+      var pos = 0;
+      while (idx !== -1) {
+        if (idx > pos) {
+          frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+        }
+        var mk = document.createElement('mark');
+        mk.className = 'table-search-mark';
+        mk.appendChild(document.createTextNode(text.slice(idx, idx + sliceLen)));
+        frag.appendChild(mk);
+        pos = idx + sliceLen;
+        idx = lower.indexOf(qn, pos);
+      }
+      if (pos < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(pos)));
+      }
+      textNode.parentNode.replaceChild(frag, textNode);
+    }
+
+    function highlightSearchInRow(tr, qLower, sliceLen) {
+      tr.querySelectorAll('td').forEach(function (td) {
+        var nodes = getSearchableTextNodes(td);
+        for (var i = 0; i < nodes.length; i++) {
+          wrapQueryInTextNode(nodes[i], qLower, sliceLen);
+        }
+      });
+    }
+
+    function clearSearchHits() {
+      unwrapSearchMarksInTables();
+      document.querySelectorAll('table.data-table tbody tr.table-search-hit').forEach(function (tr) {
+        tr.classList.remove('table-search-hit');
+      });
+      searchHitRows = [];
+      hitIndex = -1;
+      updateNavButtons();
+    }
+
+    function applySearch(options) {
+      options = options || {};
+      var scrollToFirst = options.scrollToFirst === true;
+      clearSearchHits();
+      var q = normalizeSearchString(searchInput && searchInput.value ? searchInput.value : '');
+      if (!q) {
+        if (searchMeta) searchMeta.textContent = '';
+        return;
+      }
+      var ql = q.toLowerCase();
+      var sliceLen = q.length;
+      document.querySelectorAll('table.data-table tbody tr').forEach(function (tr) {
+        var rowText = tr.textContent || '';
+        if (typeof rowText.normalize === 'function') rowText = rowText.normalize('NFC');
+        if (rowText.toLowerCase().indexOf(ql) !== -1) {
+          tr.classList.add('table-search-hit');
+          searchHitRows.push(tr);
+          highlightSearchInRow(tr, ql, sliceLen);
+        }
+      });
+      highlightSearchOutsideTables(mainEl, ql, sliceLen);
+      var markTotal = mainEl ? mainEl.querySelectorAll('mark.table-search-mark').length : 0;
+      if (searchMeta) {
+        searchMeta.textContent = formatSearchMeta(markTotal);
+      }
+      updateNavButtons();
+      if (searchHitRows.length > 0) {
+        hitIndex = 0;
+        if (scrollToFirst) {
+          scrollToHit(0);
+        }
+      }
+    }
+
+    function debouncedSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () {
+        applySearch({ scrollToFirst: false });
+      }, 100);
+    }
+
+    function scheduleSearchInput(e) {
+      if (e && e.isComposing) return;
+      debouncedSearch();
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', scheduleSearchInput);
+      searchInput.addEventListener('compositionend', function () {
+        debouncedSearch();
+      });
+      searchInput.addEventListener('change', debouncedSearch);
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applySearch({ scrollToFirst: false });
+          return;
+        }
+        if (e.key === 'Escape') {
+          searchInput.value = '';
+          clearSearchHits();
+          if (searchMeta) searchMeta.textContent = '';
+          searchInput.blur();
+        }
+      });
+    }
+    if (searchClear) {
+      searchClear.addEventListener('click', function () {
+        if (searchInput) searchInput.value = '';
+        clearSearchHits();
+        if (searchMeta) searchMeta.textContent = '';
+        if (searchInput) searchInput.focus();
+      });
+    }
+    if (searchPrev) {
+      searchPrev.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex <= 0 ? searchHitRows.length - 1 : hitIndex - 1;
+        scrollToHit(i);
+      });
+    }
+    if (searchNext) {
+      searchNext.addEventListener('click', function () {
+        if (searchHitRows.length === 0) return;
+        var i = hitIndex < 0 ? 0 : (hitIndex + 1) % searchHitRows.length;
+        scrollToHit(i);
+      });
+    }
+    if (searchHighlightBtn) {
+      searchHighlightBtn.addEventListener('click', function () {
+        highlightOn = !highlightOn;
+        syncHighlightClass();
+      });
+    }
+    syncHighlightClass();
+
+    document.querySelectorAll('table.data-table').forEach(function (table) {
+      table.querySelectorAll('tbody tr').forEach(function (tr) {
+        var first = tr.querySelector('td');
+        if (!first) return;
+        if (tr.querySelector('td[colspan]')) return;
+        tr.addEventListener('click', function (e) {
+          if (e.target.closest('a, button, label, input, select, textarea')) return;
+          var was = tr.classList.contains('table-row-focus');
+          table.querySelectorAll('tbody tr.table-row-focus').forEach(function (r) {
+            r.classList.remove('table-row-focus');
+          });
+          if (!was) tr.classList.add('table-row-focus');
+        });
+      });
+    });
+  </script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

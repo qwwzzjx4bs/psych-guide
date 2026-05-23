@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordinated Specialty Care（CSC）— 調整型専門ケアの図解（研修医向け）</title>
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --csc-navy: #1e3a5f;
+      --csc-teal: #0f766e;
+      --csc-accent: #2563eb;
+      --csc-gradient: linear-gradient(135deg, #1e3a5f 0%, #0f766e 48%, #1d4ed8 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--csc-gradient); }
+    .csc-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e2e8f0;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .csc-link {
+      color: #0f766e;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .csc-link:hover { color: #115e59; }
+    .term {
+      border-bottom: 1px dashed #94a3b8;
+      cursor: help;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    details.gloss {
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 0.65rem 1rem;
+      margin-bottom: 0.5rem;
+    }
+    details.gloss summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #1e293b;
+      list-style: none;
+    }
+    details.gloss summary::-webkit-details-marker { display: none; }
+    details.gloss[open] summary { margin-bottom: 0.5rem; }
+    .hub-core {
+      background: linear-gradient(145deg, #1e3a5f 0%, #0f766e 100%);
+      color: white;
+      border-radius: 1rem;
+      padding: 1rem 1.15rem;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      box-shadow: 0 10px 28px rgba(30, 58, 95, 0.28);
+    }
+    .pillar {
+      border-radius: 0.85rem;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      padding: 1rem 1.1rem;
+      height: 100%;
+    }
+    .pillar-num {
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 9999px;
+      background: #1e3a5f;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+      main section { scroll-margin-top: 5rem; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+  <header class="header-gradient text-white py-8 shadow-lg">
+    <div class="max-w-4xl mx-auto px-4">
+      <p class="text-white/75 text-xs font-semibold tracking-wider mb-1">PGY向け・教育用（アメリカNIMHの标配慮）</p>
+      <div class="flex items-start gap-3">
+        <i data-lucide="layout-grid" class="w-10 h-10 opacity-90 shrink-0 mt-0.5"></i>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight leading-snug">Coordinated Specialty Care（CSC）</h1>
+          <p class="text-white/95 text-base font-medium mt-1">調整型専門ケア — 初発精神病に対するチーム型アプローチ</p>
+        </div>
+      </div>
+      <p class="text-white/90 text-sm sm:text-base leading-relaxed max-w-3xl mt-4">
+        アメリカ国立精神衛生研究所（NIMH）の <span class="text-white font-semibold">RAISE</span> で検証され、現在は初発精神病の標準的ケアとして紹介されているモデルを、<strong class="text-white">日本語＋用語注釈</strong>で図解します。日本の制度・施設と<strong class="text-white">完全には一致しません</strong>（比較勉強用の翻案です）。
+      </p>
+    </div>
+  </header>
+
+  <nav class="max-w-4xl mx-auto px-4 py-3 border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-30 shadow-sm text-sm font-medium text-slate-600">
+    <ul class="flex flex-wrap gap-x-4 gap-y-1">
+      <li><a href="#what" class="hover:text-teal-700">CSCとは</a></li>
+      <li><a href="#diagram" class="hover:text-teal-700">全体像</a></li>
+      <li><a href="#five" class="hover:text-teal-700">5つの柱</a></li>
+      <li><a href="#sdm" class="hover:text-teal-700">共有意思決定</a></li>
+      <li><a href="#glossary" class="hover:text-teal-700">用語集</a></li>
+      <li><a href="#refs" class="hover:text-teal-700">出典</a></li>
+    </ul>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-4 py-6">
+
+    <div class="csc-card border-amber-200 bg-amber-50/90 text-sm text-amber-950">
+      <div class="flex gap-2">
+        <i data-lucide="triangle-alert" class="w-5 h-5 shrink-0 text-amber-700"></i>
+        <div>
+          <p class="font-bold mb-1">読み方の注意</p>
+          <p class="leading-relaxed">本ページの説明は、主に <strong>NIMH RAISE の公開資料</strong>に基づく<strong>アメリカの「CSC」概念</strong>です。診療報酬・病床構成・精神科救急体制等は日本とは異なるため、日本の現場では<strong>概念の輸入</strong>として読み、施設の早期介入・地域連携方針にあわせてください。</p>
+        </div>
+      </div>
+    </div>
+
+    <section id="what" class="csc-card">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
+          <i data-lucide="book-marked" class="w-5 h-5 text-blue-800"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">CSC（Coordinated Specialty Care）とは</h2>
+          <p class="text-xs text-slate-500">英語原文の意味をそのまま分解すると「専門ケアを調整した（連携した）ケア」</p>
+        </div>
+      </div>
+
+      <div class="text-sm text-slate-700 leading-relaxed space-y-3">
+        <p>NIMH は、CSC を<strong>回復志向的</strong>で<strong>チームによる</strong>早期精神病の治療アプローチと定め、次の特徴を挙げています。</p>
+        <ul class="list-disc list-inside space-y-1.5 marker:text-teal-600 pl-0.5">
+          <li><strong>ケアへの容易なアクセス</strong><span class="text-slate-500 text-xs">（注：待ち時間・若年層が入りやすい窓口・地域からの紹介のしやすさ等を含む「受け入れやすい入口」のイメージ）</span></li>
+          <li><strong>共有意思決定</strong><span class="text-slate-500 text-xs">（注：後述。専門家だけが決めるのではなく、本人・家族が方針に参画する）</span></li>
+          <li>複数の専門領域（薬・心理・家族・就学就労・実生活支援）を<strong>一枚の治療計画</strong>として束ねる</li>
+        </ul>
+        <p class="text-xs text-slate-500 border-t border-slate-100 pt-3"><strong>RAISE</strong>（Recovery After an Initial Schizophrenia Episode）は、2008年に始まった大規模研究で、「CSC のような協調型治療》が従来型ケアより効果的か」を検証しました。結果は NIMH のページ・論文で要約されています。</p>
+      </div>
+    </section>
+
+    <section id="diagram" class="csc-card border-l-4 border-l-teal-600">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="git-fork" class="w-6 h-6 text-teal-700"></i>
+        <h2 class="text-lg font-bold text-slate-900">全体像（コンセプト図）</h2>
+      </div>
+      <p class="text-sm text-slate-600 mb-5">中央に<strong>本人（と家族）</strong>を置き、周囲の専門職が<strong>役割分担しつつ連携</strong>します。「どれか一つだけ」ではなく、<strong>複数コンポーネントの束</strong>が CSC だというイメージです。</p>
+
+      <div class="flex flex-col items-center gap-4 py-2">
+        <div class="w-full max-w-md hub-core">
+          <i data-lucide="users" class="w-8 h-8 mx-auto mb-2 opacity-95"></i>
+          本人<br>
+          <span class="text-xs font-normal opacity-90">家族・支援者</span>
+        </div>
+        <p class="text-xs text-slate-500 flex items-center gap-1">
+          <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          共有意思決定のもとで接続
+        </p>
+        <div class="w-full max-w-2xl rounded-xl border-2 border-dashed border-teal-200 bg-teal-50/50 p-4">
+          <p class="text-center text-xs font-bold text-teal-900 uppercase tracking-wide mb-3">CSC チーム（例：RAISE Connection では TL・心理系・就労・回復支援・精神科医等）</p>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center text-xs text-slate-700 font-medium">
+            <span class="rounded-lg bg-white border border-teal-100 py-2 px-2">心理療法</span>
+            <span class="rounded-lg bg-white border border-teal-100 py-2 px-2">家族支援</span>
+            <span class="rounded-lg bg-white border border-teal-100 py-2 px-2">薬物療法</span>
+            <span class="rounded-lg bg-white border border-teal-100 py-2 px-2">就学・就労支援</span>
+            <span class="rounded-lg bg-white border border-teal-100 py-2 px-2 sm:col-span-2">ケースマネジメント</span>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 max-w-xl text-center leading-relaxed"><strong class="text-slate-700">キーワード：</strong><span class="term" title="英: recovery-oriented。症状の減弱だけでなく、本人が望む役割・人間関係・就労など「自分らしい生活」に近づくことを目標に置く考え方。">回復志向</span>・<span class="term" title="複数職種が定例で情報共有し、プランを一貫させること。">多職種連携</span>・<span class="term" title="アウトリーチ：患者側だけに通院を求めず、訪問・電話等で関与を維持するアプローチ（プログラムにより程度は異なる）。">積極的な関与・アウトリーチ</span>（モデルによる）</p>
+      </div>
+    </section>
+
+    <section id="five" class="csc-card">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="layers" class="w-6 h-6 text-slate-800"></i>
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">NIMH が挙げる CSC の構成要素（5つ）</h2>
+          <p class="text-xs text-slate-500">以下は NIMH「What is coordinated specialty care?」の列挙に対応する日本語要約です。</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-1 gap-4">
+        <article class="pillar flex gap-3">
+          <div class="pillar-num">1</div>
+          <div class="min-w-0">
+            <h3 class="font-bold text-slate-900 text-sm mb-1">心理療法（個人または集団）</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">回復の目標に合わせた心理療法。<span class="term" title="Cognitive Behavioral Therapy。思考のクセや行動パターンを扱い、症状への対処やストレス対処、目標行動の練習などを行う心理療法の一つ。">CBT（認知行動療法）</span>的な要素では、精神病に伴う体験と折り合いをつけつつ、<strong>回復力</strong>と目標達成に必要な知識・スキルを育てる、と NIMH は説明しています。</p>
+            <p class="text-xs text-slate-500 mt-2">研修医メモ：初発期は<strong>疾患理解・対処スキル・再発予兆の気づき</strong>が、その後のアドヒアランスにも効きやすいテーマです。</p>
+          </div>
+        </article>
+
+        <article class="pillar flex gap-3">
+          <div class="pillar-num">2</div>
+          <div class="min-w-0">
+            <h3 class="font-bold text-slate-900 text-sm mb-1">家族の支援と教育</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">家族向けに、<span class="term" title="妄想・幻聴など、現実検討が困難になる精神病症状の総称。">精神病</span>とは何か、どう向き合うか、ストレスやコミュニケーション、問題解決の方法などを学ぶプログラムです。<span class="term" title="本人のプライバシーと安全のバランス。可能な範囲で情報共有し、過度に「監視」にならない関わりを模索する。">境界（バウンダリー）</span>の設計も現場では重要です。</p>
+          </div>
+        </article>
+
+        <article class="pillar flex gap-3">
+          <div class="pillar-num">3</div>
+          <div class="min-w-0">
+            <h3 class="font-bold text-slate-900 text-sm mb-1">薬物療法の管理（Medication management）</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">本人の状態に合わせて、薬の<strong>種類</strong>と<strong>用量</strong>を選び、精神病症状を抑えつつ副作用とのバランスをとること、と NIMH は述べています。いわゆる「処方だけ」ではなく、<strong>モニタリングと説明・合意形成</strong>がセットのイメージです。</p>
+            <p class="text-xs text-slate-500 mt-2">研修医メモ：代謝・錐体外路系・QT延長など、<strong>若年・初発でも身体面のフォロー</strong>が長期予後に直結しやすいです。</p>
+          </div>
+        </article>
+
+        <article class="pillar flex gap-3">
+          <div class="pillar-num">4</div>
+          <div class="min-w-0">
+            <h3 class="font-bold text-slate-900 text-sm mb-1">支援付き就学・就労（Supported employment and education）</h3>
+            <p class="text-sm text-slate-700 leading-relaxed">学校や仕事に戻る・続けることを目指し、<span class="term" title="Individual Placement and Support。一般就労を原則に、迅速な職場マッチングと現職場での支援を続ける就労支援モデル（エビデンスが蓄積）。">コーチ（coach）</span>が本人の目標達成を支える、とあります。すなわち「治療だけで完結」せず、<strong>社会参加の軸</strong>を早い段階から持ち込みます。</p>
+          </div>
+        </article>
+
+        <article class="pillar flex gap-3">
+          <div class="pillar-num">5</div>
+          <div class="min-w-0">
+            <h3 class="font-bold text-slate-900 text-sm mb-1">ケースマネジメント（Case management）</h3>
+            <p class="text-sm text-slate-700 leading-relaxed"><span class="term" title="精神保健分野では、生活・福祉・医療の境界にまたがる課題を整理し、必要なサービスへつなぐ調整役。">ケースマネージャー</span>と協働し、住まい・金銭・通院の手段・他機関との調整など、<strong>現実的な障壁</strong>を下げる支援です。離脱予防にも効くことが多い要素です。</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-4 rounded-xl bg-slate-100 border border-slate-200 p-4 text-sm text-slate-700">
+        <p class="flex gap-2"><i data-lucide="lightbulb" class="w-5 h-5 text-amber-600 shrink-0"></i><span><strong class="text-slate-900">暗記のコツ：</strong>「<strong>心（心理）・家（家族）・薬・学校仕事・段取り（ケースマネ）</strong>」の5本柱と割り振ると、カンファや症例試験で抜けが防げます。</span></p>
+      </div>
+    </section>
+
+    <section id="sdm" class="csc-card ring-1 ring-blue-100">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="scale" class="w-6 h-6 text-blue-700"></i>
+        <h2 class="text-lg font-bold text-slate-900">共有意思決定（Shared Decision Making）</h2>
+      </div>
+      <p class="text-sm text-slate-700 leading-relaxed mb-4">CSC マニュアル系資料では、チームが<strong>一枚岩で動くこと</strong>と並び、<strong>本人・家族が治療の優先順位に参画する枠組み</strong>が強調されます。イメージとしては次の流れです。</p>
+      <div class="flex flex-col sm:flex-row items-stretch gap-3 text-sm">
+        <div class="flex-1 rounded-xl border border-blue-100 bg-blue-50/80 p-3 text-center font-semibold text-blue-950">情報提供<br><span class="text-xs font-normal text-blue-900/90">選択肢・希望・エビデンス</span></div>
+        <i data-lucide="arrow-right" class="w-6 h-6 text-slate-400 self-center hidden sm:block"></i>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-slate-400 self-center sm:hidden"></i>
+        <div class="flex-1 rounded-xl border border-blue-100 bg-blue-50/80 p-3 text-center font-semibold text-blue-950">本人・家族の価値観<br><span class="text-xs font-normal text-blue-900/90">目標・受け入れ可能な負担</span></div>
+        <i data-lucide="arrow-right" class="w-6 h-6 text-slate-400 self-center hidden sm:block"></i>
+        <i data-lucide="arrow-down" class="w-6 h-6 text-slate-400 self-center sm:hidden"></i>
+        <div class="flex-1 rounded-xl border border-blue-100 bg-blue-50/80 p-3 text-center font-semibold text-blue-950">合意したプラン<br><span class="text-xs font-normal text-blue-900/90">優先順位は時期で更新可</span></div>
+      </div>
+    </section>
+
+    <section class="csc-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="chart-line" class="w-6 h-6 text-green-700"></i>
+        <h2 class="text-lg font-bold text-slate-900">エビデンスと位置づけ（ごく短く）</h2>
+      </div>
+      <p class="text-sm text-slate-700 leading-relaxed">NIMH は、RAISE の研究として CSC は従来ケアより<strong>治療継続</strong>が良く、<strong>症状・対人関係・QOL</strong>の改善、<strong>就学就労への関与</strong>にも有利だった、と要約しています。アメリカ精神医学会の統合失調症治療ガイドラインでも早期段階での CSC が言及されている、と NIMH ページは紹介しています（詳細は原著へ）。</p>
+    </section>
+
+    <section id="glossary" class="csc-card bg-slate-50 border-slate-200">
+      <div class="flex items-center gap-3 mb-4">
+        <i data-lucide="library" class="w-6 h-6 text-slate-700"></i>
+        <h2 class="text-lg font-bold text-slate-900">用語ミニ辞典（1年目向け）</h2>
+      </div>
+      <details class="gloss" open>
+        <summary>Psychosis（精神病／精神病症状）</summary>
+        <p class="text-sm text-slate-600 leading-relaxed pl-1">現実とは異なる知覚（<span class="font-medium text-slate-800">幻覚</span>）や確信（<span class="font-medium text-slate-800">妄想</span>）が強く、それが苦しみや行動変化につながる状態。診断名そのものではなく、<strong>症状のクラスター</strong>に近い語です。</p>
+      </details>
+      <details class="gloss">
+        <summary>First-episode psychosis（初回精神病エピソード／初発精神病）</summary>
+        <p class="text-sm text-slate-600 leading-relaxed pl-1">はじめて精神病症状が「エピソード」として現れ、治療の対象となった期間、という理解で足りることが多いです。運用定義（症状期間・薬の履歴等）は研究・プログラムで違います。</p>
+      </details>
+      <details class="gloss">
+        <summary>Recovery-oriented care（回復志向ケア）</summary>
+        <p class="text-sm text-slate-600 leading-relaxed pl-1">「治した/治えない」だけでなく、本人が望む生活・役割に向けて支援する立場。機能・自己効力感・社会的つながりを重視します。</p>
+      </details>
+      <details class="gloss">
+        <summary>Fidelity（実施忠実度）</summary>
+        <p class="text-sm text-slate-600 leading-relaxed pl-1">マニュアルやモデルを「どの程度どおりに運用できているか」を測る指標。研究や制度展開で「形だけCSC」にならないよう評価されることがあります。</p>
+      </details>
+    </section>
+
+    <section id="refs" class="csc-card">
+      <div class="flex items-center gap-3 mb-3">
+        <i data-lucide="link" class="w-6 h-6 text-slate-700"></i>
+        <h2 class="text-lg font-bold text-slate-900">出典（原文・一次情報）</h2>
+      </div>
+      <ul class="text-sm space-y-3 text-slate-700 leading-relaxed">
+        <li>
+          <span class="font-bold text-slate-900">NIMH — Recovery After an Initial Schizophrenia Episode (RAISE)</span>：CSC の定義と5構成要素の英語原文。<br>
+          <a class="csc-link break-all" href="https://www.nimh.nih.gov/health/topics/schizophrenia/raise" target="_blank" rel="noopener noreferrer">https://www.nimh.nih.gov/health/topics/schizophrenia/raise</a>
+        </li>
+        <li>
+          <span class="font-bold text-slate-900">Evidence-based treatments for first episode psychosis（PDF）</span><br>
+          <a class="csc-link break-all" href="https://www.nimh.nih.gov/sites/default/files/documents/health/topics/schizophrenia/raise/evidence-based-treatments-for-first-episode-psychosis.pdf" target="_blank" rel="noopener noreferrer">evidence-based-treatments-for-first-episode-psychosis.pdf</a>
+        </li>
+        <li>
+          <span class="font-bold text-slate-900">CSC 実装マニュアル（Connection Program 系）</span><br>
+          <a class="csc-link break-all" href="https://www.nimh.nih.gov/sites/default/files/documents/health/topics/schizophrenia/raise/csc-for-fep-manual-ii-implementation-manual.pdf" target="_blank" rel="noopener noreferrer">csc-for-fep-manual-ii-implementation-manual.pdf</a>
+        </li>
+      </ul>
+      <p class="text-sm mt-4">関連（日本語）：<a class="csc-link" href="schizophrenia-early-intervention.html">統合失調症の早期介入（図解）</a> · <a class="csc-link" href="schizophrenia-first-episode-learning.html">初発時対応ハブ</a></p>
+    </section>
+
+    <p class="text-center text-xs text-slate-400 py-6">coordinated-specialty-care-jp.html · 翻案・要約。臨床判断は主治医の責任で行ってください。</p>
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

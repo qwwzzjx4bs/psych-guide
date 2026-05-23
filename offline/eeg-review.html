@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本日の復習 | EEG学習ツール</title>
+<script src="vendor/tailwind.js"></script>
+<script src="vendor/lucide.js"></script>
+<script src="eeg-srs.js"></script>
+
+<link href="vendor/fonts/fonts.css" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+  .eeg-canvas { display: block; width: 100%; background: #0f172a; border-radius: 0.5rem; }
+  .rating-btn {
+    flex: 1; padding: 0.75rem 0.5rem; border-radius: 0.875rem; border: 2px solid transparent;
+    font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: all 0.15s; font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  }
+  .rating-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .rating-btn.remembered { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+  .rating-btn.fuzzy     { background: #fef3c7; border-color: #d97706; color: #92400e; }
+  .rating-btn.forgot    { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+  .queue-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .progress-seg { height: 6px; border-radius: 3px; transition: width 0.4s ease; }
+  .card-flip { transition: transform 0.35s ease; }
+  .answer-panel { display: none; }
+  .answer-panel.visible { display: block; }
+  .interval-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700;
+  }
+  .source-tag {
+    font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.6rem;
+    border-radius: 999px; letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-6 shadow-lg">
+  <div class="max-w-2xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">本日の復習</span>
+    </nav>
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <i data-lucide="repeat" class="w-5 h-5 text-white/90"></i>
+          <h1 class="text-xl font-bold">本日の復習セッション</h1>
+        </div>
+        <p class="text-white/70 text-xs" id="header-subtitle">カードを読み込み中...</p>
+      </div>
+      <div class="text-right">
+        <div id="streak-badge" class="hidden bg-white/20 rounded-xl px-3 py-2 text-center">
+          <p class="text-2xl font-black" id="streak-num">0</p>
+          <p class="text-white/70 text-xs">🔥 連続日</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-5">
+
+  <!-- Empty state -->
+  <div id="empty-state" class="hidden">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
+      <div class="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="check-circle" class="w-10 h-10 text-emerald-600"></i>
+      </div>
+      <h2 class="text-xl font-bold text-slate-800 mb-2">今日の復習は完了！</h2>
+      <p class="text-sm text-slate-500 mb-5 leading-relaxed">本日の復習カードはありません。<br>クイズやアーティファクトドリルを解いてカードを追加しましょう。</p>
+      <div id="next-review-info" class="bg-slate-50 rounded-xl border border-slate-200 p-4 mb-5 text-sm text-slate-600"></div>
+      <div class="flex flex-wrap gap-2 justify-center">
+        <a href="eeg-quiz.html" class="px-4 py-2 bg-indigo-700 text-white rounded-xl text-sm font-bold hover:bg-indigo-800 transition-colors flex items-center gap-1.5">
+          <i data-lucide="target" class="w-4 h-4"></i>クイズを解く
+        </a>
+        <a href="eeg-artifacts.html" class="px-4 py-2 bg-orange-600 text-white rounded-xl text-sm font-bold hover:bg-orange-700 transition-colors flex items-center gap-1.5">
+          <i data-lucide="shield-alert" class="w-4 h-4"></i>アーティファクトドリル
+        </a>
+        <a href="eeg-stats.html" class="px-4 py-2 bg-slate-600 text-white rounded-xl text-sm font-bold hover:bg-slate-700 transition-colors flex items-center gap-1.5">
+          <i data-lucide="bar-chart-2" class="w-4 h-4"></i>学習統計
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Session area -->
+  <div id="session-area">
+    <!-- Progress bar -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-3.5 mb-4">
+      <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
+        <span id="progress-text">0 / 0 完了</span>
+        <div class="flex items-center gap-2">
+          <span id="correct-count" class="text-emerald-600 font-bold">正解: 0</span>
+          <span class="text-slate-300">|</span>
+          <span id="incorrect-count" class="text-rose-600 font-bold">要復習: 0</span>
+        </div>
+      </div>
+      <div class="h-2 bg-slate-100 rounded-full overflow-hidden flex gap-0.5" id="progress-bar-segs">
+        <!-- segments filled by JS -->
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div id="card-area" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-4">
+      <!-- Card header -->
+      <div class="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+        <div class="flex items-center gap-2">
+          <span id="card-source-tag" class="source-tag"></span>
+          <span id="card-index" class="text-xs text-slate-400"></span>
+        </div>
+        <div id="card-interval-info" class="text-xs text-slate-400"></div>
+      </div>
+
+      <!-- EEG Canvas -->
+      <canvas id="review-canvas" class="eeg-canvas" height="120"></canvas>
+
+      <!-- Question -->
+      <div class="p-4">
+        <p id="card-context" class="text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-lg p-3 mb-3 leading-relaxed"></p>
+        <p id="card-question" class="font-bold text-slate-800 text-sm mb-4"></p>
+
+        <!-- Before answer: Show answer button -->
+        <div id="show-answer-area">
+          <button onclick="showAnswer()" id="show-answer-btn"
+            class="w-full py-3 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2">
+            <i data-lucide="eye" class="w-4 h-4"></i>答えを確認する
+          </button>
+        </div>
+
+        <!-- Answer panel (hidden until reveal) -->
+        <div id="answer-panel" class="answer-panel">
+          <!-- Choices -->
+          <div id="choices-area" class="space-y-2 mb-3"></div>
+
+          <!-- Explanation -->
+          <div id="explanation-box" class="rounded-xl border p-3.5 mb-4 text-sm leading-relaxed"></div>
+
+          <!-- Interval preview -->
+          <div class="flex gap-2 items-center mb-3 flex-wrap" id="interval-preview"></div>
+
+          <!-- Rating buttons -->
+          <p class="text-xs text-slate-500 mb-2 font-medium">どのくらい覚えていましたか？</p>
+          <div class="flex gap-2">
+            <button class="rating-btn remembered" onclick="rateCard(4)">
+              <span class="text-xl">😊</span>
+              <span>よく覚えた</span>
+              <span class="text-xs font-normal opacity-75" id="interval-good"></span>
+            </button>
+            <button class="rating-btn fuzzy" onclick="rateCard(2)">
+              <span class="text-xl">🤔</span>
+              <span>うろ覚え</span>
+              <span class="text-xs font-normal opacity-75" id="interval-fuzzy"></span>
+            </button>
+            <button class="rating-btn forgot" onclick="rateCard(1)">
+              <span class="text-xl">😞</span>
+              <span>忘れていた</span>
+              <span class="text-xs font-normal opacity-75" id="interval-forgot"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mini queue visualization -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-3 mb-4">
+      <p class="text-xs text-slate-400 mb-2 font-medium">残りのカード</p>
+      <div id="queue-vis" class="flex flex-wrap gap-1.5"></div>
+    </div>
+  </div>
+
+  <!-- Session complete -->
+  <div id="session-complete" class="hidden">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+      <div class="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="award" class="w-10 h-10 text-indigo-600"></i>
+      </div>
+      <h2 class="text-xl font-bold text-slate-800 mb-1">セッション完了！</h2>
+      <div id="complete-stats" class="grid grid-cols-3 gap-3 my-4 text-center"></div>
+      <div id="complete-streak" class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4"></div>
+      <div id="complete-forecast" class="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-5 text-left text-xs"></div>
+      <div class="flex flex-wrap gap-2 justify-center">
+        <button onclick="restartSession()" class="px-5 py-2.5 bg-indigo-700 text-white rounded-xl text-sm font-bold hover:bg-indigo-800 transition-colors flex items-center gap-1.5">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i>もう一度
+        </button>
+        <a href="eeg-stats.html" class="px-5 py-2.5 bg-slate-700 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors flex items-center gap-1.5">
+          <i data-lucide="bar-chart-2" class="w-4 h-4"></i>統計を見る
+        </a>
+        <a href="eeg-learning.html" class="px-5 py-2.5 bg-teal-700 text-white rounded-xl text-sm font-bold hover:bg-teal-800 transition-colors flex items-center gap-1.5">
+          <i data-lucide="home" class="w-4 h-4"></i>ハブへ
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
+    <a href="eeg-learning.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      学習ハブへ
+    </a>
+    <a href="eeg-stats.html" class="flex items-center gap-1.5 text-sm text-indigo-700 hover:text-indigo-900 transition-colors font-semibold">
+      学習統計
+      <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+lucide.createIcons();
+
+// ===== Waveform drawing =====
+function pn(t, seed) {
+  return Math.sin(t*127.3+seed*43.7)*0.5+Math.sin(t*83.1+seed*29.1)*0.3+Math.sin(t*51.7+seed*17.9)*0.2;
+}
+
+const DRAW = {
+  alpha(ctx,W,H){ctx.strokeStyle='#4ade80';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const n=pn(t,0)*2;x===0?ctx.moveTo(x,H/2-Math.sin(2*Math.PI*10*t)*H*0.35-n):ctx.lineTo(x,H/2-Math.sin(2*Math.PI*10*t)*H*0.35-n);}ctx.stroke();},
+  delta(ctx,W,H){ctx.strokeStyle='#a78bfa';ctx.lineWidth=2;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*8;const n=pn(t,1)*5;x===0?ctx.moveTo(x,H/2-Math.sin(2*Math.PI*1.5*t)*H*0.40-n):ctx.lineTo(x,H/2-Math.sin(2*Math.PI*1.5*t)*H*0.40-n);}ctx.stroke();},
+  spikeWave(ctx,W,H){ctx.strokeStyle='#f87171';ctx.lineWidth=1.8;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const ph=t*3;const fr=ph-Math.floor(ph);const v=fr<0.12?Math.sin(fr/0.12*Math.PI*2)*H*0.42:-Math.sin((fr-0.12)/0.88*Math.PI)*H*0.20;x===0?ctx.moveTo(x,H/2-(v+pn(t,0)*2)):ctx.lineTo(x,H/2-(v+pn(t,0)*2));}ctx.stroke();},
+  spindle(ctx,W,H){ctx.strokeStyle='#93c5fd';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*8;const cy=t/3.2;const cf=cy-Math.floor(cy);const env=cf<0.42?Math.sin(cf/0.42*Math.PI):0;const n=pn(t,2)*2;x===0?ctx.moveTo(x,H/2-Math.sin(2*Math.PI*13*t)*H*0.38*env-n*0.5):ctx.lineTo(x,H/2-Math.sin(2*Math.PI*13*t)*H*0.38*env-n*0.5);}ctx.stroke();},
+  triphasic(ctx,W,H){ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const ph=t*1.5;const fr=ph-Math.floor(ph);let v=0;if(fr<0.12)v=-H*0.18*Math.sin(fr/0.12*Math.PI);else if(fr<0.45)v=H*0.40*Math.sin((fr-0.12)/0.33*Math.PI);else if(fr<0.62)v=-H*0.16*Math.sin((fr-0.45)/0.17*Math.PI);x===0?ctx.moveTo(x,H/2-(v+pn(t,2)*2)):ctx.lineTo(x,H/2-(v+pn(t,2)*2));}ctx.stroke();},
+  polyspike(ctx,W,H){ctx.strokeStyle='#fb923c';ctx.lineWidth=1.8;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const ph=t*4;const fr=ph-Math.floor(ph);let v=0;if(fr<0.05)v=H*0.42*Math.sin(fr/0.05*Math.PI*2);else if(fr<0.10)v=H*0.32*Math.sin((fr-0.05)/0.05*Math.PI*2);else if(fr<0.15)v=H*0.22*Math.sin((fr-0.10)/0.05*Math.PI*2);else v=-H*0.18*Math.sin((fr-0.15)/0.85*Math.PI);x===0?ctx.moveTo(x,H/2-(v+pn(t,3)*2)):ctx.lineTo(x,H/2-(v+pn(t,3)*2));}ctx.stroke();},
+  burstSupp(ctx,W,H){ctx.strokeStyle='#67e8f9';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*10;const cy=t/3.0;const cf=cy-Math.floor(cy);let v=cf<0.32?Math.sin(2*Math.PI*3*t)*H*0.36+pn(t,0)*H*0.10:pn(t*5,3)*H*0.02;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();},
+  flatLine(ctx,W,H){ctx.strokeStyle='#94a3b8';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*8;const n=pn(t*5,8)*H*0.015;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();ctx.fillStyle='rgba(148,163,184,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('平坦（等電位）',W/2,H/2-8);ctx.textAlign='left';},
+  focalSlowing(ctx,W,H){ctx.strokeStyle='#4ade80';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const n=pn(t,0)*1.5;x===0?ctx.moveTo(x,H*0.28-Math.sin(2*Math.PI*10*t)*H*0.14-n):ctx.lineTo(x,H*0.28-Math.sin(2*Math.PI*10*t)*H*0.14-n);}ctx.stroke();ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const n=pn(t,7)*3;x===0?ctx.moveTo(x,H*0.72-Math.sin(2*Math.PI*2.5*t)*H*0.20-n):ctx.lineTo(x,H*0.72-Math.sin(2*Math.PI*2.5*t)*H*0.20-n);}ctx.stroke();},
+  bectsSpike(ctx,W,H){ctx.strokeStyle='#34d399';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const n=pn(t,5)*2;x===0?ctx.moveTo(x,H/2-Math.sin(2*Math.PI*9*t)*H*0.08-n):ctx.lineTo(x,H/2-Math.sin(2*Math.PI*9*t)*H*0.08-n);}ctx.stroke();for(let i=0;i<3;i++){const sx=W*(0.2+i*0.3);ctx.strokeStyle='#6ee7b7';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(sx-5,H/2);ctx.lineTo(sx,H/2-H*0.42);ctx.lineTo(sx+10,H/2+H*0.22);ctx.lineTo(sx+30,H/2);ctx.stroke();}},
+  muRhythm(ctx,W,H){ctx.strokeStyle='#a3e635';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const n=pn(t,6)*2;const mu=Math.sin(2*Math.PI*10*t)*H*0.30+Math.sin(2*Math.PI*10*t*2)*H*0.08;x===0?ctx.moveTo(x,H/2-mu-n):ctx.lineTo(x,H/2-mu-n);}ctx.stroke();ctx.fillStyle='rgba(163,230,53,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('C3/C4（中心部）',W/2,14);ctx.textAlign='left';},
+  firda(ctx,W,H){ctx.strokeStyle='#f0abfc';ctx.lineWidth=2;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const cy=t/1.5;const cf=cy-Math.floor(cy);const burst=cf<0.50;let v=burst?Math.sin(2*Math.PI*1.5*t)*H*0.38+pn(t,4)*H*0.05:pn(t,4)*H*0.04;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();ctx.fillStyle='rgba(240,171,252,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('前頭部優位',W/2,14);ctx.textAlign='left';},
+  grda(ctx,W,H){ctx.strokeStyle='#c4b5fd';ctx.lineWidth=2;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*8;const v=Math.sin(2*Math.PI*1.5*t)*H*0.40+pn(t,5)*H*0.04;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();ctx.fillStyle='rgba(196,181,253,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('全般性律動性δ（GRDA）',W/2,14);ctx.textAlign='left';},
+  remSleep(ctx,W,H){ctx.strokeStyle='#7dd3fc';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const v=Math.sin(2*Math.PI*7*t)*H*0.10+Math.sin(2*Math.PI*4*t)*H*0.08+pn(t,9)*H*0.08;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();ctx.strokeStyle='#f97316';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const rem=(t*2)%1;const eye=rem<0.5?H*0.28*rem*2:H*0.28*(1-rem)*2;x===0?ctx.moveTo(x,H*0.12+eye):ctx.lineTo(x,H*0.12+eye);}ctx.stroke();ctx.fillStyle='rgba(253,186,116,0.8)';ctx.font='9px sans-serif';ctx.fillText('眼球運動（REM）',4,12);},
+  kComplex(ctx,W,H){ctx.strokeStyle='#86efac';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const n=pn(t,11)*H*0.03;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const dt=t-2.0;let kc=0;if(dt>=-0.12&&dt<0)kc=-H*0.36*(dt+0.12)/0.12;else if(dt>=0&&dt<0.25)kc=H*0.36*Math.sin(dt/0.25*Math.PI);x===0?ctx.moveTo(x,H/2-kc):ctx.lineTo(x,H/2-kc);}ctx.stroke();},
+  lpds(ctx,W,H){ctx.strokeStyle='#818cf8';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const n=pn(t,7)*H*0.03;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();for(let i=0;i<5;i++){const sx=W*(0.08+i*0.20);ctx.strokeStyle='#a5b4fc';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx,H/2);ctx.lineTo(sx+3,H/2-H*0.40);ctx.lineTo(sx+8,H/2+H*0.20);ctx.lineTo(sx+18,H/2-H*0.10);ctx.lineTo(sx+26,H/2);ctx.stroke();}ctx.fillStyle='rgba(165,180,252,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('LPDs（一側性周期性放電）',W/2,14);ctx.textAlign='left';},
+  sharpWave(ctx,W,H){ctx.strokeStyle='#4ade80';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const n=pn(t,8)*H*0.025;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();for(let i=0;i<3;i++){const sx=W*(0.18+i*0.30);ctx.strokeStyle='#fcd34d';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx-6,H/2);ctx.lineTo(sx,H/2-H*0.38);ctx.lineTo(sx+14,H/2+H*0.22);ctx.lineTo(sx+38,H/2);ctx.stroke();}ctx.fillStyle='rgba(252,211,77,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('鋭波（Sharp wave, 70-200ms）',W/2,14);ctx.textAlign='left';},
+  hypsarrhythmia(ctx,W,H){ctx.strokeStyle='#f472b6';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*8;const v=pn(t,12)*H*0.38+pn(t*2.5,7)*H*0.20+Math.sin(2*Math.PI*1.2*t)*H*0.15;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();ctx.fillStyle='rgba(244,114,182,0.7)';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('Hypsarrhythmia（混沌・高振幅）',W/2,14);ctx.textAlign='left';},
+  // Artifact patterns
+  eog_q(ctx,W,H){ctx.strokeStyle='#fb923c';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const v=Math.sin(2*Math.PI*0.4*t)*H*0.36+pn(t,0)*H*0.04;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();ctx.fillStyle='rgba(255,165,0,0.5)';ctx.font='10px sans-serif';ctx.fillText('Fp1（前頭部）',5,15);},
+  emg_q(ctx,W,H){ctx.strokeStyle='#f87171';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const v=Math.sin(2*Math.PI*60*t)*H*0.22+Math.sin(2*Math.PI*85*t)*H*0.14+pn(t*10,3)*H*0.12;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();ctx.fillStyle='rgba(255,100,100,0.6)';ctx.font='10px sans-serif';ctx.fillText('T3（左側頭部）',5,15);},
+  ecg_q(ctx,W,H){ctx.strokeStyle='#94a3b8';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const n=pn(t,0)*H*0.02;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();ctx.strokeStyle='#f87171';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const bf=(t*1.25)%1;const qrs=bf<0.035?Math.sin(bf/0.035*Math.PI*2)*H*0.38:0;x===0?ctx.moveTo(x,H/2-qrs):ctx.lineTo(x,H/2-qrs);}ctx.stroke();},
+  electrode_q(ctx,W,H){ctx.strokeStyle='#4ade80';ctx.lineWidth=1.2;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const n=pn(t,0)*H*0.025;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();const px=W*0.45;ctx.strokeStyle='#f0abfc';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(px,H/2);ctx.lineTo(px+2,H/2-H*0.45);ctx.lineTo(px+4,H/2);ctx.stroke();},
+  blink_q(ctx,W,H){ctx.strokeStyle='#fb923c';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const bt=t%1.0;const v=(bt<0.08?Math.sin(bt/0.08*Math.PI)*H*0.35:0)+pn(t,0)*H*0.02;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();},
+  movement_q(ctx,W,H){ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const v=Math.sin(2*Math.PI*0.7*t)*H*0.38+pn(t,0)*H*0.15+Math.sin(2*Math.PI*1.3*t)*H*0.12;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();},
+  spike_art_q(ctx,W,H){ctx.strokeStyle='#4ade80';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const n=pn(t,0)*H*0.025;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();for(let s=0;s<2;s++){const sx=W*(0.28+s*0.38);ctx.strokeStyle='#fca5a5';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(sx-4,H/2);ctx.lineTo(sx,H/2-H*0.40);ctx.lineTo(sx+8,H/2+H*0.22);ctx.lineTo(sx+28,H/2);ctx.stroke();}},
+  triple_art_q(ctx,W,H){ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const ph=t*1.5;const fr=ph-Math.floor(ph);let v=0;if(fr<0.12)v=-H*0.16*Math.sin(fr/0.12*Math.PI);else if(fr<0.45)v=H*0.38*Math.sin((fr-0.12)/0.33*Math.PI);else if(fr<0.62)v=-H*0.14*Math.sin((fr-0.45)/0.17*Math.PI);v+=pn(t,2)*H*0.02;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();},
+  hf_art_q(ctx,W,H){ctx.strokeStyle='#f97316';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*5;const on=t>1.5&&t<3.8;const v=on?(Math.sin(2*Math.PI*55*t)*H*0.20+pn(t*8,0)*H*0.12):pn(t,0)*H*0.03;x===0?ctx.moveTo(x,H/2-v):ctx.lineTo(x,H/2-v);}ctx.stroke();},
+  periodic_art_q(ctx,W,H){ctx.strokeStyle='#818cf8';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<W;x++){const t=x/W*6;const n=pn(t,0)*H*0.02;x===0?ctx.moveTo(x,H/2-n):ctx.lineTo(x,H/2-n);}ctx.stroke();for(let i=0;i<6;i++){const sx=W*(0.06+i*0.165);ctx.strokeStyle='#c7d2fe';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx,H/2);ctx.lineTo(sx+4,H/2-H*0.38);ctx.lineTo(sx+8,H/2+H*0.18);ctx.lineTo(sx+16,H/2-H*0.10);ctx.lineTo(sx+24,H/2);ctx.stroke();}},
+};
+
+function drawCanvas(canvas, waveKey) {
+  if (!canvas) return;
+  canvas.width = canvas.offsetWidth || 600;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width; const H = canvas.height;
+  ctx.fillStyle='#0f172a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=W/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=H/4){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  if(DRAW[waveKey]) DRAW[waveKey](ctx,W,H);
+}
+
+// ===== Question registry (merged from quiz + artifacts) =====
+// Loaded dynamically from embedded data
+const ALL_QUESTIONS = {};
+
+// Load quiz questions from localStorage-compatible data
+// We embed a minimal version of the question data here for the review session
+const QUIZ_Q = [
+  // Level 1
+  {id:'q1_1',waveKey:'alpha',context:'28歳女性。覚醒・安静・閉眼中。後頭部（O1/O2）に8-12Hzの正弦波様の律動が持続している。',question:'この脳波所見の解釈として最も適切なのはどれか？',choices:['異常 — 後頭部発作波','正常 — 後頭部α律動（安静閉眼）','正常 — μリズム（運動野）','異常 — 棘徐波複合'],correct:1,source:'quiz',level:1},
+  {id:'q1_2',waveKey:'spindle',context:'35歳男性。睡眠中の記録。中心部〜前頭部（Cz/C3/C4）に紡錘形の波束（12-14Hz）が断続的に出現している。',question:'この脳波所見はどれか？',choices:['てんかん性放電（焦点性）','睡眠紡錘波（Sleep spindle）NREM N2の正常所見','筋電図アーティファクト（EMG）','α波の後頭部延長'],correct:1,source:'quiz',level:1},
+  {id:'q1_3',waveKey:'spikeWave',context:'8歳女児。授業中にぼーっとすることが多い。',question:'この脳波所見の解釈として正しいのはどれか？',choices:['正常 — θ波活動（眠気）','正常 — 後頭部α律動','異常 — 3Hz棘徐波複合（欠神てんかん）','異常 — 睡眠紡錘波の変型'],correct:2,source:'quiz',level:1},
+  {id:'q1_4',waveKey:'triphasic',context:'68歳男性。肝硬変で入院中。意識が朦朧とし、はたはた動作が見られる。',question:'この脳波の解釈として正しいのはどれか？',choices:['正常 — 深睡眠δ波','異常 — 三相波（代謝性脳症）','正常 — REM睡眠','異常 — 焦点性てんかん放電'],correct:1,source:'quiz',level:1},
+  {id:'q1_5',waveKey:'burstSupp',context:'52歳男性。心肺停止後の蘇生後。ICUで意識なし。',question:'この脳波パターンはどれか？',choices:['正常 — 深睡眠','正常 — REM睡眠','異常 — 等電位脳波','異常 — Burst-suppression（バースト抑制）'],correct:3,source:'quiz',level:1},
+  {id:'q1_6',waveKey:'muRhythm',context:'28歳男性。覚醒・安静・閉眼中。中心部（C3/C4）に8-12Hzの律動。手を動かすと消失。',question:'この脳波所見の解釈として正しいのはどれか？',choices:['異常 — 焦点性てんかん放電（中心部）','異常 — 中心部α変異','正常 — μリズム（感覚運動律動）','正常 — 後頭部α律動'],correct:2,source:'quiz',level:1},
+  {id:'q1_7',waveKey:'firda',context:'58歳女性。原発性くも膜下出血後。前頭部優位に間欠的な1-2Hzの律動性δ活動。',question:'この脳波所見の解釈として最も適切なのはどれか？',choices:['正常 — 覚醒時のθ活動','正常 — EOGアーティファクト','異常 — FIRDA（前頭間欠律動性δ活動）','正常 — K複合'],correct:2,source:'quiz',level:1},
+  {id:'q1_8',waveKey:'remSleep',context:'混合周波数（α＋θ）、低振幅の脳波。急速眼球運動あり。筋電図最小。',question:'この記録は睡眠のどのステージか？',choices:['NREM Stage N1','NREM Stage N2','NREM Stage N3','REM睡眠'],correct:3,source:'quiz',level:1},
+  {id:'q1_9',waveKey:'grda',context:'65歳男性。ICU入院中（敗血症性脳症）。後頭部優位に1-2Hzの律動性δ活動が持続。',question:'この脳波所見の解釈として最も適切なのはどれか？',choices:['正常 — δ波（深睡眠）','異常 — GRDA（全般性律動性δ活動）/ 代謝性脳症','正常 — μリズム','異常 — 3Hz棘徐波複合'],correct:1,source:'quiz',level:1},
+  {id:'q1_10',waveKey:'delta',context:'72歳男性。急性発症の意識障害。全誘導に2-3Hzの高振幅徐波が全般性・持続的に出現。後頭部α律動消失。',question:'この脳波所見の解釈として正しいのはどれか？',choices:['正常 — 深睡眠（NREM N3）','異常 — 全般性徐波化（びまん性脳機能低下）','正常 — 高齢者のα波減衰','異常 — 焦点性てんかん放電'],correct:1,source:'quiz',level:1},
+  // Level 2
+  {id:'q2_1',waveKey:'polyspike',context:'19歳男性。朝、目が覚めた直後に物を落としたり、コーヒーカップを投げてしまう。',question:'この脳波パターンの名称はどれか？',choices:['3Hz棘徐波複合','多棘徐波複合（Polyspike-wave）','睡眠紡錘波（Spindle）','三相波（Triphasic wave）'],correct:1,source:'quiz',level:2},
+  {id:'q2_2',waveKey:'bectsSpike',context:'9歳男児。睡眠中に口の周りをぴくぴくさせ、よだれが出る発作。朝方に多い。',question:'この脳波パターンの名称として最も適切なのはどれか？',choices:['OIRDA（後頭部間欠律動性δ活動）','ヒプスアリスミア','中心・側頭部棘波（BECTS）','LPDs（一側性周期性放電）'],correct:2,source:'quiz',level:2},
+  {id:'q2_3',waveKey:'burstSupp',context:'全身麻酔での脳手術後。意識なし。',question:'この脳波パターンの名称はどれか？',choices:['等電位脳波（ECS）','Burst-suppression（バースト抑制）','GRDA','ヒプスアリスミア'],correct:1,source:'quiz',level:2},
+  {id:'q2_4',waveKey:'delta',context:'72歳女性。NREM Stage N3睡眠中。健常者。',question:'この波形の名称と臨床的意義として正しいのはどれか？',choices:['α波 — 後頭部覚醒律動','δ波 — 深睡眠（NREM N3）の正常所見','β波 — 鎮静薬投与による速波増加','三相波 — 代謝性脳症'],correct:1,source:'quiz',level:2},
+  {id:'q2_5',waveKey:'focalSlowing',context:'60歳男性。右手の脱力。左中大脳動脈領域の梗塞。',question:'この脳波所見の解釈として正しいのはどれか？',choices:['両側対称性の正常波形','右半球の全般性てんかん放電','左半球の焦点性徐波（左大脳梗塞に一致）','両側の等電位脳波'],correct:2,source:'quiz',level:2},
+  {id:'q2_6',waveKey:'kComplex',context:'30歳女性。健常者の睡眠ポリグラフ。Czに突発性の大振幅二相性波形、続いて睡眠紡錘波。',question:'この波形の名称はどれか？',choices:['K複合（K-complex）','三相波','棘徐波複合','λ波'],correct:0,source:'quiz',level:2},
+  {id:'q2_7',waveKey:'flatLine',context:'68歳男性。心停止後5日。体温管理療法終了・鎮静薬完全洗い出し後。全誘導が2μV以下の完全平坦。',question:'この脳波所見の名称として正しいのはどれか？',choices:['Burst-suppression','全般性徐波化','等電位脳波（ECS / Electrocerebral Silence）','深睡眠（NREM N3）'],correct:2,source:'quiz',level:2},
+  {id:'q2_8',waveKey:'lpds',context:'58歳男性。左側頭部〜前頭部に1-2秒ごとの規則的な二相性鋭波。ヘルペス脳炎疑い。',question:'この脳波所見の名称として最も適切なのはどれか？',choices:['GPDs（全般性周期性放電）','LPDs（一側性周期性放電）','欠神てんかんの3Hz棘徐波複合','ECGアーティファクト'],correct:1,source:'quiz',level:2},
+  {id:'q2_9',waveKey:'hypsarrhythmia',context:'5ヶ月男児。点頭発作・発達退行。',question:'この脳波パターンの名称はどれか？',choices:['Burst-suppression','ヒプスアリスミア（Hypsarrhythmia）','全般性棘徐波複合（3Hz）','OIRDA'],correct:1,source:'quiz',level:2},
+  {id:'q2_10',waveKey:'sharpWave',context:'43歳男性。右手のしびれ・ジャーキング。左中心部（C3）に70-200msの緩やかな傾斜の波形。',question:'この波形の名称として最も適切なのはどれか？',choices:['棘波（Spike）','鋭波（Sharp wave）','睡眠紡錘波','K複合'],correct:1,source:'quiz',level:2},
+  // Level 3
+  {id:'q3_1',waveKey:'spikeWave',context:'9歳女児。授業中にぼーっとすることが多い。神経学的診察は正常。',question:'このEEG所見から最も考えられる診断と第一選択薬は？',choices:['側頭葉てんかん — カルバマゼピン','小児欠神てんかん — エトスクシミド（または VPA）','BECTS — 経過観察','West症候群 — ACTH療法'],correct:1,source:'quiz',level:3},
+  {id:'q3_2',waveKey:'triphasic',context:'68歳男性。肝硬変・高アンモニア血症（NH3 180μg/dL）。意識混濁。',question:'代謝性脳症の脳波所見として最も典型的で、かつ治療方針に影響するのはどれか？',choices:['後頭部α律動の消失のみ','三相波の出現（肝性脳症の特徴的EEG）','焦点性棘波（側頭葉）','等電位脳波'],correct:1,source:'quiz',level:3},
+  {id:'q3_3',waveKey:'burstSupp',context:'75歳男性。CJD疑い（急速進行性認知症・ミオクローヌス）。',question:'CJDの特徴的EEG所見と最も関連するのはどれか？',choices:['全般性棘徐波複合（3Hz）後頭部優位','1-2Hz周期性全般性放電（PGSD）— CJDの特徴的所見','後頭部OIRDA（後頭部間欠律動性δ活動）','ヒプスアリスミア（Hypsarrhythmia）'],correct:1,source:'quiz',level:3},
+  {id:'q3_4',waveKey:'bectsSpike',context:'10歳男児。睡眠中の口唇・口角のぴくつき発作。MRI正常。学童期発症。',question:'この脳波所見と臨床像から最も適切な診断と対応は？',choices:['West症候群 — ACTH療法を直ちに開始','JME — バルプロ酸を開始し長期投薬','BECTS — 予後良好・自然消失。発作頻度低ければ経過観察','側頭葉てんかん — MRI再検・てんかん外科評価'],correct:2,source:'quiz',level:3},
+  {id:'q3_5',waveKey:'polyspike',context:'20歳男性。毎朝のミオクローヌス＋全般性強直間代発作。睡眠剥奪で増悪。家族歴あり。',question:'この脳波・臨床像から最も適切な診断・治療の組み合わせはどれか？',choices:['JME（若年性ミオクローヌスてんかん）— バルプロ酸＋睡眠管理','欠神てんかん — エトスクシミド','BECTS — 経過観察','West症候群 — ACTH療法'],correct:0,source:'quiz',level:3},
+  {id:'q3_6',waveKey:'hypsarrhythmia',context:'3ヶ月男児。1週間前から点頭発作（シリーズ形成）・発達退行。',question:'この脳波所見と臨床像から最も適切な診断・治療は？',choices:['小児欠神てんかん — エトスクシミド','West症候群 — ACTH療法（またはビガバトリン）','JME — バルプロ酸','BECTS — 経過観察'],correct:1,source:'quiz',level:3},
+  {id:'q3_7',waveKey:'delta',context:'55歳男性。急性発熱・意識障害。CSF：リンパ球増多。左側頭部周期性放電。',question:'この脳波・臨床像から最も疑うべき診断と初期対応は？',choices:['細菌性髄膜炎 — 抗菌薬待って開始','HSV脳炎 — 直ちにアシクロビル静注','自己免疫性脳炎 — ステロイドパルス','代謝性脳症 — 支持療法のみ'],correct:1,source:'quiz',level:3},
+  {id:'q3_8',waveKey:'spikeWave',context:'70歳男性。術後ICU意識変容。けいれんなし。EEGで全般性棘徐波複合が≥30分持続。',question:'この所見の解釈と最も適切な対応は？',choices:['K複合 — 治療不要','NCSE — 抗てんかん薬（ロラゼパム/レベチラセタム）投与','ECGアーティファクト','バースト抑制 — 鎮静増量'],correct:1,source:'quiz',level:3},
+  {id:'q3_9',waveKey:'delta',context:'38歳女性。精神症状→意識障害。海馬FLAIR高信号。抗NMDAR抗体陽性。右卵巣嚢胞。',question:'この患者のEEGで最も特徴的とされる所見は？',choices:['3Hz全般性棘徐波複合','Extreme delta brush（δ+β重畳）','等電位脳波','睡眠紡錘波の増加'],correct:1,source:'quiz',level:3},
+  {id:'q3_10',waveKey:'flatLine',context:'62歳男性。院外心停止蘇生後72時間。復温・鎮静薬洗い出し後。GCS 3点。EEG等電位。N20 SEP両側消失。',question:'この状況での脳波所見の解釈として最も適切なのは？',choices:['低体温の影響が残っている','復温・薬物洗い出し後のECS＋N20消失は予後不良の高信頼性指標','等電位＝深麻酔と同じ意味','睡眠中の正常所見'],correct:1,source:'quiz',level:3},
+  // Artifact questions
+  {id:'aq1',waveKey:'eog_q',context:'30歳男性。覚醒状態。前頭部（Fp1/Fp2）に低周波・高振幅の偏位が周期的に出現。後頭部には出現していない。',question:'この所見はどれか？',choices:['前頭葉てんかん焦点','EOGアーティファクト','FIRDA','K複合'],correct:1,source:'artifact'},
+  {id:'aq2',waveKey:'emg_q',context:'50歳男性。顎を食いしばっていた。側頭部（T3/T4）に30Hz以上の高周波ノイズが突発的に出現。',question:'この所見の最も可能性が高い原因は？',choices:['側頭葉てんかん焦点','ECGアーティファクト','筋電図アーティファクト（EMG）','電極アーティファクト'],correct:2,source:'artifact'},
+  {id:'aq3',waveKey:'ecg_q',context:'72歳男性。心房細動既往。全誘導にQRS類似形状の波形が約75回/分で規則的に出現。',question:'この所見の解釈として正しいのはどれか？',choices:['全般性周期性放電（GPDs）','ECGアーティファクト','GRDA','睡眠紡錘波'],correct:1,source:'artifact'},
+  {id:'aq4',waveKey:'electrode_q',context:'単一誘導（Fp1含む）に突発的な超高振幅スパイク。後続波なし。インピーダンス高値。',question:'この所見の最も可能性が高い原因は？',choices:['前頭極てんかん焦点','電極アーティファクト（Electrode pop）','EOGアーティファクト','FIRDA'],correct:1,source:'artifact'},
+  {id:'aq5',waveKey:'blink_q',context:'25歳女性。Fp1/Fp2に約0.3-0.5秒ごとの両側対称性の正相偏位が繰り返す。',question:'この所見の解釈として最も適切なのは？',choices:['欠神てんかんの3Hz棘徐波複合','眼瞼アーティファクト（まばたき）','K複合','前頭部棘波'],correct:1,source:'artifact'},
+  {id:'aq6',waveKey:'movement_q',context:'搬送直後のICU患者。全誘導が同時に不規則な大振幅低周波変動を示す。',question:'この所見の解釈として正しいのはどれか？',choices:['全般性てんかん重積（GCSE）','NCSE','体動アーティファクト','全般性徐波化'],correct:2,source:'artifact'},
+  {id:'aq7',waveKey:'spike_art_q',context:'55歳男性。前頭部に高振幅の短い鋭波が散発。後続する緩徐波（0.2-0.5秒）を伴う。後頭部α波は正常。',question:'この所見の解釈として最も適切なのは？',choices:['EOGアーティファクト','前頭葉焦点性棘波（てんかん性放電）','EMGアーティファクト','正常μリズム'],correct:1,source:'artifact'},
+  {id:'aq8',waveKey:'triple_art_q',context:'68歳男性。肝硬変・意識障害。全誘導に前頭部優位の1-2Hz三相性波形。',question:'この所見について正しい説明は？',choices:['ECGアーティファクト','体動アーティファクト','三相波（Triphasic waves）— 代謝性脳症の病的所見','睡眠紡錘波の変型'],correct:2,source:'artifact'},
+  {id:'aq9',waveKey:'hf_art_q',context:'患者が額にしわを寄せた直後に前頭部に高周波ノイズが突然出現。表情が戻ると消失。',question:'この所見の最も可能性が高い原因は？',choices:['FIRDA','全般性てんかん発作の開始','前頭部筋電図アーティファクト（EMG）','眼瞼アーティファクト'],correct:2,source:'artifact'},
+  {id:'aq10',waveKey:'periodic_art_q',context:'ICU患者（敗血症）。全誘導に約1秒ごと規則的な複合波。心拍数90回/分。ECGチャンネルと非同期。',question:'この所見の解釈として正しいのは？',choices:['ECGアーティファクト（心拍と一致）','体動アーティファクト','全般性周期性放電（GPDs）— 病的所見','睡眠紡錘波'],correct:2,source:'artifact'},
+];
+
+QUIZ_Q.forEach(q => { ALL_QUESTIONS[q.id] = q; });
+
+// ===== Session state =====
+let sessionQueue = [];
+let sessionIdx = 0;
+let sessionCorrect = 0;
+let sessionIncorrect = 0;
+let answerShown = false;
+
+function buildSession() {
+  const due = srsDueToday(10);
+  return due.map(card => {
+    const q = ALL_QUESTIONS[card.id];
+    return q ? { ...q, card } : null;
+  }).filter(Boolean);
+}
+
+function startSession() {
+  sessionQueue = buildSession();
+  sessionIdx = 0;
+  sessionCorrect = 0;
+  sessionIncorrect = 0;
+
+  if (sessionQueue.length === 0) {
+    showEmptyState();
+    return;
+  }
+
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('session-complete').classList.add('hidden');
+  document.getElementById('session-area').classList.remove('hidden');
+
+  updateHeaderSubtitle();
+  updateStreak();
+  renderCard();
+}
+
+function showEmptyState() {
+  document.getElementById('session-area').classList.add('hidden');
+  document.getElementById('session-complete').classList.add('hidden');
+  document.getElementById('empty-state').classList.remove('hidden');
+
+  const forecast = srsForecast7();
+  const lines = Object.entries(forecast).map(([d, n]) => {
+    const label = d === todayStr() ? '今日' : d;
+    return `${label}: ${n}枚`;
+  }).join(' | ');
+  document.getElementById('next-review-info').textContent = `今後7日間の予定: ${lines}`;
+}
+
+function renderCard() {
+  if (sessionIdx >= sessionQueue.length) {
+    showComplete();
+    return;
+  }
+
+  const q = sessionQueue[sessionIdx];
+  answerShown = false;
+
+  // Header
+  const srcColors = { quiz: { bg: 'bg-indigo-100', text: 'text-indigo-800', label: 'クイズ' }, artifact: { bg: 'bg-orange-100', text: 'text-orange-800', label: 'アーティファクト' } };
+  const sc = srcColors[q.source] || srcColors.quiz;
+  document.getElementById('card-source-tag').className = `source-tag ${sc.bg} ${sc.text}`;
+  document.getElementById('card-source-tag').textContent = sc.label;
+  document.getElementById('card-index').textContent = `${sessionIdx + 1} / ${sessionQueue.length}`;
+
+  // Interval info
+  const card = srsGetCard(q.id);
+  if (card && card.repetitions > 0) {
+    const overdue = daysBetween(card.dueDate, todayStr());
+    document.getElementById('card-interval-info').textContent = overdue > 0 ? `${overdue}日超過` : `本日期限`;
+  } else {
+    document.getElementById('card-interval-info').textContent = '新規カード';
+  }
+
+  // Content
+  document.getElementById('card-context').textContent = q.context || '';
+  document.getElementById('card-question').textContent = q.question;
+
+  // Canvas
+  const cv = document.getElementById('review-canvas');
+  drawCanvas(cv, q.waveKey);
+
+  // Show/hide panels
+  document.getElementById('show-answer-area').style.display = 'block';
+  document.getElementById('answer-panel').classList.remove('visible');
+
+  // Progress
+  renderProgress();
+  renderQueueVis();
+
+  // Interval preview
+  updateIntervalPreview(q.id);
+
+  lucide.createIcons();
+}
+
+function showAnswer() {
+  if (answerShown) return;
+  answerShown = true;
+
+  const q = sessionQueue[sessionIdx];
+  document.getElementById('show-answer-area').style.display = 'none';
+  document.getElementById('answer-panel').classList.add('visible');
+
+  // Render choices
+  const ca = document.getElementById('choices-area');
+  ca.innerHTML = '';
+  q.choices.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = `flex items-center gap-2 p-2.5 rounded-lg border text-sm ${i === q.correct ? 'bg-green-50 border-green-300 text-green-800' : 'bg-slate-50 border-slate-200 text-slate-600'}`;
+    div.innerHTML = `<span class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${i === q.correct ? 'bg-green-500 text-white' : 'bg-slate-200 text-slate-500'}">${String.fromCharCode(65+i)}</span><span>${c}</span>`;
+    ca.appendChild(div);
+  });
+
+  // Explanation
+  const expBox = document.getElementById('explanation-box');
+  expBox.className = 'rounded-xl border p-3.5 mb-4 text-sm leading-relaxed bg-indigo-50 border-indigo-200';
+  expBox.innerHTML = `<p class="font-bold text-indigo-800 mb-1">解説</p><p class="text-slate-700">${q.explanation || '（解説なし）'}</p>`;
+
+  lucide.createIcons();
+}
+
+function updateIntervalPreview(id) {
+  const card = srsGetCard(id);
+  if (!card) { srsRegister(id, ALL_QUESTIONS[id]?.source); }
+  const currentCard = srsGetCard(id) || { easiness:2.5, interval:0, repetitions:0 };
+
+  function previewInterval(score) {
+    const { sm2Preview } = window;
+    // Simple SM-2 preview
+    let ef = currentCard.easiness + (0.1 - (5-score)*(0.08+(5-score)*0.02));
+    ef = Math.max(1.3, Math.min(3.0, ef));
+    let interval;
+    if (score >= 3) {
+      if (currentCard.repetitions === 0) interval = 1;
+      else if (currentCard.repetitions === 1) interval = 6;
+      else interval = Math.round(currentCard.interval * ef);
+    } else {
+      interval = 1;
+    }
+    return interval;
+  }
+
+  document.getElementById('interval-good').textContent  = `→ ${previewInterval(4)}日後`;
+  document.getElementById('interval-fuzzy').textContent  = `→ ${previewInterval(2)}日後`;
+  document.getElementById('interval-forgot').textContent = `→ ${previewInterval(1)}日後`;
+}
+
+function rateCard(score) {
+  const q = sessionQueue[sessionIdx];
+  srsAnswer(q.id, score, q.source);
+
+  if (score >= 3) sessionCorrect++;
+  else sessionIncorrect++;
+
+  sessionIdx++;
+  setTimeout(() => { renderCard(); lucide.createIcons(); }, 200);
+}
+
+function renderProgress() {
+  const total = sessionQueue.length;
+  const done = sessionIdx;
+  document.getElementById('progress-text').textContent = `${done} / ${total} 完了`;
+  document.getElementById('correct-count').textContent   = `正解: ${sessionCorrect}`;
+  document.getElementById('incorrect-count').textContent = `要復習: ${sessionIncorrect}`;
+
+  const segs = document.getElementById('progress-bar-segs');
+  segs.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const seg = document.createElement('div');
+    seg.style.flex = '1';
+    seg.style.height = '100%';
+    seg.style.borderRadius = '3px';
+    if (i < sessionCorrect) seg.style.background = '#16a34a';
+    else if (i < sessionCorrect + sessionIncorrect) seg.style.background = '#dc2626';
+    else if (i === done && done < total) seg.style.background = '#6366f1';
+    else seg.style.background = '#e2e8f0';
+    segs.appendChild(seg);
+  }
+}
+
+function renderQueueVis() {
+  const vis = document.getElementById('queue-vis');
+  vis.innerHTML = '';
+  sessionQueue.forEach((q, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'queue-dot';
+    if (i < sessionCorrect) dot.style.background = '#16a34a';
+    else if (i < sessionCorrect + sessionIncorrect) dot.style.background = '#dc2626';
+    else if (i === sessionIdx) dot.style.background = '#6366f1';
+    else dot.style.background = '#e2e8f0';
+    vis.appendChild(dot);
+  });
+}
+
+function updateHeaderSubtitle() {
+  const due = sessionQueue.length;
+  const meta = loadMeta_();
+  document.getElementById('header-subtitle').textContent = `本日 ${due} 枚の復習カード`;
+}
+
+function loadMeta_() {
+  try { return JSON.parse(localStorage.getItem('eeg_srs_meta') || '{}'); } catch(e) { return {}; }
+}
+
+function updateStreak() {
+  const meta = loadMeta_();
+  const streak = meta.streak || 0;
+  if (streak > 0) {
+    document.getElementById('streak-badge').classList.remove('hidden');
+    document.getElementById('streak-num').textContent = streak;
+  }
+}
+
+function showComplete() {
+  document.getElementById('session-area').classList.add('hidden');
+  document.getElementById('session-complete').classList.remove('hidden');
+
+  const total = sessionQueue.length;
+  const pct = total > 0 ? Math.round(sessionCorrect/total*100) : 0;
+
+  document.getElementById('complete-stats').innerHTML = `
+    <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+      <p class="text-2xl font-black text-indigo-700">${total}</p>
+      <p class="text-xs text-slate-500">復習枚数</p>
+    </div>
+    <div class="bg-green-50 rounded-xl p-3 border border-green-200">
+      <p class="text-2xl font-black text-green-700">${sessionCorrect}</p>
+      <p class="text-xs text-slate-500">正解</p>
+    </div>
+    <div class="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
+      <p class="text-2xl font-black text-indigo-700">${pct}%</p>
+      <p class="text-xs text-slate-500">正答率</p>
+    </div>
+  `;
+
+  const meta = loadMeta_();
+  const streak = meta.streak || 1;
+  document.getElementById('complete-streak').innerHTML = `
+    <p class="font-bold text-amber-800 text-sm">🔥 連続学習 ${streak} 日目！</p>
+    <p class="text-xs text-amber-700 mt-0.5">過去最高: ${meta.longestStreak || streak} 日</p>
+  `;
+
+  const forecast = srsForecast7();
+  const forecastLines = Object.entries(forecast).map(([d, n]) => {
+    const isToday = d === todayStr();
+    return `<span class="${isToday ? 'font-bold text-indigo-700' : 'text-slate-600'}">${isToday ? '今日' : d.slice(5)}: ${n}枚</span>`;
+  }).join('  ');
+  document.getElementById('complete-forecast').innerHTML = `<p class="font-bold text-slate-700 mb-1.5">今後7日間の予定</p><div class="flex flex-wrap gap-3 text-xs">${forecastLines}</div>`;
+
+  lucide.createIcons();
+}
+
+function restartSession() {
+  sessionQueue = [];
+  startSession();
+}
+
+// ===== init =====
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  // Auto-register all questions as SRS cards (so review page can show them)
+  QUIZ_Q.forEach(q => srsRegister(q.id, q.source));
+  startSession();
+});
+
+window.addEventListener('resize', () => {
+  const cv = document.getElementById('review-canvas');
+  if (cv && sessionQueue[sessionIdx]) {
+    drawCanvas(cv, sessionQueue[sessionIdx].waveKey);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症って何？ ── 高校生・一般向け図解ガイド</title>
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a5f;
+      --secondary: #0f766e;
+      --gradient: linear-gradient(135deg, #1e3a5f 0%, #0f766e 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+
+    .header-gradient { background: var(--gradient); }
+
+    .section-card {
+      background: white;
+      border-radius: 1.25rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      padding: 2rem 2rem 1.75rem;
+      margin-bottom: 2rem;
+    }
+
+    /* セクション見出し */
+    .sec-title {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .sec-icon {
+      width: 2.8rem; height: 2.8rem;
+      border-radius: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* 情報ボックス */
+    .info-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #3b82f6;
+      padding: 1.1rem 1.4rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .warn-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #f59e0b;
+      padding: 1.1rem 1.4rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .good-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #22c55e;
+      padding: 1.1rem 1.4rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    /* 統計カード */
+    .stat-card {
+      text-align: center;
+      padding: 1.4rem 1rem;
+      border-radius: 1rem;
+      border: 2px solid transparent;
+    }
+    .stat-num {
+      font-size: 2.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    /* 症状カード */
+    .symptom-card {
+      border-radius: 1rem;
+      padding: 1.25rem;
+      height: 100%;
+    }
+    .symptom-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      margin-bottom: 0.75rem;
+    }
+
+    /* 要因バブル */
+    .cause-hub {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
+    }
+    .cause-center {
+      background: var(--gradient);
+      color: white;
+      font-weight: 800;
+      font-size: 1rem;
+      text-align: center;
+      width: 9rem; height: 9rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+      box-shadow: 0 6px 20px rgba(30,58,95,0.35);
+      flex-shrink: 0;
+    }
+    .cause-satellite {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.83rem;
+      font-weight: 700;
+      text-align: center;
+      color: #1e293b;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      min-width: 7.5rem;
+    }
+    .cause-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, #cbd5e1, #94a3b8);
+      transform-origin: left center;
+      z-index: 1;
+    }
+
+    /* 治療ステップ */
+    .step-card {
+      border-radius: 1rem;
+      padding: 1.25rem;
+      flex: 1;
+    }
+    .step-num {
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* 誤解vs正解 */
+    .myth-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .myth-cell {
+      padding: 0.85rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    /* サポート5か条 */
+    .support-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: white;
+      border-radius: 1rem;
+      border: 1.5px solid #e2e8f0;
+      margin-bottom: 0.75rem;
+    }
+    .support-num {
+      min-width: 2.2rem; height: 2.2rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* 相談窓口 */
+    .contact-card {
+      border-radius: 1rem;
+      padding: 1.1rem 1.25rem;
+    }
+
+    /* 目次 */
+    .toc {
+      position: fixed; right: 1.25rem; top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 0.9rem 1rem;
+      border-radius: 0.9rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      max-height: 80vh; overflow-y: auto;
+      z-index: 50; min-width: 160px;
+    }
+    @media (max-width: 1280px) { .toc { display: none; } }
+    .toc a {
+      display: block; padding: 0.35rem 0.5rem;
+      border-radius: 0.5rem; color: #334155;
+      font-size: 0.82rem; text-decoration: none;
+    }
+    .toc a:hover { background: #f1f5f9; color: #0f766e; }
+
+    /* 印刷用CSS */
+    @media print {
+      .toc, .no-print, header nav { display: none !important; }
+      body { font-size: 10pt; background: white; }
+      .section-card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+        page-break-inside: avoid;
+        margin-bottom: 1rem;
+      }
+      .print-break { page-break-before: always; }
+      main { max-width: 100% !important; padding: 0.5rem !important; }
+      header { padding: 1rem !important; }
+      .stat-num { font-size: 1.8rem; }
+      .cause-hub { min-height: 280px; }
+    }
+
+    /* SVG回復グラフ */
+    .recovery-svg { width: 100%; overflow: visible; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+  <!-- 目次 -->
+  <nav class="toc no-print">
+    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">目次</div>
+    <a href="#s1">① どんな病気？</a>
+    <a href="#s2">② 症状</a>
+    <a href="#s3">③ 原因</a>
+    <a href="#s4">④ 治療と回復</a>
+    <a href="#s5">⑤ 生活への影響</a>
+    <a href="#s6">⑥ 偏見・サポート</a>
+  </nav>
+
+  <!-- ヘッダー -->
+  <header class="header-gradient text-white py-10 shadow-lg">
+    <div class="max-w-3xl mx-auto px-5">
+      <div class="flex items-center gap-2 mb-3 opacity-75">
+        <i data-lucide="book-open" class="w-4 h-4"></i>
+        <span class="text-xs font-semibold tracking-widest uppercase">高校生・一般向け 図解ガイド</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
+        統合失調症って何？
+      </h1>
+      <p class="mt-2 text-white/80 text-base leading-relaxed max-w-xl">
+        知っておきたい基礎知識を、図・グラフ・イラストでわかりやすくまとめました。
+      </p>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">症状</span>
+        <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">原因</span>
+        <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">治療・回復</span>
+        <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">偏見をなくす</span>
+        <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">サポートの仕方</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8">
+
+    <!-- ① どんな病気？ -->
+    <section id="s1" class="section-card">
+      <div class="sec-title">
+        <div class="sec-icon bg-blue-100">
+          <i data-lucide="brain" class="w-5 h-5 text-blue-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">① 統合失調症ってどんな病気？</h2>
+          <p class="text-sm text-slate-500">定義・頻度・基本的な特徴</p>
+        </div>
+      </div>
+
+      <p class="text-slate-700 leading-relaxed mb-4">
+        統合失調症は、脳のはたらき方が一時的に変わることで、<strong>「ものの聞こえ方・見え方」「考え方」「感じ方」</strong>に普段とは違うことが起きる病気です。性格の問題でも、本人の努力不足でもなく、<strong>脳の医学的な病気</strong>です。
+      </p>
+
+      <!-- 統計3枚カード -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-5">
+        <div class="stat-card bg-blue-50 border-blue-200">
+          <div class="stat-num text-blue-700">1<span class="text-2xl">%</span></div>
+          <div class="text-xs font-bold text-blue-600 mt-1">世界中で約100人に1人</div>
+          <div class="text-xs text-slate-500 mt-1">クラス40人なら、誰かの身近にいる可能性</div>
+        </div>
+        <div class="stat-card bg-teal-50 border-teal-200">
+          <div class="stat-num text-teal-700">10<span class="text-lg font-bold">代〜</span></div>
+          <div class="text-xs font-bold text-teal-600 mt-1">10代後半〜30代に多い</div>
+          <div class="text-xs text-slate-500 mt-1">脳が大きく変化する思春期・若い成人期</div>
+        </div>
+        <div class="stat-card bg-indigo-50 border-indigo-200">
+          <div class="stat-num text-indigo-700">2002</div>
+          <div class="text-xs font-bold text-indigo-600 mt-1">日本で病名を改称</div>
+          <div class="text-xs text-slate-500 mt-1">「精神分裂病」→「統合失調症」に変更。偏見をなくすため</div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0"></i>
+          <p class="text-sm text-blue-900 leading-relaxed">
+            「統合失調症」という名前はむずかしく聞こえますが、<strong>適切な治療と支援があれば、多くの人が症状をコントロールしながら学校・仕事・日常生活を送れるようになります。</strong>「一生治らない」というのは誤解です。
+          </p>
+        </div>
+      </div>
+
+      <!-- 男女差の簡単なグラフ -->
+      <div class="mt-5">
+        <p class="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-slate-400"></i>
+          発症しやすい年代（イメージ）
+        </p>
+        <div class="bg-slate-50 rounded-xl p-4">
+          <div class="flex gap-2 items-end mb-2" style="height:80px;">
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full rounded-t-md bg-blue-300" style="height:20px;"></div>
+              <div class="text-xs text-slate-500">〜14歳</div>
+            </div>
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full rounded-t-md bg-blue-500" style="height:55px;"></div>
+              <div class="text-xs text-slate-500">15-24</div>
+            </div>
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full rounded-t-md bg-blue-700" style="height:75px;"></div>
+              <div class="text-xs text-slate-500">25-34</div>
+            </div>
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full rounded-t-md bg-blue-500" style="height:50px;"></div>
+              <div class="text-xs text-slate-500">35-44</div>
+            </div>
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full rounded-t-md bg-blue-300" style="height:28px;"></div>
+              <div class="text-xs text-slate-500">45-54</div>
+            </div>
+            <div class="flex flex-col items-center gap-1 flex-1">
+              <div class="w-full rounded-t-md bg-blue-200" style="height:15px;"></div>
+              <div class="text-xs text-slate-500">55歳〜</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mt-1 text-center">※ 発症頻度の相対的なイメージ（概略図）</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ② どんな症状？ -->
+    <section id="s2" class="section-card print-break">
+      <div class="sec-title">
+        <div class="sec-icon bg-rose-100">
+          <i data-lucide="activity" class="w-5 h-5 text-rose-600"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">② どんなことが起きる？（症状）</h2>
+          <p class="text-sm text-slate-500">3種類の症状を色分けで整理</p>
+        </div>
+      </div>
+
+      <p class="text-slate-700 text-sm leading-relaxed mb-4">
+        症状は大きく<strong>3つのグループ</strong>に分けると整理しやすいです。すべての人に同じ症状が出るわけではなく、組み合わせや強さは人それぞれです。
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+        <!-- 陽性症状 -->
+        <div class="symptom-card bg-red-50 border border-red-200">
+          <div class="symptom-tag bg-red-100 text-red-700 border border-red-200">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            陽性症状
+          </div>
+          <p class="text-xs text-red-700 font-semibold mb-2">「普段はないものが加わる」</p>
+          <ul class="text-sm text-slate-700 space-y-2">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="ear" class="w-3.5 h-3.5 text-red-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>幻聴</strong><br><span class="text-xs text-slate-500">誰もいないのに声が聞こえる</span></span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-red-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>妄想</strong><br><span class="text-xs text-slate-500">「監視されている」など証拠なく強く信じる</span></span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="shuffle" class="w-3.5 h-3.5 text-red-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>思考の混乱</strong><br><span class="text-xs text-slate-500">考えがバラバラになる</span></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 陰性症状 -->
+        <div class="symptom-card bg-blue-50 border border-blue-200">
+          <div class="symptom-tag bg-blue-100 text-blue-700 border border-blue-200">
+            <i data-lucide="minus-circle" class="w-3.5 h-3.5"></i>
+            陰性症状
+          </div>
+          <p class="text-xs text-blue-700 font-semibold mb-2">「普段あるものが減る」</p>
+          <ul class="text-sm text-slate-700 space-y-2">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="battery-low" class="w-3.5 h-3.5 text-blue-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>意欲の低下</strong><br><span class="text-xs text-slate-500">何もやる気が出ない</span></span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="meh" class="w-3.5 h-3.5 text-blue-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>感情が薄れる</strong><br><span class="text-xs text-slate-500">喜怒哀楽が感じにくい・表情が乏しい</span></span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="home" class="w-3.5 h-3.5 text-blue-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>引きこもり</strong><br><span class="text-xs text-slate-500">人との関わりが億劫になる</span></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 認知症状 -->
+        <div class="symptom-card bg-purple-50 border border-purple-200">
+          <div class="symptom-tag bg-purple-100 text-purple-700 border border-purple-200">
+            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+            認知症状
+          </div>
+          <p class="text-xs text-purple-700 font-semibold mb-2">「考える力に影響が出る」</p>
+          <ul class="text-sm text-slate-700 space-y-2">
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="focus" class="w-3.5 h-3.5 text-purple-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>集中力の低下</strong><br><span class="text-xs text-slate-500">授業・会話に集中できない</span></span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="archive" class="w-3.5 h-3.5 text-purple-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>記憶の問題</strong><br><span class="text-xs text-slate-500">さっきのことを覚えにくい</span></span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <i data-lucide="list-todo" class="w-3.5 h-3.5 text-purple-400 mt-0.5 flex-shrink-0"></i>
+              <span><strong>計画が立てにくい</strong><br><span class="text-xs text-slate-500">段取りよく行動しにくくなる</span></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="flex items-start gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0"></i>
+          <p class="text-sm text-amber-900">
+            <strong>症状には「波」があります。</strong>症状が強い急性期と、落ち着いている安定期を繰り返すことが多いです。調子が良い時期は、症状がほとんどわからないこともあります。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ③ 原因 -->
+    <section id="s3" class="section-card">
+      <div class="sec-title">
+        <div class="sec-icon bg-amber-100">
+          <i data-lucide="search" class="w-5 h-5 text-amber-600"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">③ なぜなるの？（原因）</h2>
+          <p class="text-sm text-slate-500">複数の要因が重なって発症する</p>
+        </div>
+      </div>
+
+      <p class="text-slate-700 text-sm leading-relaxed mb-5">
+        「これが原因！」と断言できるものは<strong>まだ一つもありません</strong>。現在の研究では、いくつかの要因が<strong>複合的に重なって</strong>発症すると考えられています。
+      </p>
+
+      <!-- 要因バブル図（CSS版） -->
+      <div class="relative flex flex-col items-center gap-5 my-4">
+        <!-- 中央 -->
+        <div class="cause-center text-center px-2">
+          <div class="text-sm leading-tight">統合<br>失調症</div>
+        </div>
+        <!-- 要因グリッド -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl">
+          <div class="cause-satellite">
+            <i data-lucide="zap" class="w-5 h-5 text-amber-500 mx-auto mb-1"></i>
+            <div class="text-xs font-bold text-slate-700">脳の神経伝達<br>物質のバランス</div>
+            <div class="text-xs text-slate-500 mt-1">ドーパミン等が乱れる</div>
+          </div>
+          <div class="cause-satellite">
+            <i data-lucide="dna" class="w-5 h-5 text-blue-500 mx-auto mb-1"></i>
+            <div class="text-xs font-bold text-slate-700">遺伝的要因</div>
+            <div class="text-xs text-slate-500 mt-1">家族歴でやや増えるが、必ずなるわけではない</div>
+          </div>
+          <div class="cause-satellite">
+            <i data-lucide="cloud-lightning" class="w-5 h-5 text-rose-500 mx-auto mb-1"></i>
+            <div class="text-xs font-bold text-slate-700">強いストレス</div>
+            <div class="text-xs text-slate-500 mt-1">睡眠不足・大きな変化が引き金になることも</div>
+          </div>
+          <div class="cause-satellite">
+            <i data-lucide="leaf" class="w-5 h-5 text-green-500 mx-auto mb-1"></i>
+            <div class="text-xs font-bold text-slate-700">環境・発達</div>
+            <div class="text-xs text-slate-500 mt-1">胎児期の脳発達・思春期の変化が関係</div>
+          </div>
+        </div>
+        <!-- 矢印（中央→各バブル）はテキストで表現 -->
+        <div class="flex items-center gap-2 text-slate-400 text-xs -mt-2">
+          <i data-lucide="arrow-up" class="w-4 h-4"></i>
+          <span>これらが複雑に絡み合って発症</span>
+          <i data-lucide="arrow-up" class="w-4 h-4"></i>
+        </div>
+      </div>
+
+      <div class="warn-box mt-4">
+        <div class="flex items-start gap-2">
+          <i data-lucide="x-circle" class="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0"></i>
+          <p class="text-sm text-amber-900">
+            <strong>「育て方が悪かった」「本人が弱い」は間違いです。</strong><br>
+            生物学的・環境的な複数の要因が重なって起こる病気であり、本人や家族のせいではありません。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ 治療と回復 -->
+    <section id="s4" class="section-card print-break">
+      <div class="sec-title">
+        <div class="sec-icon bg-green-100">
+          <i data-lucide="heart-pulse" class="w-5 h-5 text-green-700"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">④ 治療と回復について</h2>
+          <p class="text-sm text-slate-500">薬・カウンセリング・リハビリの組み合わせ</p>
+        </div>
+      </div>
+
+      <!-- 治療ステップ -->
+      <p class="text-sm text-slate-600 mb-4 font-semibold">主な治療の3本柱</p>
+      <div class="flex flex-col sm:flex-row items-stretch gap-3 mb-6">
+        <div class="step-card bg-teal-50 border border-teal-200">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="step-num bg-teal-600 text-white">1</div>
+            <span class="font-bold text-teal-800 text-sm">薬物療法</span>
+          </div>
+          <div class="flex items-start gap-2 mb-2">
+            <i data-lucide="pill" class="w-4 h-4 text-teal-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs text-slate-700">脳の神経伝達物質のバランスを整える「抗精神病薬」が中心。飲み続けることで再発を防ぎやすくなる</p>
+          </div>
+          <p class="text-xs text-teal-700 font-semibold mt-1">★ 勝手にやめないことが大切</p>
+        </div>
+
+        <div class="hidden sm:flex items-center text-slate-300">
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </div>
+
+        <div class="step-card bg-blue-50 border border-blue-200">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="step-num bg-blue-600 text-white">2</div>
+            <span class="font-bold text-blue-800 text-sm">心理教育・カウンセリング</span>
+          </div>
+          <div class="flex items-start gap-2 mb-2">
+            <i data-lucide="message-circle" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs text-slate-700">病気・薬のことを正しく学ぶ。つらい体験（幻聴など）への対処法を一緒に考える認知行動療法も有効</p>
+          </div>
+          <p class="text-xs text-blue-700 font-semibold mt-1">本人・家族が一緒に学ぶことも多い</p>
+        </div>
+
+        <div class="hidden sm:flex items-center text-slate-300">
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </div>
+
+        <div class="step-card bg-purple-50 border border-purple-200">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="step-num bg-purple-600 text-white">3</div>
+            <span class="font-bold text-purple-800 text-sm">リハビリ・生活支援</span>
+          </div>
+          <div class="flex items-start gap-2 mb-2">
+            <i data-lucide="users" class="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs text-slate-700">デイケアで生活リズムを整えたり、仲間と活動したり、就労の準備をしたりする</p>
+          </div>
+          <p class="text-xs text-purple-700 font-semibold mt-1">目標は本人が決める</p>
+        </div>
+      </div>
+
+      <!-- 回復の波ラインSVG -->
+      <p class="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5">
+        <i data-lucide="trending-up" class="w-4 h-4 text-slate-400"></i>
+        回復のイメージ（波を繰り返しながら改善していく）
+      </p>
+      <div class="bg-slate-50 rounded-xl p-4">
+        <svg class="recovery-svg" viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg">
+          <!-- グリッド -->
+          <line x1="0" y1="120" x2="600" y2="120" stroke="#e2e8f0" stroke-width="1"/>
+          <line x1="0" y1="80" x2="600" y2="80" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="0" y1="40" x2="600" y2="40" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,4"/>
+
+          <!-- 回復曲線（上が良好） -->
+          <path d="M 0 115
+                   C 30 115, 50 30, 80 35
+                   C 110 40, 120 105, 150 100
+                   C 180 95, 200 55, 230 50
+                   C 260 45, 270 90, 300 85
+                   C 330 80, 350 45, 380 42
+                   C 410 39, 420 70, 450 65
+                   C 480 60, 500 35, 530 32
+                   C 560 29, 580 38, 600 38"
+                fill="none" stroke="#0f766e" stroke-width="2.5"/>
+
+          <!-- 塗りつぶし -->
+          <path d="M 0 115
+                   C 30 115, 50 30, 80 35
+                   C 110 40, 120 105, 150 100
+                   C 180 95, 200 55, 230 50
+                   C 260 45, 270 90, 300 85
+                   C 330 80, 350 45, 380 42
+                   C 410 39, 420 70, 450 65
+                   C 480 60, 500 35, 530 32
+                   C 560 29, 580 38, 600 38
+                   L 600 130 L 0 130 Z"
+                fill="#0f766e" opacity="0.08"/>
+
+          <!-- フェーズラベル -->
+          <text x="40" y="150" font-size="10" fill="#64748b" font-family="sans-serif" text-anchor="middle">急性期</text>
+          <text x="200" y="150" font-size="10" fill="#64748b" font-family="sans-serif" text-anchor="middle">回復期</text>
+          <text x="390" y="150" font-size="10" fill="#64748b" font-family="sans-serif" text-anchor="middle">安定期</text>
+          <text x="560" y="150" font-size="10" fill="#0f766e" font-weight="bold" font-family="sans-serif" text-anchor="middle">生活の再建</text>
+
+          <!-- 縦破線（フェーズ区切り） -->
+          <line x1="130" y1="10" x2="130" y2="130" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="300" y1="10" x2="300" y2="130" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="470" y1="10" x2="470" y2="130" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3"/>
+
+          <!-- Y軸ラベル -->
+          <text x="5" y="44" font-size="9" fill="#94a3b8" font-family="sans-serif">良好</text>
+          <text x="5" y="124" font-size="9" fill="#94a3b8" font-family="sans-serif">症状強</text>
+
+          <!-- 矢印 -->
+          <line x1="570" y1="38" x2="590" y2="32" stroke="#0f766e" stroke-width="2"/>
+          <polygon points="590,32 585,26 595,27" fill="#0f766e"/>
+        </svg>
+        <p class="text-xs text-slate-400 mt-1 text-center">回復は一直線ではなく、波を繰り返しながら全体的に改善していく</p>
+      </div>
+
+      <div class="good-box mt-4">
+        <div class="flex items-start gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+          <p class="text-sm text-green-900">
+            <strong>早く気づいて治療を始めるほど、回復が早い傾向があります。</strong>「症状がゼロになること」だけが回復ではなく、学校・仕事・趣味・人間関係など、自分が大切にしたいことができるようになることが目標です。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑤ 日常生活への影響 -->
+    <section id="s5" class="section-card">
+      <div class="sec-title">
+        <div class="sec-icon bg-orange-100">
+          <i data-lucide="home" class="w-5 h-5 text-orange-600"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">⑤ 日常生活・学校・仕事への影響</h2>
+          <p class="text-sm text-slate-500">困りごとと使える支援</p>
+        </div>
+      </div>
+
+      <!-- 場面別カード3枚 -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+        <div class="bg-sky-50 border border-sky-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-8 h-8 bg-sky-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-sky-600"></i>
+            </div>
+            <span class="font-bold text-sky-800 text-sm">学校</span>
+          </div>
+          <p class="text-xs text-slate-600 mb-2">集中が続かない、休みがちになる</p>
+          <div class="text-xs text-sky-700 font-semibold">→ できること</div>
+          <ul class="text-xs text-slate-600 mt-1 space-y-0.5">
+            <li>・スクールカウンセラーに相談</li>
+            <li>・休学・復学の制度を利用</li>
+            <li>・通信制・定時制も選択肢</li>
+          </ul>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="briefcase" class="w-4 h-4 text-emerald-600"></i>
+            </div>
+            <span class="font-bold text-emerald-800 text-sm">仕事</span>
+          </div>
+          <p class="text-xs text-slate-600 mb-2">疲れやすい、ミスが増えることがある</p>
+          <div class="text-xs text-emerald-700 font-semibold">→ できること</div>
+          <ul class="text-xs text-slate-600 mt-1 space-y-0.5">
+            <li>・障害者雇用で配慮を受ける</li>
+            <li>・就労移行支援を利用</li>
+            <li>・短時間勤務から始める</li>
+          </ul>
+        </div>
+
+        <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="wallet" class="w-4 h-4 text-violet-600"></i>
+            </div>
+            <span class="font-bold text-violet-800 text-sm">生活費・お金</span>
+          </div>
+          <p class="text-xs text-slate-600 mb-2">働けない時期の生活費が心配</p>
+          <div class="text-xs text-violet-700 font-semibold">→ 使える制度</div>
+          <ul class="text-xs text-slate-600 mt-1 space-y-0.5">
+            <li>・障害年金を申請</li>
+            <li>・自立支援医療で通院費を削減</li>
+            <li>・精神障害者手帳でサービス利用</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 社会制度一覧 -->
+      <div class="good-box">
+        <p class="text-sm font-bold text-green-800 mb-2 flex items-center gap-1.5">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          主な社会的支援制度
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs text-green-900"><strong>自立支援医療（精神通院）</strong>：通院の医療費が原則1割に</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs text-green-900"><strong>精神障害者保健福祉手帳</strong>：交通費割引・税制優遇等</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs text-green-900"><strong>障害年金</strong>：病気で働きにくい場合に受け取れる年金</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0"></i>
+            <p class="text-xs text-green-900"><strong>就労移行支援</strong>：働く準備を最大2年間サポート</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑥ 偏見・サポート -->
+    <section id="s6" class="section-card print-break">
+      <div class="sec-title">
+        <div class="sec-icon bg-rose-100">
+          <i data-lucide="heart-handshake" class="w-5 h-5 text-rose-600"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">⑥ 偏見をなくすために／サポートの仕方</h2>
+          <p class="text-sm text-slate-500">正しい理解と温かい関わり</p>
+        </div>
+      </div>
+
+      <!-- 誤解 vs 正解 -->
+      <p class="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5">
+        <i data-lucide="scale" class="w-4 h-4 text-slate-400"></i>
+        よくある誤解と、正しい理解
+      </p>
+
+      <!-- ヘッダー -->
+      <div class="myth-row font-bold text-xs text-center mb-1">
+        <div class="flex items-center justify-center gap-1 text-red-600">
+          <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>よくある誤解
+        </div>
+        <div class="flex items-center justify-center gap-1 text-green-700">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>正しい理解
+        </div>
+      </div>
+
+      <div class="myth-row">
+        <div class="myth-cell bg-red-50 border border-red-100">
+          <i data-lucide="x" class="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-red-800">「危険な人だ」</span>
+        </div>
+        <div class="myth-cell bg-green-50 border border-green-100">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-green-800">他者を傷つけるリスクは一般の人と大きく変わらない。むしろ孤立や自傷への配慮が必要</span>
+        </div>
+      </div>
+      <div class="myth-row">
+        <div class="myth-cell bg-red-50 border border-red-100">
+          <i data-lucide="x" class="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-red-800">「一生治らない」</span>
+        </div>
+        <div class="myth-cell bg-green-50 border border-green-100">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-green-800">適切な治療で症状をコントロールできる。多くの人が仕事・学業・生活を取り戻す</span>
+        </div>
+      </div>
+      <div class="myth-row">
+        <div class="myth-cell bg-red-50 border border-red-100">
+          <i data-lucide="x" class="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-red-800">「話が通じない」</span>
+        </div>
+        <div class="myth-cell bg-green-50 border border-green-100">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-green-800">急性期以外は普通に会話できることがほとんど</span>
+        </div>
+      </div>
+      <div class="myth-row">
+        <div class="myth-cell bg-red-50 border border-red-100">
+          <i data-lucide="x" class="w-3.5 h-3.5 text-red-400 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-red-800">「自業自得」「意志が弱い」</span>
+        </div>
+        <div class="myth-cell bg-green-50 border border-green-100">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-green-600 flex-shrink-0 mt-0.5"></i>
+          <span class="text-xs text-green-800">脳の医学的な病気。本人の責任ではない</span>
+        </div>
+      </div>
+
+      <!-- サポート5か条 -->
+      <p class="text-sm font-bold text-slate-600 mt-5 mb-3 flex items-center gap-1.5">
+        <i data-lucide="hand-heart" class="w-4 h-4 text-slate-400"></i>
+        困っている人へのサポート 5か条
+      </p>
+
+      <div class="space-y-2">
+        <div class="support-card">
+          <div class="support-num bg-teal-600 text-white">1</div>
+          <div>
+            <div class="font-bold text-sm text-slate-800">まず「話を聞く」</div>
+            <p class="text-xs text-slate-500 mt-0.5">解決しようとせず「大変だったね」と気持ちを受け止めるだけでいい</p>
+          </div>
+        </div>
+        <div class="support-card">
+          <div class="support-num bg-blue-600 text-white">2</div>
+          <div>
+            <div class="font-bold text-sm text-slate-800">否定・説得しない</div>
+            <p class="text-xs text-slate-500 mt-0.5">「気のせいだよ」「頑張れば大丈夫」は逆効果になることがある</p>
+          </div>
+        </div>
+        <div class="support-card">
+          <div class="support-num bg-indigo-600 text-white">3</div>
+          <div>
+            <div class="font-bold text-sm text-slate-800">専門家につなぐ</div>
+            <p class="text-xs text-slate-500 mt-0.5">「一緒に相談窓口に行こう」と誘う。一人で抱え込まなくていい</p>
+          </div>
+        </div>
+        <div class="support-card">
+          <div class="support-num bg-violet-600 text-white">4</div>
+          <div>
+            <div class="font-bold text-sm text-slate-800">秘密を守る</div>
+            <p class="text-xs text-slate-500 mt-0.5">聞いたことを本人の許可なく周囲に広めない</p>
+          </div>
+        </div>
+        <div class="support-card">
+          <div class="support-num bg-rose-600 text-white">5</div>
+          <div>
+            <div class="font-bold text-sm text-slate-800">自分も無理しない</div>
+            <p class="text-xs text-slate-500 mt-0.5">サポートする側も疲弊しないよう、自分のペースで関わる</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 相談窓口 -->
+      <p class="text-sm font-bold text-slate-600 mt-5 mb-3 flex items-center gap-1.5">
+        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+        相談できる主な窓口
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="contact-card bg-sky-50 border border-sky-200">
+          <div class="flex items-center gap-2 mb-1">
+            <i data-lucide="building-2" class="w-4 h-4 text-sky-600"></i>
+            <span class="font-bold text-sky-800 text-sm">精神保健福祉センター</span>
+          </div>
+          <p class="text-xs text-sky-700">各都道府県に設置。本人・家族・周囲の人も無料で相談可</p>
+        </div>
+        <div class="contact-card bg-teal-50 border border-teal-200">
+          <div class="flex items-center gap-2 mb-1">
+            <i data-lucide="phone-call" class="w-4 h-4 text-teal-600"></i>
+            <span class="font-bold text-teal-800 text-sm">こころの健康相談統一ダイヤル</span>
+          </div>
+          <p class="text-xs text-teal-700 font-mono font-bold">0570-064-556</p>
+          <p class="text-xs text-teal-600">全国共通・平日</p>
+        </div>
+        <div class="contact-card bg-rose-50 border border-rose-200">
+          <div class="flex items-center gap-2 mb-1">
+            <i data-lucide="phone-call" class="w-4 h-4 text-rose-600"></i>
+            <span class="font-bold text-rose-800 text-sm">よりそいホットライン</span>
+          </div>
+          <p class="text-xs text-rose-700 font-mono font-bold">0120-279-338</p>
+          <p class="text-xs text-rose-600">24時間・無料</p>
+        </div>
+        <div class="contact-card bg-indigo-50 border border-indigo-200">
+          <div class="flex items-center gap-2 mb-1">
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-600"></i>
+            <span class="font-bold text-indigo-800 text-sm">スクールカウンセラー</span>
+          </div>
+          <p class="text-xs text-indigo-700">在学中は学校内で相談可能</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="text-center text-xs text-slate-400 py-6 border-t border-slate-200 mt-2">
+      <p class="mb-1">この資料は一般教育・啓発を目的としたものです。個別の診断・治療は必ず医療機関にご相談ください。</p>
+      <p>参考: 日本精神神経学会 / 厚生労働省「みんなのメンタルヘルス」/ WHO（2026年5月）</p>
+    </footer>
+
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

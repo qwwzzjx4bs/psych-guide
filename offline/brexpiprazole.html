@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="ja" class="data-table-sticky-col-off">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ブレクスピプラゾール（レキサルティ）— 詳解 | 精神科臨床リファレンス</title>
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.js"></script>
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #9f1239;
+      --psych-secondary: #be185d;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #881337 0%, #9f1239 50%, #7e1354 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card { background:white; border-radius:1rem; box-shadow:0 4px 6px -1px rgba(0,0,0,0.08); padding:2rem; margin-bottom:1.5rem; }
+    .criteria-box { background:linear-gradient(135deg,#fff1f2 0%,#fecdd3 100%); border-left:4px solid #be185d; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .danger-box { background:linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%); border-left:4px solid #dc2626; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .warning-box { background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%); border-left:4px solid #d97706; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .recommend-box { background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%); border-left:4px solid #15803d; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .info-box { background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%); border-left:4px solid #1d4ed8; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    @media(max-width:639px){ .section-card{padding:1rem;margin-bottom:1rem;border-radius:0.75rem;} .criteria-box,.danger-box,.warning-box,.recommend-box,.info-box{padding:1rem 0.875rem;} }
+    .badge-level-a { background:linear-gradient(135deg,#15803d,#16a34a); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-level-b { background:linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-level-c { background:linear-gradient(135deg,#4b5563,#6b7280); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-approved { background:linear-gradient(135deg,#15803d,#16a34a); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-off-label { background:linear-gradient(135deg,#6b7280,#9ca3af); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-sdam { background:linear-gradient(135deg,#9f1239,#be185d); color:white; padding:0.25rem 0.85rem; border-radius:9999px; font-size:0.875rem; font-weight:700; letter-spacing:0.05em; white-space:nowrap; display:inline-block; }
+    .badge-1st { background:linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-2nd { background:linear-gradient(135deg,#0369a1,#0284c7); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-na { background:#f3f4f6; color:#9ca3af; border:1px solid #e5e7eb; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:600; white-space:nowrap; display:inline-block; }
+    .toc { position:fixed; right:1.5rem; top:50%; transform:translateY(-50%); background:white; padding:1rem; border-radius:0.75rem; box-shadow:0 4px 12px rgba(0,0,0,0.12); max-height:80vh; overflow-y:auto; z-index:50; min-width:160px; }
+    @media(max-width:1280px){ .toc{display:none;} }
+    .toc-link { display:block; font-size:0.725rem; color:#6b7280; padding:0.25rem 0.5rem; border-radius:0.375rem; margin-bottom:0.1rem; transition:all 0.15s; text-decoration:none; }
+    .toc-link:hover,.toc-link.active { background:#fff1f2; color:#9f1239; font-weight:600; }
+    .guide-table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+    .guide-table th { background:#9f1239; color:white; padding:0.75rem 1rem; text-align:left; font-weight:600; white-space:nowrap; }
+    .guide-table td { padding:0.75rem 1rem; border-bottom:1px solid #e5e7eb; vertical-align:top; }
+    .guide-table tbody tr:nth-child(even) td { background:#fff1f2; }
+    .guide-table tbody tr:hover td { background:#fecdd3; }
+    table.guide-table thead th:first-child:not([colspan]){ position:sticky;left:0;z-index:3;background:#9f1239;box-shadow:2px 0 5px -2px rgba(0,0,0,0.25); }
+    table.guide-table tbody td:first-child:not([colspan]){ position:sticky;left:0;z-index:1;background:white;box-shadow:2px 0 5px -2px rgba(0,0,0,0.08); }
+    table.guide-table tbody tr:nth-child(even) td:first-child:not([colspan]){ background:#fff1f2; }
+    table.guide-table tbody tr:hover td:first-child:not([colspan]){ background:#fecdd3; }
+    html.data-table-sticky-col-off table.guide-table thead th:first-child:not([colspan]),
+    html.data-table-sticky-col-off table.guide-table tbody td:first-child:not([colspan]){ position:static!important;left:auto!important;z-index:auto!important;box-shadow:none!important; }
+    .col-notes{min-width:200px;} .col-action{min-width:180px;} .col-text{min-width:160px;} .col-name{min-width:140px;}
+    @media(max-width:639px){ .guide-table{font-size:0.78rem;} .guide-table th{padding:0.5rem 0.6rem;font-size:0.72rem;} .guide-table td{padding:0.5rem 0.6rem;} .badge-level-a,.badge-level-b,.badge-level-c,.badge-approved,.badge-off-label,.badge-1st,.badge-2nd,.badge-na{font-size:0.68rem;padding:0.15rem 0.5rem;} }
+    .receptor-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.875rem; }
+    .receptor-label { width:210px; font-size:0.8125rem; font-weight:600; color:#374151; flex-shrink:0; }
+    .receptor-bar-bg { flex:1; background:#f1f5f9; border-radius:9999px; height:18px; overflow:hidden; }
+    .receptor-bar { height:18px; border-radius:9999px; display:flex; align-items:center; padding-left:6px; font-size:0.65rem; color:white; font-weight:700; }
+    .receptor-ki { font-size:0.75rem; color:#6b7280; width:90px; flex-shrink:0; text-align:right; }
+    @media(max-width:639px){
+      .receptor-row { gap:0.4rem; }
+      .receptor-label { width:118px; font-size:0.68rem; }
+      .receptor-bar-bg { height:16px; }
+      .receptor-bar { height:16px; font-size:0; padding-left:0; }
+      .receptor-ki { width:64px; font-size:0.65rem; }
+    }
+    .case-card { border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.5rem; background:white; margin-bottom:1rem; transition:box-shadow 0.2s; }
+    .case-card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+    .adme-box { background:#fff1f2; border:2px solid #be185d; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#881337; }
+    .adme-metabolite { background:#f0fdf4; border:2px solid #15803d; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#14532d; }
+    .adme-excretion { background:#fff7ed; border:2px solid #d97706; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#92400e; }
+    .x-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:0.5rem; }
+    @media(max-width:767px){ .x-scroll{box-shadow:inset -14px 0 18px -10px rgba(120,15,50,0.15);} }
+    .x-scroll-hint { display:none; }
+    @media(max-width:767px){ .x-scroll-hint{display:flex;align-items:center;justify-content:flex-end;gap:0.3rem;margin-top:0.3rem;padding:0.25rem 0.5rem;font-size:0.65rem;color:#64748b;font-weight:500;background:rgba(255,241,242,0.8);border-radius:0.3rem;border:1px dashed #fda4af;} }
+    .section-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem; }
+    .section-header h2 { font-size:1.25rem; font-weight:700; color:#9f1239; margin:0; }
+    .rct-card { border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.25rem; background:white; }
+    section[id], div[id] { scroll-margin-top:var(--sticky-total-height,96px); }
+
+    /* ========== DATA-TABLE TOOLBAR ========== */
+    .data-table-toolbar { position:sticky; top:var(--nav-height,48px); z-index:9; box-sizing:border-box; width:100%; border:none; border-top:1px solid rgba(203,213,225,0.95); background:rgba(255,255,255,0.97); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 8px 24px -12px rgba(15,23,42,0.12); padding:0; }
+    .data-table-toolbar__head { --toolbar-head-bg:rgba(249,250,251,0.92); --toolbar-head-border:rgba(203,213,225,0.95); --toolbar-accent:#be185d; display:flex; align-items:center; justify-content:space-between; gap:0.625rem; padding:0.375rem 1rem; background:var(--toolbar-head-bg); border-bottom:1px solid var(--toolbar-head-border); transition:background 0.35s ease,border-color 0.35s ease; }
+    @media(min-width:640px){ .data-table-toolbar__head{gap:0.75rem;padding:0.4rem max(1rem,calc((100vw - min(64rem,100vw))/2 + 1rem));} }
+    .data-table-toolbar__head-title { font-size:0.8125rem; font-weight:700; letter-spacing:-0.015em; color:#0f172a; line-height:1.4; }
+    @media(min-width:640px){ .data-table-toolbar__head-title{font-size:0.875rem;} }
+    #data-table-section-label { color:var(--toolbar-accent,#be185d); transition:color 0.35s ease; font-size:0.75rem; font-weight:600; max-width:60%; text-align:right; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; flex-shrink:0; }
+    @media(min-width:640px){ #data-table-section-label{font-size:0.8125rem;max-width:min(50vw,22rem);} }
+    .data-table-toolbar__controls { display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.375rem 1rem; }
+    @media(min-width:640px){ .data-table-toolbar__controls{gap:0.625rem;padding:0.4rem max(1rem,calc((100vw - min(64rem,100vw))/2 + 1rem));} }
+    @media(max-width:639px){ .data-table-toolbar__controls{gap:0.3rem;padding:0.375rem 0.625rem;} }
+    .data-table-toolbar__controls input[type="search"]{font-size:0.8125rem!important;line-height:1.4;}
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-cancel-button,.data-table-toolbar__controls input[type="search"]::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none;}
+    /* Section color themes – rose palette */
+    #data-table-toolbar[data-toolbar-section="quickref"] .data-table-toolbar__head{--toolbar-head-bg:rgba(159,18,57,0.13);--toolbar-head-border:rgba(190,24,93,0.4);--toolbar-accent:#9f1239;}
+    #data-table-toolbar[data-toolbar-section="molecule"] .data-table-toolbar__head{--toolbar-head-bg:rgba(254,205,211,0.88);--toolbar-head-border:rgba(190,24,93,0.35);--toolbar-accent:#be185d;}
+    #data-table-toolbar[data-toolbar-section="pharmacology"] .data-table-toolbar__head{--toolbar-head-bg:rgba(255,241,242,0.92);--toolbar-head-border:rgba(159,18,57,0.35);--toolbar-accent:#9f1239;}
+    #data-table-toolbar[data-toolbar-section="pk"] .data-table-toolbar__head{--toolbar-head-bg:rgba(219,234,254,0.88);--toolbar-head-border:rgba(37,99,235,0.35);--toolbar-accent:#1d4ed8;}
+    #data-table-toolbar[data-toolbar-section="japan-approval"] .data-table-toolbar__head{--toolbar-head-bg:rgba(209,250,229,0.88);--toolbar-head-border:rgba(22,163,74,0.35);--toolbar-accent:#15803d;}
+    #data-table-toolbar[data-toolbar-section="efficacy"] .data-table-toolbar__head{--toolbar-head-bg:rgba(220,252,231,0.88);--toolbar-head-border:rgba(22,163,74,0.35);--toolbar-accent:#15803d;}
+    #data-table-toolbar[data-toolbar-section="evidence"] .data-table-toolbar__head{--toolbar-head-bg:rgba(219,234,254,0.88);--toolbar-head-border:rgba(30,64,175,0.35);--toolbar-accent:#1e40af;}
+    #data-table-toolbar[data-toolbar-section="cases"] .data-table-toolbar__head{--toolbar-head-bg:rgba(254,243,199,0.88);--toolbar-head-border:rgba(180,83,9,0.35);--toolbar-accent:#b45309;}
+    #data-table-toolbar[data-toolbar-section="safety"] .data-table-toolbar__head{--toolbar-head-bg:rgba(255,237,213,0.88);--toolbar-head-border:rgba(234,88,12,0.35);--toolbar-accent:#c2410c;}
+    #data-table-toolbar[data-toolbar-section="interaction"] .data-table-toolbar__head{--toolbar-head-bg:rgba(254,226,226,0.88);--toolbar-head-border:rgba(220,38,38,0.35);--toolbar-accent:#b91c1c;}
+    #data-table-toolbar[data-toolbar-section="special"] .data-table-toolbar__head{--toolbar-head-bg:rgba(237,233,254,0.88);--toolbar-head-border:rgba(124,58,237,0.35);--toolbar-accent:#7c3aed;}
+    #data-table-toolbar[data-toolbar-section="global"] .data-table-toolbar__head{--toolbar-head-bg:rgba(254,205,211,0.88);--toolbar-head-border:rgba(190,24,93,0.35);--toolbar-accent:#9f1239;}
+    main mark.table-search-mark { background-color:rgba(253,224,71,0.88); color:inherit; font-weight:600; padding:0 0.04em; border-radius:0.125rem; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+    html.data-table-search-highlight-off main mark.table-search-mark { background:transparent!important; font-weight:inherit; padding:0; border-radius:0; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header-gradient text-white py-8 sm:py-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <a href="top.html" class="text-rose-200 hover:text-white text-sm flex items-center gap-1 mb-3 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> ポータルへ戻る
+          </a>
+          <div class="flex items-center gap-3 flex-wrap mb-3">
+            <span class="badge-sdam">SGA（SDAM）</span>
+            <span class="text-rose-200 text-sm">非定型抗精神病薬 · ベンゾチオフェン-キノリノン系</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-1">ブレクスピプラゾール</h1>
+          <p class="text-rose-200 text-lg font-medium mb-1">レキサルティ®（Rexulti）</p>
+          <p class="text-rose-300 text-sm">Brexpiprazole | 日本承認: 2018年（統合失調症）/ 2023年（うつ病補助療法）</p>
+          <p class="text-rose-300 text-sm mt-0.5">製造販売：大塚製薬株式会社 / H. Lundbeck A/S</p>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-rose-200 mb-1">ICD-10</div>
+            <div class="text-lg font-bold">F20</div>
+            <div class="text-xs text-rose-200">統合失調症</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-rose-200 mb-1">ICD-10</div>
+            <div class="text-lg font-bold">F32/33</div>
+            <div class="text-xs text-rose-200">うつ病（補助）</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-rose-200 mb-1">標準用量（統合失調症）</div>
+            <div class="text-lg font-bold">2 mg</div>
+            <div class="text-xs text-rose-200">/日（国内承認）</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-rose-200 mb-1">半減期</div>
+            <div class="text-lg font-bold">≈91 h</div>
+            <div class="text-xs text-rose-200">超長時間型</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== STICKY SECTION NAV ========== -->
+  <div id="sticky-section-nav" class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4">
+      <nav class="flex items-center overflow-x-auto py-2 gap-0.5 text-sm" aria-label="セクションジャンプ">
+        <a href="#quickref"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">概要</a>
+        <a href="#molecule"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">分子</a>
+        <a href="#pharmacology"   class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">薬理</a>
+        <a href="#pk"             class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">動態</a>
+        <a href="#japan-approval" class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">国内承認</a>
+        <a href="#efficacy"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">有効性</a>
+        <a href="#evidence"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">エビデンス</a>
+        <a href="#cases"          class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">症例</a>
+        <a href="#safety"         class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">安全性</a>
+        <a href="#interaction"    class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">相互作用</a>
+        <a href="#special"        class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">特殊集団</a>
+        <a href="#global"         class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-rose-50 hover:text-rose-700 text-gray-600 font-medium transition-colors">海外・最新</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ========== DATA-TABLE TOOLBAR ========== -->
+  <div id="data-table-toolbar" class="data-table-toolbar" data-toolbar-section="quickref" role="region" aria-label="ページ内検索と表示オプション">
+    <div class="data-table-toolbar__head">
+      <span class="data-table-toolbar__head-title min-w-0 truncate">ブレクスピプラゾール（レキサルティ）詳解</span>
+      <span id="data-table-section-label" class="shrink-0 truncate" aria-live="polite">クイックリファレンス</span>
+    </div>
+    <div class="data-table-toolbar__controls">
+      <label class="flex h-7 shrink-0 cursor-pointer select-none items-center gap-1 rounded border border-slate-200 bg-slate-50/80 px-2 py-1 text-slate-700 hover:bg-slate-100/90 sm:h-7 sm:gap-1.5 sm:px-2.5">
+        <input type="checkbox" id="data-table-sticky-col-toggle" class="h-3.5 w-3.5 shrink-0 rounded border-gray-300 text-rose-600 focus:ring-rose-500" />
+        <span class="text-[0.6875rem] font-semibold leading-none whitespace-nowrap">列固定</span>
+      </label>
+      <div class="flex min-w-0 flex-1 items-center justify-end gap-1">
+        <div class="flex h-7 min-w-0 flex-1 items-center gap-1 rounded border border-slate-200 bg-slate-50/80 px-1.5 sm:max-w-[min(100%,24rem)]">
+          <i data-lucide="search" class="h-3 w-3 shrink-0 text-slate-500" aria-hidden="true"></i>
+          <label for="data-table-search" class="sr-only">ページ内検索</label>
+          <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-0 text-[0.8125rem] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
+          <button type="button" id="data-table-search-clear" class="flex h-6 w-6 shrink-0 items-center justify-center rounded text-base font-light leading-none text-slate-500 hover:bg-slate-200/80 hover:text-slate-800" aria-label="検索をクリア" title="クリア"><span aria-hidden="true">×</span></button>
+        </div>
+        <button type="button" id="data-table-search-prev" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-white text-xs font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="前の一致箇所へ" disabled>↑</button>
+        <button type="button" id="data-table-search-next" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-white text-xs font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="次の一致箇所へ" disabled>↓</button>
+        <button type="button" id="data-table-search-highlight" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-amber-50 text-amber-900 hover:bg-amber-100/90 sm:px-2" aria-pressed="true" aria-label="ハイライト切り替え" title="ハイライト"><i data-lucide="highlighter" class="h-3.5 w-3.5" aria-hidden="true"></i></button>
+        <p id="data-table-search-meta" class="max-w-[3rem] shrink-0 truncate text-[0.6rem] text-slate-600 tabular-nums sm:max-w-[6rem] sm:text-xs" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOC -->
+  <nav class="toc" aria-label="目次">
+    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">目次</p>
+    <a href="#quickref"       class="toc-link">クイックリファレンス</a>
+    <a href="#molecule"       class="toc-link">分子・化学情報</a>
+    <a href="#pharmacology"   class="toc-link">薬理作用・受容体</a>
+    <a href="#pk"             class="toc-link">薬物動態 (ADME)</a>
+    <a href="#japan-approval" class="toc-link">日本国内承認情報</a>
+    <a href="#efficacy"       class="toc-link">臨床効果・推奨度</a>
+    <a href="#evidence"       class="toc-link">主要エビデンス</a>
+    <a href="#cases"          class="toc-link">具体的適用症例</a>
+    <a href="#safety"         class="toc-link">副作用管理</a>
+    <a href="#interaction"    class="toc-link">薬物相互作用</a>
+    <a href="#special"        class="toc-link">特殊集団</a>
+    <a href="#global"         class="toc-link">海外比較・最新研究</a>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
+
+    <!-- ===== SECTION 1: QUICK REFERENCE ===== -->
+    <section id="quickref" class="section-card">
+      <div class="section-header">
+        <i data-lucide="zap" class="w-6 h-6 text-rose-800"></i>
+        <h2>クイックリファレンス</h2>
+      </div>
+
+      <!-- Two indications overview -->
+      <div class="grid sm:grid-cols-2 gap-4 mb-5">
+        <div class="bg-rose-50 rounded-xl p-4 border-2 border-rose-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-rose-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">統合失調症</span>
+            <span class="font-bold text-rose-800 text-sm">F20 / 2018年承認</span>
+          </div>
+          <div class="text-sm text-rose-800 space-y-0.5">
+            <div>• 開始：<strong>1 mg/日</strong></div>
+            <div>• 標準：<strong>2 mg/日</strong>（4日以上の間隔で増量）</div>
+            <div>• 最大：<strong>2 mg/日</strong>（国内承認用量の上限）</div>
+            <div>• 1日1回服用（食事の影響なし）</div>
+          </div>
+        </div>
+        <div class="bg-pink-50 rounded-xl p-4 border-2 border-pink-300">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">うつ病補助療法</span>
+            <span class="font-bold text-pink-800 text-sm">F32/33 / 2023年承認</span>
+          </div>
+          <div class="text-sm text-pink-800 space-y-0.5">
+            <div>• 開始：<strong>1 mg/日</strong>（通常）</div>
+            <div>• 最大：<strong>2 mg/日</strong>（忍容性良好・効果不十分時に増量）</div>
+            <div>• 既存の抗うつ薬の効果が不十分な場合に限る</div>
+            <div>• 抗うつ薬（SSRI/SNRI/ミルタザピン）との<strong>併用必須</strong></div>
+          </div>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-4 border-2 border-amber-300">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-amber-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">認知症BPSD</span>
+            <span class="font-bold text-amber-800 text-sm">F00 / 2024年9月承認</span>
+          </div>
+          <div class="text-sm text-amber-800 space-y-0.5">
+            <div>• 開始：<strong>0.5 mg/日</strong></div>
+            <div>• 目標：<strong>1 mg/日</strong>（1週間以上の間隔で増量）</div>
+            <div>• 最大：<strong>2 mg/日</strong>（忍容性良好・効果不十分時）</div>
+            <div>• アルツハイマー型認知症に伴う焦燥・攻撃的言動</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dosing table -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[680px]">
+          <thead>
+            <tr>
+              <th>適応</th>
+              <th>開始用量</th>
+              <th>推奨維持用量</th>
+              <th>最大用量</th>
+              <th>承認年</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症（F20）</td>
+              <td>1 mg/日（1日1回）</td>
+              <td>2 mg/日（4日以上の間隔で増量）</td>
+              <td>2 mg/日</td>
+              <td><span class="badge-approved">2018年</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">うつ病・うつ状態（補助療法）</td>
+              <td>1 mg/日</td>
+              <td>1 mg/日（効果不十分時は2mgへ）</td>
+              <td>2 mg/日</td>
+              <td><span class="badge-approved">2023年</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">アルツハイマー型認知症 BPSD</td>
+              <td>0.5 mg/日</td>
+              <td>1 mg/日（1週間以上の間隔で増量）</td>
+              <td>2 mg/日</td>
+              <td><span class="badge-approved">2024年</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 mb-5">※ 国内承認用量は添付文書（2024年9月改訂・第5版）に基づく。CYP3A4/2D6 阻害薬・誘導薬との併用時は用量調整必要。食事の影響は最小限（空腹・満腹いずれでも服用可）。</p>
+
+      <!-- 4 key clinical points -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">外来で必ず押さえる4点</h3>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="flex items-start gap-3 p-4 bg-rose-50 rounded-xl border-l-4 border-rose-700">
+          <div class="w-9 h-9 bg-rose-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">SDAM：アリピプラゾールの「進化版」</div>
+            <p class="text-gray-600 text-sm">D2 部分作動薬（低内在活性）＋ 5-HT1A 部分作動薬（高内在活性）＋ 5-HT2A/α1B 拮抗の複合作用。<strong>アリピプラゾールと比べてアカシジアが大幅に少ない</strong>（NNH ~30–60 vs アリピプラゾール ~10）。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-amber-50 rounded-xl border-l-4 border-amber-600">
+          <div class="w-9 h-9 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">CYP3A4 と CYP2D6 の両方が関与</div>
+            <p class="text-gray-600 text-sm">フルオキセチン・パロキセチン（CYP2D6 阻害）やアゾール系抗真菌薬（CYP3A4 阻害）で血中濃度が上昇。<strong>両方の阻害薬が重なる場合は用量を 1/4 に</strong>。カルバマゼピン（3A4 誘導）で大幅に濃度低下。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border-l-4 border-blue-600">
+          <div class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">t₁/₂ ≈ 91 時間：定常状態まで約 2 週間</div>
+            <p class="text-gray-600 text-sm">超長時間型（半減期 ≈ 91h）のため<strong>定常状態到達に約 10〜14 日</strong>かかる。急速な切り替えでは血中濃度変化が緩やかなことを考慮した増減量計画が必要。急中止後も効果が数日間残存する。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl border-l-4 border-green-600">
+          <div class="w-9 h-9 bg-green-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">うつ病補助療法：低用量から漸増</div>
+            <p class="text-gray-600 text-sm">MDD 補助療法では<strong>0.5 mg/日</strong>から開始し、週1回程度のペースで増量する。抗うつ薬との併用が前提（単独使用は適応外）。効果発現まで 4〜6 週を要することがある。1〜2 mg/日で十分な例が多い。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: MOLECULE ===== -->
+    <section id="molecule" class="section-card">
+      <div class="section-header">
+        <i data-lucide="atom" class="w-6 h-6 text-rose-800"></i>
+        <h2>分子・化学情報</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6">
+        <!-- 2D Structure SVG -->
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">化学構造式（ベンゾチオフェン—ピペリジン—キノリノン骨格）</h3>
+          <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-center">
+            <svg viewBox="0 0 545 255" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-sm" aria-label="ブレクスピプラゾール化学構造式">
+              <title>ブレクスピプラゾール 2D構造式</title>
+
+              <!-- ===== LEFT: BENZO[b]THIOPHENE ===== -->
+              <!-- Benzene ring (flat-left, center ~82,130) -->
+              <polygon points="55,130 70,106 98,106 113,130 98,154 70,154" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <circle cx="84" cy="130" r="15" fill="none" stroke="#374151" stroke-width="1.1" stroke-dasharray="4,2"/>
+              <!-- Thiophene (5-membered ring, fused right of benzene) -->
+              <!-- Shared bond: (98,106)-(98,154) -->
+              <line x1="98" y1="106" x2="122" y2="103" stroke="#374151" stroke-width="1.8"/>
+              <line x1="122" y1="103" x2="138" y2="130" stroke="#374151" stroke-width="1.8"/>
+              <line x1="138" y1="130" x2="122" y2="154" stroke="#374151" stroke-width="1.8"/>
+              <line x1="122" y1="154" x2="98" y2="154" stroke="#374151" stroke-width="1.8"/>
+              <!-- S label at far-right of thiophene -->
+              <text x="140" y="134" font-size="12" font-family="sans-serif" font-weight="700" fill="#be185d" text-anchor="start">S</text>
+
+              <!-- Position 4 of benzo[b]thiophene = lower-left of benzene = (70,154) -->
+              <!-- Bond from C4(70,154) to N of piperidine -->
+              <line x1="70" y1="154" x2="195" y2="154" stroke="#374151" stroke-width="1.8"/>
+
+              <!-- ===== CENTER: PIPERIDINE (center 235,154, r=26) ===== -->
+              <!-- Flat-left hexagon: N at left vertex -->
+              <polygon points="207,154 221,132 249,132 263,154 249,176 221,176" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <!-- N label at left vertex -->
+              <text x="194" y="158" font-size="12" font-family="sans-serif" font-weight="700" fill="#1d4ed8" text-anchor="end">N</text>
+
+              <!-- ===== BUTOXY CHAIN: C4 of piperidine (263,154) → O → quinolinone ===== -->
+              <!-- Zig-zag: (263,154)→(282,142)→(303,142)→(323,154)→(343,142)→O(358,128) -->
+              <line x1="263" y1="154" x2="282" y2="142" stroke="#374151" stroke-width="1.6"/>
+              <line x1="282" y1="142" x2="303" y2="142" stroke="#374151" stroke-width="1.6"/>
+              <line x1="303" y1="142" x2="322" y2="154" stroke="#374151" stroke-width="1.6"/>
+              <line x1="322" y1="154" x2="342" y2="142" stroke="#374151" stroke-width="1.6"/>
+              <!-- O atom -->
+              <line x1="342" y1="142" x2="357" y2="128" stroke="#374151" stroke-width="1.6"/>
+              <text x="354" y="124" font-size="11" font-family="sans-serif" font-weight="700" fill="#dc2626" text-anchor="middle">O</text>
+
+              <!-- ===== RIGHT: QUINOLINONE (two fused 6-membered rings) ===== -->
+              <!-- Bond from O(357,128) to C7 of left benzene: to (375,112) -->
+              <line x1="357" y1="128" x2="375" y2="112" stroke="#374151" stroke-width="1.6"/>
+              <!-- Left benzene ring of quinolinone, center ~(405,105) -->
+              <polygon points="375,105 390,82 418,82 432,105 418,128 390,128" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <circle cx="403" cy="105" r="15" fill="none" stroke="#374151" stroke-width="1.1" stroke-dasharray="4,2"/>
+              <!-- Shared bond with pyridinone: (418,82)-(418,128) -->
+              <!-- Right pyridinone ring (center ~448,105) -->
+              <polygon points="418,82 443,68 466,82 466,128 443,142 418,128" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <!-- NH label at top of pyridinone -->
+              <text x="443" y="64" font-size="11" font-family="sans-serif" font-weight="700" fill="#1d4ed8" text-anchor="middle">NH</text>
+              <!-- C=O at upper-right of pyridinone: C at (466,82), =O bond going right -->
+              <line x1="466" y1="82" x2="481" y2="72" stroke="#374151" stroke-width="1.8"/>
+              <line x1="469" y1="85" x2="483" y2="75" stroke="#374151" stroke-width="1.3" opacity="0.7"/>
+              <text x="486" y="70" font-size="11" font-family="sans-serif" font-weight="700" fill="#dc2626" text-anchor="start">O</text>
+
+              <!-- ===== CH2 labels on butoxy chain ===== -->
+              <text x="282" y="138" font-size="7.5" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">CH₂</text>
+              <text x="303" y="136" font-size="7.5" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">CH₂</text>
+              <text x="322" y="150" font-size="7.5" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">CH₂</text>
+              <text x="342" y="138" font-size="7.5" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">CH₂</text>
+
+              <!-- ===== RING LABELS ===== -->
+              <text x="84" y="225" font-size="9.5" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">ベンゾチオフェン環</text>
+              <text x="235" y="225" font-size="9.5" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">ピペリジン環</text>
+              <text x="422" y="225" font-size="9.5" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">キノリノン環</text>
+              <text x="288" y="170" font-size="9" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">ブトキシ鎖（-O-(CH₂)₄-）</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Chemical data -->
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">物理化学的性質</h3>
+          <table class="w-full text-sm">
+            <tbody>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium w-2/5">一般名</td><td class="py-2 font-semibold text-gray-800">ブレクスピプラゾール</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">IUPAC名</td><td class="py-2 text-xs text-gray-700 leading-relaxed">7-[4-[4-(1-benzothiophen-4-yl)piperidin-1-yl]butoxy]-1H-quinolin-2-one</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">分子式</td><td class="py-2 font-mono text-gray-800">C<sub>25</sub>H<sub>27</sub>N<sub>3</sub>O<sub>2</sub>S</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">分子量</td><td class="py-2 font-semibold text-gray-800">433.57 g/mol</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">CAS番号</td><td class="py-2 text-gray-800">913611-97-9</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">骨格</td><td class="py-2 text-gray-800">ベンゾ[b]チオフェン-ピペリジン-キノリノン骨格（アリピプラゾール類縁）</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">logP（推定値）</td><td class="py-2 text-gray-800">≈ 3.5（脂溶性：中〜高）</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">立体化学</td><td class="py-2 text-gray-800">不斉中心なし（単一化合物）</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">アリピプラゾールとの比較</td><td class="py-2 text-xs text-gray-700">アリピプラゾール：ジクロロフェニル-ピペラジン骨格。ブレクスピプラゾール：ベンゾチオフェン-ピペリジン-キノリノン骨格。側鎖と骨格の修飾によりD2内在活性を低下・5-HT1A内在活性を向上</td></tr>
+              <tr><td class="py-2 pr-3 text-gray-500 font-medium">開発経緯</td><td class="py-2 text-gray-800">大塚製薬 + H. Lundbeck A/S 共同開発（OPC-34712）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="criteria-box mt-4">
+        <div class="font-bold text-rose-900 mb-2">アリピプラゾールとの構造的差異と薬理学的意義</div>
+        <p class="text-sm text-rose-800">アリピプラゾールは 2,3-ジクロロフェニル-ピペラジン骨格を持つ。ブレクスピプラゾールはこれをベンゾ[b]チオフェン環とピペリジン（ピペラジンではなくピペリジン）に変更し、さらにキノリノン部分のリンカー（4炭素 vs アリピプラゾールの3炭素）を修飾した。この構造変化により <strong>D2 内在活性（IA）が低下（~25% vs ~40%）</strong>し、<strong>5-HT1A への親和性と内在活性が向上</strong>し、アカシジア産生が大幅に減少した。</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: PHARMACOLOGY ===== -->
+    <section id="pharmacology" class="section-card">
+      <div class="section-header">
+        <i data-lucide="flask-conical" class="w-6 h-6 text-rose-800"></i>
+        <h2>薬理作用・受容体プロファイル</h2>
+      </div>
+
+      <div class="criteria-box mb-5">
+        <div class="font-bold text-rose-900 mb-2">SDAM（セロトニン-ドーパミン活性モジュレーター）とは</div>
+        <div class="grid sm:grid-cols-2 gap-4 text-sm text-rose-800">
+          <div>
+            <div class="font-semibold mb-1">D2/D3 部分作動（低内在活性）</div>
+            <ul class="space-y-0.5">
+              <li>• D2 partial agonist、IA ≈ 25–30%（アリピプラゾール: ~40–50%）</li>
+              <li>• 「安定化剤」：ドーパミン過活動時は拮抗、低下時は補完</li>
+              <li>• D2 占有率は低内在活性のため<strong>プロラクチン上昇なし</strong></li>
+              <li>• 低内在活性 → <strong>アカシジア大幅減少</strong>が最大の特長</li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-semibold mb-1">5-HT1A 部分作動（高内在活性）+ 5-HT2A/α1B/α2C 拮抗</div>
+            <ul class="space-y-0.5">
+              <li>• 5-HT1A partial agonist、IA ≈ 70–80%（アリピプラゾールより高い）</li>
+              <li>• 5-HT1A 刺激 → 抗不安・抗うつ・前頭前野ドーパミン↑</li>
+              <li>• 5-HT2A 拮抗 → 抗精神病・前頭前野認知改善</li>
+              <li>• α1B/α2C 拮抗 → ノルエピネフリン伝達調節（抗うつ効果）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Receptor Ki chart -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">受容体結合親和性プロファイル（Ki 値）— ブレクスピプラゾール</h3>
+      <p class="text-xs text-gray-400 mb-4">低 Ki = 高親和性。ブレクスピプラゾールは SGA 中でも際立って広範囲・高親和性のプロファイルを持つ（Maeda et al. 2014, J Pharmacol Exp Ther）。丸カッコ内は受容体への作用様式。</p>
+
+      <div class="bg-gray-50 rounded-xl p-4 mb-5">
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT1A（部分作動✦）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:95%;background:linear-gradient(90deg,#7c3aed,#a855f7)">最高（PA）</div></div>
+          <div class="receptor-ki">Ki ≈ 0.12 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">α1B（遮断）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:90%;background:linear-gradient(90deg,#dc2626,#ef4444)">非常に高</div></div>
+          <div class="receptor-ki">Ki ≈ 0.17 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">D2（部分作動・低IA✦）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:82%;background:linear-gradient(90deg,#1d4ed8,#3b82f6)">高（PA/低IA）</div></div>
+          <div class="receptor-ki">Ki ≈ 0.30 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT2A（遮断）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:76%;background:linear-gradient(90deg,#7c3aed,#a855f7)">高</div></div>
+          <div class="receptor-ki">Ki ≈ 0.47 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">α2C（遮断）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:73%;background:linear-gradient(90deg,#dc2626,#ef4444)">高</div></div>
+          <div class="receptor-ki">Ki ≈ 0.59 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">D3（部分作動）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:64%;background:linear-gradient(90deg,#1d4ed8,#3b82f6)">高</div></div>
+          <div class="receptor-ki">Ki ≈ 1.1 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">D1（部分作動）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:39%;background:linear-gradient(90deg,#0369a1,#0ea5e9)">中</div></div>
+          <div class="receptor-ki">Ki ≈ 6.3 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">H1（遮断）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:23%;background:linear-gradient(90deg,#d97706,#f59e0b)">低〜中</div></div>
+          <div class="receptor-ki">Ki ≈ 19 nM</div>
+        </div>
+        <div class="receptor-row mb-0">
+          <div class="receptor-label">M1（ムスカリン）</div>
+          <div class="receptor-bar-bg"><div class="receptor-bar" style="width:3%;background:#d1d5db">&nbsp;</div></div>
+          <div class="receptor-ki">Ki &gt;1000 nM（ほぼなし）</div>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mb-5">✦ PA = Partial Agonist（部分作動薬）。ブレクスピプラゾールは 0.1 nM オーダーという極めて高い親和性を複数受容体に示す。D2 の低内在活性（~25%）がアカシジア最小化の核心。</p>
+
+      <!-- SDAM vs aripiprazole -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">ブレクスピプラゾール vs アリピプラゾール — 主な薬理学的差異</h3>
+      <div class="x-scroll">
+        <table class="guide-table min-w-[620px]">
+          <thead>
+            <tr><th>特性</th><th>ブレクスピプラゾール</th><th>アリピプラゾール</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="font-semibold">D2 内在活性（IA）</td><td class="text-green-600 font-semibold">低（~25–30%）</td><td>中（~40–50%）</td></tr>
+            <tr><td class="font-semibold">5-HT1A 内在活性（IA）</td><td class="text-green-600 font-semibold">高（~70–80%）</td><td>中（~50–60%）</td></tr>
+            <tr><td class="font-semibold">5-HT2A 親和性</td><td>Ki ≈ 0.47 nM（高）</td><td>Ki ≈ 3.4 nM（中）</td></tr>
+            <tr><td class="font-semibold">α1B 遮断</td><td class="text-green-600 font-semibold">非常に強い（Ki≈0.17nM）</td><td>中程度</td></tr>
+            <tr><td class="font-semibold">アカシジア発現率</td><td class="text-green-600 font-semibold">NNH ≈ 30–60（低い）</td><td class="text-orange-600 font-semibold">NNH ≈ 10–15（高め）</td></tr>
+            <tr><td class="font-semibold">鎮静・眠気（H1）</td><td>低〜中（H1 Ki≈19nM）</td><td>低（H1 Ki≈61nM）</td></tr>
+            <tr><td class="font-semibold">消失半減期</td><td>≈ 91 h（超長時間型）</td><td>≈ 75 h（長時間型）</td></tr>
+            <tr><td class="font-semibold">抗コリン副作用</td><td class="text-green-600 font-semibold">M1 ほぼなし → 最小</td><td class="text-green-600 font-semibold">M1 ほぼなし → 最小</td></tr>
+            <tr><td class="font-semibold">プロラクチン上昇</td><td class="text-green-600 font-semibold">ほぼなし</td><td class="text-green-600 font-semibold">ほぼなし（軽度低下も）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: PK ===== -->
+    <section id="pk" class="section-card">
+      <div class="section-header">
+        <i data-lucide="bar-chart-2" class="w-6 h-6 text-rose-800"></i>
+        <h2>薬物動態（ADME）</h2>
+      </div>
+
+      <!-- ADME Flow -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">代謝経路フロー</h3>
+      <div class="bg-gray-50 rounded-xl p-4 mb-6 overflow-x-auto">
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-center min-w-max mx-auto">
+          <div class="adme-box">経口投与<br><span class="text-xs font-normal text-rose-600">F ≈ 95%（高い）</span></div>
+          <div class="text-rose-400 text-2xl font-bold">→</div>
+          <div class="adme-box">ブレクスピプラゾール<br><span class="text-xs font-normal text-rose-600">t₁/₂ ≈ 91 h</span></div>
+          <div class="flex flex-col items-center gap-1">
+            <div class="text-xs text-gray-500 font-semibold bg-rose-50 border border-rose-200 px-2 py-0.5 rounded text-center">CYP3A4 + CYP2D6（主代謝）</div>
+            <div class="text-rose-400 text-2xl">→</div>
+          </div>
+          <div class="adme-metabolite">DM-3411（活性代謝物）<br><span class="text-xs font-normal text-green-600">t₁/₂≈86h（類似）</span></div>
+          <div class="text-rose-400 text-2xl font-bold">→</div>
+          <div class="adme-excretion">腎 + 胆汁排泄<br><span class="text-xs font-normal text-orange-600">尿：約25%</span><br><span class="text-xs font-normal text-orange-600">糞：約46%</span></div>
+        </div>
+      </div>
+
+      <!-- PK table -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">主な薬物動態パラメータ</h3>
+      <div class="x-scroll mb-6">
+        <table class="guide-table min-w-[480px]">
+          <thead><tr><th>パラメータ</th><th>値</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold">Tmax</td><td>≈ 4 時間（食事の影響を受けない）</td></tr>
+            <tr><td class="font-semibold">バイオアベイラビリティ（F）</td><td>≈ 95%（高い）</td></tr>
+            <tr><td class="font-semibold">消失半減期（t₁/₂）</td><td>≈ 91 時間（約 4 日）</td></tr>
+            <tr><td class="font-semibold">定常状態到達時間</td><td>約 10〜14 日（5 半減期 ≈ 455 h）</td></tr>
+            <tr><td class="font-semibold">タンパク結合率</td><td>&gt; 99%（アルブミン・α1-AGP）</td></tr>
+            <tr><td class="font-semibold">Vd（分布容積）</td><td>≈ 1.56 L/kg</td></tr>
+            <tr><td class="font-semibold">主代謝酵素</td><td>CYP3A4（主）+ CYP2D6（主）</td></tr>
+            <tr><td class="font-semibold">主な活性代謝物</td><td>DM-3411（デスメチル体、t₁/₂≈86h、薬理活性あり）</td></tr>
+            <tr><td class="font-semibold">食事の影響</td><td>ほぼなし（高脂肪食で Cmax±11%、AUC 変化なし）</td></tr>
+            <tr><td class="font-semibold">TDM 目標（参考）</td><td>10–230 ng/mL（AGNP コンセンサス参考範囲）</td></tr>
+            <tr><td class="font-semibold">CYP2D6 低代謝者（PM）</td><td>AUC 約 2 倍増加。日本人での PM 頻度は西洋人より低い（~1%）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CYP2D6+3A4 interaction chart -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">CYP3A4 × CYP2D6 相互作用マトリクス（用量調整の目安）</h3>
+      <div class="bg-rose-50 rounded-xl p-4 border border-rose-200 mb-4">
+        <div class="x-scroll">
+          <table class="guide-table min-w-[500px]">
+            <thead><tr><th>CYP2D6 の状態</th><th>CYP3A4 の状態</th><th>推奨用量調整（目安）</th></tr></thead>
+            <tbody>
+              <tr><td>通常（EM）</td><td>強力阻害薬なし</td><td class="text-green-700 font-semibold">通常用量（調整不要）</td></tr>
+              <tr><td>強力阻害薬（例：パロキセチン）</td><td>阻害薬なし</td><td class="text-amber-700 font-semibold">用量を 1/2 に減量</td></tr>
+              <tr><td>阻害薬なし</td><td>強力阻害薬（例：ケトコナゾール）</td><td class="text-amber-700 font-semibold">用量を 1/2 に減量</td></tr>
+              <tr><td class="text-red-700 font-semibold">強力阻害薬</td><td class="text-red-700 font-semibold">強力阻害薬（両方）</td><td class="text-red-700 font-bold">用量を 1/4 に減量（重大）</td></tr>
+              <tr><td>PM（低代謝者）</td><td>阻害薬なし</td><td class="text-amber-700 font-semibold">用量を 1/2 に減量</td></tr>
+              <tr><td>PM（低代謝者）</td><td>強力阻害薬あり</td><td class="text-red-700 font-bold">用量を 1/4 に（最大注意）</td></tr>
+              <tr><td>EM</td><td>強力誘導薬（例：カルバマゼピン）</td><td class="text-blue-700 font-semibold">用量増加を検討（最大 2 倍程度）</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">※上記は概念的な目安。必ず最新の添付文書で具体的な用量を確認してください。</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 5: JAPAN APPROVAL ===== -->
+    <section id="japan-approval" class="section-card">
+      <div class="section-header">
+        <i data-lucide="file-check" class="w-6 h-6 text-rose-800"></i>
+        <h2>日本国内承認情報</h2>
+      </div>
+
+      <!-- Product card -->
+      <div class="grid sm:grid-cols-2 gap-4 mb-5">
+        <div class="bg-rose-50 rounded-xl p-4 border border-rose-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-rose-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">錠剤</span>
+            <span class="font-bold text-rose-800">レキサルティ®</span>
+          </div>
+          <div class="text-xs text-gray-700 space-y-0.5">
+            <div>錠剤 0.5 mg / 1 mg / 2 mg</div>
+            <div>1日1回（食事の影響なし）</div>
+            <div>適応：<strong>統合失調症・うつ病うつ状態（補助療法）</strong></div>
+            <div class="text-gray-500 mt-1">製造販売：大塚製薬株式会社</div>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <div class="font-bold text-gray-800 mb-2 text-sm">日本承認の経緯</div>
+          <div class="text-xs text-gray-700 space-y-1">
+            <div>• <strong>2018年3月</strong>：統合失調症の治療薬として承認（日本初）</div>
+            <div>• <strong>2023年3月</strong>：うつ病・うつ状態（既存の抗うつ薬で効果不十分な場合の補助療法）として承認</div>
+            <div>• FDA（米国）は2015年に統合失調症・MDD補助療法の両方を承認しており、日本は約8年遅れて MDD 補助療法適応を取得</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approved indications table -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[760px]">
+          <thead>
+            <tr><th>効能・効果</th><th>ICD-10</th><th>開始用量</th><th>維持用量</th><th>最大用量</th><th>注意点</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F20</code></td>
+              <td>1 mg/日</td>
+              <td>2 mg/日（4日以上の間隔で増量）</td>
+              <td>2 mg/日</td>
+              <td>安全性が確立しているのは最大4mgまで（§7.1）。国内標準は2mg</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">うつ病・うつ状態（補助療法）</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F32/F33</code></td>
+              <td>1 mg/日</td>
+              <td>1 mg/日（効果不十分・忍容性良好なら2mgへ）</td>
+              <td>2 mg/日</td>
+              <td>既存の抗うつ薬の効果が不十分な場合のみ（抗うつ薬との<strong>併用が必須</strong>）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">アルツハイマー型認知症 BPSD</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F00</code></td>
+              <td>0.5 mg/日</td>
+              <td>1 mg/日（1週間以上の間隔で増量）</td>
+              <td>2 mg/日</td>
+              <td>焦燥感・易刺激性・興奮に起因する過活動・攻撃的言動。2024年9月承認（添付文書第5版）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MDD augmentation step-up -->
+      <h3 class="text-sm font-bold text-gray-700 mb-3">うつ病補助療法 — 用量漸増ガイド</h3>
+      <div class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl p-4 mb-5">
+        <div class="flex items-center gap-2 flex-wrap justify-center">
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">開始（Week 1〜2）</div>
+            <div class="bg-white border-2 border-rose-300 rounded-lg px-4 py-2 font-bold text-rose-800">0.5〜1 mg</div>
+            <div class="text-xs text-gray-500 mt-1">1日1回</div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">Week 2〜4（増量）</div>
+            <div class="bg-white border-2 border-rose-400 rounded-lg px-4 py-2 font-bold text-rose-800">1〜2 mg</div>
+            <div class="text-xs text-gray-500 mt-1">目標維持用量</div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">必要時（反応不十分）</div>
+            <div class="bg-pink-100 border-2 border-pink-500 rounded-lg px-4 py-2 font-bold text-pink-800">2 mg</div>
+            <div class="text-xs text-gray-500 mt-1">最大用量（国内承認）</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 text-center">半減期が約 91h と長いため、効果の確認は 2〜4 週ごとに行う。定常状態到達に約 2 週間かかることを考慮。</p>
+      </div>
+
+      <!-- Warnings -->
+      <div class="warning-box">
+        <div class="font-bold text-amber-900 mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i>添付文書上の重要注意事項</div>
+        <ul class="text-sm text-amber-800 space-y-1">
+          <li>• <strong>うつ病補助療法は抗うつ薬との「併用」が必須</strong>：本剤単独でのうつ病治療は適応外</li>
+          <li>• <strong>24歳以下：自殺念慮・自殺企図のリスク増加</strong>（FDA クラス警告。海外臨床試験データ）。開始初期は特に観察強化</li>
+          <li>• <strong>糖尿病患者への投与</strong>：重篤な高血糖・ケトアシドーシスの報告（オランザピン・クエチアピンほどのリスクではないが、血糖モニタリングを推奨）</li>
+          <li>• <strong>アカシジア</strong>：アリピプラゾールよりはるかに少ないが発現しうる。早期発見と投与量調整が重要</li>
+          <li>• <strong>高齢者認知症関連精神病</strong>：死亡率増加（全 SGA クラス警告）。本適応は未承認</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6: EFFICACY ===== -->
+    <section id="efficacy" class="section-card">
+      <div class="section-header">
+        <i data-lucide="target" class="w-6 h-6 text-rose-800"></i>
+        <h2>臨床効果・ガイドライン推奨度</h2>
+      </div>
+
+      <div class="x-scroll mb-6">
+        <table class="guide-table min-w-[920px]">
+          <thead>
+            <tr><th>適応</th><th>日本ガイドライン</th><th>CANMAT 2023</th><th>APA（米国）</th><th>WFSBP</th><th class="col-notes">備考</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症（急性期）</td>
+              <td><span class="badge-1st">推奨 SGA</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>EPS 最小・アカシジア少で継続しやすい。鎮静弱いため急性興奮への即効性はやや劣る</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">統合失調症（維持療法）</td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>長半減期（91h）による安定した血中濃度が維持療法に利点。服薬忘れへの「バッファー」がある</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">MDD 補助療法（抗うつ薬効果不十分）</td>
+              <td><span class="badge-1st">推奨（2023年〜）</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-1st">FDA 承認（2015年〜）</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>低用量（1–2mg）での有効性を複数 Ph3 RCT が実証。アカシジアが少なくアリピプラゾールの代替として選択しやすい</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害</td>
+              <td><span class="badge-na">適応外</span></td>
+              <td><span class="badge-na">非推奨（エビデンス不十分）</span></td>
+              <td><span class="badge-na">—</span></td>
+              <td><span class="badge-na">—</span></td>
+              <td>双極性障害への適応は日米欧ともになし。臨床試験データは限定的</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">PTSD（補助）</td>
+              <td><span class="badge-na">適応外</span></td>
+              <td><span class="badge-na">適応外</span></td>
+              <td><span class="badge-2nd">研究段階</span></td>
+              <td><span class="badge-na">—</span></td>
+              <td>PTSD の悪夢・過覚醒への小規模研究あり。臨床応用は適応外扱い</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="recommend-box">
+          <h3 class="font-bold text-green-900 mb-2">ブレクスピプラゾールを優先する状況</h3>
+          <ul class="text-sm text-green-800 space-y-1">
+            <li>• アリピプラゾールでアカシジアが問題になった統合失調症・MDD 患者</li>
+            <li>• MDD で抗うつ薬（SSRI/SNRI）に部分反応の患者（補助療法として）</li>
+            <li>• EPS・プロラクチン上昇・代謝副作用を最小化したい患者</li>
+            <li>• 服薬アドヒアランスに問題がある患者（長半減期がバッファー）</li>
+            <li>• 鎮静を最小化したい（日中眠気が困る）患者</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <h3 class="font-bold text-amber-900 mb-2">慎重に検討すべき状況</h3>
+          <ul class="text-sm text-amber-800 space-y-1">
+            <li>• CYP3A4 + CYP2D6 両阻害薬使用中 → 用量を 1/4 に（中毒リスク）</li>
+            <li>• カルバマゼピン・リファンピシン使用中 → 効果激減</li>
+            <li>• 急性精神病興奮で即効性の鎮静が必要な場合（鎮静作用弱い）</li>
+            <li>• うつ病で<strong>単独使用はできない</strong>（抗うつ薬との併用が必須）</li>
+            <li>• 24歳以下への MDD 補助療法（自殺念慮リスクの増加に注意）</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 7: EVIDENCE ===== -->
+    <section id="evidence" class="section-card">
+      <div class="section-header">
+        <i data-lucide="book-open" class="w-6 h-6 text-rose-800"></i>
+        <h2>主要エビデンス</h2>
+      </div>
+
+      <div class="grid gap-4 mb-6">
+
+        <!-- VECTOR -->
+        <div class="rct-card border-l-4 border-rose-600">
+          <div class="text-xs font-semibold text-rose-600 mb-1">Phase 3 RCT — Schizophrenia Research 2015 / J Clin Psychiatry 2016</div>
+          <div class="font-bold text-lg text-gray-800 mb-1">VECTOR 試験（統合失調症）</div>
+          <div class="text-sm text-gray-600 mb-2">Correll et al. 2015；統合失調症患者 636 例にブレクスピプラゾール 2mg / 4mg / プラセボを 6 週間投与。</div>
+          <div class="grid sm:grid-cols-3 gap-2">
+            <div class="bg-rose-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">PANSS 総得点変化（2mg vs PBO）</div>
+              <div class="font-bold text-rose-700">−20.7 vs −16.0</div>
+              <div class="text-xs text-gray-500">p = 0.022</div>
+            </div>
+            <div class="bg-rose-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">PANSS 総得点変化（4mg vs PBO）</div>
+              <div class="font-bold text-rose-700">−20.5 vs −16.0</div>
+              <div class="text-xs text-gray-500">p = 0.025</div>
+            </div>
+            <div class="bg-green-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">アカシジア発現率（2mg）</div>
+              <div class="font-bold text-green-700">5.0%（プラセボ 2.2%）</div>
+              <div class="text-xs text-gray-500">アリピプラゾールより大幅に低い</div>
+            </div>
+          </div>
+          <div class="mt-2 p-3 bg-rose-50 rounded-lg">
+            <p class="text-xs text-rose-800"><strong>Clinical Message：</strong>2mg と 4mg で有効性は同等。高用量の追加利益はなく、副作用が増える懸念から 2mg が標準用量とされる。アカシジア発現率がアリピプラゾール（約 13–15%）と比べて顕著に低い。</p>
+          </div>
+        </div>
+
+        <!-- BEACON -->
+        <div class="rct-card border-l-4 border-pink-500">
+          <div class="text-xs font-semibold text-pink-500 mb-1">Phase 3 RCT — J Clin Psychiatry 2015</div>
+          <div class="font-bold text-lg text-gray-800 mb-1">BEACON 試験（統合失調症）</div>
+          <div class="text-sm text-gray-600 mb-2">Kane JM et al. 2015；統合失調症患者 627 例でブレクスピプラゾール 0.25mg / 2mg / 4mg vs プラセボの 6 週間比較。</div>
+          <div class="grid sm:grid-cols-3 gap-2">
+            <div class="bg-pink-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">2mg の PANSS 変化</div>
+              <div class="font-bold text-pink-700">−18.9 vs −12.0 (PBO)</div>
+              <div class="text-xs text-gray-500">p &lt; 0.001</div>
+            </div>
+            <div class="bg-pink-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">4mg の PANSS 変化</div>
+              <div class="font-bold text-pink-700">−19.6 vs −12.0 (PBO)</div>
+              <div class="text-xs text-gray-500">p &lt; 0.001</div>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">0.25mg（低用量）</div>
+              <div class="font-bold text-amber-700">有意差なし</div>
+              <div class="text-xs text-gray-500">用量依存性を確認</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MDD augmentation RCTs -->
+        <div class="rct-card border-l-4 border-indigo-600">
+          <div class="text-xs font-semibold text-indigo-600 mb-1">Phase 3 RCT × 2 — J Clin Psychiatry 2015</div>
+          <div class="font-bold text-lg text-gray-800 mb-1">MDD 補助療法 Phase 3 試験（Thase & Kane et al. 2015）</div>
+          <div class="text-sm text-gray-600 mb-2">抗うつ薬に部分反応の MDD 患者に brexpiprazole 1mg / 2mg / 3mg を補助的に追加。2 試験（各 ~300 例）で HAMD-17 等を評価。</div>
+          <div class="grid sm:grid-cols-3 gap-2">
+            <div class="bg-indigo-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">HAMD-17 変化（2mg vs PBO）</div>
+              <div class="font-bold text-indigo-700">−8.3 vs −6.7</div>
+              <div class="text-xs text-gray-500">p &lt; 0.05（試験1）</div>
+            </div>
+            <div class="bg-indigo-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">奏効率（2mg vs PBO）</div>
+              <div class="font-bold text-indigo-700">有意差あり</div>
+              <div class="text-xs text-gray-500">両試験でプラセボ超</div>
+            </div>
+            <div class="bg-green-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">アカシジア（2mg）</div>
+              <div class="font-bold text-green-700">~5%（許容範囲）</div>
+              <div class="text-xs text-gray-500">体重増加は中等度</div>
+            </div>
+          </div>
+          <div class="mt-2 p-3 bg-indigo-50 rounded-lg">
+            <p class="text-xs text-indigo-800"><strong>Clinical Message：</strong>1–2 mg/日という低用量で統計的・臨床的に有意な補助療法効果を実証。FDA は 2015 年に MDD 補助療法を承認。日本では 2023 年承認。アカシジア発現率がアリピプラゾールより大幅に低く、日常診療での選択しやすさが特長。</p>
+          </div>
+        </div>
+
+        <!-- Leucht 2013 / comparative -->
+        <div class="rct-card border-l-4 border-gray-400">
+          <div class="text-xs font-semibold text-gray-500 mb-1">メタ解析・比較研究（参考）</div>
+          <div class="font-bold text-lg text-gray-800 mb-1">アリピプラゾールとの直接比較・メタ解析（統合失調症）</div>
+          <div class="text-sm text-gray-600 mb-2">複数のメタ解析（Citrome 2015 等）において、ブレクスピプラゾールはアリピプラゾールと比較してアカシジアが大幅に少ない（NNH ~30–60 vs ~10–15）。有効性は同等〜やや劣る（アリピプラゾールのほうが PANSS 改善が大きいとするデータもあり）。</div>
+          <div class="grid sm:grid-cols-3 gap-2">
+            <div class="bg-green-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">アカシジア（NNH）</div>
+              <div class="font-bold text-green-700">~30–60</div>
+              <div class="text-xs text-gray-500">アリピプラゾール: ~10–15</div>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">有効性（PANSS）</td>
+              <div class="font-bold text-amber-700">同等〜やや劣る</div>
+              <div class="text-xs text-gray-500">アリピプラゾールに非劣勢</div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">体重増加（SMD）</div>
+              <div class="font-bold text-gray-700">中等度（アリピプラゾール同等）</div>
+              <div class="text-xs text-gray-500">オランザピンより少ない</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- NNT/NNH -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">NNT / NNH 参考値</h3>
+      <div class="x-scroll">
+        <table class="guide-table min-w-[500px]">
+          <thead><tr><th>指標</th><th>値（参考）</th><th>比較対象</th><th>文献</th></tr></thead>
+          <tbody>
+            <tr><td>NNT（統合失調症 奏効）</td><td class="font-bold text-green-700">~7–10</td><td>対プラセボ</td><td>VECTOR/BEACON</td></tr>
+            <tr><td>NNT（MDD 補助療法 奏効）</td><td class="font-bold text-green-700">~8–11</td><td>対プラセボ（ADT 単独）</td><td>Thase/Kane 2015</td></tr>
+            <tr><td>NNH（アカシジア）</td><td class="font-bold text-green-700">~30–60</td><td>対プラセボ</td><td>複数 RCT メタ解析</td></tr>
+            <tr><td>NNH（体重 ≥7% 増加）</td><td class="font-bold text-amber-700">~20–30</td><td>対プラセボ</td><td>統合解析</td></tr>
+            <tr><td>NNH（鎮静）</td><td class="font-bold text-green-700">~30（低い）</td><td>対プラセボ</td><td>統合解析</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 8: CASES ===== -->
+    <section id="cases" class="section-card">
+      <div class="section-header">
+        <i data-lucide="user-check" class="w-6 h-6 text-rose-800"></i>
+        <h2>具体的な適用症例</h2>
+      </div>
+      <div class="info-box mb-4">
+        <p class="text-xs text-blue-800"><i data-lucide="shield" class="w-3 h-3 inline mr-1"></i>以下は架空症例であり教育目的のみです。実際の処方は最新の添付文書・ガイドラインに従い、個々の患者情報を踏まえて判断してください。</p>
+      </div>
+
+      <!-- Case 1: Schizophrenia with akathisia on aripiprazole -->
+      <div class="case-card mb-4">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-5 h-5 text-rose-700"></i></div>
+          <div>
+            <div class="font-bold text-gray-800">症例 1：26歳女性 — 統合失調症（アリピプラゾールのアカシジアから切替）</div>
+            <div class="text-xs text-gray-500">架空症例 / 教育目的</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 text-sm mb-3">
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">既往・問題</div>
+            <p class="text-gray-700">統合失調症でアリピプラゾール 12mg/日維持中。陽性症状はコントロール良好だが、強いアカシジア（Barnes Akathisia Scale 3点）で著しい苦痛。減量では再燃リスク。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">切替方針</div>
+            <p class="text-gray-700">アリピプラゾールを漸減しながらブレクスピプラゾール 1mg から開始し 2mg へ。CYP3A4/2D6 阻害薬なし確認。長半減期を活かした緩やかな切替。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">転帰</div>
+            <p class="text-gray-700">切替後 4 週でアカシジア消失。陽性症状維持。日中活動量が増加し職場復帰へ向けた準備を開始。体重 +1.2kg。プロラクチン正常継続。</p>
+          </div>
+        </div>
+        <div class="bg-rose-50 rounded-lg p-3">
+          <p class="text-xs text-rose-800"><strong>臨床的ポイント：</strong>アリピプラゾールからの切替は「最も適切なユースケース」の一つ。同じ D2 部分作動薬クラスだが D2 内在活性が低くアカシジアが大幅に少ない。切替時は長半減期同士のオーバーラップを利用できる。「効果は維持しながら副作用だけ軽減」を患者に説明することが重要。</p>
+        </div>
+      </div>
+
+      <!-- Case 2: MDD augmentation -->
+      <div class="case-card mb-4">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-5 h-5 text-pink-700"></i></div>
+          <div>
+            <div class="font-bold text-gray-800">症例 2：42歳男性 — うつ病（SSRI 部分奏効への補助療法）</div>
+            <div class="text-xs text-gray-500">架空症例 / 教育目的</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 text-sm mb-3">
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">経過</div>
+            <p class="text-gray-700">大うつ病性障害（F33.1）でエスシタロプラム 20mg/日を 8 週間継続。睡眠・食欲は改善したが抑うつ気分・意欲低下・集中困難が残存。HAMD-17: 14点（部分奏効）。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">補助療法の選択</div>
+            <p class="text-gray-700">アリピプラゾールを検討したが就労中のためアカシジア回避優先。エスシタロプラム継続でブレクスピプラゾール 1mg/日から追加。CYP2D6 阻害なし確認。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">転帰</div>
+            <p class="text-gray-700">4週で意欲・集中力が改善、2mg に増量。8週で HAMD-17: 7点（寛解）。アカシジアなし。体重 +0.8kg。業務への復帰を達成。</p>
+          </div>
+        </div>
+        <div class="bg-pink-50 rounded-lg p-3">
+          <p class="text-xs text-pink-800"><strong>臨床的ポイント：</strong>MDD 補助療法では「抗うつ薬の継続＋最低有効量の補助」が基本。1〜2mg で十分な例が多い（3mg は副作用が増えメリット少）。定常状態到達に 2 週かかるため、早期に効果判定せず少なくとも 4 週は維持。アカシジアは週1回は問診確認。</p>
+        </div>
+      </div>
+
+      <!-- Case 3: CYP2D6 interaction -->
+      <div class="case-card">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-5 h-5 text-amber-700"></i></div>
+          <div>
+            <div class="font-bold text-gray-800">症例 3：55歳女性 — うつ病補助療法中にパロキセチンへ変更（CYP2D6 相互作用）</div>
+            <div class="text-xs text-gray-500">架空症例 / 教育目的</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 text-sm mb-3">
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">経緯</div>
+            <p class="text-gray-700">ブレクスピプラゾール 2mg + エスシタロプラムで安定維持中。強迫症状の合併が確認され、よりエビデンスのある抗うつ薬としてパロキセチンへの変更を検討。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">CYP 相互作用の確認</div>
+            <p class="text-gray-700">パロキセチンは強力な CYP2D6 阻害薬。ブレクスピプラゾールは CYP2D6 で代謝されるため、変更後は血中濃度が約 2 倍増加すると予測。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">対応</div>
+            <p class="text-gray-700">パロキセチン開始と同時にブレクスピプラゾールを 1mg に減量（用量を 1/2 に）。変更後の眠気・血圧変化を 2 週間観察。安定確認後に状態に応じて再調整。</p>
+          </div>
+        </div>
+        <div class="bg-amber-50 rounded-lg p-3">
+          <p class="text-xs text-amber-800"><strong>臨床的ポイント：</strong>フルオキセチン・パロキセチンは強力な CYP2D6 阻害薬。MDD 補助療法に使用する SSRI の中でもこれらは特に相互作用が大きい。切替前に CYP プロファイルを確認し先手の用量調整が安全管理の鍵。セルトラリン・エスシタロプラムは CYP2D6 への影響が少なく組み合わせやすい。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 9: SAFETY ===== -->
+    <section id="safety" class="section-card">
+      <div class="section-header">
+        <i data-lucide="shield-alert" class="w-6 h-6 text-rose-800"></i>
+        <h2>副作用管理</h2>
+      </div>
+
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[840px]">
+          <thead>
+            <tr><th>副作用</th><th>頻度</th><th>発現時期</th><th>重症度</th><th class="col-notes">対処</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold text-orange-700">体重増加</td>
+              <td>~10–15%</td>
+              <td>数週〜数か月</td>
+              <td><span class="text-orange-600 font-semibold">中</span></td>
+              <td>定期的な体重・BMI 測定。食事・運動指導。アリピプラゾールと同程度。オランザピンよりはるかに少ない</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-green-700">アカシジア（静座不能）</td>
+              <td>~5%（アリピプラゾールの 1/3 以下）</td>
+              <td>投与初期〜数週</td>
+              <td><span class="text-green-600 font-semibold">低（SDAM の最大特長）</span></td>
+              <td>Barnes Akathisia Scale で定期評価。出現した場合は減量（1mg へ）または β 遮断薬・BZD 短期追加。通常の SGA より大幅に少ない</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">鎮静・眠気</td>
+              <td>~5–10%</td>
+              <td>投与初期</td>
+              <td><span class="text-yellow-600 font-semibold">軽〜中</span></td>
+              <td>就寝前服用を検討。H1 親和性が中程度のため過鎮静はほぼない。クエチアピン・オランザピンより大幅に少ない</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-orange-700">血糖上昇</td>
+              <td>稀〜2%</td>
+              <td>数週〜数か月</td>
+              <td><span class="text-orange-600 font-semibold">中</span></td>
+              <td>HbA1c・空腹時血糖を定期確認。オランザピン・クエチアピン（禁忌）よりリスクは低いが糖尿病既往者は注意</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">自殺念慮・行動（24歳以下）</td>
+              <td>海外臨床試験データで注意喚起</td>
+              <td>投与開始〜数週</td>
+              <td><span class="text-red-600 font-semibold">重大（若年者）</span></td>
+              <td>24歳以下への MDD 補助療法では開始〜数週は週1回の観察強化。家族への観察指導。悪化時はすぐに受診させる</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-green-700">EPS（錐体外路症状）</td>
+              <td>~2–3%（プラセボ同等レベル）</td>
+              <td>—</td>
+              <td><span class="text-green-600 font-semibold">最小</span></td>
+              <td>D2 低内在活性により EPS は最小。出現した場合は減量。抗パーキンソン薬は通常不要</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-green-700">プロラクチン上昇</td>
+              <td>ほぼなし</td>
+              <td>—</td>
+              <td><span class="text-green-600 font-semibold">問題なし</span></td>
+              <td>D2 部分作動（低IA）のためプロラクチン上昇なし。月経不順・性機能障害はほぼ生じない</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-green-700">抗コリン症状</td>
+              <td>M1 ほぼなし → 最小</td>
+              <td>—</td>
+              <td><span class="text-green-600 font-semibold">問題なし</span></td>
+              <td>口渇・便秘・認知障害はほぼ生じない</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">悪性症候群（NMS）</td>
+              <td>稀（&lt;0.1%）</td>
+              <td>変更・増量後</td>
+              <td><span class="text-red-700 font-bold">重篤</span></td>
+              <td>高熱・筋固縮・意識障害・CK 高値 → 即中止・集中管理</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Monitoring schedule -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">モニタリングスケジュール</h3>
+      <div class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl p-4">
+        <div class="flex items-center gap-2 flex-wrap justify-center">
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">ベースライン</div>
+            <div class="bg-white border-2 border-rose-300 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-rose-700">必須</div>
+              <div>体重・BMI</div>
+              <div>血糖/HbA1c</div>
+              <div>脂質</div>
+              <div>アカシジア評価</div>
+            </div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">2〜4週</div>
+            <div class="bg-white border-2 border-rose-200 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-rose-600">重点</div>
+              <div>アカシジア評価</div>
+              <div>体重変化</div>
+              <div>効果確認</div>
+            </div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">12週</div>
+            <div class="bg-white border-2 border-pink-300 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-pink-700">フル評価</div>
+              <div>体重・代謝</div>
+              <div>HbA1c・脂質</div>
+              <div>症状評価</div>
+            </div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">以降</div>
+            <div class="bg-white border-2 border-gray-200 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-gray-600">3〜6か月毎</div>
+              <div>体重・代謝</div>
+              <div>アカシジア</div>
+              <div>相互作用確認</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 10: INTERACTION ===== -->
+    <section id="interaction" class="section-card">
+      <div class="section-header">
+        <i data-lucide="git-merge" class="w-6 h-6 text-rose-800"></i>
+        <h2>薬物相互作用</h2>
+      </div>
+
+      <div class="danger-box mb-5">
+        <div class="font-bold text-red-900 mb-2 flex items-center gap-2"><i data-lucide="alert-octagon" class="w-4 h-4"></i>最重要ポイント：CYP3A4 と CYP2D6 の両方が主代謝酵素</div>
+        <p class="text-sm text-red-800">ブレクスピプラゾールは CYP3A4 および CYP2D6 の<strong>両方</strong>で代謝される（他の SGA と異なる）。一方の阻害だけでも血中濃度は 2 倍程度上昇し、<strong>両方の阻害薬が重なると最大 4 倍以上の AUC 増加</strong>となる。抗うつ薬（フルオキセチン・パロキセチン）は CYP2D6 の強力な阻害薬であり、MDD 補助療法として本剤と併用する際に特に注意が必要。</p>
+      </div>
+
+      <div class="x-scroll">
+        <table class="guide-table min-w-[940px]">
+          <thead>
+            <tr><th class="col-name">薬剤・クラス</th><th class="col-text">機序（酵素）</th><th class="col-notes">臨床的意義</th><th class="col-action">対処</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold text-red-700">パロキセチン・フルオキセチン</td>
+              <td>強力 CYP2D6 阻害 → AUC ≈ 2 倍</td>
+              <td><span class="text-red-700 font-bold">重要：MDD 補助療法での併用に要注意</span>。鎮静・体重増加リスク増</td>
+              <td>本剤を 1/2 に減量。または CYP2D6 阻害の少ない SSRI（エスシタロプラム・セルトラリン）への変更を検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">ケトコナゾール・イトラコナゾール</td>
+              <td>強力 CYP3A4 阻害 → AUC ≈ 2 倍</td>
+              <td><span class="text-red-700 font-semibold">重大：過鎮静・アカシジア増加</span></td>
+              <td>本剤を 1/2 に減量。短期投与でも対応必須</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">パロキセチン ＋ ケトコナゾール（両方同時）</td>
+              <td>CYP2D6 阻害 × CYP3A4 阻害 → AUC ≈ 4 倍以上</td>
+              <td><span class="text-red-700 font-bold">最重大：急激な毒性リスク</span></td>
+              <td>本剤を <strong>1/4 に減量</strong>。可能なら一方の薬剤変更。注意深い経過観察</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-orange-700">カルバマゼピン・リファンピシン</td>
+              <td>強力 CYP3A4 誘導 → AUC ≈ 1/2 以下</td>
+              <td>抗精神病/補助療法効果の大幅低下</td>
+              <td>用量増加（最大 2 倍程度）またはカルバマゼピン代替薬（バルプロ酸等）への変更を検討。TDM 実施</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">クラリスロマイシン・エリスロマイシン</td>
+              <td>中等度 CYP3A4 阻害 → 軽〜中程度 AUC 増加</td>
+              <td>鎮静・体重増加のリスク増加</td>
+              <td>短期併用では減量または注意深い観察。アジスロマイシン等を代替として検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">CYP2D6 低代謝者（PM）＋ CYP3A4 阻害薬</td>
+              <td>内因性 + 薬物性の複合</td>
+              <td>非常に高い血中濃度（最大 4 倍程度）</td>
+              <td>CYP2D6 遺伝子型が判明していれば 1/4 の用量から。TDM を強く推奨</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">中枢抑制薬・アルコール</td>
+              <td>中枢抑制の相加（α1B 遮断）</td>
+              <td>過鎮静・低血圧リスク</td>
+              <td>飲酒を控えるよう指導。BZD 重複使用に注意（ただし鎮静自体は弱い）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-gray-600">セルトラリン・エスシタロプラム</td>
+              <td>CYP2D6/3A4 への影響が最小</td>
+              <td>MDD 補助療法との組み合わせで相互作用が少ない</td>
+              <td>フルオキセチン・パロキセチンの代替として推奨</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-gray-600">グレープフルーツ</td>
+              <td>CYP3A4 阻害（消化管）→ 軽度 AUC 増加</td>
+              <td>軽微だが回避推奨</td>
+              <td>服用時のグレープフルーツジュースを避けるよう患者指導</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 11: SPECIAL POPULATIONS ===== -->
+    <section id="special" class="section-card">
+      <div class="section-header">
+        <i data-lucide="users" class="w-6 h-6 text-rose-800"></i>
+        <h2>特殊集団での使用</h2>
+      </div>
+
+      <div class="x-scroll">
+        <table class="guide-table min-w-[960px]">
+          <thead>
+            <tr><th>集団</th><th class="col-text">主なリスク・変化</th><th class="col-notes">用量調整・方針</th><th class="col-action">モニタリング</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">高齢者（≥65歳）</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 代謝・腎機能低下による薬物蓄積</li>
+                  <li>• 転倒リスク（α1B 遮断）</li>
+                  <li>• EPS は少ないが鎮静・低血圧に注意</li>
+                </ul>
+              </td>
+              <td>0.5〜1mg/日から開始し緩徐に増量。代謝・腎機能に応じて上限を個別調整</td>
+              <td>転倒リスク評価、血圧、体重、認知機能</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">認知症関連精神病（高齢者）</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 死亡率増加（FDA クラス警告：全 SGA）</li>
+                  <li>• 脳血管障害リスク</li>
+                </ul>
+              </td>
+              <td>本適応は未承認。使用する場合は最低限の用量・期間で慎重判断</td>
+              <td>意識、バイタル、転倒・骨折リスク</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">24歳以下（うつ病補助療法）</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 自殺念慮・自殺企図リスク増加（海外試験データ）</li>
+                  <li>• 特に抗うつ薬との組み合わせで注意</li>
+                </ul>
+              </td>
+              <td>有益性が危険性を上回る場合のみ。開始〜4週は週1回以上の観察。家族への観察指導を徹底</td>
+              <td>自傷・自殺念慮、気分の変化、睡眠、精神的激越</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">腎機能障害</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 代謝物の腎排泄低下</li>
+                  <li>• 重篤腎障害：AUC 増加（〜50%）</li>
+                </ul>
+              </td>
+              <td>中等度以上の腎障害（CrCl &lt;60 mL/min）：最大用量を半減検討。透析患者は個別評価</td>
+              <td>eGFR・BUN/Cr、過鎮静・副作用の出現</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">肝機能障害</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• CYP3A4 活性低下 → 代謝遅延</li>
+                  <li>• 中等度：AUC 約 1.3 倍増加</li>
+                  <li>• 重度：AUC 約 1.9 倍増加</li>
+                </ul>
+              </td>
+              <td>
+                <table class="text-xs" style="min-width:220px;border-collapse:collapse;">
+                  <tr><td class="pr-3 py-0.5 font-medium text-gray-600 whitespace-nowrap">中等度（Child-Pugh B）</td><td class="py-0.5">最大用量を減量（統合失調症 3mg / うつ補助 2mg 目安）</td></tr>
+                  <tr><td class="pr-3 py-0.5 font-medium text-gray-600 whitespace-nowrap">重度（Child-Pugh C）</td><td class="py-0.5 font-semibold text-red-700">最大用量をさらに減量（統合失調症 2mg / うつ補助 1.5mg 目安）</td></tr>
+                </table>
+              </td>
+              <td>肝機能（AST/ALT）定期確認。過鎮静に注意</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">妊娠</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 胎盤通過性あり（動物データ）</li>
+                  <li>• 新生児 EPS・薬物離脱症候群の可能性</li>
+                  <li>• ヒトでの大規模データは限定的</li>
+                </ul>
+              </td>
+              <td>有益性が危険性を上回ると判断した場合のみ使用。分娩前後の新生児管理を周産期チームと連携</td>
+              <td>新生児の哺乳・筋緊張・呼吸状態を観察</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">授乳</td>
+              <td>母乳中への移行（程度は限定的、データ少）</td>
+              <td>個別リスク・ベネフィット評価。授乳中は乳児の状態を観察し異変があれば中止検討</td>
+              <td>乳児の体重・発育・過鎮静の有無</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 12: GLOBAL ===== -->
+    <section id="global" class="section-card">
+      <div class="section-header">
+        <i data-lucide="globe" class="w-6 h-6 text-rose-800"></i>
+        <h2>海外との比較・最新研究（2020–2026年）</h2>
+      </div>
+
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">承認適応の国際比較</h3>
+      <div class="x-scroll mb-6">
+        <table class="guide-table min-w-[640px]">
+          <thead>
+            <tr><th>適応</th><th>日本（PMDA）</th><th>FDA（米国）</th><th>EMA（欧州）</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症</td>
+              <td><span class="badge-approved">承認</span> 2018年</td>
+              <td><span class="badge-approved">承認</span> 2015年</td>
+              <td><span class="badge-approved">承認</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">MDD 補助療法</td>
+              <td><span class="badge-approved">承認</span> 2023年</td>
+              <td><span class="badge-approved">承認</span> 2015年</td>
+              <td><span class="badge-approved">承認</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">アルツハイマー型認知症の焦燥・興奮</td>
+              <td><span class="badge-na">未承認</span></td>
+              <td><span class="badge-approved">承認</span> 2023年（世界初）</td>
+              <td><span class="badge-na">未承認</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害</td>
+              <td><span class="badge-na">未承認</span></td>
+              <td><span class="badge-na">未承認</span></td>
+              <td><span class="badge-na">未承認</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">LAI / デポ製剤</td>
+              <td><span class="badge-na">なし</span></td>
+              <td><span class="badge-na">なし</span></td>
+              <td><span class="badge-na">なし</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FDA ADCOM approval for BPSD -->
+      <div class="recommend-box mb-5">
+        <div class="font-bold text-green-900 mb-2">🌐 FDA 2023年：アルツハイマー認知症の焦燥・興奮に世界初承認</div>
+        <p class="text-sm text-green-800">2023年5月、FDA はアルツハイマー型認知症に伴う興奮・攻撃性（BPSD の焦燥・興奮）に対してブレクスピプラゾールを承認した（世界初の SGA でのこの適応）。CLARITY-AD 関連 Phase 3 試験データに基づく。日本では未承認であり、現時点での使用は適応外となる。</p>
+      </div>
+
+      <!-- Recent research -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">最新研究トレンド（2020–2026年）</h3>
+      <div class="grid sm:grid-cols-3 gap-4 mb-5">
+        <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+          <div class="font-bold text-rose-800 mb-1 text-sm">PTSD への応用研究</div>
+          <div class="text-xs text-rose-700 space-y-1">
+            <div>PTSD の悪夢・過覚醒症状への有効性を検討する RCT が進行中（VA 研究含む）。5-HT1A 部分作動・α1B 遮断の組合せが PTSD のノルエピネフリン機能異常に作用すると仮説。</div>
+            <div class="text-rose-500 font-semibold mt-1">→ 2024–2026年の結果が注目される</div>
+          </div>
+        </div>
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+          <div class="font-bold text-indigo-800 mb-1 text-sm">個別化医療：CYP2D6 薬理ゲノム学</div>
+          <div class="text-xs text-indigo-700 space-y-1">
+            <div>CYP2D6 遺伝型（PM/IM/EM/UM）に基づいた初期用量設定の研究が進む。特に PM では 1/2 の用量から開始することが提案されているが、日本人では PM 頻度が低い（~1%）。</div>
+            <div>CPIC ガイドラインに薬理ゲノム情報を統合した処方支援ツールの開発が進行中。</div>
+          </div>
+        </div>
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <div class="font-bold text-green-800 mb-1 text-sm">BPSD（認知症焦燥）研究の進展</div>
+          <div class="text-xs text-green-700 space-y-1">
+            <div>FDA 承認後（2023年）、日本でも認知症の行動・心理症状（BPSD）への承認申請が視野に入っている。低 EPS・低鎮静プロファイルが高齢認知症患者への利点として評価される。承認されれば日本のBPSD治療に大きなインパクト。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Off-label notes -->
+      <div class="warning-box">
+        <div class="font-bold text-amber-900 mb-2 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i>日本での主な適応外使用（注意）</div>
+        <ul class="text-sm text-amber-800 space-y-1">
+          <li>• <strong>認知症の BPSD（日本では現在適応外）</strong>：FDA 承認はされているが、日本では使用は適応外。BPSD には現時点でリスペリドン（低用量）が唯一エビデンスある SGA だが、死亡リスク増加警告は全 SGA に共通</li>
+          <li>• <strong>単独でのうつ病治療</strong>：補助療法のみ承認。抗うつ薬なしの単独使用は日本では適応外</li>
+          <li>• <strong>双極性障害</strong>：日米欧ともに未承認。使用する場合は利害得失を丁寧に検討</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Legend -->
+    <div class="section-card text-xs text-gray-500">
+      <div class="font-bold text-gray-700 mb-2 flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4"></i>エビデンスレベル・凡例
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <div class="flex items-center gap-1"><span class="badge-level-a">Level A</span><span>複数 RCT・メタ解析で支持</span></div>
+        <div class="flex items-center gap-1"><span class="badge-level-b">Level B</span><span>少数 RCT または一致したオブザベーショナル研究</span></div>
+        <div class="flex items-center gap-1"><span class="badge-level-c">Level C</span><span>症例報告・専門家コンセンサス</span></div>
+        <div class="flex items-center gap-1"><span class="badge-approved">承認</span><span>PMDA 承認</span></div>
+        <div class="flex items-center gap-1"><span class="badge-sdam">SDAM</span><span>セロトニン-ドーパミン活性モジュレーター</span></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 py-8 mt-4">
+    <div class="max-w-5xl mx-auto px-4 text-center text-xs text-gray-400 space-y-1">
+      <p>本資料は医療専門職向け参照資料です。処方判断には最新の各薬剤添付文書・ガイドラインを必ず参照してください。</p>
+      <p>ブレクスピプラゾール（レキサルティ）の承認適応・用法用量は改訂が行われます。必ず PMDA の添付文書で最新情報を確認してください（2026年5月現在）。</p>
+      <p class="mt-2"><a href="top.html" class="text-rose-500 hover:text-rose-700">← 精神科臨床リファレンス ポータルへ戻る</a></p>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(link => link.classList.remove('active'));
+          const activeLink = document.querySelector(`.toc-link[href="#${entry.target.id}"]`);
+          if (activeLink) activeLink.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sections.forEach(s => observer.observe(s));
+
+    function getStickyOffset() {
+      var nav = document.getElementById('sticky-section-nav');
+      var toolbar = document.getElementById('data-table-toolbar');
+      return (nav ? nav.getBoundingClientRect().height : 0) + (toolbar ? toolbar.getBoundingClientRect().height : 0) + 4;
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (!href || href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          const top = target.getBoundingClientRect().top + window.pageYOffset - getStickyOffset();
+          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+  <script>
+    /* ========== DATA-TABLE TOOLBAR ========== */
+    var STICKY_KEY = 'psych-brexpiprazole-table-sticky-col-enabled';
+    var stickyNavEl = document.getElementById('sticky-section-nav');
+    var toolbarEl = document.getElementById('data-table-toolbar');
+    var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    var searchInput = document.getElementById('data-table-search');
+    var searchClear = document.getElementById('data-table-search-clear');
+    var searchMeta = document.getElementById('data-table-search-meta');
+    var searchPrev = document.getElementById('data-table-search-prev');
+    var searchNext = document.getElementById('data-table-search-next');
+    var searchHighlightBtn = document.getElementById('data-table-search-highlight');
+    var sectionLabelEl = document.getElementById('data-table-section-label');
+    var mainEl = document.querySelector('main');
+    var searchTimer, searchHitNodes = [], hitIndex = -1, highlightOn = true;
+
+    function updateToolbarTop() {
+      if (!stickyNavEl || !toolbarEl) return;
+      var navH = stickyNavEl.getBoundingClientRect().height || stickyNavEl.offsetHeight;
+      document.documentElement.style.setProperty('--nav-height', navH + 'px');
+      requestAnimationFrame(function() {
+        var toolbarH = toolbarEl.getBoundingClientRect().height || toolbarEl.offsetHeight;
+        var total = navH + toolbarH + 4;
+        document.documentElement.style.setProperty('--sticky-total-height', total + 'px');
+        document.querySelectorAll('section[id], div[id]').forEach(function(el) { el.style.scrollMarginTop = total + 'px'; });
+      });
+    }
+    updateToolbarTop();
+    window.addEventListener('resize', updateToolbarTop);
+    window.addEventListener('load', updateToolbarTop);
+
+    function syncStickyFromToggle() {
+      var enabled = stickyToggle ? stickyToggle.checked : false;
+      document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
+    }
+    if (stickyToggle) {
+      try { var s = localStorage.getItem(STICKY_KEY); if (s !== null) stickyToggle.checked = s === '1'; } catch(e){}
+      stickyToggle.addEventListener('change', function() {
+        try { localStorage.setItem(STICKY_KEY, stickyToggle.checked ? '1' : '0'); } catch(e){}
+        syncStickyFromToggle();
+      });
+    }
+    syncStickyFromToggle();
+
+    var TOOLBAR_SECTIONS = [
+      { id: 'quickref', label: 'クイックリファレンス' },
+      { id: 'molecule', label: '分子・化学情報' },
+      { id: 'pharmacology', label: '薬理作用・受容体' },
+      { id: 'pk', label: '薬物動態（ADME）' },
+      { id: 'japan-approval', label: '日本国内承認情報' },
+      { id: 'efficacy', label: '臨床効果・推奨度' },
+      { id: 'evidence', label: '主要エビデンス' },
+      { id: 'cases', label: '具体的適用症例' },
+      { id: 'safety', label: '副作用管理' },
+      { id: 'interaction', label: '薬物相互作用' },
+      { id: 'special', label: '特殊集団' },
+      { id: 'global', label: '海外比較・最新研究' }
+    ];
+    var lastSectionId = '', lastSectionLabel = '';
+    function updateToolbarSectionLabel() {
+      if (!sectionLabelEl || !toolbarEl) return;
+      var threshold = toolbarEl.getBoundingClientRect().bottom + 6;
+      var active = TOOLBAR_SECTIONS[0];
+      for (var i = 0; i < TOOLBAR_SECTIONS.length; i++) {
+        var el = document.getElementById(TOOLBAR_SECTIONS[i].id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= threshold) active = TOOLBAR_SECTIONS[i];
+      }
+      if (active.id !== lastSectionId) { lastSectionId = active.id; toolbarEl.setAttribute('data-toolbar-section', active.id); }
+      if (active.label !== lastSectionLabel) { lastSectionLabel = active.label; sectionLabelEl.textContent = active.label; }
+    }
+    var toolbarLabelRaf = null;
+    function scheduleToolbarLabel() {
+      if (toolbarLabelRaf != null) return;
+      toolbarLabelRaf = requestAnimationFrame(function() { toolbarLabelRaf = null; updateToolbarSectionLabel(); });
+    }
+    window.addEventListener('scroll', scheduleToolbarLabel, { passive: true });
+    window.addEventListener('resize', scheduleToolbarLabel);
+    window.addEventListener('hashchange', scheduleToolbarLabel);
+    window.addEventListener('load', scheduleToolbarLabel);
+    updateToolbarSectionLabel();
+
+    function normalizeSearchString(s) {
+      if (s == null || s === '') return '';
+      s = String(s).replace(/[\u200b-\u200d\ufeff]/g, '');
+      return typeof s.normalize === 'function' ? s.normalize('NFC').trim() : s.trim();
+    }
+    function formatSearchMeta(n) {
+      var compact = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 639px)').matches;
+      return n === 0 ? (compact ? '0件' : '該当なし') : (compact ? n + '件' : '該当 ' + n + ' 箇所');
+    }
+    function syncHighlightClass() {
+      document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
+      if (searchHighlightBtn) {
+        searchHighlightBtn.setAttribute('aria-pressed', highlightOn ? 'true' : 'false');
+        searchHighlightBtn.classList.toggle('bg-amber-50', highlightOn);
+        searchHighlightBtn.classList.toggle('text-amber-900', highlightOn);
+        searchHighlightBtn.classList.toggle('bg-slate-100', !highlightOn);
+        searchHighlightBtn.classList.toggle('text-slate-600', !highlightOn);
+      }
+    }
+    function updateNavButtons() {
+      var ok = searchHitNodes.length > 0;
+      if (searchPrev) searchPrev.disabled = !ok;
+      if (searchNext) searchNext.disabled = !ok;
+      if (ok && (hitIndex < 0 || hitIndex >= searchHitNodes.length)) hitIndex = 0;
+    }
+    function scrollToHitNode(i) {
+      if (i < 0 || i >= searchHitNodes.length) return;
+      hitIndex = i;
+      requestAnimationFrame(function() { searchHitNodes[hitIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+    }
+    function getTextNodes(root) {
+      var out = [];
+      if (!root) return out;
+      var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_SKIP;
+          var p = node.parentElement;
+          if (!p || !p.closest) return NodeFilter.FILTER_SKIP;
+          if (p.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          if (p.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+    function wrapTextNode(textNode, qLower, sliceLen) {
+      var marks = [];
+      var raw = textNode.textContent;
+      var text = typeof raw.normalize === 'function' ? raw.normalize('NFC') : raw;
+      var lower = text.toLowerCase();
+      var qn = typeof qLower.normalize === 'function' ? qLower.normalize('NFC') : qLower;
+      var idx = lower.indexOf(qn);
+      if (idx === -1) return marks;
+      var frag = document.createDocumentFragment();
+      var pos = 0;
+      while (idx !== -1) {
+        if (idx > pos) frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+        var mk = document.createElement('mark');
+        mk.className = 'table-search-mark';
+        mk.appendChild(document.createTextNode(text.slice(idx, idx + sliceLen)));
+        frag.appendChild(mk);
+        marks.push(mk);
+        pos = idx + sliceLen;
+        idx = lower.indexOf(qn, pos);
+      }
+      if (pos < text.length) frag.appendChild(document.createTextNode(text.slice(pos)));
+      textNode.parentNode.replaceChild(frag, textNode);
+      return marks;
+    }
+    function clearSearchHits() {
+      if (mainEl) {
+        mainEl.querySelectorAll('mark.table-search-mark').forEach(function(mk) {
+          var p = mk.parentNode; if (!p) return;
+          while (mk.firstChild) p.insertBefore(mk.firstChild, mk);
+          p.removeChild(mk);
+        });
+      }
+      searchHitNodes = []; hitIndex = -1;
+      updateNavButtons();
+    }
+    function applySearch(opts) {
+      clearSearchHits();
+      var q = normalizeSearchString(searchInput ? searchInput.value : '');
+      if (!q) { if (searchMeta) searchMeta.textContent = ''; return; }
+      var ql = q.toLowerCase(); var sliceLen = q.length;
+      var nodes = getTextNodes(mainEl);
+      for (var i = 0; i < nodes.length; i++) {
+        var newMarks = wrapTextNode(nodes[i], ql, sliceLen);
+        for (var j = 0; j < newMarks.length; j++) searchHitNodes.push(newMarks[j]);
+      }
+      if (searchMeta) searchMeta.textContent = formatSearchMeta(searchHitNodes.length);
+      updateNavButtons();
+      if (searchHitNodes.length > 0 && opts && opts.scrollToFirst) scrollToHitNode(0);
+    }
+    function debouncedSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function() { applySearch({ scrollToFirst: false }); }, 100); }
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) { if (e.isComposing) return; debouncedSearch(); });
+      searchInput.addEventListener('compositionend', debouncedSearch);
+      searchInput.addEventListener('change', debouncedSearch);
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); applySearch({ scrollToFirst: true }); return; }
+        if (e.key === 'Escape') { searchInput.value = ''; clearSearchHits(); if (searchMeta) searchMeta.textContent = ''; searchInput.blur(); }
+      });
+    }
+    if (searchClear) {
+      searchClear.addEventListener('click', function() {
+        if (searchInput) searchInput.value = '';
+        clearSearchHits(); if (searchMeta) searchMeta.textContent = '';
+        if (searchInput) searchInput.focus();
+      });
+    }
+    if (searchPrev) searchPrev.addEventListener('click', function() { if (!searchHitNodes.length) return; scrollToHitNode(hitIndex <= 0 ? searchHitNodes.length - 1 : hitIndex - 1); });
+    if (searchNext) searchNext.addEventListener('click', function() { if (!searchHitNodes.length) return; scrollToHitNode(hitIndex < 0 ? 0 : (hitIndex + 1) % searchHitNodes.length); });
+    if (searchHighlightBtn) searchHighlightBtn.addEventListener('click', function() { highlightOn = !highlightOn; syncHighlightClass(); });
+    syncHighlightClass();
+
+    function setupScrollHints() {
+      document.querySelectorAll('.x-scroll').forEach(function(el) {
+        if (el.scrollWidth <= el.clientWidth) return;
+        var hint = el.nextElementSibling;
+        if (hint && hint.classList.contains('x-scroll-hint')) return;
+        var div = document.createElement('div');
+        div.className = 'x-scroll-hint';
+        div.innerHTML = '<span>←</span><span>横スクロールできます</span><span>→</span>';
+        el.parentNode.insertBefore(div, el.nextSibling);
+        el.addEventListener('scroll', function() { div.style.opacity = (el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) ? '0.4' : '1'; }, { passive: true });
+      });
+    }
+    if (typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 767px)').matches) {
+      window.addEventListener('load', setupScrollHints);
+      setTimeout(setupScrollHints, 300);
+    }
+  </script>
+</body>
+</html>

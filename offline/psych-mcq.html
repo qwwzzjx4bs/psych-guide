@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>精神医学 4択クイズ</title>
+  <script src="vendor/tailwind.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+    }
+
+    * { -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      overscroll-behavior: none;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', system-ui, sans-serif;
+      background-color: #111827;
+      color: #f3f4f6;
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
+    }
+
+    /* ========== SCREENS ========== */
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    /* ========== PROGRESS BAR ========== */
+    .progress-track {
+      height: 4px;
+      background: #374151;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ========== CHOICE BUTTONS ========== */
+    .choice-btn {
+      width: 100%;
+      text-align: left;
+      border-radius: 0.75rem;
+      border: 1.5px solid #374151;
+      background: #1f2937;
+      padding: 1rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      position: relative;
+      min-height: 56px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .choice-btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      border-color: #4b5563;
+      background: #243040;
+    }
+
+    /* Correct answer highlight */
+    .choice-btn.correct {
+      border-color: #16a34a;
+      background: #052e16;
+    }
+
+    /* Incorrect (chosen wrong) */
+    .choice-btn.incorrect {
+      border-color: #dc2626;
+      background: #2d0c0c;
+    }
+
+    /* Disabled state (after selection, unchosen) */
+    .choice-btn:disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
+
+    /* ========== EXPLANATION PANEL ========== */
+    .explanation-panel {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .explanation-panel.open {
+      max-height: 500px;
+    }
+
+    /* ========== RESULT LIST ========== */
+    .result-item {
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: #1f2937;
+      border: 1.5px solid #374151;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .result-item:hover { background: #243040; }
+
+    .result-item.correct-result { border-left: 4px solid #16a34a; }
+    .result-item.incorrect-result { border-left: 4px solid #dc2626; }
+
+    /* ========== BUTTONS ========== */
+    .btn-primary {
+      background: linear-gradient(135deg, #1d4ed8, #0891b2);
+      color: white;
+      border-radius: 0.75rem;
+      padding: 0.875rem 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      border: none;
+      min-height: 52px;
+    }
+
+    .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-secondary {
+      background: #1f2937;
+      color: #d1d5db;
+      border-radius: 0.75rem;
+      padding: 0.875rem 1.5rem;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      border: 1.5px solid #374151;
+      min-height: 52px;
+    }
+
+    .btn-secondary:active { transform: scale(0.97); }
+    .btn-secondary:hover { background: #243040; }
+
+    .btn-ghost {
+      background: transparent;
+      color: #9ca3af;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: color 0.15s;
+      border: none;
+    }
+
+    .btn-ghost:hover { color: #f3f4f6; }
+
+    /* ========== SCORE RING ========== */
+    .score-ring {
+      width: 120px;
+      height: 120px;
+    }
+
+    /* ========== BADGE COUNTERS ========== */
+    .badge-correct { background: #052e16; color: #4ade80; border: 1px solid #16a34a; }
+    .badge-incorrect { background: #2d0c0c; color: #f87171; border: 1px solid #dc2626; }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in { animation: fadeInUp 0.3s ease-out forwards; }
+
+    @keyframes pulse-correct {
+      0%   { box-shadow: 0 0 0 0 rgba(22,163,74,0.4); }
+      70%  { box-shadow: 0 0 0 8px rgba(22,163,74,0); }
+      100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
+    }
+
+    .pulse-correct { animation: pulse-correct 0.5s ease-out; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%  { transform: translateX(-6px); }
+      40%  { transform: translateX(6px); }
+      60%  { transform: translateX(-4px); }
+      80%  { transform: translateX(4px); }
+    }
+
+    .shake { animation: shake 0.4s ease-out; }
+
+    /* ========== SCROLLBAR ========== */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+
+    /* ========== FILE INPUT ========== */
+    #fileInput { display: none; }
+
+    /* ========== CHOICE LABEL ========== */
+    .choice-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+      background: #374151;
+      color: #d1d5db;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .choice-btn.correct .choice-label {
+      background: #16a34a;
+      color: white;
+    }
+
+    .choice-btn.incorrect .choice-label {
+      background: #dc2626;
+      color: white;
+    }
+
+    /* ========== TOAST ========== */
+    #toast {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 80px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1f2937;
+      color: #f3f4f6;
+      border: 1px solid #374151;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     START SCREEN
+============================================================ -->
+<div id="screen-start" class="screen active">
+  <div class="flex flex-col flex-1 px-5 py-8 max-w-lg mx-auto w-full">
+
+    <!-- Header -->
+    <div class="flex-1 flex flex-col justify-center items-center text-center gap-6">
+      <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-700 to-cyan-600 flex items-center justify-center shadow-lg">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 5C11.716 5 5 11.716 5 20s6.716 15 15 15 15-6.716 15-15S28.284 5 20 5zm0 6a3 3 0 110 6 3 3 0 010-6zm4 19H16v-2h3v-8h-2v-2h5v10h3v2z" fill="white"/>
+        </svg>
+      </div>
+
+      <div>
+        <h1 class="text-2xl font-bold text-white mb-2" id="startTitle">精神医学 4択クイズ</h1>
+        <p class="text-gray-400 text-sm" id="startSubtitle">症例形式で精神医学用語を学ぶ</p>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="w-full bg-gray-800 rounded-xl p-4 flex justify-around">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-white" id="startQuestionCount">10</div>
+          <div class="text-xs text-gray-400 mt-1">問題数</div>
+        </div>
+        <div class="w-px bg-gray-700"></div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-cyan-400" id="startBestScore">—</div>
+          <div class="text-xs text-gray-400 mt-1">ベストスコア</div>
+        </div>
+        <div class="w-px bg-gray-700"></div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-400" id="startAttempts">0</div>
+          <div class="text-xs text-gray-400 mt-1">挑戦回数</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col gap-3 mt-8">
+      <button class="btn-primary w-full" onclick="startQuiz()">
+        クイズを開始
+      </button>
+
+      <button class="btn-secondary w-full" onclick="document.getElementById('fileInput').click()">
+        <span class="flex items-center justify-center gap-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          JSONをインポート
+        </span>
+      </button>
+      <input type="file" id="fileInput" accept=".json" onchange="importJSON(event)">
+
+      <button class="btn-ghost w-full" onclick="exportJSON()">
+        <span class="flex items-center justify-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          現在の問題をエクスポート
+        </span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============================================================
+     QUIZ SCREEN
+============================================================ -->
+<div id="screen-quiz" class="screen">
+  <div class="flex flex-col flex-1 max-w-lg mx-auto w-full">
+
+    <!-- Top bar -->
+    <div class="px-4 pt-3 pb-2 sticky top-0 z-10" style="background:#111827;">
+      <!-- Progress line -->
+      <div class="flex items-center gap-3 mb-2">
+        <div class="progress-track flex-1">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <span class="text-xs text-gray-400 font-medium whitespace-nowrap" id="progressLabel">1/10</span>
+      </div>
+
+      <!-- Counters -->
+      <div class="flex items-center justify-between">
+        <button class="btn-ghost px-2 py-1 text-xs" onclick="goToStart()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          ホーム
+        </button>
+        <div class="flex gap-2">
+          <span class="badge-correct text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1" id="correctCount">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            0
+          </span>
+          <span class="badge-incorrect text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1" id="incorrectCount">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            0
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="flex-1 overflow-y-auto px-4 pb-4" id="quizScrollArea">
+
+      <!-- Question number + text -->
+      <div class="pt-3 pb-4 animate-in" id="questionBlock">
+        <p class="text-xs font-semibold text-blue-400 mb-2 uppercase tracking-widest" id="questionNumber">Question 1</p>
+        <p class="text-gray-100 text-base leading-relaxed font-medium" id="questionText"></p>
+      </div>
+
+      <!-- Choices -->
+      <div class="flex flex-col gap-3" id="choicesContainer"></div>
+
+    </div>
+
+    <!-- Bottom navigation -->
+    <div class="px-4 pb-4 pt-3 flex gap-3 border-t border-gray-800" id="navBar" style="display:none!important;">
+      <button class="btn-secondary flex-1" id="btnBack" onclick="navigateQuestion(-1)">戻る</button>
+      <button class="btn-primary flex-1" id="btnNext" onclick="navigateQuestion(1)">次へ</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============================================================
+     RESULT SCREEN
+============================================================ -->
+<div id="screen-result" class="screen">
+  <div class="flex flex-col flex-1 px-5 py-8 max-w-lg mx-auto w-full overflow-y-auto">
+
+    <!-- Score section -->
+    <div class="flex flex-col items-center text-center mb-8 animate-in">
+      <!-- SVG ring -->
+      <div class="relative w-32 h-32 mb-4">
+        <svg class="score-ring -rotate-90" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#1f2937" stroke-width="10"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="url(#scoreGrad)" stroke-width="10"
+            stroke-linecap="round"
+            stroke-dasharray="326.7"
+            stroke-dashoffset="326.7"
+            id="scoreCircle"/>
+          <defs>
+            <linearGradient id="scoreGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span class="text-3xl font-bold text-white" id="scorePercent">0%</span>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold text-white mb-1">クイズ完了！</h2>
+      <p class="text-gray-400 text-sm" id="scoreDetail">0 / 10 問正解</p>
+      <p class="text-xs text-gray-500 mt-1" id="scoreMessage"></p>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex gap-3 mb-6">
+      <button class="btn-primary flex-1" onclick="retryQuiz()">もう一度</button>
+      <button class="btn-secondary flex-1" onclick="goToStart()">ホームへ</button>
+    </div>
+
+    <!-- Export button -->
+    <button class="btn-ghost w-full mb-6 flex items-center justify-center gap-2" onclick="exportJSON()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      問題セットをエクスポート
+    </button>
+
+    <!-- Review list -->
+    <div>
+      <h3 class="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-widest">問題の復習</h3>
+      <div class="flex flex-col gap-2" id="resultList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const DEFAULT_QUESTIONS = {"version":"1.0","title":"精神医学用語クイズ — 臨床記述から精神状態記述へ","questions":[{"id":"q001","question":"患者は質問に対して、関連はあるが本来の答えとは微妙にズレた回答を続ける。話が逸れていく点は「脱線」に似ているが、一つ一つの返答は質問の周辺をかすめており、完全に無関係ではない。この思考形式を最も正確に表す用語はどれか。","choices":[{"id":"A","text":"接線思考（タンジェンシャリティ）","isCorrect":true,"explanation":"正解です。接線思考は質問の核心を突かず、接線方向に話が逸れていき本来の答えに到達しない思考形態です。迂遠（うえん）との違いは「最終的に元の話題に戻ってくるかどうか」にあり、接線思考では戻ってきません。"},{"id":"B","text":"思考途絶","isCorrect":false,"explanation":"不正解です。思考途絶（thought blocking）は会話中に思考が突然止まり、患者が自分でも気づく現象です。話が続いているこのケースとは異なります。"},{"id":"C","text":"連合弛緩","isCorrect":false,"explanation":"不正解です。連合弛緩は思考の繋がりが全体的に緩む状態を指しますが、この描写のように「周辺的な回答」という特定の形式を指す言葉が他にあります。連合弛緩はより広義の概念です。"},{"id":"D","text":"迂遠（うえん）","isCorrect":false,"explanation":"不正解です。迂遠（circumstantiality）は遠回りしながらも最終的には元の話題・答えに到達する思考形式です。接線思考との鑑別ポイントは「目標に到達するかどうか」です。"}]},{"id":"q002","question":"記憶の障害において、「過去の出来事を思い出せない代わりに、作り話でその穴を埋める」現象を何と呼ぶでしょうか。本人は嘘をついている自覚がないのが特徴です。","choices":[{"id":"A","text":"作話（さくわ）","isCorrect":true,"explanation":"正解です。作話（confabulation）は記憶の欠損を補うために、無意識に架空の出来事を事実として語る現象です。コルサコフ症候群（ウェルニッケ・コルサコフ症候群）や前頭葉損傷で顕著に見られます。詐病や意図的な嘘とは異なります。"},{"id":"B","text":"言語新作","isCorrect":false,"explanation":"不正解です。言語新作（neologism）は患者が独自に作り出した新しい言葉を使う現象で、記憶の穴を埋めるものではありません。統合失調症の思考障害として見られます。"},{"id":"C","text":"フラッシュバック","isCorrect":false,"explanation":"不正解です。フラッシュバック（flashback）はトラウマ体験が突然・不随意に再体験される現象です。記憶の欠損を補う機能はなく、PTSD の中核症状の一つです。"},{"id":"D","text":"空想虚言","isCorrect":false,"explanation":"不正解です。空想虚言（pseudologia fantastica）は意識的あるいは半意識的に作り上げた虚偽の物語を語る状態で、虚偽性障害や反社会性パーソナリティ障害で見られます。本人に「嘘をついている」という要素が一部あり、無意識の作話とは区別されます。"}]},{"id":"q003","question":"「自分の家族が、そっくりな偽物（入れ替わり）に入れ替わってしまった」という、知っている人物が別人と入れ替わったと確信する特殊な妄想を何と呼ぶでしょうか。","choices":[{"id":"A","text":"カプグラ症候群（替え玉妄想）","isCorrect":true,"explanation":"正解です。カプグラ症候群（Capgras syndrome）は親しい人物が偽物に入れ替わったと信じ込む、人物誤認（誤認妄想）の一種です。認知機能と感情処理の乖離が原因の一つとされ、認知症・統合失調症・脳器質疾患で見られます。"},{"id":"B","text":"離人症","isCorrect":false,"explanation":"不正解です。離人症（depersonalization）は自分自身が現実ではないように感じる体験であり、他者への誤認ではありません。「自分が幽体離脱しているようだ」「自分の行動を外から見ている」という感覚が特徴です。"},{"id":"C","text":"コタール症候群","isCorrect":false,"explanation":"不正解です。コタール症候群（Cotard syndrome）は「自分は死んでいる」「内臓がなくなった」など、自己の存在や身体の否定に関する妄想です。他者の入れ替わりを確信するカプグラとは異なります。"},{"id":"D","text":"フレゴリの錯覚","isCorrect":false,"explanation":"不正解です。フレゴリの錯覚（Fregoli delusion）はカプグラとは逆方向の誤認妄想で、「外見の違う赤の他人が実は自分の知人（迫害者）に変装している」と確信します。カプグラは「知人が偽物に変わった」、フレゴリは「他人が知人に扮している」という点で対照的です。"}]},{"id":"q004","question":"「物事に対して関心がわかず、感情も動かず、何をする意欲も起きない」という状態を指す用語として、最も適切なものはどれでしょうか。","choices":[{"id":"A","text":"アパシー（無関心・無気力）","isCorrect":true,"explanation":"正解です。アパシー（apathy）は意欲・情動・関心のすべてが著しく低下した状態を包括的に表す用語です。うつ病の抑うつ気分とは概念が異なり、脳血管障害・前頭葉病変・認知症・統合失調症の陰性症状として見られます。"},{"id":"B","text":"両価性","isCorrect":false,"explanation":"不正解です。両価性（ambivalence）は同一の対象・状況に対して正反対の感情（例：愛と憎しみ）が同時に存在する状態です。意欲の欠如ではなく、感情の二面性を指します。"},{"id":"C","text":"アンヘドニア（失快楽症）","isCorrect":false,"explanation":"不正解です。アンヘドニア（anhedonia）はかつて楽しめた活動から喜びを感じられなくなる状態で、うつ病の中核症状の一つです。アパシーより「快楽の喪失」という側面に焦点が当たっており、関心や意欲全般の欠如とは区別されます。"},{"id":"D","text":"感情失禁","isCorrect":false,"explanation":"不正解です。感情失禁（emotional incontinence）は些細な刺激で泣いたり笑ったりが止まらなくなる、感情制御の失調です。脳血管障害・多発性硬化症などで見られますが、意欲や関心の欠如とは異なります。"}]},{"id":"q005","question":"患者が「自分の背後に自分が立っているのが見える」というように、自分の姿を外部に客観的に見る異常知覚を何と呼ぶでしょうか。","choices":[{"id":"A","text":"幻聴","isCorrect":false,"explanation":"不正解です。幻聴（auditory hallucination）は外部の刺激がないのに声や音が聞こえる知覚異常です。視覚的に自己の姿を見る現象とは感覚モダリティが異なります。"},{"id":"B","text":"妄想知覚","isCorrect":false,"explanation":"不正解です。妄想知覚（delusional perception）は正常な知覚（例：信号が青になった）に対して突然妄想的な意味づけがなされる現象です。自己の姿を見るという知覚異常とは異なります。"},{"id":"C","text":"自己視視（オートスコピー）","isCorrect":true,"explanation":"正解です。自己視視（autoscopy）は自分の姿が自分の外部に鏡のように、あるいは実体を持って見える特殊な幻視現象です。てんかん・偏頭痛・解離性障害・側頭頭頂接合部の障害と関連します。「幽体離脱」体験との関連も指摘されています。"},{"id":"D","text":"考想伝播","isCorrect":false,"explanation":"不正解です。考想伝播（thought broadcasting）は自分の考えが他者に筒抜けになっているという体験で、自我障害の一種です。視覚的な自己知覚ではなく、思考の境界に関する障害です。"}]},{"id":"q006","question":"相手の言った言葉を、意味を理解しているかどうかに関わらず、即座にそのまま繰り返す現象を何と呼ぶでしょうか。","choices":[{"id":"A","text":"言語新作","isCorrect":false,"explanation":"不正解です。言語新作（neologism）は患者自身が新たに造語した独自の言葉を使う現象で、他者の発言を繰り返すものではありません。統合失調症の形式思考障害として見られます。"},{"id":"B","text":"反響言語（エコラリア）","isCorrect":true,"explanation":"正解です。反響言語（echolalia）は相手の発言をオウム返しにする現象で、緊張病症状（カタトニア）や自閉スペクトラム症（ASD）などで見られます。即時エコラリアと遅延エコラリア（後で繰り返す）に分けられます。"},{"id":"C","text":"保続","isCorrect":false,"explanation":"不正解です。保続（perseveration）は同一の言葉・行為・思考が新しい刺激があっても繰り返される現象です。前頭葉機能障害で見られますが、相手の発言を繰り返すのではなく自分が以前した応答を繰り返す点で異なります。"},{"id":"D","text":"多弁","isCorrect":false,"explanation":"不正解です。多弁（logorrhea）は止めどなく言葉が出てくる状態で、躁状態や不安の亢進で見られます。相手の発言を繰り返すという特定のパターンとは異なります。"}]},{"id":"q007","question":"特定の異性（多くは社会的地位の高い人）から「自分は深く愛されている」と、根拠がないにもかかわらず確信する妄想を何と呼ぶでしょうか。","choices":[{"id":"A","text":"誇大妄想","isCorrect":false,"explanation":"不正解です。誇大妄想（grandiose delusion）は「自分は偉大な能力・使命・財産を持つ」という信念で、躁状態や統合失調症で見られます。他者から愛されているという確信とは内容が異なります。"},{"id":"B","text":"恋愛妄想（エロトマニア）","isCorrect":true,"explanation":"正解です。恋愛妄想（erotomania / De Clérambault syndrome）は他人から愛されているという確信が強固に存在する妄想で、クレランボー症候群とも呼ばれます。対象は著名人・医師など地位の高い人物であることが多く、女性に多いとされます。妄想性障害の一病型です。"},{"id":"C","text":"血統妄想","isCorrect":false,"explanation":"不正解です。血統妄想は「自分は実は王族・著名人の血筋だ」という誇大な自己同一性に関する妄想です。他者から愛されているという内容ではありません。"},{"id":"D","text":"嫉妬妄想","isCorrect":false,"explanation":"不正解です。嫉妬妄想（Othello syndrome）は根拠なくパートナーの不貞を確信する妄想で、アルコール依存症・認知症・統合失調症で見られます。自分が愛されているという確信とは逆方向の妄想です。"}]},{"id":"q008","question":"うつ病で見られる「病識」について、「自分は病気だから休む必要がある」と口では言うが、心からの実感や行動が伴わない状態を指す適切な表現はどれでしょうか。","choices":[{"id":"A","text":"病識欠如","isCorrect":false,"explanation":"不正解です。病識欠如（lack of insight）は言葉の上ですら病気であることを否定している状態であり、このケースとは異なります。統合失調症の陽性症状期や躁状態で顕著です。"},{"id":"B","text":"作為体験","isCorrect":false,"explanation":"不正解です。作為体験（made experiences / passivity phenomena）は自分の行動・思考・感情が外部の力によって操られているという体験で、統合失調症の一級症状の一つです。病識の質的な違いとは全く異なる概念です。"},{"id":"C","text":"知的病識","isCorrect":true,"explanation":"正解です。知的病識（intellectual insight）は知識として自分の病名を認めたり説明したりはできるが、感情的な納得や実感が伴わない状態です。対義語は「情動的病識（emotional insight）」で、心から理解し行動が変容する状態を指します。うつ病の回復期評価に重要な概念です。"},{"id":"D","text":"真の病識","isCorrect":false,"explanation":"不正解です。真の病識（true insight）は知的理解に加えて感情的納得と行動変容を伴う、最も完全な病識の状態です。このケースのように実感が伴わない段階とは区別されます。"}]},{"id":"q009","question":"統合失調症などの慢性期に見られる。会話の量が著しく減り、内容も空疎で、必要最小限の言葉しか出てこなくなる思考障害を何と呼ぶでしょうか。","choices":[{"id":"A","text":"思考制止","isCorrect":false,"explanation":"不正解です。思考制止（thought retardation）は主にうつ病で見られ、思考の速度が遅くなり、応答に時間がかかる状態です。慢性期に固定的に見られる「量・内容の乏しさ」とは異なります。"},{"id":"B","text":"思考の貧困（言語の貧困）","isCorrect":true,"explanation":"正解です。思考の貧困（poverty of thought / alogia）は思考のバリエーションや量が減少し、返答が単調かつ空疎になる陰性症状の一つです。統合失調症の慢性期・陰性症状期に見られ、PANSSの陰性症状評価項目に含まれます。"},{"id":"C","text":"緘黙","isCorrect":false,"explanation":"不正解です。緘黙（mutism）は発声・発語が全くなくなる状態で、カタトニアや選択性緘黙症で見られます。「必要最小限の言葉は出る」このケースとは重症度・性質が異なります。"},{"id":"D","text":"思考途絶","isCorrect":false,"explanation":"不正解です。思考途絶（thought blocking）は会話中に思考が突然止まることであり、慢性的に「少ない」状態を指すものではありません。患者自身が思考の中断を自覚することが多い点も思考の貧困とは異なります。"}]},{"id":"q010","question":"「昨日、何をしていましたか？」と聞くと、「昨日…そうですね…昨日は…どこかに行ったような…何をしていたか、よく…」と答え、思い出せないという様子を示した。記銘した記憶を意識的に呼び起こせないが、手続き記憶（自転車の乗り方など）は保たれているこの状態を最もよく表す用語はどれか。","choices":[{"id":"A","text":"顕在記憶障害（エピソード記憶障害）","isCorrect":true,"explanation":"正解です。エピソード記憶（episodic memory）は特定の時間・場所に結びついた個人的な出来事の記憶です。顕在記憶（explicit memory）の一種で、海馬が中心的な役割を担います。アルツハイマー型認知症やコルサコフ症候群で早期から障害されます。"},{"id":"B","text":"潜在記憶障害（手続き記憶障害）","isCorrect":false,"explanation":"不正解です。手続き記憶（procedural memory）は運動スキルや習慣的行動の記憶で、意識的な想起を必要としない潜在記憶の一種です。問題文では手続き記憶は保たれており、これが障害されているわけではありません。"},{"id":"C","text":"意味記憶障害","isCorrect":false,"explanation":"不正解です。意味記憶（semantic memory）は一般的知識（言葉の意味・歴史的事実など）の記憶です。このケースは「昨日の出来事」という個人的エピソードの想起困難であり、意味記憶の障害とは区別されます。"},{"id":"D","text":"前向性健忘","isCorrect":false,"explanation":"不正解です。前向性健忘（anterograde amnesia）は障害発生後の新しい記憶が作れなくなる状態です。このケースは過去の出来事の想起困難であり、逆向性健忘（retrograde amnesia）の要素が含まれます。両者の鑑別は原因評価に重要です。"}]}]};
+
+// ============================================================
+// STATE
+// ============================================================
+
+let quizData = DEFAULT_QUESTIONS;
+let currentIndex = 0;
+let answers = [];       // answers[i] = choiceId or null
+let score = { correct: 0, incorrect: 0 };
+let attempts = 0;
+let bestScore = null;
+
+// ============================================================
+// NAVIGATION HELPERS
+// ============================================================
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ============================================================
+// START / HOME
+// ============================================================
+
+function goToStart() {
+  updateStartStats();
+  showScreen('screen-start');
+}
+
+function updateStartStats() {
+  const qs = quizData.questions || [];
+  document.getElementById('startTitle').textContent = quizData.title || '精神医学 4択クイズ';
+  document.getElementById('startQuestionCount').textContent = qs.length;
+  document.getElementById('startAttempts').textContent = attempts;
+  document.getElementById('startBestScore').textContent =
+    bestScore !== null ? `${bestScore}%` : '—';
+}
+
+// ============================================================
+// QUIZ FLOW
+// ============================================================
+
+function startQuiz() {
+  const qs = quizData.questions || [];
+  if (qs.length === 0) { showToast('問題がありません。JSONをインポートしてください。'); return; }
+  currentIndex = 0;
+  answers = new Array(qs.length).fill(null);
+  score = { correct: 0, incorrect: 0 };
+  attempts++;
+  updateStartStats();
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function retryQuiz() {
+  startQuiz();
+}
+
+// ============================================================
+// RENDER QUESTION
+// ============================================================
+
+function renderQuestion() {
+  const qs = quizData.questions;
+  const total = qs.length;
+  const q = qs[currentIndex];
+  const answered = answers[currentIndex];
+
+  // Progress
+  const pct = ((currentIndex) / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${currentIndex + 1}/${total}`;
+
+  // Counters
+  document.getElementById('correctCount').innerHTML =
+    `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${score.correct}`;
+  document.getElementById('incorrectCount').innerHTML =
+    `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>${score.incorrect}`;
+
+  // Question text
+  document.getElementById('questionNumber').textContent = `Question ${currentIndex + 1}`;
+  document.getElementById('questionText').textContent = q.question;
+
+  // Re-trigger animation
+  const block = document.getElementById('questionBlock');
+  block.classList.remove('animate-in');
+  void block.offsetWidth;
+  block.classList.add('animate-in');
+
+  // Choices
+  const container = document.getElementById('choicesContainer');
+  container.innerHTML = '';
+
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.setAttribute('data-id', choice.id);
+
+    const isAnswered = answered !== null;
+    const isChosen = answered === choice.id;
+    const isCorrect = choice.isCorrect;
+
+    if (isAnswered) {
+      btn.disabled = true;
+      if (isCorrect) btn.classList.add('correct');
+      if (isChosen && !isCorrect) btn.classList.add('incorrect');
+    }
+
+    // Label circle
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'flex items-start gap-3';
+
+    const circle = document.createElement('span');
+    circle.className = 'choice-label mt-0.5';
+    circle.textContent = choice.id;
+
+    const textWrap = document.createElement('div');
+    textWrap.className = 'flex-1';
+
+    const choiceText = document.createElement('p');
+    choiceText.className = 'text-sm font-medium text-gray-200 leading-snug';
+    choiceText.textContent = choice.text;
+
+    textWrap.appendChild(choiceText);
+
+    // Feedback row (shown after answering)
+    if (isAnswered && (isChosen || isCorrect)) {
+      const feedbackRow = document.createElement('div');
+      feedbackRow.className = 'flex items-center gap-1.5 mt-1.5';
+
+      if (isChosen && isCorrect) {
+        feedbackRow.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="text-xs font-semibold text-green-400">正解です！</span>`;
+      } else if (isChosen && !isCorrect) {
+        feedbackRow.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <span class="text-xs font-semibold text-red-400">不正解</span>`;
+      } else if (!isChosen && isCorrect) {
+        feedbackRow.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="text-xs font-semibold text-green-400">正解</span>`;
+      }
+
+      textWrap.appendChild(feedbackRow);
+
+      // Explanation
+      const expPanel = document.createElement('div');
+      expPanel.className = 'explanation-panel';
+      const expText = document.createElement('p');
+      expText.className = 'text-xs text-gray-300 leading-relaxed mt-2 pr-1';
+      expText.textContent = choice.explanation;
+      expPanel.appendChild(expText);
+      textWrap.appendChild(expPanel);
+
+      // Open explanation with slight delay for animation
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { expPanel.classList.add('open'); });
+      });
+    }
+
+    labelDiv.appendChild(circle);
+    labelDiv.appendChild(textWrap);
+    btn.appendChild(labelDiv);
+
+    if (!isAnswered) {
+      btn.addEventListener('click', () => selectChoice(choice.id));
+    } else {
+      // Allow toggling other explanations
+      if (!isChosen && !isCorrect) {
+        const expPanel = document.createElement('div');
+        expPanel.className = 'explanation-panel';
+        const expText = document.createElement('p');
+        expText.className = 'text-xs text-gray-400 leading-relaxed mt-2 pr-1';
+        expText.textContent = choice.explanation;
+        expPanel.appendChild(expText);
+        textWrap.appendChild(expPanel);
+
+        btn.style.cursor = 'pointer';
+        btn.disabled = false;
+        btn.addEventListener('click', () => {
+          expPanel.classList.toggle('open');
+        });
+      }
+    }
+
+    container.appendChild(btn);
+  });
+
+  // Nav bar
+  const navBar = document.getElementById('navBar');
+  if (answered !== null) {
+    navBar.style.removeProperty('display');
+    const isLast = currentIndex === total - 1;
+    document.getElementById('btnNext').textContent = isLast ? '結果を見る' : '次へ';
+    document.getElementById('btnBack').style.display = currentIndex === 0 ? 'none' : '';
+  } else {
+    navBar.style.setProperty('display', 'none', 'important');
+  }
+
+  // Scroll to top of quiz area
+  const scrollArea = document.getElementById('quizScrollArea');
+  scrollArea.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// SELECT CHOICE
+// ============================================================
+
+function selectChoice(choiceId) {
+  const qs = quizData.questions;
+  const q = qs[currentIndex];
+  const choice = q.choices.find(c => c.id === choiceId);
+
+  if (answers[currentIndex] !== null) return;
+
+  answers[currentIndex] = choiceId;
+
+  if (choice.isCorrect) {
+    score.correct++;
+  } else {
+    score.incorrect++;
+  }
+
+  // Animate chosen button before re-render
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(btn => {
+    if (btn.getAttribute('data-id') === choiceId) {
+      if (choice.isCorrect) {
+        btn.classList.add('pulse-correct');
+      } else {
+        btn.classList.add('shake');
+      }
+    }
+  });
+
+  setTimeout(() => renderQuestion(), 200);
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+
+function navigateQuestion(delta) {
+  const total = quizData.questions.length;
+  const next = currentIndex + delta;
+
+  if (next >= total) {
+    showResult();
+    return;
+  }
+
+  if (next < 0) return;
+
+  currentIndex = next;
+  renderQuestion();
+}
+
+// ============================================================
+// RESULT SCREEN
+// ============================================================
+
+function showResult() {
+  const qs = quizData.questions;
+  const total = qs.length;
+  const pct = Math.round((score.correct / total) * 100);
+
+  // Update best score
+  if (bestScore === null || pct > bestScore) {
+    bestScore = pct;
+    updateStartStats();
+  }
+
+  // Score ring animation
+  showScreen('screen-result');
+
+  requestAnimationFrame(() => {
+    const circle = document.getElementById('scoreCircle');
+    const circumference = 326.7;
+    const offset = circumference - (pct / 100) * circumference;
+    circle.style.transition = 'stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1)';
+    circle.style.strokeDashoffset = offset;
+  });
+
+  document.getElementById('scorePercent').textContent = pct + '%';
+  document.getElementById('scoreDetail').textContent = `${score.correct} / ${total} 問正解`;
+
+  // Message
+  let msg = '';
+  if (pct === 100) msg = '全問正解！素晴らしい！';
+  else if (pct >= 80) msg = '優秀です！あと少しで完璧。';
+  else if (pct >= 60) msg = 'もう一息！苦手な問題を復習しましょう。';
+  else msg = '基礎から復習してみましょう。';
+  document.getElementById('scoreMessage').textContent = msg;
+
+  // Review list
+  const list = document.getElementById('resultList');
+  list.innerHTML = '';
+
+  qs.forEach((q, i) => {
+    const answered = answers[i];
+    const chosenChoice = answered ? q.choices.find(c => c.id === answered) : null;
+    const correctChoice = q.choices.find(c => c.isCorrect);
+    const isCorrect = chosenChoice && chosenChoice.isCorrect;
+    const isSkipped = answered === null;
+
+    const item = document.createElement('div');
+    item.className = `result-item ${isSkipped ? '' : (isCorrect ? 'correct-result' : 'incorrect-result')}`;
+
+    item.innerHTML = `
+      <div class="flex items-start gap-3">
+        <div class="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
+          ${isSkipped ? 'bg-gray-700 text-gray-400' : (isCorrect ? 'bg-green-900 text-green-400' : 'bg-red-900 text-red-400')}">
+          ${isSkipped ? '?' : (isCorrect
+            ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+            : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>')}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-semibold text-gray-400 mb-0.5">Q${i + 1}</p>
+          <p class="text-sm text-gray-200 leading-snug line-clamp-2">${q.question.substring(0, 60)}…</p>
+          <p class="text-xs mt-1 ${isCorrect ? 'text-green-400' : 'text-red-400'}">
+            正解: ${correctChoice.text}
+          </p>
+        </div>
+      </div>`;
+
+    item.addEventListener('click', () => {
+      currentIndex = i;
+      showScreen('screen-quiz');
+      renderQuestion();
+    });
+
+    list.appendChild(item);
+  });
+}
+
+// ============================================================
+// IMPORT / EXPORT
+// ============================================================
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.questions || !Array.isArray(data.questions) || data.questions.length === 0) {
+        showToast('⚠ 有効な questions 配列が見つかりません');
+        return;
+      }
+
+      // Validate structure
+      const valid = data.questions.every(q =>
+        q.question && Array.isArray(q.choices) && q.choices.length === 4 &&
+        q.choices.some(c => c.isCorrect === true)
+      );
+
+      if (!valid) {
+        showToast('⚠ 問題の形式が正しくありません（各問に choices 4つ、isCorrect が必要）');
+        return;
+      }
+
+      quizData = data;
+      bestScore = null;
+      attempts = 0;
+      updateStartStats();
+      showToast(`✓ ${data.questions.length}問をインポートしました`);
+    } catch {
+      showToast('⚠ JSONの解析に失敗しました');
+    }
+    // Reset file input
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function exportJSON() {
+  const json = JSON.stringify(quizData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const title = (quizData.title || 'psych-mcq').replace(/[^\w\u3000-\u9fff]/g, '_');
+  a.href = url;
+  a.download = `${title}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✓ エクスポートしました');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+
+let toastTimer = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+updateStartStats();
+</script>
+</body>
+</html>

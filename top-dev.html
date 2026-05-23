@@ -1024,7 +1024,7 @@
           <a href="#portal-other"
              class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
             💡 その他
-            <span id="jump-cnt-portal-other" class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">2</span>
+            <span id="jump-cnt-portal-other" class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">3</span>
           </a>
         </div>
       </div>
@@ -1547,6 +1547,18 @@
           <p class="text-xs text-gray-500 leading-relaxed">Cursor 搭載の各AIエージェントの特徴・用途・選び方を比較解説。</p>
           <div class="mt-3 text-xs link-slate font-medium">cursor-ai-agents.html →</div>
         </a>
+        <a id="card-content-verification" href="content-verification.html" class="card block border border-slate-200 rounded-xl p-4 border-slate bg-slate sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-slate px-2 py-0.5 rounded-full">管理ツール</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-24 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">コンテンツ検証ツール — 用量・表記・精神医学用語 3軸チェック</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">ポータル掲載カード（全58枚）の内容を、①日本国内添付文書準拠の用量・用法、②標準日本語表記（mg/日・半角数字等）、③現行の精神医学用語（統合失調症・双極性障害・認知症等）の3軸で体系的に検証。自動検出＋手動評価＋メモ機能＋Markdownレポート出力。</p>
+          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+            <span class="text-slate-700 bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">全58カード一覧</span>
+            <span class="text-slate-700 bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">薬剤用量リファレンス</span>
+            <span class="text-slate-700 bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">非推奨用語自動検出</span>
+            <span class="text-slate-700 bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">Markdownレポート出力</span>
+          </div>
+          <div class="mt-2 text-xs link-slate font-medium">content-verification.html →</div>
+        </a>
       </div>
 
       <section id="portal-news-section" class="mt-6 sm:mt-8 hidden" aria-labelledby="portal-news-heading">
@@ -1629,7 +1641,7 @@
       ],
       'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-schiz-highschool'],
       'portal-study': ['card-icd10-quiz', 'card-mood-suicide-learning', 'card-eeg-learning', 'card-eeg-basics', 'card-eeg-waveforms', 'card-eeg-quiz', 'card-eeg-cases'],
-      'portal-other': ['card-context', 'card-cursor']
+      'portal-other': ['card-context', 'card-cursor', 'card-content-verification']
     };
 
     let portalSearchCommittedQuery = '';
@@ -2394,8 +2406,9 @@
       'card-bprs-guide':       ['📖 解説', '🏥 外来参照'],
       'card-terminology':      ['📚 用語集', '🏥 外来参照'],
       'card-shiteii':          ['🎓 資格取得', '📋 ガイド'],
-      'card-context':          ['💡 AI活用'],
-      'card-cursor':           ['💡 AI活用'],
+      'card-context':               ['💡 AI活用'],
+      'card-cursor':                ['💡 AI活用'],
+      'card-content-verification':  ['🛠 管理ツール', '✓ 検証', '用量・表記・用語'],
       'card-nonpharmacologic': ['🏥 外来参照', '💆 非薬物療法', 'CBT・MECT・TMS'],
       'card-schiz-psychoedu':  ['🏥 外来参照', '統合失調症', '心理教育', '🛠 生成ツール'],
       'card-schiz-highschool': ['📚 概念・資格', '統合失調症', '一般向け・患者'],
@@ -2633,7 +2646,11 @@
         { date: '2026-04-23', kind: '新規', text: 'Cursor AIエージェント比較ガイドとして初版公開' },
         { date: '2026-04-20', kind: '更新', text: 'モデル比較表の注記を追記' },
       ],
+      'card-content-verification': [
+        { date: '2026-05-24', kind: '新規', text: 'ポータル全カードの用量・用法・日本語表記・精神医学用語を3軸で検証する管理ツールを初版公開。日本国内添付文書準拠の用量リファレンス・非推奨用語自動検出・手動評価・Markdownレポート出力機能を搭載。', href: 'content-verification.html' },
+      ],
       _portal: [
+        { date: '2026-05-24', kind: '新規', text: 'top.html 準拠：「コンテンツ検証ツール」（用量・表記・精神医学用語 3軸検証）を「その他」セクションに追加。SECTIONS・CARD_TAGS・CARD_UPDATE_HISTORY を同期', href: 'top-dev.html' },
         { date: '2026-04-26', kind: '更新', text: '開発版のみ：区分「治療・薬」を「治療概要」（バイオレット）と「薬剤選択」（インディゴ）に分割、「概要・資格」を「概念・資格」に改称。ジャンプバー・SECTIONS・件数表示を再構成', href: 'top-dev.html' },
         { date: '2026-05-08', kind: '更新', text: 'お気に入りの localStorage キーを本番と統一（psychPortalFavorites）。旧 psychPortalDev* は初回のみ自動移行', href: 'top-dev.html' },
         { date: '2026-04-26', kind: '更新', text: '開発版お気に入り：☆／★・一覧絞り込みに加え、登録済みカードをオレンジ二重枠・暖色グラデで未登録と区別', href: 'top-dev.html' },

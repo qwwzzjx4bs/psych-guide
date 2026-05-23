@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="ja" class="data-table-sticky-col-off">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>オランザピン（ジプレキサ）— 詳解 | 精神科臨床リファレンス</title>
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.js"></script>
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #3b1f6e;
+      --psych-secondary: #7c3aed;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #3b0764 0%, #6d28d9 50%, #4338ca 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card {
+      background: white; border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      padding: 2rem; margin-bottom: 1.5rem;
+    }
+    .criteria-box {
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+      border-left: 4px solid #7c3aed; padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem; margin: 1rem 0;
+    }
+    .danger-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #dc2626; padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem; margin: 1rem 0;
+    }
+    .warning-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border-left: 4px solid #d97706; padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem; margin: 1rem 0;
+    }
+    .recommend-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left: 4px solid #15803d; padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem; margin: 1rem 0;
+    }
+    .info-box {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #1d4ed8; padding: 1.25rem 1.5rem;
+      border-radius: 0.75rem; margin: 1rem 0;
+    }
+    @media (max-width: 639px) {
+      .section-card { padding: 1rem; margin-bottom: 1rem; border-radius: 0.75rem; }
+      .criteria-box, .danger-box, .warning-box, .recommend-box, .info-box { padding: 1rem 0.875rem; }
+    }
+    .badge-level-a { background: linear-gradient(135deg,#15803d,#16a34a); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-level-b { background: linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-level-c { background: linear-gradient(135deg,#4b5563,#6b7280); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-approved { background: linear-gradient(135deg,#15803d,#16a34a); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-off-label { background: linear-gradient(135deg,#6b7280,#9ca3af); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-sga { background: linear-gradient(135deg,#5b21b6,#7c3aed); color:white; padding:0.25rem 0.85rem; border-radius:9999px; font-size:0.875rem; font-weight:700; letter-spacing:0.05em; white-space:nowrap; display:inline-block; }
+    .badge-1st { background: linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-2nd { background: linear-gradient(135deg,#0369a1,#0284c7); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-na { background: #f3f4f6; color:#9ca3af; border:1px solid #e5e7eb; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:600; white-space:nowrap; display:inline-block; }
+    .toc { position:fixed; right:1.5rem; top:50%; transform:translateY(-50%); background:white; padding:1rem; border-radius:0.75rem; box-shadow:0 4px 12px rgba(0,0,0,0.12); max-height:80vh; overflow-y:auto; z-index:50; min-width:160px; }
+    @media (max-width:1280px) { .toc { display:none; } }
+    .toc-link { display:block; font-size:0.725rem; color:#6b7280; padding:0.25rem 0.5rem; border-radius:0.375rem; margin-bottom:0.1rem; transition:all 0.15s; text-decoration:none; }
+    .toc-link:hover, .toc-link.active { background:#f5f3ff; color:#6d28d9; font-weight:600; }
+    .guide-table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+    .guide-table th { background:#3b1f6e; color:white; padding:0.75rem 1rem; text-align:left; font-weight:600; white-space:nowrap; }
+    .guide-table td { padding:0.75rem 1rem; border-bottom:1px solid #e5e7eb; vertical-align:top; }
+    .guide-table tbody tr:nth-child(even) td { background:#faf5ff; }
+    .guide-table tbody tr:hover td { background:#f5f3ff; }
+    /* Sticky first column (ON state) */
+    table.guide-table thead th:first-child:not([colspan]) {
+      position: sticky; left: 0; z-index: 3;
+      background: #3b1f6e;
+      box-shadow: 2px 0 5px -2px rgba(0,0,0,0.25);
+    }
+    table.guide-table tbody td:first-child:not([colspan]) {
+      position: sticky; left: 0; z-index: 1;
+      background: white;
+      box-shadow: 2px 0 5px -2px rgba(0,0,0,0.08);
+    }
+    table.guide-table tbody tr:nth-child(even) td:first-child:not([colspan]) { background: #faf5ff; }
+    table.guide-table tbody tr:hover td:first-child:not([colspan]) { background: #f5f3ff; }
+    /* OFF state */
+    html.data-table-sticky-col-off table.guide-table thead th:first-child:not([colspan]),
+    html.data-table-sticky-col-off table.guide-table tbody td:first-child:not([colspan]) {
+      position: static !important; left: auto !important; z-index: auto !important; box-shadow: none !important;
+    }
+    /* Free-text column helpers */
+    .col-notes  { min-width: 200px; }
+    .col-action { min-width: 180px; }
+    .col-text   { min-width: 160px; }
+    .col-name   { min-width: 140px; }
+    /* Mobile table adjustments */
+    @media (max-width: 639px) {
+      .guide-table { font-size: 0.78rem; }
+      .guide-table th { padding: 0.5rem 0.6rem; font-size: 0.72rem; }
+      .guide-table td { padding: 0.5rem 0.6rem; }
+      .badge-level-a, .badge-level-b, .badge-level-c, .badge-approved,
+      .badge-off-label, .badge-1st, .badge-2nd, .badge-na {
+        font-size: 0.68rem; padding: 0.15rem 0.5rem;
+      }
+    }
+    .receptor-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.875rem; }
+    .receptor-label { width:170px; font-size:0.8125rem; font-weight:600; color:#374151; flex-shrink:0; }
+    .receptor-bar-bg { flex:1; background:#f1f5f9; border-radius:9999px; height:18px; overflow:hidden; }
+    .receptor-bar { height:18px; border-radius:9999px; display:flex; align-items:center; padding-left:6px; font-size:0.65rem; color:white; font-weight:700; }
+    .receptor-ki { font-size:0.75rem; color:#6b7280; width:90px; flex-shrink:0; text-align:right; }
+    @media(max-width:639px){
+      .receptor-row { gap:0.4rem; }
+      .receptor-label { width:108px; font-size:0.68rem; }
+      .receptor-bar-bg { height:16px; }
+      .receptor-bar { height:16px; font-size:0; padding-left:0; }
+      .receptor-ki { width:64px; font-size:0.65rem; }
+    }
+    .case-card { border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.5rem; background:white; margin-bottom:1rem; transition:box-shadow 0.2s; }
+    .case-card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+    .adme-box { background:#f5f3ff; border:2px solid #7c3aed; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#3b1f6e; }
+    .adme-metabolite { background:#f0fdf4; border:2px solid #15803d; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#14532d; }
+    .adme-excretion { background:#fff7ed; border:2px solid #d97706; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#92400e; }
+    .x-scroll {
+      width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      border-radius: 0.5rem;
+    }
+    @media (max-width: 767px) {
+      .x-scroll { box-shadow: inset -14px 0 18px -10px rgba(30,41,59,0.15); }
+    }
+    .x-scroll-hint { display: none; }
+    @media (max-width: 767px) {
+      .x-scroll-hint {
+        display: flex; align-items: center; justify-content: flex-end; gap: 0.3rem;
+        margin-top: 0.3rem; padding: 0.25rem 0.5rem;
+        font-size: 0.65rem; color: #64748b; font-weight: 500;
+        background: rgba(241,245,249,0.8); border-radius: 0.3rem;
+        border: 1px dashed #cbd5e1;
+      }
+    }
+    .section-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem; }
+    .section-header h2 { font-size:1.25rem; font-weight:700; color:#3b1f6e; margin:0; }
+    .rct-card { border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.25rem; background:white; }
+    .switch-step { display:flex; align-items:flex-start; gap:0.75rem; margin-bottom:0.875rem; }
+    .switch-step-num { background:#7c3aed; color:white; border-radius:9999px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; margin-top:1px; }
+    /* Scroll margin for sticky bars */
+    section[id], div[id] { scroll-margin-top: var(--sticky-total-height, 96px); }
+
+    /* ========== DATA-TABLE TOOLBAR ========== */
+    .data-table-toolbar {
+      position: sticky;
+      top: var(--nav-height, 48px);
+      z-index: 9;
+      box-sizing: border-box;
+      width: 100%;
+      border: none;
+      border-top: 1px solid rgba(203,213,225,0.95);
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px -12px rgba(15,23,42,0.12);
+      padding: 0;
+    }
+    .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(249,250,251,0.92);
+      --toolbar-head-border: rgba(203,213,225,0.95);
+      --toolbar-accent: #7c3aed;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.625rem;
+      padding: 0.375rem 1rem;
+      background: var(--toolbar-head-bg);
+      border-bottom: 1px solid var(--toolbar-head-border);
+      transition: background 0.35s ease, border-color 0.35s ease;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__head {
+        gap: 0.75rem;
+        padding: 0.4rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem));
+      }
+    }
+    .data-table-toolbar__head-title { font-size: 0.8125rem; font-weight: 700; letter-spacing: -0.015em; color: #0f172a; line-height: 1.4; }
+    @media (min-width: 640px) { .data-table-toolbar__head-title { font-size: 0.875rem; } }
+    #data-table-section-label {
+      color: var(--toolbar-accent, #7c3aed);
+      transition: color 0.35s ease;
+      font-size: 0.75rem; font-weight: 600;
+      max-width: 60%; text-align: right; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; flex-shrink: 0;
+    }
+    @media (min-width: 640px) { #data-table-section-label { font-size: 0.8125rem; max-width: min(50vw, 22rem); } }
+    .data-table-toolbar__controls {
+      display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between;
+      gap: 0.5rem; padding: 0.375rem 1rem;
+    }
+    @media (min-width: 640px) {
+      .data-table-toolbar__controls {
+        gap: 0.625rem;
+        padding: 0.4rem max(1rem, calc((100vw - min(64rem, 100vw)) / 2 + 1rem));
+      }
+    }
+    @media (max-width: 639px) { .data-table-toolbar__controls { gap: 0.3rem; padding: 0.375rem 0.625rem; } }
+    .data-table-toolbar__controls input[type="search"] { font-size: 0.8125rem !important; line-height: 1.4; }
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-cancel-button,
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appearance: none; display: none; }
+    /* Section color themes – violet palette */
+    #data-table-toolbar[data-toolbar-section="quickref"] .data-table-toolbar__head {
+      --toolbar-head-bg: linear-gradient(135deg, rgba(91,33,182,0.18), rgba(67,56,202,0.13));
+      --toolbar-head-border: rgba(91,33,182,0.4); --toolbar-accent: #5b21b6;
+    }
+    #data-table-toolbar[data-toolbar-section="molecule"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(224,231,255,0.88); --toolbar-head-border: rgba(79,70,229,0.35); --toolbar-accent: #4338ca;
+    }
+    #data-table-toolbar[data-toolbar-section="pharmacology"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(237,233,254,0.88); --toolbar-head-border: rgba(124,58,237,0.35); --toolbar-accent: #7c3aed;
+    }
+    #data-table-toolbar[data-toolbar-section="pk"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(243,232,255,0.88); --toolbar-head-border: rgba(126,34,206,0.35); --toolbar-accent: #7e22ce;
+    }
+    #data-table-toolbar[data-toolbar-section="japan-approval"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(219,234,254,0.88); --toolbar-head-border: rgba(37,99,235,0.35); --toolbar-accent: #1d4ed8;
+    }
+    #data-table-toolbar[data-toolbar-section="efficacy"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(220,252,231,0.88); --toolbar-head-border: rgba(22,163,74,0.35); --toolbar-accent: #15803d;
+    }
+    #data-table-toolbar[data-toolbar-section="evidence"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(219,234,254,0.88); --toolbar-head-border: rgba(30,64,175,0.35); --toolbar-accent: #1e40af;
+    }
+    #data-table-toolbar[data-toolbar-section="cases"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(254,243,199,0.88); --toolbar-head-border: rgba(180,83,9,0.35); --toolbar-accent: #b45309;
+    }
+    #data-table-toolbar[data-toolbar-section="safety"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(255,237,213,0.88); --toolbar-head-border: rgba(234,88,12,0.35); --toolbar-accent: #c2410c;
+    }
+    #data-table-toolbar[data-toolbar-section="interaction"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(254,226,226,0.88); --toolbar-head-border: rgba(220,38,38,0.35); --toolbar-accent: #b91c1c;
+    }
+    #data-table-toolbar[data-toolbar-section="special"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(243,232,255,0.88); --toolbar-head-border: rgba(126,34,206,0.35); --toolbar-accent: #7e22ce;
+    }
+    #data-table-toolbar[data-toolbar-section="global"] .data-table-toolbar__head {
+      --toolbar-head-bg: rgba(204,251,241,0.88); --toolbar-head-border: rgba(13,148,136,0.35); --toolbar-accent: #0f766e;
+    }
+    /* Search highlight */
+    main mark.table-search-mark {
+      background-color: rgba(253,224,71,0.88); color: inherit; font-weight: 600;
+      padding: 0 0.04em; border-radius: 0.125rem;
+      box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    }
+    html.data-table-search-highlight-off main mark.table-search-mark {
+      background: transparent !important; font-weight: inherit; padding: 0; border-radius: 0;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header-gradient text-white py-8 sm:py-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <a href="top.html" class="text-violet-200 hover:text-white text-sm flex items-center gap-1 mb-3 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> ポータルへ戻る
+          </a>
+          <div class="flex items-center gap-3 flex-wrap mb-3">
+            <span class="badge-sga">SGA（MARTA）</span>
+            <span class="text-violet-200 text-sm">非定型抗精神病薬 · チエノベンゾジアゼピン系</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-1">オランザピン</h1>
+          <p class="text-violet-200 text-lg font-medium mb-1">ジプレキサ® / ジプレキサザイディス®</p>
+          <p class="text-violet-300 text-sm">Olanzapine | 日本承認: 2001年（統合失調症）</p>
+          <p class="text-violet-300 text-sm mt-0.5">製造販売：日本イーライリリー株式会社</p>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-violet-200 mb-1">ICD-10</div>
+            <div class="text-lg font-bold">F20</div>
+            <div class="text-xs text-violet-200">統合失調症</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-violet-200 mb-1">ICD-10</div>
+            <div class="text-lg font-bold">F31</div>
+            <div class="text-xs text-violet-200">双極性障害</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-violet-200 mb-1">最大用量</div>
+            <div class="text-lg font-bold">20 mg</div>
+            <div class="text-xs text-violet-200">/日</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== STICKY SECTION NAV ========== -->
+  <div id="sticky-section-nav" class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4">
+      <nav class="flex items-center overflow-x-auto py-2 gap-0.5 text-sm" aria-label="セクションジャンプ">
+        <a href="#quickref"     class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">概要</a>
+        <a href="#molecule"     class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">分子</a>
+        <a href="#pharmacology" class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">薬理</a>
+        <a href="#pk"           class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">動態</a>
+        <a href="#japan-approval" class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">国内承認</a>
+        <a href="#efficacy"     class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">有効性</a>
+        <a href="#evidence"     class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">エビデンス</a>
+        <a href="#cases"        class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">症例</a>
+        <a href="#safety"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">安全性</a>
+        <a href="#interaction"  class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">相互作用</a>
+        <a href="#special"      class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">特殊集団</a>
+        <a href="#global"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-violet-50 hover:text-violet-700 text-gray-600 font-medium transition-colors">海外・最新</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ========== DATA-TABLE TOOLBAR ========== -->
+  <div id="data-table-toolbar" class="data-table-toolbar" data-toolbar-section="quickref" role="region" aria-label="ページ内検索と表示オプション">
+    <div class="data-table-toolbar__head">
+      <span class="data-table-toolbar__head-title min-w-0 truncate">オランザピン（ジプレキサ）詳解</span>
+      <span id="data-table-section-label" class="shrink-0 truncate" aria-live="polite">クイックリファレンス</span>
+    </div>
+    <div class="data-table-toolbar__controls">
+      <label class="flex h-7 shrink-0 cursor-pointer select-none items-center gap-1 rounded border border-slate-200 bg-slate-50/80 px-2 py-1 text-slate-700 hover:bg-slate-100/90 sm:h-7 sm:gap-1.5 sm:px-2.5">
+        <input type="checkbox" id="data-table-sticky-col-toggle" class="h-3.5 w-3.5 shrink-0 rounded border-gray-300 text-violet-600 focus:ring-violet-500" />
+        <span class="text-[0.6875rem] font-semibold leading-none whitespace-nowrap">列固定</span>
+      </label>
+      <div class="flex min-w-0 flex-1 items-center justify-end gap-1">
+        <div class="flex h-7 min-w-0 flex-1 items-center gap-1 rounded border border-slate-200 bg-slate-50/80 px-1.5 sm:max-w-[min(100%,24rem)]">
+          <i data-lucide="search" class="h-3 w-3 shrink-0 text-slate-500" aria-hidden="true"></i>
+          <label for="data-table-search" class="sr-only">ページ内検索</label>
+          <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-0 text-[0.8125rem] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
+          <button type="button" id="data-table-search-clear" class="flex h-6 w-6 shrink-0 items-center justify-center rounded text-base font-light leading-none text-slate-500 hover:bg-slate-200/80 hover:text-slate-800" aria-label="検索をクリア" title="クリア"><span aria-hidden="true">×</span></button>
+        </div>
+        <button type="button" id="data-table-search-prev" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-white text-xs font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:px-2.5" aria-label="前の一致箇所へ" title="前の一致箇所" disabled>↑</button>
+        <button type="button" id="data-table-search-next" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-white text-xs font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:px-2.5" aria-label="次の一致箇所へ" title="次の一致箇所" disabled>↓</button>
+        <button type="button" id="data-table-search-highlight" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-amber-50 text-amber-900 hover:bg-amber-100/90 sm:px-2" aria-pressed="true" aria-label="検索一致のハイライト表示を切り替え" title="ハイライト（検索一致）"><i data-lucide="highlighter" class="h-3.5 w-3.5" aria-hidden="true"></i></button>
+        <p id="data-table-search-meta" class="max-w-[3rem] shrink-0 truncate text-[0.6rem] text-slate-600 tabular-nums sm:max-w-[6rem] sm:text-xs" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FLOATING TOC ========== -->
+  <nav class="toc" aria-label="目次">
+    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">目次</p>
+    <a href="#quickref"      class="toc-link">クイックリファレンス</a>
+    <a href="#molecule"      class="toc-link">分子・化学情報</a>
+    <a href="#pharmacology"  class="toc-link">薬理作用・受容体</a>
+    <a href="#pk"            class="toc-link">薬物動態 (ADME)</a>
+    <a href="#japan-approval" class="toc-link">日本国内承認情報</a>
+    <a href="#efficacy"      class="toc-link">臨床効果・推奨度</a>
+    <a href="#evidence"      class="toc-link">主要エビデンス</a>
+    <a href="#cases"         class="toc-link">具体的適用症例</a>
+    <a href="#safety"        class="toc-link">副作用管理</a>
+    <a href="#interaction"   class="toc-link">薬物相互作用</a>
+    <a href="#special"       class="toc-link">特殊集団</a>
+    <a href="#global"        class="toc-link">海外比較・最新研究</a>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
+
+    <!-- ===== SECTION 1: QUICK REFERENCE ===== -->
+    <section id="quickref" class="section-card">
+      <div class="section-header">
+        <i data-lucide="zap" class="w-6 h-6 text-violet-700"></i>
+        <h2>クイックリファレンス</h2>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+        <div class="bg-violet-50 rounded-xl p-3 text-center">
+          <div class="text-xs text-violet-600 font-semibold mb-1">開始用量（統合失調症）</div>
+          <div class="text-2xl font-bold text-violet-800">5–10</div>
+          <div class="text-xs text-violet-600">mg/日（就寝前）</div>
+        </div>
+        <div class="bg-purple-50 rounded-xl p-3 text-center">
+          <div class="text-xs text-purple-600 font-semibold mb-1">標準維持用量</div>
+          <div class="text-2xl font-bold text-purple-800">10</div>
+          <div class="text-xs text-purple-600">mg/日</div>
+        </div>
+        <div class="bg-indigo-50 rounded-xl p-3 text-center">
+          <div class="text-xs text-indigo-600 font-semibold mb-1">最大用量</div>
+          <div class="text-2xl font-bold text-indigo-800">20</div>
+          <div class="text-xs text-indigo-600">mg/日</div>
+        </div>
+        <div class="bg-red-50 rounded-xl p-3 text-center border border-red-200">
+          <div class="text-xs text-red-600 font-semibold mb-1">禁忌</div>
+          <div class="text-sm font-bold text-red-800">糖尿病</div>
+          <div class="text-xs text-red-600">患者・既往歴</div>
+        </div>
+      </div>
+
+      <!-- Dosing by indication -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[640px]">
+          <thead>
+            <tr>
+              <th>適応（日本）</th>
+              <th>開始</th>
+              <th>標準維持</th>
+              <th>最大</th>
+              <th>承認状況</th>
+              <th>推奨度</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症</td>
+              <td>5–10 mg/日</td>
+              <td>10 mg/日</td>
+              <td>20 mg/日</td>
+              <td><span class="badge-approved">承認</span> 2001年</td>
+              <td><span class="badge-level-a">Level A</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害 躁症状</td>
+              <td>10 mg/日</td>
+              <td>10–15 mg/日</td>
+              <td>20 mg/日</td>
+              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-level-a">Level A</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害 うつ症状</td>
+              <td>5 mg/日（就寝前）</td>
+              <td>10 mg/日</td>
+              <td>20 mg/日</td>
+              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-level-a">Level A</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">抗悪性腫瘍剤投与に伴う悪心・嘔吐</td>
+              <td>5 mg/日</td>
+              <td>5 mg/日</td>
+              <td>10 mg/日</td>
+              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-level-a">Level A</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 mb-5">※ 用量は最新の添付文書（PMDA）を必ずご確認ください。糖尿病患者（既往含む）には禁忌。</p>
+
+      <!-- 4 key monitoring points -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">外来で必ず押さえる4点</h3>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl border-l-4 border-red-600">
+          <div class="w-9 h-9 bg-red-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">代謝モニタリングを忘れずに</div>
+            <p class="text-gray-600 text-sm">開始前・4週・8週・12週・その後3か月毎に<strong>体重・腹囲・血糖（HbA1c）・脂質</strong>を計測。早期の介入（食事・運動・メトホルミン）が代謝症候群予防の鍵。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl border-l-4 border-orange-500">
+          <div class="w-9 h-9 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">糖尿病（既往歴含む）は禁忌</div>
+            <p class="text-gray-600 text-sm">日本添付文書では<strong>糖尿病患者・糖尿病の既往のある患者は禁忌</strong>。処方前に問診・HbA1c確認を必ず実施。高血糖・ケトアシドーシスで致死例の報告あり。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-violet-50 rounded-xl border-l-4 border-violet-600">
+          <div class="w-9 h-9 bg-violet-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">喫煙状況を必ず確認</div>
+            <p class="text-gray-600 text-sm">喫煙はCYP1A2を誘導しオランザピン血中濃度を<strong>30–50%低下</strong>させる。禁煙時・入院時には用量過剰となるリスク。喫煙歴の変化があれば血中濃度確認を検討。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border-l-4 border-slate-600">
+          <div class="w-9 h-9 bg-slate-600 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">筋注製剤＋BZD同時投与は禁忌</div>
+            <p class="text-gray-600 text-sm">速放性筋注（IM）とベンゾジアゼピン系IM/IVの<strong>同時・近時投与で呼吸抑制・循環虚脱・死亡例</strong>が報告。急性期鎮静を図る際は組み合わせを慎重に確認すること。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: MOLECULE ===== -->
+    <section id="molecule" class="section-card">
+      <div class="section-header">
+        <i data-lucide="atom" class="w-6 h-6 text-violet-700"></i>
+        <h2>分子・化学情報</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6">
+        <!-- 2D Structure SVG -->
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">化学構造式（チエノベンゾジアゼピン骨格）</h3>
+          <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-center">
+            <svg viewBox="0 0 470 255" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-sm" aria-label="オランザピン化学構造式">
+              <title>オランザピン 2D構造式（チエノベンゾジアゼピン）</title>
+              <!-- ===== BENZENE ring (right, 6-membered aromatic) ===== -->
+              <!-- vertices: (370,100),(405,120),(405,165),(370,185),(335,165),(335,120) -->
+              <polygon points="370,100 405,120 405,165 370,185 335,165 335,120" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <!-- aromatic inner ring hint -->
+              <circle cx="370" cy="142" r="20" fill="none" stroke="#374151" stroke-width="1.1" stroke-dasharray="4,2"/>
+
+              <!-- ===== DIAZEPINE ring (7-membered, center) ===== -->
+              <!-- Atoms: (335,120)→N_imine(305,98)→C_junc(272,105)→C3a(255,140)→C10(268,178)→N5_amino(305,192)→(335,165) -->
+              <polyline points="335,120 305,98 272,105 255,140 268,178 305,192 335,165" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <!-- close with benzene: (335,165)→(335,120) already drawn in benzene -->
+              <!-- Double bond hint N=C (C3-N4 bond in diazepine) -->
+              <line x1="305" y1="98" x2="272" y2="105" stroke="#374151" stroke-width="1.8"/>
+
+              <!-- ===== THIOPHENE ring (5-membered, left) ===== -->
+              <!-- Shared bond: C_junc(272,105)→C3a(255,140) -->
+              <!-- Other atoms: C2_methyl(220,88), S(195,118), C3_thio(218,152)→C3a(255,140) -->
+              <!-- Ring: C_junc(272,105)→C2_methyl(220,88)→S(195,118)→C3_thio(218,152)→C3a(255,140) →shared bond C3a→C_junc (already in diazepine) -->
+              <polyline points="272,105 220,88 195,118 218,152 255,140" fill="none" stroke="#374151" stroke-width="1.8"/>
+
+              <!-- ===== N-methylpiperazine (attached to N_imine at 305,98) ===== -->
+              <!-- Single bond from N_imine going up-left to piperazine N1 -->
+              <line x1="305" y1="98" x2="298" y2="72" stroke="#374151" stroke-width="1.8"/>
+              <!-- Piperazine ring: PipN1(298,72)→PipC2(322,55)→PipC3(318,28)→PipN4(292,20)→PipC5(268,35)→PipC6(270,62)→back to PipN1 -->
+              <polygon points="298,72 322,55 318,28 292,20 268,35 270,62" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <!-- NMe group from PipN4(292,20) going left-up -->
+              <line x1="292" y1="20" x2="275" y2="8" stroke="#374151" stroke-width="1.6"/>
+
+              <!-- ===== 2-methyl group on thiophene C2(220,88) ===== -->
+              <line x1="220" y1="88" x2="192" y2="68" stroke="#374151" stroke-width="1.6"/>
+
+              <!-- ===== ATOM LABELS ===== -->
+              <!-- S in thiophene -->
+              <text x="175" y="124" font-size="13" font-family="sans-serif" font-weight="700" fill="#be185d" text-anchor="middle">S</text>
+              <!-- N_imine in diazepine (N4, connects to piperazine) -->
+              <text x="310" y="96" font-size="12" font-family="sans-serif" font-weight="700" fill="#1d4ed8" text-anchor="start">N</text>
+              <!-- N5_amino in diazepine (NH) -->
+              <text x="285" y="205" font-size="12" font-family="sans-serif" font-weight="700" fill="#1d4ed8" text-anchor="middle">N<tspan font-size="9" baseline-shift="sub">H</tspan></text>
+              <!-- PipN4 (N-methyl of piperazine) -->
+              <text x="302" y="18" font-size="12" font-family="sans-serif" font-weight="700" fill="#1d4ed8" text-anchor="middle">N</text>
+              <!-- CH3 label for NMe on piperazine -->
+              <text x="262" y="8" font-size="10" font-family="sans-serif" fill="#6b7280" text-anchor="end">CH3</text>
+              <!-- CH3 label for 2-methyl on thiophene -->
+              <text x="180" y="64" font-size="10" font-family="sans-serif" fill="#6b7280" text-anchor="end">H3C</text>
+
+              <!-- ===== RING LABELS ===== -->
+              <text x="215" y="248" font-size="10" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">チエノ環</text>
+              <text x="295" y="248" font-size="10" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">ジアゼピン環</text>
+              <text x="372" y="210" font-size="10" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">ベンゼン環</text>
+              <!-- annotation: no chiral center -->
+              <text x="390" y="235" font-size="9" font-family="sans-serif" fill="#9ca3af" text-anchor="middle">不斉中心なし</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Chemical data table -->
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">物理化学的性質</h3>
+          <table class="w-full text-sm">
+            <tbody>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium w-2/5">一般名</td>
+                <td class="py-2 font-semibold text-gray-800">オランザピン</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">IUPAC名</td>
+                <td class="py-2 text-xs text-gray-700 leading-relaxed">2-methyl-4-(4-methylpiperazin-1-yl)-10H-thieno[2,3-b][1,5]benzodiazepine</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">分子式</td>
+                <td class="py-2 font-mono text-gray-800">C<sub>17</sub>H<sub>20</sub>N<sub>4</sub>S</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">分子量</td>
+                <td class="py-2 font-semibold text-gray-800">312.44 g/mol</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">CAS番号</td>
+                <td class="py-2 text-gray-800">132539-06-1</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">骨格</td>
+                <td class="py-2 text-gray-800">チエノベンゾジアゼピン系</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">logP（推定値）</td>
+                <td class="py-2 text-gray-800">≈ 3.0（脂溶性：中〜高）</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">pKa</td>
+                <td class="py-2 text-gray-800">≈ 7.4（ピペラジン窒素）</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 pr-3 text-gray-500 font-medium">立体化学</td>
+                <td class="py-2 text-gray-800">不斉中心なし（光学異性体なし）</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-3 text-gray-500 font-medium">水溶性</td>
+                <td class="py-2 text-gray-800">難溶性（pH依存、酸性で増大）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="criteria-box mt-4">
+        <div class="font-bold text-violet-900 mb-2">チエノベンゾジアゼピン骨格の特徴</div>
+        <p class="text-sm text-violet-800">ベンゾジアゼピンのベンゼン環をチオフェン環に置換した骨格。広い平面芳香環系が多くの受容体サブタイプへの高いアフィニティを持つ基盤となっており、D2・5-HT2A に加え H1・ムスカリン・α1 への多標的作用（MARTA 特性）をもたらす。不斉中心がないため光学異性体は存在しない。</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: PHARMACOLOGY ===== -->
+    <section id="pharmacology" class="section-card">
+      <div class="section-header">
+        <i data-lucide="flask-conical" class="w-6 h-6 text-violet-700"></i>
+        <h2>薬理作用・受容体プロファイル</h2>
+      </div>
+
+      <div class="criteria-box mb-5">
+        <div class="font-bold text-violet-900 mb-2">作用機序（MARTA：多受容体標的抗精神病薬）</div>
+        <ul class="text-sm text-violet-800 space-y-1">
+          <li>• <strong>D2受容体拮抗</strong>：中脳辺縁系のドーパミン過剰活動を抑制 → 陽性症状の改善</li>
+          <li>• <strong>5-HT2A受容体拮抗</strong>（D2より高アフィニティ）：前頭前皮質でドーパミン遊離を促進 → 陰性症状・認知機能の改善補助</li>
+          <li>• <strong>H1受容体拮抗</strong>：中枢性鎮静・体重増加（食欲亢進）に関与</li>
+          <li>• <strong>M1受容体拮抗</strong>：口渇・便秘・認知（記憶）への影響に関与</li>
+          <li>• <strong>α1受容体拮抗</strong>：起立性低血圧・鎮静に関与</li>
+          <li>• <strong>5-HT2C受容体拮抗</strong>：食欲調節・体重増加に関与（H1と協調）</li>
+        </ul>
+      </div>
+
+      <!-- Receptor binding Ki bar chart -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">受容体結合親和性プロファイル（Ki 値）</h3>
+      <p class="text-xs text-gray-400 mb-4">低 Ki = 高親和性。棒グラフはlog スケール換算（参照：Bymaster et al., Neuropsychopharmacology）。数値は文献値の参考例（試験条件により異なる）。</p>
+
+      <div class="bg-gray-50 rounded-xl p-4 mb-5">
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT2A（セロトニン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:95%; background:linear-gradient(90deg,#7c3aed,#a855f7)">最高</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 4 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">H1（ヒスタミン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:82%; background:linear-gradient(90deg,#d97706,#f59e0b)">高</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 7 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">D2（ドーパミン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:70%; background:linear-gradient(90deg,#1d4ed8,#3b82f6)">高</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 11 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT2C（セロトニン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:70%; background:linear-gradient(90deg,#7c3aed,#a855f7)">高</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 11 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">α1（アドレナリン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:57%; background:linear-gradient(90deg,#dc2626,#ef4444)">中〜高</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 19 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">D1（ドーパミン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:44%; background:linear-gradient(90deg,#1d4ed8,#3b82f6)">中</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 31 nM</div>
+        </div>
+        <div class="receptor-row">
+          <div class="receptor-label">M1（ムスカリン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:20%; background:linear-gradient(90deg,#15803d,#22c55e)">低〜中</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 73 nM</div>
+        </div>
+        <div class="receptor-row mb-0">
+          <div class="receptor-label">D4（ドーパミン）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:36%; background:linear-gradient(90deg,#1d4ed8,#3b82f6)">中</div>
+          </div>
+          <div class="receptor-ki">Ki ≈ 45 nM</div>
+        </div>
+      </div>
+
+      <!-- SDA vs MARTA comparison -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">SDA vs MARTA：位置づけ</h3>
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div class="border border-violet-200 rounded-xl p-4 bg-violet-50">
+          <div class="font-bold text-violet-800 mb-2 text-sm">SDA（セロトニン・ドーパミン拮抗）の特徴</div>
+          <p class="text-xs text-violet-700">リスペリドン・パリペリドンなどは 5-HT2A + D2 拮抗が中心。H1・M1 作用は比較的小さく、鎮静や代謝への影響は MARTA より限定的なことが多い。プロラクチン上昇はSDAで顕著。</p>
+        </div>
+        <div class="border border-purple-200 rounded-xl p-4 bg-purple-50">
+          <div class="font-bold text-purple-800 mb-2 text-sm">MARTA（多受容体標的）の特徴：オランザピン</div>
+          <p class="text-xs text-purple-700">D2 + 5-HT2A + H1（強）+ M1（中）+ α1 への多標的作用。高い全体的有効性を示す一方、H1/5-HT2C 拮抗による<strong>体重増加・代謝異常が最大級</strong>。EPS・プロラクチン上昇は比較的少ない。</p>
+        </div>
+      </div>
+
+      <!-- Dose-dependent effects -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">用量と受容体占有率の概要</h3>
+      <div class="bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <span class="text-xs font-semibold text-violet-600 bg-violet-100 px-2 py-0.5 rounded">5 mg</span>
+          <span class="text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-0.5 rounded">10 mg</span>
+          <span class="text-xs font-semibold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded">15 mg</span>
+          <span class="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded">20 mg</span>
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 bg-violet-500 rounded-full flex-shrink-0"></div>
+            <span class="text-gray-700"><strong>D2占有率</strong>：5 mg で ≈60%、10 mg で ≈70–80%（抗精神病効果域）。20 mg でほぼ飽和（≥90%）。</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 bg-amber-500 rounded-full flex-shrink-0"></div>
+            <span class="text-gray-700"><strong>H1占有率</strong>：低用量から高い（≥80%）。鎮静・体重増加への寄与は用量依存性が比較的弱い。</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
+            <span class="text-gray-700"><strong>EPS・プロラクチン上昇</strong>：他のSGAに比較し低いが、高用量（≥15 mg）では増加傾向。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: PK ===== -->
+    <section id="pk" class="section-card">
+      <div class="section-header">
+        <i data-lucide="bar-chart-2" class="w-6 h-6 text-violet-700"></i>
+        <h2>薬物動態（ADME）</h2>
+      </div>
+
+      <!-- ADME Flow diagram -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">代謝経路フロー</h3>
+      <div class="bg-gray-50 rounded-xl p-4 mb-6 overflow-x-auto">
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-center min-w-max mx-auto">
+          <div class="adme-box">経口投与<br><span class="text-xs font-normal text-violet-600">F ≈ 60–87%</span></div>
+          <div class="text-violet-400 text-2xl font-bold">→</div>
+          <div class="adme-box">オランザピン<br><span class="text-xs font-normal text-violet-600">t₁/₂ ≈ 30h</span></div>
+          <div class="flex flex-col items-center gap-1">
+            <div class="text-xs text-gray-500 font-semibold bg-yellow-50 border border-yellow-200 px-2 py-0.5 rounded text-center">UGT1A4（主）<br>CYP1A2（副）・FMO3</div>
+            <div class="text-violet-400 text-2xl">→</div>
+          </div>
+          <div class="adme-metabolite">10-N-グルクロニド<br>（主要代謝物・不活性）<br><span class="text-xs font-normal text-green-600">N-デスメチル体（CYP1A2）</span></div>
+          <div class="text-violet-400 text-2xl font-bold">→</div>
+          <div class="adme-excretion">腎排泄<br><span class="text-xs font-normal text-orange-600">約57%（尿）</span><br><span class="text-xs font-normal text-orange-600">約30%（糞便）</span></div>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 text-center mb-6">主要代謝物（10-N-グルクロニド・N-デスメチル体）は薬理活性ほぼなし。主体はオランザピン自身の作用。</p>
+
+      <!-- PK Parameters table -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">薬物動態パラメータ（経口 SR 製剤基準）</h3>
+      <div class="x-scroll mb-6">
+        <table class="guide-table min-w-[480px]">
+          <thead>
+            <tr>
+              <th>パラメータ</th>
+              <th>オランザピン（経口）</th>
+              <th>筋注 IM（速放型）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="font-semibold">Tmax</td><td>~5–8 h</td><td>~15–45 分</td></tr>
+            <tr><td class="font-semibold">バイオアベイラビリティ（F）</td><td>≈ 60–87%（初回通過代謝）</td><td>ほぼ完全吸収（IM）</td></tr>
+            <tr><td class="font-semibold">消失半減期（t₁/₂）</td><td>20–54 h（平均 ≈ 30 h）</td><td>経口と同等</td></tr>
+            <tr><td class="font-semibold">定常状態到達</td><td>~7日（1回/日）</td><td>—</td></tr>
+            <tr><td class="font-semibold">Vd（分布容積）</td><td>≈ 1000 L（大）</td><td>同等</td></tr>
+            <tr><td class="font-semibold">タンパク結合率</td><td>≈ 93%（アルブミン・α1AGP）</td><td>同等</td></tr>
+            <tr><td class="font-semibold">主代謝酵素</td><td>UGT1A4（グルクロン酸抱合）・CYP1A2・FMO3</td><td>—</td></tr>
+            <tr><td class="font-semibold">尿中排泄（代謝物）</td><td>~57%（主に抱合体）</td><td>—</td></tr>
+            <tr><td class="font-semibold">食事の影響</td><td>ほぼなし（Tmax・AUC変化軽微）</td><td>—</td></tr>
+            <tr><td class="font-semibold">TDM 目標濃度（参考値）</td><td colspan="2">トラフ 20–80 ng/mL（AGNP コンセンサス参考範囲）※採血タイミング・施設プロトコル要確認</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CYP1A2 effects (smoking/fluvoxamine) -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">CYP1A2 変動要因と臨床的影響</h3>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="warning-box">
+          <div class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <i data-lucide="cigarette" class="w-4 h-4"></i>喫煙（CYP1A2 誘導）
+          </div>
+          <ul class="text-sm text-amber-800 space-y-1">
+            <li>• 喫煙中はオランザピン血中濃度を<strong>30–50%低下</strong>させる</li>
+            <li>• 喫煙者には非喫煙者より<strong>高用量が必要</strong>な場合がある</li>
+            <li>• <strong>禁煙・入院時（禁煙病棟）</strong>には誘導解除 → 濃度上昇 → 過剰鎮静・EPS リスク</li>
+            <li>• 喫煙状況の変化があれば TDM 測定を検討</li>
+          </ul>
+        </div>
+        <div class="danger-box">
+          <div class="font-bold text-red-900 mb-2 flex items-center gap-2">
+            <i data-lucide="pill" class="w-4 h-4"></i>フルボキサミン（CYP1A2 阻害）
+          </div>
+          <ul class="text-sm text-red-800 space-y-1">
+            <li>• 強力な CYP1A2 阻害によりオランザピン AUC が<strong>約 50–100% 上昇</strong></li>
+            <li>• 非喫煙者でより影響大（C/D 比が数倍に上昇する症例報告あり）</li>
+            <li>• フルボキサミン併用時は<strong>オランザピン用量を半減</strong>して開始し TDM で調整</li>
+            <li>• カルバマゼピン（CYP1A2 誘導）でも血中濃度低下あり</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 5: JAPAN APPROVAL ===== -->
+    <section id="japan-approval" class="section-card">
+      <div class="section-header">
+        <i data-lucide="file-check" class="w-6 h-6 text-violet-700"></i>
+        <h2>日本国内承認情報</h2>
+      </div>
+
+      <!-- Drug info cards -->
+      <div class="grid sm:grid-cols-3 gap-4 mb-5">
+        <div class="bg-violet-50 rounded-xl p-4 border border-violet-100">
+          <div class="text-xs text-violet-600 font-semibold mb-2">製品情報</div>
+          <div class="font-bold text-violet-800">ジプレキサ®</div>
+          <div class="text-xs text-gray-600 mt-1">錠 2.5 / 5 / 10 mg<br>細粒 1%</div>
+          <div class="text-xs text-gray-500 mt-1">日本イーライリリー株式会社</div>
+        </div>
+        <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+          <div class="text-xs text-purple-600 font-semibold mb-2">ODT 製剤</div>
+          <div class="font-bold text-purple-800">ジプレキサザイディス®</div>
+          <div class="text-xs text-gray-600 mt-1">口腔内崩壊錠 2.5 / 5 / 10 mg<br>服薬確認・嚥下困難例に有用</div>
+          <div class="text-xs text-gray-500 mt-1">日本イーライリリー株式会社</div>
+        </div>
+        <div class="bg-indigo-50 rounded-xl p-4 border border-indigo-100">
+          <div class="text-xs text-indigo-600 font-semibold mb-2">筋注製剤（速放型）</div>
+          <div class="font-bold text-indigo-800">ジプレキサ® 筋注用</div>
+          <div class="text-xs text-gray-600 mt-1">10 mg/バイアル<br>急性期興奮状態に使用</div>
+          <div class="text-xs text-red-600 font-medium mt-1">BZD との同時 IM 投与：禁忌</div>
+        </div>
+      </div>
+
+      <!-- Approved indications -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[600px]">
+          <thead>
+            <tr>
+              <th>効能・効果</th>
+              <th>ICD-10</th>
+              <th>承認</th>
+              <th>初回用量</th>
+              <th>最大用量</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F20</code></td>
+              <td>2001年3月 <span class="badge-approved">承認</span></td>
+              <td>5–10 mg → 漸増</td>
+              <td>20 mg/日</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害における躁症状の改善</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F31</code></td>
+              <td><span class="badge-approved">承認</span></td>
+              <td>10 mg/日（食事に関係なく）</td>
+              <td>20 mg/日</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害におけるうつ症状の改善</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F31</code></td>
+              <td><span class="badge-approved">承認</span></td>
+              <td>5 mg/日（就寝前）</td>
+              <td>20 mg/日</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">抗悪性腫瘍剤投与に伴う<br>悪心・嘔吐の抑制</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">—</code></td>
+              <td><span class="badge-approved">承認</span></td>
+              <td>5 mg/日（他制吐薬と併用）</td>
+              <td>10 mg/日</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Dosing step-up guide for schizophrenia -->
+      <h3 class="text-sm font-bold text-gray-700 mb-3">統合失調症 — 用量設定ガイド</h3>
+      <div class="bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl p-4 mb-5">
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">初期</div>
+            <div class="bg-violet-100 border-2 border-violet-400 rounded-lg px-4 py-2 font-bold text-violet-800">5–10 mg</div>
+            <div class="text-xs text-gray-500 mt-1">就寝前 1回</div>
+          </div>
+          <div class="text-gray-400 text-xl font-bold">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">標準維持</div>
+            <div class="bg-purple-100 border-2 border-purple-400 rounded-lg px-4 py-2 font-bold text-purple-800">10 mg</div>
+            <div class="text-xs text-gray-500 mt-1">維持量目安</div>
+          </div>
+          <div class="text-gray-400 text-xl font-bold">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">必要時</div>
+            <div class="bg-indigo-100 border-2 border-indigo-400 rounded-lg px-4 py-2 font-bold text-indigo-800">15 mg</div>
+            <div class="text-xs text-gray-500 mt-1">増量幅 5mg/回</div>
+          </div>
+          <div class="text-gray-400 text-xl font-bold">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">最大</div>
+            <div class="bg-blue-100 border-2 border-blue-400 rounded-lg px-4 py-2 font-bold text-blue-800">20 mg</div>
+            <div class="text-xs text-gray-500 mt-1">日本上限</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-3">増量は原則 1 週間以上の間隔をおいて実施。高齢者・肝機能障害者は 5 mg から開始し緩徐に増量。</p>
+      </div>
+
+      <!-- Key warnings box -->
+      <div class="danger-box">
+        <div class="font-bold text-red-900 mb-2 flex items-center gap-2">
+          <i data-lucide="alert-octagon" class="w-4 h-4"></i>添付文書上の重要な安全性情報
+        </div>
+        <ul class="text-sm text-red-800 space-y-1">
+          <li>• <strong>禁忌</strong>：糖尿病患者（既往を含む）— 高血糖・ケトアシドーシス・糖尿病性昏睡による致死例の報告</li>
+          <li>• <strong>禁忌</strong>：昏睡状態の患者、中枢神経抑制薬の強い影響下にある患者</li>
+          <li>• <strong>禁忌</strong>：本剤成分に対する過敏症の既往</li>
+          <li>• <strong>特別な注意</strong>：筋注製剤とベンゾジアゼピン系 IM/IV の同時・近時投与 → 呼吸抑制・死亡例あり</li>
+          <li>• <strong>警告</strong>：高血糖（血糖値の異常上昇）— 投与前・投与中の血糖検査を実施すること</li>
+          <li>• <strong>警告</strong>：高齢者認知症患者への使用 — 死亡率増加の報告（海外：FDA クラス警告）</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6: EFFICACY ===== -->
+    <section id="efficacy" class="section-card">
+      <div class="section-header">
+        <i data-lucide="target" class="w-6 h-6 text-violet-700"></i>
+        <h2>臨床効果・ガイドライン推奨度</h2>
+      </div>
+
+      <!-- Guideline recommendation matrix -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">適応別 × ガイドライン別 推奨度マトリクス</h3>
+      <div class="x-scroll mb-6">
+        <table class="guide-table min-w-[900px]">
+          <thead>
+            <tr>
+              <th>適応</th>
+              <th>日本（統合失調症 GL / JADS）</th>
+              <th>CANMAT 2023</th>
+              <th>NICE（英国）</th>
+              <th>WFSBP</th>
+              <th class="col-notes">備考</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症（急性期）</td>
+              <td><span class="badge-1st">第一選択 SGA</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>有効性高いが代謝副作用で患者・疾患選択重要</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">統合失調症（維持療法）</td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>再発予防効果が実証。代謝モニタリング継続必須</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極Ⅰ型 躁病エピソード（急性）</td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>Li・VPA との併用でさらに効果増強</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極Ⅰ型 うつ病エピソード</td>
+              <td><span class="badge-1st">推奨</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-2nd">代替選択肢</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>体重増加が問題。クエチアピン・ルラシドンが代替候補</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害 維持療法</td>
+              <td><span class="badge-2nd">選択肢</span></td>
+              <td><span class="badge-1st">Line 1</span></td>
+              <td><span class="badge-2nd">代替</span></td>
+              <td><span class="badge-1st">Level A</span></td>
+              <td>再発予防エビデンスあり。長期の代謝問題が課題</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">難治性うつ病への補助療法</td>
+              <td><span class="badge-na">適応外</span></td>
+              <td><span class="badge-2nd">Line 2</span></td>
+              <td><span class="badge-na">—</span></td>
+              <td><span class="badge-2nd">Level B</span></td>
+              <td>日本では適応外。海外では抗うつ薬との OFC（Olanzapine-Fluoxetine Combination）として承認</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Olanzapine placement guidance -->
+      <div class="grid sm:grid-cols-2 gap-4 mb-6">
+        <div class="recommend-box">
+          <h3 class="font-bold text-green-900 mb-2">オランザピンを優先検討する状況</h3>
+          <ul class="text-sm text-green-800 space-y-1">
+            <li>• 統合失調症で陰性症状・認知機能低下が前景</li>
+            <li>• 急性期に強い鎮静・興奮コントロールが必要</li>
+            <li>• 双極躁病エピソードの急性期</li>
+            <li>• 双極うつ病（クエチアピン・ルラシドン使用困難例）</li>
+            <li>• がん化学療法中の難治性悪心・嘔吐</li>
+            <li>• 服薬アドヒアランス確認が必要（ザイディス ODT）</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <h3 class="font-bold text-amber-900 mb-2">オランザピンを慎重に検討すべき状況</h3>
+          <ul class="text-sm text-amber-800 space-y-1">
+            <li>• 糖尿病（既往含む） → <strong>禁忌</strong></li>
+            <li>• 肥満（BMI ≥25）・メタボリックシンドロームのある患者</li>
+            <li>• 脂質異常症・高血糖のコントロール不良例</li>
+            <li>• 若年（10–30代）で長期維持が予想される例</li>
+            <li>• 代謝モニタリング継続が困難な環境</li>
+            <li>• 高齢者認知症関連精神病（死亡リスク増加・警告）</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 7: EVIDENCE ===== -->
+    <section id="evidence" class="section-card">
+      <div class="section-header">
+        <i data-lucide="book-open" class="w-6 h-6 text-violet-700"></i>
+        <h2>主要エビデンス</h2>
+      </div>
+
+      <!-- Landmark RCTs -->
+      <div class="grid gap-4 mb-6">
+
+        <!-- CATIE -->
+        <div class="rct-card border-l-4 border-violet-600">
+          <div class="flex items-start gap-3 flex-wrap">
+            <div class="flex-1">
+              <div class="text-xs font-semibold text-violet-600 mb-1">Landmark Study — N Engl J Med 2005</div>
+              <div class="font-bold text-lg text-gray-800 mb-1">CATIE（Clinical Antipsychotic Trials of Intervention Effectiveness）</div>
+              <div class="text-sm text-gray-600 mb-2">Lieberman et al., NEJM 2005；慢性統合失調症患者 1493 例、5 薬剤（olanzapine・perphenazine・quetiapine・risperidone・ziprasidone）を 18 か月比較。</div>
+              <div class="grid sm:grid-cols-3 gap-2">
+                <div class="bg-violet-50 rounded-lg p-2 text-center">
+                  <div class="text-xs text-gray-500">投与中止率（最低）</div>
+                  <div class="font-bold text-violet-700">64%</div>
+                  <div class="text-xs text-gray-500">オランザピン群が最も継続</div>
+                </div>
+                <div class="bg-red-50 rounded-lg p-2 text-center">
+                  <div class="text-xs text-gray-500">体重増加（最大）</div>
+                  <div class="font-bold text-red-700">+9.4 lbs</div>
+                  <div class="text-xs text-gray-500">18 か月平均（vs 他薬）</div>
+                </div>
+                <div class="bg-amber-50 rounded-lg p-2 text-center">
+                  <div class="text-xs text-gray-500">代謝副作用中止率</div>
+                  <div class="font-bold text-amber-700">最多</div>
+                  <div class="text-xs text-gray-500">血糖・脂質・体重で離脱</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-2 p-3 bg-violet-50 rounded-lg">
+            <p class="text-xs text-violet-800"><strong>Clinical Message：</strong>「症状改善の有効性」よりも「継続できること（実効性）」が主要評価。オランザピンは他 SGA より治療継続率が高かったが、体重・代謝異常での離脱が最多。有効性と代謝トレードオフの典型例として引用される。</p>
+          </div>
+        </div>
+
+        <!-- Leucht 2013 -->
+        <div class="rct-card border-l-4 border-blue-600">
+          <div class="text-xs font-semibold text-blue-600 mb-1">Network Meta-analysis — Lancet 2013</div>
+          <div class="font-bold text-lg text-gray-800 mb-1">Leucht et al. — 15 抗精神病薬の包括的ネットワークメタ解析（統合失調症）</div>
+          <div class="text-sm text-gray-600 mb-2">212 RCT・43,049 例を解析。効果量（SMD）・副作用（体重増加・EPS・鎮静等）を比較。</div>
+          <div class="grid sm:grid-cols-3 gap-2">
+            <div class="bg-blue-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">有効性（SMD）</div>
+              <div class="font-bold text-blue-700">-0.59</div>
+              <div class="text-xs text-gray-500">対プラセボ（15 薬剤中上位）</div>
+            </div>
+            <div class="bg-red-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">体重増加（SMD）</div>
+              <div class="font-bold text-red-700">+0.74</div>
+              <div class="text-xs text-gray-500">15 薬剤中最大級</div>
+            </div>
+            <div class="bg-green-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">EPS（相対リスク）</div>
+              <div class="font-bold text-green-700">比較的低い</div>
+              <div class="text-xs text-gray-500">ハロペリドール比</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tohen 2003 – Bipolar depression -->
+        <div class="rct-card border-l-4 border-amber-500">
+          <div class="text-xs font-semibold text-amber-600 mb-1">RCT — Arch Gen Psychiatry 2003</div>
+          <div class="font-bold text-lg text-gray-800 mb-1">Tohen et al. — 双極うつ病に対するオランザピン単独および OFC（オランザピン＋フルオキセチン）</div>
+          <div class="text-sm text-gray-600 mb-2">833 例の双極Ⅰ型うつ病エピソード。オランザピン単独・OFC・プラセボを比較（8 週間）。</div>
+          <div class="grid sm:grid-cols-3 gap-2">
+            <div class="bg-amber-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">MADRS 改善（単独 vs PBO）</div>
+              <div class="font-bold text-amber-700">有意差あり</div>
+              <div class="text-xs text-gray-500">p &lt; 0.001</div>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">OFC の優越性</div>
+              <div class="font-bold text-amber-700">OFC &gt; 単独</div>
+              <div class="text-xs text-gray-500">さらに大きな改善効果</div>
+            </div>
+            <div class="bg-green-50 rounded-lg p-2 text-center">
+              <div class="text-xs text-gray-500">躁転率（単独）</div>
+              <div class="font-bold text-green-700">6.4%</div>
+              <div class="text-xs text-gray-500">プラセボ 3.7%（統計差なし）</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bipolar mania RCT summary -->
+        <div class="rct-card border-l-4 border-purple-500">
+          <div class="text-xs font-semibold text-purple-600 mb-1">複数 RCT メタ解析 — 双極躁病</div>
+          <div class="font-bold text-lg text-gray-800 mb-1">双極Ⅰ型躁病エピソードに対するエビデンス（Tohen et al. 系統）</div>
+          <div class="text-sm text-gray-600 mb-2">オランザピン単独 vs ハロペリドール・リチウム・バルプロ酸との複数 RCT（1990 年代後半〜2000 年代）。急性躁症状スコア（YMRS）の有意な改善が一貫して示されている。</div>
+          <div class="grid sm:grid-cols-2 gap-2">
+            <div class="bg-purple-50 rounded-lg p-2">
+              <div class="text-xs text-gray-500">Li/VPA との比較</div>
+              <div class="text-sm font-semibold text-purple-700">効果は同等〜やや上回る</div>
+              <div class="text-xs text-gray-500">一部試験でオランザピン優越</div>
+            </div>
+            <div class="bg-purple-50 rounded-lg p-2">
+              <div class="text-xs text-gray-500">Li/VPA との併用</div>
+              <div class="text-sm font-semibold text-purple-700">追加効果あり（相加的）</div>
+              <div class="text-xs text-gray-500">単剤不十分例へのオプション</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- NNT/NNH -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">NNT / NNH 参考値</h3>
+      <div class="x-scroll">
+        <table class="guide-table min-w-[500px]">
+          <thead>
+            <tr>
+              <th>指標</th>
+              <th>値（参考）</th>
+              <th>比較対象</th>
+              <th>文献</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>NNT（統合失調症 奏効）</td>
+              <td class="font-bold text-green-700">~6</td>
+              <td>対プラセボ</td>
+              <td>Leucht 2013 Lancet</td>
+            </tr>
+            <tr>
+              <td>NNT（双極躁病 奏効）</td>
+              <td class="font-bold text-green-700">~5–7</td>
+              <td>対プラセボ</td>
+              <td>Citrome et al.</td>
+            </tr>
+            <tr>
+              <td>NNH（体重 ≥7% 増加）</td>
+              <td class="font-bold text-red-700">~6</td>
+              <td>対プラセボ</td>
+              <td>Leucht 2013 Lancet</td>
+            </tr>
+            <tr>
+              <td>NNH（代謝関連離脱）</td>
+              <td class="font-bold text-amber-700">~30–50</td>
+              <td>対プラセボ</td>
+              <td>Citrome レビュー系</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 8: CASES ===== -->
+    <section id="cases" class="section-card">
+      <div class="section-header">
+        <i data-lucide="user-check" class="w-6 h-6 text-violet-700"></i>
+        <h2>具体的な適用症例</h2>
+      </div>
+      <div class="info-box mb-4">
+        <p class="text-xs text-blue-800"><i data-lucide="shield" class="w-3 h-3 inline mr-1"></i>以下の症例は架空であり、教育目的のみです。実際の処方は最新の添付文書・ガイドラインに従い、個々の患者情報を踏まえて判断してください。</p>
+      </div>
+
+      <!-- Case 1: Schizophrenia initial episode -->
+      <div class="case-card mb-4">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center">
+            <i data-lucide="user" class="w-5 h-5 text-violet-700"></i>
+          </div>
+          <div>
+            <div class="font-bold text-gray-800">症例 1：22歳男性 — 統合失調症 初発エピソード</div>
+            <div class="text-xs text-gray-500">架空症例 / 教育目的</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 text-sm mb-3">
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">主訴・経過</div>
+            <p class="text-gray-700">2か月前から「隣人に監視されている」「声が聞こえる」と訴え。大学を休学し自室に閉じこもり。家族の勧めで受診。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">診断・検査</div>
+            <p class="text-gray-700">統合失調症（ICD-10: F20.0 妄想型）。HbA1c 5.1%（正常）、空腹時血糖 88 mg/dL、BMI 20.5。糖尿病の既往なし。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">処方方針</div>
+            <p class="text-gray-700">オランザピン 5 mg/日（就寝前）で開始。1週後に 10 mg へ増量。代謝モニタリング（体重・血糖・脂質）を 4週毎に実施。</p>
+          </div>
+        </div>
+        <div class="bg-violet-50 rounded-lg p-3">
+          <p class="text-xs text-violet-800"><strong>臨床的ポイント：</strong>初発例では陽性症状に加え陰性症状（意欲低下・感情鈍麻）が目立つ場合、オランザピンの5-HT2A拮抗による陰性症状への付加効果が期待できる。初発例では長期維持を見越した代謝管理計画を治療開始時から立てておく。喫煙歴があれば禁煙支援と用量調整計画を同時に説明する。</p>
+        </div>
+      </div>
+
+      <!-- Case 2: Bipolar I mania -->
+      <div class="case-card mb-4">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+            <i data-lucide="user" class="w-5 h-5 text-purple-700"></i>
+          </div>
+          <div>
+            <div class="font-bold text-gray-800">症例 2：38歳女性 — 双極Ⅰ型障害 躁病エピソード</div>
+            <div class="text-xs text-gray-500">架空症例 / 教育目的</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 text-sm mb-3">
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">主訴・経過</div>
+            <p class="text-gray-700">既往の双極Ⅰ型障害。炭酸リチウム維持中に睡眠短縮・活動亢進・多弁が出現。YMRS 28点。過去に糖尿病の既往なし。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">処方方針</div>
+            <p class="text-gray-700">リチウム継続しオランザピン 10 mg/日を追加。血中リチウム濃度確認（0.7 mEq/L）。鎮静目的でオランザピンを就寝前に服用させる。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">転帰・調整</div>
+            <p class="text-gray-700">2週で YMRS 12点（奏効）。体重 +2 kg（4週）。急性期後はオランザピン漸減しリチウム単独維持を検討。体重増加・脂質は引き続きモニタリング。</p>
+          </div>
+        </div>
+        <div class="bg-purple-50 rounded-lg p-3">
+          <p class="text-xs text-purple-800"><strong>臨床的ポイント：</strong>双極躁病の急性期ではリチウム・バルプロ酸との併用で相加的効果が期待できる。急性期後に漫然とオランザピンを継続しないよう計画的に漸減を検討する（代謝リスクの長期曝露を避けるため）。</p>
+        </div>
+      </div>
+
+      <!-- Case 3: Bipolar depression -->
+      <div class="case-card">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+            <i data-lucide="user" class="w-5 h-5 text-indigo-700"></i>
+          </div>
+          <div>
+            <div class="font-bold text-gray-800">症例 3：45歳男性 — 双極Ⅰ型障害 うつ病エピソード</div>
+            <div class="text-xs text-gray-500">架空症例 / 教育目的</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 text-sm mb-3">
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">主訴・経過</div>
+            <p class="text-gray-700">双極Ⅰ型障害でバルプロ酸維持中。抑うつ気分・無力感・睡眠過多・過食。MADRS 24点。SSRI 単独は躁転リスクで回避。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">検査・方針</div>
+            <p class="text-gray-700">HbA1c 5.6%（正常範囲）、BMI 23。糖尿病既往なし。バルプロ酸継続しオランザピン 5 mg/日（就寝前）を追加。</p>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-600 mb-1">転帰</div>
+            <p class="text-gray-700">4週で MADRS 14点（改善）。不眠・食欲低下が改善。体重 +1.5 kg。血糖値は引き続きモニタリング。</p>
+          </div>
+        </div>
+        <div class="bg-indigo-50 rounded-lg p-3">
+          <p class="text-xs text-indigo-800"><strong>臨床的ポイント：</strong>双極うつ病では抗うつ薬単独使用による躁転リスクを避けるため SGA を優先する。オランザピンは鎮静・睡眠改善の即効性も持ち、就寝前投与は不眠合併例に有用。バルプロ酸との相互作用（AUC 低下 ~15%）に注意し TDM を確認。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 9: SAFETY ===== -->
+    <section id="safety" class="section-card">
+      <div class="section-header">
+        <i data-lucide="shield-alert" class="w-6 h-6 text-violet-700"></i>
+        <h2>副作用管理</h2>
+      </div>
+
+      <!-- AE frequency table -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">副作用頻度・重症度マトリクス</h3>
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[840px]">
+          <thead>
+            <tr>
+              <th>副作用</th>
+              <th>頻度</th>
+              <th>発現時期</th>
+              <th>重症度</th>
+              <th class="col-notes">対処</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold text-red-700">体重増加</td>
+              <td class="text-red-600 font-semibold">≥10%（平均+4 kg/年）</td>
+              <td>投与初期から継続</td>
+              <td><span class="text-red-600 font-bold">最重要</span></td>
+              <td>4週毎の体重測定。食事・運動指導。メトホルミン（エビデンスあり）検討。5 kg 超で薬剤変更を検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">高血糖・糖尿病</td>
+              <td class="text-red-600 font-semibold">稀〜5%（機序複合）</td>
+              <td>数週〜数か月</td>
+              <td><span class="text-red-700 font-bold">重篤・致死</span></td>
+              <td>血糖・HbA1c を定期測定。高血糖兆候（口渇・多尿・意識障害）が出現したら即中止。<strong>糖尿病・既往者は禁忌</strong></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">脂質異常（TG上昇・LDL上昇）</td>
+              <td class="text-orange-600 font-semibold">≥10%</td>
+              <td>数か月〜</td>
+              <td><span class="text-amber-600 font-semibold">中〜高</span></td>
+              <td>空腹時脂質を定期測定。TG高値持続では薬剤変更またはスタチン検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">過鎮静・傾眠</td>
+              <td class="text-orange-600 font-semibold">≥10%</td>
+              <td>投与初期</td>
+              <td><span class="text-yellow-600 font-semibold">軽〜中</span></td>
+              <td>就寝前単回投与で日中の鎮静を軽減。減量または夜間服用の徹底</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">口渇・便秘（抗コリン）</td>
+              <td class="text-orange-600 font-semibold">≥10%</td>
+              <td>投与中</td>
+              <td><span class="text-yellow-600 font-semibold">軽</span></td>
+              <td>水分補給・食物繊維。便秘が強い場合は緩下薬。継続困難なら薬剤変更</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">起立性低血圧・めまい</td>
+              <td class="text-orange-600 font-semibold">5–10%</td>
+              <td>投与初期・増量時</td>
+              <td><span class="text-yellow-600 font-semibold">軽〜中</span></td>
+              <td>起立時の注意指導。転倒リスク評価（特に高齢者）。必要なら減量</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">EPS（錐体外路症状）</td>
+              <td class="text-gray-600 font-semibold">1–5%（比較的少）</td>
+              <td>増量時・高用量</td>
+              <td><span class="text-yellow-600 font-semibold">軽〜中</span></td>
+              <td>ハロペリドールより EPS リスク低いが高用量では注意。減量または抗コリン薬</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">高プロラクチン血症</td>
+              <td class="text-gray-600 font-semibold">比較的少（SDA より低い）</td>
+              <td>投与中</td>
+              <td><span class="text-yellow-600 font-semibold">軽〜中</span></td>
+              <td>プロラクチン値測定。月経不順・性機能障害が問題なら薬剤変更を検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">悪性症候群（NMS）</td>
+              <td class="text-gray-600">稀（&lt;0.1%）</td>
+              <td>開始・増量・中止後</td>
+              <td><span class="text-red-700 font-bold">重篤・致死</span></td>
+              <td>高熱・筋固縮・意識障害・CK 上昇 → 即中止・集中管理・ダントロレン</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">筋注後呼吸抑制（BZD 同時 IM）</td>
+              <td class="text-gray-600">BZD 同時使用時</td>
+              <td>投与直後</td>
+              <td><span class="text-red-700 font-bold">重篤・致死</span></td>
+              <td>ベンゾジアゼピン IM/IV との同時・近時投与は<strong>禁忌</strong>。バイタル・呼吸モニタリング必須</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">遅発性ジスキネジア（TD）</td>
+              <td class="text-gray-600">SGA で年 0.5–1%</td>
+              <td>長期投与後</td>
+              <td><span class="text-amber-600 font-semibold">中〜重</span></td>
+              <td>定期的な AIMS 評価。出現時は減量・中止検討。バルベナジン（海外承認）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Metabolic monitoring flowchart -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">代謝モニタリングスケジュール</h3>
+      <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 mb-5">
+        <div class="flex items-center gap-2 flex-wrap justify-center">
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">ベースライン</div>
+            <div class="bg-white border-2 border-red-300 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-red-700">必須</div>
+              <div>体重・腹囲</div>
+              <div>血糖/HbA1c</div>
+              <div>脂質（TG・LDL）</div>
+              <div>血圧・BMI</div>
+            </div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">4週</div>
+            <div class="bg-white border-2 border-orange-300 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-orange-700">体重</div>
+              <div>血圧</div>
+              <div>自覚症状</div>
+            </div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">8週</div>
+            <div class="bg-white border-2 border-orange-300 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-orange-700">体重</div>
+              <div>血糖（空腹時）</div>
+              <div>血圧</div>
+            </div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">12週</div>
+            <div class="bg-white border-2 border-amber-300 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-amber-700">フル評価</div>
+              <div>体重・BMI</div>
+              <div>HbA1c・脂質</div>
+              <div>血圧・腹囲</div>
+            </div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">以降</div>
+            <div class="bg-white border-2 border-yellow-300 rounded-lg px-3 py-2 text-xs">
+              <div class="font-bold text-yellow-700">3か月毎</div>
+              <div>体重</div>
+              <div>6か月毎：</div>
+              <div>HbA1c・脂質</div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 grid sm:grid-cols-3 gap-2">
+          <div class="bg-white rounded-lg p-2 text-xs border border-red-100">
+            <div class="font-semibold text-red-700 mb-1">体重増加への介入目安</div>
+            <p>4週で &gt;2 kg 増加 → 食事・運動指導強化</p>
+            <p>12週で &gt;5 kg 増加 → メトホルミン考慮または薬剤変更検討</p>
+          </div>
+          <div class="bg-white rounded-lg p-2 text-xs border border-orange-100">
+            <div class="font-semibold text-orange-700 mb-1">高血糖アラート</div>
+            <p>空腹時血糖 &gt;126 mg/dL または HbA1c &gt;6.5% → 直ちに内科紹介</p>
+            <p>口渇・多尿・意識障害 → 緊急対応（中止検討）</p>
+          </div>
+          <div class="bg-white rounded-lg p-2 text-xs border border-amber-100">
+            <div class="font-semibold text-amber-700 mb-1">薬剤変更を検討</div>
+            <p>代謝コントロール不能・体重 &gt;10% 増加 → アリピプラゾール・ルラシドン等への切り替えを検討</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discontinuation syndrome -->
+      <div class="warning-box">
+        <div class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+          <i data-lucide="trending-down" class="w-4 h-4"></i>中止・漸減時の注意
+        </div>
+        <div class="text-sm text-amber-800 space-y-1">
+          <p>急激な中止・漸減で<strong>悪心・不眠・発汗・不安・嘔吐・振戦</strong>（コリン神経反跳）が生じることがある。長期使用後は<strong>数週〜数か月かけて徐々に減量</strong>する。中止後の再発予防のために維持量の意義を十分説明する。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 10: INTERACTION ===== -->
+    <section id="interaction" class="section-card">
+      <div class="section-header">
+        <i data-lucide="git-merge" class="w-6 h-6 text-violet-700"></i>
+        <h2>薬物相互作用</h2>
+      </div>
+
+      <div class="x-scroll">
+        <table class="guide-table min-w-[900px]">
+          <thead>
+            <tr>
+              <th class="col-name">薬剤・クラス</th>
+              <th class="col-text">機序</th>
+              <th class="col-notes">臨床的意義</th>
+              <th class="col-action">対処</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold text-red-700">ベンゾジアゼピン系（筋注・静注）</td>
+              <td>中枢神経抑制の相加・呼吸中枢抑制</td>
+              <td><span class="text-red-700 font-bold">禁忌：呼吸抑制・循環虚脱・死亡例あり</span></td>
+              <td>オランザピン IM と BZD IM/IV の同時・近時投与は絶対禁忌。経口 BZD との通常併用は相互作用注意で可（呼吸状態観察）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">フルボキサミン（フルボキサミン）</td>
+              <td>CYP1A2 強力阻害 → オランザピン AUC 大幅上昇（~50–100%）</td>
+              <td><span class="text-red-700 font-semibold">重要：過鎮静・EPS・代謝副作用増強</span></td>
+              <td>併用時はオランザピン用量を半減して開始。TDM で濃度確認。可能ならフルボキサミン回避を検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-orange-700">喫煙（受動喫煙でも軽度影響）</td>
+              <td>多環芳香族炭化水素による CYP1A2 誘導 → 血中濃度 30–50% 低下</td>
+              <td><span class="text-orange-700 font-semibold">重要：禁煙・入院時の濃度上昇リスク</span></td>
+              <td>喫煙開始・禁煙のたびに用量調整を検討。入院（禁煙病棟）では誘導解除による濃度上昇に注意。TDM 推奨</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-orange-700">カルバマゼピン</td>
+              <td>CYP1A2 + UGT1A4 誘導 → オランザピン血中濃度低下（~50%）</td>
+              <td>有効性が低下する可能性</td>
+              <td>TDM にて濃度確認。必要に応じオランザピン増量を検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">バルプロ酸（VPA）</td>
+              <td>機序不明（UGT関連の可能性）→ オランザピン AUC 約 15% 低下</td>
+              <td>軽微だが TDM で確認が望ましい</td>
+              <td>双極性障害での VPA 併用時は定期的に TDM を実施</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">リチウム</td>
+              <td>PK 的相互作用は軽微。神経毒性（振戦・EPS）の加算の可能性</td>
+              <td>リチウム毒性・NMS リスクに注意</td>
+              <td>血中リチウム濃度を維持域（0.4–0.8 mEq/L）に保つ。神経症状の出現に注意</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">抗コリン薬（トリヘキシフェニジル等）</td>
+              <td>M1 遮断の相加的増強</td>
+              <td>口渇・便秘・尿閉・認知障害の増強</td>
+              <td>抗コリン薬の必要性を再評価。代替（β遮断薬等）を検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">中枢抑制薬（麻薬・睡眠薬等）</td>
+              <td>中枢神経抑制の相加</td>
+              <td>過鎮静・呼吸抑制リスク</td>
+              <td>慎重に投与。用量調整・呼吸モニタリング</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-gray-600">アルコール</td>
+              <td>中枢抑制の相加</td>
+              <td>鎮静・低血圧の増強</td>
+              <td>飲酒を控えるよう指導。飲酒時は転倒リスクに注意</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-gray-600">降圧薬（α遮断薬等）</td>
+              <td>α1 遮断の相加 → 血圧低下増強</td>
+              <td>起立性低血圧リスク増加</td>
+              <td>血圧測定強化。転倒防止指導</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 11: SPECIAL POPULATIONS ===== -->
+    <section id="special" class="section-card">
+      <div class="section-header">
+        <i data-lucide="users" class="w-6 h-6 text-violet-700"></i>
+        <h2>特殊集団での使用</h2>
+      </div>
+
+      <div class="x-scroll">
+        <table class="guide-table min-w-[940px]">
+          <thead>
+            <tr>
+              <th>集団</th>
+              <th class="col-text">主なリスク・変化</th>
+              <th class="col-notes">用量調整・方針</th>
+              <th class="col-action">モニタリング</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">高齢者（≥65歳）</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 過鎮静・転倒リスク↑</li>
+                  <li>• 排尿障害（M1遮断）</li>
+                  <li>• 代謝・腎機能低下により薬物蓄積</li>
+                </ul>
+              </td>
+              <td>低用量（2.5–5 mg）から開始。緩徐に増量。認知症関連精神病には<strong>原則使用しない</strong>（死亡リスク増加）</td>
+              <td>転倒リスク評価、血圧・血糖・体重定期確認</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">認知症関連精神病（高齢者）</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 脳血管障害リスク増加</li>
+                  <li>• 死亡率増加（FDA/PMDAクラス警告）</li>
+                </ul>
+              </td>
+              <td>
+                <table class="text-xs" style="min-width:200px; border-collapse:collapse;">
+                  <tr><td class="pr-3 py-0.5 font-medium text-gray-600 whitespace-nowrap">FDA</td><td class="py-0.5"><strong>ブラックボックス警告</strong>（全 SGA）</td></tr>
+                  <tr><td class="pr-3 py-0.5 font-medium text-gray-600 whitespace-nowrap">日本添付</td><td class="py-0.5">警告：死亡リスク増加。原則回避</td></tr>
+                </table>
+              </td>
+              <td>必要な場合は最低有効量・短期。バイタル・意識・転落に注意</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">腎機能障害</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 主代謝物は腎排泄</li>
+                  <li>• 軽〜中等度：影響小</li>
+                </ul>
+              </td>
+              <td>透析患者を含む重篤腎機能障害では低用量から開始。定期 TDM 推奨</td>
+              <td>eGFR・BUN/Cr、過鎮静の出現</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">肝機能障害</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• UGT1A4・CYP1A2 活性低下</li>
+                  <li>• 半減期延長・AUC 増加</li>
+                </ul>
+              </td>
+              <td>
+                <table class="text-xs" style="min-width:220px; border-collapse:collapse;">
+                  <tr><td class="pr-3 py-0.5 font-medium text-gray-600 whitespace-nowrap">軽度（Child-Pugh A）</td><td class="py-0.5">5 mg から開始・慎重に増量</td></tr>
+                  <tr><td class="pr-3 py-0.5 font-medium text-gray-600 whitespace-nowrap">中等度（Child-Pugh B）</td><td class="py-0.5">5 mg 以下から開始</td></tr>
+                  <tr><td class="pr-3 py-0.5 font-medium text-gray-600 whitespace-nowrap">重度（Child-Pugh C）</td><td class="py-0.5 font-semibold text-red-700">原則禁忌・慎重判断</td></tr>
+                </table>
+              </td>
+              <td>肝機能（AST/ALT/Bil）定期確認</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">妊娠</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 胎盤通過性あり</li>
+                  <li>• 新生児EPS・薬物離脱症候群</li>
+                  <li>• 母体の体重増加・血糖変化</li>
+                </ul>
+              </td>
+              <td>有益性が危険性を上回る場合のみ。妊娠中の第一選択は一般的にハロペリドール（データ蓄積多）または安全性プロファイルを検討した上で選択</td>
+              <td>分娩前後に新生児の呼吸・筋緊張・哺乳を注意深く観察。周産期管理チームと連携</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">授乳</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 母乳中に移行（相対的乳児投与量 1–2%）</li>
+                  <li>• 乳児での鎮静・哺乳障害の可能性</li>
+                </ul>
+              </td>
+              <td>授乳継続 vs 中止を個別にリスク・ベネフィット評価。授乳継続する場合は乳児の状態を観察</td>
+              <td>乳児の体重・発育・行動観察</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">小児・青年（日本）</td>
+              <td>
+                <ul class="text-xs space-y-0.5">
+                  <li>• 自殺念慮との関連（18歳未満への注意）</li>
+                  <li>• 代謝への影響が成人より大きい可能性</li>
+                </ul>
+              </td>
+              <td>日本の添付文書では小児への用法用量の設定なし（要最新添付確認）。海外では13歳以上への承認例あり</td>
+              <td>自殺念慮モニタリング、体重・成長、代謝指標</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 12: GLOBAL ===== -->
+    <section id="global" class="section-card">
+      <div class="section-header">
+        <i data-lucide="globe" class="w-6 h-6 text-violet-700"></i>
+        <h2>海外との比較・最新研究（2020–2026年）</h2>
+      </div>
+
+      <!-- International comparison table -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">承認適応の国際比較</h3>
+      <div class="x-scroll mb-6">
+        <table class="guide-table min-w-[680px]">
+          <thead>
+            <tr>
+              <th>適応</th>
+              <th>日本（PMDA）</th>
+              <th>FDA（米国）</th>
+              <th>EMA（欧州）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">統合失調症</td>
+              <td><span class="badge-approved">承認</span> 最大 20 mg</td>
+              <td><span class="badge-approved">承認</span> 1996年 最大 20 mg</td>
+              <td><span class="badge-approved">承認</span> 最大 20 mg</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極Ⅰ型 躁病（急性）</td>
+              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-approved">承認</span> 2000年</td>
+              <td><span class="badge-approved">承認</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害 うつ病</td>
+              <td><span class="badge-approved">承認</span></td>
+              <td><span class="badge-approved">承認</span>（OFC: Symbyax®含む）</td>
+              <td><span class="badge-na">未承認</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害 維持療法</td>
+              <td><span class="badge-na">要添付確認</span></td>
+              <td><span class="badge-approved">承認</span> 2004年</td>
+              <td><span class="badge-approved">承認</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">抗がん剤による悪心・嘔吐</td>
+              <td><span class="badge-approved">承認</span>（日本独自）</td>
+              <td><span class="badge-na">適応外（広く使用）</span></td>
+              <td><span class="badge-na">適応外（ガイドライン推奨）</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">難治性うつ病 補助（OFC）</td>
+              <td><span class="badge-off-label">適応外</span></td>
+              <td><span class="badge-approved">承認</span>（Symbyax®）</td>
+              <td><span class="badge-off-label">適応外</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">LAI（デポ製剤）</td>
+              <td><span class="badge-na">日本未承認（要確認）</span></td>
+              <td><span class="badge-approved">承認</span>（Zyprexa Relprevv® REMS付）</td>
+              <td><span class="badge-approved">承認</span>（Zypadhera®）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- LAI special note -->
+      <div class="warning-box mb-5">
+        <div class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+          <i data-lucide="syringe" class="w-4 h-4"></i>LAI（オランザピンパモエート：デポ製剤）の特記事項
+        </div>
+        <ul class="text-sm text-amber-800 space-y-1">
+          <li>• 米国・欧州では「Zyprexa Relprevv®」（olanzapine pamoate）として承認。1か月または2週毎投与。</li>
+          <li>• <strong>注射後せん妄・鎮静症候群（PDSS）</strong>のリスクがあり、米国では REMS（リスク評価軽減戦略）として<strong>注射後 3 時間の施設内観察</strong>が義務付けられている。</li>
+          <li>• 日本では（2026年現在）LAI 製剤の承認は確認されていない。最新添付文書で確認のこと。</li>
+        </ul>
+      </div>
+
+      <!-- Recent research -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">最新研究トレンド（2020–2026年）</h3>
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div class="bg-violet-50 border border-violet-200 rounded-xl p-4">
+          <div class="font-bold text-violet-800 mb-1 text-sm">代謝副作用対策：メトホルミン</div>
+          <div class="text-xs text-violet-700 space-y-1">
+            <div><strong>エビデンス：</strong>複数 RCT・メタ解析で有効性確認</div>
+            <div><strong>効果量：</strong>体重・BMI の有意な低下（SMD −0.5〜−0.7）</div>
+            <div><strong>用量：</strong>500–2000 mg/日</div>
+            <div class="text-violet-600 font-semibold">→ 腎機能正常例では積極的に検討値</div>
+          </div>
+        </div>
+        <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+          <div class="font-bold text-green-800 mb-1 text-sm">GLP-1 受容体作動薬との組み合わせ</div>
+          <div class="text-xs text-green-700 space-y-1">
+            <div><strong>背景：</strong>精神科ポピュレーションでの体重管理に GLP-1 の試験増加</div>
+            <div><strong>結果：</strong>初期試験で体重・血糖改善の示唆あり（2020–2025）</div>
+            <div><strong>現状：</strong>精神科での長期安全性データは発展途上（適応外）</div>
+          </div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="font-bold text-blue-800 mb-1 text-sm">超低用量（1–2.5 mg）の応用</div>
+          <div class="text-xs text-blue-700 space-y-1">
+            <div><strong>緩和ケア・制吐：</strong>がん患者の難治性悪心に低用量オランザピンが有用</div>
+            <div><strong>不眠・せん妄：</strong>ICU でのせん妄予防・低用量での使用報告</div>
+            <div>日本では悪心・嘔吐への承認（5 mg）。さらなる低用量は研究的</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Off-label evidence grid -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">海外オフラベル使用のエビデンス</h3>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-800 mb-1 text-sm">難治性うつ病への補助（海外）</div>
+          <div class="text-xs text-gray-700 space-y-1">
+            <div>抗うつ薬単剤無効の MDD に OFC（オランザピン＋フルオキセチン）が FDA 承認（Symbyax®）。日本では適応外。</div>
+            <div class="text-gray-500 mt-1">→ 国内ではアリピプラゾール・ブレクスピプラゾールが代替</div>
+          </div>
+        </div>
+        <div class="border border-gray-200 rounded-xl p-4">
+          <div class="font-bold text-gray-800 mb-1 text-sm">バイオマーカー・治療反応予測</div>
+          <div class="text-xs text-gray-700 space-y-1">
+            <div>CYP1A2 遺伝子多型・炎症マーカー・神経画像による治療反応予測研究が進行中（2020–2026）。</div>
+            <div class="text-gray-500 mt-1">→ 実臨床への応用はまだ限定的。TDM が現実的な個別化ツール</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Evidence level legend -->
+    <div class="section-card text-xs text-gray-500">
+      <div class="font-bold text-gray-700 mb-2 flex items-center gap-2">
+        <i data-lucide="info" class="w-4 h-4"></i>エビデンスレベル凡例
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <div class="flex items-center gap-1"><span class="badge-level-a">Level A</span><span>複数 RCT・メタ解析で支持</span></div>
+        <div class="flex items-center gap-1"><span class="badge-level-b">Level B</span><span>少数 RCT または一致したオブザベーショナル研究</span></div>
+        <div class="flex items-center gap-1"><span class="badge-level-c">Level C</span><span>症例報告・専門家コンセンサス</span></div>
+        <div class="flex items-center gap-1"><span class="badge-approved">承認</span><span>日本 PMDA 承認</span></div>
+        <div class="flex items-center gap-1"><span class="badge-off-label">適応外</span><span>日本での適応外使用</span></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 py-8 mt-4">
+    <div class="max-w-5xl mx-auto px-4 text-center text-xs text-gray-400 space-y-1">
+      <p>本資料は医療専門職向け参照資料です。処方判断には最新の各薬剤添付文書・ガイドラインを必ず参照してください。</p>
+      <p>オランザピン（ジプレキサ）の承認適応・用法用量・禁忌は改訂が行われます。必ず PMDA の添付文書で最新情報を確認してください（2026年5月現在）。</p>
+      <p class="mt-2"><a href="top.html" class="text-violet-500 hover:text-violet-700">← 精神科臨床リファレンス ポータルへ戻る</a></p>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    // TOC active link highlighting
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(link => link.classList.remove('active'));
+          const activeLink = document.querySelector(`.toc-link[href="#${entry.target.id}"]`);
+          if (activeLink) activeLink.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll for anchor links — offset for sticky bars
+    function getStickyOffset() {
+      var nav = document.getElementById('sticky-section-nav');
+      var toolbar = document.getElementById('data-table-toolbar');
+      var navH = nav ? nav.getBoundingClientRect().height : 0;
+      var toolbarH = toolbar ? toolbar.getBoundingClientRect().height : 0;
+      return navH + toolbarH + 4;
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (!href || href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          const top = target.getBoundingClientRect().top + window.pageYOffset - getStickyOffset();
+          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+  <script>
+    /* ========== DATA-TABLE TOOLBAR SCRIPT ========== */
+    var STICKY_KEY = 'psych-olanzapine-table-sticky-col-enabled';
+    var stickyNavEl = document.getElementById('sticky-section-nav');
+    var toolbarEl = document.getElementById('data-table-toolbar');
+    var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    var searchInput = document.getElementById('data-table-search');
+    var searchClear = document.getElementById('data-table-search-clear');
+    var searchMeta = document.getElementById('data-table-search-meta');
+    var searchPrev = document.getElementById('data-table-search-prev');
+    var searchNext = document.getElementById('data-table-search-next');
+    var searchHighlightBtn = document.getElementById('data-table-search-highlight');
+    var sectionLabelEl = document.getElementById('data-table-section-label');
+    var mainEl = document.querySelector('main');
+    var searchTimer;
+    var searchHitNodes = [];
+    var hitIndex = -1;
+    var highlightOn = true;
+
+    /* --- Toolbar top offset --- */
+    function updateToolbarTop() {
+      if (!stickyNavEl || !toolbarEl) return;
+      var navH = stickyNavEl.getBoundingClientRect().height || stickyNavEl.offsetHeight;
+      document.documentElement.style.setProperty('--nav-height', navH + 'px');
+      requestAnimationFrame(function() {
+        var toolbarH = toolbarEl.getBoundingClientRect().height || toolbarEl.offsetHeight;
+        var total = navH + toolbarH + 4;
+        document.documentElement.style.setProperty('--sticky-total-height', total + 'px');
+        document.querySelectorAll('section[id], div[id]').forEach(function(el) {
+          el.style.scrollMarginTop = total + 'px';
+        });
+      });
+    }
+    updateToolbarTop();
+    window.addEventListener('resize', updateToolbarTop);
+    window.addEventListener('load', updateToolbarTop);
+
+    /* --- Sticky column toggle --- */
+    function syncStickyFromToggle() {
+      var enabled = stickyToggle ? stickyToggle.checked : false;
+      document.documentElement.classList.toggle('data-table-sticky-col-off', !enabled);
+    }
+    if (stickyToggle) {
+      try { var s = localStorage.getItem(STICKY_KEY); if (s !== null) stickyToggle.checked = s === '1'; } catch(e){}
+      stickyToggle.addEventListener('change', function() {
+        try { localStorage.setItem(STICKY_KEY, stickyToggle.checked ? '1' : '0'); } catch(e){}
+        syncStickyFromToggle();
+      });
+    }
+    syncStickyFromToggle();
+
+    /* --- Section label update on scroll --- */
+    var TOOLBAR_SECTIONS = [
+      { id: 'quickref',       label: 'クイックリファレンス' },
+      { id: 'molecule',       label: '分子・化学情報' },
+      { id: 'pharmacology',   label: '薬理作用・受容体' },
+      { id: 'pk',             label: '薬物動態（ADME）' },
+      { id: 'japan-approval', label: '日本国内承認情報' },
+      { id: 'efficacy',       label: '臨床効果・推奨度' },
+      { id: 'evidence',       label: '主要エビデンス' },
+      { id: 'cases',          label: '具体的適用症例' },
+      { id: 'safety',         label: '副作用管理' },
+      { id: 'interaction',    label: '薬物相互作用' },
+      { id: 'special',        label: '特殊集団' },
+      { id: 'global',         label: '海外比較・最新研究' }
+    ];
+    var lastSectionId = '';
+    var lastSectionLabel = '';
+    function updateToolbarSectionLabel() {
+      if (!sectionLabelEl || !toolbarEl) return;
+      var threshold = toolbarEl.getBoundingClientRect().bottom + 6;
+      var active = TOOLBAR_SECTIONS[0];
+      for (var i = 0; i < TOOLBAR_SECTIONS.length; i++) {
+        var el = document.getElementById(TOOLBAR_SECTIONS[i].id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= threshold) active = TOOLBAR_SECTIONS[i];
+      }
+      if (active.id !== lastSectionId) {
+        lastSectionId = active.id;
+        toolbarEl.setAttribute('data-toolbar-section', active.id);
+      }
+      if (active.label !== lastSectionLabel) {
+        lastSectionLabel = active.label;
+        sectionLabelEl.textContent = active.label;
+      }
+    }
+    var toolbarLabelRaf = null;
+    function scheduleToolbarLabel() {
+      if (toolbarLabelRaf != null) return;
+      toolbarLabelRaf = requestAnimationFrame(function() { toolbarLabelRaf = null; updateToolbarSectionLabel(); });
+    }
+    window.addEventListener('scroll', scheduleToolbarLabel, { passive: true });
+    window.addEventListener('resize', scheduleToolbarLabel);
+    window.addEventListener('hashchange', scheduleToolbarLabel);
+    window.addEventListener('load', scheduleToolbarLabel);
+    updateToolbarSectionLabel();
+
+    /* --- Search helpers --- */
+    function normalizeSearchString(s) {
+      if (s == null || s === '') return '';
+      s = String(s).replace(/[\u200b-\u200d\ufeff]/g, '');
+      return typeof s.normalize === 'function' ? s.normalize('NFC').trim() : s.trim();
+    }
+    function formatSearchMeta(n) {
+      var compact = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 639px)').matches;
+      if (n === 0) return compact ? '0件' : '該当なし';
+      return compact ? (n + '件') : ('該当 ' + n + ' 箇所');
+    }
+    function syncHighlightClass() {
+      document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
+      if (searchHighlightBtn) {
+        searchHighlightBtn.setAttribute('aria-pressed', highlightOn ? 'true' : 'false');
+        searchHighlightBtn.classList.toggle('bg-amber-50', highlightOn);
+        searchHighlightBtn.classList.toggle('text-amber-900', highlightOn);
+        searchHighlightBtn.classList.toggle('bg-slate-100', !highlightOn);
+        searchHighlightBtn.classList.toggle('text-slate-600', !highlightOn);
+      }
+    }
+    function updateNavButtons() {
+      var ok = searchHitNodes.length > 0;
+      if (searchPrev) searchPrev.disabled = !ok;
+      if (searchNext) searchNext.disabled = !ok;
+      if (ok && (hitIndex < 0 || hitIndex >= searchHitNodes.length)) hitIndex = 0;
+    }
+    function scrollToHitNode(i) {
+      if (i < 0 || i >= searchHitNodes.length) return;
+      hitIndex = i;
+      requestAnimationFrame(function() {
+        searchHitNodes[hitIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
+    }
+    function getTextNodes(root) {
+      var out = [];
+      if (!root) return out;
+      var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_SKIP;
+          var p = node.parentElement;
+          if (!p || !p.closest) return NodeFilter.FILTER_SKIP;
+          if (p.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          if (p.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+    function wrapTextNode(textNode, qLower, sliceLen) {
+      var marks = [];
+      var raw = textNode.textContent;
+      var text = typeof raw.normalize === 'function' ? raw.normalize('NFC') : raw;
+      var lower = text.toLowerCase();
+      var qn = typeof qLower.normalize === 'function' ? qLower.normalize('NFC') : qLower;
+      var idx = lower.indexOf(qn);
+      if (idx === -1) return marks;
+      var frag = document.createDocumentFragment();
+      var pos = 0;
+      while (idx !== -1) {
+        if (idx > pos) frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+        var mk = document.createElement('mark');
+        mk.className = 'table-search-mark';
+        mk.appendChild(document.createTextNode(text.slice(idx, idx + sliceLen)));
+        frag.appendChild(mk);
+        marks.push(mk);
+        pos = idx + sliceLen;
+        idx = lower.indexOf(qn, pos);
+      }
+      if (pos < text.length) frag.appendChild(document.createTextNode(text.slice(pos)));
+      textNode.parentNode.replaceChild(frag, textNode);
+      return marks;
+    }
+    function clearSearchHits() {
+      if (mainEl) {
+        mainEl.querySelectorAll('mark.table-search-mark').forEach(function(mk) {
+          var p = mk.parentNode; if (!p) return;
+          while (mk.firstChild) p.insertBefore(mk.firstChild, mk);
+          p.removeChild(mk);
+        });
+      }
+      searchHitNodes = []; hitIndex = -1;
+      updateNavButtons();
+    }
+    function applySearch(opts) {
+      clearSearchHits();
+      var q = normalizeSearchString(searchInput ? searchInput.value : '');
+      if (!q) { if (searchMeta) searchMeta.textContent = ''; return; }
+      var ql = q.toLowerCase(); var sliceLen = q.length;
+      var nodes = getTextNodes(mainEl);
+      for (var i = 0; i < nodes.length; i++) {
+        var newMarks = wrapTextNode(nodes[i], ql, sliceLen);
+        for (var j = 0; j < newMarks.length; j++) searchHitNodes.push(newMarks[j]);
+      }
+      if (searchMeta) searchMeta.textContent = formatSearchMeta(searchHitNodes.length);
+      updateNavButtons();
+      if (searchHitNodes.length > 0 && opts && opts.scrollToFirst) scrollToHitNode(0);
+    }
+    function debouncedSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function() { applySearch({ scrollToFirst: false }); }, 100);
+    }
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) { if (e.isComposing) return; debouncedSearch(); });
+      searchInput.addEventListener('compositionend', debouncedSearch);
+      searchInput.addEventListener('change', debouncedSearch);
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); applySearch({ scrollToFirst: true }); return; }
+        if (e.key === 'Escape') { searchInput.value = ''; clearSearchHits(); if (searchMeta) searchMeta.textContent = ''; searchInput.blur(); }
+      });
+    }
+    if (searchClear) {
+      searchClear.addEventListener('click', function() {
+        if (searchInput) searchInput.value = '';
+        clearSearchHits(); if (searchMeta) searchMeta.textContent = '';
+        if (searchInput) searchInput.focus();
+      });
+    }
+    if (searchPrev) {
+      searchPrev.addEventListener('click', function() {
+        if (!searchHitNodes.length) return;
+        scrollToHitNode(hitIndex <= 0 ? searchHitNodes.length - 1 : hitIndex - 1);
+      });
+    }
+    if (searchNext) {
+      searchNext.addEventListener('click', function() {
+        if (!searchHitNodes.length) return;
+        scrollToHitNode(hitIndex < 0 ? 0 : (hitIndex + 1) % searchHitNodes.length);
+      });
+    }
+    if (searchHighlightBtn) {
+      searchHighlightBtn.addEventListener('click', function() { highlightOn = !highlightOn; syncHighlightClass(); });
+    }
+    syncHighlightClass();
+
+    /* --- Scroll hint for tables on mobile --- */
+    function setupScrollHints() {
+      document.querySelectorAll('.x-scroll').forEach(function(el) {
+        if (el.scrollWidth <= el.clientWidth) return;
+        var hint = el.nextElementSibling;
+        if (hint && hint.classList.contains('x-scroll-hint')) return;
+        var div = document.createElement('div');
+        div.className = 'x-scroll-hint';
+        div.innerHTML = '<span>←</span><span>横スクロールできます</span><span>→</span>';
+        el.parentNode.insertBefore(div, el.nextSibling);
+        el.addEventListener('scroll', function() {
+          var atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+          div.style.opacity = atEnd ? '0.4' : '1';
+        }, { passive: true });
+      });
+    }
+    if (typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 767px)').matches) {
+      window.addEventListener('load', setupScrollHints);
+      setTimeout(setupScrollHints, 300);
+    }
+  </script>
+</body>
+</html>

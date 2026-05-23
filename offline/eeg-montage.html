@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>モンタージュ理解 | EEG学習ツール</title>
+<script src="vendor/tailwind.js"></script>
+<script src="vendor/lucide.js"></script>
+
+<link href="vendor/fonts/fonts.css" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+  .tab-btn {
+    padding: 0.5rem 1rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem;
+    cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+  }
+  .tab-btn.active { background: #0f766e; color: white; border-color: #0f766e; }
+  .tab-btn:not(.active) { background: #f1f5f9; color: #475569; }
+  .tab-btn:not(.active):hover { border-color: #94a3b8; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .eeg-canvas { display: block; width: 100%; background: #0f172a; border-radius: 0.5rem; }
+  .montage-card { background: white; border-radius: 1rem; border: 1.5px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 1.25rem; }
+  .channel-label { font-family: 'Inter', monospace; font-size: 0.7rem; }
+  .phase-btn {
+    padding: 0.35rem 0.9rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s; border: 1.5px solid #e2e8f0; background: #f8fafc; color: #475569;
+  }
+  .phase-btn.active { background: #0f766e; color: white; border-color: #0f766e; }
+  .dipole-svg { max-width: 320px; margin: 0 auto; display: block; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white py-8 shadow-lg">
+  <div class="max-w-3xl mx-auto px-4">
+    <nav class="text-white/60 text-xs mb-2 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <a href="eeg-learning.html" class="hover:text-white transition-colors">EEG学習ハブ</a>
+      <span>›</span>
+      <span class="text-white/90">モンタージュ</span>
+    </nav>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="git-branch" class="w-5 h-5 text-white"></i>
+      </div>
+      <span class="text-white/70 text-sm font-semibold tracking-wider">STEP 6</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">モンタージュ理解</h1>
+    <p class="text-white/80 mt-2 text-sm leading-relaxed max-w-2xl">
+      「なぜ同じ脳波なのに見え方が違うのか」—双極誘導・基準電極誘導・位相逆転を視覚的に理解する。
+    </p>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-6">
+
+  <div class="flex flex-wrap gap-2 mb-6">
+    <button class="tab-btn active" onclick="showTab('basics', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="book-open" class="w-4 h-4"></i>基本概念</span>
+    </button>
+    <button class="tab-btn" onclick="showTab('bipolar', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-4 h-4"></i>双極誘導</span>
+    </button>
+    <button class="tab-btn" onclick="showTab('referential', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="circle" class="w-4 h-4"></i>基準電極誘導</span>
+    </button>
+    <button class="tab-btn" onclick="showTab('phase', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-4 h-4"></i>位相逆転</span>
+    </button>
+    <button class="tab-btn" onclick="showTab('compare', this)">
+      <span class="flex items-center gap-1.5"><i data-lucide="columns" class="w-4 h-4"></i>比較</span>
+    </button>
+  </div>
+
+  <!-- ===== TAB 1: Basics ===== -->
+  <div id="tab-basics" class="tab-panel active">
+    <div class="montage-card p-5">
+      <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+        <i data-lucide="info" class="w-5 h-5 text-teal-600"></i>
+        モンタージュとは
+      </h2>
+      <p class="text-sm text-slate-700 leading-relaxed mb-4">
+        モンタージュ（Montage）とは、どの電極とどの電極の電位差を記録するかの「組み合わせのルール」です。同じ頭皮電位でも、モンタージュが変わると波形の見え方が大きく変わります。
+      </p>
+      <div class="grid sm:grid-cols-2 gap-3 mb-4">
+        <div class="bg-indigo-50 rounded-xl p-4 border border-indigo-200">
+          <p class="font-bold text-indigo-800 mb-2 flex items-center gap-1.5">
+            <i data-lucide="minus" class="w-4 h-4"></i>双極誘導（Bipolar）
+          </p>
+          <p class="text-sm text-slate-700 leading-relaxed">隣接する2つの電極の差分を記録。<strong>局所性の把握に優れる</strong>。波形の振幅は2電極間の電位差を反映。</p>
+          <p class="text-xs text-indigo-700 mt-2 font-mono">記録 = 電極A − 電極B</p>
+        </div>
+        <div class="bg-teal-50 rounded-xl p-4 border border-teal-200">
+          <p class="font-bold text-teal-800 mb-2 flex items-center gap-1.5">
+            <i data-lucide="circle" class="w-4 h-4"></i>基準電極誘導（Referential）
+          </p>
+          <p class="text-sm text-slate-700 leading-relaxed">各電極を共通の基準点と比較。<strong>絶対的な電位を把握しやすい</strong>。基準に活動があると全誘導に混入する（基準汚染）。</p>
+          <p class="text-xs text-teal-700 mt-2 font-mono">記録 = 電極X − 基準（A1, Cz, 平均等）</p>
+        </div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+        <p class="font-bold text-slate-700 mb-3">主なモンタージュ一覧</p>
+        <div class="space-y-2 text-sm">
+          <div class="flex gap-3 items-start">
+            <span class="w-28 flex-shrink-0 text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-center mt-0.5">縦双極</span>
+            <p class="text-slate-600">Fp1-F3-C3-P3-O1 / Fp2-F4-C4-P4-O2（前後方向の隣接差分）。最も広く使われる基本モンタージュ。</p>
+          </div>
+          <div class="flex gap-3 items-start">
+            <span class="w-28 flex-shrink-0 text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-center mt-0.5">横双極</span>
+            <p class="text-slate-600">Fp1-Fp2 / F7-F3-Fz-F4-F8（左右方向の隣接差分）。水平ダイポール（BECTS等）の確認に有用。</p>
+          </div>
+          <div class="flex gap-3 items-start">
+            <span class="w-28 flex-shrink-0 text-xs font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded text-center mt-0.5">耳垂基準</span>
+            <p class="text-slate-600">各電極 − A1またはA2（耳垂）。耳垂に活動がある場合は基準汚染が生じる。</p>
+          </div>
+          <div class="flex gap-3 items-start">
+            <span class="w-28 flex-shrink-0 text-xs font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded text-center mt-0.5">平均基準</span>
+            <p class="text-slate-600">各電極 − 全電極の平均。基準汚染が分散するが、全般性放電では見かけ振幅が低下する。</p>
+          </div>
+          <div class="flex gap-3 items-start">
+            <span class="w-28 flex-shrink-0 text-xs font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded text-center mt-0.5">Cz基準</span>
+            <p class="text-slate-600">各電極 − Cz。睡眠段階評価・ICU記録でよく使われる。側頭葉評価に適する。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Standard bipolar connection diagram (SVG) -->
+    <div class="montage-card p-5">
+      <h3 class="font-bold text-slate-800 mb-3">縦双極モンタージュ 接続図</h3>
+      <p class="text-xs text-slate-500 mb-3">矢印の方向 = 入力1 − 入力2（正の入力に対して下向きに振れる）</p>
+      <svg viewBox="0 0 340 200" class="w-full max-w-sm mx-auto block" style="background:#f8fafc;border-radius:0.75rem;border:1px solid #e2e8f0;">
+        <!-- Left chain -->
+        <text x="30" y="18" font-size="9" fill="#64748b" font-family="sans-serif" font-weight="bold">左半球（奇数）</text>
+        <g>
+          <circle cx="50" cy="35" r="12" fill="#3b82f6" stroke="white" stroke-width="1.5"/>
+          <text x="50" y="39" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">Fp1</text>
+          <line x1="50" y1="47" x2="50" y2="60" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="50" cy="72" r="12" fill="#3b82f6" stroke="white" stroke-width="1.5"/>
+          <text x="50" y="76" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">F3</text>
+          <line x1="50" y1="84" x2="50" y2="97" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="50" cy="109" r="12" fill="#10b981" stroke="white" stroke-width="1.5"/>
+          <text x="50" y="113" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">C3</text>
+          <line x1="50" y1="121" x2="50" y2="134" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="50" cy="146" r="12" fill="#f97316" stroke="white" stroke-width="1.5"/>
+          <text x="50" y="150" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">P3</text>
+          <line x1="50" y1="158" x2="50" y2="171" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="50" cy="183" r="12" fill="#8b5cf6" stroke="white" stroke-width="1.5"/>
+          <text x="50" y="187" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">O1</text>
+        </g>
+        <!-- Midline chain -->
+        <text x="140" y="18" font-size="9" fill="#64748b" font-family="sans-serif" font-weight="bold" text-anchor="middle">正中（z）</text>
+        <g>
+          <circle cx="140" cy="35" r="12" fill="#3b82f6" stroke="white" stroke-width="1.5"/>
+          <text x="140" y="39" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">Fz</text>
+          <line x1="140" y1="47" x2="140" y2="97" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="140" cy="109" r="12" fill="#10b981" stroke="white" stroke-width="1.5"/>
+          <text x="140" y="113" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">Cz</text>
+          <line x1="140" y1="121" x2="140" y2="134" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="140" cy="146" r="12" fill="#f97316" stroke="white" stroke-width="1.5"/>
+          <text x="140" y="150" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">Pz</text>
+        </g>
+        <!-- Right chain -->
+        <text x="230" y="18" font-size="9" fill="#64748b" font-family="sans-serif" font-weight="bold">右半球（偶数）</text>
+        <g>
+          <circle cx="250" cy="35" r="12" fill="#3b82f6" stroke="white" stroke-width="1.5"/>
+          <text x="250" y="39" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">Fp2</text>
+          <line x1="250" y1="47" x2="250" y2="60" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="250" cy="72" r="12" fill="#3b82f6" stroke="white" stroke-width="1.5"/>
+          <text x="250" y="76" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">F4</text>
+          <line x1="250" y1="84" x2="250" y2="97" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="250" cy="109" r="12" fill="#10b981" stroke="white" stroke-width="1.5"/>
+          <text x="250" y="113" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">C4</text>
+          <line x1="250" y1="121" x2="250" y2="134" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="250" cy="146" r="12" fill="#f97316" stroke="white" stroke-width="1.5"/>
+          <text x="250" y="150" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">P4</text>
+          <line x1="250" y1="158" x2="250" y2="171" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <circle cx="250" cy="183" r="12" fill="#8b5cf6" stroke="white" stroke-width="1.5"/>
+          <text x="250" y="187" text-anchor="middle" font-size="7.5" fill="white" font-weight="bold" font-family="sans-serif">O2</text>
+        </g>
+        <!-- Channel labels -->
+        <text x="95" y="55" font-size="8" fill="#6366f1" font-family="monospace">Fp1−F3</text>
+        <text x="95" y="92" font-size="8" fill="#6366f1" font-family="monospace">F3−C3</text>
+        <text x="95" y="130" font-size="8" fill="#6366f1" font-family="monospace">C3−P3</text>
+        <text x="95" y="167" font-size="8" fill="#6366f1" font-family="monospace">P3−O1</text>
+        <!-- Arrow marker -->
+        <defs>
+          <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#6366f1"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== TAB 2: Bipolar ===== -->
+  <div id="tab-bipolar" class="tab-panel">
+    <div class="montage-card p-5 mb-4">
+      <h2 class="text-lg font-bold text-slate-800 mb-3">双極誘導（Bipolar Montage）の特徴</h2>
+      <div class="grid sm:grid-cols-2 gap-3 text-sm mb-4">
+        <div class="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
+          <p class="font-bold text-indigo-800 mb-1">長所</p>
+          <ul class="text-slate-700 space-y-0.5 text-xs">
+            <li>• 焦点の位置特定に優れる</li>
+            <li>• 基準汚染の影響を受けない</li>
+            <li>• 位相逆転（Phase reversal）で焦点を同定できる</li>
+          </ul>
+        </div>
+        <div class="bg-rose-50 rounded-lg p-3 border border-rose-200">
+          <p class="font-bold text-rose-700 mb-1">短所</p>
+          <ul class="text-slate-700 space-y-0.5 text-xs">
+            <li>• 全般性放電の振幅が見かけ上低下する</li>
+            <li>• 隣接する活動がキャンセルされることがある</li>
+            <li>• 絶対電位を知ることができない</li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-xs text-slate-600 bg-amber-50 border border-amber-200 rounded-lg p-3">
+        <strong>重要原則：</strong>双極誘導で「波形が出ない」誘導があっても、その電極の活動が「ゼロ」ではない。隣接する2電極の電位が等しい（差分=0）か、電極の間に焦点があることを意味する。
+      </p>
+    </div>
+
+    <!-- Bipolar demo canvas -->
+    <div class="montage-card overflow-hidden">
+      <div class="bg-slate-800 px-4 py-2 flex items-center gap-2">
+        <i data-lucide="activity" class="w-4 h-4 text-teal-400"></i>
+        <span class="text-white text-sm font-bold">縦双極モンタージュ — 左後頭部の焦点性棘波</span>
+      </div>
+      <canvas id="cv-bipolar" class="eeg-canvas" height="240" style="border-radius:0;"></canvas>
+      <div class="p-4 bg-indigo-50 border-t border-indigo-200">
+        <p class="text-xs text-indigo-800 leading-relaxed"><strong>読み方：</strong>P3-O1誘導に最大の棘波が出現 → O1が焦点。前後の誘導（C3-P3、O1-O2）でも小さく出現（電場の広がり）。双極誘導では「どの誘導に最大振幅が出るか」で焦点位置を推定する。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 3: Referential ===== -->
+  <div id="tab-referential" class="tab-panel">
+    <div class="montage-card p-5 mb-4">
+      <h2 class="text-lg font-bold text-slate-800 mb-3">基準電極誘導（Referential Montage）の特徴</h2>
+      <div class="grid sm:grid-cols-2 gap-3 text-sm mb-4">
+        <div class="bg-teal-50 rounded-lg p-3 border border-teal-200">
+          <p class="font-bold text-teal-800 mb-1">長所</p>
+          <ul class="text-slate-700 space-y-0.5 text-xs">
+            <li>• 各電極の絶対的な活動量を把握しやすい</li>
+            <li>• 全般性放電の把握・振幅比較に適する</li>
+            <li>• 活動の極性（正/負）を判断しやすい</li>
+          </ul>
+        </div>
+        <div class="bg-rose-50 rounded-lg p-3 border border-rose-200">
+          <p class="font-bold text-rose-700 mb-1">短所（基準汚染）</p>
+          <ul class="text-slate-700 space-y-0.5 text-xs">
+            <li>• 基準電極に活動があると全誘導に混入する</li>
+            <li>• 耳垂基準：側頭葉活動が基準に混入</li>
+            <li>• Cz基準：正中構造の活動が基準に混入</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Referential demo -->
+    <div class="montage-card overflow-hidden">
+      <div class="bg-slate-800 px-4 py-2 flex items-center gap-2">
+        <i data-lucide="activity" class="w-4 h-4 text-teal-400"></i>
+        <span class="text-white text-sm font-bold">耳垂基準誘導 — 同一の左後頭部棘波</span>
+      </div>
+      <canvas id="cv-referential" class="eeg-canvas" height="240" style="border-radius:0;"></canvas>
+      <div class="p-4 bg-teal-50 border-t border-teal-200">
+        <p class="text-xs text-teal-800 leading-relaxed"><strong>読み方：</strong>O1に最大振幅が出現し、P3・T5にも小振幅が出現（電場の広がり）。基準（A1）に活動がなければ、活動の大きい電極が焦点に近い。双極誘導と異なり「どの電極が最大振幅か」で直接焦点を読み取れる。</p>
+      </div>
+    </div>
+
+    <!-- Reference contamination -->
+    <div class="montage-card overflow-hidden mt-4">
+      <div class="bg-slate-800 px-4 py-2 flex items-center gap-2">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+        <span class="text-white text-sm font-bold">基準汚染の例 — 側頭葉放電が耳垂基準に混入</span>
+      </div>
+      <canvas id="cv-refcontam" class="eeg-canvas" height="180" style="border-radius:0;"></canvas>
+      <div class="p-4 bg-amber-50 border-t border-amber-200">
+        <p class="text-xs text-amber-800 leading-relaxed"><strong>基準汚染：</strong>T3（側頭部）の放電が耳垂（A1）に混入すると、全誘導に逆相の波形が出現する。この場合、双極誘導に切り替えて確認することが重要。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 4: Phase reversal ===== -->
+  <div id="tab-phase" class="tab-panel">
+    <div class="montage-card p-5 mb-4">
+      <h2 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <i data-lucide="zap" class="w-5 h-5 text-amber-600"></i>
+        位相逆転（Phase Reversal）—焦点同定の基本技法
+      </h2>
+      <p class="text-sm text-slate-700 leading-relaxed mb-3">
+        双極誘導では、棘波の焦点（電位が最大）を挟む2つの誘導で波形の向きが<strong>逆転（位相逆転）</strong>します。この「山が下向きになる点」が焦点電極の位置を示します。
+      </p>
+      <div class="bg-amber-50 rounded-xl p-4 border border-amber-200 mb-3">
+        <p class="font-bold text-amber-800 mb-2">原理</p>
+        <div class="grid sm:grid-cols-3 gap-2 text-xs text-center">
+          <div class="bg-white rounded p-2 border border-amber-100">
+            <p class="font-bold text-slate-700 mb-1">焦点の前の誘導</p>
+            <p class="text-slate-600">電極A − 焦点B<br>= 小 − 大 = 負<br>→ <strong class="text-indigo-600">上向き</strong>に振れる</p>
+          </div>
+          <div class="bg-amber-100 rounded p-2 border border-amber-300">
+            <p class="font-bold text-amber-800 mb-1">焦点の位置</p>
+            <p class="text-amber-700">最大電位の電極<br>（位相逆転の「谷」）<br>→ <strong>棘波の焦点</strong></p>
+          </div>
+          <div class="bg-white rounded p-2 border border-amber-100">
+            <p class="font-bold text-slate-700 mb-1">焦点の後の誘導</p>
+            <p class="text-slate-600">焦点B − 電極C<br>= 大 − 小 = 正<br>→ <strong class="text-rose-600">下向き</strong>に振れる</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase reversal demo -->
+    <div class="montage-card overflow-hidden mb-4">
+      <div class="bg-slate-800 px-4 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+          <span class="text-white text-sm font-bold">位相逆転 — 焦点を変えて比較</span>
+        </div>
+      </div>
+      <div class="p-3 bg-slate-700 flex flex-wrap gap-2">
+        <button class="phase-btn active" id="pbtn-c3" onclick="setPhaseDemo('C3',this)">焦点 = C3</button>
+        <button class="phase-btn" id="pbtn-p3" onclick="setPhaseDemo('P3',this)">焦点 = P3</button>
+        <button class="phase-btn" id="pbtn-o1" onclick="setPhaseDemo('O1',this)">焦点 = O1</button>
+      </div>
+      <canvas id="cv-phase" class="eeg-canvas" height="250" style="border-radius:0;"></canvas>
+      <div class="p-4 bg-amber-50 border-t border-amber-200" id="phase-explanation">
+      </div>
+    </div>
+
+    <!-- Summary tips -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+      <p class="font-bold text-slate-800 mb-2">位相逆転の読み方 3ステップ</p>
+      <ol class="space-y-2 text-sm text-slate-700">
+        <li class="flex gap-2"><span class="font-black text-teal-500 w-5 flex-shrink-0">1.</span>最大振幅の誘導を見つける（棘波・鋭波が一番大きい誘導）</li>
+        <li class="flex gap-2"><span class="font-black text-teal-500 w-5 flex-shrink-0">2.</span>その前後の誘導で波形の向きが逆転しているか確認する</li>
+        <li class="flex gap-2"><span class="font-black text-teal-500 w-5 flex-shrink-0">3.</span>逆転の「接点」となる電極が焦点（最大電位点）—それが局所てんかん焦点の位置を示す</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ===== TAB 5: Compare ===== -->
+  <div id="tab-compare" class="tab-panel">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-4">
+      <p class="font-bold text-slate-800 mb-3">同一の焦点性棘波（C3焦点）— モンタージュ別の見え方</p>
+      <div class="grid sm:grid-cols-3 gap-2 text-xs text-center mb-4">
+        <div class="bg-indigo-50 rounded-lg p-2 border border-indigo-200">
+          <p class="font-bold text-indigo-800">縦双極</p>
+          <p class="text-slate-600 mt-0.5">F3-C3に最大↑<br>C3-P3に最大↓<br>（C3で位相逆転）</p>
+        </div>
+        <div class="bg-teal-50 rounded-lg p-2 border border-teal-200">
+          <p class="font-bold text-teal-800">耳垂基準（A1）</p>
+          <p class="text-slate-600 mt-0.5">C3に最大振幅<br>電場の広がりに比例<br>（直接焦点がわかる）</p>
+        </div>
+        <div class="bg-violet-50 rounded-lg p-2 border border-violet-200">
+          <p class="font-bold text-violet-800">Cz基準</p>
+          <p class="text-slate-600 mt-0.5">C3−Czの差分<br>Czにも活動があれば<br>振幅が減衰</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <div class="montage-card overflow-hidden">
+        <div class="bg-indigo-900 px-4 py-2"><span class="text-indigo-200 text-xs font-bold">縦双極モンタージュ（C3焦点）</span></div>
+        <canvas id="cv-cmp-bipolar" class="eeg-canvas" height="220" style="border-radius:0;"></canvas>
+      </div>
+      <div class="montage-card overflow-hidden">
+        <div class="bg-teal-900 px-4 py-2"><span class="text-teal-200 text-xs font-bold">耳垂基準誘導（A1基準）</span></div>
+        <canvas id="cv-cmp-ref" class="eeg-canvas" height="220" style="border-radius:0;"></canvas>
+      </div>
+      <div class="montage-card overflow-hidden">
+        <div class="bg-violet-900 px-4 py-2"><span class="text-violet-200 text-xs font-bold">Cz基準誘導</span></div>
+        <canvas id="cv-cmp-cz" class="eeg-canvas" height="220" style="border-radius:0;"></canvas>
+      </div>
+      <div class="bg-slate-50 rounded-xl border border-slate-200 p-4 text-sm text-slate-700 leading-relaxed">
+        <p class="font-bold text-slate-800 mb-1">比較のまとめ</p>
+        <ul class="space-y-1 text-xs">
+          <li>• <strong>双極誘導</strong>：C3を挟む「F3-C3」と「C3-P3」で位相逆転 → C3が焦点と特定できる</li>
+          <li>• <strong>耳垂基準</strong>：C3誘導が最大振幅 → C3が焦点と直接わかる（ただし耳垂汚染に注意）</li>
+          <li>• <strong>Cz基準</strong>：CzとC3が近接しているため、C3-Czの差分が小さくなり見逃しやすい</li>
+          <li>• 焦点同定には<strong>双極誘導 + 基準電極誘導の両方</strong>を確認することが推奨される</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="flex justify-between items-center mt-8 pt-4 border-t border-slate-200">
+    <a href="eeg-artifacts.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      アーティファクトへ
+    </a>
+    <a href="eeg-learning.html" class="flex items-center gap-1.5 text-sm text-teal-700 hover:text-teal-900 transition-colors font-semibold">
+      学習ハブへ
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+lucide.createIcons();
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(() => { drawAllCanvases(); }, 30);
+}
+
+function pnoise(t, seed) {
+  return Math.sin(t*127.3+seed*43.7)*0.5+Math.sin(t*83.1+seed*29.1)*0.3+Math.sin(t*51.7+seed*17.9)*0.2;
+}
+
+function setupCanvas(canvas) {
+  if (!canvas) return null;
+  canvas.width = canvas.offsetWidth || 600;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width; const H = canvas.height;
+  ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=W/8){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=H/4){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  return ctx;
+}
+
+// Spike at a given time position
+function spikeAt(t, tPeak, amp) {
+  const dt = t - tPeak;
+  if (Math.abs(dt) < 0.08) return Math.exp(-dt*dt/0.002) * amp;
+  if (dt > 0 && dt < 0.25) return -Math.sin((dt-0.08)/0.17*Math.PI)*amp*0.4;
+  return 0;
+}
+
+// Draw multi-channel EEG with configurable spikes per channel
+function drawMultiChannel(canvas, channels) {
+  const ctx = setupCanvas(canvas); if (!ctx) return;
+  const W = canvas.width; const H = canvas.height;
+  const nCh = channels.length; const chH = H / nCh;
+
+  channels.forEach((ch, i) => {
+    const y0 = i * chH + chH / 2;
+    ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(0,y0); ctx.lineTo(W,y0); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='9px monospace';
+    ctx.fillText(ch.label, 4, y0-chH/2+11);
+
+    ctx.strokeStyle = ch.color || '#4ade80'; ctx.lineWidth=1.5; ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const t = x/W*6;
+      let v = pnoise(t, i) * (chH*0.08);
+      if (ch.bgFreq) v += Math.sin(2*Math.PI*ch.bgFreq*t) * chH * 0.06;
+      // Spikes
+      if (ch.spikeTimes) {
+        ch.spikeTimes.forEach(sp => { v += spikeAt(t, sp, ch.spikeAmp || chH*0.38); });
+      }
+      const clamped = Math.max(y0-chH*0.47, Math.min(y0+chH*0.47, y0-v));
+      x===0?ctx.moveTo(x,clamped):ctx.lineTo(x,clamped);
+    }
+    ctx.stroke();
+  });
+}
+
+// ===== Bipolar: left occipital focus (O1) =====
+function drawBipolar(canvas) {
+  const channels = [
+    { label:'Fp1-F3', color:'#4ade80', bgFreq:10, spikeTimes:[1.5,3.5], spikeAmp:8 },
+    { label:'F3-C3',  color:'#4ade80', bgFreq:10, spikeTimes:[1.5,3.5], spikeAmp:14 },
+    { label:'C3-P3',  color:'#86efac', bgFreq:9,  spikeTimes:[1.5,3.5], spikeAmp:22 },
+    { label:'P3-O1',  color:'#fbbf24', bgFreq:9,  spikeTimes:[1.5,3.5], spikeAmp:34 },
+    { label:'O1-O2',  color:'#86efac', bgFreq:10, spikeTimes:[1.5,3.5], spikeAmp:-16 },
+    { label:'Fp2-F4', color:'#4ade80', bgFreq:10, spikeTimes:[], spikeAmp:4 },
+  ];
+  drawMultiChannel(canvas, channels);
+}
+
+// ===== Referential: same O1 focus, A1 reference =====
+function drawReferential(canvas) {
+  const channels = [
+    { label:'Fp1-A1', color:'#4ade80', bgFreq:10, spikeTimes:[1.5,3.5], spikeAmp:8 },
+    { label:'F3-A1',  color:'#4ade80', bgFreq:10, spikeTimes:[1.5,3.5], spikeAmp:12 },
+    { label:'C3-A1',  color:'#86efac', bgFreq:9,  spikeTimes:[1.5,3.5], spikeAmp:18 },
+    { label:'P3-A1',  color:'#fcd34d', bgFreq:9,  spikeTimes:[1.5,3.5], spikeAmp:28 },
+    { label:'O1-A1',  color:'#fbbf24', bgFreq:10, spikeTimes:[1.5,3.5], spikeAmp:38 },
+    { label:'O2-A2',  color:'#4ade80', bgFreq:10, spikeTimes:[], spikeAmp:4 },
+  ];
+  drawMultiChannel(canvas, channels);
+}
+
+// ===== Reference contamination =====
+function drawRefContam(canvas) {
+  const ctx = setupCanvas(canvas); if (!ctx) return;
+  const W = canvas.width; const H = canvas.height;
+  const channels = [
+    { label:'Fp1-A1', color:'#f87171', taint:true,  orig:6 },
+    { label:'F3-A1',  color:'#f87171', taint:true,  orig:8 },
+    { label:'C3-A1',  color:'#f87171', taint:true,  orig:12 },
+    { label:'T3-A1',  color:'#fbbf24', taint:false, orig:38 },
+    { label:'P3-A1',  color:'#f87171', taint:true,  orig:10 },
+  ];
+  const nCh=channels.length; const chH=H/nCh;
+  channels.forEach((ch,i)=>{
+    const y0=i*chH+chH/2;
+    ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(0,y0);ctx.lineTo(W,y0);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='9px monospace';ctx.fillText(ch.label,4,y0-chH/2+11);
+    ctx.strokeStyle=ch.color;ctx.lineWidth=1.5;ctx.beginPath();
+    for(let x=0;x<W;x++){
+      const t=x/W*6; const n=pnoise(t,i)*chH*0.07;
+      let v=n;
+      const sp1=spikeAt(t,1.5,chH*0.42); const sp2=spikeAt(t,3.5,chH*0.42);
+      if(!ch.taint){v+=sp1+sp2;}
+      else{v+=-(sp1+sp2)*0.35;}
+      const clamped=Math.max(y0-chH*0.47,Math.min(y0+chH*0.47,y0-v));
+      x===0?ctx.moveTo(x,clamped):ctx.lineTo(x,clamped);
+    }
+    ctx.stroke();
+  });
+  // Label
+  ctx.fillStyle='rgba(251,191,36,0.7)';ctx.font='10px sans-serif';ctx.fillText('T3の放電がA1に混入→全誘導に逆相',4,H-6);
+}
+
+// ===== Phase reversal demo =====
+const PHASE_CONFIGS = {
+  C3: {
+    explanation: '<strong>C3焦点：</strong>F3-C3は上向き（↑）、C3-P3は下向き（↓）に振れる。C3で位相逆転 → C3が焦点。',
+    channels: [
+      { label:'Fp1-F3', color:'#4ade80', spikeAmp:6 },
+      { label:'F3-C3',  color:'#fbbf24', spikeAmp:30, up:true },
+      { label:'C3-P3',  color:'#f87171', spikeAmp:30, up:false },
+      { label:'P3-O1',  color:'#4ade80', spikeAmp:8 },
+      { label:'O1-Oz',  color:'#4ade80', spikeAmp:4 },
+    ]
+  },
+  P3: {
+    explanation: '<strong>P3焦点：</strong>C3-P3は上向き（↑）、P3-O1は下向き（↓）。P3で位相逆転 → P3が焦点。',
+    channels: [
+      { label:'Fp1-F3', color:'#4ade80', spikeAmp:4 },
+      { label:'F3-C3',  color:'#4ade80', spikeAmp:10 },
+      { label:'C3-P3',  color:'#fbbf24', spikeAmp:28, up:true },
+      { label:'P3-O1',  color:'#f87171', spikeAmp:28, up:false },
+      { label:'O1-Oz',  color:'#4ade80', spikeAmp:6 },
+    ]
+  },
+  O1: {
+    explanation: '<strong>O1焦点：</strong>P3-O1は上向き（↑）、O1-Oz（またはO1-O2）は下向き（↓）。O1で位相逆転 → O1が焦点。',
+    channels: [
+      { label:'Fp1-F3', color:'#4ade80', spikeAmp:3 },
+      { label:'F3-C3',  color:'#4ade80', spikeAmp:6 },
+      { label:'C3-P3',  color:'#4ade80', spikeAmp:14 },
+      { label:'P3-O1',  color:'#fbbf24', spikeAmp:32, up:true },
+      { label:'O1-Oz',  color:'#f87171', spikeAmp:32, up:false },
+    ]
+  }
+};
+
+function drawPhaseDemo(canvas, focusKey) {
+  const cfg = PHASE_CONFIGS[focusKey];
+  if (!cfg) return;
+  const ctx = setupCanvas(canvas); if (!ctx) return;
+  const W = canvas.width; const H = canvas.height;
+  const nCh = cfg.channels.length; const chH = H / nCh;
+
+  cfg.channels.forEach((ch, i) => {
+    const y0 = i*chH + chH/2;
+    ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(0,y0); ctx.lineTo(W,y0); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='9px monospace';
+    ctx.fillText(ch.label, 4, y0-chH/2+11);
+    ctx.strokeStyle=ch.color; ctx.lineWidth=1.5; ctx.beginPath();
+    for (let x=0; x<W; x++) {
+      const t=x/W*6; const n=pnoise(t,i)*chH*0.07;
+      const dir=(ch.up===false)?-1:1;
+      const sp1=spikeAt(t,1.5,ch.spikeAmp*dir*chH*0.012);
+      const sp2=spikeAt(t,3.5,ch.spikeAmp*dir*chH*0.012);
+      const v=n+sp1+sp2;
+      const clamped=Math.max(y0-chH*0.47, Math.min(y0+chH*0.47, y0-v));
+      x===0?ctx.moveTo(x,clamped):ctx.lineTo(x,clamped);
+    }
+    ctx.stroke();
+    // Polarity arrow on reversal channels
+    if (ch.up===true || ch.up===false) {
+      ctx.fillStyle=ch.color+'cc';
+      const aw=W*0.16; const ax=W*0.85; const ay=y0;
+      ctx.font='bold 11px sans-serif'; ctx.textAlign='center';
+      ctx.fillText(ch.up?'↑ (正相)':'↓ (逆相)', ax, ay); ctx.textAlign='left';
+    }
+  });
+}
+
+let currentPhase = 'C3';
+function setPhaseDemo(focus, btn) {
+  currentPhase = focus;
+  document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cv = document.getElementById('cv-phase'); if (cv) { cv.width=cv.offsetWidth||600; drawPhaseDemo(cv, focus); }
+  document.getElementById('phase-explanation').innerHTML=`<p class="text-xs text-amber-800 leading-relaxed">${PHASE_CONFIGS[focus].explanation}</p>`;
+}
+
+// ===== Compare canvases =====
+function drawCompareBipolar(canvas) {
+  const channels = [
+    { label:'Fp1-F3', color:'#4ade80', spikeAmp:5 },
+    { label:'F3-C3',  color:'#fbbf24', spikeAmp:28, up:true },
+    { label:'C3-P3',  color:'#f87171', spikeAmp:28, up:false },
+    { label:'P3-O1',  color:'#4ade80', spikeAmp:10 },
+    { label:'Fp2-F4', color:'#4ade80', spikeAmp:3 },
+  ];
+  const ctx=setupCanvas(canvas); if(!ctx) return;
+  const W=canvas.width; const H=canvas.height; const nCh=channels.length; const chH=H/nCh;
+  channels.forEach((ch,i)=>{
+    const y0=i*chH+chH/2;
+    ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(0,y0);ctx.lineTo(W,y0);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='9px monospace';ctx.fillText(ch.label,4,y0-chH/2+11);
+    ctx.strokeStyle=ch.color;ctx.lineWidth=1.5;ctx.beginPath();
+    for(let x=0;x<W;x++){
+      const t=x/W*6; const n=pnoise(t,i)*chH*0.07;
+      const dir=(ch.up===false)?-1:1;
+      const v=n+spikeAt(t,1.5,ch.spikeAmp*dir*chH*0.013)+spikeAt(t,3.5,ch.spikeAmp*dir*chH*0.013);
+      const cl=Math.max(y0-chH*0.47,Math.min(y0+chH*0.47,y0-v));
+      x===0?ctx.moveTo(x,cl):ctx.lineTo(x,cl);
+    }
+    ctx.stroke();
+  });
+  ctx.fillStyle='rgba(251,191,36,0.8)';ctx.font='bold 10px sans-serif';ctx.fillText('位相逆転 → C3焦点',W*0.60,18);
+}
+
+function drawCompareRef(canvas, ref) {
+  const cfgs = {
+    a1: [
+      { label:'Fp1-A1', color:'#4ade80', amp:6 }, { label:'F3-A1',  color:'#86efac', amp:14 },
+      { label:'C3-A1',  color:'#fbbf24', amp:36 }, { label:'P3-A1',  color:'#86efac', amp:16 },
+      { label:'O1-A1',  color:'#4ade80', amp:8 },
+    ],
+    cz: [
+      { label:'Fp1-Cz', color:'#4ade80', amp:8  }, { label:'F3-Cz',  color:'#86efac', amp:16 },
+      { label:'C3-Cz',  color:'#a78bfa', amp:8  }, // Small: C3 ≈ Cz → cancels
+      { label:'P3-Cz',  color:'#86efac', amp:18 }, { label:'O1-Cz',  color:'#4ade80', amp:10 },
+    ],
+  };
+  const chs=cfgs[ref]; if(!chs) return;
+  const ctx=setupCanvas(canvas); if(!ctx) return;
+  const W=canvas.width; const H=canvas.height; const nCh=chs.length; const chH=H/nCh;
+  chs.forEach((ch,i)=>{
+    const y0=i*chH+chH/2;
+    ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(0,y0);ctx.lineTo(W,y0);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='9px monospace';ctx.fillText(ch.label,4,y0-chH/2+11);
+    ctx.strokeStyle=ch.color;ctx.lineWidth=1.5;ctx.beginPath();
+    for(let x=0;x<W;x++){
+      const t=x/W*6; const n=pnoise(t,i)*chH*0.07;
+      const v=n+spikeAt(t,1.5,ch.amp*chH*0.012)+spikeAt(t,3.5,ch.amp*chH*0.012);
+      const cl=Math.max(y0-chH*0.47,Math.min(y0+chH*0.47,y0-v));
+      x===0?ctx.moveTo(x,cl):ctx.lineTo(x,cl);
+    }
+    ctx.stroke();
+  });
+  if (ref==='a1') {ctx.fillStyle='rgba(251,191,36,0.8)';ctx.font='bold 10px sans-serif';ctx.fillText('C3が最大振幅 → C3焦点',W*0.55,18);}
+  if (ref==='cz') {ctx.fillStyle='rgba(167,139,250,0.8)';ctx.font='bold 10px sans-serif';ctx.fillText('C3−Czが小さい（キャンセル）',W*0.45,18);}
+}
+
+function drawAllCanvases() {
+  drawBipolar(document.getElementById('cv-bipolar'));
+  drawReferential(document.getElementById('cv-referential'));
+  drawRefContam(document.getElementById('cv-refcontam'));
+  const cvPhase=document.getElementById('cv-phase'); if(cvPhase){cvPhase.width=cvPhase.offsetWidth||600;drawPhaseDemo(cvPhase,currentPhase);}
+  drawCompareBipolar(document.getElementById('cv-cmp-bipolar'));
+  drawCompareRef(document.getElementById('cv-cmp-ref'),'a1');
+  drawCompareRef(document.getElementById('cv-cmp-cz'),'cz');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  lucide.createIcons();
+  setTimeout(drawAllCanvases, 50);
+  // Init phase explanation
+  document.getElementById('phase-explanation').innerHTML=`<p class="text-xs text-amber-800 leading-relaxed">${PHASE_CONFIGS['C3'].explanation}</p>`;
+});
+
+window.addEventListener('resize', drawAllCanvases);
+</script>
+</body>
+</html>

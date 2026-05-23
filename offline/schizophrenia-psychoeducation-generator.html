@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>統合失調症 心理教育資料 カスタマイズ生成ツール - 精神科</title>
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f1f5f9; }
+    .header-gradient { background: var(--psych-gradient); }
+
+    /* ===== ツールレイアウト ===== */
+    .tool-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 0;
+      height: calc(100vh - 72px);
+    }
+    .form-panel {
+      background: white;
+      border-right: 1px solid #e2e8f0;
+      overflow-y: auto;
+      padding: 1.25rem;
+    }
+    .preview-panel {
+      background: #f8fafc;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    /* ===== フォームスタイル ===== */
+    .form-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      padding: 0.5rem 0 0.4rem;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 1rem 0 0.6rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.2rem;
+    }
+    .form-hint {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-bottom: 0.3rem;
+      line-height: 1.4;
+    }
+    .form-input {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.82rem;
+      font-family: inherit;
+      color: #1e293b;
+      background: #fff;
+      transition: border-color 0.15s;
+      margin-bottom: 0.7rem;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15,118,110,0.12);
+    }
+    textarea.form-input { resize: vertical; min-height: 60px; }
+    .audience-btn {
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 2px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: white;
+      color: #64748b;
+    }
+    .audience-btn.active-patient {
+      background: #1e3a5f; border-color: #1e3a5f; color: white;
+    }
+    .audience-btn.active-family {
+      background: #0f766e; border-color: #0f766e; color: white;
+    }
+    .insert-btn {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .insert-btn:hover { background: #e2e8f0; }
+
+    /* ===== アクションボタン ===== */
+    .action-btn {
+      display: flex; align-items: center; gap: 0.4rem;
+      width: 100%; justify-content: center;
+      padding: 0.55rem 0;
+      border-radius: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      margin-bottom: 0.5rem;
+    }
+    .btn-primary { background: var(--psych-gradient); color: white; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: #f1f5f9; color: #374151; border: 1px solid #d1d5db; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-green { background: #15803d; color: white; }
+    .btn-green:hover { background: #166534; }
+    .btn-word { background: #1d4ed8; color: white; }
+    .btn-word:hover { background: #1e40af; }
+    .btn-word:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    /* ===== プレビュースタイル ===== */
+    .preview-wrapper {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 2rem 2.5rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .preview-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin-bottom: 0.2rem;
+    }
+    .preview-subtitle {
+      font-size: 0.95rem;
+      color: #334155;
+      margin-bottom: 0.1rem;
+    }
+    .preview-date {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 1.2rem;
+    }
+    .preview-chapter {
+      margin-bottom: 0.5rem;
+    }
+    .preview-h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      padding: 0.5rem 0 0.3rem;
+      border-bottom: 2px solid #cbd5e1;
+      margin: 1.5rem 0 0.8rem;
+    }
+    .preview-h2 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin: 1rem 0 0.4rem;
+    }
+    .preview-p {
+      font-size: 0.85rem;
+      color: #374151;
+      line-height: 1.7;
+      margin-bottom: 0.6rem;
+    }
+    .preview-case-note {
+      font-size: 0.85rem;
+      color: #1e293b;
+      line-height: 1.7;
+      background: #f0fdf4;
+      border-left: 3px solid #15803d;
+      padding: 0.6rem 0.8rem;
+      border-radius: 0 0.4rem 0.4rem 0;
+      margin-bottom: 0.6rem;
+      white-space: pre-wrap;
+    }
+    .preview-bullets {
+      list-style: disc;
+      padding-left: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+    .preview-bullets li {
+      font-size: 0.85rem;
+      color: #374151;
+      line-height: 1.7;
+    }
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0.8rem;
+      font-size: 0.82rem;
+    }
+    .preview-table th {
+      background: #e4e6eb;
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+    }
+    .preview-table td {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid #d1d5db;
+      vertical-align: top;
+      line-height: 1.6;
+      color: #374151;
+    }
+    .preview-table tr:nth-child(even) td { background: #f3f4f7; }
+    .preview-table tr:nth-child(odd) td { background: white; }
+    .preview-caption {
+      font-size: 0.77rem;
+      color: #64748b;
+      margin-bottom: 0.3rem;
+      font-style: italic;
+    }
+    .preview-footer {
+      font-size: 0.77rem;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      line-height: 1.7;
+    }
+    .preview-page-break {
+      border: none;
+      border-top: 2px dashed #e2e8f0;
+      margin: 1.5rem 0;
+    }
+    .audience-badge-patient {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: #dbeafe; color: #1e40af;
+      padding: 0.2rem 0.7rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .audience-badge-family {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: #d1fae5; color: #065f46;
+      padding: 0.2rem 0.7rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+
+    /* ===== 参考リソースパネル ===== */
+    .ref-panel {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      margin-top: 1rem;
+      font-size: 0.77rem;
+      color: #92400e;
+    }
+    .ref-panel summary {
+      cursor: pointer;
+      font-weight: 600;
+      list-style: none;
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+
+    /* ===== 印刷スタイル ===== */
+    @media print {
+      body { background: white; }
+      .no-print { display: none !important; }
+      .tool-layout { display: block; height: auto; }
+      .preview-panel { padding: 0; background: white; }
+      .preview-wrapper {
+        box-shadow: none; padding: 1rem;
+        max-width: 100%;
+        border-radius: 0;
+      }
+      .preview-page-break { page-break-after: always; border: none; }
+      .preview-h1 { color: black; }
+      .preview-h2 { color: black; }
+    }
+
+    /* ===== サーバーステータス ===== */
+    .server-status {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.72rem; padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+    }
+    .server-online { background: #d1fae5; color: #065f46; }
+    .server-offline { background: #fee2e2; color: #991b1b; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .dot-green { background: #15803d; }
+    .dot-red { background: #dc2626; }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header class="header-gradient text-white no-print">
+  <div class="px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <i data-lucide="file-text" class="w-6 h-6"></i>
+      <div>
+        <h1 class="text-lg font-bold leading-tight">統合失調症 心理教育資料 カスタマイズ生成ツール</h1>
+        <p class="text-xs text-teal-100">患者さん・ご家族向け説明資料を症例に合わせてカスタマイズ</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="server-status-badge" class="server-status server-offline">
+        <span class="dot dot-red"></span>Wordサーバー: オフライン
+      </span>
+      <a href="index.html" class="text-xs text-teal-100 hover:text-white flex items-center gap-1">
+        <i data-lucide="home" class="w-4 h-4"></i>トップへ
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="tool-layout">
+
+  <!-- ====== 左パネル：フォーム ====== -->
+  <aside class="form-panel no-print">
+
+    <!-- 本人 / 家族 切り替え -->
+    <div class="flex gap-2 mb-3">
+      <button id="btn-patient" class="audience-btn active-patient" onclick="setAudience('patient')">
+        <i data-lucide="user" class="w-3 h-3 inline mr-1"></i>本人用
+      </button>
+      <button id="btn-family" class="audience-btn" onclick="setAudience('family')">
+        <i data-lucide="users" class="w-3 h-3 inline mr-1"></i>家族用
+      </button>
+    </div>
+
+    <!-- 基本情報 -->
+    <div class="form-section-title">基本情報</div>
+    <label class="form-label">施設名</label>
+    <input id="f_facility_name" class="form-input" type="text" value="○○病院 精神科外来" oninput="renderPreview()">
+
+    <label class="form-label">患者の表示名（任意）</label>
+    <div class="form-hint">資料に印刷される表示名。氏名でなく「様」「患者A」等でも可。</div>
+    <input id="f_subject_line" class="form-input" type="text" placeholder="例: 山田 太郎 様" oninput="renderPreview()">
+
+    <label class="form-label">作成日</label>
+    <input id="f_date_line" class="form-input" type="text" oninput="renderPreview()">
+
+    <!-- 章1 -->
+    <div class="form-section-title">① 症状・経過（症例記入）</div>
+    <div class="form-hint">この患者さんの症状の要点を、できるだけ分かりやすい言葉で記入してください。<br>（参考: 陽性症状・陰性症状・解体症状・気分/不安の有無、病識の程度）</div>
+    <textarea id="f_ch1_case_note" class="form-input" rows="4" placeholder="例: 幻聴と被害的な確信が主訴で来院。陰性症状も目立つ。" oninput="renderPreview()"></textarea>
+
+    <!-- 章2 -->
+    <div class="form-section-title">② 原因・しくみ（症例記入）</div>
+    <label class="form-label">説明できること</label>
+    <div class="form-hint">多因子モデルのうち、この症例に当てはまりうる要因（遺伝素因・発達・ストレス等）</div>
+    <textarea id="f_ch2_known" class="form-input" rows="3" placeholder="例: 家系歴あり。青年期の強いストレスが誘因と考えられる。" oninput="renderPreview()"></textarea>
+
+    <label class="form-label">現時点では断言が難しいこと</label>
+    <textarea id="f_ch2_unknown" class="form-input" rows="2" placeholder="例: 将来の職業復帰の時期は治療反応に依存し、現時点では断言できない。" oninput="renderPreview()"></textarea>
+
+    <!-- 章3 -->
+    <div class="form-section-title">③ 治療の方向性（症例記入）</div>
+    <label class="form-label">短期の方針（数週〜数か月）</label>
+    <textarea id="f_ch3_short" class="form-input" rows="2" placeholder="例: 症状安定・睡眠確保・副作用モニタリング。2〜4週ごと外来。" oninput="renderPreview()"></textarea>
+
+    <label class="form-label">長期の方針（数か月〜年）</label>
+    <textarea id="f_ch3_long" class="form-input" rows="2" placeholder="例: 再発予防・服薬継続・段階的な社会復帰。" oninput="renderPreview()"></textarea>
+
+    <!-- 章4 -->
+    <div class="form-section-title">④ 薬物療法（症例記入）</div>
+    <div class="form-hint">一般名・用法・副作用説明の要点を記入してください。<br>参考（すまいるナビゲーター）: 眠気・体重増加・錐体外路症状・高プロラクチン血症・代謝異常</div>
+    <textarea id="f_ch4_medication" class="form-input" rows="4" placeholder="例: リスペリドン 2mg 夕食後。眠気・体重の変化を毎回確認。勝手な中断は再発リスク。" oninput="renderPreview()"></textarea>
+
+    <!-- 章5 -->
+    <div class="form-section-title">⑤ 薬以外の支援（症例記入）</div>
+    <div class="form-hint">心理社会的支援・生活指導・家族関わり方の方針<br>（参考: 心理教育・CBT・SST・デイケア・就労移行・ピア支援）</div>
+    <textarea id="f_ch5_nonpharma" class="form-input" rows="3" placeholder="例: 本資料による心理教育。睡眠衛生指導。デイケア紹介を検討中。" oninput="renderPreview()"></textarea>
+
+    <!-- 章6 -->
+    <div class="form-section-title">⑥ 早期警告・再発予防・支援制度</div>
+    <label class="form-label">この患者さんの早期警告サイン</label>
+    <div class="form-hint">（参考: 不眠・焦燥増加・疑念の強まり・生活の乱れ等）</div>
+    <textarea id="f_ch6_early_warning" class="form-input" rows="3" placeholder="例: 不眠が3日続く、出かけられなくなる、独り言が増える。" oninput="renderPreview()"></textarea>
+
+    <label class="form-label">困ったとき・受診の目安</label>
+    <textarea id="f_ch6_trouble_contact" class="form-input" rows="2" placeholder="例: 平日昼: 外来予約枠。夜間・休日: ○○救急相談。" oninput="renderPreview()"></textarea>
+
+    <label class="form-label">制度・相談窓口（手続き状況）</label>
+    <div class="flex gap-1 flex-wrap mb-1">
+      <button class="insert-btn" onclick="insertTemplate('ch6_support', TEMPLATES.jiritsu_shien)">自立支援医療</button>
+      <button class="insert-btn" onclick="insertTemplate('ch6_support', TEMPLATES.techou)">障害者手帳</button>
+      <button class="insert-btn" onclick="insertTemplate('ch6_support', TEMPLATES.nenkin)">障害年金</button>
+    </div>
+    <textarea id="f_ch6_support" class="form-input" rows="3" placeholder="例: 精神通院医療（自立支援）: MSWと申請手続き中。" oninput="renderPreview()"></textarea>
+
+    <!-- 参考リソース -->
+    <details class="ref-panel">
+      <summary><i data-lucide="book-open" class="w-3 h-3"></i>参考ガイドライン・資料</summary>
+      <ul class="mt-2 space-y-1 text-xs">
+        <li><a href="https://www.smilenavigator.jp/tougou/" target="_blank" class="underline text-amber-700">すまいるナビゲーター（大塚製薬）</a> — 患者・家族向け総合情報</li>
+        <li><a href="https://www.ncnp.go.jp/nimh/chiiki/documents/kazokushinrikyoikuhen.pdf" target="_blank" class="underline text-amber-700">NCNP 家族心理教育ハンドブック</a></li>
+        <li><a href="https://med.sawai.co.jp/file/mate/open/02dfef5e-9b0d-452b-9fd9-be66eb21619c00000000027E7525.pdf" target="_blank" class="underline text-amber-700">沢井製薬 服薬指導ガイド</a></li>
+        <li><a href="https://amn.astellas.jp/content/dam/jp/amn/jp/ja/medical-support/guidance/disease_file/pdfs/DocNo202007981_y,0.pdf" target="_blank" class="underline text-amber-700">Astellas 統合失調症診療ガイド</a></li>
+      </ul>
+    </details>
+
+    <!-- アクションボタン -->
+    <div class="mt-4">
+      <button class="action-btn btn-primary" onclick="window.print()">
+        <i data-lucide="printer" class="w-4 h-4"></i>このページを印刷（PDF）
+      </button>
+      <button class="action-btn btn-green" onclick="downloadJSON()">
+        <i data-lucide="download" class="w-4 h-4"></i>症例JSONをダウンロード
+      </button>
+      <button id="btn-word" class="action-btn btn-word" disabled onclick="downloadWord()">
+        <i data-lucide="file-type" class="w-4 h-4"></i>Word文書をダウンロード
+      </button>
+      <p class="text-xs text-slate-400 text-center mt-1">Word出力は <code>python serve_web.py</code> 起動時に有効</p>
+    </div>
+
+    <!-- CLI説明 -->
+    <div class="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+      <p class="text-xs font-bold text-slate-600 mb-1">CLIでの.docx生成</p>
+      <code class="text-xs text-slate-500 block leading-relaxed">
+        cd scripts/schizophrenia_psychoeducation<br>
+        python generate_docx.py \<br>
+        &nbsp;&nbsp;--input downloaded.json \<br>
+        &nbsp;&nbsp;--output 資料.docx
+      </code>
+    </div>
+
+  </aside>
+
+  <!-- ====== 右パネル：ライブプレビュー ====== -->
+  <main class="preview-panel">
+    <div class="preview-wrapper">
+
+      <!-- プレビューヘッダー（印刷時も表示）-->
+      <div id="preview-audience-toggle" class="flex items-center gap-3 mb-4 no-print">
+        <span class="text-sm font-semibold text-slate-500">プレビュー:</span>
+        <button id="prev-btn-patient" class="audience-btn active-patient text-sm" onclick="setAudience('patient')">本人用</button>
+        <button id="prev-btn-family" class="audience-btn text-sm" onclick="setAudience('family')">家族用</button>
+        <span id="preview-audience-badge" class="audience-badge-patient ml-auto">本人用</span>
+      </div>
+
+      <!-- 生成コンテンツ -->
+      <div id="preview-content">
+        <p class="text-slate-400 text-sm text-center py-8">左のフォームに入力すると、ここにプレビューが表示されます。</p>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script>
+// =============================================
+// content.json のデータをインライン埋め込み
+// =============================================
+const CONTENT = {
+  "meta": { "version": 2 },
+  "titles": {
+    "patient": "統合失調症の心理教育資料（本人用）",
+    "family":  "統合失調症の心理教育資料（家族用）"
+  },
+  "chapters": [
+    {
+      "id": "ch1",
+      "heading": "① 統合失調症とは（症状・経過・よくある誤解）",
+      "blocks": {
+        "patient": [
+          { "type": "p", "text": "統合失調症は、「考え方」「感じ方」「見え方・聞こえ方」「行動」などが、普段の自分に比べてつながりにくくなる病気として理解されています。診断名は医療者が症状の整理のために用いるもので、一人ひとりの体験とは必ずしもぴったり重ならないことがあります。" },
+          { "type": "h2", "text": "症状のわかりやすい整理（一例）" },
+          { "type": "table", "caption": "すべての人に同じ組み合わせがあるわけではありません。気になる点をチェックする目安として使ってください。", "headers": ["側面", "本人にこう感じられやすい例"], "rows": [["陽性症状","幻聴／被害感／根拠が少ない確信（妄想）など"],["陰性症状","やる気や興味が出にくい、表情が乏しい、社会的に引きこもりやすいなど"],["解体症状","考えが散らばる、言葉が空を飛ぶような印象、体が不自由に感じるなど"],["気分・不安","落ち込み、焦燥、眠れなさ（別診断や併存もあり）"]] },
+          { "type": "h2", "text": "経過のイメージ（一般論）" },
+          { "type": "bullets", "items": ["よく「波」があります。症状が強い時期と、比較的落ち着いた時期がありうる。","再発はありうる病気として捉え、早めの受診や生活調整で傷を小さくすることが大切、と説明されることが多い。","回復の形は人それぞれ（学業・就労・趣味・地域参加など、目標は本人と相談して決める）。"] },
+          { "type": "h2", "text": "よくある誤解と、医療側の整理（一般論）" },
+          { "type": "table", "headers": ["誤解されやすい言い方","医療的に言い換えると（例）"], "rows": [["気合が足りないだけ","努力不足では説明しきれず、脳機能・ストレス・環境などが関わる病気として治療対象になることがある"],["性格の問題","性格と症状は混同されやすい。切り分けは専門の面接で進める"],["危険な人が多い（偏見）","大多数は自傷や孤立のリスクへの配慮が中心。危険評価は個別に行う"]] },
+          { "type": "h2", "text": "この症例の症状の整理（主治医より）" },
+          { "type": "case", "key": "ch1_case_note" }
+        ],
+        "family": [
+          { "type": "p", "text": "ご家族の方へ。統合失調症は本人だけでなく、家庭の生活にも影響しやすい病気です。同時に、正しい理解と現実的な支援の仕方は、回復を支える大きな要素になります。" },
+          { "type": "h2", "text": "症状のわかりやすい整理（観察で気づきやすい例）" },
+          { "type": "table", "caption": "すべてに当てはまる必要はありません。変化の目安としてご覧ください。", "headers": ["側面","周囲からみられやすい例"], "rows": [["陽性症状","独り言が増える、根拠の薄い確信を強く言う、不眠と急性期の混在など"],["陰性症状","生活の質が低下、外出・会話が減る、生活リズムの乱れなど"],["解体症状","話題が散漫、身だしなみの変化、予定どおり動けないなど（他の理由も検討）"],["気分・不眠","抑うつ調、焦燥、昼夜逆転など"]] },
+          { "type": "h2", "text": "経過のイメージ（一般論）" },
+          { "type": "bullets", "items": ["治療の初期は「安全管理」と「苦痛の軽減」が優先になりやすい。","その後、「本人のペース」を尊重しつつ、生活へ少しずつ橋をかける段階が続くことが多い。","ご家族の過干渉と放任の両極端は両方とも負担が大きくなりやすい、と説明されることがある。"] },
+          { "type": "h2", "text": "よくある誤解（ご家族へ）" },
+          { "type": "table", "headers": ["誤解","整理（例）"], "rows": [["家庭が原因だと決めつけられる","多因子モデルが主流。責め合いの根拠にはならない説明が多い"],["監視すれば治る","服薬・医療関係・本人の納得が中心。家族は支えの役割に寄せることが多い"],["良くなったから薬をやめてよい","再発予防の判断は医師と本人。家族が主導で止めない方が安全なことが多い"]] },
+          { "type": "h2", "text": "この症例の症状の整理（主治医より）" },
+          { "type": "case", "key": "ch1_case_note" }
+        ]
+      }
+    },
+    {
+      "id": "ch2",
+      "heading": "② 原因としくみ（医学的にわかっていること／いまだ限界があること）",
+      "blocks": {
+        "patient": [
+          { "type": "h2", "text": "多くの研究で示唆されていること（例）" },
+          { "type": "bullets", "items": ["遺伝的素因が関与しやすい（家系リスクの話は「確定」ではなく確率の話）。","胎児期・周産期の要因、幼少期〜青年期の発達・環境、成人後のストレスが「重なり」やすいという整理。","脳内の情報伝達（ドパミンなど）や脳ネットワークの偏りが関与しうるというモデル。"] },
+          { "type": "h2", "text": "いまだ議論・研究が続いていること" },
+          { "type": "bullets", "items": ["「この一つの原因だけ」と誰にでも当てはめて説明することは難しい。","予後（将来の働き方や症状の波）を長期に正確に当てにいくことは難しく、治療反応には個人差がある。","ストレスと脆弱性の関係は、あなたを責めるためではなく「再発予防の手がかり」として使うことが多い。"] },
+          { "type": "p", "text": "{{facility_name}}では、説明できる範囲と、いまだ不確実な点を分けて共有します。" },
+          { "type": "h2", "text": "この症例で説明できること（主治医より）" },
+          { "type": "case", "key": "ch2_known" },
+          { "type": "h2", "text": "いま十分には説明が難しいこと" },
+          { "type": "case", "key": "ch2_unknown" }
+        ],
+        "family": [
+          { "type": "h2", "text": "多くの研究で示唆されていること（例）" },
+          { "type": "bullets", "items": ["遺伝的素因と環境・発達・ストレスの相互作用という多因子モデル。","脳の情報伝達やネットワークの関与（専門家が症状と照らして説明）。"] },
+          { "type": "h2", "text": "限界と注意点（家族向け）" },
+          { "type": "bullets", "items": ["原因探しで「誰か一人のせい」に寄せない方が、関係を守りやすい。","予後は本人の治療参加と環境にも左右されるため、長期の断定は難しい。","医学的事実と、家庭内の感情（罪悪感・怒り）は別々に扱うと整理しやすい。"] },
+          { "type": "p", "text": "{{facility_name}}では、ご家族にも分かる言葉で、説明できる範囲と限界を共有します。" },
+          { "type": "h2", "text": "この症例で説明できること（主治医より）" },
+          { "type": "case", "key": "ch2_known" },
+          { "type": "h2", "text": "いま十分には説明が難しいこと" },
+          { "type": "case", "key": "ch2_unknown" }
+        ]
+      }
+    },
+    {
+      "id": "ch3",
+      "heading": "③ 治療の全体像と目標（回復・機能・短期／長期）",
+      "blocks": {
+        "patient": [
+          { "type": "p", "text": "治療は「症状を下げる」だけでなく、「あなたの生活の土台（睡眠、食事、対人、役割、目標）」を取り戻す方向で計画されることが多いです。薬物療法と非薬物療法は、目的が違うことがあり、組み合わせて考えます。" },
+          { "type": "h2", "text": "バイオ・サイコ・ソーシャルの整理（例）" },
+          { "type": "table", "headers": ["領域","治療でよく扱うこと（例）"], "rows": [["バイオ","抗精神病薬を中心とした薬物療法、身体合併症の管理、睡眠リズム"],["サイコ","心理教育、認知的な対処、不安・うつへの支援（併存時）"],["ソーシャル","通院、デイケア、就労支援、家族との関わり方、地域資源"]] },
+          { "type": "h2", "text": "短期の方向性（主治医より）" },
+          { "type": "case", "key": "ch3_short" },
+          { "type": "h2", "text": "長期の方向性（主治医より）" },
+          { "type": "case", "key": "ch3_long" }
+        ],
+        "family": [
+          { "type": "p", "text": "治療は、本人の安全と苦痛軽減を優先しつつ、生活の再建へ進む過程になります。家族は「すべてを決める」のではなく、支えと環境調整が中心になりやすい、と説明されることがあります。" },
+          { "type": "h2", "text": "バイオ・サイコ・ソーシャル（ご家族視点での関わり）" },
+          { "type": "table", "headers": ["領域","家族が気をつけるとよいこと（一般論）"], "rows": [["バイオ","通院への同行が必要かは個別判断。異常運動や急な眠気増などは早めに医療へ"],["サイコ","詰問より短文の確認、本人の話を否定し続けない対話が望ましいとされる"],["ソーシャル","過干渉と放任のバランス、介護疲労のケア、きょうだい・子への説明"]] },
+          { "type": "h2", "text": "短期の方向性（主治医より）" },
+          { "type": "case", "key": "ch3_short" },
+          { "type": "h2", "text": "長期の方向性（主治医より）" },
+          { "type": "case", "key": "ch3_long" }
+        ]
+      }
+    },
+    {
+      "id": "ch4",
+      "heading": "④ 薬物療法（役割・続け方・副作用・相談の目安）",
+      "blocks": {
+        "patient": [
+          { "type": "h2", "text": "薬が担うこと（一般論）" },
+          { "type": "bullets", "items": ["幻聴・妄想などの陽性症状や、興奮・不安の軽減に使われることが多い。","「すぐ性格が変わる薬」ではなく、脳内の過剰な信号を整えやすくするイメージで説明されることがある。","効き方と副作用のバランスは個人差が大きく、量や種類の調整が普通に行われる。"] },
+          { "type": "h2", "text": "本人が知っておくとよいチェック（例）" },
+          { "type": "table", "headers": ["テーマ","内容"], "rows": [["飲み方","勝手に中断・急減は再発リスクが上がりやすい。調整は医師に相談"],["副作用","眠気、体重、座っていられない感じ、不随意運動、内分泌など。早め相談"],["他院・市販薬","飲み合わせは必ず伝える"],["妊娠・授乳","希望があれば必ず事前相談"]] },
+          { "type": "h2", "text": "この症例の薬物療法（主治医より）" },
+          { "type": "case", "key": "ch4_medication" }
+        ],
+        "family": [
+          { "type": "h2", "text": "薬物療法の位置づけ（ご家族向け）" },
+          { "type": "bullets", "items": ["本人の苦痛や危険を下げるうえで、薬は重要な選択肢になりうる。","一方で副作用や病識の問題で「飲みたくない」気持ちも起こりうる。日常は対話が基本とされる。","監視・詰問が続くと、治療関係や家族関係を損なうことがある、と説明されることがある。"] },
+          { "type": "h2", "text": "副作用で受診を考える目安（例・一般論）" },
+          { "type": "table", "headers": ["症状の例","対応の目安"], "rows": [["舌や顎の不随意運動、嚥下困難","早めに医療機関へ（誤嚥のリスク）"],["高熱、意識変容、筋硬直","緊急の評価が必要なことがある"],["強い焦燥・落ち着かなさ","用量・種類の調整の相談窓口へ"]] },
+          { "type": "h2", "text": "この症例の薬物療法（主治医より）" },
+          { "type": "case", "key": "ch4_medication" }
+        ]
+      }
+    },
+    {
+      "id": "ch5",
+      "heading": "⑤ 薬以外（心理社会的支援・生活・家族の関わり方）",
+      "blocks": {
+        "patient": [
+          { "type": "h2", "text": "よく議論になる非薬物の選択肢（適応は個別）" },
+          { "type": "table", "headers": ["種類","ねらい（例）"], "rows": [["心理教育","病気の理解と、自分で対処するヒントを増やす"],["認知行動的支援","幻聴・不安・妄想への対処や、活動計画など"],["就労・就学支援","段階的に役割へ戻るための調整（地域・制度と連携）"],["デイケア／ピア支援","孤立を減らし、日常生活の練習場になることがある"]] },
+          { "type": "h2", "text": "生活のセルフケア（一例）" },
+          { "type": "bullets", "items": ["睡眠のリズム、カフェイン・飲酒、運動や散歩の量を定期的に確認。","ストレスイベント（人間関係・締切）は「予兆」をメモすると再発対策になりやすい。","家族との距離は、主治医や支援者と一緒に調整することがある。"] },
+          { "type": "h2", "text": "この症例で推奨・検討中の内容（主治医より）" },
+          { "type": "case", "key": "ch5_nonpharma" }
+        ],
+        "family": [
+          { "type": "h2", "text": "非薬物療法とご家族の役割（一般論）" },
+          { "type": "bullets", "items": ["本人の同意と本人の目標が出発点になりやすい。","代替医療に走らせない、というより「安全第一で医師と情報共有」を推奨されやすい。","ご家族自身の休息・カウンセリング・福祉相談は、支援継続のために有効なことがある。"] },
+          { "type": "h2", "text": "関わり方の目安（例）" },
+          { "type": "table", "headers": ["場面","例"], "rows": [["会話","短い相槌＋事実確認。長時間の説得は疲弊しやすい"],["服薬","本人と医師の領域。家族は「相談しやすい空気」を作ることが多い"],["危機","連絡ルールを事前に文書化しておくと混乱が減りやすい"]] },
+          { "type": "h2", "text": "この症例で推奨・検討中の内容（主治医より）" },
+          { "type": "case", "key": "ch5_nonpharma" }
+        ]
+      }
+    },
+    {
+      "id": "ch6",
+      "heading": "⑥ 早期警告サイン・再発予防／困ったとき／支援制度",
+      "blocks": {
+        "patient": [
+          { "type": "h2", "text": "早期警告サイン（物差しの例）" },
+          { "type": "p", "text": "再発は「いきなり」ではなく、睡眠・意欲・疑心・刺激感受性などの変化が先に現れることがあります。あなた自身の言葉でメモしておくと役立ちます。" },
+          { "type": "table", "headers": ["分野","サインの例"], "rows": [["睡眠","寝付けない／逆に眠すぎる、昼夜逆転"],["気分・焦燥","落ち着かない、いら立ちが強い"],["思考・知覚","疑心が強くなる、物音が気になりすぎる、根拠の薄い確信"],["行動","外出が難しくなる／逆に衝動的になる"],["生活","食事・入浴・身だしなみの乱れ"]] },
+          { "type": "h2", "text": "この症例の早期警告サイン（主治医・本人で確認）" },
+          { "type": "case", "key": "ch6_early_warning" },
+          { "type": "h2", "text": "困ったとき・受診の目安" },
+          { "type": "case", "key": "ch6_trouble_contact" },
+          { "type": "h2", "text": "利用できる社会支援・制度（一般論）" },
+          { "type": "bullets", "items": ["自立支援医療（精神通院医療）: 医療費の自己負担が原則1割に。","精神障害者保健福祉手帳: 各種割引・サービスが受けられる。","障害年金: 就労困難な場合に申請を検討。","就労移行支援・継続就労支援: 段階的な社会復帰をサポート。","地域活動支援センター・デイケア: 日中活動の場。"] },
+          { "type": "h2", "text": "この症例の制度・相談窓口（手続き状況）" },
+          { "type": "case", "key": "ch6_support" }
+        ],
+        "family": [
+          { "type": "h2", "text": "早期警告サイン（家族が気づきやすい例）" },
+          { "type": "table", "headers": ["分野","変化の例"], "rows": [["睡眠・生活","昼夜逆転、部屋の乱れ、食事量の変化"],["会話","話が飛ぶ、答えに詰まる、独り言の増加"],["対人","閉じこもり、無断外出、SNSでのトラブル"],["安全","火の不始末、交通の乱れ、自傷の示唆"]] },
+          { "type": "h2", "text": "この症例の早期警告サイン（主治医・家族で確認）" },
+          { "type": "case", "key": "ch6_early_warning" },
+          { "type": "h2", "text": "困ったとき・連絡・受診" },
+          { "type": "case", "key": "ch6_trouble_contact" },
+          { "type": "h2", "text": "制度・相談先（一般論）" },
+          { "type": "table", "headers": ["区分","内容（例）"], "rows": [["医療","担当科、休日診、近医の共有情報"],["福祉","市区町村の相談支援、障害福祉サービス担当部署"],["緊急","救急番号、地域の夜間急病センター"]] },
+          { "type": "h2", "text": "この症例の制度・相談窓口（手続き状況）" },
+          { "type": "case", "key": "ch6_support" }
+        ]
+      }
+    }
+  ],
+  "footer": [
+    "【免責事項】本資料は心理教育を目的とした一般情報と、症例に応じた記入欄で構成されています。医学的助言への代替ではありません。服薬の変更、診断の解釈、制度の適用可否は、必ず主治医・専門窓口に確認してください。",
+    "【情報の正確性】社会支援制度は法改正・自治体運用の影響を受けます。記載は作成時点の一般的説明であり、個別の適用を保証するものではありません。"
+  ]
+};
+
+// =============================================
+// 定型文テンプレート
+// =============================================
+const TEMPLATES = {
+  jiritsu_shien: "精神通院医療（自立支援）: 医療費の自己負担が原則1割になる制度。申請先: 市区町村の障害福祉窓口。精神科診断書（主治医作成）が必要。手続き: MSWと相談中。",
+  techou: "精神障害者保健福祉手帳: 各種公共交通割引、税控除、就労支援サービス等が受けられる。申請先: 市区町村の障害福祉窓口。主治医の診断書が必要（初診から6か月以上）。",
+  nenkin: "障害年金: 就労が困難な場合に申請を検討。初診日に年金加入・保険料納付の要件あり。申請先: 年金事務所または市区町村。主治医の診断書が必要。詳細は社労士・MSWに相談。"
+};
+
+// =============================================
+// 状態管理
+// =============================================
+let currentAudience = 'patient';
+let serverOnline = false;
+
+// =============================================
+// 初期化
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  // 今日の日付をセット
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
+  document.getElementById('f_date_line').value = dateStr;
+
+  lucide.createIcons();
+  renderPreview();
+  checkServer();
+  setInterval(checkServer, 5000);
+});
+
+// =============================================
+// 対象（本人/家族）切り替え
+// =============================================
+function setAudience(aud) {
+  currentAudience = aud;
+
+  // 左パネルボタン
+  document.getElementById('btn-patient').className = 'audience-btn' + (aud === 'patient' ? ' active-patient' : '');
+  document.getElementById('btn-family').className  = 'audience-btn' + (aud === 'family'  ? ' active-family'  : '');
+  // 右パネルボタン
+  document.getElementById('prev-btn-patient').className = 'audience-btn text-sm' + (aud === 'patient' ? ' active-patient' : '');
+  document.getElementById('prev-btn-family').className  = 'audience-btn text-sm' + (aud === 'family'  ? ' active-family'  : '');
+  // バッジ
+  const badge = document.getElementById('preview-audience-badge');
+  if (aud === 'patient') {
+    badge.className = 'audience-badge-patient ml-auto';
+    badge.textContent = '本人用';
+  } else {
+    badge.className = 'audience-badge-family ml-auto';
+    badge.textContent = '家族用';
+  }
+  renderPreview();
+}
+
+// =============================================
+// プレースホルダマップ構築
+// =============================================
+function buildPlaceholderMap() {
+  return {
+    facility_name:       val('f_facility_name')  || '当院',
+    subject_line:        val('f_subject_line'),
+    date_line:           val('f_date_line'),
+    ch1_case_note:       val('f_ch1_case_note'),
+    ch2_known:           val('f_ch2_known'),
+    ch2_unknown:         val('f_ch2_unknown'),
+    ch3_short:           val('f_ch3_short'),
+    ch3_long:            val('f_ch3_long'),
+    ch4_medication:      val('f_ch4_medication'),
+    ch5_nonpharma:       val('f_ch5_nonpharma'),
+    ch6_early_warning:   val('f_ch6_early_warning'),
+    ch6_trouble_contact: val('f_ch6_trouble_contact'),
+    ch6_support:         val('f_ch6_support'),
+  };
+}
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function substitute(text, map) {
+  return text.replace(/\{\{(\w+)\}\}/g, (_, key) => map[key] !== undefined ? map[key] : '');
+}
+
+// =============================================
+// プレビュー描画
+// =============================================
+function renderPreview() {
+  const map = buildPlaceholderMap();
+  const aud = currentAudience;
+  const container = document.getElementById('preview-content');
+  let html = '';
+
+  // タイトル
+  const title = CONTENT.titles[aud];
+  const subject = map.subject_line ? `<div class="preview-subtitle">${esc(map.subject_line)}</div>` : '';
+  const dateStr = map.date_line ? `<div class="preview-date">${esc(map.date_line)}&nbsp;&nbsp;${esc(map.facility_name)}</div>` : `<div class="preview-date">${esc(map.facility_name)}</div>`;
+  html += `<div class="preview-title">${esc(title)}</div>${subject}${dateStr}`;
+
+  // 各章
+  CONTENT.chapters.forEach((ch, idx) => {
+    if (idx > 0) html += '<hr class="preview-page-break">';
+    html += `<div class="preview-chapter">`;
+    html += `<div class="preview-h1">${esc(ch.heading)}</div>`;
+
+    const blocks = ch.blocks[aud] || [];
+    blocks.forEach(block => {
+      html += renderBlock(block, map);
+    });
+    html += '</div>';
+  });
+
+  // フッター
+  html += '<div class="preview-footer">';
+  CONTENT.footer.forEach(line => {
+    html += `<p>${esc(substitute(line, map))}</p>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+  lucide.createIcons();
+}
+
+function renderBlock(block, map) {
+  const type = block.type;
+
+  if (type === 'p') {
+    const text = substitute(block.text || '', map);
+    return `<div class="preview-p">${esc(text).replace(/\n/g,'<br>')}</div>`;
+  }
+
+  if (type === 'case') {
+    const text = map[block.key] || '';
+    if (!text) {
+      return `<div class="preview-case-note" style="color:#94a3b8;font-style:italic;">（主治医記入欄）</div>`;
+    }
+    return `<div class="preview-case-note">${esc(text).replace(/\n/g,'<br>')}</div>`;
+  }
+
+  if (type === 'h2') {
+    return `<div class="preview-h2">${esc(substitute(block.text || '', map))}</div>`;
+  }
+
+  if (type === 'bullets') {
+    const items = (block.items || []).map(item =>
+      `<li>${esc(substitute(item, map))}</li>`
+    ).join('');
+    return `<ul class="preview-bullets">${items}</ul>`;
+  }
+
+  if (type === 'table') {
+    let t = '';
+    if (block.caption) {
+      t += `<div class="preview-caption">${esc(substitute(block.caption, map))}</div>`;
+    }
+    t += '<table class="preview-table"><thead><tr>';
+    (block.headers || []).forEach(h => {
+      t += `<th>${esc(h)}</th>`;
+    });
+    t += '</tr></thead><tbody>';
+    (block.rows || []).forEach(row => {
+      t += '<tr>';
+      row.forEach(cell => {
+        t += `<td>${esc(substitute(cell, map))}</td>`;
+      });
+      t += '</tr>';
+    });
+    t += '</tbody></table>';
+    return t;
+  }
+
+  return '';
+}
+
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// =============================================
+// 定型文の挿入
+// =============================================
+function insertTemplate(fieldKey, text) {
+  const el = document.getElementById('f_' + fieldKey);
+  if (!el) return;
+  const cur = el.value;
+  el.value = cur ? cur + '\n' + text : text;
+  renderPreview();
+}
+
+// =============================================
+// JSON ダウンロード
+// =============================================
+function downloadJSON() {
+  const map = buildPlaceholderMap();
+  const caseObj = {
+    audience: currentAudience,
+    subject_line: map.subject_line || '',
+    date_line: map.date_line || '',
+    facility_name: map.facility_name || '当院',
+    ch1_case_note: map.ch1_case_note || '',
+    ch2_known: map.ch2_known || '',
+    ch2_unknown: map.ch2_unknown || '',
+    ch3_short: map.ch3_short || '',
+    ch3_long: map.ch3_long || '',
+    ch4_medication: map.ch4_medication || '',
+    ch5_nonpharma: map.ch5_nonpharma || '',
+    ch6_early_warning: map.ch6_early_warning || '',
+    ch6_trouble_contact: map.ch6_trouble_contact || '',
+    ch6_support: map.ch6_support || '',
+  };
+  const blob = new Blob([JSON.stringify(caseObj, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  const subj = (map.subject_line || '症例').replace(/[^\w\u3000-\u9fff]+/g, '_').slice(0, 20);
+  a.download = `psychoedu_case_${subj}.json`;
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// =============================================
+// Word ダウンロード（サーバー経由）
+// =============================================
+async function downloadWord() {
+  const map = buildPlaceholderMap();
+  const caseObj = {
+    audience: currentAudience,
+    subject_line: map.subject_line || '',
+    date_line: map.date_line || '',
+    facility_name: map.facility_name || '当院',
+    ch1_case_note: map.ch1_case_note || '',
+    ch2_known: map.ch2_known || '',
+    ch2_unknown: map.ch2_unknown || '',
+    ch3_short: map.ch3_short || '',
+    ch3_long: map.ch3_long || '',
+    ch4_medication: map.ch4_medication || '',
+    ch5_nonpharma: map.ch5_nonpharma || '',
+    ch6_early_warning: map.ch6_early_warning || '',
+    ch6_trouble_contact: map.ch6_trouble_contact || '',
+    ch6_support: map.ch6_support || '',
+  };
+  try {
+    const res = await fetch('http://localhost:5001/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(caseObj)
+    });
+    if (!res.ok) throw new Error('サーバーエラー: ' + res.status);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    const subj = (map.subject_line || '症例').replace(/[^\w\u3000-\u9fff]+/g, '_').slice(0, 20);
+    a.download = `psychoedu_${subj}_${currentAudience}.docx`;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch (e) {
+    alert('Word生成に失敗しました。\nserve_web.py が起動しているか確認してください。\n\n詳細: ' + e.message);
+  }
+}
+
+// =============================================
+// サーバー疎通確認
+// =============================================
+async function checkServer() {
+  try {
+    const res = await fetch('http://localhost:5001/health', { signal: AbortSignal.timeout(1500) });
+    const online = res.ok;
+    setServerStatus(online);
+  } catch {
+    setServerStatus(false);
+  }
+}
+
+function setServerStatus(online) {
+  serverOnline = online;
+  const badge = document.getElementById('server-status-badge');
+  const wordBtn = document.getElementById('btn-word');
+  if (online) {
+    badge.className = 'server-status server-online';
+    badge.innerHTML = '<span class="dot dot-green"></span>Wordサーバー: オンライン';
+    wordBtn.disabled = false;
+  } else {
+    badge.className = 'server-status server-offline';
+    badge.innerHTML = '<span class="dot dot-red"></span>Wordサーバー: オフライン';
+    wordBtn.disabled = true;
+  }
+}
+</script>
+</body>
+</html>

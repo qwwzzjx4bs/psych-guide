@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脳波読影学習ハブ | EEG学習ツール</title>
+<script src="vendor/tailwind.js"></script>
+<script src="vendor/lucide.js"></script>
+<script src="eeg-srs.js"></script>
+
+<link href="vendor/fonts/fonts.css" rel="stylesheet">
+<style>
+  :root { --eeg-grad: linear-gradient(135deg, #312e81 0%, #1e3a5f 40%, #0f766e 100%); }
+  body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+  .header-gradient { background: var(--eeg-grad); }
+
+  /* Animated wave in header */
+  .wave-bg {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+    overflow: hidden; pointer-events: none;
+  }
+  .wave-svg { width: 200%; animation: waveSlide 6s linear infinite; }
+  @keyframes waveSlide { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  .module-card {
+    background: white; border-radius: 1.25rem; border: 1.5px solid #e2e8f0;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08); padding: 1.5rem;
+    transition: box-shadow 0.2s, transform 0.2s; position: relative; overflow: hidden;
+    text-decoration: none; display: block; color: inherit;
+  }
+  .module-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.14); transform: translateY(-2px); }
+  .module-num {
+    font-size: 3.5rem; font-weight: 900; position: absolute; right: 1.25rem; bottom: 0.5rem;
+    opacity: 0.06; letter-spacing: -0.04em; line-height: 1;
+  }
+  .progress-ring {
+    width: 48px; height: 48px; flex-shrink: 0;
+  }
+  .progress-ring circle { transition: stroke-dashoffset 0.5s ease; }
+
+  .stat-card {
+    background: white; border-radius: 1rem; border: 1px solid #e2e8f0;
+    padding: 1rem; text-align: center;
+  }
+  .quick-ref-link {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+    border-radius: 0.875rem; border: 1.5px solid #e2e8f0; background: #f8fafc;
+    font-size: 0.85rem; font-weight: 600; color: #1e293b; text-decoration: none;
+    transition: all 0.15s;
+  }
+  .quick-ref-link:hover { border-color: #6366f1; background: #eef2ff; color: #4338ca; }
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<header class="header-gradient text-white pt-10 pb-16 shadow-lg relative overflow-hidden">
+  <div class="max-w-3xl mx-auto px-4 relative z-10">
+    <nav class="text-white/60 text-xs mb-3 flex items-center gap-1">
+      <a href="top.html" class="hover:text-white transition-colors">ポータル</a>
+      <span>›</span>
+      <span class="text-white/90">EEG学習ハブ</span>
+    </nav>
+    <div class="flex items-center gap-4 mb-4">
+      <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
+        <i data-lucide="brain" class="w-7 h-7 text-white"></i>
+      </div>
+      <div>
+        <p class="text-white/60 text-xs font-bold tracking-wider uppercase mb-0.5">EEG Learning Hub</p>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight">脳波読影学習ハブ</h1>
+      </div>
+    </div>
+    <p class="text-white/80 text-sm leading-relaxed max-w-xl">
+      医学生・研修医向け。基礎知識 → 波形図鑑 → クイズ → 症例学習の4ステップで脳波読影の基礎を身に付けます。
+    </p>
+    <!-- Stats row -->
+    <div class="flex gap-4 mt-4 text-sm">
+      <div class="bg-white/15 rounded-xl px-3 py-2 text-center">
+        <p class="text-white/60 text-xs">波形パターン</p>
+        <p class="font-black text-white text-xl">20+</p>
+      </div>
+      <div class="bg-white/15 rounded-xl px-3 py-2 text-center">
+        <p class="text-white/60 text-xs">クイズ問題</p>
+        <p class="font-black text-white text-xl">30問</p>
+      </div>
+      <div class="bg-white/15 rounded-xl px-3 py-2 text-center">
+        <p class="text-white/60 text-xs">症例</p>
+        <p class="font-black text-white text-xl">10例</p>
+      </div>
+    </div>
+  </div>
+  <!-- Animated wave background -->
+  <div class="wave-bg">
+    <svg class="wave-svg" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,30 C80,50 120,10 200,30 C280,50 320,10 400,30 C480,50 520,10 600,30 C680,50 720,10 800,30 C880,50 920,10 1000,30 C1080,50 1120,10 1200,30 C1280,50 1320,10 1400,30 C1440,42 1440,60 1440,60 L0,60 Z" fill="rgba(255,255,255,0.06)"/>
+      <path d="M0,38 C60,20 100,50 180,38 C260,26 300,52 380,38 C460,24 500,52 580,38 C660,24 700,52 780,38 C860,24 900,52 980,38 C1060,24 1100,52 1180,38 C1260,24 1300,52 1380,38 L1440,38 L1440,60 L0,60 Z" fill="rgba(255,255,255,0.04)"/>
+    </svg>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-6 -mt-4 relative z-10">
+
+  <!-- SRS Review Banner -->
+  <div id="srs-banner" class="hidden rounded-2xl border shadow-sm p-4 mb-5 flex items-center justify-between gap-3" style="background:linear-gradient(135deg,#312e81,#0f766e);border-color:#3730a3;">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+        <i data-lucide="repeat" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <p class="font-bold text-white text-sm" id="srs-banner-title">本日の復習</p>
+        <p class="text-white/70 text-xs" id="srs-banner-sub"></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <span id="srs-streak-badge" class="hidden text-white/90 text-xs bg-white/20 px-2 py-1 rounded-full font-bold"></span>
+      <a href="eeg-review.html" class="px-4 py-2 bg-white text-indigo-900 rounded-xl text-sm font-black hover:bg-indigo-50 transition-colors flex items-center gap-1.5">
+        復習開始 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- SRS Quick Stats (compact row) -->
+  <div id="srs-stats-row" class="hidden grid grid-cols-3 gap-2 mb-5">
+    <a href="eeg-review.html" class="bg-white rounded-xl border border-indigo-200 p-3 text-center hover:shadow-md transition-shadow">
+      <p class="text-xl font-black text-indigo-700" id="srs-due-count">0</p>
+      <p class="text-xs text-slate-500">期限カード</p>
+    </a>
+    <a href="eeg-stats.html" class="bg-white rounded-xl border border-teal-200 p-3 text-center hover:shadow-md transition-shadow">
+      <p class="text-xl font-black text-teal-700" id="srs-mature-count">0</p>
+      <p class="text-xs text-slate-500">定着済み</p>
+    </a>
+    <a href="eeg-stats.html" class="bg-white rounded-xl border border-amber-200 p-3 text-center hover:shadow-md transition-shadow">
+      <p class="text-xl font-black text-amber-700" id="srs-streak-num">0</p>
+      <p class="text-xs text-slate-500">🔥 連続日</p>
+    </a>
+  </div>
+
+  <!-- Progress Dashboard -->
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-6">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-slate-800 flex items-center gap-2">
+        <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-600"></i>
+        学習進捗
+      </h2>
+      <button onclick="clearProgress()" class="text-xs text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1">
+        <i data-lucide="trash-2" class="w-3 h-3"></i>リセット
+      </button>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="progress-dashboard">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+
+  <!-- 4 Module cards -->
+  <div class="grid sm:grid-cols-2 gap-4 mb-6">
+
+    <!-- Module 1: Basics -->
+    <a href="eeg-basics.html" class="module-card" style="border-color:#c7d2fe;">
+      <div class="module-num" style="color:#4338ca;">01</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="zap" class="w-6 h-6 text-indigo-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-0.5">STEP 1</p>
+          <h3 class="font-bold text-slate-800 text-base">基礎知識</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">10-20法電極配置・周波数帯域（δ/θ/α/β/γ）・脳波アニメーター・用語集</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 rounded px-2 py-0.5">電極配置SVG</span>
+        <span class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 rounded px-2 py-0.5">波形アニメーター</span>
+        <span class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 rounded px-2 py-0.5">用語集</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-indigo-600 flex items-center gap-1">
+        学習を始める <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+
+    <!-- Module 2: Waveforms -->
+    <a href="eeg-waveforms.html" class="module-card" style="border-color:#bbf7d0;">
+      <div class="module-num" style="color:#059669;">02</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="library" class="w-6 h-6 text-emerald-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-emerald-600 uppercase tracking-wide mb-0.5">STEP 2</p>
+          <h3 class="font-bold text-slate-800 text-base">波形図鑑</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">正常波形・睡眠波形・てんかん性放電・脳症・焦点性異常・特殊パターンを網羅</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 rounded px-2 py-0.5">20+パターン</span>
+        <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 rounded px-2 py-0.5">Canvas波形描画</span>
+        <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 rounded px-2 py-0.5">詳細解説</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-emerald-600 flex items-center gap-1">
+        図鑑を開く <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+
+    <!-- Module 3: Quiz -->
+    <a href="eeg-quiz.html" class="module-card" style="border-color:#fde68a;">
+      <div class="module-num" style="color:#d97706;">03</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="target" class="w-6 h-6 text-amber-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-amber-600 uppercase tracking-wide mb-0.5">STEP 3</p>
+          <h3 class="font-bold text-slate-800 text-base">クイズ</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">3段階の難易度（正常/異常識別 → 波形名 → 臨床相関）。進捗はブラウザに保存</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-0.5">Level 1〜3</span>
+        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-0.5">30問</span>
+        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-0.5" id="quiz-progress-badge">進捗保存</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-amber-600 flex items-center gap-1">
+        クイズを開始 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+
+    <!-- Module 4: Cases -->
+    <a href="eeg-cases.html" class="module-card" style="border-color:#fecaca;">
+      <div class="module-num" style="color:#dc2626;">04</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="stethoscope" class="w-6 h-6 text-rose-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-rose-600 uppercase tracking-wide mb-0.5">STEP 4</p>
+          <h3 class="font-bold text-slate-800 text-base">症例学習</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">欠神てんかん・肝性脳症・BECTS・CJD・JME・West症候群・HSV脳炎・NCSE・自己免疫性脳炎・深麻酔の10症例を段階的に読影</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded px-2 py-0.5">10症例</span>
+        <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded px-2 py-0.5">段階的開示</span>
+        <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 rounded px-2 py-0.5">治療方針まで</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-rose-600 flex items-center gap-1">
+        症例を解く <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+
+    <!-- Module 5: Artifacts (Phase 2 NEW) -->
+    <a href="eeg-artifacts.html" class="module-card" style="border-color:#fed7aa;">
+      <div class="module-num" style="color:#ea580c;">05</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="shield-alert" class="w-6 h-6 text-orange-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-orange-600 uppercase tracking-wide mb-0.5">STEP 5 <span class="text-xs bg-orange-500 text-white px-1.5 py-0.5 rounded-full font-bold ml-1">NEW</span></p>
+          <h3 class="font-bold text-slate-800 text-base">アーティファクト識別</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">EOG・筋電図・ECG・電極の6種アーティファクト図示＋病的所見との鑑別10問クイズ</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 rounded px-2 py-0.5">6種アーティファクト</span>
+        <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 rounded px-2 py-0.5">鑑別比較</span>
+        <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 rounded px-2 py-0.5">識別クイズ10問</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-orange-600 flex items-center gap-1">
+        識別ドリルへ <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+
+    <!-- Module 6: Montage (Phase 2 NEW) -->
+    <a href="eeg-montage.html" class="module-card" style="border-color:#a7f3d0;">
+      <div class="module-num" style="color:#0f766e;">06</div>
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="git-branch" class="w-6 h-6 text-teal-700"></i>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-teal-600 uppercase tracking-wide mb-0.5">STEP 6 <span class="text-xs bg-teal-500 text-white px-1.5 py-0.5 rounded-full font-bold ml-1">NEW</span></p>
+          <h3 class="font-bold text-slate-800 text-base">モンタージュ理解</h3>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed mb-3">双極誘導/基準電極誘導の比較＋位相逆転インタラクティブ解説で「なぜ見え方が違うのか」を理解する</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-xs bg-teal-50 text-teal-700 border border-teal-200 rounded px-2 py-0.5">双極/基準比較</span>
+        <span class="text-xs bg-teal-50 text-teal-700 border border-teal-200 rounded px-2 py-0.5">位相逆転</span>
+        <span class="text-xs bg-teal-50 text-teal-700 border border-teal-200 rounded px-2 py-0.5">焦点同定</span>
+      </div>
+      <div class="mt-3 text-xs font-semibold text-teal-600 flex items-center gap-1">
+        モンタージュを学ぶ <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      </div>
+    </a>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mb-6">
+    <h2 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+      <i data-lucide="bookmark" class="w-4 h-4 text-indigo-600"></i>
+      クイック参照
+    </h2>
+    <div class="grid sm:grid-cols-2 gap-2">
+      <a href="eeg-basics.html#sec-electrode" class="quick-ref-link" onclick="openBasicsTab('electrode')">
+        <span class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="circle-dot" class="w-4 h-4 text-indigo-700"></i>
+        </span>
+        10-20法 電極配置図
+      </a>
+      <a href="eeg-basics.html" class="quick-ref-link">
+        <span class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="activity" class="w-4 h-4 text-teal-700"></i>
+        </span>
+        周波数帯域まとめ（δ〜γ）
+      </a>
+      <a href="eeg-waveforms.html" class="quick-ref-link" onclick="return setFilter('epilepsy')">
+        <span class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="zap" class="w-4 h-4 text-red-700"></i>
+        </span>
+        てんかん性放電パターン集
+      </a>
+      <a href="eeg-waveforms.html" class="quick-ref-link">
+        <span class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-700"></i>
+        </span>
+        脳症・ICUパターン集
+      </a>
+      <a href="eeg-review.html" class="quick-ref-link" style="border-color:#c7d2fe;background:#eef2ff;">
+        <span class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="repeat" class="w-4 h-4 text-indigo-700"></i>
+        </span>
+        <span>本日の復習 <span id="quick-due-badge" class="ml-1 text-indigo-700 font-bold"></span></span>
+      </a>
+      <a href="eeg-stats.html" class="quick-ref-link">
+        <span class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-teal-700"></i>
+        </span>
+        学習統計・ヒートマップ
+      </a>
+    </div>
+  </div>
+
+  <!-- Learning tips -->
+  <div class="bg-indigo-50 rounded-2xl border border-indigo-200 p-5 mb-6">
+    <h2 class="font-bold text-indigo-800 mb-3 flex items-center gap-2">
+      <i data-lucide="lightbulb" class="w-4 h-4 text-indigo-600"></i>
+      脳波読影 5原則
+    </h2>
+    <ol class="space-y-2 text-sm text-indigo-900">
+      <li class="flex gap-2"><span class="font-black text-indigo-400 w-5 flex-shrink-0">1.</span>まず<strong>後頭部α波</strong>を確認（有無・対称性・周波数）</li>
+      <li class="flex gap-2"><span class="font-black text-indigo-400 w-5 flex-shrink-0">2.</span><strong>背景活動の左右対称性</strong>を比較（非対称→局所病変）</li>
+      <li class="flex gap-2"><span class="font-black text-indigo-400 w-5 flex-shrink-0">3.</span><strong>アーティファクト</strong>を識別してから病的所見を判断（眼球運動・筋電図・心電図）</li>
+      <li class="flex gap-2"><span class="font-black text-indigo-400 w-5 flex-shrink-0">4.</span><strong>全般性か焦点性か</strong>を判断（全般性=両側・対称、焦点性=一側・限局）</li>
+      <li class="flex gap-2"><span class="font-black text-indigo-400 w-5 flex-shrink-0">5.</span><strong>臨床背景</strong>（薬物・代謝・睡眠・発作型）と照合して解釈する</li>
+    </ol>
+  </div>
+
+  <!-- Back to portal -->
+  <div class="flex justify-between items-center pt-4 border-t border-slate-200">
+    <a href="top.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-700 transition-colors font-medium">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      ポータルへ戻る
+    </a>
+    <a href="eeg-basics.html" class="flex items-center gap-1.5 px-5 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-sm font-bold transition-colors">
+      Step 1 から始める
+      <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+  </div>
+</main>
+
+<script>
+lucide.createIcons();
+
+// ===== Progress from localStorage =====
+function loadProgress() {
+  let quizState = null;
+  let caseState = null;
+  let artifactState = null;
+  try {
+    const qs = localStorage.getItem('eeg_quiz_state');
+    if (qs) quizState = JSON.parse(qs);
+    const cs = localStorage.getItem('eeg_case_state');
+    if (cs) caseState = JSON.parse(cs);
+    const as = localStorage.getItem('eeg_artifact_drill');
+    if (as) artifactState = JSON.parse(as);
+  } catch(e) {}
+  return { quizState, caseState, artifactState };
+}
+
+function renderDashboard() {
+  const { quizState, caseState, artifactState } = loadProgress();
+  const dash = document.getElementById('progress-dashboard');
+  if (!dash) return;
+
+  // Quiz progress (expanded to 30 questions)
+  let quizTotal = 30;
+  let quizDone = 0;
+  if (quizState?.answered) {
+    quizDone = Object.keys(quizState.answered).length;
+  }
+
+  // Case progress (expanded to 10 cases)
+  const totalCases = 10;
+  let casesDone = 0;
+  if (caseState) {
+    Object.keys(caseState).forEach(caseId => {
+      const cs = caseState[caseId];
+      if (cs?.unlocked && cs.unlocked.includes(2)) casesDone++;
+    });
+  }
+
+  // Artifact drill
+  let artTotal = 10;
+  let artDone = 0;
+  let artScore = 0;
+  if (artifactState?.answered) {
+    artDone = Object.keys(artifactState.answered).length;
+    artScore = artifactState.score || 0;
+  }
+
+  const items = [
+    { label: 'クイズ進捗', done: quizDone, total: quizTotal, color: '#d97706', bg: '#fef3c7' },
+    { label: '症例完了', done: casesDone, total: totalCases, color: '#059669', bg: '#d1fae5' },
+    { label: 'アーティファクト', done: artScore, total: artTotal, color: '#ea580c', bg: '#ffedd5', sub: `${artDone}問回答` },
+    { label: '総合達成率', done: quizDone + casesDone * 3 + artScore, total: quizTotal + totalCases * 3 + artTotal, color: '#4338ca', bg: '#e0e7ff' },
+  ];
+
+  dash.innerHTML = items.map(item => {
+    const pct = item.total > 0 ? Math.round(item.done / item.total * 100) : 0;
+    return `
+      <div class="stat-card">
+        <div class="text-2xl font-black mb-0.5" style="color:${item.color}">${pct}%</div>
+        <div class="text-xs text-slate-500">${item.label}</div>
+        <div class="mt-2 h-1.5 rounded-full overflow-hidden" style="background:${item.bg}">
+          <div class="h-full rounded-full" style="width:${pct}%;background:${item.color};transition:width 0.5s ease;"></div>
+        </div>
+        <div class="text-xs text-slate-400 mt-1">${item.sub || (item.done + ' / ' + item.total)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function clearProgress() {
+  if (!confirm('学習進捗をリセットしますか？')) return;
+  localStorage.removeItem('eeg_quiz_state');
+  localStorage.removeItem('eeg_case_state');
+  localStorage.removeItem('eeg_artifact_drill');
+  renderDashboard();
+}
+
+function renderSRSBanner() {
+  if (typeof srsDueTodayCount !== 'function') return;
+  const dueCount = srsDueTodayCount();
+  const stats = srsGetStats ? srsGetStats() : null;
+  const meta = stats ? stats.meta : {};
+  const streak = meta.streak || 0;
+  const mature = stats ? stats.matureCount : 0;
+
+  // Always show quick stats row if any cards exist
+  const totalCards = stats ? stats.total : 0;
+  if (totalCards > 0) {
+    document.getElementById('srs-stats-row').classList.remove('hidden');
+    document.getElementById('srs-stats-row').classList.add('grid');
+    document.getElementById('srs-due-count').textContent = dueCount;
+    document.getElementById('srs-mature-count').textContent = mature;
+    document.getElementById('srs-streak-num').textContent = streak;
+  }
+
+  // Show banner when there are due cards
+  if (dueCount > 0) {
+    const banner = document.getElementById('srs-banner');
+    banner.classList.remove('hidden');
+    banner.classList.add('flex');
+    document.getElementById('srs-banner-title').textContent = `本日の復習カード: ${dueCount}枚`;
+    document.getElementById('srs-banner-sub').textContent = streak > 0
+      ? `🔥 ${streak}日連続学習中！継続しましょう`
+      : '忘却曲線に基づく最適なタイミングで復習しましょう';
+    if (streak > 1) {
+      const sb = document.getElementById('srs-streak-badge');
+      sb.classList.remove('hidden');
+      sb.textContent = `🔥 ${streak}日`;
+    }
+  }
+
+  // Update quick reference badge
+  const qb = document.getElementById('quick-due-badge');
+  if (qb && dueCount > 0) qb.textContent = `(${dueCount}枚)`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  renderDashboard();
+  renderSRSBanner();
+});
+</script>
+</body>
+</html>

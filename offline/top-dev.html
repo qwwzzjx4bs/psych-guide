@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精神科臨床ガイド — ポータル</title>
-  <link rel="canonical" href="https://qwwzzjx4bs.github.io/psych-guide/top.html">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>精神科臨床ガイド — ポータル（開発・試行・本番お気に入りと同一 storage）</title>
+  
+  <script src="vendor/tailwind.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
   <style>
     /* === Base === */
     body {
@@ -98,7 +98,7 @@
     .link-violet { color: #5c4e98; }
     .row-violet  { background: #eeeaf8; }
 
-    /* Indigo（薬剤選択） */
+    /* Indigo（薬剤選択・開発版） */
     .sec-indigo   { background: #4a4d9e; }
     .bg-indigo    { background: #eef0fc; border: 2px solid #7175c9; }
     .border-indigo { border-top: 3px solid #5c5fb8; }
@@ -138,7 +138,7 @@
     .link-slate  { color: #526078; }
     .row-slate   { background: #f2f3f5; }
 
-    /* Sky（評価スケール区分＋ジャンプバー #d8e8f4 系に整合） */
+    /* Sky（評価スケール区分＋開発版ジャンプバー #d8e8f4 系に整合） */
     .sec-sky    { background: #33689c; }
     .bg-sky     { background: #e3edf8; border: 2px solid #6ba5c4; }
     .border-sky { border-top: 3px solid #4588b8; }
@@ -162,6 +162,17 @@
     .link-calc   { color: #126a72; }
     .row-calc    { background: #e8f7f8; }
 
+    .portal-jump-hint {
+      font-size: 0.65rem;
+      line-height: 1.45;
+      color: #78716c;
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 0 1rem 0.35rem;
+    }
+    @media (min-width: 640px) {
+      .portal-jump-hint { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
     .portal-grid-divider {
       grid-column: 1 / -1;
       display: flex;
@@ -197,7 +208,7 @@
     #site-icon { background: #4c6e9c !important; }
 
     /* ===================================
-       ジャンプバー — 8区分
+       ジャンプバー — 8区分（開発版の並び順）
        =================================== */
     a[href="#portal-diag"] {
       background: #dbeafe !important;
@@ -255,13 +266,6 @@
     a[href="#portal-other"]:hover { background: #d4dae4 !important; }
     a[href="#portal-other"] span { background: #c4ccd8 !important; color: #384458 !important; }
 
-    a[href="#portal-literature"] {
-      background: #e0f2f1 !important;
-      color: #1a4a45 !important;
-    }
-    a[href="#portal-literature"]:hover { background: #c8e6e3 !important; }
-    a[href="#portal-literature"] span { background: #99d4ce !important; color: #1a4a45 !important; }
-
 
     /* ===================================
        コンパクトモード
@@ -315,7 +319,7 @@
     /* トグルボタン：アクティブ状態 */
     #compact-toggle.active { background: #e8eef6 !important; color: #2a4070 !important; }
 
-    /* ポータルお気に入り（端末内 localStorage） */
+    /* 開発版：本番と同型のカードお気に入り（キーは psychPortalFavorites） */
     .card-fav-btn {
       position: absolute;
       top: auto;
@@ -350,6 +354,7 @@
       outline: 2px solid #3b82f6;
       outline-offset: 1px;
     }
+    /* お気に入り済み：ページ全体を★ボタン以外でも判別（今週/強調カードの ::before(::after) と競合しないよう多重 box-shadow） */
     .card.portal-card--favorite {
       box-shadow:
         0 0 0 2px rgba(234, 88, 12, 0.78),
@@ -377,6 +382,7 @@
       border-color: #fdba74 !important;
     }
     body.compact-mode .card-fav-btn {
+      /* 一覧は横並び flex のため、絶対配置をやめてタイトル右端に並べる */
       position: static !important;
       top: auto !important;
       right: auto !important;
@@ -452,13 +458,13 @@
     #portal-search-apply:hover,
     #portal-search-clear:hover { background: #f0eeea; }
 
-    /* 主要疾患フィルター（検索と AND） */
-    .portal-disease-filter {
+    /* 開発版：主要疾患フィルター */
+    .portal-dev-disease-filter {
       border-top: 1px dashed #e5e2dc;
       margin-top: 2px;
       padding-top: 8px;
     }
-    .portal-disease-filter-btn {
+    .portal-dev-filter-btn {
       font-size: 0.65rem;
       font-weight: 600;
       padding: 0.28rem 0.55rem;
@@ -470,22 +476,22 @@
       line-height: 1.2;
       transition: background 0.12s, border-color 0.12s, color 0.12s;
     }
-    .portal-disease-filter-btn:hover {
+    .portal-dev-filter-btn:hover {
       background: #f5f2ec;
       border-color: #b8b0a4;
     }
-    .portal-disease-filter-btn.is-active {
+    .portal-dev-filter-btn.is-active {
       border-color: #4c6e9c;
       background: #eef3f9;
       color: #1e3a5f;
       box-shadow: 0 0 0 1px rgba(76, 110, 156, 0.25);
     }
-    .portal-disease-filter-btn.portal-disease-filter-btn--reset {
+    .portal-dev-filter-btn.portal-dev-filter-btn--reset {
       font-weight: 500;
       color: #6b6560;
       border-style: dashed;
     }
-    .portal-disease-filter-btn.portal-disease-filter-btn--reset.is-active {
+    .portal-dev-filter-btn.portal-dev-filter-btn--reset.is-active {
       border-style: solid;
     }
 
@@ -935,191 +941,6 @@
       outline: 2px solid #4c6e9c;
       outline-offset: 2px;
     }
-
-    /* ===================================
-       目的別ゴールセクション
-       =================================== */
-    .sec-goals { background: #2d6a4f; }
-
-    .goals-subtitle {
-      font-size: 0.78rem;
-      color: #6b7280;
-      margin: -0.5rem 0 1rem;
-      max-width: 48rem;
-      line-height: 1.6;
-    }
-
-    .goals-grid {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    @media (min-width: 768px) {
-      .goals-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .goal-card {
-      background: #fff;
-      border-radius: 1rem;
-      border: 1.5px solid #e5e7eb;
-      overflow: hidden;
-      transition: box-shadow 0.18s;
-    }
-
-    .goal-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.09); }
-
-    .goal-card > summary {
-      list-style: none;
-      cursor: pointer;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      padding: 1rem 1.25rem;
-      outline: none;
-      user-select: none;
-    }
-
-    .goal-card > summary::-webkit-details-marker { display: none; }
-
-    .goal-card__icon {
-      font-size: 1.3rem;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
-    }
-
-    .goal-card__title-wrap { flex: 1; min-width: 0; }
-
-    .goal-card__title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #111827;
-      letter-spacing: 0.015em;
-      line-height: 1.4;
-    }
-
-    .goal-card__tagline {
-      font-size: 0.72rem;
-      color: #6b7280;
-      margin-top: 0.2rem;
-      line-height: 1.5;
-    }
-
-    .goal-card__chevron {
-      flex-shrink: 0;
-      margin-top: 0.3rem;
-      color: #9ca3af;
-      transition: transform 0.2s;
-      font-style: normal;
-      font-size: 0.7rem;
-    }
-
-    details[open].goal-card > summary .goal-card__chevron { transform: rotate(90deg); }
-
-    details[open].goal-card > summary { background: #f9fafb; }
-
-    .goal-card__body {
-      padding: 0.75rem 1.25rem 1.25rem;
-      border-top: 1px solid #f3f4f6;
-    }
-
-    @keyframes goalSlideDown {
-      from { opacity: 0; transform: translateY(-6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    details[open].goal-card .goal-card__body {
-      animation: goalSlideDown 0.18s ease;
-    }
-
-    .goal-target {
-      font-size: 0.72rem;
-      color: #6b7280;
-      margin: 0 0 0.65rem;
-      padding: 0.45rem 0.7rem;
-      background: #f9fafb;
-      border-radius: 0.5rem;
-      border-left: 3px solid #d1d5db;
-      line-height: 1.65;
-    }
-
-    .goal-target strong {
-      display: inline;
-      color: #374151;
-      font-weight: 700;
-    }
-
-    .goal-steps-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: #374151;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin: 0.7rem 0 0.4rem;
-    }
-
-    .goal-steps {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      counter-reset: goal-step;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .goal-steps li {
-      counter-increment: goal-step;
-      display: flex;
-      align-items: baseline;
-      gap: 0.55rem;
-      font-size: 0.79rem;
-      line-height: 1.5;
-      color: #374151;
-    }
-
-    .goal-steps li::before {
-      content: counter(goal-step);
-      flex-shrink: 0;
-      width: 1.4em;
-      height: 1.4em;
-      border-radius: 50%;
-      background: #2d6a4f;
-      color: #fff;
-      font-size: 0.6rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 0.12em;
-    }
-
-    .goal-steps a {
-      color: #1d4ed8;
-      font-weight: 600;
-      text-decoration: underline;
-      text-decoration-color: #bfdbfe;
-      text-underline-offset: 2px;
-      transition: color 0.12s;
-    }
-
-    .goal-steps a:hover {
-      color: #1e40af;
-      text-decoration-color: #93c5fd;
-    }
-
-    .goal-steps .step-note {
-      color: #9ca3af;
-      font-size: 0.68rem;
-      font-weight: 400;
-    }
-
-    /* ジャンプバー — 目的別 */
-    a[href="#portal-goals"] {
-      background: #d1fae5 !important;
-      color: #064e3b !important;
-    }
-    a[href="#portal-goals"]:hover { background: #a7f3d0 !important; }
-    a[href="#portal-goals"] span { background: #6ee7b7 !important; color: #065f46 !important; }
   </style>
 </head>
 <body class="min-h-screen">
@@ -1165,11 +986,6 @@
     <!-- ジャンプバー：左から「診療の流れ」に近い順 -->
     <div class="border-b border-gray-100 bg-white">
       <div class="flex flex-wrap gap-1.5 px-4 sm:px-6 py-2">
-          <a href="#portal-goals"
-             class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition-colors text-xs font-medium whitespace-nowrap">
-            🎯 目的別
-            <span id="jump-cnt-portal-goals" class="px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">6</span>
-          </a>
           <a href="#portal-calc"
              class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyan-100 hover:bg-cyan-200 transition-colors text-xs font-medium text-teal-900 whitespace-nowrap">
             🧮 計算ツール
@@ -1203,12 +1019,7 @@
           <a href="#portal-study"
              class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-pink-100 hover:bg-pink-200 transition-colors text-xs font-medium text-pink-900 whitespace-nowrap">
             🎓 学習・ドリル
-            <span id="jump-cnt-portal-study" class="bg-pink-200 text-pink-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">7</span>
-          </a>
-          <a href="#portal-literature"
-             class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition-colors text-xs font-medium whitespace-nowrap">
-            📄 最新論文
-            <span id="jump-cnt-portal-literature" class="px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">1</span>
+            <span id="jump-cnt-portal-study" class="bg-pink-200 text-pink-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">2</span>
           </a>
           <a href="#portal-other"
              class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
@@ -1216,6 +1027,8 @@
             <span id="jump-cnt-portal-other" class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">3</span>
           </a>
         </div>
+      </div>
+      <p class="portal-jump-hint">上のタブは左から「計算 → 数値評価 → 診断 → <strong>治療概要</strong> → <strong>薬剤選択</strong> → <strong>概念・資格</strong> → 学習・ドリル → その他」のイメージです（開発版の8区分）。迷ったら検索バーでページ名を決定してください。</p>
     </div>
     <div class="portal-search-wrap">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2" id="portal-search-field-wrap">
@@ -1230,15 +1043,15 @@
           <button type="button" id="portal-search-clear" title="検索をクリア">クリア</button>
         </div>
         <div id="portal-search-suggest" class="portal-search-suggest" role="listbox" aria-label="検索候補" hidden></div>
-        <div id="portal-disease-filter" class="portal-disease-filter" aria-label="主要疾患でカードを絞り込み">
+        <div id="portal-dev-disease-filter" class="portal-dev-disease-filter" aria-label="疾患別フィルター（開発試行）">
           <div class="flex flex-wrap items-end gap-x-2 gap-y-1.5">
             <span class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide shrink-0 pt-0.5">主要疾患</span>
-            <div class="flex flex-wrap gap-1.5 items-center" role="toolbar" aria-label="疾患プリセット">
-              <button type="button" class="portal-disease-filter-btn" data-disease="schizophrenia" title="統合失調症関連＋共通計算ツール">統合失調症</button>
-              <button type="button" class="portal-disease-filter-btn" data-disease="depression" title="うつ病関連＋共通計算ツール">うつ病</button>
-              <button type="button" class="portal-disease-filter-btn" data-disease="bipolar" title="双極性障害関連＋共通計算ツール">双極性障害</button>
-              <button type="button" class="portal-disease-filter-btn" data-disease="anxiety" title="不安症関連＋共通計算ツール">不安症</button>
-              <button type="button" class="portal-disease-filter-btn portal-disease-filter-btn--reset" data-disease="" title="疾患フィルターを解除">すべて表示</button>
+            <div class="flex flex-wrap gap-1.5 items-center" role="toolbar" aria-label="主要疾患でカードを絞り込み（開発版）">
+              <button type="button" class="portal-dev-filter-btn" data-dev-disease="schizophrenia" title="統合失調症関連カード＋共通計算ツール">統合失調症</button>
+              <button type="button" class="portal-dev-filter-btn" data-dev-disease="depression" title="うつ病関連カード＋共通計算ツール">うつ病</button>
+              <button type="button" class="portal-dev-filter-btn" data-dev-disease="bipolar" title="双極性障害関連カード＋共通計算ツール">双極性障害</button>
+              <button type="button" class="portal-dev-filter-btn" data-dev-disease="anxiety" title="不安症関連カード＋共通計算ツール">不安症</button>
+              <button type="button" class="portal-dev-filter-btn portal-dev-filter-btn--reset" data-dev-disease="" title="疾患フィルターを解除">すべて表示</button>
             </div>
           </div>
         </div>
@@ -1257,178 +1070,27 @@
     <section class="mb-6 sm:mb-10">
       <div class="bg-white rounded-2xl border border-gray-200 px-5 sm:px-6 py-5 sm:py-6 shadow-sm">
         <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 tracking-tight">精神科臨床ガイド</h1>
-        <hr class="max-w-2xl my-4 border-0 border-t border-dashed border-gray-300" aria-hidden="true">
-        <div class="text-gray-500 text-sm leading-relaxed max-w-2xl space-y-3">
-          <p class="m-0">
-            ICD-10 / ICD-11 / DSM-5-TR / 国内外ガイドラインに基づく診断・治療アルゴリズム、評価スケール、用語集、資格ガイドを、AI利用してまとめた即時参照ポータルです。<br>
-            自己責任でご利用ください。
-          </p>
-          <p class="text-gray-600 m-0 text-xs font-semibold tracking-wide">主な表記・操作は次のとおりです。</p>
-          <ul class="portal-intro-bullet-list list-none pl-0 m-0 space-y-2 text-xs text-gray-600 leading-relaxed">
-            <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span><strong class="text-gray-700 font-medium">NEW</strong>＝掲載から14日以内の追加、<strong class="text-gray-700 font-medium">今週</strong>＝履歴上・カード表記の「更新」から7日以内。</span></li>
-            <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</span></li>
-            <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください。</span></li>
-            <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>各カードの<strong class="text-gray-700 font-medium">☆／★</strong>クリックで<strong class="text-gray-700 font-medium">お気に入り</strong>に登録/解除できます。</span></li>
-            <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>検索は、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</span></li>
-            <li class="flex gap-2"><span class="text-gray-400 shrink-0 select-none" aria-hidden="true">・</span><span>検索バー直下の主要疾患ボタンでは、よく使う疾患別にカードを絞り込めます（検索語と併用可）。「すべて表示」で解除します。</span></li>
+        <p class="text-gray-500 text-sm leading-relaxed max-w-2xl">
+          外来参照用ポータルです。先頭付近に<strong class="text-gray-700 font-semibold">計算ツール</strong>（CP換算など）と<strong class="text-gray-700 font-semibold">評価スケール</strong>を置き、続けて<strong class="text-gray-700 font-semibold">診断・分類</strong>・<strong class="text-gray-700 font-semibold">治療概要</strong>（ガイドライン・治療フロー）と<strong class="text-gray-700 font-semibold">薬剤選択</strong>（国内承認薬ガイド）、<strong class="text-gray-700 font-semibold">概念・資格</strong>（歴史・用語・手続き）・<strong class="text-gray-700 font-semibold">学習・ドリル</strong>、末尾に<strong class="text-gray-700 font-semibold">その他</strong>（AI活用ガイドなど）があります。<span class="text-amber-800 font-medium">（開発版・区分試行）</span>
+        </p>
+        <p class="text-gray-400 text-xs leading-relaxed max-w-2xl mt-2">
+          <span class="inline-flex items-center gap-1.5 flex-wrap mb-2">
+            <span class="rounded-md bg-amber-50 border border-amber-200/80 text-amber-950 px-2 py-0.5 text-[10px] font-semibold">開発版</span>
+            <span class="text-gray-500">使い方の要点です。</span>
+          </span>
+          <ul class="list-disc pl-4 sm:pl-5 m-0 mt-1 space-y-1.5 text-gray-500 marker:text-gray-400 [list-style-position:outside]">
+            <li><strong class="text-gray-600 font-medium">NEW</strong>＝掲載から14日以内の追加、<strong class="text-gray-600 font-medium">今週</strong>＝履歴上・カード表記の「更新」から7日以内。いずれも各カードのバッジで確認できます。</li>
+            <li>直近の改訂内容は、カードにマウスを載せるかスマホで長押ししたときのプレビュー内「更新履歴（最新5件）」をご覧ください。</li>
+            <li>一覧を詰めて見る場合はヘッダー右の「コンパクト」ボタンをご利用ください（設定は端末に保存されます）。</li>
+            <li>URL の別名として <a href="top-portal-dev.html" class="text-amber-900/90 underline decoration-amber-700/40 underline-offset-2">top-portal-dev.html</a> からも開けます（内部で <code class="text-[11px] bg-stone-100/80 px-1 rounded">top-dev.html</code> に移動します）。</li>
+            <li>お気に入りは本番 <code class="text-[11px] bg-stone-100/80 px-1 rounded">top.html</code> と同じ端末ストレージキー（<code class="text-[11px] bg-stone-100/80 px-1 rounded">psychPortalFavorites</code>）を使います。</li>
+            <li>お気に入りにしたカードは<strong class="text-gray-600 font-medium">オレンジの二重枠と淡い暖色の背景</strong>で、未登録のカードと区別できます。</li>
+            <li>各カードの<strong class="text-gray-600 font-medium">☆／★</strong>クリックで<strong class="text-gray-600 font-medium">お気に入り</strong>に登録/解除できます（端末内）。ヘッダーの<strong class="text-gray-600 font-medium">お気に入りのみ</strong>は本番ポータルと同様です。</li>
+            <li>ヘッダー下の検索では、入力中に候補一覧が表示され、「決定」または Enter で一覧を絞り込めます。候補を押すとそのページタイトルで確定します。</li>
+            <li>検索バー直下の<strong class="text-gray-600 font-medium">主要疾患</strong>ボタンは<strong class="text-gray-600 font-medium">開発試行</strong>用です。選択中はその疾患に関連するカードと共通計算ツールのみ表示します（検索語と併用可）。「すべて表示」で解除します。</li>
+            <li>履歴が<strong class="text-gray-600 font-medium">新規</strong>のページは、直下のコンパクトカードにまとめています（新規掲載日の<strong class="text-gray-600 font-medium">新しい順</strong>・5件ずつ、「次の５件を表示する」で続き）。カードの<strong class="text-gray-600 font-medium">新規</strong>履歴に加え、ポータル告知だけのリンクは同一URLが無い場合に補完表示します。更新・修正など履歴全体は、下部「その他」区分の更新情報（先頭10件＋折りたたみ）で確認できます。</li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- 目的別ゴールガイド -->
-    <section id="portal-goals" class="mb-8 sm:mb-12">
-      <div class="sec-header sec-goals">
-        <div class="sec-icon">🎯</div>
-        <span>目的・ゴール別ガイド</span>
-        <span class="sec-count">6 コース</span>
-      </div>
-      <p class="goals-subtitle">「何を学びたいか」「何を目指しているか」を起点に、関連ページを順番に辿れます。各コースをクリックして詳細とステップを確認してください。</p>
-
-      <div class="goals-grid">
-
-        <!-- ① 脳波（EEG）を学ぶ -->
-        <details class="goal-card" id="goal-eeg">
-          <summary class="goal-card__header">
-            <span class="goal-card__icon">🧠</span>
-            <div class="goal-card__title-wrap">
-              <div class="goal-card__title">脳波（EEG）を学ぶ</div>
-              <div class="goal-card__tagline">基礎から症例読影・アーティファクト識別まで 7 ステップ</div>
-            </div>
-            <i class="goal-card__chevron">▶</i>
-          </summary>
-          <div class="goal-card__body">
-            <p class="goal-target"><strong>こんな方に：</strong>脳波を一から学びたい研修医・専攻医、てんかん・せん妄の評価に自信をつけたい方</p>
-            <p class="goal-steps-label">推奨ステップ</p>
-            <ol class="goal-steps">
-              <li><a href="eeg-basics.html">EEG 基礎知識</a> <span class="step-note">— 正常脳波・基本リズム・電極配置の概要</span></li>
-              <li><a href="eeg-waveforms.html">波形の種類と正常値</a> <span class="step-note">— α・β・θ・δ・睡眠紡錘波など主要波形を一覧整理</span></li>
-              <li><a href="eeg-montage.html">モンタージュを理解する</a> <span class="step-note">— 縦・横・双極・参照導出の切り替えと読み方</span></li>
-              <li><a href="eeg-learning.html">学習ガイド＋概要まとめ</a> <span class="step-note">— ここまでの知識を整理する総合解説</span></li>
-              <li><a href="eeg-quiz.html">基本クイズ</a> <span class="step-note">— 知識の定着確認（〇×・択一形式）</span></li>
-              <li><a href="eeg-cases.html">症例読影ドリル</a> <span class="step-note">— 実際の波形パターンから病態を推論</span></li>
-              <li><a href="eeg-artifacts.html">アーティファクト識別</a> <span class="step-note">— 筋電図・眼球運動・電極ノイズを見分ける</span></li>
-            </ol>
-          </div>
-        </details>
-
-        <!-- ② 精神保健指定医を取ろう -->
-        <details class="goal-card" id="goal-shitei">
-          <summary class="goal-card__header">
-            <span class="goal-card__icon">📋</span>
-            <div class="goal-card__title-wrap">
-              <div class="goal-card__title">精神保健指定医を取ろう</div>
-              <div class="goal-card__tagline">制度把握 → 申請要件 → 症例記録まで 5 ステップ</div>
-            </div>
-            <i class="goal-card__chevron">▶</i>
-          </summary>
-          <div class="goal-card__body">
-            <p class="goal-target"><strong>こんな方に：</strong>指定医申請を準備中の精神科専攻医、申請経験者でも要件を再確認したい方</p>
-            <p class="goal-steps-label">推奨ステップ</p>
-            <ol class="goal-steps">
-              <li><a href="shiteii-guide.html">指定医制度ガイド</a> <span class="step-note">— 指定医とは何か・申請要件・更新の全体像</span></li>
-              <li><a href="seishin-hoken-shitei-overview.html">精神保健福祉法の全体像</a> <span class="step-note">— 措置入院・医療保護入院の法的根拠を整理</span></li>
-              <li><a href="shitei-checklist.html">申請要件チェックリスト</a> <span class="step-note">— 経験症例数・書類要件を漏れなく確認</span></li>
-              <li><a href="shitei-report-wizard.html">症例記録ウィザード</a> <span class="step-note">— 記載すべき項目をガイド付きで入力・確認</span></li>
-              <li><a href="shitei-case-template.html">症例テンプレート</a> <span class="step-note">— 実際の申請書に沿ったサンプル構成を参照</span></li>
-            </ol>
-          </div>
-        </details>
-
-        <!-- ③ 統合失調症の初発に対応する -->
-        <details class="goal-card" id="goal-schiz">
-          <summary class="goal-card__header">
-            <span class="goal-card__icon">🏥</span>
-            <div class="goal-card__title-wrap">
-              <div class="goal-card__title">統合失調症の初発に対応する</div>
-              <div class="goal-card__tagline">診断 → 早期介入 → 治療 → 評価まで 5 ステップ</div>
-            </div>
-            <i class="goal-card__chevron">▶</i>
-          </summary>
-          <div class="goal-card__body">
-            <p class="goal-target"><strong>こんな方に：</strong>初発統合失調症の診断・治療を担当する研修医・専攻医、早期介入の枠組みを体系的に学びたい方</p>
-            <p class="goal-steps-label">推奨ステップ</p>
-            <ol class="goal-steps">
-              <li><a href="schizophrenia-diagnosis.html">診断基準と鑑別</a> <span class="step-note">— ICD-10/DSM-5-TR の診断基準・陽性・陰性症状の整理</span></li>
-              <li><a href="schizophrenia-early-intervention.html">早期介入の枠組み</a> <span class="step-note">— UHR・DUP・包括的ケアの考え方</span></li>
-              <li><a href="schizophrenia-algorithm.html">治療アルゴリズム</a> <span class="step-note">— 急性期〜安定期の薬物・非薬物療法の選択フロー</span></li>
-              <li><a href="schizophrenia-scales.html">症状評価スケール</a> <span class="step-note">— BPRS・PANSS・CGI の使い分けと採点ポイント</span></li>
-              <li><a href="schizophrenia-first-episode-learning.html">初発症例 学習ドリル</a> <span class="step-note">— 実践的ケース演習で臨床判断を鍛える</span></li>
-            </ol>
-          </div>
-        </details>
-
-        <!-- ④ 向精神薬を使いこなす -->
-        <details class="goal-card" id="goal-drugs">
-          <summary class="goal-card__header">
-            <span class="goal-card__icon">💊</span>
-            <div class="goal-card__title-wrap">
-              <div class="goal-card__title">向精神薬を使いこなす</div>
-              <div class="goal-card__tagline">各薬剤クラス → 相互作用 → 換算計算まで 6 ステップ</div>
-            </div>
-            <i class="goal-card__chevron">▶</i>
-          </summary>
-          <div class="goal-card__body">
-            <p class="goal-target"><strong>こんな方に：</strong>薬の使い方・使い分けを体系的に学びたい研修医、処方設計の自信をつけたい方</p>
-            <p class="goal-steps-label">推奨ステップ</p>
-            <ol class="goal-steps">
-              <li><a href="antipsychotics-japan.html">抗精神病薬 国内一覧</a> <span class="step-note">— 第1世代・第2世代の特性比較と選択指針</span></li>
-              <li><a href="antidepressants-japan.html">抗うつ薬 国内一覧</a> <span class="step-note">— SSRI・SNRI・NaSSA・TCA の特性と使い分け</span></li>
-              <li><a href="mood-stabilizers-japan.html">気分安定薬</a> <span class="step-note">— リチウム・バルプロ酸・ラモトリギン等の概要</span></li>
-              <li><a href="benzodiazepines-japan.html">ベンゾジアゼピン系</a> <span class="step-note">— 半減期・力価・依存リスクの整理</span></li>
-              <li><a href="psychotropics-interactions-learning.html">薬物相互作用 学習</a> <span class="step-note">— CYP・QT 延長・中枢抑制の主要組み合わせを演習</span></li>
-              <li><a href="cp-calculator.html">CP 換算計算機</a> <span class="step-note">— 外来でのリアルタイム等価換算ツール</span></li>
-            </ol>
-          </div>
-        </details>
-
-        <!-- ⑤ 評価スケールを習得する -->
-        <details class="goal-card" id="goal-scales">
-          <summary class="goal-card__header">
-            <span class="goal-card__icon">📊</span>
-            <div class="goal-card__title-wrap">
-              <div class="goal-card__title">評価スケールを習得する</div>
-              <div class="goal-card__tagline">BPRS 基礎から PANSS・HAMD・MADRS・YMRS・BFCRS まで 6 ステップ</div>
-            </div>
-            <i class="goal-card__chevron">▶</i>
-          </summary>
-          <div class="goal-card__body">
-            <p class="goal-target"><strong>こんな方に：</strong>診察で評価スケールを活用したい医師・研修医、研究・指定医申請に向けて採点の精度を高めたい方</p>
-            <p class="goal-steps-label">推奨ステップ</p>
-            <ol class="goal-steps">
-              <li><a href="bprs-guide.html">BPRS 解説</a> <span class="step-note">— 18 項目の意味・採点基準・臨床での使い方</span></li>
-              <li><a href="bprs-sheet-detailed.html">BPRS 採点練習シート</a> <span class="step-note">— 対話型 WEB 採点フォームで実際に採点</span></li>
-              <li><a href="panss-sheet-detailed.html">PANSS 採点シート</a> <span class="step-note">— 30 項目の陽性・陰性・総合精神病理スケール</span></li>
-              <li><a href="hamd-sheet-detailed.html">HAMD 採点シート</a> <span class="step-note">— うつ病重症度の標準的評価（17 項目版）</span></li>
-              <li><a href="ymrs-sheet-detailed.html">YMRS 採点シート</a> <span class="step-note">— 躁状態重症度の評価（11 項目）</span></li>
-              <li><a href="bfcrs-sheet.html">BFCRS（緊張病評価）</a> <span class="step-note">— Bush–Francis Catatonia Rating Scale の採点フォーム</span></li>
-            </ol>
-          </div>
-        </details>
-
-        <!-- ⑥ うつ病・双極性障害を診る -->
-        <details class="goal-card" id="goal-mood">
-          <summary class="goal-card__header">
-            <span class="goal-card__icon">😔</span>
-            <div class="goal-card__title-wrap">
-              <div class="goal-card__title">うつ病・双極性障害を診る</div>
-              <div class="goal-card__tagline">ガイドライン → 診断 → 薬剤選択 → スケールまで 5 ステップ</div>
-            </div>
-            <i class="goal-card__chevron">▶</i>
-          </summary>
-          <div class="goal-card__body">
-            <p class="goal-target"><strong>こんな方に：</strong>気分障害の外来診療の基礎を固めたい医師、双極性障害の診断に迷うことがある研修医・専攻医</p>
-            <p class="goal-steps-label">推奨ステップ</p>
-            <ol class="goal-steps">
-              <li><a href="depression-guideline2025.html">うつ病診療ガイドライン 2025</a> <span class="step-note">— 国内最新ガイドラインの要点と治療フロー</span></li>
-              <li><a href="bipolar-diagnosis-treatment.html">双極性障害の診断・治療</a> <span class="step-note">— 双極Ⅰ型・Ⅱ型の診断基準と薬物療法の基本</span></li>
-              <li><a href="atypical-depression.html">非定型うつ病</a> <span class="step-note">— 非定型うつの特徴・双極との鑑別・治療戦略</span></li>
-              <li><a href="antidepressants-japan.html">抗うつ薬 国内一覧</a> <span class="step-note">— 薬剤クラス別の特性比較と選択フロー</span></li>
-              <li><a href="hamd-sheet-detailed.html">HAMD / MADRS 採点シート</a> <span class="step-note">— 治療効果の客観的評価ツール</span></li>
-            </ol>
-          </div>
-        </details>
-
+        </p>
       </div>
     </section>
 
@@ -1473,7 +1135,7 @@
           <div class="mt-3 text-xs link-calc font-medium">crcl-psychotropics.html →</div>
         </a>
         <a id="card-acute-alerts" href="acute-alerts.html" class="card block border border-cyan-100 rounded-xl p-4 border-calc bg-calc">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-calc px-2 py-0.5 rounded-full">計算ツール</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-calc px-2 py-0.5 rounded-full">計算ツール</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-03 新規</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">急性期クイック（QTc・電解質・離脱要約）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">Bazett / Fridericia による QTc、Na・K・Mg の閾値アラート、CIWA-Ar 型の要約スコア（最大67点）を1画面に集約。教育用の目安表示。</p>
           <div class="mt-3 text-xs link-calc font-medium">acute-alerts.html →</div>
@@ -1592,13 +1254,13 @@
           <div class="mt-3 text-xs link-blue font-medium">icd10mini.html →</div>
         </a>
         <a id="card-dsm5tr" href="dsm5tr.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">DSM-5-TR 詳細版</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">DSM-5-TR 詳細版</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-03 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">DSM-5-TR 精神科章立てガイド（詳細版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">APA Section II 全章のアコーディオン一覧。各章のアウトラインボックス、ICD-10-CM連関メモ、DSM側概要列付きコード表。※行クリックで概要全文表示。</p>
           <div class="mt-3 text-xs link-blue font-medium">dsm5tr.html →</div>
         </a>
         <a id="card-dsm5trmini" href="dsm5trmini.html" class="card block border border-blue-100 rounded-xl p-4 border-blue bg-blue">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">DSM-5-TR ミニ版</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">DSM-5-TR ミニ版</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-03 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">DSM-5-TR 精神科章立てガイド（ミニ版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">全章テーブルを同一画面で軽量表示。概要列を常時表示し、外来スマホ確認に最適化。</p>
           <div class="mt-3 text-xs link-blue font-medium">dsm5trmini.html →</div>
@@ -1705,7 +1367,7 @@
           <div class="mt-3 text-xs link-indigo font-medium">antipsychotics-japan.html →</div>
         </a>
         <a id="card-benzodiazepines" href="benzodiazepines-japan.html" class="card block border border-indigo-100 rounded-xl p-4 border-indigo bg-indigo">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-indigo px-2 py-0.5 rounded-full">薬物治療</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-indigo px-2 py-0.5 rounded-full">薬物治療</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-03 作成</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ベンゾジアゼピン 選択ガイド（日本承認薬）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">作用時間分類・薬物動態・主訴別アルゴリズム・注射剤・漸減まで、抗精神病薬ガイドと同構成で整理。</p>
           <div class="mt-3 text-xs link-indigo font-medium">benzodiazepines-japan.html →</div>
@@ -1719,7 +1381,7 @@
         <a id="card-mood-stabilizers" href="mood-stabilizers-japan.html" class="card block border border-indigo-100 rounded-xl p-4 border-indigo bg-indigo">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-indigo px-2 py-0.5 rounded-full">薬物治療</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-04 更新</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">気分安定薬 選択ガイド（日本承認薬）</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">リチウム・バルプロ酸・カルバマゼピン・ラモトリギンと、双極適応がある SGA を、抗うつ薬ガイドと同じ目次構成（アルゴリズム・薬理・薬剤ごとの用量・製剤・副作用・監視・相互作用）で整理。</p>
+          <p class="text-xs text-gray-500 leading-relaxed">リチウム・バルプロ酸・カルバマゼピン・ラモトリギンと、双極適応がある SGA を、抗うつ薬ガイドと同じ目次構成で整理。</p>
           <div class="mt-3 text-xs link-indigo font-medium">mood-stabilizers-japan.html →</div>
         </a>
         <a id="card-hypnotics" href="hypnotics-japan.html" class="card block border border-indigo-100 rounded-xl p-4 border-indigo bg-indigo">
@@ -1801,30 +1463,6 @@
           <p class="text-xs text-gray-500 leading-relaxed">専攻医1年目から始める申請要件・症例レポート対策・口頭試問対策・タイムラインを収録した資格取得の完全ガイド。</p>
           <div class="mt-3 text-xs link-amber font-medium">shiteii-guide.html →</div>
         </a>
-        <a id="card-shitei-overview" href="seishin-hoken-shitei-overview.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">制度概要</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 制度概要</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">精神保健福祉法 第18条に基づく指定医制度の法的根拠・権限・申請要件・5カテゴリのレポート要件・疾患カテゴリ早見表を網羅。</p>
-          <div class="mt-3 text-xs link-amber font-medium">seishin-hoken-shitei-overview.html →</div>
-        </a>
-        <a id="card-shitei-checklist" href="shitei-checklist.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">申請支援</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 申請チェックリスト</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">措置入院・医療保護入院・任意入院・隔離・身体的拘束・疾患カテゴリの要件をインタラクティブに確認。進捗はブラウザに自動保存。</p>
-          <div class="mt-3 text-xs link-amber font-medium">shitei-checklist.html →</div>
-        </a>
-        <a id="card-shitei-wizard" href="shitei-report-wizard.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">作成支援</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 レポート作成ウィザード</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">7ステップの対話形式で症例レポートを作成。ICD-10ピッカー・入院形態別の記載ガイド付き。入力内容から整形テキストを自動生成し、コピー可能。進捗は localStorage に保存。</p>
-          <div class="mt-3 text-xs link-amber font-medium">shitei-report-wizard.html →</div>
-        </a>
-        <a id="card-shitei-case-template" href="shitei-case-template.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">申請支援</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 症例5本 選定テンプレ</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">新規申請ケースレポート5症例の選定をインタラクティブに支援。申請日入力で7年・1年の期間閾値を自動算出。入院形態・立ち会い・ICD-10コードの整合チェック付き。提出書類一覧・最終確認チェックリストを収録。</p>
-          <div class="mt-3 text-xs link-amber font-medium">shitei-case-template.html →</div>
-        </a>
         <a id="card-schiz-highschool" href="schizophrenia-highschool-guide.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">患者・一般向け</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-10 新規</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症って何？ ── 高校生・一般向け図解ガイド</h3>
@@ -1843,12 +1481,6 @@
       </div>
       <p class="text-xs text-gray-500 -mt-2 mb-4 max-w-3xl leading-relaxed">臨床の合間ではなく、知識の確認・試験対策向けのコンテンツです。</p>
       <div class="grid sm:grid-cols-2 gap-3" id="grid-portal-study">
-        <a id="card-terminology-srs" href="psych-terminology-srs.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">SRS</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-11 新規</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神医学用語 SRS 学習（間隔反復）</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">精神医学・精神病理・症候学・精神分析の全用語をLeitner 5段階で間隔反復。フリップカード（自己評価）と4択MCQを切替可能。進捗はブラウザに保存。</p>
-          <div class="mt-3 text-xs link-study font-medium">psych-terminology-srs.html →</div>
-        </a>
         <a id="card-icd10-quiz" href="icd10-quiz.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">クイズ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">ICD-10 精神科クイズ</h3>
@@ -1861,43 +1493,10 @@
           <p class="text-xs text-gray-500 leading-relaxed">双極性障害の鑑別・構造化アセス・治療との交差点を1本に整理。症例ドリル計15症例（身体疾患併存・向精神薬誘発性・統合失調症性感情障害 ほか、開示付き）と10問ミニチェック。</p>
           <div class="mt-3 text-xs link-study font-medium">mood-suicide-learning.html →</div>
         </a>
-        <a id="card-schiz-fe-learning" href="schizophrenia-first-episode-learning.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">学習ハブ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">統合失調症 × 初発時対応 — 学習ハブ</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">初発精神病（FEP）の鑑別・安全・治療開始・家族連携の型。症例ドライループ8本とミニチェック10問。診断ページ・薬ガイド・BFCRS等へリンク。</p>
-          <div class="mt-3 text-xs link-study font-medium">schizophrenia-first-episode-learning.html →</div>
-        </a>
-        <a id="card-psychopath-scales-learning" href="psychopathology-scales-learning.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">学習ハブ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神病理 × スケール — 学習ハブ</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">症候の読みと尺度項目の対応を練習。学習順・採点前チェック・交差点の整理、症例ドライループ8本、ミニチェック10問。用語マップ・BPRS／PANSS・BFCRS・HAM-D／MADRS・YMRS等へリンク。</p>
-          <div class="mt-3 text-xs link-study font-medium">psychopathology-scales-learning.html →</div>
-        </a>
-        <a id="card-psychotropics-interactions-learning" href="psychotropics-interactions-learning.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">学習ハブ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">向精神薬 × 相互作用・禁忌 — 学習ハブ</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">併用前チェック・PK/PDの交差点を整理。症例ドライループ8本（MAOI-SSRI、QT、酵素誘導、リチウム-NSAIDs、リネゾリド、ラモトリギン、クロザピン-禁煙、トラマドール等）とミニチェック10問。薬ガイド・CrCl・QTアラート・換算ページへリンク。</p>
-          <div class="mt-3 text-xs link-study font-medium">psychotropics-interactions-learning.html →</div>
-        </a>
-        <a id="card-asd-schizophrenia-learning" href="asd-schizophrenia-learning.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">学習ハブ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-06 更新</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">自閉症スペクトラム障害 × 統合失調症 — 学習ハブ</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">発達史と精神病症状の時間軸・交差点を整理。症例ドライループ8本（いじめ後不安、発達の再評価、不動・少食、感覚vs幻聴、知的障害、職場ストレス、物質後持続幻聴、陰性vsASD等）とミニチェック10問。ICD F8/F2・診断・BFCRS・PANSS・初発ハブ等へリンク。</p>
-          <div class="mt-3 text-xs link-study font-medium">asd-schizophrenia-learning.html →</div>
-        </a>
         <a id="card-eeg-learning" href="eeg-learning.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-study px-2 py-0.5 rounded-full">学習ハブ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-10 新規</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">脳波読影（EEG）— 初学者学習ハブ</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">10-20法電極配置・周波数帯域（δ/θ/α/β/γ）・波形アニメーターの基礎知識から、20+波形パターン図鑑（正常・てんかん性・脳症・焦点性異常・特殊）、3難易度クイズ（30問）、10症例の段階的読影、6種アーティファクト識別・モンタージュ解説まで1ハブに統合（Phase 2）。</p>
-          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">電極配置SVG</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">波形アニメーター</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">20+パターン図鑑</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">3難易度クイズ（30問）</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">10症例</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">アーティファクト</span>
-            <span class="text-pink-900 bg-pink-100/90 border border-pink-200/90 rounded px-1.5 py-0.5">モンタージュ</span>
-          </div>
+          <p class="text-xs text-gray-500 leading-relaxed">10-20法電極配置・周波数帯域（δ/θ/α/β/γ）・波形アニメーターの基礎知識から、20+波形パターン図鑑（正常・てんかん性・脳症・焦点性異常・特殊）、3難易度クイズ（15問）、5症例の段階的読影（欠神てんかん・肝性脳症・BECTS・CJD・JME）まで1ハブに統合。</p>
           <div class="mt-3 text-xs link-study font-medium">eeg-learning.html →</div>
         </a>
         <a id="card-eeg-basics" href="eeg-basics.html" class="card block border border-pink-100 rounded-xl p-4 border-study bg-study">
@@ -1928,37 +1527,6 @@
     </section>
 
     <!-- ⑧ その他 -->
-    <!-- ⑧ 最新論文 -->
-    <section id="portal-literature" class="mb-10">
-      <div class="sec-header sec-teal">
-        <div class="sec-icon">📄</div>
-        <span>最新論文</span>
-        <span class="sec-count" id="cnt-portal-literature"></span>
-      </div>
-      <p class="text-xs text-gray-500 -mt-2 mb-4 max-w-3xl leading-relaxed">PubMed・国内外ジャーナルRSS・medRxiv から精神医学の最新エビデンスをリアルタイム検索・閲覧するツールです。</p>
-      <div class="grid sm:grid-cols-2 gap-3" id="grid-portal-literature">
-        <a id="card-literature-search" href="literature-search.html" class="card block border border-teal-100 rounded-xl p-4 border-teal bg-teal sm:col-span-2">
-          <div class="flex items-start justify-between mb-2">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-medium tag-teal px-2 py-0.5 rounded-full">論文検索</span>
-              <span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span>
-            </div>
-            <span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span>
-          </div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神医学 最新論文検索ツール</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">PubMed（NCBI）APIを使い、精神医学の最新論文をリアルタイム検索。疾患別クイック検索（統合失調症・うつ病・双極性障害・不安症・認知症ほか）、主要ジャーナル別ブラウズ、抄録の展開表示、DOI / PMC全文リンクに対応。Phase 2でRSS・medRxiv・J-STAGEの多ソース統合・キーワードアラートメール通知を実装予定。</p>
-          <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
-            <span class="text-teal-900 bg-teal-100/90 border border-teal-200/90 rounded px-1.5 py-0.5">PubMed直接検索</span>
-            <span class="text-teal-900 bg-teal-100/90 border border-teal-200/90 rounded px-1.5 py-0.5">疾患別クイック検索</span>
-            <span class="text-teal-900 bg-teal-100/90 border border-teal-200/90 rounded px-1.5 py-0.5">論文種別フィルタ（RCT/Meta/SR/GL）</span>
-            <span class="text-teal-900 bg-teal-100/90 border border-teal-200/90 rounded px-1.5 py-0.5">抄録展開・全文リンク</span>
-          </div>
-          <div class="mt-2 text-xs link-teal font-medium">literature-search.html →</div>
-        </a>
-      </div>
-    </section>
-
-    <!-- ⑨ その他 -->
     <section id="portal-other" class="mb-10">
       <div class="sec-header sec-slate">
         <div class="sec-icon">💡</div>
@@ -2071,14 +1639,13 @@
         'card-brexpiprazole',
         'card-vortioxetine'
       ],
-      'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool'],
-      'portal-study': ['card-terminology-srs', 'card-icd10-quiz', 'card-mood-suicide-learning', 'card-schiz-fe-learning', 'card-psychopath-scales-learning', 'card-psychotropics-interactions-learning', 'card-asd-schizophrenia-learning', 'card-eeg-learning', 'card-eeg-basics', 'card-eeg-waveforms', 'card-eeg-quiz', 'card-eeg-cases'],
-      'portal-other': ['card-context', 'card-cursor', 'card-content-verification'],
-      'portal-literature': ['card-literature-search']
+      'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-schiz-highschool'],
+      'portal-study': ['card-icd10-quiz', 'card-mood-suicide-learning', 'card-eeg-learning', 'card-eeg-basics', 'card-eeg-waveforms', 'card-eeg-quiz', 'card-eeg-cases'],
+      'portal-other': ['card-context', 'card-cursor', 'card-content-verification']
     };
 
     let portalSearchCommittedQuery = '';
-    /** お気に入り（開発版キー psychPortalDev* からの一回限り移行あり） */
+    /** お気に入り（本番と同一キー。旧 psychPortalDev* は一度だけ移行） */
     const PORTAL_FAV_STORAGE = 'psychPortalFavorites';
     const PORTAL_FAV_ONLY_STORAGE = 'psychPortalFavoritesOnly';
     (function migratePortalFavFromDevKeys() {
@@ -2152,62 +1719,51 @@
       });
       syncCardFavButtons();
     }
-
-    /** 主要疾患フィルター（検索語と AND） */
-    let portalDiseaseFilter = '';
-    const PORTAL_SHARED_CALC_IDS = ['card-cp-calc', 'card-dzp-calc', 'card-crcl-psych', 'card-acute-alerts'];
-    const DISEASE_CARD_SETS = {
+    /** 開発版のみ：主要疾患でカードを追加絞り込み（検索語と AND） */
+    let portalDevDiseaseFilter = '';
+    const DEV_PORTAL_CALC_IDS = ['card-cp-calc', 'card-dzp-calc', 'card-crcl-psych', 'card-acute-alerts'];
+    const DEV_DISEASE_CARD_SETS = {
       schizophrenia: new Set([
-        ...PORTAL_SHARED_CALC_IDS,
+        ...DEV_PORTAL_CALC_IDS,
         'card-schiz-sheets', 'card-schiz-scales', 'card-schiz-diagnosis', 'card-schiz-history', 'card-schiz-early-intervention', 'card-schiz-algo',
+        'card-csc-jp',
         'card-bprs-detailed', 'card-panss-detailed', 'card-bfcrs', 'card-bprs-guide',
         'card-antipsychotics',
-        'card-schiz-fe-learning',
-        'card-csc-jp',
-        'card-psychopath-scales-learning',
-        'card-psychotropics-interactions-learning',
-        'card-asd-schizophrenia-learning',
         'card-delirium',
         'card-icd10-quiz',
       ]),
       depression: new Set([
-        ...PORTAL_SHARED_CALC_IDS,
+        ...DEV_PORTAL_CALC_IDS,
         'card-depression', 'card-atypical-depression', 'card-antidepressants',
         'card-hypnotics',
         'card-delirium',
         'card-hamd', 'card-madrs',
         'card-mood-suicide-learning', 'card-cssrs-memo',
         'card-benzodiazepines',
-        'card-psychopath-scales-learning',
-        'card-psychotropics-interactions-learning',
         'card-icd10-quiz',
       ]),
       bipolar: new Set([
-        ...PORTAL_SHARED_CALC_IDS,
+        ...DEV_PORTAL_CALC_IDS,
         'card-bipolar', 'card-mood-stabilizers', 'card-ymrs',
         'card-mood-suicide-learning', 'card-cssrs-memo',
         'card-antipsychotics', 'card-antidepressants',
         'card-hypnotics',
         'card-delirium',
-        'card-psychopath-scales-learning',
-        'card-psychotropics-interactions-learning',
         'card-icd10-quiz',
       ]),
       anxiety: new Set([
-        ...PORTAL_SHARED_CALC_IDS,
+        ...DEV_PORTAL_CALC_IDS,
         'card-anxiety', 'card-anxiety-scales',
         'card-benzodiazepines', 'card-antidepressants', 'card-hypnotics',
         'card-delirium',
-        'card-psychopath-scales-learning',
-        'card-psychotropics-interactions-learning',
         'card-icd10-quiz',
       ]),
     };
 
-    function syncDiseaseFilterButtons() {
-      document.querySelectorAll('.portal-disease-filter-btn').forEach((btn) => {
-        const v = btn.getAttribute('data-disease') ?? '';
-        const active = portalDiseaseFilter === v;
+    function syncDevDiseaseFilterButtons() {
+      document.querySelectorAll('.portal-dev-filter-btn').forEach((btn) => {
+        const v = btn.getAttribute('data-dev-disease') ?? '';
+        const active = portalDevDiseaseFilter === v;
         btn.classList.toggle('is-active', active);
         btn.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
@@ -2439,8 +1995,8 @@
           row.rel = 'noopener noreferrer';
         }
       }
-      const title = String(it.title || '').trim() || '（無題）';
       const d = String(it.date || '').trim();
+      const title = String(it.title || '').trim() || '（無題）';
       const dm = d.match(/^(\d{4}-\d{2}-\d{2})/);
       const dateShown = dm ? dm[1] : (d || '—');
       if (dm) row.title = `${dateShown} 新規 · ${title}`;
@@ -2557,8 +2113,8 @@
             const hay = normSearchText(el.textContent + ' ' + (el.getAttribute('href') || ''));
             show = hay.includes(q);
           }
-          if (show && portalDiseaseFilter) {
-            const allow = DISEASE_CARD_SETS[portalDiseaseFilter];
+          if (show && portalDevDiseaseFilter) {
+            const allow = DEV_DISEASE_CARD_SETS[portalDevDiseaseFilter];
             if (!allow || !allow.has(id)) show = false;
           }
           if (show && portalFavoritesOnly && !portalFavSet.has(id)) show = false;
@@ -2572,14 +2128,14 @@
         if (jumpCnt) jumpCnt.textContent = String(visible);
         const sectionEl = document.getElementById(sec);
         if (sectionEl) {
-          const emptyReason = Boolean(q || portalDiseaseFilter || portalFavoritesOnly);
+          const emptyReason = Boolean(q || portalDevDiseaseFilter || portalFavoritesOnly);
           sectionEl.classList.toggle('portal-section-empty', emptyReason && visible === 0);
         }
       });
 
       // ヒット件数バッジ
       const hitCount = document.getElementById('portal-search-hit-count');
-      const isFiltering = Boolean(q || portalDiseaseFilter || portalFavoritesOnly);
+      const isFiltering = Boolean(q || portalDevDiseaseFilter || portalFavoritesOnly);
       if (hitCount) {
         if (isFiltering) {
           hitCount.textContent = grandTotal + '件';
@@ -2595,7 +2151,7 @@
       if (noResults) {
         const show0 = isFiltering && grandTotal === 0;
         noResults.classList.toggle('hidden', !show0);
-        if (noResultsQ) noResultsQ.textContent = qRaw || (portalDiseaseFilter ? '選択中の疾患フィルター' : 'お気に入り');
+        if (noResultsQ) noResultsQ.textContent = qRaw || (portalDevDiseaseFilter ? '選択中の疾患フィルター' : 'お気に入り');
       }
 
       portalNewItemsVisibleCount = PORTAL_NEW_ITEMS_CHUNK;
@@ -2610,7 +2166,7 @@
     const SEC_SHORT = {
       'portal-calc': '計算', 'portal-scales': '評価', 'portal-diag': '診断',
       'portal-tx-overview': '治療概要', 'portal-drugs': '薬剤選択', 'portal-concepts': '概念',
-      'portal-study': '学習', 'portal-other': 'その他', 'portal-literature': '最新論文'
+      'portal-study': '学習', 'portal-other': 'その他'
     };
 
     function sectionForCardId(cardId) {
@@ -2631,8 +2187,8 @@
         for (const id of ids) {
           if (hidden.includes(id)) continue;
           if (portalFavoritesOnly && !portalFavSet.has(id)) continue;
-          if (portalDiseaseFilter) {
-            const allow = DISEASE_CARD_SETS[portalDiseaseFilter];
+          if (portalDevDiseaseFilter) {
+            const allow = DEV_DISEASE_CARD_SETS[portalDevDiseaseFilter];
             if (!allow || !allow.has(id)) continue;
           }
           const el = document.getElementById(id);
@@ -2740,11 +2296,11 @@
       closeSearchSuggestPanel();
       refreshCardDisplay();
     });
-    document.getElementById('portal-disease-filter')?.addEventListener('click', (e) => {
-      const btn = e.target.closest('.portal-disease-filter-btn');
+    document.getElementById('portal-dev-disease-filter')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('.portal-dev-filter-btn');
       if (!btn) return;
-      portalDiseaseFilter = btn.getAttribute('data-disease') || '';
-      syncDiseaseFilterButtons();
+      portalDevDiseaseFilter = btn.getAttribute('data-dev-disease') || '';
+      syncDevDiseaseFilterButtons();
       refreshCardDisplay();
     });
 
@@ -2811,15 +2367,10 @@
       'card-icd10mini':        ['🏥 外来参照', '⚡ 軽量版'],
       'card-dsm5tr':           ['🏥 外来参照', '📘 DSM'],
       'card-dsm5trmini':       ['🏥 外来参照', '📘 DSM', '⚡ 軽量版'],
-      'card-terminology-srs':  ['🎓 学習・確認', '用語', 'SRS', '間隔反復'],
       'card-icd10-quiz':       ['🎓 学習・確認', '📖 ICD-10', 'クイズ'],
       'card-mood-suicide-learning': ['🎓 学習・確認', '📉 気分障害', '🛡 自殺リスク'],
       'card-cssrs-memo':        ['📚 概念・資格', '🛡 自殺リスク', '📋 手順'],
-      'card-schiz-fe-learning': ['🎓 学習・確認', '統合失調症', '初発精神病'],
       'card-csc-jp':           ['📚 概念・資格', '初発精神病', 'NIMH', 'CSC'],
-      'card-psychopath-scales-learning': ['🎓 学習・確認', '精神病理', '📊 採点'],
-      'card-psychotropics-interactions-learning': ['🎓 学習・確認', '💊 向精神薬', '相互作用'],
-      'card-asd-schizophrenia-learning': ['🎓 学習・確認', 'ASD', '統合失調症'],
       'card-cp-calc':          ['🏥 外来参照', '🧮 CP換算', '💊 薬剤選択'],
       'card-dzp-calc':         ['🏥 外来参照', '🧮 DZP換算', '💊 ベンゾ'],
       'card-crcl-psych':       ['🏥 外来参照', '🧮 CrCl', '💧 腎機能'],
@@ -2855,10 +2406,6 @@
       'card-bprs-guide':       ['📖 解説', '🏥 外来参照'],
       'card-terminology':      ['📚 用語集', '🏥 外来参照'],
       'card-shiteii':          ['🎓 資格取得', '📋 ガイド'],
-      'card-shitei-overview':  ['🎓 資格取得', '📋 制度概要', '精神保健指定医'],
-      'card-shitei-checklist': ['🎓 資格取得', '✅ チェックリスト', '精神保健指定医'],
-      'card-shitei-wizard':         ['🎓 資格取得', '✍ レポート作成', '精神保健指定医'],
-      'card-shitei-case-template': ['🎓 資格取得', '📋 症例選定', '精神保健指定医'],
       'card-context':               ['💡 AI活用'],
       'card-cursor':                ['💡 AI活用'],
       'card-content-verification':  ['🛠 管理ツール', '✓ 検証', '用量・表記・用語'],
@@ -2892,7 +2439,7 @@
     })();
 
     applyVisibility();
-    syncDiseaseFilterButtons();
+    syncDevDiseaseFilterButtons();
 
     /** プレビュー用：各カードの更新履歴（新しい順・最大5件表示） */
     const CARD_UPDATE_HISTORY = {
@@ -2909,22 +2456,17 @@
         { date: '2026-03-28', kind: '修正', text: '印刷時の改ページずれを調整' },
       ],
       'card-dsm5tr': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
         { date: '2026-05-03', kind: '新規', text: 'DSM-5-TR 章一覧（詳細版）として初版公開。ICDクロス・アコーディオン構成' },
       ],
       'card-dsm5trmini': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
         { date: '2026-05-03', kind: '新規', text: 'DSM-5-TR ミニ版（一覧常時概要）として初版公開' },
       ],
       'card-icd10mini': [
         { date: '2026-04-13', kind: '新規', text: 'ICD-10 ミニ版（軽量参照・印刷向け）として初版公開' },
         { date: '2026-04-08', kind: '更新', text: 'F章一覧の可読性を改善' },
       ],
-      'card-terminology-srs': [
-        { date: '2026-05-11', kind: '新規', text: '精神医学用語 SRS 学習ツール（Leitner 5段階・フリップ/4択・localStorage 進捗保存）として初版公開' },
-      ],
       'card-icd10-quiz': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル「学習・ドリル」にカードを再掲載。定義JSON（icd10-definitions.json）をリポジトリに復元' },
+        { date: '2026-05-06', kind: '更新', text: 'top.html 準拠：ポータル「学習・ドリル」にカードを再掲載。定義JSON を復元' },
         { date: '2026-04-13', kind: '新規', text: 'ICD-10 精神科疾患の定義文からコード・日本語病名を当てる4択クイズとして初版公開' },
       ],
       'card-mood-suicide-learning': [
@@ -2940,30 +2482,10 @@
         { date: '2026-05-05', kind: '更新', text: 'ポータルで「概念・資格」区分に移設（当初は学習・ドリル）' },
         { date: '2026-05-03', kind: '新規', text: 'C-SSRS 面接・記録・エスカレーションの手順メモ（公式質問の転載なし）として初版公開' },
       ],
-      'card-schiz-fe-learning': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
-        { date: '2026-05-03', kind: '新規', text: '統合失調症×初発時対応の学習ハブ（症例8・ミニチェック10）として初版公開' },
-      ],
-      'card-schiz-early-intervention': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
-        { date: '2026-05-05', kind: '新規', text: '早期介入の概念・SEIチーム・コクラン要約を図解（こころとくらし準拠）として初版公開' },
-      ],
       'card-csc-jp': [
         { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
         { date: '2026-05-05', kind: '更新', text: 'ポータルで「概念・資格」区分に移設（当初は学習・ドリル）' },
         { date: '2026-05-05', kind: '新規', text: 'NIMHのCSC（調整型専門ケア）を日本語・用語注釈付きで図解（PGY向け）として初版公開' },
-      ],
-      'card-psychopath-scales-learning': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
-        { date: '2026-05-03', kind: '新規', text: '精神病理×スケールの学習ハブ（症例8・ミニチェック10・尺度への対応整理）として初版公開' },
-      ],
-      'card-psychotropics-interactions-learning': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
-        { date: '2026-05-03', kind: '新規', text: '向精神薬×相互作用・禁忌の学習ハブ（症例8・ミニチェック10・PK/PDの整理）として初版公開' },
-      ],
-      'card-asd-schizophrenia-learning': [
-        { date: '2026-05-06', kind: '更新', text: 'GitHub 追跡・Pages 配信に対応（404 を解消）。ポータル履歴を同期' },
-        { date: '2026-05-03', kind: '新規', text: '自閉症スペクトラム障害×統合失調症の学習ハブ（症例8・ミニチェック10・発達と精神病の鑑別）として初版公開' },
       ],
       'card-dzp-calc': [
         { date: '2026-05-04', kind: '更新', text: '国内販売名の併記と区分内の操作ヒントを追加' },
@@ -2983,7 +2505,6 @@
         { date: '2026-05-03', kind: '新規', text: '推算CrClと向精神薬の腎障害区分別用量目安を一覧表示' },
       ],
       'card-acute-alerts': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
         { date: '2026-05-03', kind: '新規', text: 'QTc（Bazett/Fridericia）・電解質閾値アラート・アルコール離脱要約スコアを1ページに集約' },
       ],
       'card-antipsychotics': [
@@ -2991,7 +2512,6 @@
         { date: '2026-04-20', kind: '更新', text: '添付文書・エビデンスへの注記を整理' },
       ],
       'card-benzodiazepines': [
-        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
         { date: '2026-05-03', kind: '新規', text: '日本承認ベンゾジアゼピン選択ガイド（抗精神病薬ガイドと同構成）として初版公開' },
       ],
       'card-antidepressants': [
@@ -3002,7 +2522,7 @@
       'card-mood-stabilizers': [
         { date: '2026-05-04', kind: '更新', text: '薬剤データ表で行クリックによる強調表示（再クリックで解除）を追加' },
         { date: '2026-05-04', kind: '更新', text: '用語（双極性障害うつ病相・TDM 等）・禁忌表現・相互リンク表記を臨床向けに整備' },
-        { date: '2026-05-03', kind: '新規', text: '気分安定薬選択ガイド（古典＋双極適応 SGA を抗うつ薬ガイドと同構成）として初版公開' },
+        { date: '2026-05-03', kind: '新規', text: '気分安定薬選択ガイド（古典＋双極適応 SGA）として初版公開' },
       ],
       'card-hypnotics': [
         { date: '2026-05-05', kind: '新規', text: '日本承認の不眠薬を他薬剤選択ガイドと同構成（MT受容体作動・4種DORA・Z薬・BZD催眠要約）として初版公開', href: 'hypnotics-japan.html' },
@@ -3022,6 +2542,10 @@
         { date: '2026-05-05', kind: '更新', text: 'ポータルで「概念・資格」区分に移設（当初は治療・薬）' },
         { date: '2026-04-26', kind: '新規', text: 'クレペリン〜現代まで「世界×日本」並列タイムライン・概念マップで図解' },
         { date: '2026-04-24', kind: '更新', text: '名称変更（2002）と早期介入の記述を補強' },
+      ],
+      'card-schiz-early-intervention': [
+        { date: '2026-05-06', kind: '更新', text: 'ポータル掲載日・履歴を最新化（NEW／今週バッジ用）' },
+        { date: '2026-05-05', kind: '新規', text: '早期介入の概念・SEIチーム・コクラン要約を図解（こころとくらし準拠）として初版公開' },
       ],
       'card-atypical-depression': [
         { date: '2026-04-26', kind: '新規', text: 'Columbia Group・DSM-5-TR・RAILS記憶法・MAOI/SSRIエビデンス・CBTを網羅した図解' },
@@ -3094,18 +2618,6 @@
         { date: '2026-04-23', kind: '新規', text: '精神保健指定医資格取得のロードマップ・症例・口試対策として初版公開' },
         { date: '2026-04-18', kind: '更新', text: '申請タイムラインとチェックリストを更新' },
       ],
-      'card-shitei-overview': [
-        { date: '2026-05-07', kind: '新規', text: '精神保健指定医制度概要ページを新規作成（法的根拠・権限・申請フロー・5カテゴリ早見表・疾患カテゴリ）', href: 'seishin-hoken-shitei-overview.html' },
-      ],
-      'card-shitei-checklist': [
-        { date: '2026-05-07', kind: '新規', text: '精神保健指定医申請チェックリストを新規作成（localStorage 進捗保存・6カテゴリ×記載要件）', href: 'shitei-checklist.html' },
-      ],
-      'card-shitei-wizard': [
-        { date: '2026-05-07', kind: '新規', text: '精神保健指定医レポート作成ウィザードを新規作成（7ステップ・ICD-10ピッカー・テキスト自動生成）', href: 'shitei-report-wizard.html' },
-      ],
-      'card-shitei-case-template': [
-        { date: '2026-05-07', kind: '新規', text: '精神保健指定医 症例5本選定テンプレを新規作成（申請日自動計算・入院形態/立ち会い/ICD整合チェック）', href: 'shitei-case-template.html' },
-      ],
       'card-nonpharmacologic': [
         { date: '2026-05-10', kind: '新規', text: '精神医学領域の非薬物療法マップを新規作成（心理系・社会系・環境系の三分類・エビデンスレベルA/B/C）', href: 'nonpharmacologic-psychiatry-overview.html' },
       ],
@@ -3138,37 +2650,23 @@
         { date: '2026-05-24', kind: '新規', text: 'ポータル全カードの用量・用法・日本語表記・精神医学用語を3軸で検証する管理ツールを初版公開。日本国内添付文書準拠の用量リファレンス・非推奨用語自動検出・手動評価・Markdownレポート出力機能を搭載。', href: 'content-verification.html' },
       ],
       _portal: [
-        { date: '2026-05-24', kind: '新規', text: '「コンテンツ検証ツール」（用量・用法・日本語表記・精神医学用語 3軸検証）を「その他」セクションに追加。SECTIONS・CARD_TAGS・CARD_UPDATE_HISTORY・ジャンプバー件数を全ポータル（top.html／top-dev.html）に同期', href: 'top.html' },
-        { date: '2026-04-26', kind: '更新', text: '本番ポータル：区分「治療・薬」を「治療概要」（バイオレット）と「薬剤選択」（インディゴ）に分割、「概要・資格」を「概念・資格」に改称（8区分・admin 同期）', href: 'top.html' },
-        { date: '2026-05-08', kind: '更新', text: '本番ポータルにお気に入り機能を追加（カード☆／★・「お気に入りのみ」・端末内保存・橙枠で区別）。開発版キーからのデータ移行あり', href: 'top.html' },
-        { date: '2026-05-05', kind: '更新', text: '更新情報・新規追加（CARD_UPDATE_HISTORY）とカード掲載日を現行ポータルに同期。ポータル内の相対 .html リンクはリポジトリ上で実在確認済み（GitHub Pages の最新構成に準拠）', href: 'top.html' },
-        { date: '2026-05-05', kind: '更新', text: 'ポータル「治療・薬」の下位区分を再編（ガイドライン治療アルゴリズムを先頭、「治療選択ツリー」でせん妄を集約、続けて疾患フロー・薬剤選択）', href: 'top.html' },
-        { date: '2026-05-05', kind: '更新', text: 'セクション「用語・資格」を「概要・資格」に改称し、歴史・C-SSRS・CSC を琥珀帯で同欄に集約', href: 'top.html' },
-        { date: '2026-05-05', kind: '新規', text: '「せん妄 治療選択ツリー」（delirium-treatment-japan.html）をポータル「治療・薬」の治療選択ツリーに追加', href: 'delirium-treatment-japan.html' },
-        { date: '2026-05-07', kind: '更新', text: 'リポジトリ現状に同期（index をポータルへリダイレクト、ICD-10 クイズ／旧 index 系を整理、新規 HTML を追跡、admin／ジャンプ件数を更新）', href: 'top.html' },
-        { date: '2026-05-06', kind: '更新', text: '「更新情報」「新規追加」の履歴（CARD_UPDATE_HISTORY）と各カードの掲載日を同期。NEW（初回「新規」から14日以内）／「今週」バッジ（直近7日に非「新規」改訂がある場合）の基準を反映', href: 'top.html' },
-        { date: '2026-05-06', kind: '更新', text: '「ASD×統合失調症」学習ハブをリポジトリに追加し GitHub Pages から配信', href: 'asd-schizophrenia-learning.html' },
-        { date: '2026-05-05', kind: '新規', text: 'ポータルに「統合失調症の早期介入」図解・「CSC（調整型専門ケア）」日本語図解を追加', href: 'top.html' },
-        { date: '2026-05-04', kind: '更新', text: 'トップイントロから「今後の計画」を削除', href: 'top.html' },
-        { date: '2026-05-04', kind: '更新', text: 'トップ「精神科臨床ガイド」欄の説明を点線区切り下に刷新（AI補助・自己責任・操作要約）', href: 'top.html' },
-        { date: '2026-05-04', kind: '更新', text: 'ポータル本番に主要疾患フィルター（統合失調症・うつ病・双極性障害・不安症＋共通計算ツール）を追加。検索語と併用可', href: 'top.html' },
-        { date: '2026-05-04', kind: '更新', text: '更新情報・新規追加の自動反映を拡充（履歴追補：抗うつ・気分安定薬の表行強調、新規一覧にポータル告知の補完マージ）', href: 'top.html' },
-        { date: '2026-05-04', kind: '更新', text: 'GitHub Pages に同期（気分安定薬ガイドの用語・臨床記載の整備を反映）', href: 'top.html' },
-        { date: '2026-05-03', kind: '更新', text: 'GitHub Pages に同期（気分安定薬ガイド・学習ハブ各種・抗うつガイド・ポータル／admin のローカル更新を反映）', href: 'top.html' },
-        { date: '2026-05-03', kind: '新規', text: '「向精神薬 × 相互作用・禁忌」学習ハブを追加（psychotropics-interactions-learning.html）', href: 'psychotropics-interactions-learning.html' },
-        { date: '2026-05-03', kind: '新規', text: '「自閉症スペクトラム障害 × 統合失調症」学習ハブを追加（asd-schizophrenia-learning.html）', href: 'asd-schizophrenia-learning.html' },
-        { date: '2026-05-03', kind: '新規', text: '「精神病理 × スケール」学習ハブを追加（psychopathology-scales-learning.html）', href: 'psychopathology-scales-learning.html' },
-        { date: '2026-04-26', kind: '更新', text: 'GitHub Pages に同期（用語統一・学習ハブ・C-SSRS手順メモ・新規ページを含むリポジトリ全体の反映）', href: 'top.html' },
-        { date: '2026-04-26', kind: '修正', text: 'ポータル文面の精神医学用語を統一（双極性障害・強迫性障害・特定子・MECT・統合失調症性感情障害等）、学習カードのHTML構造と更新履歴の構文を修正', href: 'top.html' },
-        { date: '2026-05-03', kind: '新規', text: '統合失調症×初発時対応の学習ハブを追加（schizophrenia-first-episode-learning.html）', href: 'schizophrenia-first-episode-learning.html' },
-        { date: '2026-05-03', kind: '新規', text: 'C-SSRS 手順メモ（cssrs-procedure-memo.html）をポータルに追加（現在は概要・資格に掲載）', href: 'cssrs-procedure-memo.html' },
-        { date: '2026-05-03', kind: '更新', text: '気分障害学習ハブの症例ドリルを15症例に拡張（身体疾患・薬源性・統合失調症性感情障害を追加）', href: 'mood-suicide-learning.html' },
-        { date: '2026-05-03', kind: '新規', text: '「気分障害 × 自殺リスク」学習ハブを学習・ドリル欄に追加（mood-suicide-learning.html）', href: 'mood-suicide-learning.html' },
+        { date: '2026-05-24', kind: '新規', text: 'top.html 準拠：「コンテンツ検証ツール」（用量・表記・精神医学用語 3軸検証）を「その他」セクションに追加。SECTIONS・CARD_TAGS・CARD_UPDATE_HISTORY を同期', href: 'top-dev.html' },
+        { date: '2026-04-26', kind: '更新', text: '開発版のみ：区分「治療・薬」を「治療概要」（バイオレット）と「薬剤選択」（インディゴ）に分割、「概要・資格」を「概念・資格」に改称。ジャンプバー・SECTIONS・件数表示を再構成', href: 'top-dev.html' },
+        { date: '2026-05-08', kind: '更新', text: 'お気に入りの localStorage キーを本番と統一（psychPortalFavorites）。旧 psychPortalDev* は初回のみ自動移行', href: 'top-dev.html' },
+        { date: '2026-04-26', kind: '更新', text: '開発版お気に入り：☆／★・一覧絞り込みに加え、登録済みカードをオレンジ二重枠・暖色グラデで未登録と区別', href: 'top-dev.html' },
+        { date: '2026-04-26', kind: '新規', text: '開発ポータル別名 top-portal-dev.html（top-dev.html へリダイレクト、クエリ・ハッシュを引き継ぎ）', href: 'top-portal-dev.html' },
+        { date: '2026-05-05', kind: '更新', text: 'top.html 準拠：更新情報・新規追加（CARD_UPDATE_HISTORY）と掲載日を同期。相対 .html 実在確認・canonical を GitHub Pages に合わせる', href: 'top-dev.html' },
+        { date: '2026-05-05', kind: '新規', text: '「せん妄 治療選択ツリー」をポータル「治療・薬」治療選択ツリーに追加（top.html 準拠）', href: 'delirium-treatment-japan.html' },
+        { date: '2026-05-07', kind: '更新', text: 'top.html 準拠：早期介入カード・非定型うつローカルリンク・ジャンプ件数と開発用疾患プリセットを同期', href: 'top-dev.html' },
+        { date: '2026-05-06', kind: '更新', text: 'top.html 準拠：CARD_UPDATE_HISTORY のポータル表示・NEW／今週バッジ基準を同期', href: 'top-dev.html' },
+        { date: '2026-05-04', kind: '更新', text: 'top.html 準拠：更新情報・新規追加の自動反映拡充（開発プレビュー同期）', href: 'top-dev.html' },
+        { date: '2026-05-04', kind: '更新', text: 'GitHub Pages デプロイと同内容を開発プレビューに同期', href: 'top-dev.html' },
+        { date: '2026-04-26', kind: '修正', text: 'top.html 準拠：学習・ドリル3カード・用語統一（開発プレビュー同期）', href: 'top-dev.html' },
         { date: '2026-05-05', kind: '表示', text: 'カード配色を区分（ジャンプバー）に合わせて統一（評価スケール＝スカイ、診断・分類＝ブルー、治療・薬＝バイオレット、DSMもブルーに揃えた）', href: 'top.html' },
         { date: '2026-05-05', kind: '更新', text: '「新規追加」一覧を新規掲載日の新しい順で並べるよう変更。新規行の区分色（スカイ等）をカードに合わせて調整', href: 'top.html' },
         { date: '2026-05-05', kind: '新規', text: '不眠症治療薬選択ガイドをポータル「治療・薬」に追加（日本承認の MT 作動薬・4 種オレキシン拮抗・Z 薬・BZD 催眠要約）', href: 'hypnotics-japan.html' },
         { date: '2026-05-05', kind: '更新', text: '抗うつ薬ガイドを「治療・薬」の更新履歴・件数・検索対象に正式追加', href: 'antidepressants-japan.html' },
-        { date: '2026-05-03', kind: '新規', text: '気分安定薬選択ガイド（リチウム・バルプロ酸・カルバマゼピン・ラモトリギン＋双極適応 SGA）をポータルに追加', href: 'mood-stabilizers-japan.html' },
+        { date: '2026-05-03', kind: '新規', text: '気分安定薬選択ガイドをポータルに追加', href: 'mood-stabilizers-japan.html' },
         { date: '2026-05-03', kind: '更新', text: 'CrCl×向精神薬ページの入力・結果バー・表レイアウトを改善', href: 'crcl-psychotropics.html' },
         { date: '2026-05-04', kind: '更新', text: 'ベンゾ換算の追補（販売名・ヒント）、CP/admin からの導線、psych-news の調整', href: 'dzp-calculator.html' },
         { date: '2026-05-04', kind: '更新', text: 'ジャンプバーで区分へ移動したとき、ヘッダーに隠れないようスクロール余白を調整', href: 'top.html' },

@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>精神医学用語 SRS 学習</title>
+  <script src="vendor/tailwind.js"></script>
+  
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #1e3a5f;
+      --psych-secondary: #0f766e;
+      --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    body { font-family: 'Noto Sans JP', system-ui, sans-serif; padding-bottom: var(--safe-bottom); }
+    .header-gradient { background: var(--psych-gradient); }
+
+    /* Flip card */
+    .flip-scene { perspective: 1200px; }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      min-height: 260px;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card-inner.is-flipped { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    /* Animations */
+    .tap-hint { animation: pulse-soft 2.2s ease-in-out infinite; }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .bar-fill { transition: width 0.5s ease; }
+
+    /* Touch targets */
+    .action-btn { min-height: 48px; touch-action: manipulation; }
+
+    /* MCQ buttons */
+    .choice-btn {
+      min-height: 52px;
+      touch-action: manipulation;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .choice-btn.correct {
+      background: #d1fae5 !important;
+      border-color: #10b981 !important;
+      color: #065f46 !important;
+    }
+    .choice-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #991b1b !important;
+    }
+    .choice-btn:disabled { cursor: default; }
+
+    /* 取り込みHTML（ソースと同様の見やすさ） */
+    .srs-detail-root { font-size: 0.8125rem; line-height: 1.65; color: #334155; }
+    .srs-detail-root .example-box {
+      margin-top: 0.65rem;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 3px solid #2563eb;
+      padding: 0.55rem 0.85rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+    .srs-detail-root .contrast-box {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <!-- ── Header ── -->
+  <header class="header-gradient text-white sticky top-0 z-10
+                 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 px-4">
+    <div class="max-w-lg mx-auto">
+      <div class="flex items-center justify-between gap-2">
+        <div>
+          <h1 class="text-lg font-bold leading-tight">精神医学用語 SRS</h1>
+          <p class="text-xs text-white/70 mt-0.5">Leitner 間隔反復・学習ツール</p>
+        </div>
+        <div id="header-progress" class="hidden text-right shrink-0">
+          <p class="text-[10px] text-white/70 uppercase tracking-wide">今日の進捗</p>
+          <p class="text-base font-bold tabular-nums leading-tight">
+            <span id="prog-done">0</span>
+            <span class="text-white/60 font-normal text-sm"> / </span>
+            <span id="prog-total">0</span>
+          </p>
+        </div>
+      </div>
+      <div id="progress-bar-wrap" class="hidden mt-2.5">
+        <div class="h-1.5 bg-white/20 rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-white/80 rounded-full bar-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-lg mx-auto px-4 py-4">
+
+    <!-- ══════════════════════════════════════════
+         DASHBOARD
+    ══════════════════════════════════════════ -->
+    <div id="dashboard">
+
+      <!-- Loading -->
+      <div id="loading" class="text-center py-16 text-slate-400">
+        <div class="animate-spin w-8 h-8 border-2 border-teal-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p class="text-sm">用語データを読み込み中…</p>
+      </div>
+
+      <!-- Dashboard content -->
+      <div id="dashboard-content" class="hidden space-y-4">
+
+        <!-- Today's count -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-700
+                        flex items-center justify-center text-white text-2xl shrink-0">
+              📅
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 font-medium mb-0.5">今日の学習カード</p>
+              <p class="text-3xl font-bold text-slate-900 tabular-nums leading-none">
+                <span id="today-count">0</span>
+                <span class="text-lg font-semibold text-slate-400 ml-1">枚</span>
+              </p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+            全 <span id="total-count" class="font-semibold">0</span> 語収録。
+            期日を迎えたカードと未学習カードが今日の対象です。
+          </p>
+        </div>
+
+        <!-- Leitner boxes -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+            <span class="text-base">📦</span> Leitner ボックス
+          </h2>
+          <div id="leitner-boxes" class="space-y-3"></div>
+        </div>
+
+        <!-- Session size -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-3">今回の問題数</h2>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+            今日対象になるカード（期日済み・未学習）から、ランダムに出題します。
+          </p>
+          <div id="session-size-chips" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- Mode toggle -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-3">出題モード</h2>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" data-mode="flip"
+              class="mode-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              🔄 フリップ
+            </button>
+            <button type="button" data-mode="mcq"
+              class="mode-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              🎯 4 択
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-2.5 leading-relaxed" id="mode-desc"></p>
+        </div>
+
+        <!-- MCQ format toggle (visible only when MCQ is active) -->
+        <div id="mcq-format-section" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
+          <h2 class="text-sm font-bold text-slate-700 mb-1">問題形式 <span class="text-xs font-normal text-slate-400">（4択モード時）</span></h2>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">症例形式は各用語に対応した臨床記述を問題文として使います。</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" data-mcqformat="definition"
+              class="mcqformat-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              📖 定義文
+            </button>
+            <button type="button" data-mcqformat="case"
+              class="mcqformat-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition">
+              🏥 症例形式
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-2.5 leading-relaxed" id="mcqformat-desc"></p>
+        </div>
+
+        <!-- Start button -->
+        <button type="button" id="btn-start"
+          class="w-full py-4 rounded-2xl font-bold text-white text-base shadow-lg
+                 active:scale-[0.98] transition"
+          style="background: var(--psych-gradient);">
+          学習を始める →
+        </button>
+
+        <!-- Footer links -->
+        <div class="flex justify-between items-center pt-1 pb-8">
+          <button type="button" id="btn-export"
+            class="text-xs text-slate-400 hover:text-slate-600 underline decoration-slate-300">
+            進捗をエクスポート
+          </button>
+          <button type="button" id="btn-reset"
+            class="text-xs text-red-400 hover:text-red-600 underline decoration-red-200">
+            ログをリセット
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SESSION
+    ══════════════════════════════════════════ -->
+    <div id="session" class="hidden space-y-4">
+
+      <!-- Top bar -->
+      <div class="flex items-center justify-between">
+        <button type="button" id="btn-back"
+          class="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1 py-1 -ml-1 px-1 rounded-lg">
+          ← 戻る
+        </button>
+        <p class="text-xs text-slate-400 tabular-nums">
+          残り <span id="remaining" class="font-semibold text-slate-600">0</span> 枚
+        </p>
+      </div>
+
+      <!-- ── Flip card ── -->
+      <div id="flip-area" class="flip-scene">
+        <div id="flip-inner"
+          class="flip-card-inner cursor-pointer select-none"
+          role="button" tabindex="0" aria-label="タップして定義を表示">
+
+          <!-- Front (term) -->
+          <div class="flip-face bg-white border border-slate-200 shadow-md p-6">
+            <div class="flex items-center justify-between mb-3">
+              <p id="flip-cat" class="text-[11px] font-bold tracking-wide text-teal-700"></p>
+              <span id="flip-box-badge"></span>
+            </div>
+            <p id="flip-term" class="text-xl font-bold text-slate-900 text-center leading-snug mt-6 mb-8"></p>
+            <p class="text-center text-xs text-slate-400 tap-hint">タップで定義を表示</p>
+          </div>
+
+          <!-- Back (definition) -->
+          <div class="flip-face flip-back bg-gradient-to-br from-slate-50 to-slate-100
+                      border border-slate-200 shadow-inner p-6 overflow-hidden flex flex-col justify-start"
+               style="max-height:65vh;">
+            <p class="text-[11px] font-bold tracking-widest text-slate-400 uppercase mb-2 shrink-0">定義</p>
+            <p id="flip-def" class="text-sm text-slate-800 leading-relaxed shrink-0"></p>
+            <div id="flip-detail-wrap" class="mt-3 min-h-0 flex-1 overflow-y-auto hidden">
+              <p class="text-[11px] font-bold text-slate-500 uppercase mb-1.5">詳細・使用例・鑑別</p>
+              <div id="flip-detail" class="srs-detail-root rounded-lg bg-white/60 border border-slate-100 p-3"></div>
+            </div>
+            <p class="text-center text-xs text-slate-400 mt-3 tap-hint shrink-0 pt-1">タップで表に戻す</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flip rating buttons -->
+      <div id="flip-rating" class="hidden space-y-2">
+        <p class="text-xs text-center text-slate-400">定義を確認して、記憶の確かさを記録</p>
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" data-rating="known"
+            class="action-btn rounded-xl bg-emerald-50 text-emerald-900
+                   border border-emerald-200 font-bold text-sm active:scale-[0.97] transition">
+            ✓ 知ってた
+          </button>
+          <button type="button" data-rating="fuzzy"
+            class="action-btn rounded-xl bg-amber-50 text-amber-900
+                   border border-amber-200 font-bold text-sm active:scale-[0.97] transition">
+            △ 怪しい
+          </button>
+          <button type="button" data-rating="unknown"
+            class="action-btn rounded-xl bg-red-50 text-red-900
+                   border border-red-200 font-bold text-sm active:scale-[0.97] transition">
+            ✗ 知らなかった
+          </button>
+        </div>
+      </div>
+
+      <!-- ── MCQ ── -->
+      <div id="mcq-area" class="hidden space-y-3">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+          <p id="mcq-cat" class="text-[11px] font-bold tracking-wide text-teal-700 mb-1"></p>
+          <p class="mcq-question-label text-xs font-semibold text-slate-500 mb-3">次の説明にあてはまる用語はどれか？</p>
+          <p id="mcq-fallback-note" class="hidden text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 mb-3"></p>
+          <p id="mcq-def" class="text-sm text-slate-800 leading-relaxed"></p>
+        </div>
+        <div id="mcq-choices" class="space-y-2"></div>
+
+        <div id="mcq-feedback" class="hidden space-y-3" aria-live="polite">
+          <div id="mcq-verdict" class="rounded-2xl border-2 px-4 py-3 text-center font-bold text-base"></div>
+          <div id="mcq-explain-body" class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 text-left space-y-3"></div>
+        </div>
+
+        <button type="button" id="mcq-next"
+          class="hidden w-full action-btn rounded-xl bg-slate-800 hover:bg-slate-700
+                 text-white font-semibold text-sm active:scale-[0.98] transition">
+          次のカード →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         COMPLETION
+    ══════════════════════════════════════════ -->
+    <div id="completion" class="hidden text-center space-y-4 py-8">
+      <div class="text-5xl mb-2">🎉</div>
+      <h2 class="text-xl font-bold text-slate-900">今日の学習完了！</h2>
+      <p class="text-sm text-slate-500 leading-relaxed px-4">
+        お疲れ様でした。<br>
+        明日以降もカードが期日を迎えたら自動で出題されます。
+      </p>
+      <div id="completion-stats"
+        class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 text-left space-y-2 mx-auto max-w-xs">
+      </div>
+      <button type="button" id="btn-to-dashboard"
+        class="w-full py-3.5 rounded-2xl font-bold text-white text-sm shadow-md
+               active:scale-[0.98] transition mx-auto"
+        style="background: var(--psych-gradient);">
+        ダッシュボードに戻る
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // Constants
+    // ─────────────────────────────────────────────────────────
+    const STORAGE_KEY = 'psychTermsSRS_v2';
+
+    const SESSION_SIZE_OPTIONS = [
+      { value: '5',  label: '5 問',  numeric: 5 },
+      { value: '10', label: '10 問', numeric: 10 },
+      { value: '20', label: '20 問', numeric: 20 },
+      { value: 'all', label: 'すべて', numeric: Infinity }
+    ];
+
+    const MCQ_FORMAT_OPTIONS = [
+      { value: 'definition', label: '定義文', desc: '用語の定義文から正しい用語を選びます。' },
+      { value: 'case',       label: '症例形式', desc: '臨床場面の記述から最も適切な用語を選びます。症例記述がない語は定義文で代替します。' }
+    ];
+
+    const CAT_LABELS = {
+      psychiatry:     '精神医学',
+      pathology:      '精神病理学',
+      semiology:      '精神症候学',
+      psychoanalysis: '精神分析学'
+    };
+
+    /** Leitner box intervals in days (index = box-1) */
+    const LEITNER_INTERVALS = [0, 1, 3, 7, 14];
+    const LEITNER_LABELS    = ['新規・苦手', '覚えはじめ', '定着中', 'ほぼ習得', '習得済み'];
+    const LEITNER_COLORS    = [
+      { bar: 'bg-red-400',     text: 'text-red-700',     bg: 'bg-red-50',     border: 'border-red-200' },
+      { bar: 'bg-orange-400',  text: 'text-orange-700',  bg: 'bg-orange-50',  border: 'border-orange-200' },
+      { bar: 'bg-yellow-400',  text: 'text-yellow-700',  bg: 'bg-yellow-50',  border: 'border-yellow-200' },
+      { bar: 'bg-blue-400',    text: 'text-blue-700',    bg: 'bg-blue-50',    border: 'border-blue-200' },
+      { bar: 'bg-emerald-400', text: 'text-emerald-700', bg: 'bg-emerald-50', border: 'border-emerald-200' }
+    ];
+
+    // ─────────────────────────────────────────────────────────
+    // Runtime state
+    // ─────────────────────────────────────────────────────────
+    let CARDS         = [];
+    let appState      = loadState();
+    let queue         = [];
+    let queueIndex    = 0;
+    let sessionDone   = 0;
+    let sessionTotal  = 0;
+    let flipRevealed  = false;
+
+    // ─────────────────────────────────────────────────────────
+    // localStorage
+    // ─────────────────────────────────────────────────────────
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { version: 2, mode: 'flip', sessionSize: '10', mcqFormat: 'definition', cards: {} };
+        const p = JSON.parse(raw);
+        const validSz  = SESSION_SIZE_OPTIONS.some((x) => x.value === p.sessionSize);
+        const validFmt = MCQ_FORMAT_OPTIONS.some((x) => x.value === p.mcqFormat);
+        return {
+          version:     2,
+          mode:        p.mode === 'mcq' ? 'mcq' : 'flip',
+          sessionSize: validSz  ? p.sessionSize : '10',
+          mcqFormat:   validFmt ? p.mcqFormat   : 'definition',
+          cards:       (p.cards && typeof p.cards === 'object') ? p.cards : {}
+        };
+      } catch {
+        return { version: 2, mode: 'flip', sessionSize: '10', mcqFormat: 'definition', cards: {} };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Leitner engine
+    // ─────────────────────────────────────────────────────────
+    function getCardState(cardId) {
+      const s = appState.cards[cardId];
+      return s ? { box: s.box || 1, due: s.due || 0 } : { box: 1, due: 0 };
+    }
+
+    function todayMidnight() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.getTime();
+    }
+
+    function isDue(cardId) {
+      const { due } = getCardState(cardId);
+      if (!due) return true;
+      return due <= todayMidnight();
+    }
+
+    /**
+     * rating: 'known' | 'fuzzy' | 'unknown'
+     * known   → box + 1 (max 5), schedule per new box
+     * fuzzy   → box unchanged, reset due to today
+     * unknown → box = 1, due = today
+     */
+    function applyRating(cardId, rating) {
+      const cs = getCardState(cardId);
+      let newBox;
+
+      if (rating === 'known') {
+        newBox = Math.min(5, cs.box + 1);
+      } else if (rating === 'fuzzy') {
+        newBox = cs.box;
+      } else {
+        newBox = 1;
+      }
+
+      const intervalDays = LEITNER_INTERVALS[newBox - 1];
+      const dayMs = 24 * 60 * 60 * 1000;
+      const due = intervalDays === 0 ? 0 : todayMidnight() + intervalDays * dayMs;
+
+      appState.cards[cardId] = { box: newBox, due };
+      saveState();
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Embedded card data (self-contained; no fetch required)
+    // ─────────────────────────────────────────────────────────
+    const EMBEDDED_CARDS = [{"id": "psychiatry-t0", "cat": "psychiatry", "term": "エピソード／寛解／再発", "def": "症状が顕在化した期間、症状が十分軽快した状態、再び顕在化すること。双極性障害では躁・うつ・混合エピソードなど極性ごとに記載する。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">うつ病エピソードは3回目。前回寛解後、服薬中断から約8か月で再発。</li>\n              <li class=\"leading-snug\">診療録・要約：うつ病エピソードは3回目。前回寛解後、服薬中断から約8か月で再発。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「エピソード」の点で、うつ病エピソードは3回目。前回寛解後、服薬中断から約8か月で再発と説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 気分エピソードの枠組み（Major depressive / Manic / Hypomanic / Mixed 等）と再発・寛解の記述が診断・治療期間の根拠になる。持続期間・回数はスペシファイアや鑑別に使用。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 気分障害群では抑うつエピソード、躁狂エピソード、混合エピソード等の用語で病期を整理。再発性・単一エピソードの区別が記載される。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 記述的精神医学・教科書: Sadock et al.『Comprehensive Textbook of Psychiatry』(10th ed. 等) の病期・経過章。日本語: 河合・中尾監修『精神医学』(医学書院) の気分障害・経過の節。</p>", "caseDescription": "35歳の男性。うつ病の診断で抗うつ薬を開始し、3か月後に職場復帰できるほど改善した。しかし半年後に服薬を自己中断し、約8か月後に再び抑うつ・不眠・集中困難が出現して外来受診した。今回が3度目の発症である。カルテに「今回の発症は3回目。前回の〔　〕後、服薬中断から約8か月で〔　〕」と記録した。〔　〕に入る適切な用語の組み合わせを表すひとつの単語はどれか。", "caseExplanation": "うつ病の経過は「症状が顕在化した期間（エピソード）」「症状が十分軽快した状態（寛解）」「再び顕在化すること（再発）」という3つの概念で記述されます。双極性障害でも同様の枠組みが用いられ、病期・回数の記録に必須の用語です。"}, {"id": "psychiatry-t1", "cat": "psychiatry", "term": "内因性／外因性", "def": "ストレス由来か否かの対比で用いられることが多い歴史的語彙。現代は遺伝×環境の多因子モデルが主流で、鑑別語として残る。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">外因性はストレスや生活事件との時系列が語りやすい語。内因性は『内因のみ』を想起させ歴史的誤解があり、現代は遺伝×環境の多因子で説明。診断名として内因性／外因性うつは用いない。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">生活イベントとの時系列が明確なため、外因性ストレスが関与したうつ病として整理した。</li>\n              <li class=\"leading-snug\">診療録・要約：生活イベントとの時系列が明確なため、外因性ストレスが関与したうつ病として整理した。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「内因性」の点で、生活イベントとの時系列が明確なため、外因性ストレスが関与したうつ病として整理したと説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 「内因性うつ」という診断カテゴリは用いない。うつ病は基準A〜にストレスの有無を必須としない（ストレスは有病率・再発と関連）。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 抑うつエピソードの診断要件は症状・期間・機能障害中心。外因はコンテキストとして記録（適応障害・PTSD 等との鑑別）。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> ジャスパース以降の理解精神病理学では「意味のある反応」と「病的過程」の対比が系譜。現代臨床ではICDの「適応障害」「反応性うつ様障害」などでストレス関連を分類。</p>", "caseDescription": "28歳の女性。昇進に伴うプレッシャーが強まった直後から抑うつ・不眠が出現した。主治医は「生活イベントとの時系列が明確で、ストレスの関与が考えられる」と記録した。一方、父親もうつ病の既往があり、遺伝的な脆弱性も否定できない。このようにストレスと遺伝の両面から病態を捉える場合、歴史的に「外から来るものに由来するか、内部（体質）由来か」という対比で使われてきた用語はどれか。", "caseExplanation": "「内因性／外因性」は歴史的な対比用語で、内因性はかつて「脳・体質に由来」、外因性は「ストレス・身体疾患に由来」を指しました。現代では遺伝×環境の多因子モデルが主流となり、診断名として「内因性うつ」は用いませんが、病因論の文脈で今も登場します。"}, {"id": "psychiatry-t2", "cat": "psychiatry", "term": "器質性／機能性", "def": "脳・全身の疾患や物質で説明できるか、一次の精神・行動障害として扱うかの整理。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">機能性：かつて『脳病変がなく精神症状』を指したが、画像・電生理の進歩で誤解を招きやすい。現在は他医学的／物質性と原発精神障害の鑑別が中心。※気質（temperament）は生得的な情動・活動の基調を指し、器質性（脳病変）とは無関係。聞き間違い・誤記に注意。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">甲状腺機能低下を治療しても気分症状が残存するため、併存するうつ病を考慮。</li>\n              <li class=\"leading-snug\">診療録・要約：甲状腺機能低下を治療しても気分症状が残存するため、併存するうつ病を考慮。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「器質性」の点で、甲状腺機能低下を治療しても気分症状が残存するため、併存するうつ病を考慮と説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 「器質性」という用語は避け、物質/医原性/他医学的状態による精神障害を区別。鑑別では「他医学的状態」が原因十分かを評価。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 一次精神障害と、神経認知障害・物質関連・他身体疾患による症状を階層化。CDDR では臨床像と除外を併記。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 神経精神医学: Mesulam 等の皮質ネットワーク、谵妄の診断基準（DSM）と整合。日本語総論でも「脳症・身体疾患関連」の章で記載。</p>", "caseDescription": "65歳の男性。甲状腺機能低下症の既往があり、抑うつ・意欲低下で精神科を紹介された。内科で甲状腺ホルモンを補充したが精神症状が残存したため、うつ病の併存を考慮した。このように「脳・全身の疾患や物質で説明できるか、一次の精神行動障害として扱うか」を整理する際に使われる概念の対はどれか。", "caseExplanation": "「器質性／機能性」は脳・全身疾患による二次的精神症状と、一次的な精神障害を区別する概念です。現代では「器質性」という表現は「他医学的状態による精神障害」と言い換えられることが多く、DSM-5-TRでも器質性という語を避け、鑑別に「他医学的状態が原因として十分か」を評価します。"}, {"id": "psychiatry-t3", "cat": "psychiatry", "term": "アドヒアランス／コンプライアンス", "def": "処方・通院・行動処方への一致度。コンプライアンスは服従のニュアンスがあり、アドヒアランスが推奨されることが多い。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">コンプライアンス：処方への服従・遵守のニュアンスが強く、患者の納得や実行障害の多面性を捉えにくい。アドヒアランス：治療計画への同意・実行・障害要因（副作用恐怖、コスト、認知等）まで含む広い概念。記録・研究ではアドヒアランスが推奨されやすい。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">副作用懸念で自己減量。アドヒアランス不良が再発リスクになっている。</li>\n              <li class=\"leading-snug\">診療録・要約：副作用懸念で自己減量。アドヒアランス不良が再発リスクになっている。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「アドヒアランス」の点で、副作用懸念で自己減量。アドヒアランス不良が再発リスクになっていると説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 治療計画は「共同意思決定」の文脈で記載。服薬は診断名より行動面の記述としてカルテに残る。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 管理・疫学では治療継続率として扱う。診断マニュアル本体より実践ガイド・WHO guideline で扱う。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 動機づけ面接、家族介入、デジタルリマインダなどエビデンスは各ガイドライン。教科書では治療学の「患者中心」節。</p>", "caseDescription": "統合失調症の患者が「副作用が怖くて自分で薬を減量した」と話した。外来看護師が「薬の効果・副作用・代替案を含めて説明し、患者が治療計画に合意して薬を飲み続けられているか」を評価しようとしている。患者側の能動的な合意と実行を重視する現代的な用語はどれか。", "caseExplanation": "「アドヒアランス」は患者が治療計画に自ら合意し実行するという、能動的な意味合いを持ちます。一方「コンプライアンス」は処方への服従・遵守というニュアンスが強く、現代の「共同意思決定」の文脈では記録・研究ともにアドヒアランスが推奨されます。"}, {"id": "psychiatry-t4", "cat": "psychiatry", "term": "インフォームド・コンセント（IC）", "def": "診断名、治療の目的・利益・リスク・代替手段、拒否の権利についての説明と同意。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">抗精神病薬の錐体外路症状・代謝影響について説明し、ICを得た上で開始。</li>\n              <li class=\"leading-snug\">診療録・要約：抗精神病薬の錐体外路症状・代謝影響について説明し、ICを得た上で開始。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「インフォームド・コンセント」の点で、抗精神病薬の錐体外路症状・代謝影響について説明し、ICを得た上で開始と説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 治療は倫理原則に基づく。ECT 等は追加の手続きが臨床指針で求められることがある。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 人権・倫理は分類とは別層。各国の医師会指針と併読。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 医学教育・医事法テキスト、精神科臨床指針（学会）を参照。</p>", "caseDescription": "双極性障害の患者に、第二世代抗精神病薬のリスぺリドンを追加することを提案した。主治医は錐体外路症状・代謝への影響・代替薬・服薬を拒否する権利についてわかりやすく説明し、患者の同意を得て処方した。このプロセスを表す法的・倫理的な用語はどれか。", "caseExplanation": "インフォームド・コンセント（IC）は診断名・治療目的・利益・リスク・代替手段・拒否の権利について説明し同意を得ることです。精神科では医療保護入院など本人同意が困難な場面も多く、意思決定能力の評価と合わせて重要な概念です。"}, {"id": "psychiatry-t5", "cat": "psychiatry", "term": "MSE（精神状態検査）", "def": "外見、行動、気分・感情、思考（形式・内容）、知覚、認知、洞察・判断力の体系的評価。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">MSE上、幻聴を否認。思考連合は整。気分は「不安定」と記載。</li>\n              <li class=\"leading-snug\">診療録・要約：MSE上、幻聴を否認。思考連合は整。気分は「不安定」と記載。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「MSE」の点で、MSE上、幻聴を否認。思考連合は整。気分は「不安定」と記載と説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 文化面（Cultural formulation）や人格障害の評価枠組みと併用される。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> CDDR は各障害の「臨床像」で観察項目を列挙。記録様式は国・施設差あり。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Trzepacz &amp; Baker『The Psychiatric Mental Status Examination』等。日本語は『精神医学』初診・MSEの節。</p>", "caseDescription": "初診の患者に対し、研修医が系統的に「外見・行動・気分・感情・思考形式・思考内容・知覚・認知・洞察と判断力」の順に評価を行い、カルテにその所見を記録した。この系統的な評価法の略称はどれか。", "caseExplanation": "MSE（Mental Status Examination：精神状態検査）は外見から洞察・判断力まで7〜9項目を系統的に記録する精神科診察の基本フォーマットです。DSM-5-TRの文化的定式化や人格障害評価とも併用されます。"}, {"id": "psychiatry-t6", "cat": "psychiatry", "term": "鑑別診断（Differential diagnosis）", "def": "症状が重なる複数疾患のうち、証拠に基づき優先順位をつける思考過程。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">初発精神病像のため、物質誘発性精神病性障害と統合失調症様障害を鑑別した。</li>\n              <li class=\"leading-snug\">診療録・要約：初発精神病像のため、物質誘発性精神病性障害と統合失調症様障害を鑑別した。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「鑑別診断」の点で、初発精神病像のため、物質誘発性精神病性障害と統合失調症様障害を鑑別したと説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 診断は基準の列挙に加え、時系列・物質・身体疾患・発達の除外が中心。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 も診断要件に除外と関連障害を明記。多軸は記録システム次第。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 臨床推論: First, M. et al.『DSM-5-TR 臨床家ガイド』(邦訳)、Oxford Textbook of Psychiatry の approach to diagnosis。</p>", "caseDescription": "20歳の男性。急性精神病状態で入院した。主治医は統合失調症・物質誘発性精神病・双極性障害（躁状態）・自閉スペクトラム症の関連反応など複数の疾患の可能性を検討し、検査所見・経過・家族歴から優先順位を絞り込んだ。このような思考過程を何と呼ぶか。", "caseExplanation": "鑑別診断（Differential diagnosis）は症状・経過・検査に基づいて複数の可能性疾患に優先順位をつける臨床推論の過程です。初回エピソードの精神病状態では物質・器質・気分障害を含む広い鑑別が必要です。"}, {"id": "psychiatry-t7", "cat": "psychiatry", "term": "自殺・自傷リスク評価", "def": "意念、計画、手段、保護因子、過去の試図を含む構造化評価。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">消極的念慮はあるが具体計画は否認。高リスク日（事件後）は短期フォロー。</li>\n              <li class=\"leading-snug\">診療録・要約：消極的念慮はあるが具体計画は否認。高リスク日（事件後）は短期フォロー。退院／転院時のサマリにも転記可能な文面。</li>\n              <li class=\"leading-snug\">多職種カンファ：「自殺・自傷リスク評価」の点で、消極的念慮はあるが具体計画は否認。高リスク日（事件後）は短期フォローと説明した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 自殺リスクは診断カテゴリではなく危機度。多くの障害で増加しうる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 分類上は自傷行動を伴う障害・境界型人格障害などで行動面を記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Stanley &amp; Brown の安全計画、各種スケールはガイドライン参照。日本の自殺対策ガイドラインと併読。</p>", "caseDescription": "双極性障害の外来患者が「死にたいと思うことがある」と打ち明けた。主治医は意念の有無、具体的計画の有無、実行手段へのアクセス、過去の企図、保護因子（家族サポート・将来への希望）を一つひとつ確認した。このような多面的な評価を何と呼ぶか。", "caseExplanation": "自殺・自傷リスク評価は意念・計画・手段・保護因子・過去の企図を含む構造化評価です。C-SSRSなどの尺度とともに用いられ、リスク水準に応じた安全計画（Safety Planning）につなげます。"}, {"id": "pathology-t0", "cat": "pathology", "term": "一次症状／二次症状（歴史的用法）", "def": "統合失調症理解史における対比。現代はシュナイダー基準やICD/DSMの操作性定義が中心。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">思考形式の障害を一次症状群として捉え、内容の新奇性より構造を重視した。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、思考形式の障害を一次症状群として捉え、内容の新奇性より構造を重視したという整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「一次症状」の説明例として、思考形式の障害を一次症状群として捉え、内容の新奇性より構造を重視したを挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> Schneiderian first-rank は参考概念。診断はCriterion Aの症状リストに統合。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 統合失調症の臨床像でも「原発性精神病症状」として妄想・幻覚・解体化思考・経験のパッシビティ等を列挙。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Andreasen の陽性・陰性、現代はNAP S5 等の研究用枠組み。教科書: Häfner, Jablensky のレビュー章。</p>", "caseDescription": "統合失調症の文献を読んでいた研修医が「症状を一次・二次に分類する記述」に出会った。指導医は「これは歴史的な概念で、シュナイダーの一級症状などが由来だが、現代の操作的診断基準ではこの区別を明示しない」と説明した。この「一次症状（原発症状）と二次症状（続発症状）」の区別が由来する歴史的文脈を表す言葉はどれか。", "caseExplanation": "「一次症状／二次症状（歴史的用法）」はブロイラーが統合失調症の基本症状（連合弛緩・感情鈍麻・自閉・両価性）と副次症状（幻覚・妄想）を分けたことに由来します。現代のDSM/ICD診断では操作的定義が中心です。"}, {"id": "pathology-t1", "cat": "pathology", "term": "自我障害", "def": "自己と外界・身体・思考の境界が揺らぐ体験（思考伝播・剥奪・挿入等の系譜）。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">思考が漏れる感じがあり、自我障害の訴えとして記載。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、思考が漏れる感じがあり、自我障害の訴えとして記載という整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「自我障害」の説明例として、思考が漏れる感じがあり、自我障害の訴えとして記載を挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 経験のパッシビティ（passivity experiences）は精神病性症状の一部として評価。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 でも「他人の思考が自分の中に入る」等の記載例が臨床記述に含まれる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 現象学: Sass &amp; Parnas の自己障害研究、福間 等の日本語レビュー。Jaspers の理解精神病理学の系譜。</p>", "caseDescription": "患者が「自分の考えが他人に筒抜けになっている気がする」「誰かが自分の頭の中に考えを入れている」と訴えた。主治医は「自己と他者・外界・思考の境界が揺らいでいる」と評価した。このような体験の総称はどれか。", "caseExplanation": "自我障害は自己と外界・身体・思考の境界が揺らぐ体験の総称で、思考伝播（考えが筒抜け）・思考挿入（他者に考えを入れられる）・思考剥奪（考えが奪われる）などが含まれます。統合失調症の一級症状として重視されます。"}, {"id": "pathology-t2", "cat": "pathology", "term": "現実検討能力（reality testing）", "def": "病理的知覚・信念が現実と区別できるかの度合い。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">幻聴ありつつ病的確信は弱く、現実検討は保たれている。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、幻聴ありつつ病的確信は弱く、現実検討は保たれているという整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「現実検討能力」の説明例として、幻聴ありつつ病的確信は弱く、現実検討は保たれているを挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 精神病性障害では妄想・幻覚の確信度と洞察が重症度・治療選択に関わる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 でも妄想・幻覚の「病的確信」や鑑別の文脈で臨床記述。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 精神分析では現実原則・自我の機能と接続して語られることがある（Gabbard）。</p>", "caseDescription": "妄想性障害の患者に「なぜ隣人が自分を監視していると確信しているのか」を尋ねたところ、患者は「そう感じるから確かだ」と述べ、反証を示しても信念を修正しようとしなかった。精神症状を評価する際に「病的な知覚・信念を現実と区別できるかどうか」を問う概念はどれか。", "caseExplanation": "現実検討能力（reality testing）は病的な知覚・信念が現実と区別できるかを示す指標です。能力が保たれていれば幻覚・妄想を「おかしいと思う」と自覚でき、喪失すると完全に病的体験を真実と信じます。"}, {"id": "pathology-t3", "cat": "pathology", "term": "形式思考障害／内容思考障害", "def": "連合の速度・論理性（形式）と、妄想の主題（内容）を分ける。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">内容は被害だが形式は逸脱が目立つため、形式面の評価を優先した。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、内容は被害だが形式は逸脱が目立つため、形式面の評価を優先したという整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「形式思考障害」の説明例として、内容は被害だが形式は逸脱が目立つため、形式面の評価を優先したを挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 解体化言語（disorganized speech）は精神病性症状の一要素。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 同様に思考形式の乱れは精神病性障害の記述に含まれる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 記述的精神医学の古典的分類。現代認知研究では言語フルエンシー・意味ネットワークと接続。</p>", "caseDescription": "患者の発話を分析すると、①「話の流れが脈絡なく飛んでしまう」という連合の問題と、②「自分は世界征服を企む組織に狙われている」という考えの内容の問題が混在していた。この2つを区別するために用いられる概念対はどれか。", "caseExplanation": "形式思考障害は連合の速度・論理性などの「思考の形（プロセス）」の障害で、内容思考障害は妄想など「思考の内容（コンテンツ）」の障害です。治療反応性や重症度評価で重要な区別です。"}, {"id": "pathology-t4", "cat": "pathology", "term": "情緒不調和（mood-incongruent）", "def": "気分極性と精神病症状の内容が整合しない様式。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">躁状態だが内容は被害。気分不調和性精神病症状として記録。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、躁状態だが内容は被害。気分不調和性精神病症状として記録という整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「情緒不調和」の説明例として、躁状態だが内容は被害。気分不調和性精神病症状として記録を挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 気分エピソードに精神病性症状がある場合、調和性／不調和性のスペシファイアが用いられる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 気分エピソード随伴の精神病症状の記述で同様の区別が臨床上有用。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 鑑別: 統合失調症 vs 気分障害随伴精神病症状の整理に用いる。</p>", "caseDescription": "うつ病エピソードの患者が「自分は神から特別な使命を与えられた」という誇大な内容の幻声を聴いていた。気分は重度の抑うつであるにもかかわらず、幻声の内容が気分の極性と整合していない。この状態を表す病理学的概念はどれか。", "caseExplanation": "情緒不調和（mood-incongruent）は気分の極性（抑うつ・躁）と精神病症状の内容が整合しない状態です。一方、抑うつに罪業妄想が伴う場合は情緒調和的（mood-congruent）となり、予後予測や診断（統合失調感情障害との鑑別）に影響します。"}, {"id": "pathology-t5", "cat": "pathology", "term": "病識（インサイト）", "def": "病気であること、症状が病的であることへの理解。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">病識乏しいため、家族への心理教育と訪問看護調整を行った。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、病識乏しいため、家族への心理教育と訪問看護調整を行ったという整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「病識」の説明例として、病識乏しいため、家族への心理教育と訪問看護調整を行ったを挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 妄想の確信度と洞察は別次元で評価。アノソグノシア様の状態も鑑別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 記録上は治療コンプライアンス・リハビリ計画に影響。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Amador の研究、日本の「病識」臨床研究。認知療法では「信念の柔軟性」と接続。</p>", "caseDescription": "統合失調症の外来患者は「薬を飲まなくていいと思っている。病気ではないから」と述べた。主治医は「病気であること、症状が病的であることへの自己認識の欠如」と評価した。この自己認識の能力を表す用語はどれか。", "caseExplanation": "病識（インサイト）は「自分が病気である」「症状が病的である」「治療が必要である」という自覚の程度を指します。病識欠如はアドヒアランス不良・再入院リスクと関連し、認知行動療法的介入や心理教育の対象となります。"}, {"id": "pathology-t6", "cat": "pathology", "term": "理解と説明（ヤスパース）", "def": "意味のある心のつながりとして理解できるものと、因果的に説明すべき病的過程の区別。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">彼の行動は文脈から共感的に理解可能で、直ちに精神病性とは言えない。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、彼の行動は文脈から共感的に理解可能で、直ちに精神病性とは言えないという整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「理解と説明」の説明例として、彼の行動は文脈から共感的に理解可能で、直ちに精神病性とは言えないを挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> DSM/ICD は主に操作性カテゴリ。現象学的厚みは別枠で記録。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 も文化・文脈を考慮する記載を含む。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Jaspers『一般精神病理学』、現代は Stanghellini の現象学的精神医学。</p>", "caseDescription": "患者が重大なストレスイベントの直後にうつ状態を呈した。主治医は「この反応はストレスと心理的に意味のあるつながりがある（理解できる反応）」と判断し、「脳の病的プロセスによって生じた状態ではなく、意味論的に了解可能な反応だ」と評価した。この区別の枠組みを提唱した哲学者・精神科医は誰か、またその概念の対はどれか。", "caseExplanation": "ヤスパースの「理解と説明」の区別は精神病理学の基礎概念です。「了解（verstehen）」は他者の心のつながりが共感的に理解できる状態、「説明（erklären）」は脳の病的過程として因果的に説明される状態です。"}, {"id": "pathology-t7", "cat": "pathology", "term": "閾下症状／残存症状", "def": "基準未満だが機能に影響する症状、または寛解期の軽度持続症状。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">PHQ-9は軽度だが倦怠が持続。閾下抑うつとして介入継続。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、PHQ-9は軽度だが倦怠が持続。閾下抑うつとして介入継続という整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「閾下症状」の説明例として、PHQ-9は軽度だが倦怠が持続。閾下抑うつとして介入継続を挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> Major depressive episode 寛解のスペシファイアで部分的寛解等の概念。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 長期経過の記述で臨床上有用。研究用閾下定義は複数。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 再発予防ガイドライン（CANMAT 等）で残存症状の扱い。</p>", "caseDescription": "うつ病の患者が薬物療法を3か月継続し、診断基準を満たすほどの症状はなくなった。しかし「なんとなくやる気が出ない」「集中力がまだ続かない」という軽微な症状が残存し、職場復帰に影響していた。このような診断基準以下だが機能に影響する残存症状を表す概念はどれか。", "caseExplanation": "閾下症状（subthreshold symptoms）または残存症状（residual symptoms）は診断基準を満たさないが機能障害を引き起こす症状で、うつ病の再発予測因子として重要です。完全寛解を目指す治療目標と関連します。"}, {"id": "pathology-t8", "cat": "pathology", "term": "次元モデル", "def": "カテゴリ診断に加え、精神病性〜神経症性、重症度の軸で記述する考え方。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">陽性症状スコアは中程度だが社会機能低下が顕著。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、陽性症状スコアは中程度だが社会機能低下が顕著という整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「次元モデル」の説明例として、陽性症状スコアは中程度だが社会機能低下が顕著を挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 人格障害はAlternative Model（次元）でtrait記述。精神病性症状は重症度尺度（PANSS等）で補完。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 の人格障害は程度指定子とtrait記述へ移行。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Widiger、Krueger の構造モデル。WHO の field study 報告。</p>", "caseDescription": "カンファレンスで、ある患者を「統合失調症か双極性障害か」と二択で議論していた。指導医は「どちらかのカテゴリに当てはめるのではなく、精神病性・感情・陰性症状それぞれの重症度の軸で記述する考え方も有用だ」と提案した。この考え方はどれか。", "caseExplanation": "次元モデルはカテゴリ診断を補完し、精神病性・抑うつ・不安・陰性症状などの症状次元で重症度を評価します。DSM-5-TRでも精神病スペクトラムの次元評価が付録で提示されています。"}, {"id": "pathology-t9", "cat": "pathology", "term": "社会・職業機能（グローバル・アセスメント）", "def": "症状以外に、役割遂行の度合いを評価する。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">在宅は可能だが就労は不可。機能面を別欄で明示した。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、在宅は可能だが就労は不可。機能面を別欄で明示したという整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「社会・職業機能」の説明例として、在宅は可能だが就労は不可。機能面を別欄で明示したを挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 診断基準の多くに「臨床的に著しい苦痛または障害」を含む。GAFはDSM-5で廃止、WHODAS等推奨。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 でも障害・活動制限の記録を推奨。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 復職支援・ディスアビリティ評価のマニュアルと併読。</p>", "caseDescription": "統合失調症の患者が退院を検討されている。症状評価（BPRS・PANSS）では軽快しているが、「週3日出勤でもミスが続く」「家事が半分もできない」という役割遂行の問題が残っていた。症状スコアだけでなく生活機能を別軸で評価する指標はどれか。", "caseExplanation": "社会・職業機能（グローバル・アセスメント）はGAF（Global Assessment of Functioning）などの指標で、症状の有無だけでなく社会・職業・対人関係の機能水準を評価します。回復（リカバリー）の指標として重要です。"}, {"id": "pathology-t10", "cat": "pathology", "term": "複雑トラウマ／人格機能・感情調整", "def": "反復・長期の対人トラウマに続く、自己同一性・対人関係・感情調整の広範な困難。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">児童期虐待後、対人不信と感情の麻痺が持続。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、児童期虐待後、対人不信と感情の麻痺が持続という整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「複雑トラウマ」の説明例として、児童期虐待後、対人不信と感情の麻痺が持続を挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> DSM-5-TR はPTSDに解離指定子等。複雑PTSDという独立診断名は用いない（研究・臨床用語としては議論継続）。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 に Complex PTSD（複雑PTSD）を明記。PTSD核症状に加え人格機能障害・感情調整困難を要約。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Cloitre、Briere の発達トラウマモデル。Stanghellini の現象学的記述。</p>", "caseDescription": "幼少期に反復的な虐待を受けた患者が、解離症状・感情の激しい波・対人関係の不安定さ・自傷行為を呈していた。単回の重篤トラウマではなく、長期・反復的な対人トラウマに続く広範な困難を表す概念はどれか。", "caseExplanation": "複雑トラウマ（complex trauma/C-PTSD）はICD-11に採用された概念で、反復・長期の対人トラウマに続く、自己同一性・対人関係・感情調整の広範な困難を特徴とします。境界性パーソナリティ障害との鑑別が重要です。"}, {"id": "pathology-t11", "cat": "pathology", "term": "神経発達症（知的・自閉スペクトラム・ADHD との境界）", "def": "発達段階からの持続的困難と精神病理の交差。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">ASD 併存で感情表出が読み取りにくい。誤診に注意。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、ASD 併存で感情表出が読み取りにくい。誤診に注意という整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「神経発達症」の説明例として、ASD 併存で感情表出が読み取りにくい。誤診に注意を挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> ASD・ADHD・知的障害は別章。併存時は症状帰属の注意書きあり。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 も神経発達グループを整理。併存障害の記録を推奨。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> NICE guideline、Lai 等のASD成人レビュー。</p>", "caseDescription": "18歳の男性。小学校から注意散漫・多動で発達障害の評価を受けていたが、高校2年頃から奇異な発言・社会的引きこもりが出現した。発達段階からの持続的困難と思春期以降に顕在化した精神病症状が交差するこの状態の記述に用いられる概念はどれか。", "caseExplanation": "神経発達症（知的・自閉スペクトラム・ADHD）と統合失調症スペクトラムは交差しうる概念です。ADHDと双極性障害、ASDと統合失調症の鑑別・併存評価は現代精神医学の重要課題です。"}, {"id": "pathology-t12", "cat": "pathology", "term": "気質（temperament）／状態（state・エピソード）", "def": "気質は比較的長期に安定した情動・活動・衝動性の基調。状態はうつ・躁など、明確な始まりと（寛解すれば）終わりをもつ病的エピソード。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">器質性（脳病変・身体疾患）とは無関係。器質／機能の対と、気質／状態の対は次元が異なる（誤記・聞き間違いで混同されやすい）。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">気分循環性気質の素地の上に、今回初めて躁エピソードが出現した。</li>\n              <li class=\"leading-snug\">症例検討・考察：精神病理学的には、気分循環性気質の素地の上に、今回初めて躁エピソードが出現したという整理ができる。</li>\n              <li class=\"leading-snug\">教育・抄録：概念「気質」の説明例として、気分循環性気質の素地の上に、今回初めて躁エピソードが出現したを挙げた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 人格障害のtraitと気分エピソードの区別に関連。児童期からの気質は発達・性格病理の文脈でも記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11・DSM いずれも気分エピソードは期間・症状で定義。気質は研究・臨床記述語として併用。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Akiskal の気分気質、Cloninger の気質次元モデル等。日本語総論の気分障害・人格の節。</p>", "caseDescription": "患者は「もともと几帳面で心配性な性格」で、今回職場のストレスをきっかけにうつ病エピソードを発症した。主治医は「比較的安定した情動・活動の基調（性格特性）」と「今回の明確な始まりと終わりをもつ病的な状態変化」を区別して記録した。この二つの概念の対はどれか。", "caseExplanation": "気質（temperament）は比較的長期に安定した情動・活動・衝動性の基調を指し、状態（state/エピソード）はうつ・躁など明確な開始と（寛解すれば）終わりをもつ病的期間を指します。人格障害と気分障害の鑑別に重要な区別です。"}, {"id": "semiology-t0", "cat": "semiology", "term": "妄想（delusion）", "def": "誤った信念が固定し、文化に照らしても説明しがたく、本人が病的確信をもつ。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">超価観念・固執：現実の出来事を根拠に拡大解釈しやすい信念で、完全な反証不可能性・病的確信の度合いは妄想より弱いことが多い（連続体）。誇大妄想との鑑別は程度・機能障害・他症状で。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">同僚が自分を陥れているという被害妄想。反証に動かない。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「同僚が自分を陥れているという被害妄想。反証に動かない」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「妄想」に当てはまるか、同僚が自分を陥れているという被害妄想。反証に動かないと述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 妄想は精神病性障害の核心症状の一つ。誇大、被害、身体、混合型など内容分類。妄想性障害は妄想が主征。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 妄想性障害(6A24)、統合失調症等の精神病性障害で妄想を中核に記述。病的確信と持続が鑑別上重要。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Mullen、Garety の認知モデル（妄想は信念更新の偏り）。日本語: 『精神医学』精神病性症状の節。</p>", "caseDescription": "患者が「隣人が自分に毒を盛ろうとしている」と強く確信し、どれだけ証拠を示しても信念を修正できない。この確信は文化的背景からも説明がつかず、本人は病的体験とは認識していない。このような固定した誤った信念を何と呼ぶか。", "caseExplanation": "妄想（delusion）は誤った信念が固定し、文化に照らしても説明しがたく、本人が病的確信をもつ状態です。超価観念（overvalued idea）とは固執の強さと現実との乖離の程度で区別されます。"}, {"id": "semiology-t1", "cat": "semiology", "term": "幻覚（hallucination）", "def": "相当する外界刺激がないのに生じる知覚様体験。幻聴が最多。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">錯覚：実際に存在する刺激を歪んで知覚する（暗がりのコートを人影と見る等）。幻覚は相当する外界刺激がない点が要点。譫妄・極度の注意狭窄時は鑑別に注意。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">第三者人称幻聴。『あいつはダメだ』と囁かれる。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「第三者人称幻聴。『あいつはダメだ』と囁かれる」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「幻覚」に当てはまるか、第三者人称幻聴。『あいつはダメだ』と囁かれると述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 幻覚は精神病性症状。聴覚以外（視・嗅・味・体性）も記載。ヒプナゴジック等は鑑別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 原発性精神病性障害の臨床像で持続的幻覚を列挙。知覚様式ごとに記録。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Slade &amp; Bentall の幻聴モデル、Sims『精神症状をどうみるか』(邦訳) の症候学。</p>", "caseDescription": "患者が「誰もいないのに、はっきり自分の名を呼ぶ声が聞こえる」と訴えた。耳鼻科的異常はなく、外界に対応する刺激がないのに生じる知覚様体験と評価された。この体験の総称はどれか。", "caseExplanation": "幻覚（hallucination）は外界に対応する刺激なしに生じる知覚様体験です。精神科で最も多いのは幻聴で、次いで幻視が続きます。幻視が目立つ場合は器質的疾患・物質性の鑑別が重要です。"}, {"id": "semiology-t2", "cat": "semiology", "term": "思考の奔逸／連合弛緩", "def": "話題が素早く移り、音連合・意連合が目立つ。躁病性興奮で典型。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">質問に答えず連合が飛び、思考の奔逸を認める。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「質問に答えず連合が飛び、思考の奔逸を認める」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「思考の奔逸」に当てはまるか、質問に答えず連合が飛び、思考の奔逸を認めると述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 躁または混合エピソードの可能指標。精神運動性興奮と併記されることが多い。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 躁狂エピソードの臨床記述に含まれる思考・言語の加速。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 記述的精神医学の古典用語。認知面では注意制御・反応抑制と関連づけられる研究あり。</p>", "caseDescription": "躁状態の患者が「昨日山に登ろうと思って——そういえば山田さんて知ってる？——山の話といえばアルプス——アルプスはスイスだね——チーズ食べたい」と矢継ぎ早に話し、会話の流れが素早く移り変わり、音の類似（山→山田）や意味的連想で話題が次々と飛んだ。この思考の形式的特徴はどれか。", "caseExplanation": "思考の奔逸（flight of ideas）は話題が素早く移り、音連合や意連合が目立つ思考形式で、躁病性興奮の典型症状です。連合弛緩（loose association）に比べて話の流れに辿れる連関があるとされますが、臨床上は連続体として評価します。"}, {"id": "semiology-t3", "cat": "semiology", "term": "思考連合の弛緩・逸脱・固執・途切れ", "def": "話題からの脱線（tangential）、冗長な遠回り（circumstantial）、同一反復（perseveration）、突然の途切れ（blocking）。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">答えに至る前に話題がそれるが、最終的には回答できる逸脱性思考。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「答えに至る前に話題がそれるが、最終的には回答できる逸脱性思考」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「思考連合の弛緩・逸脱・固執・途切れ」に当てはまるか、答えに至る前に話題がそれるが、最終的には回答できる逸脱性思考と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 解体化思考・言語は統合失調症スペクトラムで重要。器質性・注意欠如とも鑑別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 精神病性障害の思考形式障害として記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Harvey 等の言語サンプル研究。臨床面接技法のテキストでも定義。</p>", "caseDescription": "患者は「昨日何をしていましたか？」と聞かれ、「えっと昨日は……外に出たんですけど……そういえば最近の天気がどうも……まあ外は色々ありまして……」と延々と周辺的なことを話し、本来の「昨日の行動」に到達しないまま話し続けた。この思考の様式を表す用語として最も適切なのはどれか。", "caseExplanation": "迂遠（circumstantiality）は質問の要点に直接答えず、周辺的・詳細な説明に終始する思考様式です。接線思考（tangentiality）と異なり、迂遠では最終的に（時間をかけて）目標に到達することがあります。"}, {"id": "semiology-t4", "cat": "semiology", "term": "新語造語・語尾韻連合（clang association）", "def": "新造語や音の類似のみで連合が進む。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">質問に対し意味をなさない語の連鎖。語尾韻が目立つ。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「質問に対し意味をなさない語の連鎖。語尾韻が目立つ」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「新語造語・語尾韻連合」に当てはまるか、質問に対し意味をなさない語の連鎖。語尾韻が目立つと述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 解体化言語の極端な例として評価。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 思考形式障害の記述例。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 古典的記述精神医学。</p>", "caseDescription": "解体した統合失調症の患者が「ピンクのニンクがシンクで飲んでリンク」と全く意味不明な発話をした。通常の連想のつながりがなく、音の類似のみで言葉が連鎖しているようにみえた。この発話の特徴を表す用語はどれか。", "caseExplanation": "新語造語（neologism）は本人のみが使う意味不明な新語を作る症状、語尾韻連合（clang association）は音の類似のみで連合が進む症状です。語サラダ（word salad）と呼ばれる重度の思考破綻に見られます。"}, {"id": "semiology-t5", "cat": "semiology", "term": "経験のパッシビティ（思考剥奪・挿入・伝播・公開）", "def": "思考が奪われる・入れられる・漏れる・他人に聞こえる等の体験。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">考えていることが隣人に筒抜けだという体験を訴える。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「考えていることが隣人に筒抜けだという体験を訴える」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「経験のパッシビティ」に当てはまるか、考えていることが隣人に筒抜けだという体験を訴えると述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> Schneider の first-rank symptoms の系譜。Criterion A に含まれる体験として評価。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 統合失調症の臨床像に「他人が自分の思考を知っている」等の例示。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Mellor、Mishara 等の現象学的再検討。</p>", "caseDescription": "患者が「考えていることが電波で周囲の人全員に聞こえてしまっている」と主張した。別の患者は「自分の思考が突然頭の中から引き抜かれる」と訴えた。これらは自己と外界の思考の境界が溶解した体験で、統合失調症の一級症状とされる。この体験の系譜を表す総称はどれか。", "caseExplanation": "経験のパッシビティ（passivity experiences）は思考伝播（考えが他者に聞こえる）・思考剥奪（考えが奪われる）・思考挿入（考えを入れられる）・思考公開（考えが開示される）などを含み、自我障害の中核をなします。"}, {"id": "semiology-t6", "cat": "semiology", "term": "解体化（不協調）行動", "def": "目的に沿わない行動、奇異な姿勢・服装、無言・無反応など。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">路上で奇声を発し衣服を脱ぐ。目的行動が途切れている。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「路上で奇声を発し衣服を脱ぐ。目的行動が途切れている」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「解体化」に当てはまるか、路上で奇声を発し衣服を脱ぐ。目的行動が途切れていると述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 精神病性症状の一要素。カタトニー・谵妄・物質中毒とも鑑別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 精神病性障害の行動面。緊張病と重複しうる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Northoff のカタトニー神経機序レビュー等。</p>", "caseDescription": "入院中の統合失調症の患者が病棟内で突然下着のみで廊下を歩き始め、壁に向かって話しかけた後、床に体を横たえて動かなくなった。この一連の行動は目的に沿わず奇異で、会話も無反応であった。このような状態を表す用語はどれか。", "caseExplanation": "解体化（disorganized）行動は目的に沿わない奇異な行動・姿勢・服装、会話の解体、無言・無反応などを含み、DSM-5-TRの統合失調症の5症状ドメインのひとつです。緊張症状（カタトニー）との鑑別が重要です。"}, {"id": "semiology-t7", "cat": "semiology", "term": "陰性症状（感情平坦・アロリジア・アヘドニア等）", "def": "感情表出の減少、言語量低下、快感消失、意欲低下。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">抑うつによる無気力・興味喪失：気分エピソードに整合し、抗うつ薬等で変動しうる。陰性症状：統合失調症スペクトラムの欠乏側で、抑うつが寛解しても残存しうる。両者の重なりは臨床で頻繁—評価尺度・病歴で切り分け。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">表情変化乏しく、自発語少。陰性症状が社会生活障害の主因。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「表情変化乏しく、自発語少。陰性症状が社会生活障害の主因」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「陰性症状」に当てはまるか、表情変化乏しく、自発語少。陰性症状が社会生活障害の主因と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 統合失調症の陰性症状は5類型（DSM-5 記載の観点）で評価。抑うつ・孤独症スペクトラムとも鑑別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 統合失調症の臨床像に持続的陰性症状を記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> PANSS、BNSS 等の評価ツール。Kirkpatrick の欠乏症候群概念。</p>", "caseDescription": "慢性期統合失調症の患者の家族が「幻声はなくなったが、以前のような喜びや感情の表現がなくなり、一日中ぼーっとしていて何もしようとしない。会話も一言二言しか返ってこない」と訴えた。これらはどのような症状群か。", "caseExplanation": "陰性症状は感情平坦化（感情表出の減少）・無言語症（アロリジア、言語量の低下）・快感消失（アヘドニア）・意欲低下（アブリア）・社会的引きこもりを含みます。抗精神病薬の陽性症状への効果に比べ、陰性症状への効果は限られています。"}, {"id": "semiology-t8", "cat": "semiology", "term": "カタトニー", "def": "精神運動性の著変（緘黙、蠟屈、拒絶、興奮、奇妙な姿勢等）。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">蠟屈と緘黙。針打ち後に姿勢が保たれる。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「蠟屈と緘黙。針打ち後に姿勢が保たれる」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「カタトニー」に当てはまるか、蠟屈と緘黙。針打ち後に姿勢が保たれると述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> カタトニーは他障害随伴としても診断カテゴリ化（カタトニー様症候群）。緊急度が高い。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 緊張病は独立診断および他障害随伴の指定が可能。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Carroll のBFCRS、Fink &amp; Taylor の治療ガイド。</p>", "caseDescription": "患者が「固まったまま何時間も動かない」「腕を持ち上げると重力に逆らってそのまま止まっている（ろう様屈曲）」「指示に全く従わない（拒絶症）」と病棟スタッフから報告を受けた。精神運動に著変が生じているこの状態を何と呼ぶか。", "caseExplanation": "カタトニー（緊張病）は精神運動性の著変を特徴とし、緘黙・ろう様屈曲・拒絶症・常同症・興奮・奇妙な姿勢などを含みます。統合失調症だけでなく、気分障害・医学的疾患でも生じます。悪性症候群との鑑別も重要です。"}, {"id": "semiology-t9", "cat": "semiology", "term": "抑うつ気分・興味快感喪失・易刺激性", "def": "気分の抑うつまたは快感消失が中核。児童青年では易刺激性が主征になりうる。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">連日の抑うつ気分と興味低下。早朝覚醒の訴えあり。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「連日の抑うつ気分と興味低下。早朝覚醒の訴えあり」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「抑うつ気分・興味快感喪失・易刺激性」に当てはまるか、連日の抑うつ気分と興味低下。早朝覚醒の訴えありと述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> Major depressive episode の中核症状。Persistent depressive disorder は慢性軽度像。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 抑うつエピソードの記述。単エピソード／再発性で区別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> CANMAT、英国NICE のうつ病ガイド。認知行動療法マニュアル（Beck）。</p>", "caseDescription": "患者が「何をしていても楽しめない」「気分がひどく沈んで一日中何もする気になれない」と2週間以上訴えている。この中核症状として最も重要な2つのうち少なくとも一方が必ず存在することが診断に求められる。この中核症状の組み合わせはどれか。", "caseExplanation": "抑うつ気分（ほぼ毎日の持続的抑うつ）と興味・快感の消失（ほぼすべての活動への興味・喜びの著しい減少）はDSM-5-TRのうつ病エピソード診断基準Aのうち、少なくとも一方が必須の中核症状です。"}, {"id": "semiology-t10", "cat": "semiology", "term": "躁気分・誇大・衝動性", "def": "高揚・易怒・活動増・睡眠欲求減少等。誇大信念は精神病性域に及ぶことも。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">睡眠2時間で十分と言い、衝動買いが連日。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「睡眠2時間で十分と言い、衝動買いが連日」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「躁気分・誇大・衝動性」に当てはまるか、睡眠2時間で十分と言い、衝動買いが連日と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 躁狂／軽躁エピソード。混合エピソードでは気分と相反する症状が同時。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 躁狂・軽躁・混合エピソードの記載。双極Ⅰ・Ⅱの区別に使用。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Young Mania Rating Scale 等。Akiskal の気分気質論。</p>", "caseDescription": "躁状態の患者が「気分が高揚して、自分は天才だから24時間仕事をしても平気だ」と言い、夜も眠ずに活動し続け、カードを使いすぎ、周囲への言動が攻撃的になっていた。この状態の主要な症状群はどれか。", "caseExplanation": "躁気分・誇大・衝動性は躁病エピソードの主要症状群で、気分の高揚・易怒性・活動増加・睡眠欲求減少・誇大な自己評価・衝動的行動（散財・性的逸脱など）を含みます。誇大信念が強固になると精神病性の躁状態となります。"}, {"id": "semiology-t11", "cat": "semiology", "term": "精神病性抑うつ（気分随伴精神病症状）", "def": "抑うつエピソードに妄想・幻覚が随伴。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">罪責妄想と命令幻聴。気分調和性。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「罪責妄想と命令幻聴。気分調和性」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「精神病性抑うつ」に当てはまるか、罪責妄想と命令幻聴。気分調和性と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> Major depressive episode with psychotic features（調和／不調和の指定）。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 抑うつエピソードに精神病症状を併記。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> ECT が有効エビデンスが強い群の一つとしてガイドライン記載。</p>", "caseDescription": "重度うつ病の患者が「自分には罪があって、もうすぐ地獄に行く」という確信をもっており、「刑事が家の前で張り込んでいる」という被害的な幻声も聴いていた。抑うつエピソードに精神病症状が随伴している、このような状態を表す用語はどれか。", "caseExplanation": "精神病性抑うつ（psychotic depression）はDSM-5-TRでは「精神病性の特徴を伴う」重篤なうつ病エピソードとして記述されます。気分と一致した妄想（罪業妄想など）が典型的ですが、気分不一致の症状も出現しうる点が重要です。"}, {"id": "semiology-t12", "cat": "semiology", "term": "不安・予期不安・パニック・回避", "def": "過度な心配、発作様の身体症状、状況回避。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">電車内で動悸・窒息感、その後その路線を回避。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「電車内で動悸・窒息感、その後その路線を回避」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「不安・予期不安・パニック・回避」に当てはまるか、電車内で動悸・窒息感、その後その路線を回避と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> GAD、パニック障害、場面恐怖、社交不安障害など不安障害群で定義が異なる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 一般性不安障害、パニック障害、場面恐怖、社交恐怖等に細分化。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Barlow の統合理論、曝露療法エビデンス。日本の不安障害治療ガイド。</p>", "caseDescription": "患者が「バスに乗ると突然、動悸・発汗・息苦しさ・死ぬかもしれないという恐怖感が出てくる。それ以来バスに乗れなくなった」と訴えた。予期不安からバス回避が生じているこの一連のパターンを表す複合的な症状群はどれか。", "caseExplanation": "不安（anxiety）・予期不安（anticipatory anxiety）・パニック発作（panic attack）・回避（avoidance）は相互に関連した症状概念です。パニック症はパニック発作後に予期不安が生じ、次第に回避行動が拡大していくパターンをとります。"}, {"id": "semiology-t13", "cat": "semiology", "term": "強迫観念・強迫行為", "def": "侵入的思考とそれを中和する反復行為／心の行為。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">汚染恐怖と45分かかる洗手の強迫行為。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「汚染恐怖と45分かかる洗手の強迫行為」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「強迫観念・強迫行為」に当てはまるか、汚染恐怖と45分かかる洗手の強迫行為と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> OCD の中核。関連障害に躯体型、こだわり、積み重ね。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 強迫性障害として独立。身体醜形障害等は関連障害。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Exposure and response prevention が第一選択。マニュアル: Foa 等。</p>", "caseDescription": "患者が「汚れているかもしれないという考えが頭から離れず、毎回30分以上手を洗わないと気が済まない。洗わないと不安でたまらないが、洗い終わっても一時的なものでまた繰り返す」と訴えた。この侵入的な思考と反復行為の組み合わせはどれか。", "caseExplanation": "強迫観念（obsession）は自我違和的な侵入的思考・衝動・心像で、強迫行為（compulsion）はそれを中和するための反復行動または心の行為です。両者はOCDの診断に必須であり、強迫行為は一時的に不安を低下させますが長期的には症状を維持します。"}, {"id": "semiology-t14", "cat": "semiology", "term": "トラウマ再体験・回避・過覚醒", "def": "フラッシュバック、悪夢、想起回避、過敏さ。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">夜間悪夢で睡眠障害。特定の場所を回避。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「夜間悪夢で睡眠障害。特定の場所を回避」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「トラウマ再体験・回避・過覚醒」に当てはまるか、夜間悪夢で睡眠障害。特定の場所を回避と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> PTSD、急性ストレス障害。解離症状のスペシファイアあり。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> PTSD、複雑PTSD（人格機能障害・感情調整困難を追加記述）。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Brewin の二重表現モデル、EMDR のエビデンスレビュー。</p>", "caseDescription": "交通事故の被害者である患者が、数か月後に当時の場面が「まるで今起きているかのように」突然頭に浮かびあがり（フラッシュバック）、事故を想起させる道路を避けるようになり、物音に過剰に反応するようになった。この三つの症状クラスターを表す概念群はどれか。", "caseExplanation": "PTSDの中核症状はトラウマ再体験（フラッシュバック・悪夢）・回避（想起刺激の回避）・認知と気分の陰性変化・過覚醒（過敏反応・過度の驚愕）の4クラスターで構成されます（DSM-5-TR基準B〜E）。"}, {"id": "semiology-t15", "cat": "semiology", "term": "解離（人格解体・現実感喪失・離人性）", "def": "自己・環境の非現実感、人格の分裂体験。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">解体化（disorganization）：思考・言語・行動の不協調で、統合失調症スペクトラムの陽性症状側の用語。解離（dissociation）：意識・同一性・記憶の連続性の断裂。英語綴りが似て混同されやすいが概念は別。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">発作時、身体が自分のものでない感じ（人格解体様）を訴える。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「発作時、身体が自分のものでない感じ（人格解体様）を訴える」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「解離」に当てはまるか、発作時、身体が自分のものでない感じ（人格解体様）を訴えると述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 解離性障害、PTSD、うつ・パニック随伴として鑑別。人格解体／現実感喪失は指定子・症状として記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 解離性障害群、トラウマ関連障害で解離を記載。複雑PTSD でも感情切り離しを扱う。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Spitzer 等の構造化面接、日本語臨床解離研究。</p>", "caseDescription": "患者が「自分が自分でないような感じで、自分を外から眺めているような気がする」と訴えた。別の患者は「世界が霞がかかったように非現実的に見え、夢の中にいるような感覚が続く」と話した。この二種類の体験を表す概念を合わせて何と呼ぶか。", "caseExplanation": "人格解体（depersonalization）は自己・身体が非現実的に感じられる体験、現実感喪失（derealization）は外界が非現実的に感じられる体験です。両者は解離症状として同一疾患に生じることが多く、解離症・PTSD・パニック症など多くの文脈で観察されます。"}, {"id": "semiology-t16", "cat": "semiology", "term": "注意欠如・多動・衝動性（成人を含む）", "def": "持続的注意困難、落ち着きのなさ、待てない。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">仕事の締切を繰り返し誤る。会話で遮る。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「仕事の締切を繰り返し誤る。会話で遮る」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「注意欠如・多動・衝動性」に当てはまるか、仕事の締切を繰り返し誤る。会話で遮ると述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> ADHD は児童期開始が原則。成人期の顕在化は遡及診断で慎重に。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 注意欠陥多動性障害として記載。実行機能障害と併記。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Barkley の理論、成人ADHDガイドライン（WHO ASRS 等）。</p>", "caseDescription": "成人女性が「会議中に着席し続けられない、仕事を最後まで仕上げられない、重要な場面でも衝動的な発言が止まらない」と訴えた。小児期からの持続的な症状であり、職場や家庭で機能に影響している。この症状群を表す用語はどれか。", "caseExplanation": "注意欠如・多動性障害（ADHD）の成人では不注意（持続的注意困難・忘れ物など）・多動（落ち着きのなさ・静かにしていられない）・衝動性（待てない・割り込み）が機能に影響します。成人では多動は目立たず不注意優勢となることが多いです。"}, {"id": "semiology-t17", "cat": "semiology", "term": "物質誘発性精神病／離脱", "def": "覚醒剤、アルコール、ベンゾジアゼピン等の使用・離脱に時系列で整合する精神病症状。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">使用後24時間以内に幻覚。尿検査陽性。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「使用後24時間以内に幻覚。尿検査陽性」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「物質誘発性精神病」に当てはまるか、使用後24時間以内に幻覚。尿検査陽性と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 各物質使用障害・中毒・離脱の診断。精神病性障害は二次性を除外してから。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 物質関連・中毒・離脱の章で整理。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 臨床毒物学、依存症専門テキスト。</p>", "caseDescription": "患者が「覚醒剤を使用した翌日から、見知らぬ人が自分を追いかけてくる幻声と被害妄想が出現した」と報告した。精神症状の出現が物質使用と時系列で一致しており、使用を中止すれば数日で軽快した。このような物質との時系列関係が明確な精神病症状を表す用語はどれか。", "caseExplanation": "物質誘発性精神病は物質の使用中または離脱中に出現し、物質の薬理作用で直接説明できる精神病症状です。覚醒剤・大麻・PCP・アルコール離脱などが代表的であり、一次性統合失調症との鑑別が重要です。"}, {"id": "semiology-t18", "cat": "semiology", "term": "認知障害・谵妄様症状", "def": "注意・意識レベルの変動、日内変動、見当識障害。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">夜間に見当識低下と幻視。感染疑いで身体評価。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「夜間に見当識低下と幻視。感染疑いで身体評価」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「認知障害・谵妄様症状」に当てはまるか、夜間に見当識低下と幻視。感染疑いで身体評価と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> major neurocognitive disorder vs delirium。谵妄は急性・原因多様。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 谵妄、神経認知障害（アルツハイマー等）を区別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> CAM、4AT 等スクリーニング。Lipowski の古典。</p>", "caseDescription": "高齢患者が術後に「夜だけ混乱して、家族のことが誰かわからなくなる。日中は普通に会話できる」という経過をたどった。注意・意識レベルの変動・日内変動・見当識障害という特徴から、どのような状態と評価されるか。", "caseExplanation": "せん妄（delirium）は注意と覚醒の障害を中心とし、日内変動（特に夜間増悪）・認知機能変動・見当識障害・知覚異常を特徴とする急性の認知障害状態です。高齢者の術後に多く、原因検索と環境調整が急務です。"}, {"id": "semiology-t19", "cat": "semiology", "term": "物質使用障害・離脱・中毒", "def": "反復使用、欲求、コントロール低下、離脱・耐性。アルコール、覚醒剤、オピオイド、鎮静薬など。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">週末だけ飲酒でも震えと幻覚。離脱として救急受診。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「週末だけ飲酒でも震えと幻覚。離脱として救急受診」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「物質使用障害・離脱・中毒」に当てはまるか、週末だけ飲酒でも震えと幻覚。離脱として救急受診と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 物質使用障害、中毒、離脱を物質ごとに診断。精神病性症状は二次性を鑑別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 有害使用から依存までICD-11で階層化。離脱・中毒の臨床像を章別に記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Volkow、Koob の報酬・ストレス系モデル。日本の依存症治療ガイドライン。</p>", "caseDescription": "患者が「毎日2本以上飲まないと落ち着かない。やめようとすると手の震えと発汗が出る。家族に止められても飲んでしまう」と話した。この物質に対する欲求・コントロール困難・離脱・耐性のパターンを何と呼ぶか。", "caseExplanation": "物質使用障害は反復使用・渇望・コントロール低下・社会的機能障害・離脱・耐性を含む診断概念です。DSM-5-TRでは「依存」「乱用」の区別を廃し、重症度（軽度〜重度）で評価します。アルコール使用障害が最多です。"}, {"id": "semiology-t20", "cat": "semiology", "term": "身体症候性障害・疾患不安障害", "def": "身体症状への過度の心配、健康不安、医療利用のパターン。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">検査は正常だが癌確信が消えない。疾患不安の主訴。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「検査は正常だが癌確信が消えない。疾患不安の主訴」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「身体症候性障害・疾患不安障害」に当てはまるか、検査は正常だが癌確信が消えない。疾患不安の主訴と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 疾患不安障害、身体症候性障害（症状の種類・持続で区分）。関連して変換障害・心因性過敏症群。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 身体症候性障害・神経症様障害の章で記載。医療利用と機能障害を重視。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 認知行動モデル（健康不安の誤信念）、Primary care ガイドライン。</p>", "caseDescription": "患者が「胃がおかしい気がして毎月消化器内科を受診しているが、検査では異常がない。医師に問題ないと言われても信じられず、インターネットで調べて癌かもしれないと不安が止まらない」と訴えた。このような身体症状・健康不安のパターンを表す概念はどれか。", "caseExplanation": "身体症候性障害（somatic symptom disorder）は身体症状への過度の苦痛・思考・行動を特徴とし、疾患不安障害（illness anxiety disorder）は深刻な病気への強い恐れを特徴とします。両者は器質疾患を「除外する」のではなく「過度の反応」に着目します。"}, {"id": "semiology-t21", "cat": "semiology", "term": "摂食障害（制限・暴飲嘔吐・その他）", "def": "体重・体型への執着、摂取行動の異常、代償行為。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">摂取後嘔吐を毎日。電解質異常。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「摂取後嘔吐を毎日。電解質異常」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「摂食障害」に当てはまるか、摂取後嘔吐を毎日。電解質異常と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 神経性食欲不振症、神経性大食症、暴食障害、回避／制限摂取障害（ARFID）等。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 摂食障害・異常摂食行動をICD-11で整理。身体合併症の記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Fairburn のトランスダイアグノスティックCBT、家族ベース治療（青少年）。</p>", "caseDescription": "10代の女性が「体重が増えることが怖くて、食事量を極限まで減らした。でも夜に食べてしまうと全部吐いてしまう。体型のことが頭から離れない」と訴えた。このような体重・体型への執着と摂取行動の異常を含む障害群を表す用語はどれか。", "caseExplanation": "摂食障害は神経性やせ症（制限による低体重）・神経性過食症（過食＋代償行為）・回避/制限性食物摂取症などを含む症候群です。体重・体型への認知の歪みが中核であり、内科的合併症（低カリウム・不整脈など）のモニタリングも重要です。"}, {"id": "semiology-t22", "cat": "semiology", "term": "不眠・過眠・覚醒リズム", "def": "入眠困難、中途覚醒、早朝覚醒、日中の眠気、リズムずれ。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">うつ改善後も早朝覚醒が残存。睡眠衛生と評価。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「うつ改善後も早朝覚醒が残存。睡眠衛生と評価」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「不眠・過眠・覚醒リズム」に当てはまるか、うつ改善後も早朝覚醒が残存。睡眠衛生と評価と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 不眠症、過眠症、睡眠関連呼吸障害等は別診断。うつ・不安・双極と併存しやすい。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 睡眠覚醒障害として分類。不眠は症状兼疾患として扱う記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> CBT-I が慢性不眠の第一選択。ICSD の器質的睡眠障害鑑別。</p>", "caseDescription": "患者が「寝つくまでに1時間以上かかり、夜中に何度も目が覚め、朝4時には必ず目が覚めてしまう。日中は眠気で仕事に集中できない」と3か月以上訴えている。この睡眠障害のパターンに含まれる3つのタイプはどれか。", "caseExplanation": "不眠障害は入眠困難・中途覚醒・早朝覚醒の3タイプに分類され、日中機能障害を伴います。過眠（hypersomnia）は日中の過度の眠気・長時間睡眠を指し、概日リズム障害とは異なります。気分障害や不安障害に頻繁に合併します。"}, {"id": "semiology-t23", "cat": "semiology", "term": "性功能・性嗜好の困り（パラフィリア関連）", "def": "性的衝動・行為が本人・他者に苦痛／障害を生じるパターン。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">衝動制御が効かず法的リスク。鑑別と安全計画。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「衝動制御が効かず法的リスク。鑑別と安全計画」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「性功能・性嗜好の困り」に当てはまるか、衝動制御が効かず法的リスク。鑑別と安全計画と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> パラフィリア障害は同意・被害の観点で診断。露見症等はカテゴリ別。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 では性的関心・行動パターンを、同意・被害・苦痛の観点から再整理（パラフィリア関連障害ほか）。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 法精神医学・性科学テキスト。児童保護との連携。</p>", "caseDescription": "患者が「相手が嫌がっているにもかかわらず、強引な行為に強く引かれる衝動が止められず、法的問題にもなっている。自分でもおかしいとは思うが変えられない」と訴えた。このような性的衝動・嗜好が本人・他者に苦痛または障害をもたらすパターンを表す概念はどれか。", "caseExplanation": "パラフィリア関連障害は性的衝動・空想・行為の対象や状況が非典型的で、かつ自己または他者に苦痛・障害をもたらす場合に診断されます。行為があっても当事者が苦痛を感じず他者被害もなければ障害とは診断されません。"}, {"id": "semiology-t24", "cat": "semiology", "term": "人格パターン・対人様式（trait）", "def": "持続的な感情・対人・衝動の様式。苦痛または機能障害を伴う。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">対人関係が毎回破局。感情の起伏が極端。</li>\n              <li class=\"leading-snug\">MSE／構造化記載：客観所見欄に「対人関係が毎回破局。感情の起伏が極端」と記した。</li>\n              <li class=\"leading-snug\">鑑別の言い回し：診断会で「人格パターン・対人様式」に当てはまるか、対人関係が毎回破局。感情の起伏が極端と述べた。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 10種人格障害＋PDtrait指定、またはAlternative Modelの5領域trait。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> ICD-11 は人格障害を程度指定＋trait記述へ。軽度〜重度で介入計画に反映。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Kernberg（境界性病理）、Linehan（DBT）、Livesley の次元的研究。</p>", "caseDescription": "患者は「いつも見捨てられる不安があり、大事な人を理想化したかと思うと激しく貶す。自己像がいつもぐらぐらで、衝動的に自傷してしまう」と話した。このような感情・対人・衝動の様式が長期間持続し、苦痛または機能障害を伴っている状態を総称する概念はどれか。", "caseExplanation": "人格パターン（personality pattern/traits）は認知・感情・対人・衝動の持続的様式であり、苦痛または機能障害を伴う場合にパーソナリティ障害と診断されます。境界性・自己愛性・回避性などのカテゴリモデルと、ICD-11の次元モデルがあります。"}, {"id": "psychoanalysis-t0", "cat": "psychoanalysis", "term": "無意識・抑圧（repression）", "def": "意識に耐えがたい表象・衝動がアクセス不能になる過程。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">自由連想法で関連が途切れる箇所に抑圧の働きを仮定した。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：自由連想法で関連が途切れる箇所に抑圧の働きを仮定したと記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「無意識・抑圧」について、自由連想法で関連が途切れる箇所に抑圧の働きを仮定したと報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> DSM/ICD は直接語らない。解離・変換・身体症候性障害の理解と接続されることがある。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 解離・転換症状の心理社会的文脈を記述する補助概念として。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Freud 古典、現代: Fonagy のメンタライゼーション、Defense Mechanism Rating Scales。邦訳精神分析辞典。</p>", "caseDescription": "患者は幼少期の性的虐待体験を一切思い出せなかったが、治療が進むにつれてフラッシュバック様に記憶が浮上し始めた。フロイトは「耐えがたい記憶・衝動が意識にアクセス不能になる基本的な防衛機制」としてこれを理論化した。この概念はどれか。", "caseExplanation": "抑圧（repression）はフロイト精神分析の中心概念で、意識に耐えがたい表象・衝動・記憶がアクセス不能になる無意識的過程です。抑圧が解除されると抑圧された内容が意識に浮上するとされます。"}, {"id": "psychoanalysis-t1", "cat": "psychoanalysis", "term": "防衛機制（否認・分裂・合理化・置換など）", "def": "不安を和らげるための無意識的パターン。成熟度で階層化されるモデルがある。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">重大な診断告知に対し否認が強く、防衛として機能している。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：重大な診断告知に対し否認が強く、防衛として機能していると記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「防衛機制」について、重大な診断告知に対し否認が強く、防衛として機能していると報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 人格機能レベル（LPFS）や防衛機制はAlternative Modelで性格病理の深さに関与。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 人格障害・適応の文脈で心理社会的因子として記録可能。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Vaillant の階層、Cramer。Gabbard『精神動力的精神医学の実際』(邦訳)。</p>", "caseDescription": "境界性パーソナリティ障害の患者が、主治医のちょっとした遅刻を「自分を見捨てようとしている」と解釈し激しく攻撃した。患者は自分の怒りを認めたくなく、「先生が悪いから怒って当然」と思っている。不安を和らげるためのこのような無意識的パターンの総称はどれか。", "caseExplanation": "防衛機制（defense mechanisms）は不安・葛藤を和らげるための無意識的心理プロセスです。成熟したもの（ユーモア・昇華）から未熟なもの（否認・分裂・投影）まで階層化されており、パーソナリティ障害の理解に重要です。"}, {"id": "psychoanalysis-t2", "cat": "psychoanalysis", "term": "投影（projection）", "def": "自己に受け入れがたい感情・衝動を他者に帰属。", "detailHtml": "<div class=\"contrast-box mt-2 text-xs text-gray-800 leading-relaxed\">\n            <strong class=\"text-amber-900\">類似用語との違い</strong>\n            <p class=\"mt-1\">転移：過去の重要他者への感情・期待が治療関係に再現される過程。投影：自己の受け容れがたい感情を他者に帰属する防衛。臨床では併存しうるが、記録では用語を分けて書く。</p>\n          </div>          <div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">面接者を敵意ある存在と感じる投影が、関係構築を妨げている。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：面接者を敵意ある存在と感じる投影が、関係構築を妨げていると記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「投影」について、面接者を敵意ある存在と感じる投影が、関係構築を妨げていると報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 妄想のメカニズム説明語として誤用されやすい。診断名ではない。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Klein 系の投影性同一視と区別。書籍: Ogden、Sandler。</p>", "caseDescription": "被害念慮の強い患者が「周囲の人みんなが自分を陥れようとしている」と訴えた。治療者が詳しく聴くと、患者自身が他者への強い攻撃性・嫉妬を持っており、それを他者に帰属することで自己を守っているようであった。このような防衛機制はどれか。", "caseExplanation": "投影（projection）は自己に受け入れがたい感情・衝動・願望を他者に帰属する防衛機制です。「自分が人を憎む」を「人が自分を憎む」と認知することで自己イメージを保護します。妄想性障害の心理的基盤として論じられることもあります。"}, {"id": "psychoanalysis-t3", "cat": "psychoanalysis", "term": "内射・同一化・投射同一視", "def": "他者の表象を内面に取り込む／相手に似る／自己他境界が曖昧になる。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">亡母の口調で話し始める。同一化が目立つ。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：亡母の口調で話し始める。同一化が目立つと記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「内射・同一化・投射同一視」について、亡母の口調で話し始める。同一化が目立つと報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 人格障害の対人様式理解に用いる。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 客体関係理論: Klein, Kernberg。</p>", "caseDescription": "患者は長年、強い父親を模範として行動するうちに、父親と同じ価値観・しゃべり方・習慣を自分のものとして内面化していた。また、幼少期に愛した人物の性格を自分の一部として取り込む過程が発達に重要とされる。他者の表象を内面化するこの過程を表す概念群はどれか。", "caseExplanation": "内射（introjection）は他者の表象を内面に取り込む過程、同一化（identification）は他者に似ていく過程、投射同一視（projective identification）は自己の一部を他者に投影し相手の反応で処理する無意識的対人過程です。"}, {"id": "psychoanalysis-t4", "cat": "psychoanalysis", "term": "分裂（splitting）", "def": "全好・全悪の極端な対人表象。境界型病理で頻出。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">昨日は理想化、今日は完全否定。分裂様の推移。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：昨日は理想化、今日は完全否定。分裂様の推移と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「分裂」について、昨日は理想化、今日は完全否定。分裂様の推移と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 境界型人格障害の特徴の理解に。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 境界型人格障害の記述と接続。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Kernberg、Linehan（DBT での対人過敏性との統合）。</p>", "caseDescription": "境界性パーソナリティ障害の患者が、入院直後は「この病棟は最高で先生は私だけをわかってくれる神様のような存在」と言っていたが、退院が近づくと「この病棟は最悪で先生はひどい人間だ」と全く正反対の評価に転じた。このような全好または全悪の極端な対人表象の特徴を表す概念はどれか。", "caseExplanation": "分裂（splitting）は他者を全好または全悪に極端に分けて認知する防衛機制で、境界性パーソナリティ障害の中核的な防衛機制です。部分対象から全体対象関係への発達が妨げられていると理解されます。"}, {"id": "psychoanalysis-t5", "cat": "psychoanalysis", "term": "転移・逆転移（countertransference）", "def": "過去の重要他者への感情が治療者へ向く／治療者側に喚起される感情。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">治療者への過剰依存と怒りは、幼少の親像への転移として扱った。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：治療者への過剰依存と怒りは、幼少の親像への転移として扱ったと記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「転移・逆転移」について、治療者への過剰依存と怒りは、幼少の親像への転移として扱ったと報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 診断基準外。心理療法のプロセス記録。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Heimann、Bion の容器モデル。Hayashi 等の日本語文献。</p>", "caseDescription": "長期外来治療を続けている患者が、主治医に対して「父親に感じていたのと同じ厳しさへの恐怖と反発」を感じていると報告した。一方、主治医は患者と接するうちに「この患者に対して不思議な罪悪感や保護欲が生じる」と督察（スーパービジョン）で話した。この二つの現象を表す概念の対はどれか。", "caseExplanation": "転移（transference）は過去の重要他者への感情・期待・行動パターンが治療者へと向く現象で、逆転移（countertransference）は治療者側に患者によって喚起される感情反応です。現代では逆転移も治療上の情報として活用します。"}, {"id": "psychoanalysis-t6", "cat": "psychoanalysis", "term": "抵抗（resistance）", "def": "治療的探求を無意識的に妨げる（沈黙、遅刻、忘れ、主題転換）。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">トラウマ話題で話題転換が増え、抵抗の増強として記録。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：トラウマ話題で話題転換が増え、抵抗の増強として記録と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「抵抗」について、トラウマ話題で話題転換が増え、抵抗の増強として記録と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Freud 技術論、現代は関係性抵抗として再概念化。</p>", "caseDescription": "心理療法の患者が「最近なぜか毎回5分遅刻してしまう」「今日は何を話していいかわからない」「話題が重要な問題に近づくと急に違う話を始める」という行動をとっていた。治療者は「治療的探求を無意識的に妨げている」と評価した。この現象はどれか。", "caseExplanation": "抵抗（resistance）は治療的探求を無意識的に妨げるプロセスで、沈黙・遅刻・忘れ・主題転換・知識化などの形をとります。抵抗の分析（解釈）は精神分析的治療の中心的作業のひとつです。"}, {"id": "psychoanalysis-t7", "cat": "psychoanalysis", "term": "リビドー・攻撃性（駆力）", "def": "古典理論の動機づけ概念。現代は愛着・感情調整と統合して語られる。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">依存と自立の葛藤を、対象愛着の問題として概念化。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：依存と自立の葛藤を、対象愛着の問題として概念化と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「リビドー・攻撃性」について、依存と自立の葛藤を、対象愛着の問題として概念化と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Greenberg &amp; Mitchell『客体関係と精神分析的自己心理学』(邦訳)、Laplanche &amp; Pontalis『用語解説』。</p>", "caseDescription": "古典的フロイト理論を学ぶ学生が「人間の行動を動機づける基本的な心理的エネルギー、特に性的・愛情的なものをどう呼ぶか？」という問いに直面した。現代では愛着理論・感情調整と統合されているが、フロイトがこの概念に使った用語はどれか。", "caseExplanation": "リビドー（libido）はフロイトが性的・愛情的動機づけのエネルギーとして定式化した概念です。攻撃性（攻撃ドライブ）と並ぶ古典理論の中心概念で、現代では対象関係論・愛着理論・感情神経科学と統合されて論じられます。"}, {"id": "psychoanalysis-t8", "cat": "psychoanalysis", "term": "自己愛（ナルシシズム）・理想化自己", "def": "自己価値調整、称賛への感受性、慢性的な空虚感の理解枠。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">軽い批判で激しい羞恥。自己愛の脆弱性。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：軽い批判で激しい羞恥。自己愛の脆弱性と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「自己愛」について、軽い批判で激しい羞恥。自己愛の脆弱性と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> ナルシシスティック人格障害は誇大性・称賛希求のパターンとして定義。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 人格障害の一型として記載。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Kohut、Kernberg の対照的理解。</p>", "caseDescription": "患者は「他人からの称賛がないと自分を保てない。誰かに少し批判されると砕け散るような空虚感と怒りが生じる。表向きは自信満々だが、心の底には深い空虚感と不全感がある」と訴えた。コーフートの自己心理学の観点から、この患者の中核的な困難を表す概念はどれか。", "caseExplanation": "自己愛（narcissism）の病理は自己の凝集性（cohesion）の脆弱性として理解されます。コーフートの自己心理学では、自己愛的な傷つきへの反応（narcissistic rage）や慢性的な空虚感・誇大自己と理想化された親イマゴの統合失敗を中核に置きます。"}, {"id": "psychoanalysis-t9", "cat": "psychoanalysis", "term": "処理（working through）・修通", "def": "洞察を反復体験を通じて統合し、行動・感情様式を変える過程。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">解釈後も同じパターンが数週続いたが、徐々に変化。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：解釈後も同じパターンが数週続いたが、徐々に変化と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「処理」について、解釈後も同じパターンが数週続いたが、徐々に変化と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 古典精神分析技術。短程動的療法でも「焦点」の維持として類似。</p>", "caseDescription": "長期精神分析を受けていた患者が、数か月間にわたって「見捨てられ不安」のテーマに繰り返し取り組んだ。洞察を得るだけでなく、その洞察を実際の感情体験として繰り返し処理する中で、対人関係パターンが少しずつ変化していった。このプロセスを表す精神分析用語はどれか。", "caseExplanation": "処理（working through）または修通は洞察を繰り返しの感情体験を通じて統合し、行動・感情様式を実際に変える過程です。一回の洞察では不十分で、同じテーマへの反復的な取り組みが変化をもたらすとされます。"}, {"id": "psychoanalysis-t10", "cat": "psychoanalysis", "term": "行動化（acting out）", "def": "思考化されない衝動が行動で表出。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">セッション直後の衝動的自傷。行動化として記録。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：セッション直後の衝動的自傷。行動化として記録と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「行動化」について、セッション直後の衝動的自傷。行動化として記録と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 境界型人格障害の反復的自傷行動と鑑別上関連。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> 技術書では転移の行動的表現として扱う。</p>", "caseDescription": "衝動統制に困難を抱える患者が、怒りや性的衝動を言語化・思考化できず、直接的な行動で表出してしまう（器物破損・無謀な性行動）という問題があった。感情や衝動が言語化されずに行動で表出されるこの現象を表す用語はどれか。", "caseExplanation": "行動化（acting out）は思考・言語化されない衝動・感情が直接行動として表出される現象です。治療場面では転移感情の行動化が問題となることがあります。アレキシサイミア（失感情症）との関連でも論じられます。"}, {"id": "psychoanalysis-t11", "cat": "psychoanalysis", "term": "メンタライゼーション・思考化（mentalization）", "def": "自己・他者の心の状態を推論する能力。愛着トラウマで低下しうる。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">相手の意図を読み取れず誤解が連鎖。メンタライゼーション低下。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：相手の意図を読み取れず誤解が連鎖。メンタライゼーション低下と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「メンタライゼーション・思考化」について、相手の意図を読み取れず誤解が連鎖。メンタライゼーション低下と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> 人格障害・ASD 鑑別で認知面の補助概念。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> 人格障害の心理社会的介入（MBT）の理論根拠。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Fonagy &amp; Target、MBT マニュアル。</p>", "caseDescription": "幼少期に虐待を受けた患者は、他者の表情から感情を読み取ることが難しく、自分自身の感情にも気づきにくいという困難を抱えていた。治療者との関係を通じて、自己や他者の内的状態を少しずつ推論できるようになっていった。この能力を表す概念はどれか。", "caseExplanation": "メンタライゼーション（mentalization）は自己・他者の心の状態（意図・感情・欲求）を推論する能力で、愛着関係の質と密接に関連します。愛着トラウマで低下しやすく、メンタライゼーション強化療法（MBT）の標的となります。"}, {"id": "psychoanalysis-t12", "cat": "psychoanalysis", "term": "投影同一視（projective identification）", "def": "自己の一部を他者に投影し、相手の反応を通じて処理しようとする無意識的対人過程。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">面接中に治療者が強い無力感に襲われる。対移行現象として検討。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：面接中に治療者が強い無力感に襲われる。対移行現象として検討と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「投影同一視」について、面接中に治療者が強い無力感に襲われる。対移行現象として検討と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Klein 以降の客体関係理論。Ogden、Sandler が臨床記述を整理。</p>", "caseDescription": "境界性パーソナリティ障害の患者が治療者に対して怒りをぶつけていた。グループスーパービジョンで指導医は「患者は自分の中の許容しがたい怒りを治療者に投影し、治療者を通じてその怒りが処理されることを無意識的に求めている」と説明した。この無意識的対人過程はどれか。", "caseExplanation": "投射同一視（projective identification）はクライン派の概念で、自己の一部（許容しがたい感情など）を他者に投影し、その他者の反応を通じて処理しようとする無意識的な対人過程です。治療場面での逆転移理解に重要です。"}, {"id": "psychoanalysis-t13", "cat": "psychoanalysis", "term": "容器（container）と被収容者（contained）", "def": "治療者が患者の耐えがたい感情を一時的に抱え、意味づけ可能な形に返すというビオンのモデル。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">激しい怒りの後、沈黙が続く。容器機能が試される局面。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：激しい怒りの後、沈黙が続く。容器機能が試される局面と記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「容器」について、激しい怒りの後、沈黙が続く。容器機能が試される局面と報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Bion『Experiences in Groups』系譜。現代精神分析スーパービジョンで常用。</p>", "caseDescription": "治療者がスーパービジョンで「患者が強烈な絶望感を語るとき、自分もその絶望を一時的に引き受けて共にそこに留まり、それを言語化して返すことが大切だと感じる」と話した。ビオンのモデルでは、治療者が患者の耐えがたい感情を抱え意味づけして返す役割を表す概念はどれか。", "caseExplanation": "ビオンの容器（container）と被収容者（contained）モデルでは、治療者が患者の未消化な感情・体験（beta elements）を受け取り、それを消化可能な形（alpha elements）に変換して返すことが治療的変容をもたらすとされます。"}, {"id": "psychoanalysis-t14", "cat": "psychoanalysis", "term": "自己物（selfobject）・鏡映・理想化", "def": "コーフートの自己心理学における、自己の凝集性を支える他者機能。", "detailHtml": "<div class=\"example-box\">\n            <strong class=\"text-gray-800\">使用例</strong>\n            <ol class=\"mt-1.5 ml-4 list-decimal list-outside space-y-1.5 text-sm text-gray-800 pl-1\">\n              <li class=\"leading-snug\">称賛がないと崩れる。鏡映需要が強い。</li>\n              <li class=\"leading-snug\">心理療法記録（プロセスノート）：称賛がないと崩れる。鏡映需要が強いと記載した。</li>\n              <li class=\"leading-snug\">スーパービジョン申し送り：局面「自己物」について、称賛がないと崩れる。鏡映需要が強いと報告した。</li>\n            </ol>\n          </div>\n<div class=\"mt-2 pt-2 border-t border-gray-200 text-xs leading-relaxed text-gray-700 space-y-1\"><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-blue-900\">DSM-5-TR（要点・パラフレーズ）</span> ナルシシスティック人格障害の理解と接続されることがあるが同一ではない。</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-teal-900\">ICD-11（CDDR 趣旨・パラフレーズ）</span> —</p><p class=\"mb-1.5 last:mb-0\"><span class=\"font-semibold text-violet-900\">学派・主要書（標準的教科書・最新版に近い版）</span> Kohut『The Analysis of the Self』／邦訳自己心理学文献。</p>", "caseDescription": "患者は「認めてもらいたい、本当の自分を受け入れてほしいという強い欲求があり、それが満たされないと激しい空虚感に陥る」と話した。コーフートは治療者がこの欲求に共感的に応じることで患者の自己の凝集性が高まると考えた。この理論で治療者が果たすとされる機能を表す概念はどれか。", "caseExplanation": "自己物（selfobject）はコーフートの自己心理学の概念で、自己の凝集性を維持するために必要な他者の機能を指します。鏡映（自己を映し認めてもらう）・理想化（尊敬できる他者と一体感を持つ）・双子性（自分と似た他者との共感）の三機能があります。"}];
+
+    function fetchCards() {
+      return EMBEDDED_CARDS.map((c) => ({
+        id:              c.id,
+        cat:             c.cat,
+        term:            c.term,
+        def:             c.def,
+        detailHtml:      c.detailHtml  || '',
+        caseDescription: c.caseDescription || null,
+        caseExplanation: c.caseExplanation || null,
+      }));
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Queue
+    // ─────────────────────────────────────────────────────────
+    function sessionSizeNumeric() {
+      const opt = SESSION_SIZE_OPTIONS.find((x) => x.value === appState.sessionSize);
+      return opt ? opt.numeric : 10;
+    }
+
+    /**
+     * 期限到来・未学習カードをシャッフル後、問題数だけ切り詰める
+     */
+    function buildQueue() {
+      let dueCards = CARDS.filter((c) => isDue(c.id));
+      dueCards.sort(() => Math.random() - 0.5);
+      const lim = sessionSizeNumeric();
+      if (Number.isFinite(lim) && lim < dueCards.length) dueCards = dueCards.slice(0, lim);
+
+      queue        = dueCards;
+      queueIndex   = 0;
+      sessionDone  = 0;
+      sessionTotal = dueCards.length;
+    }
+
+    /** 詳細 HTML を表示用に包む（空なら注記のみ） */
+    function detailSectionHtml(card, heading) {
+      const inner = card.detailHtml && card.detailHtml.trim().length > 0;
+      if (!inner) {
+        return `<p class="text-xs text-slate-400 italic">※参照ページでは続きに使用例・類似語・文献メモがあることがありますが、この語からは抽出されていません。</p>`;
+      }
+      return `<p class="text-xs font-bold text-slate-700">${heading}</p>` +
+        `<div class="srs-detail-root text-sm text-slate-700">${card.detailHtml}</div>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /** MCQ：回答直後に正誤バナーと詳細解説パネルを表示 */
+    function showMcqFeedback(isCorrect, correctCard, wrongChosenCard) {
+      const wrap    = document.getElementById('mcq-feedback');
+      const verdict = document.getElementById('mcq-verdict');
+      const body    = document.getElementById('mcq-explain-body');
+      wrap.classList.remove('hidden');
+
+      // 症例形式時の解説テキスト
+      const isCaseMode = appState.mcqFormat === 'case' && correctCard.caseDescription;
+      const primaryExplanation = isCaseMode && correctCard.caseExplanation
+        ? correctCard.caseExplanation
+        : null;
+
+      if (isCorrect) {
+        verdict.innerHTML =
+          '<span class="text-2xl mr-1">✓</span> 正解です！';
+        verdict.className =
+          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base flex items-center justify-center gap-1 ' +
+          'border-emerald-400 bg-emerald-50 text-emerald-900';
+
+        let html = '';
+
+        // 1. 解説ブロック（症例形式専用 > 詳細HTMLの要約 の優先順）
+        if (primaryExplanation) {
+          html += `<div class="rounded-xl bg-emerald-50 border border-emerald-200 p-3.5 space-y-1">
+            <p class="text-xs font-bold text-emerald-800 uppercase tracking-wide">解説</p>
+            <p class="text-sm text-emerald-950 leading-relaxed">${escapeHtml(primaryExplanation)}</p>
+          </div>`;
+        }
+
+        // 2. 正解用語の定義確認
+        html += `<div class="rounded-xl bg-white border border-slate-200 p-3.5 space-y-1.5">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">正解の用語</p>
+          <p class="text-base font-bold text-slate-900">${escapeHtml(correctCard.term)}</p>
+          <p class="text-xs font-bold text-slate-500 mt-2 uppercase tracking-wide">一文定義</p>
+          <p class="text-sm text-slate-700 leading-relaxed">${escapeHtml(correctCard.def)}</p>
+        </div>`;
+
+        // 3. さらに詳細ブロック
+        html += detailSectionHtml(correctCard, '使用例・類似語の違い・DSM／ICD 文献メモ');
+
+        body.innerHTML = html;
+
+      } else {
+        verdict.innerHTML =
+          '<span class="text-2xl mr-1">✗</span> 不正解です';
+        verdict.className =
+          'rounded-2xl border-2 px-4 py-3 text-center font-bold text-base flex items-center justify-center gap-1 ' +
+          'border-red-400 bg-red-50 text-red-900';
+
+        let html = '';
+
+        // 1. 誤答語の解説（なぜ間違いか）
+        if (wrongChosenCard && wrongChosenCard.id !== correctCard.id) {
+          html += `<div class="rounded-xl bg-red-50/80 border border-red-200 p-3.5 space-y-1.5">
+            <p class="text-xs font-bold text-red-800 uppercase tracking-wide">選択した用語</p>
+            <p class="text-base font-bold text-red-900">${escapeHtml(wrongChosenCard.term)}</p>
+            <p class="text-xs font-bold text-red-700 mt-1.5">この語の定義</p>
+            <p class="text-sm text-red-950 leading-relaxed">${escapeHtml(wrongChosenCard.def)}</p>
+            <p class="text-xs text-red-600 mt-1 italic">この定義は今回の問題文と異なる概念です。混同しやすい場合は両語の違いを比較してみてください。</p>
+          </div>`;
+        }
+
+        // 2. 正解語 + 解説
+        html += `<div class="rounded-xl bg-emerald-50/90 border border-emerald-200 p-3.5 space-y-1.5">
+          <p class="text-xs font-bold text-emerald-800 uppercase tracking-wide">正解の用語</p>
+          <p class="text-base font-bold text-emerald-900">${escapeHtml(correctCard.term)}</p>
+          <p class="text-xs font-bold text-slate-500 mt-1.5">一文定義</p>
+          <p class="text-sm text-slate-700 leading-relaxed">${escapeHtml(correctCard.def)}</p>
+        </div>`;
+
+        // 3. 症例解説 or 詳細解説
+        if (primaryExplanation) {
+          html += `<div class="rounded-xl bg-indigo-50 border border-indigo-200 p-3.5 space-y-1">
+            <p class="text-xs font-bold text-indigo-800 uppercase tracking-wide">解説</p>
+            <p class="text-sm text-indigo-950 leading-relaxed">${escapeHtml(primaryExplanation)}</p>
+          </div>`;
+        }
+
+        // 4. 詳細HTML
+        html += detailSectionHtml(correctCard, '使用例・類似語・DSM／ICD 文献メモ');
+
+        body.innerHTML = html;
+      }
+
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Dashboard render
+    // ─────────────────────────────────────────────────────────
+    function renderDashboard() {
+      const todayCount = CARDS.filter(c => isDue(c.id)).length;
+      document.getElementById('today-count').textContent = todayCount;
+      document.getElementById('total-count').textContent = CARDS.length;
+
+      // Box distribution
+      const boxCounts = [0, 0, 0, 0, 0];
+      for (const c of CARDS) {
+        const { box } = getCardState(c.id);
+        boxCounts[box - 1]++;
+      }
+
+      const container = document.getElementById('leitner-boxes');
+      container.innerHTML = '';
+      LEITNER_LABELS.forEach((label, i) => {
+        const col = LEITNER_COLORS[i];
+        const pct = CARDS.length > 0 ? (boxCounts[i] / CARDS.length) * 100 : 0;
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-3';
+        row.innerHTML = `
+          <span class="w-6 h-6 rounded-full ${col.bg} ${col.text} ${col.border}
+                       border text-[11px] font-bold flex items-center justify-center shrink-0">
+            ${i + 1}
+          </span>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs text-slate-600 truncate">${label}</span>
+              <span class="text-xs font-bold tabular-nums ${col.text} ml-2 shrink-0">${boxCounts[i]}</span>
+            </div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full bar-fill ${col.bar}" style="width:${pct.toFixed(1)}%"></div>
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      renderSessionSizeChips();
+      renderModeButtons();
+      renderMcqFormatButtons();
+    }
+
+    function renderSessionSizeChips() {
+      const host = document.getElementById('session-size-chips');
+      if (!host) return;
+      host.innerHTML = '';
+      SESSION_SIZE_OPTIONS.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const active = appState.sessionSize === opt.value;
+        btn.className =
+          'rounded-xl border-2 px-3.5 py-2.5 text-xs font-semibold transition min-h-[44px] touch-manipulation ' +
+          (active
+            ? 'border-teal-600 bg-teal-50 text-teal-900'
+            : 'border-slate-200 bg-white text-slate-600');
+        btn.textContent = opt.label;
+        btn.addEventListener('click', () => {
+          appState.sessionSize = opt.value;
+          saveState();
+          renderSessionSizeChips();
+        });
+        host.appendChild(btn);
+      });
+    }
+
+    function renderModeButtons() {
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        const active = btn.dataset.mode === appState.mode;
+        btn.className = `mode-btn action-btn flex-1 rounded-xl border-2 py-3 text-sm font-semibold transition ${
+          active
+            ? 'border-teal-600 bg-teal-50 text-teal-800'
+            : 'border-slate-200 bg-white text-slate-600'
+        }`;
+      });
+      document.getElementById('mode-desc').textContent = appState.mode === 'flip'
+        ? '表面の用語を見てから裏を開くと、一文定義のほかに使用例・鑑別・文献メモ（抽出分）も読めます。そのうえで記憶の確かさを記録してください。'
+        : '選択した瞬間に正解／不正解が表示されます。正解時・不正解時で内容の異なる解説と、詳細ブロックが続きます。';
+
+      // MCQ format section の表示/非表示
+      const fmtSection = document.getElementById('mcq-format-section');
+      if (fmtSection) {
+        fmtSection.classList.toggle('hidden', appState.mode !== 'mcq');
+      }
+    }
+
+    function renderMcqFormatButtons() {
+      document.querySelectorAll('.mcqformat-btn').forEach((btn) => {
+        const active = btn.dataset.mcqformat === appState.mcqFormat;
+        btn.className =
+          'mcqformat-btn action-btn rounded-xl border-2 py-3 text-sm font-semibold transition ' +
+          (active
+            ? 'border-indigo-600 bg-indigo-50 text-indigo-900'
+            : 'border-slate-200 bg-white text-slate-600');
+      });
+      const opt = MCQ_FORMAT_OPTIONS.find((x) => x.value === appState.mcqFormat);
+      const descEl = document.getElementById('mcqformat-desc');
+      if (descEl && opt) descEl.textContent = opt.desc;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Progress bar
+    // ─────────────────────────────────────────────────────────
+    function updateProgress() {
+      document.getElementById('prog-done').textContent  = sessionDone;
+      document.getElementById('prog-total').textContent = sessionTotal;
+      const pct = sessionTotal > 0 ? (sessionDone / sessionTotal) * 100 : 0;
+      document.getElementById('progress-bar').style.width = pct.toFixed(1) + '%';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Flip card render
+    // ─────────────────────────────────────────────────────────
+    function renderFlipCard(card) {
+      const cs  = getCardState(card.id);
+      const col = LEITNER_COLORS[cs.box - 1];
+
+      document.getElementById('flip-cat').textContent  = CAT_LABELS[card.cat] || card.cat;
+      document.getElementById('flip-term').textContent = card.term;
+      document.getElementById('flip-def').textContent  = card.def;
+
+      document.getElementById('flip-box-badge').innerHTML =
+        `<span class="inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full
+                      border ${col.bg} ${col.text} ${col.border}">
+           Box ${cs.box} · ${LEITNER_LABELS[cs.box - 1]}
+         </span>`;
+
+      const dw = document.getElementById('flip-detail-wrap');
+      const d  = document.getElementById('flip-detail');
+      if (card.detailHtml && card.detailHtml.trim().length > 0) {
+        dw.classList.remove('hidden');
+        d.innerHTML = card.detailHtml;
+      } else {
+        dw.classList.add('hidden');
+        d.innerHTML = '';
+      }
+
+      document.getElementById('flip-inner').classList.remove('is-flipped');
+      document.getElementById('flip-rating').classList.add('hidden');
+      flipRevealed = false;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // MCQ render
+    // ─────────────────────────────────────────────────────────
+    function renderMCQ(card) {
+      document.getElementById('mcq-cat').textContent = CAT_LABELS[card.cat] || card.cat;
+      document.getElementById('mcq-next').classList.add('hidden');
+      document.getElementById('mcq-feedback').classList.add('hidden');
+
+      // 問題形式の選択：症例形式が選ばれていて症例データがある場合は症例を表示、なければ定義文に fallback
+      const useCase = appState.mcqFormat === 'case' && card.caseDescription;
+      const questionText = useCase ? card.caseDescription : card.def;
+
+      const labelEl = document.querySelector('#mcq-area .mcq-question-label');
+      if (labelEl) {
+        labelEl.textContent = useCase ? '次の臨床場面に当てはまる用語はどれか？' : '次の説明にあてはまる用語はどれか？';
+      }
+
+      // 症例形式フォールバック注記
+      const fallbackEl = document.getElementById('mcq-fallback-note');
+      if (fallbackEl) {
+        if (appState.mcqFormat === 'case' && !card.caseDescription) {
+          fallbackEl.textContent = '※この語には症例記述がないため定義文形式で出題しています。';
+          fallbackEl.classList.remove('hidden');
+        } else {
+          fallbackEl.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('mcq-def').textContent = questionText;
+
+      const others  = CARDS.filter((c) => c.id !== card.id);
+      const diffCat = others.filter((c) => c.cat !== card.cat);
+      const sameCat = others.filter((c) => c.cat === card.cat);
+      let pool = diffCat.length >= 3 ? diffCat : [...diffCat, ...sameCat];
+      pool.sort(() => Math.random() - 0.5);
+      const distractors = pool.slice(0, 3);
+
+      const choices = [
+        { pick: card, correct: true },
+        ...distractors.map((d) => ({ pick: d, correct: false }))
+      ].sort(() => Math.random() - 0.5);
+
+      const container = document.getElementById('mcq-choices');
+      container.innerHTML = '';
+
+      choices.forEach((choice) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.cardId = choice.pick.id;
+        btn.className =
+          'choice-btn w-full text-left rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-800 active:scale-[0.98]';
+        btn.textContent = choice.pick.term;
+
+        btn.addEventListener('click', () => {
+          container.querySelectorAll('.choice-btn').forEach((b) => { b.disabled = true; });
+
+          if (choice.correct) {
+            btn.classList.add('correct');
+            applyRating(card.id, 'known');
+            showMcqFeedback(true, card, null);
+          } else {
+            btn.classList.add('wrong');
+            container.querySelectorAll('.choice-btn').forEach((b) => {
+              if (b.dataset.cardId === card.id) b.classList.add('correct');
+            });
+            applyRating(card.id, 'unknown');
+            showMcqFeedback(false, card, choice.pick);
+          }
+
+          sessionDone++;
+          updateProgress();
+          document.getElementById('mcq-next').classList.remove('hidden');
+        });
+
+        container.appendChild(btn);
+      });
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Screen transitions
+    // ─────────────────────────────────────────────────────────
+    function showDashboard() {
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('session').classList.add('hidden');
+      document.getElementById('completion').classList.add('hidden');
+      document.getElementById('header-progress').classList.add('hidden');
+      document.getElementById('progress-bar-wrap').classList.add('hidden');
+      renderDashboard();
+    }
+
+    function showSession() {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('session').classList.remove('hidden');
+      document.getElementById('completion').classList.add('hidden');
+      document.getElementById('header-progress').classList.remove('hidden');
+      document.getElementById('progress-bar-wrap').classList.remove('hidden');
+      showCurrentCard();
+    }
+
+    function showCompletion() {
+      document.getElementById('session').classList.add('hidden');
+      document.getElementById('completion').classList.remove('hidden');
+      document.getElementById('header-progress').classList.add('hidden');
+      document.getElementById('progress-bar-wrap').classList.add('hidden');
+
+      const boxCounts = [0, 0, 0, 0, 0];
+      for (const c of CARDS) {
+        const { box } = getCardState(c.id);
+        boxCounts[box - 1]++;
+      }
+
+      const statsEl = document.getElementById('completion-stats');
+      statsEl.innerHTML =
+        `<p class="text-sm font-bold text-slate-700 mb-3">ボックス分布</p>` +
+        LEITNER_LABELS.map((label, i) => {
+          const col = LEITNER_COLORS[i];
+          return `<div class="flex items-center justify-between text-xs py-0.5">
+            <span class="${col.text} font-medium">Box ${i + 1}　${label}</span>
+            <span class="tabular-nums font-semibold text-slate-700">${boxCounts[i]} 語</span>
+          </div>`;
+        }).join('') +
+        `<div class="border-t border-slate-100 mt-2 pt-2 flex justify-between text-xs">
+           <span class="text-slate-500">今日完了</span>
+           <span class="font-bold text-teal-700">${sessionDone} 枚</span>
+         </div>`;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Session: show current card
+    // ─────────────────────────────────────────────────────────
+    function showCurrentCard() {
+      if (queueIndex >= queue.length) {
+        showCompletion();
+        return;
+      }
+
+      const card = queue[queueIndex];
+      document.getElementById('remaining').textContent = queue.length - queueIndex;
+      updateProgress();
+
+      if (appState.mode === 'flip') {
+        document.getElementById('flip-area').classList.remove('hidden');
+        document.getElementById('mcq-area').classList.add('hidden');
+        renderFlipCard(card);
+      } else {
+        document.getElementById('flip-area').classList.add('hidden');
+        document.getElementById('mcq-area').classList.remove('hidden');
+        renderMCQ(card);
+      }
+    }
+
+    function advance() {
+      queueIndex++;
+      showCurrentCard();
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Event listeners
+    // ─────────────────────────────────────────────────────────
+
+    // Start
+    document.getElementById('btn-start').addEventListener('click', () => {
+      buildQueue();
+      if (queue.length === 0) {
+        alert('今日の学習カードはありません。明日また来てください！');
+        return;
+      }
+      showSession();
+    });
+
+    // Back to dashboard
+    document.getElementById('btn-back').addEventListener('click', () => {
+      if (confirm('セッションを中断してダッシュボードに戻りますか？')) showDashboard();
+    });
+
+    // Completion → dashboard
+    document.getElementById('btn-to-dashboard').addEventListener('click', showDashboard);
+
+    // Flip card toggle
+    const flipInnerEl = document.getElementById('flip-inner');
+    flipInnerEl.addEventListener('click', () => {
+      if (queueIndex >= queue.length) return;
+      flipRevealed = !flipRevealed;
+      flipInnerEl.classList.toggle('is-flipped', flipRevealed);
+      document.getElementById('flip-rating').classList.toggle('hidden', !flipRevealed);
+    });
+    flipInnerEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipInnerEl.click(); }
+    });
+
+    // Flip rating buttons
+    document.querySelectorAll('[data-rating]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = queue[queueIndex];
+        if (!card) return;
+        applyRating(card.id, btn.dataset.rating);
+        sessionDone++;
+        advance();
+      });
+    });
+
+    // MCQ next
+    document.getElementById('mcq-next').addEventListener('click', advance);
+
+    // Mode toggle
+    document.querySelectorAll('.mode-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        appState.mode = btn.dataset.mode;
+        saveState();
+        renderModeButtons();
+        renderMcqFormatButtons();
+      });
+    });
+
+    // MCQ format toggle
+    document.querySelectorAll('.mcqformat-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        appState.mcqFormat = btn.dataset.mcqformat;
+        saveState();
+        renderMcqFormatButtons();
+      });
+    });
+
+    // Export JSON
+    document.getElementById('btn-export').addEventListener('click', () => {
+      const payload = JSON.stringify({ exportedAt: new Date().toISOString(), state: appState }, null, 2);
+      const blob = new Blob([payload], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = Object.assign(document.createElement('a'), { href: url, download: 'psych-srs-progress.json' });
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Reset
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (!confirm('学習ログをすべてリセットしますか？\n（Leitnerボックスの進捗がすべて消えます）')) return;
+      appState.cards = {};
+      saveState();
+      renderDashboard();
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // Init
+    // ─────────────────────────────────────────────────────────
+    (() => {
+      CARDS = fetchCards();
+      document.getElementById('loading').classList.add('hidden');
+
+      if (CARDS.length === 0) {
+        document.getElementById('dashboard-content').innerHTML =
+          `<div class="bg-red-50 rounded-2xl border border-red-200 p-5 text-center">
+             <p class="text-red-700 font-semibold text-sm mb-1">用語データの初期化に失敗しました</p>
+             <p class="text-red-500 text-xs leading-relaxed">ページを再読み込みしてください。</p>
+           </div>`;
+        document.getElementById('dashboard-content').classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('dashboard-content').classList.remove('hidden');
+      renderDashboard();
+    })();
+  </script>
+</body>
+</html>

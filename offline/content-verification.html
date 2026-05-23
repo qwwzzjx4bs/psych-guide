@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コンテンツ検証ツール — 精神科臨床ガイド</title>
+  <script src="vendor/tailwind.js"></script>
+  <link href="vendor/fonts/fonts.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background: #f4f2ef;
+      color: #232323;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'palt';
+    }
+    a { text-decoration: none; }
+
+    /* === Status badges === */
+    .status-ok    { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+    .status-warn  { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .status-flag  { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    .status-skip  { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+
+    /* === Card row === */
+    .verify-card {
+      background: #fff;
+      border: 1px solid #e2e0dd;
+      border-radius: 12px;
+      transition: box-shadow 0.15s;
+    }
+    .verify-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .verify-card.confirmed { border-left: 4px solid #10b981; }
+    .verify-card.has-flag  { border-left: 4px solid #ef4444; }
+    .verify-card.has-warn  { border-left: 4px solid #f59e0b; }
+
+    /* === Axis panels === */
+    .axis-panel { border-radius: 8px; padding: 10px 12px; font-size: 0.75rem; }
+    .axis-dosage   { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .axis-notation { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .axis-terms    { background: #faf5ff; border: 1px solid #e9d5ff; }
+
+    /* === Reference table === */
+    .ref-table th { background: #f8fafc; font-weight: 600; font-size: 0.7rem; }
+    .ref-table td { font-size: 0.7rem; }
+    .ref-table tr:hover td { background: #f1f5f9; }
+
+    /* === Filter buttons === */
+    .filter-btn { transition: background 0.12s, color 0.12s; }
+    .filter-btn.active { background: #3b5bdb; color: #fff; }
+
+    /* === Section badge === */
+    .sec-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+    .sec-calc     { background: #cffafe; color: #164e63; }
+    .sec-scales   { background: #e0f2fe; color: #0c4a6e; }
+    .sec-diag     { background: #dbeafe; color: #1e3a8a; }
+    .sec-tx       { background: #ede9fe; color: #4c1d95; }
+    .sec-drugs    { background: #e0e7ff; color: #3730a3; }
+    .sec-concepts { background: #fef3c7; color: #78350f; }
+    .sec-study    { background: #fce7f3; color: #831843; }
+    .sec-lit      { background: #ccfbf1; color: #134e4a; }
+    .sec-other    { background: #f1f5f9; color: #334155; }
+
+    /* === Highlight match === */
+    mark { background: #fde68a; color: #78350f; border-radius: 2px; padding: 0 2px; }
+
+    /* === Sticky header === */
+    #sticky-header {
+      position: sticky; top: 0; z-index: 40;
+      background: #fff;
+      border-bottom: 1px solid #e2e0dd;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    /* === Stats bar === */
+    .stat-box {
+      text-align: center;
+      padding: 6px 16px;
+      border-radius: 8px;
+      min-width: 80px;
+    }
+
+    /* Export modal */
+    #export-modal {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #export-modal.hidden { display: none; }
+    #export-body {
+      width: min(90vw, 800px);
+      max-height: 80vh;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    #export-text {
+      flex: 1;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      padding: 16px;
+      background: #f8fafc;
+      border: none;
+      resize: none;
+      outline: none;
+    }
+
+    /* Reference drawer */
+    #ref-drawer {
+      transition: max-height 0.3s ease;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- Sticky header -->
+<div id="sticky-header">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <!-- Title row -->
+    <div class="flex items-center justify-between py-3 gap-3 flex-wrap">
+      <div class="flex items-center gap-3">
+        <a href="top.html" class="text-gray-400 hover:text-gray-600 text-xs">← ポータル</a>
+        <div class="w-px h-4 bg-gray-200"></div>
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-indigo-700 flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-xs font-bold">✓</span>
+          </div>
+          <div>
+            <h1 class="font-bold text-gray-900 text-sm leading-tight">コンテンツ検証ツール</h1>
+            <p class="text-xs text-gray-400 leading-tight">用量・表記・精神医学用語 3軸検証</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Stats -->
+        <div class="stat-box bg-gray-50 border border-gray-200">
+          <div class="text-lg font-bold text-gray-800" id="stat-total">—</div>
+          <div class="text-xs text-gray-500">総カード数</div>
+        </div>
+        <div class="stat-box bg-red-50 border border-red-200">
+          <div class="text-lg font-bold text-red-700" id="stat-flag">—</div>
+          <div class="text-xs text-red-500">要修正</div>
+        </div>
+        <div class="stat-box bg-amber-50 border border-amber-200">
+          <div class="text-lg font-bold text-amber-700" id="stat-warn">—</div>
+          <div class="text-xs text-amber-500">要確認</div>
+        </div>
+        <div class="stat-box bg-emerald-50 border border-emerald-200">
+          <div class="text-lg font-bold text-emerald-700" id="stat-confirmed">—</div>
+          <div class="text-xs text-emerald-500">確認済み</div>
+        </div>
+        <button id="btn-export" onclick="openExport()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+          レポート出力
+        </button>
+        <button onclick="resetAll()"
+          class="bg-white hover:bg-gray-50 text-gray-600 text-xs font-medium px-3 py-2 rounded-lg border border-gray-200 transition-colors">
+          リセット
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="pb-3 flex items-center gap-2 flex-wrap">
+      <span class="text-xs text-gray-500 font-medium">表示:</span>
+      <button class="filter-btn active text-xs px-3 py-1 rounded-full border border-gray-200 bg-gray-50" data-filter="all" onclick="setFilter('all', this)">全表示</button>
+      <button class="filter-btn text-xs px-3 py-1 rounded-full border border-gray-200 bg-gray-50" data-filter="issues" onclick="setFilter('issues', this)">要確認のみ</button>
+      <button class="filter-btn text-xs px-3 py-1 rounded-full border border-gray-200 bg-gray-50" data-filter="unconfirmed" onclick="setFilter('unconfirmed', this)">未確認のみ</button>
+      <button class="filter-btn text-xs px-3 py-1 rounded-full border border-gray-200 bg-gray-50" data-filter="confirmed" onclick="setFilter('confirmed', this)">確認済みのみ</button>
+      <div class="w-px h-4 bg-gray-200"></div>
+      <span class="text-xs text-gray-500 font-medium">軸:</span>
+      <button class="filter-btn text-xs px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700" data-axis="dosage" onclick="toggleAxis('dosage', this)">用量・用法</button>
+      <button class="filter-btn text-xs px-3 py-1 rounded-full border border-green-200 bg-green-50 text-green-700" data-axis="notation" onclick="toggleAxis('notation', this)">日本語表記</button>
+      <button class="filter-btn text-xs px-3 py-1 rounded-full border border-purple-200 bg-purple-50 text-purple-700" data-axis="terms" onclick="toggleAxis('terms', this)">精神医学用語</button>
+      <div class="w-px h-4 bg-gray-200"></div>
+      <select id="section-filter" onchange="setSectionFilter(this.value)"
+        class="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white text-gray-700">
+        <option value="">セクション: 全て</option>
+        <option value="drugs">薬剤選択</option>
+        <option value="tx-overview">治療概要</option>
+        <option value="diag">診断・分類</option>
+        <option value="calc">計算ツール</option>
+        <option value="scales">評価スケール</option>
+        <option value="concepts">概念・資格</option>
+        <option value="study">学習・ドリル</option>
+        <option value="literature">最新論文</option>
+        <option value="other">その他</option>
+      </select>
+      <div class="ml-auto">
+        <input type="text" id="search-input" placeholder="カード検索…" oninput="setSearch(this.value)"
+          class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white w-36 focus:outline-none focus:border-indigo-300">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+
+  <!-- Reference drawer (collapsible) -->
+  <div class="mb-6">
+    <button onclick="toggleRefDrawer()"
+      class="flex items-center gap-2 text-xs font-semibold text-indigo-700 hover:text-indigo-900 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-2.5 w-full text-left transition-colors">
+      <span id="ref-drawer-icon">▶</span>
+      <span>日本国内承認用量 リファレンスパネル（展開して参照）</span>
+    </button>
+    <div id="ref-drawer" style="max-height: 0;">
+      <div class="bg-white border border-indigo-100 rounded-b-xl p-4 mt-1">
+        <p class="text-xs text-gray-500 mb-3">出典: 各薬剤の日本国内添付文書（PMDA）。記載は検証参照用途です。必ず最新版添付文書を確認してください。</p>
+        <div class="overflow-x-auto">
+          <table class="ref-table w-full border-collapse text-left">
+            <thead>
+              <tr class="border-b border-gray-200">
+                <th class="py-2 px-3 w-36">薬剤名（一般名）</th>
+                <th class="py-2 px-3 w-28">商品名</th>
+                <th class="py-2 px-3">適応（日本）</th>
+                <th class="py-2 px-3 w-48">用量（mg/日）</th>
+                <th class="py-2 px-3">主な注意点</th>
+              </tr>
+            </thead>
+            <tbody id="ref-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card list -->
+  <div id="card-list" class="space-y-3"></div>
+  <div id="empty-msg" class="hidden text-center py-16 text-gray-400">
+    <div class="text-4xl mb-3">🔍</div>
+    <p class="text-sm">条件に一致するカードがありません</p>
+  </div>
+</div>
+
+<!-- Export modal -->
+<div id="export-modal" class="hidden" onclick="closeExport(event)">
+  <div id="export-body" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+      <h2 class="font-bold text-gray-900 text-sm">検証レポート（Markdown）</h2>
+      <div class="flex gap-2">
+        <button onclick="copyExport()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">コピー</button>
+        <button onclick="closeExport()" class="bg-white hover:bg-gray-50 text-gray-600 text-xs font-medium px-3 py-2 rounded-lg border border-gray-200">閉じる</button>
+      </div>
+    </div>
+    <textarea id="export-text" readonly></textarea>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   DATA: CARDS
+===================================================================== */
+const CARDS = [
+  // ── 計算ツール ──────────────────────────────────────────────────
+  { id: 'card-cp-calc',    section: 'calc', title: '抗精神病薬 CP換算計算機', file: 'cp-calculator.html',
+    desc: '世代別（第1世代・第2世代）に分類された抗精神病薬のクロルプロマジン等価換算（稲垣・稲田版）をリアルタイムで計算。経口・持効性注射剤・速効性注射剤に対応。スマホ最適化。' },
+  { id: 'card-dzp-calc',   section: 'calc', title: 'ベンゾジアゼピン系 ジアゼパム換算計算機', file: 'dzp-calculator.html',
+    desc: '国内主要なベンゾジアゼピン系薬をジアゼパム等価 mg に概算換算。経口・舌下／徐放・ODT／注射の3タブ。CP換算ページと同じ操作（検索ジャンプ・クイック加算・合計バー）。' },
+  { id: 'card-crcl-psych', section: 'calc', title: 'CrCl 推算 × 向精神薬の腎障害時目安', file: 'crcl-psychotropics.html',
+    desc: 'Cockcroft–Gault による推算クレアチニンクリアランスと、CrCl 区分ごとの国内向精神薬の1日量上限・禁忌・慎重投与の要約表を1画面に表示。' },
+  { id: 'card-acute-alerts', section: 'calc', title: '急性期クイック（QTc・電解質・離脱要約）', file: 'acute-alerts.html',
+    desc: 'Bazett / Fridericia による QTc、Na・K・Mg の閾値アラート、CIWA-Ar 型の要約スコア（最大67点）を1画面に集約。教育用の目安表示。' },
+
+  // ── 評価スケール ──────────────────────────────────────────────
+  { id: 'card-schiz-sheets',  section: 'scales', title: '統合失調症 評価スケール集（外来用印刷様式）', file: 'schizophrenia-assessment-sheets.html',
+    desc: '外来診察での記入・印刷に最適化されたアセスメントシート集。評価記録・経過追跡に使用可能。' },
+  { id: 'card-anxiety-scales', section: 'scales', title: '不安症群 重症度評価スケール集 — 外来用様式', file: 'anxiety-assessment-scales.html',
+    desc: 'GAD-7・HAM-A・LSAS・Y-BOCS・PHQ-9 等の重症度評価スケールを外来用印刷様式として収録。エビデンスレベルバッジ付き。' },
+  { id: 'card-bprs-detailed',  section: 'scales', title: 'BPRS 採点シート — 詳細版（7段階アンカーポイント）', file: 'bprs-sheet-detailed.html',
+    desc: '18項目×7段階の具体的な臨床記述を収録。評価基準・質問例・定義の折りたたみ表示付き。アンカーポイントを参照しながら採点できる精緻版。' },
+  { id: 'card-panss-detailed', section: 'scales', title: 'PANSS 採点シート — 詳細版（アンカーポイント）', file: 'panss-sheet-detailed.html',
+    desc: '30項目×7段階のアンカーポイントを収録。PANSSの一般的基準・寛解基準（Andreasen 2005）・BPRS対応関係を随所に明記した精緻版採点シート。' },
+  { id: 'card-bfcrs',          section: 'scales', title: 'BFCRS 採点シート — Bush-Francis 緊張病評価尺度（詳細版）', file: 'bfcrs-sheet.html',
+    desc: '緊張病（カタトニア）の標準評価尺度・全23項目の詳細採点シート。BFCSS スクリーニング判定（≥2項目陽性）・バイナリ項目（蝋様固縮・随行［Mitgehen］等6項目）・ベンゾジアゼピン反応試験ガイド・悪性緊張病アラートを収録。' },
+  { id: 'card-ymrs',           section: 'scales', title: 'YMRS 採点シート — Young 躁状態評価尺度（詳細版）', file: 'ymrs-sheet-detailed.html',
+    desc: '11項目の躁状態評価尺度。通常項目（0〜4点）と倍点項目（0〜8点：過敏性・言語思考障害・攻撃的行動）を区別して採点。重症度判定・アンカーポイント・質問例付き。' },
+  { id: 'card-hamd',           section: 'scales', title: 'HAM-D 採点シート — ハミルトンうつ病評価尺度（詳細版）', file: 'hamd-sheet-detailed.html',
+    desc: '17項目のうつ病重症度評価の世界標準。気分・罪責感・自殺念慮・睡眠・精神運動・不安・身体症状・病識を網羅。0-4点項目・0-2点項目を自動判別して採点。重症度判定（正常〜最重度）・アンカーポイント・質問例・臨床コメント付き。' },
+  { id: 'card-madrs',          section: 'scales', title: 'MADRS 採点シート — Montgomery–Åsberg うつ病評価尺度（詳細版）', file: 'madrs-sheet-detailed.html',
+    desc: '10項目・各0〜6点（合計0〜60点）。治験をはじめ抗うつ薬効果判定に頻用。外見的悲しさ・睡眠・食欲・集中・自殺念慮等を7段階で評価。サブスコア表示・寛解・軽中重度の目安付き。簡易印刷は子ウィンドウ自己印刷方式（Android対応）。' },
+  { id: 'card-schiz-scales',   section: 'scales', title: '統合失調症 精神症状評価スケール集', file: 'schizophrenia-scales.html',
+    desc: 'PANSS・BPRS・CGI・SAPS/SANS 等の評価スケールを収録した臨床リファレンス。スコア基準・判定方法付き。' },
+  { id: 'card-bprs-guide',     section: 'scales', title: 'BPRS 解説ガイド', file: 'bprs-guide.html',
+    desc: '日本語版BPRS解説書をHTMLで図解。18項目の定義・評価ポイント・質問例・採点基準・面接手順・FAQを収録した外来参照ガイド。' },
+
+  // ── 診断・分類 ────────────────────────────────────────────────
+  { id: 'card-icd10',     section: 'diag', title: 'ICD-10 精神科疾患分類（詳細版）', file: 'icd10.html',
+    desc: 'F0〜F9 全カテゴリの診断基準・鑑別診断・関連治療薬をコード表付きで網羅。外来診察中の即時参照に最適化。' },
+  { id: 'card-icd11',     section: 'diag', title: 'ICD-11 / DSM-5-TR 精神科疾患全体像', file: 'psychiatric-overview-icd11.html',
+    desc: 'ICD-11とDSM-5-TRの両分類を並置した全体像マップ。改訂ポイント・対応コードを対照表形式で整理。' },
+  { id: 'card-icd10mini', section: 'diag', title: 'ICD-10 精神科疾患分類 ミニ版', file: 'icd10mini.html',
+    desc: 'F0〜F9 の概要・コード一覧をコンパクトにまとめた軽量版。素早い参照・印刷用途に最適。' },
+  { id: 'card-dsm5tr',    section: 'diag', title: 'DSM-5-TR 精神科章立てガイド（詳細版）', file: 'dsm5tr.html',
+    desc: 'APA Section II 全章のアコーディオン一覧。各章のアウトラインボックス、ICD-10-CM連関メモ、DSM側概要列付きコード表。※行クリックで概要全文表示。' },
+  { id: 'card-dsm5trmini', section: 'diag', title: 'DSM-5-TR 精神科章立てガイド（ミニ版）', file: 'dsm5trmini.html',
+    desc: '全章テーブルを同一画面で軽量表示。概要列を常時表示し、外来スマホ確認に最適化。' },
+
+  // ── 治療概要 ──────────────────────────────────────────────────
+  { id: 'card-schiz-algo',  section: 'tx-overview', title: '統合失調症 薬物治療アルゴリズム 図解版', file: 'schizophrenia-algorithm.html',
+    desc: '統合失調症治療ガイドライン2022準拠。急性期・維持期の薬物選択・用量調整・切り替え戦略をフローチャートで図解。' },
+  { id: 'card-depression',  section: 'tx-overview', title: 'うつ病 診断・治療選択ツリー — ガイドライン2025準拠', file: 'depression-guideline2025.html',
+    desc: 'うつ病エピソードの重症度評価から初期薬物治療・増強療法・難治性うつへの対応まで治療フローを図解。双極性障害との鑑別ポイントも収録。' },
+  { id: 'card-bipolar',     section: 'tx-overview', title: '双極性障害 診断・治療選択ツリー — 日本うつ病学会 診療ガイドライン2023準拠', file: 'bipolar-diagnosis-treatment.html',
+    desc: 'DSM-5-TR 診断基準・特定子（specifier）分類・鑑別診断から、躁病急性期（気分安定薬+SGA 弱く推奨2A）・双極性障害うつ病相（クエチアピンXR/ルラシドン/オランザピン/ラモトリギン・抗うつ薬追加は弱く推奨しない2C）・維持療法・心理教育・MECTまで網羅した外来即時参照ガイド。' },
+  { id: 'card-delirium',    section: 'tx-overview', title: 'せん妄 治療選択ツリー（日本のガイドライン・実践整理）', file: 'delirium-treatment-japan.html',
+    desc: '原因探索・非薬物介入・ハイリスク薬の見直し、ハロペリドール／リスペリドン／クエチアピン等の位置づけと禁忌・QT 注意を、鑑別・プロセスムシの視点で整理。' },
+  { id: 'card-anxiety',     section: 'tx-overview', title: '不安症群 — 診断ツリー＆治療アルゴリズム', file: 'anxiety-disorders.html',
+    desc: 'パニック障害・社交不安症・全般不安症・特定の恐怖症・強迫性障害（OCD）の ICD-10/DSM-5-TR 診断ツリーと薬物・非薬物治療選択。' },
+  { id: 'card-schiz-diagnosis', section: 'tx-overview', title: '統合失調症 診断プロセス完全ガイド — 古典的診断 vs 操作的基準・鑑別・除外検査', file: 'schizophrenia-diagnosis.html',
+    desc: 'クレペリン/ブロイラー/シュナイダーの古典的概念からDSM-5-TR/ICD-10/ICD-11の操作的基準を比較対照。初発精神病（FEP）の診断プロセスフロー・10疾患の鑑別診断・自己免疫性脳炎との鑑別・一般的・専門的除外検査（抗NMDA受容体抗体等）を網羅した外来即時参照ガイド。' },
+  { id: 'card-schiz-early-intervention', section: 'tx-overview', title: '統合失調症の早期介入 — 概要・専門チーム・エビデンス図解', file: 'schizophrenia-early-intervention.html',
+    desc: '国リセ「こころとくらし」の解説とコクラン要約をベースに、概念・対象の流れ・SEIチームの運用条件・エビデンスの境界を図解。CSC（NIMH）図解ページへリンク。' },
+  { id: 'card-atypical-depression', section: 'tx-overview', title: '非定型うつ病 — 概念・歴史・診断基準・治療アルゴリズム', file: 'atypical-depression.html',
+    desc: 'West &amp; Dally（1950年代）から Columbia Group・DSM-5-TRへの歴史的変遷。RAILS記憶法（気分反応性・過食・拒絶過敏・鉛様麻痺・過眠）による核心症状解説。MAOI vs SSRI エビデンス・CBT（Jarrett 1999: CT≒フェネルジン>プラセボ）・成人ADHD（RSD）との鑑別・MAOIの禁忌薬剤一覧を収録。' },
+  { id: 'card-nonpharmacologic', section: 'tx-overview', title: '精神医学領域の非薬物療法マップ — 心理・社会・環境の三分類', file: 'nonpharmacologic-psychiatry-overview.html',
+    desc: '心理系（CBT・EMDR・ACT・IPT等）・社会系（SST・就労支援・家族心理教育等）・環境系（MECT・TMS・光療法等）の非薬物療法をエビデンスレベル（A/B/C）・推奨度とともに一覧化した外来参照マップ。' },
+  { id: 'card-schiz-psychoedu', section: 'tx-overview', title: '統合失調症 心理教育資料 カスタマイズ生成ツール', file: 'schizophrenia-psychoeducation-generator.html',
+    desc: '患者さん・ご家族向け説明資料を症例に合わせてカスタマイズ生成。薬剤名・副作用・治療目標を入力すると整形テキストを自動出力。外来での説明文書作成を効率化するジェネレーター。' },
+
+  // ── 薬剤選択 ──────────────────────────────────────────────────
+  { id: 'card-antipsychotics',   section: 'drugs', title: '抗精神病薬 選択ガイド（日本承認薬）', file: 'antipsychotics-japan.html',
+    desc: '日本で承認されている抗精神病薬の特性・用量・副作用プロファイルを比較整理した臨床選択ガイド。' },
+  { id: 'card-benzodiazepines',  section: 'drugs', title: 'ベンゾジアゼピン 選択ガイド（日本承認薬）', file: 'benzodiazepines-japan.html',
+    desc: '作用時間分類・薬物動態・主訴別アルゴリズム・注射剤・漸減まで、抗精神病薬ガイドと同構成で整理。' },
+  { id: 'card-antidepressants',  section: 'drugs', title: '抗うつ薬 選択ガイド（日本承認薬）', file: 'antidepressants-japan.html',
+    desc: 'SSRI・SNRI・NaSSA・SMS 等の分類、トランスポーター／薬理比較、主訴別アルゴリズム、薬剤ごとの用量・特徴、副作用マトリックス、製剤経路、相互作用まで抗精神病薬ガイドと同構成で整理。' },
+  { id: 'card-mood-stabilizers', section: 'drugs', title: '気分安定薬 選択ガイド（日本承認薬）', file: 'mood-stabilizers-japan.html',
+    desc: 'リチウム・バルプロ酸・カルバマゼピン・ラモトリギンと、双極適応がある SGA を、抗うつ薬ガイドと同じ目次構成（アルゴリズム・薬理・薬剤ごとの用量・製剤・副作用・監視・相互作用）で整理。' },
+  { id: 'card-hypnotics',        section: 'drugs', title: '不眠症治療薬 選択ガイド（日本承認薬）', file: 'hypnotics-japan.html',
+    desc: 'ラメルテオン・オレキシン拮抗薬 4 成分・ゾルピデム／ゾピクロン／エスゾピクロンと、BZD 催眠を、他の薬剤ガイドと同型の目次（クイック・分類・アルゴリズム・比較表・薬剤詳細・相互作用）で整理。' },
+  { id: 'card-venlafaxine',      section: 'drugs', title: 'ベンラファキシン（イフェクサーSR）— 分子構造・薬理・エビデンス 詳解', file: 'venlafaxine.html',
+    desc: 'SNRI の代表薬ベンラファキシンを分子構造・受容体プロファイル（Ki 値）・用量依存性メカニズム・薬物動態（ADME・CYP2D6多型）・日本承認情報・ガイドライン推奨度マトリクス・主要 RCT・具体的症例・副作用管理（血圧・中止症候群）・相互作用・特殊集団・海外比較・最新研究まで専門医向けに一本化した単剤詳解ページ。' },
+  { id: 'card-olanzapine',       section: 'drugs', title: 'オランザピン（ジプレキサ）— 分子構造・薬理・エビデンス 詳解', file: 'olanzapine.html',
+    desc: 'SGA（MARTA）の代表薬オランザピンを分子構造・受容体プロファイル（D2/5-HT2A/H1/M1/α1 Ki 値）・薬物動態（UGT1A4/CYP1A2・喫煙影響）・4適応の日本承認情報・ガイドライン推奨度マトリクス・CATIE 試験・Leucht 2013 等の主要エビデンス・具体的症例・代謝モニタリングフロー・薬物相互作用・特殊集団（糖尿病禁忌・認知症警告）・海外比較・最新研究まで一本化した単剤詳解ページ。' },
+  { id: 'card-quetiapine',       section: 'drugs', title: 'クエチアピン（セロクエル / ビプレッソ）— 分子構造・薬理・エビデンス 詳解', file: 'quetiapine.html',
+    desc: 'SGA（MARTA）の代表薬クエチアピンを分子構造・受容体プロファイル（H1/α1/5-HT2A/D2 Ki 値・ヒットアンドラン型 D2 結合）・活性代謝物 norquetiapine（NET 阻害・5-HT1A 部分作動）・IR vs XR 製剤の使い分け・CYP3A4 代謝（カルバマゼピン相互作用）・BOLDER/EMBOLDEN 試験・双極うつ/維持の強力エビデンス・代謝モニタリング・特殊集団・海外比較まで一本化した単剤詳解ページ。' },
+  { id: 'card-brexpiprazole',    section: 'drugs', title: 'ブレクスピプラゾール（レキサルティ）— 分子構造・薬理・エビデンス 詳解', file: 'brexpiprazole.html',
+    desc: 'SDAM（セロトニン-ドーパミン活性モジュレーター）の代表薬ブレクスピプラゾールを分子構造（ベンゾチオフェン-ピペリジン-キノリノン骨格）・受容体プロファイル（5-HT1A/α1B/D2/5-HT2A の sub-nM Ki）・アカシジア最小の機序・超長半減期（t₁/₂≈91h）・CYP3A4+CYP2D6 両代謝の相互作用・統合失調症 VECTOR/BEACON 試験・MDD 補助療法（2023年日本承認）エビデンス・BPSD への FDA 新承認まで詳解。' },
+
+  // ── 概念・資格 ────────────────────────────────────────────────
+  { id: 'card-schiz-history',    section: 'concepts', title: '統合失調症の捉え方の歴史（世界×日本）— 思想・学派・診断体系の変遷', file: 'schizophrenia-history.html',
+    desc: 'クレペリン/ブロイラーから、現象学・反精神医学・DSM/ICDの操作的診断、神経発達モデル、早期介入までを「世界×日本」並列タイムライン＋概念マップで整理。日本の改称（2002）と制度史のポイントも含めた外来参照用の歴史図解。' },
+  { id: 'card-cssrs-memo',       section: 'concepts', title: 'C-SSRS 手順メモ（面接・記録・連携）', file: 'cssrs-procedure-memo.html',
+    desc: 'Columbia Lighthouse Project の許諾版を用いる前提で、実施前後のチェック・記録・エスカレーション・再評価の型を整理。質問票の転載なし。' },
+  { id: 'card-csc-jp',           section: 'concepts', title: 'Coordinated Specialty Care（CSC）— 調整型専門ケア（NIMH・研修医向け）', file: 'coordinated-specialty-care-jp.html',
+    desc: 'RAISEで検証された初発精神病向けチームケアを日本語化。5構成要素（心理・家族・薬物・就学就労・ケースマネ）と共有意思決定を用語注釈付きで図解。アメリカ基準である旨の注記あり。' },
+  { id: 'card-terminology',      section: 'concepts', title: '精神医学・精神病理学・精神症候学・精神分析学 用語マップ（拡張版）', file: 'psych-terminology-jp.html',
+    desc: '精神医学の主要概念・症候学用語・精神分析用語を体系的にマッピング。症状記載・論文読解・症例検討に即座に参照可能。' },
+  { id: 'card-shiteii',          section: 'concepts', title: '精神保健指定医 資格取得ガイド — 完全ロードマップ', file: 'shiteii-guide.html',
+    desc: '専攻医1年目から始める申請要件・症例レポート対策・口頭試問対策・タイムラインを収録した資格取得の完全ガイド。' },
+  { id: 'card-shitei-overview',  section: 'concepts', title: '精神保健指定医 制度概要', file: 'seishin-hoken-shitei-overview.html',
+    desc: '精神保健福祉法 第18条に基づく指定医制度の法的根拠・権限・申請要件・5カテゴリのレポート要件・疾患カテゴリ早見表を網羅。' },
+  { id: 'card-shitei-checklist', section: 'concepts', title: '精神保健指定医 申請チェックリスト', file: 'shitei-checklist.html',
+    desc: '措置入院・医療保護入院・任意入院・隔離・身体的拘束・疾患カテゴリの要件をインタラクティブに確認。進捗はブラウザに自動保存。' },
+  { id: 'card-shitei-wizard',    section: 'concepts', title: '精神保健指定医 レポート作成ウィザード', file: 'shitei-report-wizard.html',
+    desc: '7ステップの対話形式で症例レポートを作成。ICD-10ピッカー・入院形態別の記載ガイド付き。入力内容から整形テキストを自動生成し、コピー可能。進捗は localStorage に保存。' },
+  { id: 'card-shitei-case-template', section: 'concepts', title: '精神保健指定医 症例5本 選定テンプレ', file: 'shitei-case-template.html',
+    desc: '新規申請ケースレポート5症例の選定をインタラクティブに支援。申請日入力で7年・1年の期間閾値を自動算出。入院形態・立ち会い・ICD-10コードの整合チェック付き。提出書類一覧・最終確認チェックリストを収録。' },
+  { id: 'card-schiz-highschool', section: 'concepts', title: '統合失調症って何？ ── 高校生・一般向け図解ガイド', file: 'schizophrenia-highschool-guide.html',
+    desc: '統合失調症の症状・経過・治療を高校生・一般向けにやさしく図解。家族・友人の関わり方・相談先（精神科外来・相談窓口）の案内も収録した患者・支援者向け参照ページ。' },
+
+  // ── 学習・ドリル ──────────────────────────────────────────────
+  { id: 'card-terminology-srs',  section: 'study', title: '精神医学用語 SRS 学習（間隔反復）', file: 'psych-terminology-srs.html',
+    desc: '精神医学・精神病理・症候学・精神分析の全用語をLeitner 5段階で間隔反復。フリップカード（自己評価）と4択MCQを切替可能。進捗はブラウザに保存。' },
+  { id: 'card-icd10-quiz',       section: 'study', title: 'ICD-10 精神科クイズ', file: 'icd10-quiz.html',
+    desc: '定義文から ICD コードと日本語病名を4択。主コード／サブコード・F章カテゴリ・問題数を選べます。解答後に一覧（icd10.html）への導線あり。' },
+  { id: 'card-mood-suicide-learning', section: 'study', title: '気分障害 × 自殺リスク — 学習ハブ', file: 'mood-suicide-learning.html',
+    desc: '双極性障害の鑑別・構造化アセス・治療との交差点を1本に整理。症例ドリル計15症例（身体疾患併存・向精神薬誘発性・統合失調症性感情障害 ほか、開示付き）と10問ミニチェック。' },
+  { id: 'card-schiz-fe-learning', section: 'study', title: '統合失調症 × 初発時対応 — 学習ハブ', file: 'schizophrenia-first-episode-learning.html',
+    desc: '初発精神病（FEP）の鑑別・安全・治療開始・家族連携の型。症例ドライループ8本とミニチェック10問。診断ページ・薬ガイド・BFCRS等へリンク。' },
+  { id: 'card-psychopath-scales-learning', section: 'study', title: '精神病理 × スケール — 学習ハブ', file: 'psychopathology-scales-learning.html',
+    desc: '症候の読みと尺度項目の対応を練習。学習順・採点前チェック・交差点の整理、症例ドライループ8本、ミニチェック10問。用語マップ・BPRS／PANSS・BFCRS・HAM-D／MADRS・YMRS等へリンク。' },
+  { id: 'card-psychotropics-interactions-learning', section: 'study', title: '向精神薬 × 相互作用・禁忌 — 学習ハブ', file: 'psychotropics-interactions-learning.html',
+    desc: '併用前チェック・PK/PDの交差点を整理。症例ドライループ8本（MAOI-SSRI、QT、酵素誘導、リチウム-NSAIDs、リネゾリド、ラモトリギン、クロザピン-禁煙、トラマドール等）とミニチェック10問。薬ガイド・CrCl・QTアラート・換算ページへリンク。' },
+  { id: 'card-asd-schizophrenia-learning', section: 'study', title: '自閉症スペクトラム障害 × 統合失調症 — 学習ハブ', file: 'asd-schizophrenia-learning.html',
+    desc: '発達史と精神病症状の時間軸・交差点を整理。症例ドライループ8本（いじめ後不安、発達の再評価、不動・少食、感覚vs幻聴、知的障害、職場ストレス、物質後持続幻聴、陰性vsASD等）とミニチェック10問。ICD F8/F2・診断・BFCRS・PANSS・初発ハブ等へリンク。' },
+  { id: 'card-eeg-learning',     section: 'study', title: '脳波読影（EEG）— 初学者学習ハブ', file: 'eeg-learning.html',
+    desc: '10-20法電極配置・周波数帯域（δ/θ/α/β/γ）・波形アニメーターの基礎知識から、20+波形パターン図鑑（正常・てんかん性・脳症・焦点性異常・特殊）、3難易度クイズ（30問）、10症例の段階的読影、6種アーティファクト識別・モンタージュ解説まで1ハブに統合（Phase 2）。' },
+  { id: 'card-eeg-basics',       section: 'study', title: '脳波読影 基礎知識', file: 'eeg-basics.html',
+    desc: '10-20法電極配置・周波数帯域（δ/θ/α/β/γ）の基礎から正常・異常波形の識別ポイントまでを整理した入門リファレンス。EEG学習ハブの基礎コンテンツ。' },
+  { id: 'card-eeg-waveforms',    section: 'study', title: '脳波パターン図鑑', file: 'eeg-waveforms.html',
+    desc: '正常波形・てんかん性放電・脳症性パターン・焦点性異常・特殊パターン（BSR・LPDs等）を収録した20+波形パターンの参照図鑑。' },
+  { id: 'card-eeg-quiz',         section: 'study', title: '脳波読影クイズ', file: 'eeg-quiz.html',
+    desc: '3難易度（入門・標準・応用）で波形パターンの認識を練習する対話型クイズ15問。解答後に解説・波形の特徴ポイントを表示。' },
+  { id: 'card-eeg-cases',        section: 'study', title: 'EEG 症例学習', file: 'eeg-cases.html',
+    desc: '欠神てんかん・肝性脳症・BECTS・CJD・JMEなど5症例を段階的に読影。臨床情報→脳波所見→鑑別→確定診断のステップで進む実践学習。' },
+
+  // ── 最新論文 ──────────────────────────────────────────────────
+  { id: 'card-literature-search', section: 'literature', title: '精神医学 最新論文検索ツール', file: 'literature-search.html',
+    desc: 'PubMed（NCBI）APIを使い、精神医学の最新論文をリアルタイム検索。疾患別クイック検索（統合失調症・うつ病・双極性障害・不安症・認知症ほか）、主要ジャーナル別ブラウズ、抄録の展開表示、DOI / PMC全文リンクに対応。Phase 2でRSS・medRxiv・J-STAGEの多ソース統合・キーワードアラートメール通知を実装予定。' },
+
+  // ── その他 ────────────────────────────────────────────────────
+  { id: 'card-context', section: 'other', title: 'コンテキストエンジニアリング完全解説', file: 'context-engineering.html',
+    desc: 'Anthropic 技術記事の日本語訳。AIエージェントへの情報提供手法を解説。' },
+  { id: 'card-cursor',  section: 'other', title: 'Cursor AIエージェント完全比較ガイド', file: 'cursor-ai-agents.html',
+    desc: 'Cursor 搭載の各AIエージェントの特徴・用途・選び方を比較解説。' },
+  { id: 'card-content-verification', section: 'other', title: 'コンテンツ検証ツール', file: 'content-verification.html',
+    desc: 'ポータル掲載内容の用量・用法・日本語表記・精神医学用語を3軸で検証し修正点を指摘する管理ツール。' },
+];
+
+/* =====================================================================
+   DATA: DRUG DOSAGE REFERENCE（日本国内添付文書準拠）
+===================================================================== */
+const DRUG_DOSAGE_REFERENCE = [
+  // ── 抗精神病薬 ──
+  { drug: 'オランザピン', brand: 'ジプレキサ®', indication: '統合失調症', dosage: '5〜10 mg/日 開始、維持10 mg/日、最大20 mg/日', note: '就寝前。糖尿病（既往含む）は禁忌。増量間隔は原則1週間以上。' },
+  { drug: 'オランザピン', brand: 'ジプレキサ®', indication: '双極性障害（躁/うつ）', dosage: '躁: 10 mg/日、最大20 mg/日 / うつ: 5 mg/日就寝前、最大20 mg/日', note: '糖尿病禁忌。認知症患者への常用投与は原則禁忌。' },
+  { drug: 'オランザピン', brand: 'ジプレキサ®', indication: '制吐（悪性腫瘍化学療法）', dosage: '5 mg/日、最大10 mg/日', note: '他制吐薬との併用。' },
+  { drug: 'クエチアピン', brand: 'セロクエル® (IR)', indication: '統合失調症', dosage: '25 mg×2〜3回/日 開始、維持150〜600 mg/日、最大750 mg/日', note: 'IR製剤のみ統合失調症適応。XR（ビプレッソ）は統合失調症への国内適応なし。' },
+  { drug: 'クエチアピン', brand: 'ビプレッソ® (XR)', indication: '双極性障害うつ病相', dosage: '50 mg就寝前→漸増、維持150〜300 mg/日就寝前、最大300 mg/日', note: 'Day1〜4で50→100→200→300 mg増量。XRは割砕禁忌。IR（セロクエル）は双極うつへの適応なし（適応外）。' },
+  { drug: 'ブレクスピプラゾール', brand: 'レキサルティ®', indication: '統合失調症', dosage: '1 mg/日開始、維持2 mg/日、最大2 mg/日', note: '1日1回。4日以上の間隔で増量。海外では4 mgまで使用されるが国内上限は2 mg。' },
+  { drug: 'ブレクスピプラゾール', brand: 'レキサルティ®', indication: 'うつ病・うつ状態（補助療法）', dosage: '1 mg/日（不十分なら2 mg/日）、最大2 mg/日', note: '抗うつ薬との併用必須。0.5 mgから開始も可。2023年日本承認。' },
+  { drug: 'ブレクスピプラゾール', brand: 'レキサルティ®', indication: 'アルツハイマー型認知症のBPSD', dosage: '0.5 mg/日開始、維持1 mg/日、最大2 mg/日', note: '1週間以上の間隔で増量。FDA承認（2023）、国内適応は要確認。' },
+  { drug: 'リスペリドン', brand: 'リスパダール®', indication: '統合失調症', dosage: '1〜2 mg/日開始、維持2〜8 mg/日、最大12 mg/日', note: '1日1〜2回。錐体外路症状（EPS）に注意。LAI製剤（リスパダールコンスタ® 25〜50 mg/2週）あり。' },
+  { drug: 'アリピプラゾール', brand: 'エビリファイ®', indication: '統合失調症', dosage: '6〜12 mg/日開始、維持6〜24 mg/日、最大30 mg/日', note: '1日1〜2回。うつ病補助療法は3〜15 mg/日（抗うつ薬との併用）。' },
+  { drug: 'ハロペリドール', brand: 'セレネース®', indication: '統合失調症・精神興奮', dosage: '0.75〜2.25 mg/日（高齢者：0.5〜1 mg）、維持0.75〜10 mg/日、最大最大20 mg/日', note: 'QT延長・EPS・遅発性ジスキネジアに注意。認知症の行動症状（BPSD）への使用は原則慎重。' },
+  { drug: 'クロザピン', brand: 'クロザリル®', indication: '治療抵抗性統合失調症', dosage: '12.5 mg/日開始、漸増、維持200〜450 mg/日、最大600 mg/日', note: '無顆粒球症リスク（約1%）のため週1〜4回の血液検査必須。国内はCPMS登録施設のみ。禁煙でCYP1A2誘導低下→血中濃度上昇。' },
+  { drug: 'パリペリドン', brand: 'インヴェガ® / ゼプリオン®', indication: '統合失調症', dosage: '経口：3〜6 mg/日開始、最大12 mg/日 / 月1回注射（LAI）：初回150 mg、1週後100 mg、維持75〜150 mg', note: '腎機能低下で用量調整要。経口は徐放製剤（割砕不可）。' },
+  { drug: 'アセナピン', brand: 'シクレスト®', indication: '双極Ⅰ型障害（躁症状）', dosage: '5 mg×2回/日（舌下錠）、維持5〜10 mg×2回/日', note: '舌下投与後10分は飲食・うがい禁忌。統合失調症への国内適応あり（5〜10 mg×2）。' },
+  { drug: 'ルラシドン', brand: 'ラツーダ®', indication: '統合失調症・双極性障害うつ病相', dosage: '統合失調症：40 mg/日開始、最大80 mg/日 / 双極うつ：20 mg/日開始、最大60 mg/日', note: '食後投与推奨（AUC増加）。1日1回。2020年日本で双極うつ適応取得。' },
+  // ── 抗うつ薬 ──
+  { drug: 'ベンラファキシン', brand: 'イフェクサー® SR', indication: 'うつ病・うつ状態、社交不安症', dosage: '37.5 mg/日開始、1週後75 mg/日、最大225 mg/日', note: '用量依存的にSERT→NET阻害。中止時は1〜2週かけて漸減（中止症候群）。血圧モニタリング。' },
+  { drug: 'エスシタロプラム', brand: 'レクサプロ®', indication: 'うつ病・うつ状態、社交不安症', dosage: '10 mg/日開始、維持10 mg/日、最大20 mg/日', note: '1日1回。最もCYP相互作用少ない。QT延長注意（20 mg）。' },
+  { drug: 'パロキセチン', brand: 'パキシル®', indication: 'うつ病・うつ状態ほか', dosage: '10〜20 mg/日開始、維持20〜40 mg/日、最大50 mg/日', note: '強力なCYP2D6阻害。中止症候群が最も強い。徐放錠（CR）は1日1回。' },
+  { drug: 'フルボキサミン', brand: 'デプロメール® / ルボックス®', indication: 'うつ病・うつ状態、強迫性障害、社交不安症', dosage: '50 mg/日開始、維持50〜150 mg/日、最大200 mg/日', note: '1日2回。強力なCYP1A2阻害（クロザピン・オランザピン濃度上昇）。' },
+  { drug: 'デュロキセチン', brand: 'サインバルタ®', indication: 'うつ病・うつ状態、糖尿病性神経障害、線維筋痛症、慢性腰痛症', dosage: '20 mg/日開始、維持40〜60 mg/日、最大60 mg/日', note: 'CYP2D6阻害中等度。尿閉・出血傾向に注意。' },
+  { drug: 'ミルタザピン', brand: 'リフレックス® / レメロン®', indication: 'うつ病・うつ状態', dosage: '15 mg/日就寝前開始、維持15〜30 mg/日、最大45 mg/日', note: 'NaSSA。鎮静・食欲増進が強い（低用量ほど著明）。CYP相互作用少。' },
+  { drug: 'ボルチオキセチン', brand: 'トリンテリックス®', indication: 'うつ病・うつ状態', dosage: '10 mg/日開始、維持10〜20 mg/日、最大20 mg/日', note: 'SMS（セロトニン調節・刺激薬）。認知機能への効果がエビデンス。CYP2D6弱阻害。' },
+  // ── 気分安定薬 ──
+  { drug: 'リチウム', brand: 'リーマス®', indication: '双極性障害（躁/維持）', dosage: '維持期200〜800 mg/日（血中濃度0.6〜0.8 mEq/L）、急性期0.8〜1.2 mEq/L', note: '治療域が狭い（中毒域>1.5 mEq/L）。腎機能・NSAIDs・ACE阻害薬で濃度上昇。妊娠初期エブスタイン奇形リスク。定期的TDM必須。' },
+  { drug: 'バルプロ酸', brand: 'デパケン® / セレニカR®', indication: '双極性障害（躁/維持）、てんかん', dosage: '400〜1200 mg/日（血中濃度50〜100 μg/mL）', note: '催奇形性（二分脊椎、神経管閉鎖障害）：女性への投与は要注意。肝障害・血小板減少モニタリング。CYP誘導なし（むしろCYP2C9阻害）。' },
+  { drug: 'カルバマゼピン', brand: 'テグレトール®', indication: '双極性障害（躁/維持）、てんかん、三叉神経痛', dosage: '200〜1200 mg/日（血中濃度4〜12 μg/mL）', note: '強力CYP誘導（自己誘導あり）。スティーブンス・ジョンソン症候群リスク（HLA-B*1502）。多数の薬物相互作用。' },
+  { drug: 'ラモトリギン', brand: 'ラミクタール®', indication: '双極性障害（維持）、てんかん', dosage: '単剤：25 mg/日開始→2週毎増量→維持100〜200 mg/日 / バルプロ酸併用：12.5 mg/日開始→維持25〜100 mg/日', note: '急激な増量で皮疹・SJS リスク（漸増必須）。バルプロ酸は血中濃度を約2倍に上昇させるため用量を半分以下に。' },
+  // ── ベンゾジアゼピン系 ──
+  { drug: 'ジアゼパム', brand: 'セルシン® / ホリゾン®', indication: '神経症の不安・緊張、不眠、痙攣', dosage: '2〜5 mg×1〜4回/日、最大30 mg/日（筋注静注は急性期）', note: '筋弛緩・鎮静作用。長期使用で依存・離脱症状。高齢者転倒リスク。' },
+  { drug: 'ロラゼパム', brand: 'ワイパックス®', indication: '不安・緊張・睡眠障害', dosage: '0.5〜1 mg×2〜3回/日、最大3 mg/日', note: '筋注製剤あり（カタトニア・痙攣重積に使用）。活性代謝物なし→高齢者に比較的安全。' },
+  { drug: 'クロナゼパム', brand: 'リボトリール® / ランドセン®', indication: 'てんかん（各種）、パニック障害（適応外使用多い）', dosage: 'てんかん：0.5〜6 mg/日', note: 'パニック障害への添付文書適応なし（適応外使用）。' },
+  // ── 催眠薬・睡眠薬 ──
+  { drug: 'スボレキサント', brand: 'ベルソムラ®', indication: '不眠症', dosage: '20 mg就寝前、高齢者15 mg', note: 'オレキシン受容体拮抗薬。REM睡眠保持。CYP3A4代謝（カルバマゼピンで効果減弱）。自動車運転注意。' },
+  { drug: 'レンボレキサント', brand: 'デエビゴ®', indication: '不眠症', dosage: '5 mg就寝前、最大10 mg（高齢者5 mgまで推奨）', note: 'オレキシン受容体拮抗薬。CYP3A4代謝。' },
+  { drug: 'ラメルテオン', brand: 'ロゼレム®', indication: '不眠症（睡眠の質向上）', dosage: '8 mg就寝前（食後直後は避ける）', note: 'MT1/MT2受容体作動薬。依存なし。高脂肪食で吸収遅延・増大。CYP1A2代謝（フルボキサミン禁忌）。' },
+  { drug: 'ゾルピデム', brand: 'マイスリー®', indication: '不眠症（入眠困難型）', dosage: '5〜10 mg就寝前、高齢者5 mg', note: 'BZD様作動（GABA-A）。短時間作用型。奇異反応・健忘・夢遊症。翌朝残存（特に女性）。' },
+  { drug: 'エスゾピクロン', brand: 'ルネスタ®', indication: '不眠症', dosage: '1〜2 mg就寝前（高齢者1 mgから）、最大3 mg', note: '短〜中時間型。金属味。ゾピクロンの光学異性体。' },
+];
+
+/* =====================================================================
+   DATA: TERM CHECK TABLE（精神医学用語 非推奨→推奨語）
+===================================================================== */
+const TERM_CHECK_TABLE = [
+  { bad: '分裂病',     good: '統合失調症',   level: 'flag', note: '2002年日本精神神経学会の公式改称。現在「分裂病」は完全に非推奨。' },
+  { bad: '精神分裂病', good: '統合失調症',   level: 'flag', note: '「分裂病」と同様に廃止された旧病名。' },
+  { bad: '躁うつ病',   good: '双極性障害',   level: 'flag', note: 'DSM-IV以降の改称。日本うつ病学会・精神神経学会の標準用語は「双極性障害」。' },
+  { bad: '痴呆症',     good: '認知症',       level: 'flag', note: '2004年厚労省の公式改称。「痴呆」は差別的とみなされ廃止。' },
+  { bad: '老人性痴呆', good: '老年期認知症', level: 'flag', note: '「痴呆」の廃止に伴い表現も変更。' },
+  { bad: '境界例',     good: '境界性パーソナリティ障害（BPD）', level: 'warn', note: '「境界例」は精神分析的概念で操作的診断名ではない。記述文脈による。' },
+  { bad: '精神薄弱',   good: '知的障害（知的発達症）', level: 'flag', note: '1998年厚労省通知で「精神薄弱」→「知的障害」に用語改称。' },
+  { bad: '精神遅滞',   good: '知的障害（知的発達症）', level: 'warn', note: 'DSM-5では「Intellectual Disability（Intellectual Developmental Disorder）」。DSM-IV由来の旧用語。' },
+  { bad: 'アスペルガー症候群', good: '自閉スペクトラム症（ASD）', level: 'warn', note: 'DSM-5（2013）でASDに統合。文脈（歴史的記述・個人の自称）による使い分けを確認。' },
+  { bad: '広汎性発達障害', good: '自閉スペクトラム症（ASD）', level: 'warn', note: 'DSM-5でASDに統合。ICD-10では「広汎性発達障害」として残存する場合もあるため文脈確認。' },
+  { bad: '注意欠陥多動性障害', good: '注意欠如・多動症（ADHD）', level: 'warn', note: 'DSM-5日本語訳の正式名称は「注意欠如・多動症」。DSM-IV日本語の旧名称。' },
+  { bad: '注意欠陥障害',     good: '注意欠如・多動症（ADHD）', level: 'warn', note: 'ADHDの不注意型の旧称。現在の標準用語に更新を推奨。' },
+  { bad: 'パニック障害', good: 'パニック症', level: 'warn', note: 'DSM-5日本語訳では「パニック障害」→「パニック症」。ただし一般・患者向け資料では「パニック障害」も許容されることが多い。' },
+  { bad: '社会不安障害', good: '社交不安症', level: 'warn', note: 'DSM-5日本語訳では「社交不安症」が正式。「社会不安障害」はDSM-IV由来。' },
+  { bad: '強迫性障害', good: '強迫症', level: 'warn', note: 'DSM-5日本語訳では「強迫症」が正式。「強迫性障害」はDSM-IV由来。文脈による使い分け確認。' },
+  { bad: '外傷後ストレス障害', good: 'PTSD（心的外傷後ストレス障害）', level: 'warn', note: '日本語略称として「PTSD」が広く定着。「外傷後ストレス障害」単体では略称なしで意味が通りにくい場合あり。' },
+];
+
+/* =====================================================================
+   DATA: NOTATION RULES（日本語表記自動検出）
+===================================================================== */
+const NOTATION_RULES = [
+  { pattern: /\d+\s*mg\s*\/\s*day/i,  level: 'flag', msg: '「mg/day」→「mg/日」に修正（日本語表記）' },
+  { pattern: /\d+\s*μg\s*\/\s*day/i, level: 'flag', msg: '「μg/day」→「μg/日」に修正（日本語表記）' },
+  { pattern: /\d+\s*mg\s*\/\s*Day/,   level: 'flag', msg: '「mg/Day」→「mg/日」に修正（日本語表記）' },
+  { pattern: /[０-９]/, level: 'warn', msg: '全角数字が含まれています（→半角数字に統一）' },
+  { pattern: /[Ａ-Ｚａ-ｚ]/, level: 'warn', msg: '全角アルファベットが含まれています（→半角に統一）' },
+  { pattern: /\d+mg(?!\s*\/)/,        level: 'warn', msg: '数値とmgの間にスペースなし（「10 mg」形式を推奨）' },
+];
+
+/* =====================================================================
+   DATA: ABBREVIATION FLAGS（初出未定義の略語チェック）
+===================================================================== */
+const ABBREV_CHECKS = [
+  { abbr: 'MARTA',  full: 'multi-acting receptor-targeted antipsychotic（多受容体標的型抗精神病薬）', level: 'warn' },
+  { abbr: 'SDAM',   full: 'serotonin-dopamine activity modulator（セロトニン-ドーパミン活性調節薬）', level: 'warn' },
+  { abbr: 'NaSSA',  full: 'noradrenergic and specific serotonergic antidepressant（ノルアドレナリン作動性・特異的セロトニン作動性抗うつ薬）', level: 'warn' },
+  { abbr: 'SMS',    full: 'serotonin modulator and stimulator（セロトニン調節・刺激薬）', level: 'warn' },
+  { abbr: 'SGA',    full: '第二世代抗精神病薬（second-generation antipsychotic）', level: 'warn' },
+  { abbr: 'FGA',    full: '第一世代抗精神病薬（first-generation antipsychotic）', level: 'warn' },
+  { abbr: 'FEP',    full: '初発精神病（first-episode psychosis）', level: 'warn' },
+  { abbr: 'EPS',    full: '錐体外路症状（extrapyramidal symptoms）', level: 'warn' },
+  { abbr: 'BZD',    full: 'ベンゾジアゼピン（benzodiazepine）', level: 'warn' },
+  { abbr: 'LAI',    full: '持効性注射製剤（long-acting injectable）', level: 'warn' },
+  { abbr: 'BPSD',   full: '認知症の行動・心理症状（behavioral and psychological symptoms of dementia）', level: 'warn' },
+  { abbr: 'TDM',    full: '治療薬物モニタリング（therapeutic drug monitoring）', level: 'warn' },
+  { abbr: 'MECT',   full: '修正型電気けいれん療法（modified electroconvulsive therapy）', level: 'warn' },
+  { abbr: 'TMS',    full: '経頭蓋磁気刺激（transcranial magnetic stimulation）', level: 'warn' },
+  { abbr: 'RCT',    full: '無作為化比較試験（randomized controlled trial）', level: 'warn' },
+  { abbr: 'ADME',   full: '吸収・分布・代謝・排泄（absorption, distribution, metabolism, excretion）', level: 'warn' },
+  { abbr: 'CIWA-Ar',full: 'Clinical Institute Withdrawal Assessment for Alcohol Scale（アルコール離脱評価尺度）', level: 'warn' },
+  { abbr: 'SSRI',   full: '選択的セロトニン再取り込み阻害薬', level: 'warn' },
+  { abbr: 'SNRI',   full: 'セロトニン・ノルアドレナリン再取り込み阻害薬', level: 'warn' },
+  { abbr: 'MAOI',   full: 'モノアミン酸化酵素阻害薬', level: 'warn' },
+];
+
+/* =====================================================================
+   DATA: DRUG-SPECIFIC CHECKLIST（薬剤個別チェック項目）
+===================================================================== */
+const DRUG_SPECIFIC_CHECKS = {
+  'card-olanzapine': [
+    { item: '統合失調症 最大用量 20 mg/日（日本）', ref: '添付文書' },
+    { item: '糖尿病（既往含む）禁忌の記載', ref: '添付文書 禁忌' },
+    { item: '双極性障害うつ病相への適応記載', ref: '2010年承認' },
+    { item: '制吐（悪性腫瘍化学療法）への適応記載', ref: '2017年承認' },
+    { item: 'IM（筋注）×BZD 同時・近時投与は禁忌の記載', ref: '添付文書 禁忌' },
+    { item: '就寝前投与の推奨記載', ref: '用法' },
+  ],
+  'card-quetiapine': [
+    { item: 'セロクエル（IR）は統合失調症のみ 最大750 mg/日', ref: '添付文書' },
+    { item: 'ビプレッソ（XR）は双極性障害うつ病相のみ 最大300 mg/日', ref: '2017年承認' },
+    { item: 'XRは割砕・噛み砕き禁忌の記載', ref: '用法' },
+    { item: 'IRの双極うつへの使用は国内適応外である旨の記載', ref: '適応外' },
+    { item: 'CYP3A4代謝（カルバマゼピン相互作用）の記載', ref: '薬物動態' },
+  ],
+  'card-brexpiprazole': [
+    { item: '国内承認最大用量 2 mg/日（海外4 mgと区別）', ref: '添付文書' },
+    { item: 'MDD補助療法の適応（2023年日本承認）の記載', ref: '承認日' },
+    { item: 'BPSD適応の国内未承認・FDA承認である旨の明示', ref: '適応外' },
+    { item: 'CYP3A4+CYP2D6両代謝→用量調整の記載', ref: '薬物動態' },
+    { item: 'うつ病補助は抗うつ薬との「併用必須」の記載', ref: '用法' },
+  ],
+  'card-venlafaxine': [
+    { item: 'SR製剤（徐放剤）のみが国内承認（即放剤は未承認）', ref: '製剤' },
+    { item: '最大225 mg/日（国内）の記載', ref: '添付文書' },
+    { item: '中止症候群（漸減必須）の記載', ref: '副作用' },
+    { item: '血圧モニタリングの記載', ref: '副作用' },
+    { item: 'CYP2D6多型が薬物動態に影響する記載', ref: '薬物動態' },
+  ],
+  'card-antipsychotics': [
+    { item: 'クロザピンはCPMS登録施設・血液検査必須の明記', ref: '安全対策' },
+    { item: '各薬剤の国内承認最大用量が正確か', ref: '添付文書一覧' },
+    { item: '糖尿病禁忌（オランザピン等）の記載', ref: '禁忌' },
+    { item: 'LAI（持効性注射剤）の製品名・用量が正確か', ref: '製剤' },
+  ],
+  'card-antidepressants': [
+    { item: 'フルボキサミン最大200 mg/日（国内）', ref: '添付文書' },
+    { item: 'パロキセチン最大50 mg/日（国内）', ref: '添付文書' },
+    { item: 'ベンラファキシンはSR製剤のみ国内承認', ref: '製剤' },
+    { item: 'MAOI（フェネルジン等）は国内未承認の旨の明記', ref: '承認状況' },
+    { item: 'ボルチオキセチンの分類（SMS）が正確か', ref: '薬理' },
+  ],
+  'card-mood-stabilizers': [
+    { item: 'リチウム有効血中濃度（維持0.6〜0.8、急性0.8〜1.2 mEq/L）', ref: '添付文書' },
+    { item: 'バルプロ酸有効血中濃度（50〜100 μg/mL）', ref: '添付文書' },
+    { item: 'ラモトリギン バルプロ酸併用時は用量半分以下', ref: '相互作用' },
+    { item: 'バルプロ酸 催奇形性（妊婦禁忌相当）の記載', ref: '禁忌' },
+    { item: 'カルバマゼピン HLA-B*1502検査とSJSリスクの記載', ref: '副作用' },
+  ],
+  'card-benzodiazepines': [
+    { item: 'ロラゼパム 筋注製剤の使用法（緊張病・痙攣重積）', ref: '適応' },
+    { item: 'クロナゼパムのパニック障害適応は添付文書に記載なし', ref: '適応外' },
+    { item: '高齢者転倒・認知機能リスクの記載', ref: '副作用' },
+    { item: '漸減手順（離脱症状予防）の記載', ref: '用法' },
+  ],
+  'card-hypnotics': [
+    { item: 'スボレキサント高齢者用量 15 mg（通常20 mg）', ref: '添付文書' },
+    { item: 'ラメルテオン食後直後回避の記載', ref: '用法' },
+    { item: 'ゾルピデム高齢者 5 mg（通常5〜10 mg）', ref: '添付文書' },
+    { item: 'ラメルテオン+フルボキサミン禁忌の記載', ref: '禁忌' },
+  ],
+};
+
+/* =====================================================================
+   STATE
+===================================================================== */
+const STORAGE_KEY = 'contentVerification_v1';
+let state = {}; // { cardId: { dosage: 'ok'|'warn'|'flag'|'', notation: ..., terms: ..., confirmed: bool, memo: '' } }
+
+function loadState() {
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { state = {}; }
+}
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function getCardState(id) {
+  if (!state[id]) state[id] = { dosage: '', notation: '', terms: '', confirmed: false, memo: '' };
+  return state[id];
+}
+
+/* =====================================================================
+   AUTO CHECKS
+===================================================================== */
+function runAutoChecks(card) {
+  const issues = [];
+  const text = card.title + ' ' + card.desc;
+
+  // 表記チェック
+  for (const rule of NOTATION_RULES) {
+    if (rule.pattern.test(text)) {
+      issues.push({ axis: 'notation', level: rule.level, msg: rule.msg });
+    }
+  }
+
+  // 用語チェック
+  for (const t of TERM_CHECK_TABLE) {
+    if (text.includes(t.bad)) {
+      issues.push({ axis: 'terms', level: t.level, msg: `「${t.bad}」→「${t.good}」（${t.note}）` });
+    }
+  }
+
+  // 略語チェック（薬剤セクションのみ詳細）
+  if (card.section === 'drugs' || card.section === 'tx-overview') {
+    for (const a of ABBREV_CHECKS) {
+      const re = new RegExp('\\b' + a.abbr.replace(/[-+]/g, '\\$&') + '\\b');
+      if (re.test(text)) {
+        const hasParenDef = text.includes(a.abbr + '（') || text.includes(a.abbr + '(');
+        if (!hasParenDef) {
+          issues.push({ axis: 'notation', level: a.level, msg: `略語「${a.abbr}」の初出に日本語説明がない可能性（= ${a.full}）` });
+        }
+      }
+    }
+  }
+
+  return issues;
+}
+
+/* =====================================================================
+   SECTION META
+===================================================================== */
+const SECTION_META = {
+  calc:        { label: '計算ツール',   cls: 'sec-calc',     icon: '🧮' },
+  scales:      { label: '評価スケール', cls: 'sec-scales',   icon: '📊' },
+  diag:        { label: '診断・分類',   cls: 'sec-diag',     icon: '🗂' },
+  'tx-overview':{ label: '治療概要',   cls: 'sec-tx',       icon: '📋' },
+  drugs:       { label: '薬剤選択',    cls: 'sec-drugs',    icon: '💊' },
+  concepts:    { label: '概念・資格',  cls: 'sec-concepts', icon: '📖' },
+  study:       { label: '学習・ドリル', cls: 'sec-study',   icon: '🎓' },
+  literature:  { label: '最新論文',    cls: 'sec-lit',      icon: '📄' },
+  other:       { label: 'その他',      cls: 'sec-other',    icon: '💡' },
+};
+
+/* =====================================================================
+   FILTER STATE
+===================================================================== */
+let filterMode = 'all';
+let filterSection = '';
+let filterSearch = '';
+let activeAxes = new Set(['dosage', 'notation', 'terms']);
+let refDrawerOpen = false;
+
+function setFilter(mode, btn) {
+  filterMode = mode;
+  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
+function setSectionFilter(val) {
+  filterSection = val;
+  renderCards();
+}
+function setSearch(val) {
+  filterSearch = val.toLowerCase();
+  renderCards();
+}
+function toggleAxis(axis, btn) {
+  if (activeAxes.has(axis)) activeAxes.delete(axis);
+  else activeAxes.add(axis);
+  btn.classList.toggle('active');
+  renderCards();
+}
+
+/* =====================================================================
+   RENDER REFERENCE TABLE
+===================================================================== */
+function renderRefTable() {
+  const tbody = document.getElementById('ref-table-body');
+  tbody.innerHTML = DRUG_DOSAGE_REFERENCE.map((r, i) => `
+    <tr class="border-b border-gray-100" style="${i%2===0?'':'background:#f8fafc'}">
+      <td class="py-1.5 px-3 font-medium text-gray-800">${r.drug}</td>
+      <td class="py-1.5 px-3 text-gray-600">${r.brand}</td>
+      <td class="py-1.5 px-3 text-gray-700">${r.indication}</td>
+      <td class="py-1.5 px-3 font-mono text-indigo-800 text-[0.68rem]">${r.dosage}</td>
+      <td class="py-1.5 px-3 text-gray-500">${r.note}</td>
+    </tr>
+  `).join('');
+}
+
+function toggleRefDrawer() {
+  refDrawerOpen = !refDrawerOpen;
+  const drawer = document.getElementById('ref-drawer');
+  const icon   = document.getElementById('ref-drawer-icon');
+  if (refDrawerOpen) {
+    drawer.style.maxHeight = drawer.scrollHeight + 'px';
+    icon.textContent = '▼';
+  } else {
+    drawer.style.maxHeight = '0';
+    icon.textContent = '▶';
+  }
+}
+
+/* =====================================================================
+   RENDER CARDS
+===================================================================== */
+function shouldShowCard(card, autoIssues, cs) {
+  if (filterSection && card.section !== filterSection) return false;
+  if (filterSearch) {
+    const haystack = (card.title + ' ' + card.desc + ' ' + card.file).toLowerCase();
+    if (!haystack.includes(filterSearch)) return false;
+  }
+  const hasIssues = autoIssues.length > 0 || cs.dosage === 'flag' || cs.dosage === 'warn' ||
+                    cs.notation === 'flag' || cs.notation === 'warn' ||
+                    cs.terms === 'flag' || cs.terms === 'warn';
+  if (filterMode === 'issues' && !hasIssues) return false;
+  if (filterMode === 'confirmed' && !cs.confirmed) return false;
+  if (filterMode === 'unconfirmed' && cs.confirmed) return false;
+  return true;
+}
+
+function levelIcon(level) {
+  if (level === 'flag') return '<span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1"></span>';
+  if (level === 'warn') return '<span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-1"></span>';
+  return '<span class="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-1"></span>';
+}
+
+function badgeHtml(level, text) {
+  const cls = level === 'flag' ? 'status-flag' : level === 'warn' ? 'status-warn' : 'status-ok';
+  return `<span class="text-xs px-2 py-0.5 rounded-full font-medium ${cls}">${text}</span>`;
+}
+
+function manualStatus(val) {
+  if (val === 'flag') return badgeHtml('flag', '要修正');
+  if (val === 'warn') return badgeHtml('warn', '要確認');
+  if (val === 'ok')   return badgeHtml('ok', '問題なし');
+  return `<span class="text-xs text-gray-400">— 未評価</span>`;
+}
+
+function renderCards() {
+  const list = document.getElementById('card-list');
+  const sortedCards = [...CARDS].sort((a, b) => {
+    const order = ['drugs', 'tx-overview', 'diag', 'scales', 'calc', 'concepts', 'study', 'literature', 'other'];
+    return order.indexOf(a.section) - order.indexOf(b.section);
+  });
+
+  let html = '';
+  let shown = 0;
+  let totalFlag = 0, totalWarn = 0, totalConfirmed = 0;
+
+  for (const card of sortedCards) {
+    const autoIssues = runAutoChecks(card);
+    const cs = getCardState(card.id);
+    const drCheck = DRUG_SPECIFIC_CHECKS[card.id];
+
+    // Count stats
+    const hasFlag = autoIssues.some(i => i.level === 'flag') || cs.dosage === 'flag' || cs.notation === 'flag' || cs.terms === 'flag';
+    const hasWarn = !hasFlag && (autoIssues.some(i => i.level === 'warn') || cs.dosage === 'warn' || cs.notation === 'warn' || cs.terms === 'warn');
+    if (hasFlag) totalFlag++;
+    else if (hasWarn) totalWarn++;
+    if (cs.confirmed) totalConfirmed++;
+
+    if (!shouldShowCard(card, autoIssues, cs)) continue;
+    shown++;
+
+    const sec = SECTION_META[card.section] || SECTION_META.other;
+    const cardClass = cs.confirmed ? 'confirmed' : hasFlag ? 'has-flag' : hasWarn ? 'has-warn' : '';
+
+    // Summary line
+    const autoFlagCount = autoIssues.filter(i => i.level === 'flag').length;
+    const autoWarnCount = autoIssues.filter(i => i.level === 'warn').length;
+    const summaryParts = [];
+    if (autoFlagCount) summaryParts.push(`<span class="text-red-600 font-semibold">${autoFlagCount}件の要修正</span>`);
+    if (autoWarnCount) summaryParts.push(`<span class="text-amber-600">${autoWarnCount}件の要確認</span>`);
+
+    // Auto-issues grouped by axis
+    const issuesByAxis = { dosage: [], notation: [], terms: [] };
+    for (const issue of autoIssues) {
+      if (issuesByAxis[issue.axis]) issuesByAxis[issue.axis].push(issue);
+    }
+
+    // Drug specific checklist
+    const drCheckHtml = drCheck ? `
+      <div class="mt-3 pt-3 border-t border-gray-100">
+        <div class="text-xs font-semibold text-gray-600 mb-2">📋 薬剤個別チェックリスト（ページ内容確認用）</div>
+        <ul class="space-y-1">
+          ${drCheck.map((item, idx) => `
+            <li class="flex items-start gap-2 text-xs text-gray-700">
+              <input type="checkbox" id="drcheck-${card.id}-${idx}" onchange="saveDrCheck('${card.id}', ${idx}, this.checked)"
+                ${(cs.drCheck && cs.drCheck[idx]) ? 'checked' : ''}
+                class="mt-0.5 flex-shrink-0 accent-indigo-600">
+              <label for="drcheck-${card.id}-${idx}" class="cursor-pointer">
+                ${item.item}
+                <span class="text-gray-400 ml-1">[${item.ref}]</span>
+              </label>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    ` : '';
+
+    html += `
+      <div class="verify-card ${cardClass}" id="vcard-${card.id}">
+        <!-- Card header (always visible) -->
+        <div class="px-4 py-3 flex items-start gap-3 cursor-pointer select-none" onclick="toggleCard('${card.id}')">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+              <span class="sec-badge ${sec.cls}">${sec.icon} ${sec.label}</span>
+              ${cs.confirmed ? '<span class="text-xs text-emerald-600 font-semibold">✓ 確認済み</span>' : ''}
+              ${hasFlag ? '<span class="text-xs text-red-600 font-semibold">● 要修正あり</span>' : ''}
+              ${hasWarn && !hasFlag ? '<span class="text-xs text-amber-600">◐ 要確認あり</span>' : ''}
+              ${summaryParts.length ? '— ' + summaryParts.join('、') : ''}
+            </div>
+            <h3 class="font-semibold text-gray-900 text-sm leading-snug">${card.title}</h3>
+            <p class="text-xs text-gray-500 mt-0.5 leading-relaxed line-clamp-2">${card.desc}</p>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <a href="${card.file}" target="_blank"
+              onclick="event.stopPropagation()"
+              class="text-xs text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded px-2 py-1 bg-indigo-50">
+              ページを開く →
+            </a>
+            <span class="text-gray-400 text-sm" id="toggle-${card.id}">▼</span>
+          </div>
+        </div>
+
+        <!-- Expandable detail -->
+        <div id="detail-${card.id}" class="hidden px-4 pb-4">
+          <div class="border-t border-gray-100 pt-3 grid sm:grid-cols-3 gap-3">
+
+            <!-- 軸1: 用量・用法 -->
+            ${activeAxes.has('dosage') ? `
+            <div class="axis-panel axis-dosage">
+              <div class="font-semibold text-blue-800 mb-2 flex items-center gap-1">
+                <span>💊</span> 用量・用法
+              </div>
+              ${issuesByAxis.dosage.length ? issuesByAxis.dosage.map(i => `
+                <div class="flex items-start gap-1.5 mb-1">
+                  ${levelIcon(i.level)}
+                  <span class="text-gray-700">${i.msg}</span>
+                </div>`).join('') : `<div class="text-gray-500 mb-2">自動検出: なし</div>`}
+              <div class="mt-2 pt-2 border-t border-blue-100">
+                <div class="text-gray-600 mb-1">手動評価:</div>
+                <div class="flex gap-1.5 flex-wrap">
+                  ${['ok','warn','flag'].map(v => `
+                    <button onclick="setAxis('${card.id}','dosage','${v}');event.stopPropagation()"
+                      class="text-xs px-2 py-0.5 rounded-full border transition-colors ${cs.dosage===v ? (v==='ok'?'bg-emerald-100 border-emerald-400 text-emerald-800':v==='warn'?'bg-amber-100 border-amber-400 text-amber-800':'bg-red-100 border-red-400 text-red-800') : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}">
+                      ${v==='ok'?'✓ 問題なし':v==='warn'?'⚠ 要確認':'✗ 要修正'}
+                    </button>`).join('')}
+                </div>
+                <div class="mt-1 text-xs">${manualStatus(cs.dosage)}</div>
+              </div>
+            </div>
+            ` : ''}
+
+            <!-- 軸2: 日本語表記 -->
+            ${activeAxes.has('notation') ? `
+            <div class="axis-panel axis-notation">
+              <div class="font-semibold text-green-800 mb-2 flex items-center gap-1">
+                <span>🈯</span> 日本語表記
+              </div>
+              ${issuesByAxis.notation.length ? issuesByAxis.notation.map(i => `
+                <div class="flex items-start gap-1.5 mb-1">
+                  ${levelIcon(i.level)}
+                  <span class="text-gray-700 text-xs">${i.msg}</span>
+                </div>`).join('') : `<div class="text-gray-500 mb-2">自動検出: なし</div>`}
+              <div class="mt-2 pt-2 border-t border-green-100">
+                <div class="text-gray-600 mb-1">手動評価:</div>
+                <div class="flex gap-1.5 flex-wrap">
+                  ${['ok','warn','flag'].map(v => `
+                    <button onclick="setAxis('${card.id}','notation','${v}');event.stopPropagation()"
+                      class="text-xs px-2 py-0.5 rounded-full border transition-colors ${cs.notation===v ? (v==='ok'?'bg-emerald-100 border-emerald-400 text-emerald-800':v==='warn'?'bg-amber-100 border-amber-400 text-amber-800':'bg-red-100 border-red-400 text-red-800') : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}">
+                      ${v==='ok'?'✓ 問題なし':v==='warn'?'⚠ 要確認':'✗ 要修正'}
+                    </button>`).join('')}
+                </div>
+                <div class="mt-1 text-xs">${manualStatus(cs.notation)}</div>
+              </div>
+            </div>
+            ` : ''}
+
+            <!-- 軸3: 精神医学用語 -->
+            ${activeAxes.has('terms') ? `
+            <div class="axis-panel axis-terms">
+              <div class="font-semibold text-purple-800 mb-2 flex items-center gap-1">
+                <span>📝</span> 精神医学用語
+              </div>
+              ${issuesByAxis.terms.length ? issuesByAxis.terms.map(i => `
+                <div class="flex items-start gap-1.5 mb-1">
+                  ${levelIcon(i.level)}
+                  <span class="text-gray-700 text-xs">${i.msg}</span>
+                </div>`).join('') : `<div class="text-gray-500 mb-2">自動検出: なし</div>`}
+              <div class="mt-2 pt-2 border-t border-purple-100">
+                <div class="text-gray-600 mb-1">手動評価:</div>
+                <div class="flex gap-1.5 flex-wrap">
+                  ${['ok','warn','flag'].map(v => `
+                    <button onclick="setAxis('${card.id}','terms','${v}');event.stopPropagation()"
+                      class="text-xs px-2 py-0.5 rounded-full border transition-colors ${cs.terms===v ? (v==='ok'?'bg-emerald-100 border-emerald-400 text-emerald-800':v==='warn'?'bg-amber-100 border-amber-400 text-amber-800':'bg-red-100 border-red-400 text-red-800') : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}">
+                      ${v==='ok'?'✓ 問題なし':v==='warn'?'⚠ 要確認':'✗ 要修正'}
+                    </button>`).join('')}
+                </div>
+                <div class="mt-1 text-xs">${manualStatus(cs.terms)}</div>
+              </div>
+            </div>
+            ` : ''}
+          </div>
+
+          ${drCheckHtml}
+
+          <!-- Memo + confirm -->
+          <div class="mt-3 pt-3 border-t border-gray-100 flex items-start gap-3">
+            <div class="flex-1">
+              <label class="text-xs text-gray-500 font-medium block mb-1">メモ・修正内容:</label>
+              <textarea
+                id="memo-${card.id}"
+                oninput="saveMemo('${card.id}', this.value)"
+                placeholder="修正内容・注記を入力…"
+                class="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-indigo-300 bg-gray-50"
+                rows="2">${cs.memo || ''}</textarea>
+            </div>
+            <div class="flex-shrink-0 pt-4">
+              <button onclick="toggleConfirm('${card.id}');event.stopPropagation()"
+                class="text-xs font-semibold px-4 py-2 rounded-lg border transition-colors ${cs.confirmed ? 'bg-emerald-100 border-emerald-400 text-emerald-800 hover:bg-emerald-200' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}">
+                ${cs.confirmed ? '✓ 確認済み' : '確認済みにする'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  list.innerHTML = html;
+  document.getElementById('empty-msg').classList.toggle('hidden', shown > 0);
+  document.getElementById('stat-total').textContent = CARDS.length;
+  document.getElementById('stat-flag').textContent = totalFlag;
+  document.getElementById('stat-warn').textContent = totalWarn;
+  document.getElementById('stat-confirmed').textContent = totalConfirmed;
+
+  // Restore open state
+  for (const card of CARDS) {
+    const cs = getCardState(card.id);
+    if (cs._open) {
+      const detail = document.getElementById(`detail-${card.id}`);
+      const toggle = document.getElementById(`toggle-${card.id}`);
+      if (detail) { detail.classList.remove('hidden'); if (toggle) toggle.textContent = '▲'; }
+    }
+  }
+}
+
+/* =====================================================================
+   INTERACTIONS
+===================================================================== */
+function toggleCard(id) {
+  const detail = document.getElementById(`detail-${id}`);
+  const toggle = document.getElementById(`toggle-${id}`);
+  if (!detail) return;
+  const isOpen = !detail.classList.contains('hidden');
+  detail.classList.toggle('hidden', isOpen);
+  if (toggle) toggle.textContent = isOpen ? '▼' : '▲';
+  const cs = getCardState(id);
+  cs._open = !isOpen;
+  saveState();
+}
+
+function setAxis(id, axis, val) {
+  const cs = getCardState(id);
+  cs[axis] = cs[axis] === val ? '' : val;
+  saveState();
+  renderCards();
+  const detail = document.getElementById(`detail-${id}`);
+  const toggle = document.getElementById(`toggle-${id}`);
+  if (detail) { detail.classList.remove('hidden'); if (toggle) toggle.textContent = '▲'; }
+  const cs2 = getCardState(id);
+  cs2._open = true;
+  saveState();
+}
+
+function saveMemo(id, val) {
+  const cs = getCardState(id);
+  cs.memo = val;
+  saveState();
+}
+
+function saveDrCheck(id, idx, checked) {
+  const cs = getCardState(id);
+  if (!cs.drCheck) cs.drCheck = {};
+  cs.drCheck[idx] = checked;
+  saveState();
+}
+
+function toggleConfirm(id) {
+  const cs = getCardState(id);
+  cs.confirmed = !cs.confirmed;
+  saveState();
+  renderCards();
+  const detail = document.getElementById(`detail-${id}`);
+  const toggle = document.getElementById(`toggle-${id}`);
+  if (detail) { detail.classList.remove('hidden'); if (toggle) toggle.textContent = '▲'; }
+  const cs2 = getCardState(id);
+  cs2._open = true;
+  saveState();
+}
+
+function resetAll() {
+  if (!confirm('全ての検証状態・メモをリセットしますか？')) return;
+  state = {};
+  saveState();
+  renderCards();
+}
+
+/* =====================================================================
+   EXPORT
+===================================================================== */
+function generateReport() {
+  const lines = [];
+  const now = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  lines.push(`# 精神科臨床ガイド ポータル — コンテンツ検証レポート`);
+  lines.push(`生成日時: ${now}\n`);
+
+  let flagCards = [], warnCards = [], okCards = [], uncheckedCards = [];
+
+  for (const card of CARDS) {
+    const autoIssues = runAutoChecks(card);
+    const cs = getCardState(card.id);
+    const hasAutoFlag = autoIssues.some(i => i.level === 'flag');
+    const hasAutoWarn = autoIssues.some(i => i.level === 'warn');
+    const manualFlag = cs.dosage === 'flag' || cs.notation === 'flag' || cs.terms === 'flag';
+    const manualWarn = cs.dosage === 'warn' || cs.notation === 'warn' || cs.terms === 'warn';
+
+    if (hasAutoFlag || manualFlag) flagCards.push({ card, autoIssues, cs });
+    else if (hasAutoWarn || manualWarn) warnCards.push({ card, autoIssues, cs });
+    else if (cs.confirmed) okCards.push({ card, autoIssues, cs });
+    else uncheckedCards.push({ card, autoIssues, cs });
+  }
+
+  lines.push(`## サマリー`);
+  lines.push(`- 総カード数: ${CARDS.length}`);
+  lines.push(`- 要修正（フラグあり）: ${flagCards.length} 件`);
+  lines.push(`- 要確認: ${warnCards.length} 件`);
+  lines.push(`- 確認済み（問題なし）: ${okCards.length} 件`);
+  lines.push(`- 未チェック: ${uncheckedCards.length} 件\n`);
+
+  if (flagCards.length > 0) {
+    lines.push(`## 🔴 要修正 (${flagCards.length} 件)\n`);
+    for (const { card, autoIssues, cs } of flagCards) {
+      const sec = SECTION_META[card.section];
+      lines.push(`### ${sec.label} — ${card.title}`);
+      lines.push(`- ファイル: \`${card.file}\``);
+      for (const i of autoIssues.filter(x => x.level === 'flag')) {
+        lines.push(`- [自動検出 ${i.axis}] ${i.msg}`);
+      }
+      if (cs.dosage === 'flag') lines.push(`- [手動 用量・用法] 要修正`);
+      if (cs.notation === 'flag') lines.push(`- [手動 日本語表記] 要修正`);
+      if (cs.terms === 'flag') lines.push(`- [手動 精神医学用語] 要修正`);
+      if (cs.memo) lines.push(`- メモ: ${cs.memo}`);
+      lines.push('');
+    }
+  }
+
+  if (warnCards.length > 0) {
+    lines.push(`## 🟡 要確認 (${warnCards.length} 件)\n`);
+    for (const { card, autoIssues, cs } of warnCards) {
+      const sec = SECTION_META[card.section];
+      lines.push(`### ${sec.label} — ${card.title}`);
+      lines.push(`- ファイル: \`${card.file}\``);
+      for (const i of autoIssues.filter(x => x.level === 'warn')) {
+        lines.push(`- [自動検出 ${i.axis}] ${i.msg}`);
+      }
+      if (cs.dosage === 'warn') lines.push(`- [手動 用量・用法] 要確認`);
+      if (cs.notation === 'warn') lines.push(`- [手動 日本語表記] 要確認`);
+      if (cs.terms === 'warn') lines.push(`- [手動 精神医学用語] 要確認`);
+      if (cs.memo) lines.push(`- メモ: ${cs.memo}`);
+      lines.push('');
+    }
+  }
+
+  if (okCards.length > 0) {
+    lines.push(`## ✅ 確認済み (${okCards.length} 件)\n`);
+    for (const { card } of okCards) {
+      const sec = SECTION_META[card.section];
+      lines.push(`- ${sec.label} — ${card.title} (\`${card.file}\`)`);
+    }
+    lines.push('');
+  }
+
+  lines.push(`---`);
+  lines.push(`検証ツール: content-verification.html`);
+  lines.push(`参照: 日本国内添付文書（PMDA）/ 日本精神神経学会用語基準`);
+
+  return lines.join('\n');
+}
+
+function openExport() {
+  document.getElementById('export-text').value = generateReport();
+  document.getElementById('export-modal').classList.remove('hidden');
+}
+function closeExport(e) {
+  if (!e || e.target === document.getElementById('export-modal')) {
+    document.getElementById('export-modal').classList.add('hidden');
+  }
+}
+function copyExport() {
+  const ta = document.getElementById('export-text');
+  ta.select();
+  document.execCommand('copy');
+  const btn = document.querySelector('#export-body button');
+  const orig = btn.textContent;
+  btn.textContent = 'コピーしました！';
+  setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+
+/* =====================================================================
+   INIT
+===================================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  renderRefTable();
+  renderCards();
+});
+</script>
+
+</body>
+</html>
