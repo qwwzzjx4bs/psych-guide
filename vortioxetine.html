@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="ja" class="data-table-sticky-col-off">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ボルチオキセチン（トリンテリックス）— 詳解 | 精神科臨床リファレンス</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --psych-primary: #065f46;
+      --psych-secondary: #059669;
+      --psych-danger: #dc2626;
+      --psych-warning: #d97706;
+      --psych-success: #15803d;
+      --psych-gradient: linear-gradient(135deg, #047857 0%, #059669 50%, #065f46 100%);
+    }
+    body { font-family: 'Noto Sans JP', 'Inter', sans-serif; }
+    .header-gradient { background: var(--psych-gradient); }
+    .section-card { background:white; border-radius:1rem; box-shadow:0 4px 6px -1px rgba(0,0,0,0.08); padding:2rem; margin-bottom:1.5rem; }
+    .criteria-box { background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%); border-left:4px solid #059669; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .danger-box { background:linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%); border-left:4px solid #dc2626; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .warning-box { background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%); border-left:4px solid #d97706; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .recommend-box { background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%); border-left:4px solid #15803d; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    .info-box { background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%); border-left:4px solid #1d4ed8; padding:1.25rem 1.5rem; border-radius:0.75rem; margin:1rem 0; }
+    @media(max-width:639px){ .section-card{padding:1rem;margin-bottom:1rem;border-radius:0.75rem;} .criteria-box,.danger-box,.warning-box,.recommend-box,.info-box{padding:1rem 0.875rem;} }
+    .badge-level-a { background:linear-gradient(135deg,#15803d,#16a34a); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-level-b { background:linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-level-c { background:linear-gradient(135deg,#4b5563,#6b7280); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-approved { background:linear-gradient(135deg,#15803d,#16a34a); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-off-label { background:linear-gradient(135deg,#6b7280,#9ca3af); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-srisam { background:linear-gradient(135deg,#065f46,#059669); color:white; padding:0.25rem 0.85rem; border-radius:9999px; font-size:0.875rem; font-weight:700; letter-spacing:0.05em; white-space:nowrap; display:inline-block; }
+    .badge-1st { background:linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-2nd { background:linear-gradient(135deg,#0369a1,#0284c7); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .badge-na { background:#f3f4f6; color:#9ca3af; border:1px solid #e5e7eb; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:600; white-space:nowrap; display:inline-block; }
+    .badge-overseas { background:linear-gradient(135deg,#b45309,#d97706); color:white; padding:0.2rem 0.65rem; border-radius:9999px; font-size:0.75rem; font-weight:700; white-space:nowrap; display:inline-block; }
+    .toc { position:fixed; right:1.5rem; top:50%; transform:translateY(-50%); background:white; padding:1rem; border-radius:0.75rem; box-shadow:0 4px 12px rgba(0,0,0,0.12); max-height:80vh; overflow-y:auto; z-index:50; min-width:160px; }
+    @media(max-width:1280px){ .toc{display:none;} }
+    .toc-link { display:block; font-size:0.725rem; color:#6b7280; padding:0.25rem 0.5rem; border-radius:0.375rem; margin-bottom:0.1rem; transition:all 0.15s; text-decoration:none; }
+    .toc-link:hover,.toc-link.active { background:#ecfdf5; color:#065f46; font-weight:600; }
+    .guide-table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+    .guide-table th { background:#065f46; color:white; padding:0.75rem 1rem; text-align:left; font-weight:600; white-space:nowrap; }
+    .guide-table td { padding:0.75rem 1rem; border-bottom:1px solid #e5e7eb; vertical-align:top; }
+    .guide-table tbody tr:nth-child(even) td { background:#ecfdf5; }
+    .guide-table tbody tr:hover td { background:#d1fae5; }
+    table.guide-table thead th:first-child:not([colspan]){ position:sticky;left:0;z-index:3;background:#065f46;box-shadow:2px 0 5px -2px rgba(0,0,0,0.25); }
+    table.guide-table tbody td:first-child:not([colspan]){ position:sticky;left:0;z-index:1;background:white;box-shadow:2px 0 5px -2px rgba(0,0,0,0.08); }
+    table.guide-table tbody tr:nth-child(even) td:first-child:not([colspan]){ background:#ecfdf5; }
+    table.guide-table tbody tr:hover td:first-child:not([colspan]){ background:#d1fae5; }
+    html.data-table-sticky-col-off table.guide-table thead th:first-child:not([colspan]),
+    html.data-table-sticky-col-off table.guide-table tbody td:first-child:not([colspan]){ position:static!important;left:auto!important;z-index:auto!important;box-shadow:none!important; }
+    .col-notes{min-width:200px;} .col-action{min-width:180px;} .col-text{min-width:160px;} .col-name{min-width:140px;}
+    @media(max-width:639px){ .guide-table{font-size:0.78rem;} .guide-table th{padding:0.5rem 0.6rem;font-size:0.72rem;} .guide-table td{padding:0.5rem 0.6rem;} .badge-level-a,.badge-level-b,.badge-level-c,.badge-approved,.badge-off-label,.badge-1st,.badge-2nd,.badge-na,.badge-overseas{font-size:0.68rem;padding:0.15rem 0.5rem;} }
+    .receptor-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.875rem; }
+    .receptor-label { width:220px; font-size:0.8125rem; font-weight:600; color:#374151; flex-shrink:0; }
+    .receptor-bar-bg { flex:1; background:#f1f5f9; border-radius:9999px; height:18px; overflow:hidden; }
+    .receptor-bar { height:18px; border-radius:9999px; display:flex; align-items:center; padding-left:6px; font-size:0.65rem; color:white; font-weight:700; }
+    .receptor-ki { font-size:0.75rem; color:#6b7280; width:90px; flex-shrink:0; text-align:right; }
+    @media(max-width:639px){
+      .receptor-row { gap:0.4rem; }
+      .receptor-label { width:120px; font-size:0.68rem; }
+      .receptor-bar-bg { height:16px; }
+      .receptor-bar { height:16px; font-size:0; padding-left:0; }
+      .receptor-ki { width:64px; font-size:0.65rem; }
+    }
+    .case-card { border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.5rem; background:white; margin-bottom:1rem; transition:box-shadow 0.2s; }
+    .case-card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+    .adme-box { background:#ecfdf5; border:2px solid #059669; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#065f46; }
+    .adme-metabolite { background:#f0fdf4; border:2px solid #15803d; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#14532d; }
+    .adme-excretion { background:#fff7ed; border:2px solid #d97706; border-radius:0.5rem; padding:0.625rem 1rem; text-align:center; font-size:0.8125rem; font-weight:600; color:#92400e; }
+    .x-scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:0.5rem; }
+    @media(max-width:767px){ .x-scroll{box-shadow:inset -14px 0 18px -10px rgba(6,95,70,0.15);} }
+    .x-scroll-hint { display:none; }
+    @media(max-width:767px){ .x-scroll-hint{display:flex;align-items:center;justify-content:flex-end;gap:0.3rem;margin-top:0.3rem;padding:0.25rem 0.5rem;font-size:0.65rem;color:#64748b;font-weight:500;background:rgba(236,253,245,0.8);border-radius:0.3rem;border:1px dashed #6ee7b7;} }
+    .section-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem; }
+    .section-header h2 { font-size:1.25rem; font-weight:700; color:#065f46; margin:0; }
+    .rct-card { border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.25rem; background:white; }
+    section[id], div[id] { scroll-margin-top:var(--sticky-total-height,96px); }
+
+    /* ========== DATA-TABLE TOOLBAR ========== */
+    .data-table-toolbar { position:sticky; top:var(--nav-height,48px); z-index:9; box-sizing:border-box; width:100%; border:none; border-top:1px solid rgba(203,213,225,0.95); background:rgba(255,255,255,0.97); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 8px 24px -12px rgba(15,23,42,0.12); padding:0; }
+    .data-table-toolbar__head { --toolbar-head-bg:rgba(249,250,251,0.92); --toolbar-head-border:rgba(203,213,225,0.95); --toolbar-accent:#059669; display:flex; align-items:center; justify-content:space-between; gap:0.625rem; padding:0.375rem 1rem; background:var(--toolbar-head-bg); border-bottom:1px solid var(--toolbar-head-border); transition:background 0.35s ease,border-color 0.35s ease; }
+    @media(min-width:640px){ .data-table-toolbar__head{gap:0.75rem;padding:0.4rem max(1rem,calc((100vw - min(64rem,100vw))/2 + 1rem));} }
+    .data-table-toolbar__head-title { font-size:0.8125rem; font-weight:700; letter-spacing:-0.015em; color:#0f172a; line-height:1.4; }
+    @media(min-width:640px){ .data-table-toolbar__head-title{font-size:0.875rem;} }
+    #data-table-section-label { color:var(--toolbar-accent,#059669); transition:color 0.35s ease; font-size:0.75rem; font-weight:600; max-width:60%; text-align:right; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; flex-shrink:0; }
+    @media(min-width:640px){ #data-table-section-label{font-size:0.8125rem;max-width:min(50vw,22rem);} }
+    .data-table-toolbar__controls { display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.375rem 1rem; }
+    @media(min-width:640px){ .data-table-toolbar__controls{gap:0.625rem;padding:0.4rem max(1rem,calc((100vw - min(64rem,100vw))/2 + 1rem));} }
+    @media(max-width:639px){ .data-table-toolbar__controls{gap:0.3rem;padding:0.375rem 0.625rem;} }
+    .data-table-toolbar__controls input[type="search"]{font-size:0.8125rem!important;line-height:1.4;}
+    .data-table-toolbar__controls input[type="search"]::-webkit-search-cancel-button,.data-table-toolbar__controls input[type="search"]::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none;}
+    /* Section color themes – emerald palette */
+    #data-table-toolbar[data-toolbar-section="quickref"] .data-table-toolbar__head{--toolbar-head-bg:rgba(6,95,70,0.13);--toolbar-head-border:rgba(5,150,105,0.4);--toolbar-accent:#065f46;}
+    #data-table-toolbar[data-toolbar-section="molecule"] .data-table-toolbar__head{--toolbar-head-bg:rgba(209,250,229,0.88);--toolbar-head-border:rgba(5,150,105,0.35);--toolbar-accent:#059669;}
+    #data-table-toolbar[data-toolbar-section="pharmacology"] .data-table-toolbar__head{--toolbar-head-bg:rgba(236,253,245,0.92);--toolbar-head-border:rgba(6,95,70,0.35);--toolbar-accent:#065f46;}
+    #data-table-toolbar[data-toolbar-section="pk"] .data-table-toolbar__head{--toolbar-head-bg:rgba(219,234,254,0.88);--toolbar-head-border:rgba(37,99,235,0.35);--toolbar-accent:#1d4ed8;}
+    #data-table-toolbar[data-toolbar-section="japan-approval"] .data-table-toolbar__head{--toolbar-head-bg:rgba(209,250,229,0.88);--toolbar-head-border:rgba(22,163,74,0.35);--toolbar-accent:#15803d;}
+    #data-table-toolbar[data-toolbar-section="efficacy"] .data-table-toolbar__head{--toolbar-head-bg:rgba(220,252,231,0.88);--toolbar-head-border:rgba(22,163,74,0.35);--toolbar-accent:#15803d;}
+    #data-table-toolbar[data-toolbar-section="evidence"] .data-table-toolbar__head{--toolbar-head-bg:rgba(219,234,254,0.88);--toolbar-head-border:rgba(30,64,175,0.35);--toolbar-accent:#1e40af;}
+    #data-table-toolbar[data-toolbar-section="cases"] .data-table-toolbar__head{--toolbar-head-bg:rgba(254,243,199,0.88);--toolbar-head-border:rgba(180,83,9,0.35);--toolbar-accent:#b45309;}
+    #data-table-toolbar[data-toolbar-section="safety"] .data-table-toolbar__head{--toolbar-head-bg:rgba(255,237,213,0.88);--toolbar-head-border:rgba(234,88,12,0.35);--toolbar-accent:#c2410c;}
+    #data-table-toolbar[data-toolbar-section="interaction"] .data-table-toolbar__head{--toolbar-head-bg:rgba(254,226,226,0.88);--toolbar-head-border:rgba(220,38,38,0.35);--toolbar-accent:#b91c1c;}
+    #data-table-toolbar[data-toolbar-section="special"] .data-table-toolbar__head{--toolbar-head-bg:rgba(237,233,254,0.88);--toolbar-head-border:rgba(124,58,237,0.35);--toolbar-accent:#7c3aed;}
+    #data-table-toolbar[data-toolbar-section="global"] .data-table-toolbar__head{--toolbar-head-bg:rgba(209,250,229,0.88);--toolbar-head-border:rgba(5,150,105,0.35);--toolbar-accent:#065f46;}
+    main mark.table-search-mark { background-color:rgba(253,224,71,0.88); color:inherit; font-weight:600; padding:0 0.04em; border-radius:0.125rem; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+    html.data-table-search-highlight-off main mark.table-search-mark { background:transparent!important; font-weight:inherit; padding:0; border-radius:0; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header-gradient text-white py-8 sm:py-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <a href="top.html" class="text-emerald-200 hover:text-white text-sm flex items-center gap-1 mb-3 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> ポータルへ戻る
+          </a>
+          <div class="flex items-center gap-3 flex-wrap mb-3">
+            <span class="badge-srisam">SRISAM（抗うつ薬）</span>
+            <span class="text-emerald-200 text-sm">セロトニン再取り込み阻害・セロトニン受容体調節薬</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-1">ボルチオキセチン</h1>
+          <p class="text-emerald-200 text-lg font-medium mb-1">トリンテリックス®（Trintellix）</p>
+          <p class="text-emerald-300 text-sm">Vortioxetine | 日本承認: 2019年9月（うつ病・うつ状態）</p>
+          <p class="text-emerald-300 text-sm mt-0.5">製造販売：武田薬品工業株式会社 / H. Lundbeck A/S</p>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-emerald-200 mb-1">ICD-10</div>
+            <div class="text-lg font-bold">F32/33</div>
+            <div class="text-xs text-emerald-200">うつ病・うつ状態</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-emerald-200 mb-1">標準用量（国内）</div>
+            <div class="text-lg font-bold">10–20 mg</div>
+            <div class="text-xs text-emerald-200">/日</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-emerald-200 mb-1">最大用量（国内）</div>
+            <div class="text-lg font-bold">20 mg</div>
+            <div class="text-xs text-emerald-200">/日（1日1回）</div>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center min-w-[80px]">
+            <div class="text-xs text-emerald-200 mb-1">半減期</div>
+            <div class="text-lg font-bold">≈66 h</div>
+            <div class="text-xs text-emerald-200">長時間型</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== STICKY SECTION NAV ========== -->
+  <div id="sticky-section-nav" class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4">
+      <nav class="flex items-center overflow-x-auto py-2 gap-0.5 text-sm" aria-label="セクションジャンプ">
+        <a href="#quickref"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">概要</a>
+        <a href="#molecule"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">分子</a>
+        <a href="#pharmacology"   class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">薬理</a>
+        <a href="#pk"             class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">動態</a>
+        <a href="#japan-approval" class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">国内承認</a>
+        <a href="#efficacy"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">有効性</a>
+        <a href="#evidence"       class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">エビデンス</a>
+        <a href="#cases"          class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">症例</a>
+        <a href="#safety"         class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">安全性</a>
+        <a href="#interaction"    class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">相互作用</a>
+        <a href="#special"        class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">特殊集団</a>
+        <a href="#global"         class="whitespace-nowrap px-3 py-1.5 rounded hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-medium transition-colors">海外・最新</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ========== DATA-TABLE TOOLBAR ========== -->
+  <div id="data-table-toolbar" class="data-table-toolbar" data-toolbar-section="quickref" role="region" aria-label="ページ内検索と表示オプション">
+    <div class="data-table-toolbar__head">
+      <span class="data-table-toolbar__head-title min-w-0 truncate">ボルチオキセチン（トリンテリックス）詳解</span>
+      <span id="data-table-section-label" class="shrink-0 truncate" aria-live="polite">クイックリファレンス</span>
+    </div>
+    <div class="data-table-toolbar__controls">
+      <label class="flex h-7 shrink-0 cursor-pointer select-none items-center gap-1 rounded border border-slate-200 bg-slate-50/80 px-2 py-1 text-slate-700 hover:bg-slate-100/90 sm:h-7 sm:gap-1.5 sm:px-2.5">
+        <input type="checkbox" id="data-table-sticky-col-toggle" class="h-3.5 w-3.5 shrink-0 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
+        <span class="text-[0.6875rem] font-semibold leading-none whitespace-nowrap">列固定</span>
+      </label>
+      <div class="flex min-w-0 flex-1 items-center justify-end gap-1">
+        <div class="flex h-7 min-w-0 flex-1 items-center gap-1 rounded border border-slate-200 bg-slate-50/80 px-1.5 sm:max-w-[min(100%,24rem)]">
+          <i data-lucide="search" class="h-3 w-3 shrink-0 text-slate-500" aria-hidden="true"></i>
+          <label for="data-table-search" class="sr-only">ページ内検索</label>
+          <input type="search" id="data-table-search" enterkeyhint="search" autocomplete="off" placeholder="検索…" class="min-w-0 flex-1 border-0 bg-transparent py-0 text-[0.8125rem] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0" />
+          <button type="button" id="data-table-search-clear" class="flex h-6 w-6 shrink-0 items-center justify-center rounded text-base font-light leading-none text-slate-500 hover:bg-slate-200/80 hover:text-slate-800" aria-label="検索をクリア" title="クリア"><span aria-hidden="true">×</span></button>
+        </div>
+        <button type="button" id="data-table-search-prev" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-white text-xs font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="前の一致箇所へ" disabled>↑</button>
+        <button type="button" id="data-table-search-next" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-white text-xs font-bold leading-none text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" aria-label="次の一致箇所へ" disabled>↓</button>
+        <button type="button" id="data-table-search-highlight" class="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-200 bg-amber-50 text-amber-900 hover:bg-amber-100/90 sm:px-2" aria-pressed="true" aria-label="ハイライト切り替え" title="ハイライト"><i data-lucide="highlighter" class="h-3.5 w-3.5" aria-hidden="true"></i></button>
+        <p id="data-table-search-meta" class="max-w-[3rem] shrink-0 truncate text-[0.6rem] text-slate-600 tabular-nums sm:max-w-[6rem] sm:text-xs" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOC -->
+  <nav class="toc" aria-label="目次">
+    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">目次</p>
+    <a href="#quickref"       class="toc-link">クイックリファレンス</a>
+    <a href="#molecule"       class="toc-link">分子・化学情報</a>
+    <a href="#pharmacology"   class="toc-link">薬理作用・受容体</a>
+    <a href="#pk"             class="toc-link">薬物動態 (ADME)</a>
+    <a href="#japan-approval" class="toc-link">日本国内承認情報</a>
+    <a href="#efficacy"       class="toc-link">臨床効果・推奨度</a>
+    <a href="#evidence"       class="toc-link">主要エビデンス</a>
+    <a href="#cases"          class="toc-link">具体的適用症例</a>
+    <a href="#safety"         class="toc-link">副作用管理</a>
+    <a href="#interaction"    class="toc-link">薬物相互作用</a>
+    <a href="#special"        class="toc-link">特殊集団</a>
+    <a href="#global"         class="toc-link">海外比較・最新研究</a>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
+
+    <!-- ===== SECTION 1: QUICK REFERENCE ===== -->
+    <section id="quickref" class="section-card">
+      <div class="section-header">
+        <i data-lucide="zap" class="w-6 h-6 text-emerald-800"></i>
+        <h2>クイックリファレンス</h2>
+      </div>
+
+      <!-- Indication overview -->
+      <div class="grid sm:grid-cols-1 gap-4 mb-5">
+        <div class="bg-emerald-50 rounded-xl p-4 border-2 border-emerald-200">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-emerald-700 text-white text-xs font-bold px-2 py-0.5 rounded-full">うつ病・うつ状態</span>
+            <span class="font-bold text-emerald-800 text-sm">F32 / F33 / 2019年9月承認</span>
+          </div>
+          <div class="grid sm:grid-cols-3 gap-3 text-sm text-emerald-800">
+            <div class="space-y-0.5">
+              <div>• 開始：<strong>10 mg/日</strong>（1日1回）</div>
+              <div>• 最大：<strong>20 mg/日</strong>（1週間以上の間隔で増量）</div>
+            </div>
+            <div class="space-y-0.5">
+              <div>• 食事の影響なし（食後・食前いずれでも可）</div>
+              <div>• 剤形：10 mg錠・20 mg錠</div>
+            </div>
+            <div class="space-y-0.5">
+              <div>• 効果発現：2〜4週（十分な評価は4〜8週）</div>
+              <div>• 定常状態到達：約2週間（t<sub>1/2</sub> ≈66h）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dosing table -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[620px]">
+          <thead>
+            <tr>
+              <th>適応（日本）</th>
+              <th>開始用量</th>
+              <th>維持用量</th>
+              <th>最大用量</th>
+              <th>承認年</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">うつ病・うつ状態（F32/F33）</td>
+              <td>10 mg/日（1日1回）</td>
+              <td>10–20 mg/日</td>
+              <td>20 mg/日</td>
+              <td><span class="badge-approved">2019年</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 mb-5">※ 国内承認用量は添付文書（最新版）に基づく。5mg錠は日本未発売（FDA/EMAのみ）。CYP2D6阻害薬との併用時は用量を半減。</p>
+
+      <!-- 4 key clinical points -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">外来で必ず押さえる4点</h3>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border-l-4 border-emerald-600">
+          <div class="w-9 h-9 bg-emerald-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">悪心は最初の2週間が山場</div>
+            <p class="text-gray-600 text-sm">悪心（約30%）は投与開始早期に多く、2〜4週で大半が軽快する。食後服用・制吐薬の短期併用・10mgで2週間維持してから増量する戦略で対応。悪心で中止する前に「様子見」を提案する。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border-l-4 border-blue-600">
+          <div class="w-9 h-9 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">認知機能改善が最大の強み</div>
+            <p class="text-gray-600 text-sm">5-HT3拮抗による前頭前野でのACh・DA・NE放出促進が、抑うつ改善とは独立した認知機能改善（DSST・RAVLT）を実現。「仕事での集中力・記憶力が落ちている」患者に特に適する。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-purple-50 rounded-xl border-l-4 border-purple-600">
+          <div class="w-9 h-9 bg-purple-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">性機能障害・体重増加が少ない</div>
+            <p class="text-gray-600 text-sm">SSRI/SNRIで性機能障害（15〜30%）に悩む患者への切り替え候補。ボルチオキセチンの性機能障害発現率は約2〜5%と有意に低い。体重変化も中性的（有意な増減なし）。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 p-4 bg-amber-50 rounded-xl border-l-4 border-amber-600">
+          <div class="w-9 h-9 bg-amber-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-gray-800 mb-1">CYP2D6阻害薬との併用は用量半減</div>
+            <p class="text-gray-600 text-sm">フルオキセチン・パロキセチン・ブプロピオン（強力なCYP2D6阻害薬）との併用でAUCが約2〜3倍に増加。これらを開始する際はボルチオキセチンを半量に減量。カルバマゼピン（CYP誘導薬）では逆に増量検討。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: MOLECULE ===== -->
+    <section id="molecule" class="section-card">
+      <div class="section-header">
+        <i data-lucide="atom" class="w-6 h-6 text-emerald-800"></i>
+        <h2>分子・化学情報</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6">
+        <!-- 2D Structure SVG -->
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">化学構造式（2,4-ジメチルフェニルスルファニル-フェニル-ピペラジン骨格）</h3>
+          <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-center">
+            <svg viewBox="0 0 560 270" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-sm" aria-label="ボルチオキセチン化学構造式">
+              <title>ボルチオキセチン 2D構造式</title>
+
+              <!-- ===== Ring B: 2,4-dimethylbenzene, center (105,148) ===== -->
+              <!-- Pointy-top hexagon, r=40 -->
+              <polygon points="105,108 140,128 140,168 105,188 70,168 70,128" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <circle cx="105" cy="148" r="18" fill="none" stroke="#374151" stroke-width="1.1" stroke-dasharray="4,2"/>
+              <!-- C1 of ring B = top-right vertex (140,128), connected to S -->
+              <!-- C2 = top vertex (105,108) → methyl -->
+              <line x1="105" y1="108" x2="105" y2="88" stroke="#374151" stroke-width="1.6"/>
+              <text x="105" y="82" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#374151">CH₃</text>
+              <!-- C4 = bottom-left vertex (70,168) → methyl -->
+              <line x1="70" y1="168" x2="50" y2="178" stroke="#374151" stroke-width="1.6"/>
+              <text x="38" y="182" text-anchor="middle" font-size="11" font-family="sans-serif" fill="#374151">CH₃</text>
+              <!-- Ring B label -->
+              <text x="105" y="215" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#9ca3af">2,4-ジメチルフェニル環（Ring B）</text>
+
+              <!-- ===== S atom bridge ===== -->
+              <!-- Bond Ring B C1(140,128) → S(196,112) -->
+              <line x1="140" y1="128" x2="190" y2="113" stroke="#374151" stroke-width="1.8"/>
+              <!-- S circle -->
+              <circle cx="198" cy="110" r="11" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+              <text x="198" y="115" text-anchor="middle" font-size="12" font-family="sans-serif" font-weight="700" fill="#92400e">S</text>
+              <!-- Bond S → Ring A C2(252,108) -->
+              <line x1="209" y1="110" x2="260" y2="108" stroke="#374151" stroke-width="1.8"/>
+
+              <!-- ===== Ring A: benzene, center (295,148) ===== -->
+              <polygon points="295,108 330,128 330,168 295,188 260,168 260,128" fill="none" stroke="#374151" stroke-width="1.8"/>
+              <circle cx="295" cy="148" r="18" fill="none" stroke="#374151" stroke-width="1.1" stroke-dasharray="4,2"/>
+              <!-- C2 top = (295,108), S attached -->
+              <!-- C1 top-right = (330,128), N1-piperazine attached -->
+              <!-- Bond Ring A C1(330,128) → N1 of piperazine(370,128) -->
+              <line x1="330" y1="128" x2="370" y2="128" stroke="#374151" stroke-width="1.8"/>
+              <!-- Ring A label -->
+              <text x="295" y="215" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#9ca3af">フェニル環（Ring A）</text>
+
+              <!-- ===== Piperazine ring: flat-left/right (N at left and right), center (430,148) r=40 ===== -->
+              <!-- Vertices: N-left(390,148), TL(410,113), TR(450,113), N-right(470,148), BR(450,183), BL(410,183) -->
+              <polygon points="390,148 410,113 450,113 470,148 450,183 410,183" fill="#ecfdf5" fill-opacity="0.8" stroke="#065f46" stroke-width="2.5"/>
+              <!-- N labels -->
+              <text x="382" y="153" text-anchor="end" font-size="13" font-family="sans-serif" font-weight="700" fill="#065f46">N</text>
+              <text x="478" y="153" text-anchor="start" font-size="13" font-family="sans-serif" font-weight="700" fill="#065f46">N</text>
+              <!-- H on right N -->
+              <text x="492" y="145" text-anchor="start" font-size="10" font-family="sans-serif" fill="#374151">H</text>
+              <!-- Piperazine label -->
+              <text x="430" y="215" text-anchor="middle" font-size="9" font-family="sans-serif" fill="#065f46" font-weight="600">ピペラジン環</text>
+
+              <!-- ===== Legend box ===== -->
+              <rect x="10" y="230" width="540" height="34" fill="#f9fafb" rx="5" stroke="#e5e7eb" stroke-width="1"/>
+              <text x="20" y="244" font-size="9.5" font-family="sans-serif" fill="#374151"><tspan font-weight="700" fill="#065f46">■ピペラジン: </tspan>2つのN（塩基性）が特徴的。HBr塩として製剤</text>
+              <text x="20" y="257" font-size="9.5" font-family="sans-serif" fill="#374151"><tspan font-weight="700" fill="#92400e">S: </tspan>チオエーテル結合（硫黄架橋）| 分子式: C₁₈H₂₂N₂S・HBr | MW: 379.35 (HBr塩) / 298.44 (遊離塩基)</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Chemical data -->
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">物理化学的性質</h3>
+          <table class="w-full text-sm">
+            <tbody>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium w-2/5">一般名</td><td class="py-2 font-semibold text-gray-800">ボルチオキセチン臭化水素酸塩</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">IUPAC名</td><td class="py-2 text-xs text-gray-700 leading-relaxed">1-[2-(2,4-dimethylphenylsulfanyl)phenyl]piperazine hydrobromide</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">分子式</td><td class="py-2 font-mono text-gray-800">C<sub>18</sub>H<sub>22</sub>N<sub>2</sub>S・HBr</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">分子量</td><td class="py-2 font-semibold text-gray-800">379.35 g/mol（HBr塩）/ 298.44（遊離塩基）</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">CAS番号</td><td class="py-2 text-gray-800">508233-74-7</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">骨格</td><td class="py-2 text-gray-800">2,4-ジメチルフェニルスルファニル-フェニル-ピペラジン骨格</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">logP</td><td class="py-2 text-gray-800">≈ 2.5（中程度の脂溶性）</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">水溶性</td><td class="py-2 text-gray-800">HBr塩として良好な水溶性</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-2 pr-3 text-gray-500 font-medium">立体化学</td><td class="py-2 text-gray-800">不斉中心なし（単一化合物・ラセミ体不要）</td></tr>
+              <tr><td class="py-2 pr-3 text-gray-500 font-medium">開発経緯</td><td class="py-2 text-gray-800">H. Lundbeck A/S / 武田薬品工業株式会社 共同開発（Lu AA21004）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="criteria-box mt-4">
+        <div class="font-bold text-emerald-900 mb-2">構造的特徴と薬理学的意義</div>
+        <p class="text-sm text-emerald-800">ボルチオキセチンの核心構造は<strong>ピペラジン環</strong>（二窒素六員環）であり、一方のN（N1）が2位にチオエーテルを持つフェニル環（Ring A）に結合し、このチオエーテルが2,4-ジメチルフェニル基（Ring B）と繋がる。この独自の三環様配置が、SERTと複数の5-HT受容体に対する多標的結合親和性を生み出す。チオエーテル結合（C–S–C）の柔軟性と2,4-ジメチル基の立体的特性が、5-HT3・5-HT1A・5-HT7への高親和性結合に重要と考えられる。</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: PHARMACOLOGY ===== -->
+    <section id="pharmacology" class="section-card">
+      <div class="section-header">
+        <i data-lucide="flask-conical" class="w-6 h-6 text-emerald-800"></i>
+        <h2>薬理作用・受容体プロファイル</h2>
+      </div>
+
+      <div class="criteria-box mb-5">
+        <div class="font-bold text-emerald-900 mb-2">SRISAM（Serotonin Reuptake Inhibitor and Serotonin Modulator）— 多標的作用薬の新カテゴリ</div>
+        <p class="text-sm text-emerald-800 mb-2">ボルチオキセチンはSERTを高親和性（Ki≈1.6nM）で阻害しつつ、6種類の5-HT受容体サブタイプに対して異なるモード（拮抗・部分作動・完全作動）で作用する。この「SSRI+セロトニン受容体調節」の組み合わせが、古典的SSRIには見られない<strong>認知機能改善・性機能障害の少なさ・離脱症状の軽微さ</strong>を生む薬理学的基盤となる。</p>
+        <div class="grid sm:grid-cols-3 gap-2 text-xs text-emerald-800">
+          <div class="bg-white rounded p-2"><span class="font-bold">SERT阻害：</span>セロトニン再取り込み抑制 → シナプス間隙5-HT↑</div>
+          <div class="bg-white rounded p-2"><span class="font-bold">5-HT3拮抗：</span>認知機能改善・性機能保護の主機序</div>
+          <div class="bg-white rounded p-2"><span class="font-bold">5-HT1A作動：</span>不安軽減・セロトニン神経伝達の増強</div>
+        </div>
+      </div>
+
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">受容体結合親和性プロファイル（Ki値）</h3>
+      <div class="mb-6">
+        <!-- SERT -->
+        <div class="receptor-row">
+          <div class="receptor-label">SERT（セロトニントランスポーター）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:97%;background:linear-gradient(90deg,#2563eb,#3b82f6);">Ki≈1.6nM</div>
+          </div>
+          <div class="receptor-ki">阻害（SERT）</div>
+        </div>
+        <!-- 5-HT3A -->
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT<sub>3A</sub>（イオンチャネル型）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:93%;background:linear-gradient(90deg,#ea580c,#f97316);">Ki≈3.7nM</div>
+          </div>
+          <div class="receptor-ki">拮抗（Ant.）</div>
+        </div>
+        <!-- 5-HT1A -->
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT<sub>1A</sub>（Gi共役）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:82%;background:linear-gradient(90deg,#15803d,#22c55e);">Ki≈15nM</div>
+          </div>
+          <div class="receptor-ki">作動（Ago.）</div>
+        </div>
+        <!-- 5-HT7 -->
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT<sub>7</sub>（Gs共役）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:79%;background:linear-gradient(90deg,#7c3aed,#8b5cf6);">Ki≈19nM</div>
+          </div>
+          <div class="receptor-ki">拮抗（Ant.）</div>
+        </div>
+        <!-- 5-HT1B -->
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT<sub>1B</sub>（Gi共役）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:75%;background:linear-gradient(90deg,#0891b2,#06b6d4);">Ki≈33nM</div>
+          </div>
+          <div class="receptor-ki">部分作動（PAgo.）</div>
+        </div>
+        <!-- 5-HT1D -->
+        <div class="receptor-row">
+          <div class="receptor-label">5-HT<sub>1D</sub>（Gi共役）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:68%;background:linear-gradient(90deg,#ca8a04,#eab308);">Ki≈54nM</div>
+          </div>
+          <div class="receptor-ki">拮抗（Ant.）</div>
+        </div>
+        <!-- NET -->
+        <div class="receptor-row">
+          <div class="receptor-label">NET（ノルアドレナリントランスポーター）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:25%;background:linear-gradient(90deg,#64748b,#94a3b8);">Ki≈113nM</div>
+          </div>
+          <div class="receptor-ki">弱阻害</div>
+        </div>
+        <!-- DAT -->
+        <div class="receptor-row">
+          <div class="receptor-label">DAT（ドパミントランスポーター）</div>
+          <div class="receptor-bar-bg">
+            <div class="receptor-bar" style="width:10%;background:#cbd5e1;"></div>
+          </div>
+          <div class="receptor-ki" style="color:#9ca3af;">Ki＞1000nM</div>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mb-5">※ Ki値はヒト組換え受容体を用いたin vitro結合実験値（Sanchez et al., 2015）。数値が小さいほど親和性が高い。</p>
+
+      <!-- Cognition mechanism -->
+      <h3 class="text-sm font-bold text-gray-700 mb-3">5-HT3拮抗による認知機能改善機序</h3>
+      <div class="grid sm:grid-cols-2 gap-4 mb-5">
+        <div class="bg-orange-50 rounded-xl p-4 border border-orange-200">
+          <div class="font-bold text-orange-800 mb-2 text-sm">前頭前野での神経伝達物質放出促進</div>
+          <p class="text-xs text-orange-700">5-HT3受容体はGABAニューロン上に多く発現。5-HT3拮抗によりGABA放出が抑制され、これが前頭前野でのアセチルコリン（ACh）・ドパミン（DA）・ノルアドレナリン（NE）の放出を促進する。この「ジスインヒビション」機序が、SERT阻害だけでは得られない認知機能改善を生む。</p>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+          <div class="font-bold text-blue-800 mb-2 text-sm">5-HT7拮抗の追加効果</div>
+          <p class="text-xs text-blue-700">5-HT7受容体はグルタミン酸神経伝達・概日リズム・学習記憶に関与。5-HT7拮抗は神経可塑性（BDNF分泌・スパイン形成）を促進し、睡眠構造（REM密度の適正化）にも好影響を与える可能性が示唆されている。</p>
+        </div>
+        <div class="bg-green-50 rounded-xl p-4 border border-green-200">
+          <div class="font-bold text-green-800 mb-2 text-sm">5-HT1A作動の役割</div>
+          <p class="text-xs text-green-700">5-HT1A（Gi共役型）の作動は、縫線核でのフィードバック抑制（自己受容体）解除と海馬での不安緩和・神経新生促進に寄与。SSRI単独よりも強くかつ多様な機序でセロトニン神経機能を増強する。</p>
+        </div>
+        <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
+          <div class="font-bold text-purple-800 mb-2 text-sm">性機能保護のメカニズム</div>
+          <p class="text-xs text-purple-700">SSRIによる性機能障害は脊髄・末梢の5-HT3受容体活性化が一因とされる。ボルチオキセチンの5-HT3拮抗がこれを打ち消し、SSRI使用時と比較して性機能障害発現率が有意に低い。</p>
+        </div>
+      </div>
+
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">SSRIとの薬理学的比較</h3>
+      <div class="x-scroll mb-4">
+        <table class="guide-table min-w-[640px]">
+          <thead>
+            <tr><th>機序</th><th>SSRI（例：エスシタロプラム）</th><th>ボルチオキセチン</th><th>臨床的意義</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="font-semibold">SERT阻害</td><td>高（主要機序）</td><td>高（Ki≈1.6nM）</td><td>抗うつ効果の中核</td></tr>
+            <tr><td class="font-semibold">5-HT3拮抗</td><td>なし</td><td>強（Ki≈3.7nM）</td><td>認知機能改善・性機能保護</td></tr>
+            <tr><td class="font-semibold">5-HT1A作動</td><td>なし</td><td>あり（Ki≈15nM）</td><td>不安軽減・神経新生促進</td></tr>
+            <tr><td class="font-semibold">5-HT7拮抗</td><td>なし</td><td>あり（Ki≈19nM）</td><td>認知・睡眠構造改善</td></tr>
+            <tr><td class="font-semibold">認知機能改善</td><td>間接的（抑うつ改善に伴う）</td><td>部分的に独立（5-HT3機序）</td><td>残遺認知症状への追加効果</td></tr>
+            <tr><td class="font-semibold">性機能障害</td><td>15–30%</td><td>2–5%（有意に低い）</td><td>性機能障害が問題の患者に選択優位</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: PK / ADME ===== -->
+    <section id="pk" class="section-card">
+      <div class="section-header">
+        <i data-lucide="activity" class="w-6 h-6 text-emerald-800"></i>
+        <h2>薬物動態 (ADME)</h2>
+      </div>
+
+      <!-- ADME flow -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+        <div class="adme-box">
+          <div class="text-xs font-normal text-emerald-600 mb-1">吸収（A）</div>
+          <div class="text-base">F ≈ 75%</div>
+          <div class="text-xs font-normal mt-1">Tmax ≈7–8h</div>
+          <div class="text-xs font-normal">食事の影響なし</div>
+        </div>
+        <div class="adme-box">
+          <div class="text-xs font-normal text-emerald-600 mb-1">分布（D）</div>
+          <div class="text-base">Vd ≈ 2400 L</div>
+          <div class="text-xs font-normal mt-1">タンパク結合 ≈98%</div>
+          <div class="text-xs font-normal">脳移行性 良好</div>
+        </div>
+        <div class="adme-metabolite">
+          <div class="text-xs font-normal text-green-600 mb-1">代謝（M）</div>
+          <div class="text-base">CYP2D6（主）</div>
+          <div class="text-xs font-normal mt-1">+CYP3A4/5</div>
+          <div class="text-xs font-normal">+CYP2C9/19</div>
+        </div>
+        <div class="adme-excretion">
+          <div class="text-xs font-normal text-amber-600 mb-1">排泄（E）</div>
+          <div class="text-base">t<sub>1/2</sub> ≈66h</div>
+          <div class="text-xs font-normal mt-1">尿中59%・糞中26%</div>
+          <div class="text-xs font-normal">（代謝物として）</div>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6 mb-5">
+        <div>
+          <h3 class="text-sm font-bold text-gray-700 mb-3">代謝経路と遺伝子多型</h3>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-24 h-8 bg-emerald-100 border-2 border-emerald-400 rounded flex items-center justify-center text-xs font-bold text-emerald-800">ボルチオキセチン</div>
+            </div>
+            <div class="flex flex-col gap-2 pl-4 border-l-2 border-gray-300">
+              <div class="text-xs text-gray-600">↓ CYP2D6（主要・約半量以上）</div>
+              <div class="text-xs text-gray-600">↓ CYP3A4/5、CYP2C9、CYP2C19（補助）</div>
+              <div class="flex gap-2 flex-wrap mt-1">
+                <div class="adme-metabolite text-xs py-1 px-2">Lu AA34443（主代謝物・低活性）</div>
+                <div class="adme-excretion text-xs py-1 px-2">その他不活性代謝物</div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">原型としての腎排泄はほとんどなし（&lt;1%）。主代謝物は薬理活性が低く臨床的影響は限定的。</p>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-gray-700 mb-3">CYP2D6遺伝子多型の影響</h3>
+          <div class="x-scroll">
+            <table class="guide-table min-w-[320px]">
+              <thead><tr><th>代謝表現型</th><th>AUCへの影響</th><th>対応</th></tr></thead>
+              <tbody>
+                <tr><td>EM（通常代謝者）</td><td>基準値</td><td>通常用量</td></tr>
+                <tr><td>IM（中間代謝者）</td><td>約1.5倍</td><td>通常用量 → 状態観察</td></tr>
+                <tr><td>PM（低代謝者・約5–10%）</td><td>約2倍</td><td>低用量から開始・10mgで維持検討</td></tr>
+                <tr><td>UM（超高代謝者）</td><td>約0.6倍</td><td>効果不十分時は増量検討（最大20mg）</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-gray-400 mt-2">日本人のCYP2D6 PMは欧米（5〜10%）より少ない（約1%）が、CYP2D6阻害薬の影響はPM相当となる。</p>
+        </div>
+      </div>
+
+      <!-- PK summary table -->
+      <div class="x-scroll">
+        <table class="guide-table min-w-[540px]">
+          <thead><tr><th>パラメータ</th><th>値</th><th>臨床的意義</th></tr></thead>
+          <tbody>
+            <tr><td>生物学的利用率</td><td>≈75%</td><td>経口投与で安定した血中濃度。製剤間の差異は少ない</td></tr>
+            <tr><td>Tmax（最高血中濃度到達時間）</td><td>7〜8時間</td><td>食後服用でも変化なし</td></tr>
+            <tr><td>タンパク結合率</td><td>≈98%（アルブミン・α1-AGP）</td><td>高結合により透析での除去は困難</td></tr>
+            <tr><td>分布容積（Vd）</td><td>≈2400 L（体重1kgあたり約35L）</td><td>広範な組織移行を示す</td></tr>
+            <tr><td>消失半減期（t<sub>1/2</sub>）</td><td>≈66時間（平均57〜70h）</td><td>定常状態到達まで約2週間。1日1回投与で血中濃度安定</td></tr>
+            <tr><td>定常状態到達</td><td>約14日</td><td>薬効の完全評価は投与開始から4〜8週が目安</td></tr>
+            <tr><td>尿中排泄（代謝物）</td><td>約59%</td><td>原型での排泄はほぼゼロ。腎機能障害で通常用量使用可</td></tr>
+            <tr><td>糞中排泄（代謝物）</td><td>約26%</td><td>胆汁排泄経路あり</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 5: JAPAN APPROVAL ===== -->
+    <section id="japan-approval" class="section-card">
+      <div class="section-header">
+        <i data-lucide="clipboard-check" class="w-6 h-6 text-emerald-800"></i>
+        <h2>日本国内承認情報</h2>
+      </div>
+
+      <!-- Quick indication cards -->
+      <div class="grid sm:grid-cols-1 gap-4 mb-5">
+        <div class="bg-emerald-50 rounded-xl p-4 border-2 border-emerald-200">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="bg-emerald-700 text-white text-xs font-bold px-2 py-0.5 rounded-full">うつ病・うつ状態</span>
+            <span class="font-bold text-emerald-800 text-sm">F32 / F33 / 2019年9月承認（製造販売承認）</span>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3 text-sm text-emerald-800">
+            <div class="space-y-1">
+              <div>• 開始：<strong>10 mg/日</strong>（1日1回）</div>
+              <div>• 効果不十分時：<strong>20 mg/日</strong>に増量（1週間以上の間隔）</div>
+              <div>• 最大：<strong>20 mg/日</strong>（日本国内の上限）</div>
+            </div>
+            <div class="space-y-1">
+              <div>• 服用時点：食後・食前いずれでも可</div>
+              <div>• 剤形：10mg錠・20mg錠（5mg錠は日本未発売）</div>
+              <div>• 中止：急な中止を避け漸減を推奨</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dosing table -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[720px]">
+          <thead>
+            <tr><th>効能・効果</th><th>ICD-10</th><th>開始用量</th><th>維持用量</th><th>最大用量</th><th>増量間隔</th><th>注意点</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">うつ病・うつ状態</td>
+              <td><code class="text-xs bg-gray-100 px-1 rounded">F32/F33</code></td>
+              <td>10 mg/日</td>
+              <td>10–20 mg/日</td>
+              <td>20 mg/日</td>
+              <td>1週間以上</td>
+              <td>効果発現まで2〜4週。CYP2D6阻害薬との併用時は半量（5mg相当）を考慮</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Dose step-up guide -->
+      <h3 class="text-sm font-bold text-gray-700 mb-3">用量漸増ガイド（悪心対策込み）</h3>
+      <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-4 mb-5">
+        <div class="flex items-center gap-2 flex-wrap justify-center">
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">Week 1〜2</div>
+            <div class="bg-white border-2 border-emerald-300 rounded-lg px-4 py-2 font-bold text-emerald-800">10 mg</div>
+            <div class="text-xs text-gray-500 mt-1">開始用量（食後推奨）</div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">Week 2〜4（評価後）</div>
+            <div class="bg-white border-2 border-emerald-400 rounded-lg px-4 py-2 font-bold text-emerald-800">10–20 mg</div>
+            <div class="text-xs text-gray-500 mt-1">悪心軽快後に増量検討</div>
+          </div>
+          <div class="text-gray-400 text-xl">→</div>
+          <div class="text-center">
+            <div class="text-xs text-gray-500 mb-1">必要時（反応不十分）</div>
+            <div class="bg-emerald-100 border-2 border-emerald-600 rounded-lg px-4 py-2 font-bold text-emerald-900">20 mg</div>
+            <div class="text-xs text-gray-500 mt-1">最大用量（国内承認）</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 text-center">半減期約66hのため効果確認は2〜4週ごとに。悪心は最初の2週間に集中することが多い。</p>
+      </div>
+
+      <!-- Important warnings -->
+      <div class="danger-box">
+        <div class="font-bold text-red-900 mb-2">国内添付文書上の重要注意事項</div>
+        <ul class="text-sm text-red-800 space-y-1 list-disc list-inside">
+          <li>MAO阻害薬（モノアミン酸化酵素阻害薬）との<strong>併用禁忌</strong>（セロトニン症候群リスク）</li>
+          <li>MAO阻害薬投与中止後少なくとも<strong>2週間</strong>の間隔をあけてから投与開始すること</li>
+          <li>本剤投与中止後は<strong>3週間</strong>（t<sub>1/2</sub>×5≈2週間＋安全余裕）が推奨される（MAO阻害薬を開始する前）</li>
+          <li>自殺念慮・自殺企図のリスク：投与開始早期と用量変更時に観察を密に</li>
+          <li>躁転・軽躁転：双極性障害が疑われる患者には単独投与を慎重に検討</li>
+          <li>急な中止は推奨しない（ディスコンティニュエーション症候群は軽微だが、漸減が原則）</li>
+        </ul>
+      </div>
+
+      <div class="warning-box mt-4">
+        <div class="font-bold text-amber-900 mb-2">CYP2D6阻害薬との併用時の用量調整</div>
+        <p class="text-sm text-amber-800">フルオキセチン・パロキセチン・ブプロピオンなど強力なCYP2D6阻害薬を追加する際、またはボルチオキセチンを追加する際は<strong>ボルチオキセチンを半量に減量</strong>すること。これらの阻害薬を中止する際には元の用量に戻す（添付文書§10参照）。</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6: EFFICACY ===== -->
+    <section id="efficacy" class="section-card">
+      <div class="section-header">
+        <i data-lucide="trending-up" class="w-6 h-6 text-emerald-800"></i>
+        <h2>臨床効果・推奨度</h2>
+      </div>
+
+      <!-- Guideline recommendation table -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[700px]">
+          <thead>
+            <tr><th>ガイドライン</th><th>推奨レベル</th><th>適応・位置づけ</th><th>コメント</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">日本うつ病学会（JSD）</td>
+              <td><span class="badge-level-b">Level B</span></td>
+              <td>うつ病ファーストライン選択肢のひとつ</td>
+              <td class="col-text">認知機能改善・忍容性を理由に選択可能</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">CANMAT 2023</td>
+              <td><span class="badge-level-a">Level A</span></td>
+              <td>MDDファーストライン（Line 1）</td>
+              <td class="col-text">エビデンスの一貫性・認知機能改善データが高評価</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">NICE（英国）</td>
+              <td><span class="badge-level-b">Level B</span></td>
+              <td>成人うつ病 推奨薬剤リスト</td>
+              <td class="col-text">性機能障害・体重増加が少ない点を明記</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">WFSBP 2022</td>
+              <td><span class="badge-level-a">Level A</span></td>
+              <td>MDD急性期治療（カテゴリA）</td>
+              <td class="col-text">複数の高品質RCTによる一貫した効果</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">APA 2023</td>
+              <td><span class="badge-level-a">Level A</span></td>
+              <td>MDD 薬物療法ファーストライン</td>
+              <td class="col-text">認知症状への有用性・Cipriani 2018データを重視</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-5">
+        <div class="recommend-box">
+          <div class="font-bold text-green-900 mb-2">特に選択が有利な患者プロファイル</div>
+          <ul class="text-sm text-green-800 space-y-1 list-disc list-inside">
+            <li>認知機能障害（集中力・記憶力低下）が目立つうつ病</li>
+            <li>性機能障害を忌避する患者（転換目的も含む）</li>
+            <li>体重増加を懸念する患者（中性的プロファイル）</li>
+            <li>就労中・社会機能の早期回復を優先したい症例</li>
+            <li>高齢者（認知症前駆期含む）のうつ病</li>
+            <li>SSRI/SNRIで性機能障害・体重増加が問題になった既往</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <div class="font-bold text-amber-900 mb-2">相対的に注意を要する状況</div>
+          <ul class="text-sm text-amber-800 space-y-1 list-disc list-inside">
+            <li>悪心の忍容性が低い患者（主な副作用）</li>
+            <li>CYP2D6阻害薬（フルオキセチン等）との必須の併用</li>
+            <li>双極性障害（うつエピソード）：単独使用で躁転リスク</li>
+            <li>MAO阻害薬との併用（絶対禁忌）</li>
+            <li>コスト制約（他の汎用SSRIより薬価高め）</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Efficacy comparison -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">他の抗うつ薬との有効性・忍容性比較（Cipriani 2018）</h3>
+      <div class="x-scroll mb-4">
+        <table class="guide-table min-w-[600px]">
+          <thead>
+            <tr><th>薬剤</th><th>有効性（OR vs プラセボ）</th><th>忍容性（脱落率 OR）</th><th>位置づけ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="font-semibold text-emerald-700">ボルチオキセチン</td><td>OR 1.57（良好）</td><td>OR 1.06（良好）</td><td class="text-green-700 font-semibold">有効性・忍容性ともに上位</td></tr>
+            <tr><td>エスシタロプラム</td><td>OR 1.48</td><td>OR 1.11（良好）</td><td>最良の忍容性クラス</td></tr>
+            <tr><td>セルトラリン</td><td>OR 1.37</td><td>OR 1.03（最良）</td><td>忍容性No.1・コスト優位</td></tr>
+            <tr><td>ベンラファキシン</td><td>OR 1.49</td><td>OR 1.34（やや↓）</td><td>SNRI・高用量で追加効果</td></tr>
+            <tr><td>ミルタザピン</td><td>OR 1.66（最高クラス）</td><td>OR 1.22（中等度）</td><td>即効性・不眠・食欲不振に有利</td></tr>
+            <tr><td>アミトリプチリン（TCA）</td><td>OR 2.13（最高）</td><td>OR 2.04（最悪）</td><td>有効性高いが副作用多い</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400">Cipriani A, et al. Lancet. 2018;391(10128):1357-1366. 522 RCTs, 116,477例, 21成人MDD抗うつ薬の有効性・受忍性ネットワークメタ解析。</p>
+    </section>
+
+    <!-- ===== SECTION 7: EVIDENCE ===== -->
+    <section id="evidence" class="section-card">
+      <div class="section-header">
+        <i data-lucide="bar-chart-2" class="w-6 h-6 text-emerald-800"></i>
+        <h2>主要エビデンス</h2>
+      </div>
+
+      <!-- FOCUS trial -->
+      <div class="rct-card mb-4">
+        <div class="flex items-start justify-between flex-wrap gap-2 mb-2">
+          <div class="font-bold text-gray-800">FOCUS試験（NCT01422213）</div>
+          <div class="flex gap-1 flex-wrap">
+            <span class="badge-level-a">Level A</span>
+            <span class="badge-approved">DB-RCT</span>
+          </div>
+        </div>
+        <div class="text-sm text-gray-600 mb-2">Mahableshwarkar AR, et al. Neuropsychopharmacology. 2015;40:2219-2230. N=454, 8週間, 成人MDD（DSM-IV-TR）</div>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm mb-2">
+          <div class="bg-gray-50 rounded p-2"><div class="font-semibold text-gray-700 mb-1">デザイン</div><p class="text-gray-600">二重盲検RCT。ボルチオキセチン10mg/日または20mg/日 vs プラセボ。8週間投与後のMADRS改善度が主要評価項目</p></div>
+          <div class="bg-gray-50 rounded p-2"><div class="font-semibold text-gray-700 mb-1">主要結果</div><p class="text-gray-600">20mg群でMADRS改善スコア：−15.7 vs プラセボ−12.0（p＜0.01）。10mg群：−15.2（p＜0.01）。臨床的に意味ある差</p></div>
+          <div class="bg-gray-50 rounded p-2"><div class="font-semibold text-gray-700 mb-1">認知機能サブ解析</div><p class="text-gray-600">DSST（記号数字置換テスト）でプラセボ対比の有意改善を確認。抑うつ改善度による共分散調整後も独立した認知機能改善が示唆された</p></div>
+        </div>
+        <p class="text-xs text-emerald-800"><strong>Clinical Message：</strong>10mgと20mgで同等以上の有効性。20mgへの増量は反応が不十分な場合に行う。認知機能改善はSSRIとの差別化点。</p>
+      </div>
+
+      <!-- CONNECT trial -->
+      <div class="rct-card mb-4">
+        <div class="flex items-start justify-between flex-wrap gap-2 mb-2">
+          <div class="font-bold text-gray-800">CONNECT試験（NCT01766973）— 認知機能の主要評価</div>
+          <div class="flex gap-1 flex-wrap">
+            <span class="badge-level-a">Level A</span>
+            <span class="badge-approved">DB-RCT</span>
+          </div>
+        </div>
+        <div class="text-sm text-gray-600 mb-2">McIntyre RS, et al. Int J Neuropsychopharmacol. 2014;17(10):1557-1567. N=602, 8週間, 成人MDD（18〜65歳）</div>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm mb-2">
+          <div class="bg-blue-50 rounded p-2"><div class="font-semibold text-blue-700 mb-1">主要評価項目</div><p class="text-gray-600">DSST（記号数字置換テスト）スコア変化量。認知機能を主要評価項目としたMDD治療薬のRCTとして初の試み</p></div>
+          <div class="bg-blue-50 rounded p-2"><div class="font-semibold text-blue-700 mb-1">主要結果</div><p class="text-gray-600">ボルチオキセチン10/20mg: DSSTPrimary改善量 +4.0 vs プラセボ +1.7（p＜0.001）。標準化効果量 d≈0.35（中等度）</p></div>
+          <div class="bg-blue-50 rounded p-2"><div class="font-semibold text-blue-700 mb-1">独立性の解析</div><p class="text-gray-600">認知改善の約30%はMADRS改善と独立していた（mediation analysis）。5-HT3拮抗による直接的認知機能改善を支持</p></div>
+        </div>
+        <p class="text-xs text-blue-800"><strong>Clinical Message：</strong>「うつが良くなったから集中できるようになった」だけでなく、認知機能改善そのものへの直接効果がある可能性を示す。就労中患者に重要。</p>
+      </div>
+
+      <!-- REVIVE trial -->
+      <div class="rct-card mb-4">
+        <div class="flex items-start justify-between flex-wrap gap-2 mb-2">
+          <div class="font-bold text-gray-800">REVIVE試験（NCT01492426）— SSRI不十分奏効後の切り替え</div>
+          <div class="flex gap-1 flex-wrap">
+            <span class="badge-level-b">Level B</span>
+            <span class="badge-approved">DB-RCT</span>
+          </div>
+        </div>
+        <div class="text-sm text-gray-600 mb-2">Häggström L, et al. Int J Neuropsychopharmacol. 2015;18(4). N=513, 12週間. SSRI充足量6週後も不十分奏効のMDD患者</div>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm mb-2">
+          <div class="bg-gray-50 rounded p-2"><div class="font-semibold text-gray-700 mb-1">試験デザイン</div><p class="text-gray-600">SSRI（エスシタロプラム/セルトラリン/パロキセチン/フルオキセチン）から切り替え。ボルチオキセチン10/20mg vs アゴメラチン25/50mg（両群とも12週間）</p></div>
+          <div class="bg-gray-50 rounded p-2"><div class="font-semibold text-gray-700 mb-1">主要結果</div><p class="text-gray-600">両群で有意なMADRS改善（非劣性）。ボルチオキセチンで認知機能（DSST）の追加改善。性機能障害はアゴメラチンと同等以上に低率</p></div>
+        </div>
+        <p class="text-xs text-emerald-800"><strong>Clinical Message：</strong>SSRIで効果不十分な患者への切り替え先として有効。アゴメラチンと同等以上の効果・忍容性。</p>
+      </div>
+
+      <!-- COMPASS (Japan) -->
+      <div class="rct-card mb-4">
+        <div class="flex items-start justify-between flex-wrap gap-2 mb-2">
+          <div class="font-bold text-gray-800">COMPASS試験（日本人対象）</div>
+          <div class="flex gap-1 flex-wrap">
+            <span class="badge-level-a">Level A</span>
+            <span class="badge-approved">DB-RCT</span>
+          </div>
+        </div>
+        <div class="text-sm text-gray-600 mb-2">日本人MDD患者 N=305, 8週間. ボルチオキセチン10mg/日または20mg/日 vs プラセボ</div>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm mb-2">
+          <div class="bg-emerald-50 rounded p-2"><div class="font-semibold text-emerald-700 mb-1">主要結果</div><p class="text-gray-600">両用量でMADRS改善の統計的有意差を確認（p＜0.05）。日本人での有効性・安全性を検証し2019年の国内承認の根拠となった</p></div>
+          <div class="bg-emerald-50 rounded p-2"><div class="font-semibold text-emerald-700 mb-1">特徴</div><p class="text-gray-600">悪心の発現率は欧米試験と同程度（約30%）だが忍容性良好。日本の5mg錠未発売の背景として10mgスタートで安全性確認済み</p></div>
+        </div>
+        <p class="text-xs text-emerald-800"><strong>Clinical Message：</strong>日本人でも同等の有効性・安全性が確認された。10mgスタートは国内標準として適切。</p>
+      </div>
+
+      <!-- Cipriani 2018 -->
+      <div class="rct-card mb-4">
+        <div class="flex items-start justify-between flex-wrap gap-2 mb-2">
+          <div class="font-bold text-gray-800">Cipriani 2018 ネットワークメタ解析（Lancet）</div>
+          <div class="flex gap-1 flex-wrap">
+            <span class="badge-level-a">Level A</span>
+            <span class="badge-1st">Meta</span>
+          </div>
+        </div>
+        <div class="text-sm text-gray-600 mb-2">N=116,477例, 522 RCT, 21抗うつ薬の大規模ネットワークメタ解析</div>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm mb-2">
+          <div class="bg-indigo-50 rounded p-2"><div class="font-semibold text-indigo-700 mb-1">有効性ランキング</div><p class="text-gray-600">ボルチオキセチンOR 1.57（上位グループ）。ミルタザピン・アミトリプチリン・アゴメラチンに次ぐ高いOR。プラセボに対する反応率の差は臨床的に意味ある範囲</p></div>
+          <div class="bg-indigo-50 rounded p-2"><div class="font-semibold text-indigo-700 mb-1">忍容性ランキング</div><p class="text-gray-600">ドロップアウト率OR 1.06（セルトラリン、エスシタロプラムと同水準）。有効性と忍容性の両立において上位グループに位置づけ</p></div>
+        </div>
+        <p class="text-xs text-indigo-800"><strong>Clinical Message：</strong>21剤中でボルチオキセチンは有効性・忍容性バランスが良いグループ。「最も信頼できる初期選択薬」の候補として認識されている。</p>
+      </div>
+
+      <!-- Summary NNT table -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">NNT・NNH サマリー（主要RCTより）</h3>
+      <div class="x-scroll mb-4">
+        <table class="guide-table min-w-[540px]">
+          <thead>
+            <tr><th>指標</th><th>値（概算）</th><th>根拠・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>NNT（50%改善）vs プラセボ</td><td class="text-green-700 font-semibold">≈7〜9</td><td>10–20mg用量。FOCUS/CONNECT試験の加重平均推計</td></tr>
+            <tr><td>NNT（寛解率）vs プラセボ</td><td class="text-green-700 font-semibold">≈8〜12</td><td>MADRS≦10を寛解基準。FOCUS試験準拠</td></tr>
+            <tr><td>NNH（悪心で中止）</td><td class="text-amber-600 font-semibold">≈30〜50</td><td>悪心による中止率は全体の2〜3%程度</td></tr>
+            <tr><td>NNH（全理由中止）vs プラセボ</td><td class="text-amber-600 font-semibold">≈60</td><td>忍容性良好。中止率の差は小さい</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 8: CLINICAL CASES ===== -->
+    <section id="cases" class="section-card">
+      <div class="section-header">
+        <i data-lucide="users" class="w-6 h-6 text-emerald-800"></i>
+        <h2>具体的適用症例</h2>
+      </div>
+
+      <!-- Case 1 -->
+      <div class="case-card mb-4 border-emerald-100">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-emerald-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+          <div>
+            <div class="font-bold text-gray-800">症例1：認知機能症状が目立つMDD — 就労中の30代</div>
+            <div class="text-xs text-gray-500">初発うつ病 / 認知機能への優先対応</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm mb-3">
+          <div class="bg-gray-50 rounded p-3">
+            <div class="font-semibold text-gray-700 mb-1">主訴・背景</div>
+            <p class="text-gray-600">30代後半、会社員男性。「仕事でミスが増えた、会議で発言できない」が主訴。抑うつ気分・疲労感・食欲低下（体重5kg減）。GAD-7=12, PHQ-9=18（中等度）。初発エピソード。</p>
+          </div>
+          <div class="bg-gray-50 rounded p-3">
+            <div class="font-semibold text-gray-700 mb-1">治療選択の根拠</div>
+            <p class="text-gray-600">認知機能症状（集中力・記憶力）が業務支障の主体。体重増加は避けたい（BMI 22.5）。性機能障害も懸念（既婚）。ボルチオキセチン10mg/日で開始。</p>
+          </div>
+          <div class="bg-gray-50 rounded p-3">
+            <div class="font-semibold text-gray-700 mb-1">経過・アウトカム</div>
+            <p class="text-gray-600">Week 1〜2：悪心（軽度）。食後服用で軽快。Week 4：PHQ-9=10（改善）。Week 8：20mgへ増量。Week 12：PHQ-9=4（寛解）、業務効率の自覚改善。</p>
+          </div>
+        </div>
+        <p class="text-xs text-emerald-800"><strong>臨床的ポイント：</strong>「抑うつが良くなったから考えられるようになった」のか「薬が直接認知を改善した」のか患者と対話しながら評価。DSST相当の観察（日常業務での認知機能）を4〜8週で評価指標に組み込む。</p>
+      </div>
+
+      <!-- Case 2 -->
+      <div class="case-card mb-4 border-blue-100">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+          <div>
+            <div class="font-bold text-gray-800">症例2：SSRI性機能障害でのスイッチング — 40代女性</div>
+            <div class="text-xs text-gray-500">慢性MDD / SSRI副作用から切り替え</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm mb-3">
+          <div class="bg-blue-50 rounded p-3">
+            <div class="font-semibold text-blue-700 mb-1">主訴・背景</div>
+            <p class="text-gray-600">40代女性、うつ病（F33.1）再発エピソード。エスシタロプラム10mg/日を8週間使用し抑うつは改善（PHQ-9：18→9）。しかし性的欲求の低下・オルガズム困難が著明で、夫婦関係に悪影響。</p>
+          </div>
+          <div class="bg-blue-50 rounded p-3">
+            <div class="font-semibold text-blue-700 mb-1">切り替え戦略</div>
+            <p class="text-gray name-600">エスシタロプラムを漸減しながらボルチオキセチン10mgへクロスタイトレーション（2週間並行後にエスシタロプラム中止）。切り替え中の再燃・悪心に注意。CYP2D6阻害薬の追加なし。</p>
+          </div>
+          <div class="bg-blue-50 rounded p-3">
+            <div class="font-semibold text-blue-700 mb-1">経過・アウトカム</div>
+            <p class="text-gray-600">切り替え4週後：抑うつ症状維持（PHQ-9=8）、性機能障害が著明に改善。8週後PHQ-9=5。「精神科の薬で性機能が戻った」と患者が驚きを表明。</p>
+          </div>
+        </div>
+        <p class="text-xs text-blue-800"><strong>臨床的ポイント：</strong>SSRI切り替え時は抗うつ効果の維持を確認しながら慎重にクロスタイトレーション。抑うつ症状が維持されているなら悪心の許容範囲内で切り替えを継続。効果不十分なら20mgへ増量。</p>
+      </div>
+
+      <!-- Case 3 -->
+      <div class="case-card mb-4 border-amber-100">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-amber-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+          <div>
+            <div class="font-bold text-gray-800">症例3：高齢者うつ病での使用 — 70代認知機能軽度低下</div>
+            <div class="text-xs text-gray-500">高齢者MDD / 軽度認知障害（MCI）合併</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm mb-3">
+          <div class="bg-amber-50 rounded p-3">
+            <div class="font-semibold text-amber-700 mb-1">主訴・背景</div>
+            <p class="text-gray-600">70代男性。MMSE=24（軽度低下）、GDS=10（中等度うつ）。元来活動的だったが、半年前から活動性低下・趣味の喪失・不眠。糖尿病・高血圧で内科通院中。多剤服用あり。</p>
+          </div>
+          <div class="bg-amber-50 rounded p-3">
+            <div class="font-semibold text-amber-700 mb-1">治療選択の根拠</div>
+            <p class="text-gray-600">高齢者では鎮静・抗コリン・QTc延長・体重増加リスクが低いSSRI系が第一選択。ボルチオキセチンはこれらリスクが低く、認知機能への追加効果（MCIへの介入研究も存在）が期待される。</p>
+          </div>
+          <div class="bg-amber-50 rounded p-3">
+            <div class="font-semibold text-amber-700 mb-1">経過・考慮点</div>
+            <p class="text-gray-600">ボルチオキセチン10mg/日で開始（用量調整規定なし）。悪心が問題なければ維持。4週後GDS=6（改善）。活動性・会話量の増加を家族が報告。MMSE継続モニタリング中。</p>
+          </div>
+        </div>
+        <p class="text-xs text-amber-800"><strong>臨床的ポイント：</strong>高齢者でのボルチオキセチン：抗コリン作用なし・過鎮静なし・QTc影響最小・体重中性的。MCI合併うつに対する認知機能面での寄与はまだエビデンス蓄積中だが有望視されている。転倒リスクは低い。</p>
+      </div>
+
+      <!-- Case 4: CYP2D6 interaction -->
+      <div class="case-card border-red-100">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 bg-red-700 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">4</div>
+          <div>
+            <div class="font-bold text-gray-800">症例4：パロキセチン→ボルチオキセチン切り替えでの相互作用管理</div>
+            <div class="text-xs text-gray-500">CYP2D6阻害薬との薬物相互作用</div>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm mb-3">
+          <div class="bg-red-50 rounded p-3">
+            <div class="font-semibold text-red-700 mb-1">状況</div>
+            <p class="text-gray-600">MDD既往でパロキセチン20mg/日維持中。不安症状と性機能障害（両方ともパロキセチン由来）が問題。ボルチオキセチンへの切り替えを検討。</p>
+          </div>
+          <div class="bg-red-50 rounded p-3">
+            <div class="font-semibold text-red-700 mb-1">相互作用の問題点</div>
+            <p class="text-gray-600">パロキセチンは強力なCYP2D6阻害薬。ボルチオキセチンの主代謝経路はCYP2D6のため、並行投与時にボルチオキセチンAUCが約2〜3倍に上昇する可能性がある。</p>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm mb-3">
+          <div class="bg-red-50 rounded p-3">
+            <div class="font-semibold text-red-700 mb-1">正しい切り替え手順</div>
+            <p class="text-gray-600">①パロキセチンを先に漸減・中止（2〜4週かけて減量）→②パロキセチン中止後1週間の観察 →③ボルチオキセチン10mgで開始（この時点でCYP2D6阻害はほぼ解除）。ボルチオキセチン投与中にパロキセチンを追加する必要がある場合は、ボルチオキセチンを半量（5mg相当=10mgを5日に3回など臨床的工夫）に減量。</p>
+          </div>
+          <div class="bg-red-50 rounded p-3">
+            <div class="font-semibold text-red-700 mb-1">注意事項</div>
+            <p class="text-gray-600">パロキセチン中止時の離脱症状（めまい・電気ショック感）に注意。パロキセチンは半減期が短く（約21h）、中止症候群が強い。ボルチオキセチンは半減期が長く（約66h）、開始後の安定は比較的早い。</p>
+          </div>
+        </div>
+        <p class="text-xs text-red-800"><strong>臨床的ポイント：</strong>パロキセチン→ボルチオキセチンへの切り替えは「逆手順」（まずパロキセチン中止、その後ボルチオキセチン開始）がCYP2D6相互作用回避の最良策。直接のクロスタイトレーションは相互作用リスクがある。</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 9: SAFETY ===== -->
+    <section id="safety" class="section-card">
+      <div class="section-header">
+        <i data-lucide="shield-alert" class="w-6 h-6 text-emerald-800"></i>
+        <h2>副作用管理</h2>
+      </div>
+
+      <!-- Main side effects table -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[720px]">
+          <thead>
+            <tr><th>副作用</th><th>発現率（概算）</th><th>発現時期</th><th class="col-notes">管理戦略</th><th class="col-action">機序</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold text-orange-700">悪心・嘔気</td>
+              <td><span class="text-orange-600 font-semibold">約30%（最多）</span></td>
+              <td>Week 1〜2（最初の2週間が山場）</td>
+              <td class="col-notes">食後服用・低用量継続で多くは自然軽快。制吐薬（メトクロプラミド等）短期使用。「2週間様子見を」と事前説明</td>
+              <td class="col-action">SERT阻害による5-HT増加が腸管・嘔吐中枢を刺激。5-HT3拮抗があっても初期は悪心が生じうる（5-HT3以外の経路による）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">頭痛</td>
+              <td>約7%</td>
+              <td>開始初期・増量時</td>
+              <td class="col-notes">アセトアミノフェンで対応可。多くは1〜2週で自然軽快</td>
+              <td class="col-action">セロトニン神経系の急性変化（CGRP関連の可能性）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">口渇</td>
+              <td>約8%</td>
+              <td>継続して出現しうる</td>
+              <td class="col-notes">水分摂取・キャンディ。抗コリン作用は弱く重篤化しにくい</td>
+              <td class="col-action">セロトニン系の唾液腺分泌への影響（軽微）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">便秘</td>
+              <td>約5%</td>
+              <td>継続性</td>
+              <td class="col-notes">食物繊維・水分摂取。酸化マグネシウム短期使用。重篤化は稀</td>
+              <td class="col-action">腸管セロトニン作動への影響</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">性機能障害</td>
+              <td><span class="text-green-600 font-semibold">約2〜5%（SSRIより著明に低い）</span></td>
+              <td>持続性</td>
+              <td class="col-notes">SSRIより大幅に少ない。性機能障害を主訴の場合、切り替え効果を期待できる</td>
+              <td class="col-action">5-HT3拮抗が脊髄・末梢の性機能障害機序を打ち消す</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">体重変化</td>
+              <td>軽微（有意な変化なし）</td>
+              <td>長期使用</td>
+              <td class="col-notes">体重増加はSSRI・ミルタザピンと比べ最小限。メタボリスク患者に比較的安全</td>
+              <td class="col-action">H1・α1・5-HT2C へのブロックなし → 食欲促進なし</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">不眠・異夢</td>
+              <td>約5%</td>
+              <td>開始初期・増量時</td>
+              <td class="col-notes">多くは一過性。5-HT7拮抗が睡眠構造を改善する可能性。投与時間の調整を検討</td>
+              <td class="col-action">SERT阻害による覚醒の一時的亢進・夢の鮮明化</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-600">セロトニン症候群</td>
+              <td>稀（0.1%未満単独では）</td>
+              <td>MAO-I・他のセロトニン作動薬との併用時</td>
+              <td class="col-notes">MAO-I絶対禁忌。トリプタン・リネゾリド・メサドン等との注意。高体温・筋強直・クローヌスで緊急対応</td>
+              <td class="col-action">過剰なセロトニン刺激（5-HT1A過活性、5-HT2A刺激）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="danger-box">
+          <div class="font-bold text-red-900 mb-2">絶対禁忌・最重要警告</div>
+          <ul class="text-sm text-red-800 space-y-1 list-disc list-inside">
+            <li>MAO阻害薬との同時投与（セロトニン症候群）</li>
+            <li>MAO阻害薬中止後2週間は開始しない</li>
+            <li>本剤中止後3週間はMAO阻害薬開始しない</li>
+            <li>本剤過敏症の既往</li>
+          </ul>
+        </div>
+        <div class="warning-box">
+          <div class="font-bold text-amber-900 mb-2">ディスコンティニュエーション（中止症状）</div>
+          <p class="text-sm text-amber-800 mb-2">長半減期（約66h）のため、SSRIより中止症状は軽微。しかし急な中止は推奨しない。</p>
+          <ul class="text-sm text-amber-800 space-y-1 list-disc list-inside">
+            <li>典型症状：頭痛、めまい（SSRIの電気ショック感は少ない）</li>
+            <li>推奨：2週間以上かけて漸減（例：20mg→10mg→5日おき10mg→中止）</li>
+            <li>短期投与（4週未満）であれば1週間で漸減可能なことも</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 10: DRUG INTERACTIONS ===== -->
+    <section id="interaction" class="section-card">
+      <div class="section-header">
+        <i data-lucide="git-merge" class="w-6 h-6 text-emerald-800"></i>
+        <h2>薬物相互作用</h2>
+      </div>
+
+      <div class="danger-box mb-5">
+        <div class="font-bold text-red-900 mb-2">CYP2D6 × CYP3A4 相互作用マトリクス（用量調整の目安）</div>
+        <p class="text-sm text-red-800">ボルチオキセチンはCYP2D6で主に代謝される。CYP2D6阻害薬は血中濃度を著明に上昇させる。CYP誘導薬は反対に急減少させる。</p>
+      </div>
+
+      <!-- CYP interaction matrix -->
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[620px]">
+          <thead>
+            <tr><th>相互作用薬</th><th>機序</th><th>AUCへの影響</th><th class="col-notes">推奨対応（添付文書準拠）</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold text-red-700">フルオキセチン・パロキセチン（強CYP2D6阻害）</td>
+              <td>CYP2D6強阻害</td>
+              <td class="text-red-600 font-semibold">約2〜3倍（AUC増加）</td>
+              <td class="col-notes">ボルチオキセチンを<strong>半量に減量</strong>。阻害薬中止後は元の用量に戻す</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">ブプロピオン（中等度CYP2D6阻害）</td>
+              <td>CYP2D6中等度阻害</td>
+              <td class="text-amber-600 font-semibold">約1.5倍</td>
+              <td class="col-notes">観察強化。症状に応じて用量調整を検討</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">カルバマゼピン（強CYP3A4/CYP2C9誘導）</td>
+              <td>CYP3A4/CYP2C9誘導</td>
+              <td class="text-red-600 font-semibold">約−72%（AUC減少）</td>
+              <td class="col-notes">ボルチオキセチンを<strong>増量検討</strong>（最大20mg）。誘導薬中止後は速やかに元の用量に戻す</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">リファンピシン（強CYP誘導）</td>
+              <td>多経路誘導</td>
+              <td class="text-amber-600 font-semibold">約−70〜80%</td>
+              <td class="col-notes">効果が著明に低下。可能なら代替薬へ変更。最大用量での使用も効果不十分な可能性</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-red-700">MAO阻害薬（フェネルジン、セレギリン等）</td>
+              <td>セロトニン相加（相乗）</td>
+              <td>—</td>
+              <td class="col-notes"><strong>絶対禁忌。</strong>セロトニン症候群リスク。ウォッシュアウト必要（MAOI→ボルチオキセチン：2週間; ボルチオキセチン→不可逆的MAOI：3週間）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">トリプタン（スマトリプタン等）</td>
+              <td>5-HT1B/1D作動 相加</td>
+              <td>—</td>
+              <td class="col-notes">セロトニン症候群のリスク。必要な場合は注意深く観察。発熱・筋強直・クローヌスに注意</td>
+            </tr>
+            <tr>
+              <td class="font-semibold text-amber-700">リネゾリド（可逆的MAO阻害）</td>
+              <td>セロトニン相加</td>
+              <td>—</td>
+              <td class="col-notes">原則避ける。緊急時はボルチオキセチン中止→リネゾリド使用</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">アルコール</td>
+              <td>CNS抑制相加（軽微）</td>
+              <td>軽微</td>
+              <td class="col-notes">精神運動機能に注意。過度の飲酒は避けるよう指導</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <div class="font-bold text-blue-900 mb-2">実臨床での相互作用チェックポイント</div>
+        <p class="text-sm text-blue-800">ボルチオキセチンを他のSSRI/SNRIから切り替える際の最大の落とし穴は<strong>フルオキセチン・パロキセチンとの同時期使用</strong>。フルオキセチンの活性代謝物ノルフルオキセチンは半減期が4〜16日と長く、フルオキセチン中止後も2週間以上CYP2D6阻害が持続する。セルトラリン・エスシタロプラム・シタロプラムはCYP2D6への影響が小さく、クロスタイトレーションがより安全に行える。</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 11: SPECIAL POPULATIONS ===== -->
+    <section id="special" class="section-card">
+      <div class="section-header">
+        <i data-lucide="heart-pulse" class="w-6 h-6 text-emerald-800"></i>
+        <h2>特殊集団</h2>
+      </div>
+
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[700px]">
+          <thead>
+            <tr><th>集団</th><th class="col-text">主なリスク・変化</th><th class="col-notes">用量調整・方針</th><th class="col-action">モニタリング</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">高齢者（65歳以上）</td>
+              <td class="col-text">PK変化は最小限（肝代謝機能低下は軽微）。転倒リスクは低い（過鎮静なし）</td>
+              <td class="col-notes">用量調整規定なし。10mg/日で開始し効果・忍容性を確認。20mgへの増量は高齢者でも可能だが慎重に</td>
+              <td class="col-action">認知機能変化・起立性低血圧・転倒を定期評価</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">軽〜中等度肝機能障害（Child-Pugh A/B）</td>
+              <td class="col-text">AUCへの影響は限定的（CYP代謝の全体的な低下）</td>
+              <td class="col-notes">用量調整は必須ではないが、慎重に観察しながら低用量から開始を検討</td>
+              <td class="col-action">肝機能定期検査・副作用モニタリング</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">重度肝機能障害（Child-Pugh C）</td>
+              <td class="col-text">AUC増加・代謝遅延の可能性。データ限定的</td>
+              <td class="col-notes">使用を避けることを推奨。必要な場合は最低用量（10mg）から慎重に</td>
+              <td class="col-action">厳重な副作用モニタリング・肝機能追跡</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">腎機能障害（軽〜重度）</td>
+              <td class="col-text">原型として腎排泄はほぼゼロ（1%未満）。不活性代謝物の蓄積は可能性あり</td>
+              <td class="col-notes">用量調整不要（添付文書上）。重度腎機能障害でも標準用量を使用可能</td>
+              <td class="col-action">腎機能の定期確認（他剤影響）</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">妊婦</td>
+              <td class="col-text">胎盤通過性あり。新生児適応症候群リスク（けいれん・授乳困難・過興奮）</td>
+              <td class="col-notes">原則回避。妊娠継続中のうつ病治療は産科・精神科の連携でリスク・ベネフィットを個別判断</td>
+              <td class="col-action">胎児発育・分娩前後の新生児状態モニタリング</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">授乳婦</td>
+              <td class="col-text">母乳に移行する（推定母体用量の0.2〜1%）。乳児への影響データは限定的</td>
+              <td class="col-notes">原則として授乳の中止か薬剤変更を検討。軽度〜中等度うつでは授乳への利益と薬剤リスクを総合的に判断</td>
+              <td class="col-action">乳児の発達・活動性・哺乳量の観察</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">CYP2D6 PM（低代謝者）</td>
+              <td class="col-text">AUC約2倍（CYP2D6阻害薬の追加と同等）</td>
+              <td class="col-notes">遺伝子型判明している場合：10mgから開始し慎重に増量。副作用モニタリングを強化。臨床的には個別対応</td>
+              <td class="col-action">副作用（特に悪心・めまい）の頻度・程度</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">双極性障害（うつエピソード）</td>
+              <td class="col-text">躁転・混合状態誘発のリスク（全ての抗うつ薬共通）</td>
+              <td class="col-notes">日本国内は単極性うつ病のみ承認。双極性障害での使用は添付文書適応外。気分安定薬との併用が原則</td>
+              <td class="col-action">躁症状・睡眠変化・活動亢進のモニタリング</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="criteria-box">
+        <div class="font-bold text-emerald-900 mb-2">高齢者うつ病での優位性のまとめ</div>
+        <div class="grid sm:grid-cols-3 gap-3 text-sm text-emerald-800">
+          <div class="bg-white rounded p-2">
+            <div class="font-bold mb-1">リスク回避</div>
+            <p>抗コリン作用なし（口渇・便秘・認知悪化）。QTc延長リスク最小。過鎮静なし（転倒リスク低）</p>
+          </div>
+          <div class="bg-white rounded p-2">
+            <div class="font-bold mb-1">認知への追加効果</div>
+            <p>MCI合併うつ病での認知機能改善の可能性（5-HT3拮抗・5-HT7拮抗機序）。認知症予防効果は現在研究中</p>
+          </div>
+          <div class="bg-white rounded p-2">
+            <div class="font-bold mb-1">体重・代謝</div>
+            <p>体重中性的。高齢者の低体重・栄養不良患者では食欲改善効果への期待もある（不安軽減後の食欲回復）</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 12: GLOBAL / RESEARCH ===== -->
+    <section id="global" class="section-card">
+      <div class="section-header">
+        <i data-lucide="globe" class="w-6 h-6 text-emerald-800"></i>
+        <h2>海外比較・最新研究</h2>
+      </div>
+
+      <!-- International comparison table -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">承認適応・用量 国際比較</h3>
+      <div class="x-scroll mb-5">
+        <table class="guide-table min-w-[680px]">
+          <thead>
+            <tr><th>機関</th><th>承認適応</th><th>開始用量</th><th>最大用量</th><th>利用可能な規格</th><th>承認年</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold text-emerald-700">日本（PMDA）</td>
+              <td>うつ病・うつ状態（F32/F33）</td>
+              <td>10 mg/日</td>
+              <td>20 mg/日</td>
+              <td>10mg・20mg錠</td>
+              <td><span class="badge-approved">2019年9月</span></td>
+            </tr>
+            <tr>
+              <td class="font-semibold">FDA（米国）</td>
+              <td>MDD（Major Depressive Disorder）</td>
+              <td>10 mg/日（必要時5mgから）</td>
+              <td>20 mg/日</td>
+              <td>5mg・10mg・20mg錠</td>
+              <td>2013年9月</td>
+            </tr>
+            <tr>
+              <td class="font-semibold">EMA（欧州）</td>
+              <td>MDD（成人）</td>
+              <td>10 mg/日（高齢者は5mgから）</td>
+              <td>20 mg/日</td>
+              <td>5mg・10mg・15mg・20mg錠</td>
+              <td>2013年12月</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-5">
+        <div class="info-box">
+          <div class="font-bold text-blue-900 mb-2">日本と海外の主な差異</div>
+          <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+            <li><strong>5mg錠が日本未発売：</strong>FDAは5mgから開始可（忍容性懸念時）。日本は10mg固定スタート。欧州では高齢者に5mgスタートを推奨</li>
+            <li><strong>15mg錠が日本にない：</strong>欧州ではFDA/日本にない15mg規格あり（10mg→15mg→20mgの漸増が可能）</li>
+            <li><strong>承認時期：</strong>欧米2013年→日本2019年（約6年の差）。日本での承認がやや遅れた</li>
+            <li><strong>適応：</strong>3地域とも単極性うつ病のみ。双極うつへの承認はなし</li>
+          </ul>
+        </div>
+        <div class="recommend-box">
+          <div class="font-bold text-green-900 mb-2">最新研究トレンド（2024〜2026年）</div>
+          <ul class="text-sm text-green-800 space-y-1 list-disc list-inside">
+            <li><strong>MCI・認知症予防：</strong>軽度認知障害（MCI）患者への認知機能改善・認知症進行抑制効果を評価するRCT継続中</li>
+            <li><strong>COVID後認知症候群（Brain Fog）：</strong>5-HT3拮抗機序による認知機能改善の可能性（観察研究レベル）</li>
+            <li><strong>老年期うつ病：</strong>65歳以上のMDD患者での大規模試験（FACT-BD等）でのデータ蓄積</li>
+            <li><strong>TRD（治療抵抗性うつ病）：</strong>ケタミン補助療法との比較・組み合わせ研究</li>
+            <li><strong>5-HT7拮抗と睡眠：</strong>睡眠ポリグラフを用いた睡眠構造への影響研究</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Comparison with newer/alternative antidepressants -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">主要な抗うつ薬との比較（外来選択の視点）</h3>
+      <div class="x-scroll mb-4">
+        <table class="guide-table min-w-[720px]">
+          <thead>
+            <tr><th>特徴</th><th>ボルチオキセチン</th><th>エスシタロプラム（SSRI）</th><th>ベンラファキシン（SNRI）</th><th>ミルタザピン（NaSSA）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>認知機能改善</td><td class="text-green-700 font-semibold">強（直接効果+抑うつ改善）</td><td>間接的（抑うつ改善）</td><td>間接的</td><td>間接的</td></tr>
+            <tr><td>性機能障害</td><td class="text-green-700 font-semibold">低（2〜5%）</td><td>中〜高（15〜30%）</td><td>中〜高（15〜25%）</td><td>低〜中</td></tr>
+            <tr><td>体重増加</td><td class="text-green-700 font-semibold">中性的</td><td>軽度増加</td><td>軽度増加</td><td>著明（最大リスク）</td></tr>
+            <tr><td>悪心</td><td>30%（初期・改善する）</td><td>15〜25%</td><td>25〜40%（用量依存）</td><td>少ない</td></tr>
+            <tr><td>不眠改善</td><td>5-HT7拮抗で可能性</td><td>限定的</td><td>限定的（不眠悪化も）</td><td class="text-green-700 font-semibold">強（H1拮抗で即効）</td></tr>
+            <tr><td>離脱症状</td><td class="text-green-700 font-semibold">軽微（t1/2長）</td><td>中等度</td><td>中〜重度（t1/2短）</td><td>軽微</td></tr>
+            <tr><td>CYP相互作用</td><td>CYP2D6阻害薬に注意</td><td>中等度CYP2C19関与</td><td>CYP2D6軽度阻害</td><td>CYP3A4基質</td></tr>
+            <tr><td>日本での最大用量</td><td>20 mg/日</td><td>20 mg/日</td><td>225 mg/日</td><td>45 mg/日</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="criteria-box">
+        <div class="font-bold text-emerald-900 mb-2">ボルチオキセチンのユニークな薬理ポジション</div>
+        <p class="text-sm text-emerald-800">ボルチオキセチンはSERTを阻害しながら6種類の5-HT受容体を同時に調節する唯一の抗うつ薬（SRISAM）として、従来のSSRI/SNRIにはない「認知機能改善」という明確な差別化特性を持つ。特に就労世代の「ブレインフォグ」症状、高齢者のうつ病・軽度認知障害の合併例、そしてSSRIで性機能障害が問題になった患者への選択肢として国際的なガイドラインで高く評価されている。日本では2019年承認とやや遅れたが、臨床的な有用性は既に複数の高品質エビデンスで裏付けられており、今後のうつ病治療の中心的な選択肢のひとつとなることが期待される。</p>
+      </div>
+
+      <p class="text-sm text-gray-500 mt-4">ボルチオキセチン（トリンテリックス）の承認適応・用法用量・禁忌は改訂が行われます。必ず PMDA の添付文書で最新情報を確認してください（2026年5月現在）。</p>
+    </section>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // ======= STICKY HEIGHTS =======
+    var stickyNav = document.getElementById('sticky-section-nav');
+    var toolbar = document.getElementById('data-table-toolbar');
+    function updateStickyHeights() {
+      var navH = stickyNav ? stickyNav.getBoundingClientRect().height : 48;
+      var tbH  = toolbar  ? toolbar.getBoundingClientRect().height  : 48;
+      document.documentElement.style.setProperty('--nav-height', navH + 'px');
+      document.documentElement.style.setProperty('--sticky-total-height', (navH + tbH + 6) + 'px');
+    }
+    updateStickyHeights();
+    window.addEventListener('resize', updateStickyHeights);
+
+    // ======= ANCHOR SCROLL =======
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        var id = a.getAttribute('href').slice(1);
+        var target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        updateStickyHeights();
+        var navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 48;
+        var tbH  = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sticky-total-height')) || 96;
+        var totalOffset = tbH + 8;
+        var top = target.getBoundingClientRect().top + window.scrollY - totalOffset;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      });
+    });
+
+    // ======= SECTION LABEL UPDATE =======
+    var toolbarEl = document.getElementById('data-table-toolbar');
+    var sectionLabel = document.getElementById('data-table-section-label');
+    var sections = [
+      { id: 'quickref',       label: 'クイックリファレンス' },
+      { id: 'molecule',       label: '分子・化学情報' },
+      { id: 'pharmacology',   label: '薬理作用・受容体' },
+      { id: 'pk',             label: '薬物動態 (ADME)' },
+      { id: 'japan-approval', label: '日本国内承認情報' },
+      { id: 'efficacy',       label: '臨床効果・推奨度' },
+      { id: 'evidence',       label: '主要エビデンス' },
+      { id: 'cases',          label: '具体的適用症例' },
+      { id: 'safety',         label: '副作用管理' },
+      { id: 'interaction',    label: '薬物相互作用' },
+      { id: 'special',        label: '特殊集団' },
+      { id: 'global',         label: '海外比較・最新研究' }
+    ];
+    var rafId = null;
+    function updateSectionLabel() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(function() {
+        updateStickyHeights();
+        var totalOffset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sticky-total-height')) || 96;
+        var threshold = totalOffset + 12;
+        var current = sections[0];
+        for (var i = 0; i < sections.length; i++) {
+          var el = document.getElementById(sections[i].id);
+          if (!el) continue;
+          var rect = el.getBoundingClientRect();
+          if (rect.top <= threshold) { current = sections[i]; } else { break; }
+        }
+        if (sectionLabel && sectionLabel.textContent !== current.label) {
+          sectionLabel.textContent = current.label;
+        }
+        if (toolbarEl && toolbarEl.dataset.toolbarSection !== current.id) {
+          toolbarEl.dataset.toolbarSection = current.id;
+        }
+        // TOC active
+        document.querySelectorAll('.toc-link').forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + current.id);
+        });
+      });
+    }
+    window.addEventListener('scroll', updateSectionLabel, { passive: true });
+    window.addEventListener('resize', updateSectionLabel);
+    updateSectionLabel();
+
+    // ======= STICKY COLUMN TOGGLE =======
+    var stickyToggle = document.getElementById('data-table-sticky-col-toggle');
+    var STORAGE_KEY = 'psychTableStickyColOff';
+    function initStickyToggle() {
+      var off = localStorage.getItem(STORAGE_KEY) === 'true';
+      document.documentElement.classList.toggle('data-table-sticky-col-off', off);
+      if (stickyToggle) stickyToggle.checked = !off;
+    }
+    initStickyToggle();
+    if (stickyToggle) {
+      stickyToggle.addEventListener('change', function() {
+        var off = !stickyToggle.checked;
+        document.documentElement.classList.toggle('data-table-sticky-col-off', off);
+        try { localStorage.setItem(STORAGE_KEY, String(off)); } catch(e) {}
+      });
+    }
+
+    // ======= SEARCH =======
+    var mainEl = document.querySelector('main');
+    var searchInput = document.getElementById('data-table-search');
+    var searchClear = document.getElementById('data-table-search-clear');
+    var searchPrev = document.getElementById('data-table-search-prev');
+    var searchNext = document.getElementById('data-table-search-next');
+    var searchMeta = document.getElementById('data-table-search-meta');
+    var searchHighlightBtn = document.getElementById('data-table-search-highlight');
+    var searchHitNodes = [];
+    var hitIndex = -1;
+    var searchTimer = null;
+    var highlightOn = true;
+    function normalizeSearchString(s) {
+      if (s == null || s === '') return '';
+      s = String(s).replace(/[\u200b-\u200d\ufeff]/g, '');
+      return typeof s.normalize === 'function' ? s.normalize('NFC').trim() : s.trim();
+    }
+    function formatSearchMeta(n) {
+      var compact = typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 639px)').matches;
+      return n === 0 ? (compact ? '0件' : '該当なし') : (compact ? n + '件' : '該当 ' + n + ' 箇所');
+    }
+    function syncHighlightClass() {
+      document.documentElement.classList.toggle('data-table-search-highlight-off', !highlightOn);
+      if (searchHighlightBtn) {
+        searchHighlightBtn.setAttribute('aria-pressed', highlightOn ? 'true' : 'false');
+        searchHighlightBtn.classList.toggle('bg-amber-50', highlightOn);
+        searchHighlightBtn.classList.toggle('text-amber-900', highlightOn);
+        searchHighlightBtn.classList.toggle('bg-slate-100', !highlightOn);
+        searchHighlightBtn.classList.toggle('text-slate-600', !highlightOn);
+      }
+    }
+    function updateNavButtons() {
+      var ok = searchHitNodes.length > 0;
+      if (searchPrev) searchPrev.disabled = !ok;
+      if (searchNext) searchNext.disabled = !ok;
+      if (ok && (hitIndex < 0 || hitIndex >= searchHitNodes.length)) hitIndex = 0;
+    }
+    function scrollToHitNode(i) {
+      if (i < 0 || i >= searchHitNodes.length) return;
+      hitIndex = i;
+      requestAnimationFrame(function() { searchHitNodes[hitIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+    }
+    function getTextNodes(root) {
+      var out = [];
+      if (!root) return out;
+      var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_SKIP;
+          var p = node.parentElement;
+          if (!p || !p.closest) return NodeFilter.FILTER_SKIP;
+          if (p.closest('mark.table-search-mark')) return NodeFilter.FILTER_REJECT;
+          if (p.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = w.nextNode())) out.push(n);
+      return out;
+    }
+    function wrapTextNode(textNode, qLower, sliceLen) {
+      var marks = [];
+      var raw = textNode.textContent;
+      var text = typeof raw.normalize === 'function' ? raw.normalize('NFC') : raw;
+      var lower = text.toLowerCase();
+      var qn = typeof qLower.normalize === 'function' ? qLower.normalize('NFC') : qLower;
+      var idx = lower.indexOf(qn);
+      if (idx === -1) return marks;
+      var frag = document.createDocumentFragment();
+      var pos = 0;
+      while (idx !== -1) {
+        if (idx > pos) frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+        var mk = document.createElement('mark');
+        mk.className = 'table-search-mark';
+        mk.appendChild(document.createTextNode(text.slice(idx, idx + sliceLen)));
+        frag.appendChild(mk);
+        marks.push(mk);
+        pos = idx + sliceLen;
+        idx = lower.indexOf(qn, pos);
+      }
+      if (pos < text.length) frag.appendChild(document.createTextNode(text.slice(pos)));
+      textNode.parentNode.replaceChild(frag, textNode);
+      return marks;
+    }
+    function clearSearchHits() {
+      if (mainEl) {
+        mainEl.querySelectorAll('mark.table-search-mark').forEach(function(mk) {
+          var p = mk.parentNode; if (!p) return;
+          while (mk.firstChild) p.insertBefore(mk.firstChild, mk);
+          p.removeChild(mk);
+        });
+      }
+      searchHitNodes = []; hitIndex = -1;
+      updateNavButtons();
+    }
+    function applySearch(opts) {
+      clearSearchHits();
+      var q = normalizeSearchString(searchInput ? searchInput.value : '');
+      if (!q) { if (searchMeta) searchMeta.textContent = ''; return; }
+      var ql = q.toLowerCase(); var sliceLen = q.length;
+      var nodes = getTextNodes(mainEl);
+      for (var i = 0; i < nodes.length; i++) {
+        var newMarks = wrapTextNode(nodes[i], ql, sliceLen);
+        for (var j = 0; j < newMarks.length; j++) searchHitNodes.push(newMarks[j]);
+      }
+      if (searchMeta) searchMeta.textContent = formatSearchMeta(searchHitNodes.length);
+      updateNavButtons();
+      if (searchHitNodes.length > 0 && opts && opts.scrollToFirst) scrollToHitNode(0);
+    }
+    function debouncedSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function() { applySearch({ scrollToFirst: false }); }, 100); }
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) { if (e.isComposing) return; debouncedSearch(); });
+      searchInput.addEventListener('compositionend', debouncedSearch);
+      searchInput.addEventListener('change', debouncedSearch);
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); applySearch({ scrollToFirst: true }); return; }
+        if (e.key === 'Escape') { searchInput.value = ''; clearSearchHits(); if (searchMeta) searchMeta.textContent = ''; searchInput.blur(); }
+      });
+    }
+    if (searchClear) {
+      searchClear.addEventListener('click', function() {
+        if (searchInput) searchInput.value = '';
+        clearSearchHits(); if (searchMeta) searchMeta.textContent = '';
+        if (searchInput) searchInput.focus();
+      });
+    }
+    if (searchPrev) {
+      searchPrev.addEventListener('click', function() {
+        if (!searchHitNodes.length) return;
+        hitIndex = (hitIndex <= 0) ? searchHitNodes.length - 1 : hitIndex - 1;
+        scrollToHitNode(hitIndex);
+      });
+    }
+    if (searchNext) {
+      searchNext.addEventListener('click', function() {
+        if (!searchHitNodes.length) return;
+        hitIndex = (hitIndex >= searchHitNodes.length - 1) ? 0 : hitIndex + 1;
+        scrollToHitNode(hitIndex);
+      });
+    }
+    if (searchHighlightBtn) {
+      searchHighlightBtn.addEventListener('click', function() {
+        highlightOn = !highlightOn;
+        syncHighlightClass();
+      });
+    }
+    syncHighlightClass();
+
+    // ======= SCROLL HINTS =======
+    document.querySelectorAll('.x-scroll').forEach(function(container) {
+      var inner = container.querySelector('table');
+      if (!inner) return;
+      function checkOverflow() {
+        if (inner.scrollWidth <= container.clientWidth + 4) return;
+        var hint = container.nextElementSibling;
+        if (!hint || !hint.classList.contains('x-scroll-hint')) {
+          hint = document.createElement('div');
+          hint.className = 'x-scroll-hint';
+          hint.setAttribute('aria-hidden', 'true');
+          hint.innerHTML = '<i data-lucide="chevrons-right" style="width:12px;height:12px;flex-shrink:0;"></i><span>横スクロールできます</span>';
+          container.parentNode.insertBefore(hint, container.nextSibling);
+          lucide.createIcons();
+        }
+      }
+      checkOverflow();
+      window.addEventListener('resize', checkOverflow);
+    });
+  </script>
+</body>
+</html>
