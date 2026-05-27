@@ -983,9 +983,10 @@
         </div>
       </div>
     </div>
-    <!-- ジャンプバー：左から「診療の流れ」に近い順 -->
+    <!-- ジャンプバー：常時5ボタン＋展開ボタン -->
     <div class="border-b border-gray-100 bg-white">
-      <div class="flex flex-wrap gap-1.5 px-4 sm:px-6 py-2">
+      <div class="flex flex-wrap gap-1.5 px-4 sm:px-6 py-2 items-center" id="jumpbar-row">
+          <!-- 常時表示5ボタン -->
           <a href="#portal-calc"
              class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyan-100 hover:bg-cyan-200 transition-colors text-xs font-medium text-teal-900 whitespace-nowrap">
             🧮 計算ツール
@@ -1011,24 +1012,38 @@
             💊 薬剤選択
             <span id="jump-cnt-portal-drugs" class="bg-indigo-200 text-indigo-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">5</span>
           </a>
-          <a href="#portal-concepts"
-             class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-900 whitespace-nowrap">
-            📖 概念・資格
-            <span id="jump-cnt-portal-concepts" class="bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">5</span>
-          </a>
-          <a href="#portal-study"
-             class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-pink-100 hover:bg-pink-200 transition-colors text-xs font-medium text-pink-900 whitespace-nowrap">
-            🎓 学習・ドリル
-            <span id="jump-cnt-portal-study" class="bg-pink-200 text-pink-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">2</span>
-          </a>
-          <a href="#portal-other"
-             class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
-            💡 その他
-            <span id="jump-cnt-portal-other" class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">3</span>
-          </a>
+
+          <!-- 展開ボタン -->
+          <button id="jumpbar-more"
+                  type="button"
+                  aria-expanded="false"
+                  aria-label="他のカテゴリを表示"
+                  aria-controls="jumpbar-extra"
+                  class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-xs font-medium text-gray-600 whitespace-nowrap">
+            ・・・
+          </button>
+
+          <!-- 格納3ボタン（初期非表示） -->
+          <div id="jumpbar-extra" class="contents hidden">
+            <a href="#portal-concepts"
+               class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors text-xs font-medium text-amber-900 whitespace-nowrap">
+              📖 概念・資格
+              <span id="jump-cnt-portal-concepts" class="bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">5</span>
+            </a>
+            <a href="#portal-study"
+               class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-pink-100 hover:bg-pink-200 transition-colors text-xs font-medium text-pink-900 whitespace-nowrap">
+              🎓 学習・ドリル
+              <span id="jump-cnt-portal-study" class="bg-pink-200 text-pink-900 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">2</span>
+            </a>
+            <a href="#portal-other"
+               class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-xs font-medium text-slate-700 whitespace-nowrap">
+              💡 その他
+              <span id="jump-cnt-portal-other" class="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-full text-xs leading-none tabular-nums">3</span>
+            </a>
+          </div>
         </div>
       </div>
-      <p class="portal-jump-hint">上のタブは左から「計算 → 数値評価 → 診断 → <strong>治療概要</strong> → <strong>薬剤選択</strong> → <strong>概念・資格</strong> → 学習・ドリル → その他」のイメージです（開発版の8区分）。迷ったら検索バーでページ名を決定してください。</p>
+      <p class="portal-jump-hint">よく使う5区分（計算ツール・評価スケール・診断・治療概要・薬剤選択）を常時表示。<strong>「・・・」</strong> をタップすると残りの区分（概念・資格・学習・ドリル・その他）が展開します。迷ったら検索バーでページ名を決定してください。</p>
     </div>
     <div class="portal-search-wrap">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2" id="portal-search-field-wrap">
@@ -1462,6 +1477,12 @@
           <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 資格取得ガイド — 完全ロードマップ</h3>
           <p class="text-xs text-gray-500 leading-relaxed">専攻医1年目から始める申請要件・症例レポート対策・口頭試問対策・タイムラインを収録した資格取得の完全ガイド。</p>
           <div class="mt-3 text-xs link-amber font-medium">shiteii-guide.html →</div>
+        </a>
+        <a id="card-seishin-hoken-ho-flow" href="seishin-hoken-ho-shiteii-moshikomi.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">法律・制度図解</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-27 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健福祉法 × 指定医申請 — 専攻医1年目の入門図解</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">入院形態フロー・指定医職務一覧・申請要件・令和4年改正ポイント・行動制限最小化を専攻医1年目向けに図解。令和7年度研修会配布資料準拠。口頭試問対策にも最適。</p>
+          <div class="mt-3 text-xs link-amber font-medium">seishin-hoken-ho-shiteii-moshikomi.html →</div>
         </a>
         <a id="card-schiz-highschool" href="schizophrenia-highschool-guide.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">患者・一般向け</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-10 新規</span></div>
@@ -2406,6 +2427,7 @@
       'card-bprs-guide':       ['📖 解説', '🏥 外来参照'],
       'card-terminology':      ['📚 用語集', '🏥 外来参照'],
       'card-shiteii':          ['🎓 資格取得', '📋 ガイド'],
+      'card-seishin-hoken-ho-flow': ['🎓 資格取得', '⚖ 法律・制度', '精神保健指定医', '入院形態', '行動制限'],
       'card-context':               ['💡 AI活用'],
       'card-cursor':                ['💡 AI活用'],
       'card-content-verification':  ['🛠 管理ツール', '✓ 検証', '用量・表記・用語'],
@@ -2617,6 +2639,9 @@
       'card-shiteii': [
         { date: '2026-04-23', kind: '新規', text: '精神保健指定医資格取得のロードマップ・症例・口試対策として初版公開' },
         { date: '2026-04-18', kind: '更新', text: '申請タイムラインとチェックリストを更新' },
+      ],
+      'card-seishin-hoken-ho-flow': [
+        { date: '2026-05-27', kind: '新規', text: '精神保健福祉法×指定医申請 入門図解を新規作成（入院形態フロー・職務一覧・申請要件・令和4年改正・行動制限最小化、令和7年度研修会資料準拠）', href: 'seishin-hoken-ho-shiteii-moshikomi.html' },
       ],
       'card-nonpharmacologic': [
         { date: '2026-05-10', kind: '新規', text: '精神医学領域の非薬物療法マップを新規作成（心理系・社会系・環境系の三分類・エビデンスレベルA/B/C）', href: 'nonpharmacologic-psychiatry-overview.html' },
@@ -3053,6 +3078,20 @@
         requestAnimationFrame(function () {
           if (window.portalRefreshJumpScroll) window.portalRefreshJumpScroll();
         });
+      });
+    })();
+
+    /* ジャンプバー展開ボタン */
+    (function () {
+      var btn = document.getElementById('jumpbar-more');
+      var extra = document.getElementById('jumpbar-extra');
+      if (!btn || !extra) return;
+      btn.addEventListener('click', function () {
+        var isOpen = btn.getAttribute('aria-expanded') === 'true';
+        extra.classList.toggle('hidden', isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+        btn.textContent = isOpen ? '・・・' : '✕';
+        btn.setAttribute('aria-label', isOpen ? '他のカテゴリを表示' : '閉じる');
       });
     })();
   </script>
