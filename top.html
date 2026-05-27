@@ -1505,6 +1505,13 @@
           <p class="text-xs text-gray-500 leading-relaxed">GAD-7・HAM-A・LSAS・Y-BOCS・PHQ-9 等の重症度評価スケールを外来用印刷様式として収録。エビデンスレベルバッジ付き。</p>
           <div class="mt-3 text-xs link-sky font-medium">anxiety-assessment-scales.html →</div>
         </a>
+
+        <a id="card-phq9-print" href="phq9-sheet.html" class="card block border border-sky-100 rounded-xl p-4 border-sky bg-sky">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-sky px-2 py-0.5 rounded-full">PHQ-9 うつ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-27 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">PHQ-9 採点シート（印刷用）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">Patient Health Questionnaire-9 の外来用印刷様式。9項目×0〜3点（過去2週間）で合計0〜27点。重症度判定表・機能障害評価欄・希死念慮アラート付き。</p>
+          <div class="mt-3 text-xs link-sky font-medium">phq9-sheet.html →</div>
+        </a>
         <div class="portal-grid-divider"><span>WEB 採点・詳細シート</span></div>
         <a id="card-bprs-detailed" href="bprs-sheet-detailed.html" class="card block border border-sky-100 rounded-xl p-4 border-sky bg-sky">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-sky px-2 py-0.5 rounded-full">BPRS 詳細</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-04-25 作成</span></div>
@@ -1547,6 +1554,13 @@
           <h3 class="font-semibold text-gray-900 text-sm mb-1">MADRS 採点シート — Montgomery–Åsberg うつ病評価尺度（詳細版）</h3>
           <p class="text-xs text-gray-500 leading-relaxed">10項目・各0〜6点（合計0〜60点）。治験をはじめ抗うつ薬効果判定に頻用。外見的悲しさ・睡眠・食欲・集中・自殺念慮等を7段階で評価。サブスコア表示・寛解・軽中重度の目安付き。簡易印刷は子ウィンドウ自己印刷方式（Android対応）。</p>
           <div class="mt-3 text-xs link-sky font-medium">madrs-sheet-detailed.html →</div>
+        </a>
+
+        <a id="card-phq9" href="phq9-sheet-detailed.html" class="card block border border-sky-100 rounded-xl p-4 border-sky bg-sky">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-sky px-2 py-0.5 rounded-full">PHQ-9 うつ</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-27 作成</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">PHQ-9 採点シート — 患者健康質問票（詳細版）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">DSM-5大うつ病性障害の診断基準9項目に1対1対応。各0〜3点（合計0〜27点）。重症度5段階・希死念慮アラート・サブスコア表示。アンカーポイント・質問例・臨床コメントの折りたたみ解説付き。簡易印刷対応（Android）。</p>
+          <div class="mt-3 text-xs link-sky font-medium">phq9-sheet-detailed.html →</div>
         </a>
         <div class="portal-grid-divider"><span>解説・読み方</span></div>
         <a id="card-schiz-scales" href="schizophrenia-scales.html" class="card block border border-sky-100 rounded-xl p-4 border-sky bg-sky">
@@ -2055,8 +2069,8 @@
     const SECTIONS = {
       'portal-calc': ['card-cp-calc', 'card-dzp-calc', 'card-crcl-psych', 'card-acute-alerts'],
       'portal-scales': [
-        'card-schiz-sheets', 'card-anxiety-scales',
-        'card-bprs-detailed', 'card-panss-detailed', 'card-bfcrs', 'card-ymrs', 'card-hamd', 'card-madrs',
+        'card-schiz-sheets', 'card-anxiety-scales', 'card-phq9-print',
+        'card-bprs-detailed', 'card-panss-detailed', 'card-bfcrs', 'card-ymrs', 'card-hamd', 'card-madrs', 'card-phq9',
         'card-schiz-scales', 'card-bprs-guide'
       ],
       'portal-diag': ['card-icd10', 'card-icd11', 'card-icd10mini', 'card-dsm5tr', 'card-dsm5trmini'],
@@ -2182,7 +2196,7 @@
         'card-depression', 'card-atypical-depression', 'card-antidepressants',
         'card-hypnotics',
         'card-delirium',
-        'card-hamd', 'card-madrs',
+        'card-hamd', 'card-madrs', 'card-phq9', 'card-phq9-print',
         'card-mood-suicide-learning', 'card-cssrs-memo',
         'card-benzodiazepines',
         'card-psychopath-scales-learning',
@@ -2858,6 +2872,8 @@
       'card-ymrs':             ['💻 WEB入力', '📊 採点', '⚡ 躁状態'],
       'card-hamd':             ['💻 WEB入力', '📊 採点', '📉 HAM-D'],
       'card-madrs':            ['💻 WEB入力', '📊 採点', '📉 MADRS'],
+      'card-phq9':             ['💻 WEB入力', '📊 採点', '📉 PHQ-9', '🩺 うつ病'],
+      'card-phq9-print':       ['🖨 印刷用', '📄 PDF対応', '📉 PHQ-9', '🩺 うつ病'],
       'card-schiz-scales':     ['📖 解説', '🏥 外来参照'],
       'card-bprs-guide':       ['📖 解説', '🏥 外来参照'],
       'card-terminology':      ['📚 用語集', '🏥 外来参照'],
@@ -3084,6 +3100,12 @@
       'card-madrs': [
         { date: '2026-04-26', kind: '新規', text: 'MADRS 詳細採点シートとして初版公開' },
         { date: '2026-04-25', kind: '更新', text: '総点・重症度区分の表示を調整' },
+      ],
+      'card-phq9': [
+        { date: '2026-05-27', kind: '新規', text: 'PHQ-9 詳細採点シート（WEB入力・印刷・簡易印刷）として初版公開。9項目0〜3点・重症度5段階・希死念慮アラート付き' },
+      ],
+      'card-phq9-print': [
+        { date: '2026-05-27', kind: '新規', text: 'PHQ-9 印刷用採点シートとして初版公開。A4印刷対応・重症度判定表・機能障害評価欄収録' },
       ],
       'card-schiz-scales': [
         { date: '2026-04-23', kind: '新規', text: 'PANSS・BPRS・CGI・SAPS/SANS 等のリファレンスとして初版公開' },
