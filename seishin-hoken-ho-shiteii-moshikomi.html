@@ -15,6 +15,7 @@
       --psych-gradient: linear-gradient(135deg, #1e3a5f, #0f766e);
       --sticky-offset: 5rem;
     }
+    html, body { max-width: 100%; overflow-x: hidden; }
     body { font-family: 'Noto Sans JP', 'Inter', sans-serif; background: #f0f4f8; font-feature-settings: 'palt'; }
     .header-gradient { background: var(--psych-gradient); }
     .section-card { background: white; border-radius: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.07); padding: 1.75rem; margin-bottom: 1.5rem; }
@@ -26,11 +27,11 @@
     .new-box      { background: linear-gradient(135deg, #fff1f2, #ffe4e6); border-left: 4px solid #e11d48; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
     .teal-box     { background: linear-gradient(135deg, #f0fdfa, #ccfbf1); border-left: 4px solid #0f766e; padding: 1rem 1.2rem; border-radius: .75rem; margin: .75rem 0; }
 
-    .badge-law  { background: #1e3a5f; color: white; padding: .12rem .5rem; border-radius: .3rem; font-size: .7rem; font-weight: 700; white-space: nowrap; }
+    .badge-law  { background: #1e3a5f; color: white; padding: .12rem .5rem; border-radius: .3rem; font-size: .7rem; font-weight: 700; white-space: normal; word-break: keep-all; }
     .badge-new  { background: #e11d48; color: white; padding: .12rem .5rem; border-radius: 9999px; font-size: .68rem; font-weight: 700; }
     .badge-r4   { background: #d97706; color: white; padding: .12rem .5rem; border-radius: 9999px; font-size: .68rem; font-weight: 700; }
     .badge-r6   { background: #7c3aed; color: white; padding: .12rem .5rem; border-radius: 9999px; font-size: .68rem; font-weight: 700; }
-    .badge-cat  { background: linear-gradient(135deg, #0f766e, #15803d); color: white; padding: .12rem .55rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; white-space: nowrap; }
+    .badge-cat  { background: linear-gradient(135deg, #0f766e, #15803d); color: white; padding: .12rem .55rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; white-space: normal; word-break: keep-all; }
     .badge-koumu { background: #dc2626; color: white; padding: .1rem .45rem; border-radius: .25rem; font-size: .65rem; font-weight: 700; }
 
     .tbl th { background: #1e3a5f; color: white; padding: .6rem .85rem; font-size: .78rem; font-weight: 600; text-align: left; }
@@ -168,8 +169,8 @@
 
   <!-- ===== S1: 精神保健福祉法の体系 ===== -->
   <section id="ho-taikei" class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="book-open" class="w-5 h-5 text-blue-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="book-open" class="w-5 h-5 text-blue-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">精神保健福祉法の体系</h2>
       <span class="badge-law">昭和25年 法律第123号</span>
     </div>
@@ -259,8 +260,8 @@
 
   <!-- ===== S2: 入院形態 ===== -->
   <section id="nyuin-keitai" class="section-card">
-    <div class="flex items-center gap-3 mb-2">
-      <i data-lucide="git-branch" class="w-5 h-5 text-teal-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+      <i data-lucide="git-branch" class="w-5 h-5 text-teal-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">精神科入院形態の全体像</h2>
       <span class="badge-cat">口頭試問 最頻出</span>
     </div>
@@ -345,15 +346,15 @@
     </div>
 
     <!-- 比較表 -->
-    <div class="x-scroll mt-4">
-      <table class="tbl tbl-sticky w-full rounded-lg overflow-hidden text-xs">
+    <div class="x-scroll mt-4 rounded-lg overflow-hidden">
+      <table class="tbl tbl-sticky w-full text-xs">
         <thead>
           <tr>
-            <th class="rounded-tl-lg col-nyuin">入院形態</th>
+            <th class="col-nyuin">入院形態</th>
             <th class="col-shiteii">指定医</th>
             <th class="col-kikan">同意/決定</th>
             <th class="col-period">期間上限</th>
-            <th class="rounded-tr-lg col-point">ポイント</th>
+            <th class="col-point">ポイント</th>
           </tr>
         </thead>
         <tbody>
@@ -406,8 +407,8 @@
 
   <!-- ===== S3: 精神保健指定医とは ===== -->
   <section id="shiteii-towa" class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="shield-check" class="w-5 h-5 text-blue-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="shield-check" class="w-5 h-5 text-blue-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">精神保健指定医とは</h2>
       <span class="badge-law">法第18条</span>
     </div>
@@ -457,8 +458,8 @@
 
   <!-- ===== S4: 指定医の職務一覧 ===== -->
   <section id="shitei-shokumu" class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="clipboard-list" class="w-5 h-5 text-teal-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="clipboard-list" class="w-5 h-5 text-teal-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">指定医の職務一覧</h2>
     </div>
 
@@ -466,9 +467,9 @@
       <!-- 勤務先での職務 -->
       <div>
         <p class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-gray-500"></i>勤務する医療機関での職務</p>
-        <div class="x-scroll">
-          <table class="tbl w-full rounded-lg overflow-hidden text-xs">
-            <thead><tr><th class="rounded-tl-lg col-bamen">場面</th><th class="col-shokumu">職務内容</th><th class="rounded-tr-lg col-joken">条文</th></tr></thead>
+        <div class="x-scroll rounded-lg overflow-hidden">
+          <table class="tbl w-full text-xs">
+            <thead><tr><th class="col-bamen">場面</th><th class="col-shokumu">職務内容</th><th class="col-joken">条文</th></tr></thead>
             <tbody>
               <tr>
                 <td rowspan="3" class="font-bold text-gray-600 bg-gray-50">入院時</td>
@@ -524,10 +525,10 @@
 
       <!-- 公務員としての職務 -->
       <div>
-        <p class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><i data-lucide="landmark" class="w-4 h-4 text-gray-500"></i>公務員としての職務 <span class="badge-koumu ml-1">○印：委嘱を受けて行う</span></p>
-        <div class="x-scroll">
-          <table class="tbl tbl-sticky w-full rounded-lg overflow-hidden text-xs">
-            <thead><tr><th class="rounded-tl-lg col-bamen">場面</th><th class="col-shokumu">職務内容</th><th class="rounded-tr-lg col-joken">条文</th></tr></thead>
+        <p class="text-sm font-bold text-gray-700 mb-2 flex flex-wrap items-center gap-x-2 gap-y-1"><i data-lucide="landmark" class="w-4 h-4 text-gray-500 flex-shrink-0"></i>公務員としての職務 <span class="badge-koumu ml-1">○印：委嘱を受けて行う</span></p>
+        <div class="x-scroll rounded-lg overflow-hidden">
+          <table class="tbl tbl-sticky w-full text-xs">
+            <thead><tr><th class="col-bamen">場面</th><th class="col-shokumu">職務内容</th><th class="col-joken">条文</th></tr></thead>
             <tbody>
               <tr>
                 <td class="font-bold text-gray-600 bg-gray-50">入院時</td>
@@ -575,8 +576,8 @@
 
   <!-- ===== S5: 申請要件の詳細 ===== -->
   <section id="moshikomi-yoken" class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="list-checks" class="w-5 h-5 text-blue-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="list-checks" class="w-5 h-5 text-blue-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">申請要件の詳細</h2>
       <span class="badge-new">令和元年改正</span>
     </div>
@@ -615,15 +616,15 @@
 
     <!-- 5分野5症例の表 -->
     <p class="text-sm font-bold text-gray-700 mb-3">ケースレポート 5分野5症例（令和元年以降の新基準）</p>
-    <div class="x-scroll mb-4">
-      <table class="tbl tbl-sticky w-full rounded-lg overflow-hidden">
+    <div class="x-scroll mb-4 rounded-lg overflow-hidden">
+      <table class="tbl tbl-sticky w-full">
         <thead>
           <tr>
-            <th class="rounded-tl-lg col-bamen">症例</th>
+            <th class="col-bamen">症例</th>
             <th class="col-fcat">疾患カテゴリ</th>
             <th class="col-icd">ICD-10</th>
             <th class="col-nyuinkei">必要入院形態</th>
-            <th class="rounded-tr-lg col-point">注意点</th>
+            <th class="col-point">注意点</th>
           </tr>
         </thead>
         <tbody>
@@ -748,8 +749,8 @@
 
   <!-- ===== S6: 令和4年改正のポイント ===== -->
   <section id="kaiseiten" class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="file-edit" class="w-5 h-5 text-amber-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="file-edit" class="w-5 h-5 text-amber-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">令和4年精神保健福祉法改正のポイント</h2>
       <span class="badge-r4">R4.12.16公布</span>
     </div>
@@ -793,7 +794,7 @@
 
       <!-- 令和6年4月1日施行 -->
       <div class="bg-red-50 rounded-xl p-4 border border-red-200">
-        <p class="text-xs font-bold text-red-700 mb-2 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>令和6年4月1日施行 <span class="badge-new ml-1">ケースレポートに影響あり</span></p>
+        <p class="text-xs font-bold text-red-700 mb-2 flex flex-wrap items-center gap-x-1 gap-y-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5 flex-shrink-0"></i>令和6年4月1日施行 <span class="badge-new ml-1">ケースレポートに影響あり</span></p>
         <div class="grid md:grid-cols-2 gap-3">
           <div class="new-box">
             <p class="font-bold text-xs text-rose-900 mb-1">医療保護入院の入院期間の法定化 ★最重要</p>
@@ -831,8 +832,8 @@
 
   <!-- ===== S7: 行動制限最小化 ===== -->
   <section id="kodo-seigen" class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="lock" class="w-5 h-5 text-amber-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="lock" class="w-5 h-5 text-amber-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">行動制限最小化</h2>
       <span class="badge-law">法第36条第3項</span>
     </div>
@@ -939,8 +940,8 @@
 
   <!-- ===== S8: 資格管理 ===== -->
   <section id="shikaku-kanri" class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="refresh-cw" class="w-5 h-5 text-teal-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="refresh-cw" class="w-5 h-5 text-teal-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">指定取得後の資格管理</h2>
     </div>
 
@@ -995,11 +996,11 @@
         <div>
           <p class="font-bold text-xs text-violet-900 mb-1">失効後1年未満の特例申請</p>
           <p class="text-xs text-gray-700">指定失効後<strong>1年未満</strong>の者に限り、更新研修受講後にケースレポート等の必要書類を<strong>一部省略</strong>して新規申請が可能。ただし資格は失効しているため、再指定を受けるまで指定医業務は不可。</p>
-          <div class="flex items-center gap-2 mt-2 text-xs text-gray-600">
+          <div class="flex flex-wrap items-center gap-x-2 gap-y-2 mt-2 text-xs text-gray-600">
             <span class="badge-law">①指定医資格失効</span>
-            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
             <span class="badge-law">②1年以内に更新研修受講</span>
-            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 flex-shrink-0"></i>
             <span class="badge-law">③新規申請（書類一部省略）</span>
           </div>
         </div>
@@ -1020,8 +1021,8 @@
 
   <!-- ===== 関連リンク ===== -->
   <section class="section-card">
-    <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="link-2" class="w-5 h-5 text-teal-700"></i>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
+      <i data-lucide="link-2" class="w-5 h-5 text-teal-700 flex-shrink-0"></i>
       <h2 class="text-xl font-bold text-gray-800">関連ページ・支援ツール</h2>
     </div>
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
