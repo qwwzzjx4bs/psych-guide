@@ -25,7 +25,7 @@ const SECTIONS = {
   ],
   'portal-concepts': [
     'card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii',
-    'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-workspace',
+    'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-workspace', 'card-teaching-workspace',
     'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool',
   ],
   'portal-study': [
@@ -100,7 +100,8 @@ for (const id of allIds) {
       (CASE_REPORT_SECTIONS.has(section)
         || id === 'card-cssrs-memo'
         || id === 'card-csc-jp'
-        || id === 'card-terminology')
+        || id === 'card-terminology'
+        || id === 'card-teaching-workspace')
       && !TEACHING_EXCLUDE_IDS.has(id),
   });
 }

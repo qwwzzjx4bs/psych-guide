@@ -1841,6 +1841,12 @@
           <p class="text-xs text-gray-500 leading-relaxed">ポータル登録ツールを参照しながら症例を作成する4ペインUI。7ステップ入力・55項目チェック・Undo/スナップショット・.shitei互換JSON出力。Tauri版への引き渡しに対応。</p>
           <div class="mt-3 text-xs link-blue font-medium">shitei-report-workspace.html →</div>
         </a>
+        <a id="card-teaching-workspace" href="teaching-case-workspace.html" class="card block border border-emerald-200 rounded-xl p-4 border-emerald bg-emerald sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-emerald px-2 py-0.5 rounded-full">症例提示</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-06-06 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">多領域症例提示ワークスペース</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">指定医申請とは別の症例カンファ用4ペインUI。F章横断の可変症例・6ステップ入力・品質チェック・F章カバレッジ・.tcases JSON出力。</p>
+          <div class="mt-3 text-xs link-emerald font-medium">teaching-case-workspace.html →</div>
+        </a>
         <a id="card-shitei-wizard" href="shitei-report-wizard.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber sm:col-span-2">
           <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">作成支援・軽量</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span></div>
           <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 レポート作成ウィザード（軽量版）</h3>
@@ -2099,7 +2105,7 @@
         'card-brexpiprazole',
         'card-vortioxetine'
       ],
-      'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-workspace', 'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool'],
+      'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-workspace', 'card-teaching-workspace', 'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool'],
       'portal-study': ['card-terminology-srs', 'card-icd10-quiz', 'card-mood-suicide-learning', 'card-schiz-fe-learning', 'card-psychopath-scales-learning', 'card-psychotropics-interactions-learning', 'card-asd-schizophrenia-learning', 'card-eeg-learning', 'card-eeg-basics', 'card-eeg-waveforms', 'card-eeg-quiz', 'card-eeg-cases'],
       'portal-other': ['card-context', 'card-cursor', 'card-content-verification'],
       'portal-literature': ['card-literature-search']
@@ -2888,6 +2894,7 @@
       'card-shitei-overview':  ['🎓 資格取得', '📋 制度概要', '精神保健指定医'],
       'card-shitei-checklist': ['🎓 資格取得', '✅ チェックリスト', '精神保健指定医'],
       'card-shitei-workspace':      ['🎓 資格取得', '✍ レポート作成', '精神保健指定医', '4ペイン'],
+      'card-teaching-workspace':    ['📋 症例提示', '✍ カンファ', 'F章横断', '4ペイン'],
       'card-shitei-wizard':         ['🎓 資格取得', '✍ レポート作成', '精神保健指定医', '軽量版'],
       'card-shitei-case-template': ['🎓 資格取得', '📋 症例選定', '精神保健指定医'],
       'card-seishin-hoken-ho-flow': ['🎓 資格取得', '⚖ 法律・制度', '精神保健指定医', '入院形態', '行動制限'],
@@ -3140,6 +3147,9 @@
       ],
       'card-shitei-workspace': [
         { date: '2026-06-06', kind: '新規', text: 'ケースレポート4ペインワークスペースを新規作成（ポータルツール参照・7ステップ入力・55項目チェック・Undo/スナップショット）', href: 'shitei-report-workspace.html' },
+      ],
+      'card-teaching-workspace': [
+        { date: '2026-06-06', kind: '新規', text: '多領域症例提示ワークスペースを新規作成（可変症例・6ステップ・F章カバレッジ・品質チェック）', href: 'teaching-case-workspace.html' },
       ],
       'card-shitei-wizard': [
         { date: '2026-05-07', kind: '新規', text: '精神保健指定医レポート作成ウィザードを新規作成（7ステップ・ICD-10ピッカー・テキスト自動生成）', href: 'shitei-report-wizard.html' },
