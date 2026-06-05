@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "categories": {
+    "coverage": {
+      "ids": ["cov_f0", "cov_f1", "cov_f2", "cov_f3", "cov_f49"],
+      "group": "coverage",
+      "title": "F章カバレッジ"
+    },
+    "meta": {
+      "ids": ["meta_presenter", "meta_institution"],
+      "group": "meta",
+      "title": "ドキュメント情報"
+    },
+    "case_meta": {
+      "ids": ["cm_icd", "cm_objective", "cm_setting", "cm_domain"],
+      "group": "case",
+      "title": "症例概要（現在症例）"
+    },
+    "presentation": {
+      "ids": ["pr_cc", "pr_hpi", "pr_mse", "pr_risk", "pr_diff", "pr_treatment"],
+      "group": "case",
+      "title": "提示内容（現在症例）"
+    },
+    "teaching": {
+      "ids": ["te_learning", "te_discussion", "te_references"],
+      "group": "case",
+      "title": "学習・討議（現在症例）"
+    },
+    "manual": {
+      "ids": ["mn_supervisor", "mn_presented"],
+      "group": "manual",
+      "title": "確認事項"
+    }
+  },
+  "rules": [
+    { "id": "cov_f0", "label": "F0 領域の提示済み症例あり", "ruleType": "auto", "evaluator": "domainCoverage", "domain": "F0" },
+    { "id": "cov_f1", "label": "F1 領域の提示済み症例あり", "ruleType": "auto", "evaluator": "domainCoverage", "domain": "F1" },
+    { "id": "cov_f2", "label": "F2 領域の提示済み症例あり", "ruleType": "auto", "evaluator": "domainCoverage", "domain": "F2" },
+    { "id": "cov_f3", "label": "F3 領域の提示済み症例あり", "ruleType": "auto", "evaluator": "domainCoverage", "domain": "F3" },
+    { "id": "cov_f49", "label": "F4〜F9 領域の提示済み症例あり", "ruleType": "auto", "evaluator": "domainCoverage", "domain": "F4-9" },
+
+    { "id": "meta_presenter", "label": "発表者名を記載", "ruleType": "semi", "evaluator": "metaField", "field": "presenter" },
+    { "id": "meta_institution", "label": "所属機関を記載", "ruleType": "semi", "evaluator": "metaField", "field": "institution" },
+
+    { "id": "cm_icd", "label": "ICD-10 を選択", "ruleType": "auto", "evaluator": "currentCaseField", "field": "t1_icd" },
+    { "id": "cm_objective", "label": "学習目的を記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t1_objective" },
+    { "id": "cm_setting", "label": "診療場面を選択", "ruleType": "auto", "evaluator": "currentCaseField", "field": "t1_setting" },
+    { "id": "cm_domain", "label": "F章タグを選択", "ruleType": "auto", "evaluator": "currentCaseDomain" },
+
+    { "id": "pr_cc", "label": "主訴を記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t2_cc" },
+    { "id": "pr_hpi", "label": "現病歴を記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t3_hpi" },
+    { "id": "pr_mse", "label": "MSE を3領域以上記載", "ruleType": "semi", "evaluator": "currentCaseMseCount", "minCount": 3 },
+    { "id": "pr_risk", "label": "リスク評価を記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t3_risk" },
+    { "id": "pr_diff", "label": "鑑別診断を記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t4_diff_dx" },
+    { "id": "pr_treatment", "label": "治療方針・経過を記載", "ruleType": "semi", "evaluator": "currentCaseFields", "fields": ["t5_pharma", "t5_nonpharma"] },
+
+    { "id": "te_learning", "label": "学習ポイントを記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t6_learning_points" },
+    { "id": "te_discussion", "label": "討議用の問いを記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t6_discussion_q" },
+    { "id": "te_references", "label": "参考文献・ガイドラインを記載", "ruleType": "semi", "evaluator": "currentCaseField", "field": "t6_references" },
+
+    { "id": "mn_supervisor", "label": "指導医に内容を確認した", "ruleType": "manual", "manualHint": "指導医・上級医に症例提示の内容を確認してもらい、チェックを入れてください。" },
+    { "id": "mn_presented", "label": "カンファレンスで提示済み", "ruleType": "manual", "manualHint": "実際に提示した後にチェックを入れてください。提示済みにすると F章カバレッジに反映されます。" }
+  ]
+}

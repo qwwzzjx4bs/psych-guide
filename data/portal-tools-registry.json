@@ -1,0 +1,618 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-05T17:26:00.840Z",
+  "tools": [
+    {
+      "id": "card-crcl-psych",
+      "title": "CrCl 推算 × 向精神薬の腎障害時目安",
+      "href": "crcl-psychotropics.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-dzp-calc",
+      "title": "ベンゾジアゼピン系 ジアゼパム換算計算機",
+      "href": "dzp-calculator.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-acute-alerts",
+      "title": "急性期クイック（QTc・電解質・離脱要約）",
+      "href": "acute-alerts.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-cp-calc",
+      "title": "抗精神病薬 CP換算計算機",
+      "href": "cp-calculator.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-cssrs-memo",
+      "title": "C-SSRS 手順メモ（面接・記録・連携）",
+      "href": "cssrs-procedure-memo.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-csc-jp",
+      "title": "Coordinated Specialty Care（CSC）— 調整型専門ケア（NIMH・研修医向け）",
+      "href": "coordinated-specialty-care-jp.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-terminology",
+      "title": "精神医学・精神病理学・精神症候学・精神分析学 用語マップ（拡張版）",
+      "href": "psych-terminology-jp.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-shitei-wizard",
+      "title": "精神保健指定医 レポート作成ウィザード",
+      "href": "shitei-report-wizard.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shiteii",
+      "title": "精神保健指定医 資格取得ガイド — 完全ロードマップ",
+      "href": "shiteii-guide.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shitei-case-template",
+      "title": "精神保健指定医 症例5本 選定テンプレ",
+      "href": "shitei-case-template.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shitei-checklist",
+      "title": "精神保健指定医 申請チェックリスト",
+      "href": "shitei-checklist.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shitei-overview",
+      "title": "精神保健指定医 制度概要",
+      "href": "seishin-hoken-shitei-overview.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-seishin-hoken-ho-flow",
+      "title": "精神保健福祉法 × 指定医申請 — 専攻医1年目の入門図解",
+      "href": "seishin-hoken-ho-shiteii-moshikomi.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-schiz-highschool",
+      "title": "統合失調症って何？ ── 高校生・一般向け図解ガイド",
+      "href": "schizophrenia-highschool-guide.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-history",
+      "title": "統合失調症の捉え方の歴史（世界×日本）— 思想・学派・診断体系の変遷",
+      "href": "schizophrenia-history.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-dsm5trmini",
+      "title": "DSM-5-TR 精神科章立てガイド（ミニ版）",
+      "href": "dsm5trmini.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-dsm5tr",
+      "title": "DSM-5-TR 精神科章立てガイド（詳細版）",
+      "href": "dsm5tr.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-icd10mini",
+      "title": "ICD-10 精神科疾患分類 ミニ版",
+      "href": "icd10mini.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-icd10",
+      "title": "ICD-10 精神科疾患分類（詳細版）",
+      "href": "icd10.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-icd11",
+      "title": "ICD-11 / DSM-5-TR 精神科疾患全体像",
+      "href": "psychiatric-overview-icd11.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-olanzapine",
+      "title": "オランザピン（ジプレキサ）— 分子構造・薬理・エビデンス 詳解",
+      "href": "olanzapine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-quetiapine",
+      "title": "クエチアピン（セロクエル / ビプレッソ）— 分子構造・薬理・エビデンス 詳解",
+      "href": "quetiapine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-brexpiprazole",
+      "title": "ブレクスピプラゾール（レキサルティ）— 分子構造・薬理・エビデンス 詳解",
+      "href": "brexpiprazole.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-benzodiazepines",
+      "title": "ベンゾジアゼピン 選択ガイド（日本承認薬）",
+      "href": "benzodiazepines-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-venlafaxine",
+      "title": "ベンラファキシン（イフェクサーSR）— 分子構造・薬理・エビデンス 詳解",
+      "href": "venlafaxine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-vortioxetine",
+      "title": "ボルチオキセチン（トリンテリックス）— 分子構造・薬理・エビデンス 詳解",
+      "href": "vortioxetine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-mood-stabilizers",
+      "title": "気分安定薬 選択ガイド（日本承認薬）",
+      "href": "mood-stabilizers-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-antidepressants",
+      "title": "抗うつ薬 選択ガイド（日本承認薬）",
+      "href": "antidepressants-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-antipsychotics",
+      "title": "抗精神病薬 選択ガイド（日本承認薬）",
+      "href": "antipsychotics-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-hypnotics",
+      "title": "不眠症治療薬 選択ガイド（日本承認薬）",
+      "href": "hypnotics-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-literature-search",
+      "title": "精神医学 最新論文検索ツール",
+      "href": "literature-search.html",
+      "section": "portal-literature",
+      "sectionLabel": "最新論文",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-cursor",
+      "title": "Cursor AIエージェント完全比較ガイド",
+      "href": "cursor-ai-agents.html",
+      "section": "portal-other",
+      "sectionLabel": "その他",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-context",
+      "title": "コンテキストエンジニアリング完全解説",
+      "href": "context-engineering.html",
+      "section": "portal-other",
+      "sectionLabel": "その他",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-content-verification",
+      "title": "コンテンツ検証ツール — 用量・表記・精神医学用語 3軸チェック",
+      "href": "content-verification.html",
+      "section": "portal-other",
+      "sectionLabel": "その他",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-bfcrs",
+      "title": "BFCRS 採点シート — Bush-Francis 緊張病評価尺度（詳細版）",
+      "href": "bfcrs-sheet.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-bprs-guide",
+      "title": "BPRS 解説ガイド",
+      "href": "bprs-guide.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-bprs-detailed",
+      "title": "BPRS 採点シート — 詳細版（7段階アンカーポイント）",
+      "href": "bprs-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-hamd",
+      "title": "HAM-D 採点シート — ハミルトンうつ病評価尺度（詳細版）",
+      "href": "hamd-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-madrs",
+      "title": "MADRS 採点シート — Montgomery–Åsberg うつ病評価尺度（詳細版）",
+      "href": "madrs-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-panss-detailed",
+      "title": "PANSS 採点シート — 詳細版（アンカーポイント）",
+      "href": "panss-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-phq9",
+      "title": "PHQ-9 採点シート — 患者健康質問票（詳細版）",
+      "href": "phq9-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-phq9-print",
+      "title": "PHQ-9 採点シート（印刷用）",
+      "href": "phq9-sheet.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-ymrs",
+      "title": "YMRS 採点シート — Young 躁状態評価尺度（詳細版）",
+      "href": "ymrs-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-scales",
+      "title": "統合失調症 精神症状評価スケール集",
+      "href": "schizophrenia-scales.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-sheets",
+      "title": "統合失調症 評価スケール集（外来用印刷様式）",
+      "href": "schizophrenia-assessment-sheets.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-anxiety-scales",
+      "title": "不安症群 重症度評価スケール集 — 外来用様式",
+      "href": "anxiety-assessment-scales.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-eeg-cases",
+      "title": "EEG 症例学習",
+      "href": "eeg-cases.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-icd10-quiz",
+      "title": "ICD-10 精神科クイズ",
+      "href": "icd10-quiz.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-mood-suicide-learning",
+      "title": "気分障害 × 自殺リスク — 学習ハブ",
+      "href": "mood-suicide-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-psychotropics-interactions-learning",
+      "title": "向精神薬 × 相互作用・禁忌 — 学習ハブ",
+      "href": "psychotropics-interactions-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-asd-schizophrenia-learning",
+      "title": "自閉症スペクトラム障害 × 統合失調症 — 学習ハブ",
+      "href": "asd-schizophrenia-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-terminology-srs",
+      "title": "精神医学用語 SRS 学習（間隔反復）",
+      "href": "psych-terminology-srs.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-psychopath-scales-learning",
+      "title": "精神病理 × スケール — 学習ハブ",
+      "href": "psychopathology-scales-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-schiz-fe-learning",
+      "title": "統合失調症 × 初発時対応 — 学習ハブ",
+      "href": "schizophrenia-first-episode-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-waveforms",
+      "title": "脳波パターン図鑑",
+      "href": "eeg-waveforms.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-basics",
+      "title": "脳波読影 基礎知識",
+      "href": "eeg-basics.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-learning",
+      "title": "脳波読影（EEG）— 初学者学習ハブ",
+      "href": "eeg-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-quiz",
+      "title": "脳波読影クイズ",
+      "href": "eeg-quiz.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-depression",
+      "title": "うつ病 診断・治療選択ツリー — ガイドライン2025準拠",
+      "href": "depression-guideline2025.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-delirium",
+      "title": "せん妄 治療選択ツリー（日本のガイドライン・実践整理）",
+      "href": "delirium-treatment-japan.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-nonpharmacologic",
+      "title": "精神医学領域の非薬物療法マップ — 心理・社会・環境の三分類",
+      "href": "nonpharmacologic-psychiatry-overview.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-bipolar",
+      "title": "双極性障害 診断・治療選択ツリー — 日本うつ病学会 診療ガイドライン2023準拠",
+      "href": "bipolar-diagnosis-treatment.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-psychoedu",
+      "title": "統合失調症 心理教育資料 カスタマイズ生成ツール",
+      "href": "schizophrenia-psychoeducation-generator.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-diagnosis",
+      "title": "統合失調症 診断プロセス完全ガイド — 古典的診断 vs 操作的基準・鑑別・除外検査",
+      "href": "schizophrenia-diagnosis.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-algo",
+      "title": "統合失調症 薬物治療アルゴリズム 図解版",
+      "href": "schizophrenia-algorithm.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-early-intervention",
+      "title": "統合失調症の早期介入 — 概要・専門チーム・エビデンス図解",
+      "href": "schizophrenia-early-intervention.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-atypical-depression",
+      "title": "非定型うつ病 — 概念・歴史・診断基準・治療アルゴリズム",
+      "href": "atypical-depression.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-anxiety",
+      "title": "不安症群 — 診断ツリー＆治療アルゴリズム",
+      "href": "anxiety-disorders.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    }
+  ]
+}
