@@ -109,6 +109,8 @@
     .t-sea .hd-name { color: #713f12; }
     .t-mix .hd { border-bottom: 3px solid #6b7280; }
     .t-mix .hd-name { color: #374151; }
+    .t-dep .hd { border-bottom: 3px solid #0369a1; }
+    .t-dep .hd-name { color: #0c4a6e; }
 
     /* ========== PATIENT INFO BAR ========== */
     .pt {
@@ -138,6 +140,7 @@
     .i-sp  { background: #eff6ff; border-left: 3px solid #1d4ed8; }
     .i-sea { background: #fefce8; border-left: 3px solid #ca8a04; }
     .i-mix { background: #f3f4f6; border-left: 3px solid #6b7280; }
+    .i-dep { background: #f0f9ff; border-left: 3px solid #0369a1; }
 
     /* ========== TABLES ========== */
     table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 5px; }
@@ -211,6 +214,7 @@
   <a href="#mi">MI</a>
   <a href="#phq4-suds">PHQ-4 &amp; SUDs</a>
   <a href="#asa27">ASA-27</a>
+  <a href="#phq9">PHQ-9</a>
   <button class="print-btn" onclick="window.print()">印刷 / PDF保存</button>
 </nav>
 
@@ -290,7 +294,7 @@
   </div>
   <div class="ft">
     <span>GAD-7 ｜ Spitzer RL et al., Arch Intern Med. 2006;166:1092–1097 ｜ 日本語版：村松公美子ほか</span>
-    <span>不安症群 評価スケール集　1 / 8</span>
+    <span>不安症群 評価スケール集　1 / 9</span>
   </div>
 </div>
 
@@ -419,7 +423,7 @@
   </div>
   <div class="ft">
     <span>PDSS ｜ Shear MK et al., Am J Psychiatry. 1997;154:1571–1575 ｜ 日本語版：貝谷久宣ほか</span>
-    <span>不安症群 評価スケール集　2 / 8</span>
+    <span>不安症群 評価スケール集　2 / 9</span>
   </div>
 </div>
 
@@ -509,7 +513,7 @@
   </div>
   <div class="ft">
     <span>LSAS ｜ Liebowitz MR. Mod Probl Pharmacopsychiatry. 1987;22:141–173 ｜ 日本語版：朝倉聡ほか</span>
-    <span>不安症群 評価スケール集　3 / 8</span>
+    <span>不安症群 評価スケール集　3 / 9</span>
   </div>
 </div>
 
@@ -615,7 +619,7 @@
   </div>
   <div class="ft">
     <span>LSAS ｜ Liebowitz MR. Mod Probl Pharmacopsychiatry. 1987;22:141–173 ｜ 日本語版：朝倉聡ほか</span>
-    <span>不安症群 評価スケール集　4 / 8</span>
+    <span>不安症群 評価スケール集　4 / 9</span>
   </div>
 </div>
 
@@ -704,7 +708,7 @@
   </div>
   <div class="ft">
     <span>ACQ ｜ Chambless DL et al., Behav Res Ther. 1984;22:113–125 ｜ 日本語版：久保木富房ほか</span>
-    <span>不安症群 評価スケール集　5 / 8</span>
+    <span>不安症群 評価スケール集　5 / 9</span>
   </div>
 </div>
 
@@ -784,7 +788,7 @@
   </div>
   <div class="ft">
     <span>MI ｜ Chambless DL et al., Behav Res Ther. 1985;23:35–44 ｜ 日本語版：貝谷久宣ほか</span>
-    <span>不安症群 評価スケール集　6 / 8</span>
+    <span>不安症群 評価スケール集　6 / 9</span>
   </div>
 </div>
 
@@ -902,7 +906,7 @@
   </div>
   <div class="ft">
     <span>PHQ-4 ｜ Kroenke K et al., Psychosomatics. 2009;50:613–621 ｜ SUDs ｜ Wolpe J. (1969) The Practice of Behavior Therapy.</span>
-    <span>不安症群 評価スケール集　7 / 8</span>
+    <span>不安症群 評価スケール集　7 / 9</span>
   </div>
 </div>
 
@@ -990,7 +994,100 @@
   </div>
   <div class="ft">
     <span>ASA-27 ｜ Manicavasagar V et al., Compr Psychiatry. 2003;44:97–106 ｜ 日本語版参照：朝倉聡ほか</span>
-    <span>不安症群 評価スケール集　8 / 8</span>
+    <span>不安症群 評価スケール集　8 / 9</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════ PAGE 9: PHQ-9 ═══════════════ -->
+<div class="page t-dep" id="phq9">
+  <div class="page-content">
+    <div class="hd">
+      <div>
+        <div class="hd-name">PHQ-9　患者健康質問票（うつ病重症度評価）</div>
+        <div class="hd-en">Patient Health Questionnaire-9 ─ DSM-5大うつ病性障害 スクリーニング・重症度評価</div>
+      </div>
+      <div class="hd-right">対象：大うつ病性障害（MDD / F32–F33）<br>スコア：0–27点 ｜ ≥10 でMDDスクリーン陽性</div>
+    </div>
+
+    <div class="pt">
+      <div class="pt-f"><label>患者氏名</label><div class="ul"></div></div>
+      <div class="pt-f"><label>カルテ番号</label><div class="ul"></div></div>
+      <div class="pt-f"><label>記入日</label><div class="ul"></div></div>
+      <div class="pt-f"><label>担当医</label><div class="ul"></div></div>
+    </div>
+
+    <div class="instr i-dep">
+      この<strong>2週間</strong>、次の問題にどのくらいの頻度で悩まされましたか。当てはまる数字を○で囲み、「得点」欄に記入してください。<br>
+      <strong>0 ＝ 全くない　　1 ＝ 数日　　2 ＝ 半分以上の日　　3 ＝ ほとんど毎日</strong>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:17px">#</th>
+          <th class="tl">この2週間、次のことでどのくらい悩まされましたか</th>
+          <th style="width:33px">全くない<br>0</th>
+          <th style="width:33px">数日<br>1</th>
+          <th style="width:38px">半分以上<br>の日　2</th>
+          <th style="width:42px">ほとんど<br>毎日　3</th>
+          <th style="width:29px">得点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="7" style="background:#dbeafe;font-size:7.5pt;font-weight:700;color:#1e3a8a;padding:3px 6px">▶ 中核症状（項目1または2の少なくとも一方が陽性：MDDの必要条件）</td></tr>
+        <tr><td class="n">1</td><td>気分が落ち込んだり、憂うつになったり、または絶望的な気持ちになった</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td class="n">2</td><td>物事に対してほとんど興味がない、または楽しめなくなった（アンヘドニア）</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td colspan="7" style="background:#e0f2fe;font-size:7.5pt;font-weight:700;color:#0369a1;padding:3px 6px">▶ 身体症状（睡眠・疲労・食欲）</td></tr>
+        <tr><td class="n">3</td><td>寝つきが悪い、途中で目が覚める、または逆に眠りすぎた</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td class="n">4</td><td>疲れた感じがする、または気力がない</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td class="n">5</td><td>あまり食欲がない、または食べ過ぎた</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td colspan="7" style="background:#bfdbfe;font-size:7.5pt;font-weight:700;color:#1e3a8a;padding:3px 6px">▶ 認知・行動症状（罪責感・集中・精神運動）</td></tr>
+        <tr><td class="n">6</td><td>自分はダメな人間だと感じた、人生の敗北者だと感じた、または自分自身・家族に申し訳ないと感じた</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td class="n">7</td><td>新聞を読む、またはテレビを見ることなどに集中することが難しかった</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td class="n">8</td><td>他の人が気づくくらいに動きや話し方が遅くなっていた、またはそわそわして落ち着かず普段よりよく動き回っていた</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc"></td></tr>
+        <tr><td colspan="7" style="background:#fecaca;font-size:7.5pt;font-weight:700;color:#7f1d1d;padding:3px 6px">▶ 希死念慮（陽性の場合は必ずフォローアップ評価を実施）</td></tr>
+        <tr><td class="n">9</td><td>死んだほうがましだ、あるいは自分を何らかの方法で傷つけようという考えがあった</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="ck">○</td><td class="sc" style="border:1px solid #ef4444 !important;"></td></tr>
+        <tr class="total-r">
+          <td colspan="2" style="text-align:right;padding-right:10px;font-size:8.5pt">合計得点（0〜27点）</td>
+          <td colspan="4"></td>
+          <td class="sc" style="border:2px solid #0369a1 !important;font-size:11pt"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-bottom:6px;font-size:8pt;background:#f0f9ff;border:1px solid #bae6fd;border-radius:4px;padding:4px 9px;">
+      <strong>機能障害の確認（診断に必要）：</strong>「これらの問題が仕事・家事・他の人と仲良くやっていくことを、どのくらい困難にしていますか？」<br>
+      <span style="margin-right:18px">□ 全く困難でない</span>
+      <span style="margin-right:18px">□ やや困難</span>
+      <span style="margin-right:18px">□ かなり困難</span>
+      <span>□ 極めて困難</span>
+    </div>
+
+    <div style="margin-bottom:5px;font-size:8pt;background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:4px 9px;">
+      <strong>項目9（希死念慮）が 1 点以上の場合：</strong>
+      C-SSRS等の構造化リスク評価を実施。自殺計画・手段・意図・致死性を詳細に聴取し、安全確保と入院の必要性を判断する。
+    </div>
+
+    <div class="scoring">
+      <b>採点・重症度判定</b>
+      <div class="sbar">
+        <div class="sbar-s" style="background:#22c55e;flex:4">0–4 / 最小限</div>
+        <div class="sbar-s" style="background:#eab308;flex:5">5–9 / 軽度</div>
+        <div class="sbar-s" style="background:#f97316;flex:5">10–14 / 中等度</div>
+        <div class="sbar-s" style="background:#ef4444;flex:5">15–19 / やや重度</div>
+        <div class="sbar-s" style="background:#7f1d1d;flex:8">20–27 / 重度</div>
+      </div>
+      <div style="margin-top:3px;line-height:1.65;color:#374151">
+        ◆ <strong>≥10点</strong>：MDDスクリーニング陽性（感度88%・特異度88%）。DSM-5-TR診断基準（≥5症状・≥2週間・機能障害）で確定診断を行う。<br>
+        ◆ <strong>項目1または2の少なくとも1つが≥1点</strong>であることがMDDのゲートウェイ条件（どちらも0点ならMDDの診断基準Aを満たさない）。<br>
+        ◆ 治療反応の目安：前回比<strong>5点以上改善</strong>が臨床的有意差。<strong>寛解目安：≤4点</strong>。PHQ-2（項目1+2、≥3点）を初回スクリーニングに使用し、陽性時にPHQ-9全9項目を評価する。
+      </div>
+    </div>
+  </div>
+  <div class="ft">
+    <span>PHQ-9 ｜ Kroenke K et al., J Gen Intern Med. 2001;16:606–613 ｜ 日本語版：村松公美子ほか（2009）</span>
+    <span>不安症群 評価スケール集　9 / 9</span>
   </div>
 </div>
 
