@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ケースレポート 4ペインワークスペース — 令和7年新基準</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/split.js/dist/split.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --primary: #3a6ea5;
+      --primary-dark: #2d5685;
+      --border: #d4e4f4;
+      --border-light: #ecf2f8;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --ok: #2d7a4f;
+      --warn: #b45309;
+      --fail: #c53030;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-feature-settings: 'palt';
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    .ws-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px;
+      background: var(--primary);
+      color: #fff;
+      border-bottom: 1px solid var(--primary-dark);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .ws-header h1 { font-size: 0.95rem; font-weight: 700; margin: 0; white-space: nowrap; }
+    .ws-header-sub { font-size: 0.7rem; opacity: 0.85; }
+    .ws-header-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .ws-btn {
+      padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.12);
+      color: #fff; cursor: pointer; transition: background 0.15s;
+    }
+    .ws-btn:hover { background: rgba(255,255,255,0.22); }
+    .title-input {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem;
+      min-width: 160px; max-width: 220px;
+    }
+    .title-input::placeholder { color: rgba(255,255,255,0.6); }
+    .save-status { font-size: 0.7rem; opacity: 0.9; }
+    .save-status.saving { opacity: 0.7; }
+
+    /* Layout */
+    .ws-main { display: flex; height: calc(100vh - 48px); }
+    .pane {
+      background: var(--surface);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .pane-header {
+      padding: 8px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--border-light);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      letter-spacing: 0.03em;
+    }
+    .pane-body { flex: 1; overflow: auto; min-height: 0; }
+
+    .gutter { background: var(--border); cursor: col-resize; }
+    .gutter:hover { background: var(--primary); opacity: 0.5; }
+
+    /* Palette */
+    #palettePane .pane-body { padding: 8px; }
+    .palette-suggest-label { font-size: 0.68rem; font-weight: 700; color: var(--primary); margin: 0 0 6px; }
+    .palette-suggest-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .palette-suggest-btn {
+      text-align: left; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--border-light); font-size: 0.7rem; cursor: pointer; color: var(--text);
+    }
+    .palette-suggest-btn:hover { border-color: var(--primary); background: #fff; }
+    .palette-filters { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+    .palette-filters input, .palette-filters select {
+      width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.72rem;
+    }
+    .palette-filter-row { display: flex; gap: 8px; font-size: 0.68rem; color: var(--text-muted); }
+    .palette-item { display: flex; align-items: stretch; gap: 2px; margin-bottom: 4px; }
+    .palette-fav {
+      width: 28px; flex-shrink: 0; border: 1px solid var(--border); border-radius: 6px 0 0 6px;
+      background: var(--border-light); cursor: pointer; font-size: 0.75rem;
+    }
+    .palette-link {
+      flex: 1; text-align: left; padding: 6px 8px; border: 1px solid var(--border);
+      border-radius: 0 6px 6px 0; background: #fff; cursor: pointer;
+    }
+    .palette-link:hover { border-color: var(--primary); background: var(--border-light); }
+    .palette-item.is-fav .palette-fav { color: #d97706; }
+    .palette-item-title { display: block; font-size: 0.72rem; font-weight: 600; }
+    .palette-item-meta { display: block; font-size: 0.62rem; color: var(--text-muted); }
+    .palette-empty, .palette-hint { font-size: 0.72rem; color: var(--text-muted); padding: 8px; }
+
+    /* Reference */
+    .ref-toolbar {
+      display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+      border-bottom: 1px solid var(--border); background: var(--border-light); flex-shrink: 0;
+    }
+    .ref-toolbar button {
+      padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px;
+      background: #fff; font-size: 0.68rem; cursor: pointer;
+    }
+    .ref-toolbar button:hover { border-color: var(--primary); }
+    #refTitle { flex: 1; font-size: 0.72rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #refIframe { width: 100%; height: 100%; border: none; }
+    .ref-frame-wrap { flex: 1; position: relative; min-height: 0; }
+    .ref-placeholder {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 24px;
+    }
+    .hidden { display: none !important; }
+
+    /* Wizard */
+    .wizard-scroll { padding: 12px; }
+    .case-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .case-btn {
+      padding: 6px 10px; border-radius: 8px; border: 2px solid var(--border);
+      font-size: 0.72rem; font-weight: 600; cursor: pointer; background: #fff; color: var(--text);
+    }
+    .case-btn.active { border-color: var(--primary); background: var(--border-light); color: var(--primary); }
+    .case-btn.done { border-color: var(--ok); background: #f0fdf4; color: var(--ok); }
+    .case-num-badge {
+      display: inline-flex; width: 1.2rem; height: 1.2rem; border-radius: 999px;
+      background: var(--primary); color: #fff; align-items: center; justify-content: center;
+      font-size: 0.6rem; font-weight: 700;
+    }
+    .step-indicator { display: flex; align-items: flex-end; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+    .step-indicator .step-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .step-dot {
+      width: 1.6rem; height: 1.6rem; border-radius: 999px; display: flex; align-items: center;
+      justify-content: center; font-size: 0.68rem; font-weight: 700; flex-shrink: 0;
+    }
+    .step-dot.active { background: var(--primary); color: #fff; box-shadow: 0 0 0 2px var(--border); }
+    .step-dot.done { background: var(--ok); color: #fff; }
+    .step-dot.pending { background: #e2e8f0; color: var(--text-muted); }
+    .step-label { font-size: 0.58rem; margin-top: 4px; text-align: center; color: var(--text-muted); }
+    .step-line { flex: 1; height: 2px; background: #e2e8f0; margin: 0 4px 14px; min-width: 12px; }
+    .step-line.done { background: var(--ok); }
+    .step-page { display: none; }
+    .step-page.active { display: block; }
+    .wizard-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+    }
+    .wizard-card h2 { font-size: 0.9rem; font-weight: 700; margin: 0; }
+    .field-label { font-size: 0.75rem; font-weight: 600; display: block; margin-bottom: 4px; }
+    input[type=text], input[type=date], select, textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
+      font-size: 0.78rem; font-family: inherit; color: var(--text);
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
+    textarea { resize: vertical; min-height: 72px; }
+    .field-hint { font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mt-2 { margin-top: 8px; } .mt-3 { margin-top: 12px; } .mb-3 { margin-bottom: 12px; } .mb-4 { margin-bottom: 16px; }
+    .hint-box { padding: 8px 10px; border-radius: 8px; font-size: 0.72rem; line-height: 1.6; margin: 8px 0; }
+    .hint-box.info { background: var(--border-light); border-left: 3px solid var(--primary); }
+    .hint-box.warn { background: #fffbeb; border-left: 3px solid var(--warn); }
+    .badge-req { font-size: 0.58rem; font-weight: 700; background: var(--fail); color: #fff; padding: 1px 5px; border-radius: 999px; }
+    .badge-r7 { font-size: 0.58rem; font-weight: 700; background: #6b5ea5; color: #fff; padding: 1px 5px; border-radius: 999px; }
+    .icd-group-title { font-size: 0.72rem; font-weight: 700; padding: 4px 8px; background: var(--border-light); border-radius: 4px; margin-bottom: 6px; }
+    .icd-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .icd-chip {
+      padding: 3px 8px; border-radius: 999px; border: 1px solid var(--border);
+      font-size: 0.68rem; cursor: pointer; background: #fff;
+    }
+    .icd-chip.selected { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .char-counter { font-size: 0.65rem; text-align: right; color: var(--text-muted); }
+    .char-total { font-size: 1.2rem; font-weight: 700; }
+    .char-total.warn { color: var(--warn); }
+    .char-total.over { color: var(--fail); }
+    .char-total.ok { color: var(--ok); }
+    .char-bar-wrap { width: 100%; background: var(--border-light); border-radius: 999px; height: 6px; margin-top: 6px; }
+    #charBar { height: 6px; border-radius: 999px; background: var(--primary); }
+    .step-nav { display: flex; justify-content: space-between; margin-top: 16px; gap: 8px; }
+    .btn-primary, .btn-secondary {
+      padding: 8px 16px; border-radius: 8px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; border: none;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #f1f5f9; color: var(--text); }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .text-muted { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* Checklist */
+    #checkPane .pane-body { padding: 8px; }
+    .check-progress-bar { height: 6px; background: var(--border-light); border-radius: 999px; overflow: hidden; }
+    .check-progress-fill { height: 100%; background: var(--primary); transition: width 0.2s; }
+    .check-progress-text { font-size: 0.72rem; margin: 6px 0 10px; }
+    .check-fail { color: var(--fail); font-weight: 600; }
+    .check-warn { color: var(--warn); font-weight: 600; }
+    .check-group { margin-bottom: 10px; }
+    .check-group-title {
+      font-size: 0.68rem; font-weight: 700; color: var(--primary);
+      padding: 4px 0; border-bottom: 1px solid var(--border); margin-bottom: 4px;
+    }
+    .check-group-count { font-weight: 500; color: var(--text-muted); }
+    .check-row {
+      display: flex; gap: 6px; padding: 5px 6px; border-radius: 4px; font-size: 0.68rem;
+      line-height: 1.4; margin-bottom: 2px;
+    }
+    .check-row.clickable { cursor: pointer; }
+    .check-row.clickable:hover { background: var(--border-light); }
+    .check-row.checked .check-icon { color: var(--ok); }
+    .check-row.fail .check-label { color: var(--fail); }
+    .check-row.warn .check-label { color: var(--warn); }
+    .check-row.manual .check-label { color: var(--text-muted); }
+    .check-icon { flex-shrink: 0; width: 14px; font-weight: 700; }
+
+    /* Toast & narrow banner */
+    .ws-toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text); color: #fff; padding: 10px 18px; border-radius: 8px;
+      font-size: 0.8rem; z-index: 200; transition: transform 0.25s; max-width: 90vw;
+    }
+    .ws-toast.show { transform: translateX(-50%) translateY(0); }
+    .narrow-banner {
+      position: fixed; inset: 0; background: rgba(30,41,59,0.55); z-index: 150;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .narrow-banner-inner {
+      background: #fff; border-radius: 12px; padding: 24px; max-width: 400px; text-align: center;
+      border: 2px solid var(--primary);
+    }
+    .narrow-banner-inner h2 { font-size: 1rem; color: var(--primary); margin: 0 0 8px; }
+    .narrow-banner-inner p { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 16px; line-height: 1.6; }
+    .offline-banner {
+      background: #fef3c7; color: #92400e; text-align: center; font-size: 0.72rem;
+      padding: 6px 12px; border-bottom: 1px solid #fcd34d;
+    }
+    .offline-banner.hidden { display: none; }
+
+    .ws-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Step toolbar */
+    .step-toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .btn-step-copy {
+      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--border-light); font-size: 0.68rem; font-weight: 600; cursor: pointer; color: var(--primary);
+    }
+    .btn-step-copy:hover { border-color: var(--primary); background: #fff; }
+
+    /* Drawers */
+    .ws-drawer-root { position: absolute; inset: 0; z-index: 30; display: flex; justify-content: flex-end; }
+    .ws-drawer-root.hidden { display: none; }
+    .ws-drawer-overlay { position: absolute; inset: 0; background: rgba(30,41,59,0.25); }
+    .ws-drawer-panel {
+      position: relative; width: min(420px, 92%); height: 100%; background: #fff;
+      border-left: 1px solid var(--border); display: flex; flex-direction: column;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.08);
+    }
+    .ws-drawer-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--border-light);
+    }
+    .ws-drawer-header h3 { margin: 0; font-size: 0.82rem; color: var(--primary); }
+    .ws-drawer-close { border: none; background: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+    .ws-drawer-body { flex: 1; overflow: auto; padding: 12px 14px; }
+    .ws-drawer-actions { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); }
+    .drawer-empty { font-size: 0.75rem; color: var(--text-muted); text-align: center; padding: 24px; }
+
+    /* Version items */
+    .version-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .version-item-ts { font-size: 0.65rem; color: var(--text-muted); }
+    .version-item-msg { font-size: 0.78rem; font-weight: 600; margin: 4px 0 8px; }
+    .version-item-actions { display: flex; gap: 6px; }
+    .btn-restore, .btn-delete {
+      font-size: 0.68rem; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-weight: 600;
+    }
+    .btn-restore { background: var(--border-light); border: 1px solid var(--border); color: var(--primary); }
+    .btn-delete { background: #fef2f2; border: 1px solid #fecaca; color: var(--fail); }
+    .snapshot-input {
+      width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.78rem; margin-bottom: 8px;
+    }
+
+    /* Preview / form31 */
+    .draft-pre {
+      font-family: 'Noto Sans JP', monospace; font-size: 0.72rem; line-height: 1.7;
+      white-space: pre-wrap; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .form31-sheet { font-size: 9pt; color: #111; }
+    .form31-title { text-align: center; font-size: 12pt; font-weight: 700; }
+    .form31-subtitle { text-align: center; font-size: 8.5pt; color: #555; margin-bottom: 12px; }
+    .form31-table, .form31-check-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    .form31-table th, .form31-table td, .form31-check-table th, .form31-check-table td {
+      border: 1px solid #555; padding: 4px 8px; font-size: 8.5pt; vertical-align: top;
+    }
+    .form31-table th { background: #f1f5f9; width: 38%; }
+    .form31-section-title { font-weight: 700; border-bottom: 2px solid var(--primary); margin: 12px 0 6px; font-size: 9.5pt; }
+    .form31-body-text { border: 1px solid #555; padding: 8px; min-height: 120px; white-space: pre-wrap; font-size: 8.5pt; line-height: 1.7; }
+    .form31-detail-area { border: 1px solid #555; padding: 8px; min-height: 48px; font-size: 8.5pt; white-space: pre-wrap; }
+    .check-no, .check-box { text-align: center; width: 2rem; }
+
+    /* Step copy modal */
+    .modal-root {
+      position: fixed; inset: 0; z-index: 100; background: rgba(30,41,59,0.45);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-root.hidden { display: none; }
+    .modal-panel {
+      background: #fff; border-radius: 12px; padding: 20px; max-width: 360px; width: 100%;
+      border: 1px solid var(--border); box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+    .modal-panel h3 { margin: 0 0 12px; font-size: 0.9rem; color: var(--primary); }
+    .step-copy-label { display: block; font-size: 0.8rem; margin-bottom: 6px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+    #wizardPane { position: relative; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #previewDrawer .ws-drawer-panel, #previewDrawer .ws-drawer-panel * { visibility: visible; }
+      #previewDrawer { position: absolute; inset: 0; }
+      #previewDrawer .ws-drawer-overlay { display: none; }
+      #previewDrawer .ws-drawer-header, #previewDrawer .ws-drawer-actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="narrowBanner" class="narrow-banner hidden">
+  <div class="narrow-banner-inner">
+    <h2>ワイド画面推奨</h2>
+    <p>4ペインワークスペースは横幅 1280px 以上での利用を推奨します。操作は可能ですがレイアウトが崩れる場合があります。</p>
+    <button class="btn-primary" id="narrowDismiss">了解して続ける</button>
+  </div>
+</div>
+
+<div id="offlineBanner" class="offline-banner hidden">オフライン同梱データで動作中（file:// 直開き時は fetch の代わりに埋め込み JSON を使用）</div>
+
+<header class="ws-header">
+  <div>
+    <h1>ケースレポート ワークスペース</h1>
+    <div class="ws-header-sub">令和7年新基準 · 4ペイン</div>
+  </div>
+  <input type="text" id="titleInput" class="title-input" placeholder="申請タイトル" value="無題の申請">
+  <span id="saveStatus" class="save-status">—</span>
+  <div class="ws-header-actions">
+    <button class="ws-btn" id="btnUndo" disabled title="元に戻す (⌘Z)">↶ 戻す</button>
+    <button class="ws-btn" id="btnRedo" disabled title="やり直し (⌘⇧Z)">↷ やり直し</button>
+    <button class="ws-btn" id="btnSnapshot">スナップショット</button>
+    <button class="ws-btn" id="btnNew">新規</button>
+    <button class="ws-btn" id="btnImport">JSON 読込</button>
+    <button class="ws-btn" id="btnExport">JSON 出力</button>
+    <button class="ws-btn" id="btnRefNewTab">参照を新しいタブ</button>
+    <a href="top.html" class="ws-btn" style="text-decoration:none">ポータル</a>
+  </div>
+</header>
+
+<div class="ws-main">
+  <!-- 1. Tool Palette -->
+  <div id="palettePane" class="pane">
+    <div class="pane-header">ツールパレット</div>
+    <div class="pane-body">
+      <div id="paletteSuggest"></div>
+      <div class="palette-filters">
+        <input type="search" id="paletteSearch" placeholder="ツールを検索…">
+        <select id="paletteSection"><option value="">すべて</option></select>
+        <div class="palette-filter-row">
+          <label><input type="checkbox" id="paletteRelevant"> 症例作成向け</label>
+          <label><input type="checkbox" id="paletteFavOnly"> お気に入り</label>
+        </div>
+      </div>
+      <div id="paletteList"></div>
+    </div>
+  </div>
+
+  <!-- 2. Reference -->
+  <div id="refPane" class="pane">
+    <div class="pane-header">参照ペイン</div>
+    <div class="ref-toolbar hidden">
+      <button type="button" id="refBack" title="戻る">←</button>
+      <button type="button" id="refForward" title="進む">→</button>
+      <button type="button" id="refReload" title="再読込">↻</button>
+      <span id="refTitle">—</span>
+      <button type="button" id="refNewTab" title="新しいタブ">↗</button>
+    </div>
+    <div class="ref-frame-wrap pane-body" style="padding:0">
+      <div id="refPlaceholder" class="ref-placeholder">
+        左のパレットからツールを選択すると<br>ここに表示されます
+      </div>
+      <iframe id="refIframe" class="hidden" title="参照ツール"></iframe>
+    </div>
+  </div>
+
+  <!-- 3. Wizard Input -->
+  <div id="wizardPane" class="pane">
+    <div class="pane-header">ケースレポート入力</div>
+    <div class="pane-body wizard-scroll">
+      <div class="case-selector">
+        <button class="case-btn active" data-case="1"><span class="case-num-badge">1</span> F0</button>
+        <button class="case-btn" data-case="2"><span class="case-num-badge">2</span> F1</button>
+        <button class="case-btn" data-case="3"><span class="case-num-badge">3</span> F2</button>
+        <button class="case-btn" data-case="4"><span class="case-num-badge">4</span> F3</button>
+        <button class="case-btn" data-case="5"><span class="case-num-badge">5</span> F4-9</button>
+      </div>
+
+      <div class="step-toolbar">
+        <button type="button" id="btnStepCopy" class="btn-step-copy hidden">他症例へコピー</button>
+      </div>
+
+      <div class="step-indicator">
+        <div class="step-col"><div class="step-dot active" id="sd1">1</div><div class="step-label">表紙</div></div>
+        <div class="step-line" id="sl12"></div>
+        <div class="step-col"><div class="step-dot pending" id="sd2">2</div><div class="step-label">背景</div></div>
+        <div class="step-line" id="sl23"></div>
+        <div class="step-col"><div class="step-dot pending" id="sd3">3</div><div class="step-label">病歴</div></div>
+        <div class="step-line" id="sl34"></div>
+        <div class="step-col"><div class="step-dot pending" id="sd4">4</div><div class="step-label">症状</div></div>
+        <div class="step-line" id="sl45"></div>
+        <div class="step-col"><div class="step-dot pending" id="sd5">5</div><div class="step-label">診断</div></div>
+        <div class="step-line" id="sl56"></div>
+        <div class="step-col"><div class="step-dot pending" id="sd6">6</div><div class="step-label">法的手続</div></div>
+        <div class="step-line" id="sl67"></div>
+        <div class="step-col"><div class="step-dot pending" id="sd7">7</div><div class="step-label">治療</div></div>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="wizard-card step-page active" id="page1">
+        <h2 class="mb-4">表紙情報（様式3-1 ①〜⑩）</h2>
+        <div id="caseInfoHint" class="hint-box info mb-3"></div>
+        <div class="grid-2">
+          <div><label class="field-label">申請日 <span class="badge-req">必須</span></label><input type="date" id="s1_date"></div>
+          <div>
+            <label class="field-label">③ 主な評価対象の入院形態 <span class="badge-req">必須</span></label>
+            <select id="s1_adm_type"><option value="">選択</option><option value="措置入院">措置入院</option><option value="医療保護入院">医療保護入院</option></select>
+          </div>
+        </div>
+        <div id="hogoHint" class="hidden mt-2"></div>
+        <div class="grid-2 mt-3">
+          <div><label class="field-label">② 最終診断名</label><input type="text" id="s1_dx_name"></div>
+          <div>
+            <label class="field-label">ICD-10 <span class="badge-req">必須</span></label>
+            <div id="icdSelector" class="mt-2"></div>
+            <input type="text" id="s1_icd" class="mt-2" placeholder="F20.0">
+          </div>
+        </div>
+        <div class="grid-2 mt-3">
+          <div><label class="field-label">④ 医療機関名</label><input type="text" id="s1_hospital"></div>
+          <div><label class="field-label">⑤ イニシャル <span class="badge-r7">R7</span></label><input type="text" id="s1_initial" placeholder="T.H"></div>
+        </div>
+        <div class="grid-2 mt-3">
+          <div><label class="field-label">⑤ 生年月日 <span class="badge-r7">R7</span></label><input type="date" id="s1_dob"></div>
+          <div><label class="field-label">⑥ 入院日</label><input type="date" id="s1_admit_date"></div>
+        </div>
+        <div class="grid-2 mt-3">
+          <div><label class="field-label">⑥ 退院日</label><input type="date" id="s1_discharge_date"></div>
+          <div><label class="field-label">⑦-1 担当開始</label><input type="date" id="s1_attend_start"></div>
+        </div>
+        <div class="mt-3"><label class="field-label">⑦-2 指導医</label><input type="text" id="s1_supervisor"></div>
+        <div class="mt-3">
+          <label class="field-label">⑩ 行動制限の有無</label>
+          <label><input type="radio" name="s1_restriction" value="有"> 有</label>
+          <label style="margin-left:12px"><input type="radio" name="s1_restriction" value="無"> 無</label>
+        </div>
+        <div id="restrictionTypes" class="hidden mt-2">
+          <label><input type="checkbox" id="rt_kal"> 隔離</label>
+          <label style="margin-left:8px"><input type="checkbox" id="rt_phy"> 身体的拘束</label>
+          <label style="margin-left:8px"><input type="checkbox" id="rt_tel"> 電話制限</label>
+          <label style="margin-left:8px"><input type="checkbox" id="rt_vis"> 面会制限</label>
+          <label style="margin-left:8px"><input type="checkbox" id="rt_opn"> 開放処遇制限</label>
+        </div>
+        <div class="step-nav"><span></span><button class="btn-primary" data-goto-step="2">次へ →</button></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="wizard-card step-page" id="page2">
+        <h2 class="mb-4">患者背景</h2>
+        <div class="grid-2">
+          <div><label class="field-label">年齢</label><input type="text" id="s2_age"></div>
+          <div><label class="field-label">性別</label><select id="s2_sex"><option value="">選択</option><option>男性</option><option>女性</option></select></div>
+        </div>
+        <div class="mt-3"><label class="field-label">家族歴</label><textarea id="s2_family"></textarea></div>
+        <div class="mt-3"><label class="field-label">生育・生活歴</label><textarea id="s2_life"></textarea></div>
+        <div class="mt-3"><label class="field-label">既往歴</label><textarea id="s2_hx"></textarea></div>
+        <div class="mt-3"><label class="field-label">初診時主訴</label><input type="text" id="s2_cc"></div>
+        <div class="step-nav"><button class="btn-secondary" data-goto-step="1">← 戻る</button><button class="btn-primary" data-goto-step="3">次へ →</button></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="wizard-card step-page" id="page3">
+        <h2 class="mb-4">現病歴</h2>
+        <div class="hint-box info mb-3"><p>合計 <strong>1200〜2500字</strong>（入院時状況+入院後経過+考察）</p></div>
+        <div class="mt-2"><label class="field-label">入院前経過</label><textarea id="s3_pre" rows="3"></textarea></div>
+        <div class="mt-3">
+          <label class="field-label">入院時の状況 <span class="badge-req">字数対象</span></label>
+          <div id="hint_admission_situation" class="hint-box info mb-2"></div>
+          <textarea id="s3_admission" rows="5"></textarea>
+          <div class="char-counter" id="countAdm">0字</div>
+        </div>
+        <div class="mt-3">
+          <label class="field-label">入院後経過 <span class="badge-req">字数対象</span></label>
+          <textarea id="s3_course" rows="5"></textarea>
+          <div class="char-counter" id="countCourse">0字</div>
+        </div>
+        <div class="step-nav"><button class="btn-secondary" data-goto-step="2">← 戻る</button><button class="btn-primary" data-goto-step="4">次へ →</button></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="wizard-card step-page" id="page4">
+        <h2 class="mb-4">精神症状・MSE</h2>
+        <div id="hint_mental_status" class="hint-box info mb-3"></div>
+        <div><label class="field-label">外観・行動</label><input type="text" id="s4_behavior"></div>
+        <div class="grid-2 mt-3">
+          <div><label class="field-label">意識・見当識</label><input type="text" id="s4_consciousness"></div>
+          <div><label class="field-label">知的機能・記憶</label><input type="text" id="s4_cognition"></div>
+        </div>
+        <div class="grid-2 mt-3">
+          <div><label class="field-label">気分・感情</label><input type="text" id="s4_mood"></div>
+          <div><label class="field-label">思考</label><input type="text" id="s4_thought"></div>
+        </div>
+        <div class="grid-2 mt-3">
+          <div><label class="field-label">知覚</label><input type="text" id="s4_perception"></div>
+          <div><label class="field-label">自傷他害リスク</label><input type="text" id="s4_risk"></div>
+        </div>
+        <div class="mt-3"><label class="field-label">病識・判断力</label><input type="text" id="s4_insight"></div>
+        <div class="mt-3"><label class="field-label">追記</label><textarea id="s4_other" rows="2"></textarea></div>
+        <div class="step-nav"><button class="btn-secondary" data-goto-step="3">← 戻る</button><button class="btn-primary" data-goto-step="5">次へ →</button></div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="wizard-card step-page" id="page5">
+        <h2 class="mb-4">診断・入院の根拠</h2>
+        <div id="hint_dx_basis" class="hint-box info mb-3"></div>
+        <div><label class="field-label">診断の根拠</label><textarea id="s5_dx_basis" rows="3"></textarea></div>
+        <div class="mt-3"><label class="field-label">鑑別診断</label><textarea id="s5_diff_dx" rows="2"></textarea></div>
+        <div class="mt-3">
+          <label class="field-label">入院形態の法的根拠</label>
+          <div id="hint_adm_basis" class="hint-box warn mb-2"></div>
+          <textarea id="s5_adm_basis" rows="4"></textarea>
+        </div>
+        <div class="step-nav"><button class="btn-secondary" data-goto-step="4">← 戻る</button><button class="btn-primary" data-goto-step="6">次へ →</button></div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="wizard-card step-page" id="page6">
+        <h2 class="mb-4">法的手続</h2>
+        <div id="legal_checks_area"></div>
+        <div class="mt-3"><label class="field-label">行動制限の詳細</label><textarea id="s6_restriction_detail" rows="3"></textarea></div>
+        <div class="mt-3"><label class="field-label">退院後生活環境相談員 <span class="badge-r7">R6〜</span></label><input type="text" id="s6_seisanin"></div>
+        <div class="step-nav"><button class="btn-secondary" data-goto-step="5">← 戻る</button><button class="btn-primary" data-goto-step="7">次へ →</button></div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="wizard-card step-page" id="page7">
+        <h2 class="mb-4">治療・考察</h2>
+        <div><label class="field-label">薬物療法</label><textarea id="s7_pharma" rows="2"></textarea></div>
+        <div class="mt-3"><label class="field-label">非薬物療法</label><textarea id="s7_nonpharma" rows="2"></textarea></div>
+        <div class="mt-3"><label class="field-label">退院後支援</label><textarea id="s7_aftercare" rows="2"></textarea></div>
+        <div class="mt-3">
+          <label class="field-label">考察（任意・字数対象）</label>
+          <textarea id="s7_consider" rows="3"></textarea>
+          <div class="char-counter" id="countConsider">0字</div>
+        </div>
+        <div class="hint-box info mt-3">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>字数カウント</span><span id="totalCharDisplay" class="char-total">0字</span>
+          </div>
+          <div class="char-bar-wrap"><div id="charBar"></div></div>
+          <p id="charBarLabel" class="field-hint" style="margin-top:4px">目標：1200〜2500字</p>
+        </div>
+        <div class="step-nav">
+          <button class="btn-secondary" data-goto-step="6">← 戻る</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn-secondary" id="btnPreviewDraft">テキスト草案</button>
+            <button type="button" class="btn-primary" id="btnPreviewForm">様式プレビュー</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Version drawer -->
+    <div id="versionDrawer" class="ws-drawer-root hidden">
+      <div class="ws-drawer-overlay"></div>
+      <div class="ws-drawer-panel">
+        <div class="ws-drawer-header">
+          <h3>スナップショット <span id="versionCount"></span></h3>
+          <button type="button" class="ws-drawer-close" id="versionDrawerClose">×</button>
+        </div>
+        <div class="ws-drawer-body">
+          <input type="text" id="snapshotMessage" class="snapshot-input" placeholder="メッセージ（例: Step3 下書き完了）">
+          <button type="button" class="btn-primary" id="btnSaveSnapshot" style="width:100%;margin-bottom:12px">保存</button>
+          <div id="versionList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview drawer -->
+    <div id="previewDrawer" class="ws-drawer-root hidden">
+      <div class="ws-drawer-overlay"></div>
+      <div class="ws-drawer-panel">
+        <div class="ws-drawer-header">
+          <h3 id="previewDrawerTitle">プレビュー</h3>
+          <button type="button" class="ws-drawer-close" id="previewDrawerClose">×</button>
+        </div>
+        <div class="ws-drawer-body" id="previewDrawerBody"></div>
+        <div class="ws-drawer-actions">
+          <button type="button" class="btn-secondary" id="previewCopy">コピー</button>
+          <button type="button" class="btn-primary" id="previewPrint">印刷</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step copy modal -->
+  <div id="stepCopyModal" class="modal-root hidden">
+    <div class="modal-panel">
+      <h3>他症例へ Step コピー</h3>
+      <p class="field-hint" style="margin-bottom:10px">空欄のみ反映。既存入力とソースが空のフィールドはスキップします。</p>
+      <div id="stepCopyTargets"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="stepCopyCancel">キャンセル</button>
+        <button type="button" class="btn-primary" id="stepCopyConfirm">コピー</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Checklist -->
+  <div id="checkPane" class="pane">
+    <div class="pane-header">チェックリスト（55項目）</div>
+    <div class="pane-body">
+      <div id="checkProgress"></div>
+      <div id="checkList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 同梱データ（file:// 対策）: HTTP では data/*.json の fetch が優先。JSON を編集したら scripts/generate-portal-registry.mjs を実行して同期すること -->
+<!-- EMBED:portal-tools-registry START -->
+<script type="application/json" id="portal-tools-registry-embed">
+{
+  "version": 1,
+  "generatedAt": "2026-06-05T17:26:28.431Z",
+  "tools": [
+    {
+      "id": "card-crcl-psych",
+      "title": "CrCl 推算 × 向精神薬の腎障害時目安",
+      "href": "crcl-psychotropics.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-dzp-calc",
+      "title": "ベンゾジアゼピン系 ジアゼパム換算計算機",
+      "href": "dzp-calculator.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-acute-alerts",
+      "title": "急性期クイック（QTc・電解質・離脱要約）",
+      "href": "acute-alerts.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-cp-calc",
+      "title": "抗精神病薬 CP換算計算機",
+      "href": "cp-calculator.html",
+      "section": "portal-calc",
+      "sectionLabel": "計算ツール",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-cssrs-memo",
+      "title": "C-SSRS 手順メモ（面接・記録・連携）",
+      "href": "cssrs-procedure-memo.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-csc-jp",
+      "title": "Coordinated Specialty Care（CSC）— 調整型専門ケア（NIMH・研修医向け）",
+      "href": "coordinated-specialty-care-jp.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-shitei-workspace",
+      "title": "ケースレポート 4ペインワークスペース（推奨）",
+      "href": "shitei-report-workspace.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-terminology",
+      "title": "精神医学・精神病理学・精神症候学・精神分析学 用語マップ（拡張版）",
+      "href": "psych-terminology-jp.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-shitei-wizard",
+      "title": "精神保健指定医 レポート作成ウィザード（軽量版）",
+      "href": "shitei-report-wizard.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shiteii",
+      "title": "精神保健指定医 資格取得ガイド — 完全ロードマップ",
+      "href": "shiteii-guide.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shitei-case-template",
+      "title": "精神保健指定医 症例5本 選定テンプレ",
+      "href": "shitei-case-template.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shitei-checklist",
+      "title": "精神保健指定医 申請チェックリスト",
+      "href": "shitei-checklist.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-shitei-overview",
+      "title": "精神保健指定医 制度概要",
+      "href": "seishin-hoken-shitei-overview.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-seishin-hoken-ho-flow",
+      "title": "精神保健福祉法 × 指定医申請 — 専攻医1年目の入門図解",
+      "href": "seishin-hoken-ho-shiteii-moshikomi.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-schiz-highschool",
+      "title": "統合失調症って何？ ── 高校生・一般向け図解ガイド",
+      "href": "schizophrenia-highschool-guide.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-history",
+      "title": "統合失調症の捉え方の歴史（世界×日本）— 思想・学派・診断体系の変遷",
+      "href": "schizophrenia-history.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-dsm5trmini",
+      "title": "DSM-5-TR 精神科章立てガイド（ミニ版）",
+      "href": "dsm5trmini.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-dsm5tr",
+      "title": "DSM-5-TR 精神科章立てガイド（詳細版）",
+      "href": "dsm5tr.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-icd10mini",
+      "title": "ICD-10 精神科疾患分類 ミニ版",
+      "href": "icd10mini.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-icd10",
+      "title": "ICD-10 精神科疾患分類（詳細版）",
+      "href": "icd10.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-icd11",
+      "title": "ICD-11 / DSM-5-TR 精神科疾患全体像",
+      "href": "psychiatric-overview-icd11.html",
+      "section": "portal-diag",
+      "sectionLabel": "診断・分類",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-olanzapine",
+      "title": "オランザピン（ジプレキサ）— 分子構造・薬理・エビデンス 詳解",
+      "href": "olanzapine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-quetiapine",
+      "title": "クエチアピン（セロクエル / ビプレッソ）— 分子構造・薬理・エビデンス 詳解",
+      "href": "quetiapine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-brexpiprazole",
+      "title": "ブレクスピプラゾール（レキサルティ）— 分子構造・薬理・エビデンス 詳解",
+      "href": "brexpiprazole.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-benzodiazepines",
+      "title": "ベンゾジアゼピン 選択ガイド（日本承認薬）",
+      "href": "benzodiazepines-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-venlafaxine",
+      "title": "ベンラファキシン（イフェクサーSR）— 分子構造・薬理・エビデンス 詳解",
+      "href": "venlafaxine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-vortioxetine",
+      "title": "ボルチオキセチン（トリンテリックス）— 分子構造・薬理・エビデンス 詳解",
+      "href": "vortioxetine.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-mood-stabilizers",
+      "title": "気分安定薬 選択ガイド（日本承認薬）",
+      "href": "mood-stabilizers-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-antidepressants",
+      "title": "抗うつ薬 選択ガイド（日本承認薬）",
+      "href": "antidepressants-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-antipsychotics",
+      "title": "抗精神病薬 選択ガイド（日本承認薬）",
+      "href": "antipsychotics-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-hypnotics",
+      "title": "不眠症治療薬 選択ガイド（日本承認薬）",
+      "href": "hypnotics-japan.html",
+      "section": "portal-drugs",
+      "sectionLabel": "薬剤選択",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-literature-search",
+      "title": "精神医学 最新論文検索ツール",
+      "href": "literature-search.html",
+      "section": "portal-literature",
+      "sectionLabel": "最新論文",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-cursor",
+      "title": "Cursor AIエージェント完全比較ガイド",
+      "href": "cursor-ai-agents.html",
+      "section": "portal-other",
+      "sectionLabel": "その他",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-context",
+      "title": "コンテキストエンジニアリング完全解説",
+      "href": "context-engineering.html",
+      "section": "portal-other",
+      "sectionLabel": "その他",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-content-verification",
+      "title": "コンテンツ検証ツール — 用量・表記・精神医学用語 3軸チェック",
+      "href": "content-verification.html",
+      "section": "portal-other",
+      "sectionLabel": "その他",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-bfcrs",
+      "title": "BFCRS 採点シート — Bush-Francis 緊張病評価尺度（詳細版）",
+      "href": "bfcrs-sheet.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-bprs-guide",
+      "title": "BPRS 解説ガイド",
+      "href": "bprs-guide.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-bprs-detailed",
+      "title": "BPRS 採点シート — 詳細版（7段階アンカーポイント）",
+      "href": "bprs-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-hamd",
+      "title": "HAM-D 採点シート — ハミルトンうつ病評価尺度（詳細版）",
+      "href": "hamd-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-madrs",
+      "title": "MADRS 採点シート — Montgomery–Åsberg うつ病評価尺度（詳細版）",
+      "href": "madrs-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-panss-detailed",
+      "title": "PANSS 採点シート — 詳細版（アンカーポイント）",
+      "href": "panss-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-phq9",
+      "title": "PHQ-9 採点シート — 患者健康質問票（詳細版）",
+      "href": "phq9-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-phq9-print",
+      "title": "PHQ-9 採点シート（印刷用）",
+      "href": "phq9-sheet.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-ymrs",
+      "title": "YMRS 採点シート — Young 躁状態評価尺度（詳細版）",
+      "href": "ymrs-sheet-detailed.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-scales",
+      "title": "統合失調症 精神症状評価スケール集",
+      "href": "schizophrenia-scales.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-sheets",
+      "title": "統合失調症 評価スケール集（外来用印刷様式）",
+      "href": "schizophrenia-assessment-sheets.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-anxiety-scales",
+      "title": "不安症群 重症度評価スケール集 — 外来用様式",
+      "href": "anxiety-assessment-scales.html",
+      "section": "portal-scales",
+      "sectionLabel": "評価スケール",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-eeg-cases",
+      "title": "EEG 症例学習",
+      "href": "eeg-cases.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-icd10-quiz",
+      "title": "ICD-10 精神科クイズ",
+      "href": "icd10-quiz.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-mood-suicide-learning",
+      "title": "気分障害 × 自殺リスク — 学習ハブ",
+      "href": "mood-suicide-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-psychotropics-interactions-learning",
+      "title": "向精神薬 × 相互作用・禁忌 — 学習ハブ",
+      "href": "psychotropics-interactions-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-asd-schizophrenia-learning",
+      "title": "自閉症スペクトラム障害 × 統合失調症 — 学習ハブ",
+      "href": "asd-schizophrenia-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-terminology-srs",
+      "title": "精神医学用語 SRS 学習（間隔反復）",
+      "href": "psych-terminology-srs.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-psychopath-scales-learning",
+      "title": "精神病理 × スケール — 学習ハブ",
+      "href": "psychopathology-scales-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-schiz-fe-learning",
+      "title": "統合失調症 × 初発時対応 — 学習ハブ",
+      "href": "schizophrenia-first-episode-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-waveforms",
+      "title": "脳波パターン図鑑",
+      "href": "eeg-waveforms.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-basics",
+      "title": "脳波読影 基礎知識",
+      "href": "eeg-basics.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-learning",
+      "title": "脳波読影（EEG）— 初学者学習ハブ",
+      "href": "eeg-learning.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-eeg-quiz",
+      "title": "脳波読影クイズ",
+      "href": "eeg-quiz.html",
+      "section": "portal-study",
+      "sectionLabel": "学習・ドリル",
+      "caseReportRelevant": false,
+      "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-depression",
+      "title": "うつ病 診断・治療選択ツリー — ガイドライン2025準拠",
+      "href": "depression-guideline2025.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-delirium",
+      "title": "せん妄 治療選択ツリー（日本のガイドライン・実践整理）",
+      "href": "delirium-treatment-japan.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-nonpharmacologic",
+      "title": "精神医学領域の非薬物療法マップ — 心理・社会・環境の三分類",
+      "href": "nonpharmacologic-psychiatry-overview.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-bipolar",
+      "title": "双極性障害 診断・治療選択ツリー — 日本うつ病学会 診療ガイドライン2023準拠",
+      "href": "bipolar-diagnosis-treatment.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-psychoedu",
+      "title": "統合失調症 心理教育資料 カスタマイズ生成ツール",
+      "href": "schizophrenia-psychoeducation-generator.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-diagnosis",
+      "title": "統合失調症 診断プロセス完全ガイド — 古典的診断 vs 操作的基準・鑑別・除外検査",
+      "href": "schizophrenia-diagnosis.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-algo",
+      "title": "統合失調症 薬物治療アルゴリズム 図解版",
+      "href": "schizophrenia-algorithm.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-schiz-early-intervention",
+      "title": "統合失調症の早期介入 — 概要・専門チーム・エビデンス図解",
+      "href": "schizophrenia-early-intervention.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-atypical-depression",
+      "title": "非定型うつ病 — 概念・歴史・診断基準・治療アルゴリズム",
+      "href": "atypical-depression.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    },
+    {
+      "id": "card-anxiety",
+      "title": "不安症群 — 診断ツリー＆治療アルゴリズム",
+      "href": "anxiety-disorders.html",
+      "section": "portal-tx-overview",
+      "sectionLabel": "治療概要",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
+    }
+  ]
+}
+</script>
+<!-- EMBED:portal-tools-registry END -->
+<!-- EMBED:checklist-rules START -->
+<script type="application/json" id="checklist-rules-embed">
+{
+  "version": 1,
+  "categories": {
+    "overview": {
+      "ids": [
+        "ov1",
+        "ov2",
+        "ov3",
+        "ov4",
+        "ov5"
+      ],
+      "group": "cases",
+      "title": "5症例の構成確認"
+    },
+    "c1": {
+      "ids": [
+        "c1a",
+        "c1b",
+        "c1c",
+        "c1d",
+        "c1e"
+      ],
+      "group": "cases",
+      "title": "第1症例：F0"
+    },
+    "c2": {
+      "ids": [
+        "c2a",
+        "c2b",
+        "c2c",
+        "c2d"
+      ],
+      "group": "cases",
+      "title": "第2症例：F1依存症"
+    },
+    "c3": {
+      "ids": [
+        "c3a",
+        "c3b",
+        "c3c",
+        "c3d",
+        "c3e"
+      ],
+      "group": "cases",
+      "title": "第3症例：F2"
+    },
+    "c4": {
+      "ids": [
+        "c4a",
+        "c4b",
+        "c4c",
+        "c4d",
+        "c4e"
+      ],
+      "group": "cases",
+      "title": "第4症例：F3"
+    },
+    "c5": {
+      "ids": [
+        "c5a",
+        "c5b",
+        "c5c",
+        "c5d"
+      ],
+      "group": "cases",
+      "title": "第5症例：F4-F9"
+    },
+    "adm": {
+      "ids": [
+        "adm1",
+        "adm2",
+        "adm3",
+        "adm4",
+        "adm5",
+        "adm6"
+      ],
+      "group": "adm",
+      "title": "入院形態要件"
+    },
+    "timing": {
+      "ids": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6"
+      ],
+      "group": "timing",
+      "title": "診療期間条件"
+    },
+    "common": {
+      "ids": [
+        "cm1",
+        "cm2",
+        "cm3",
+        "cm4",
+        "cm5",
+        "cm6",
+        "cm7",
+        "cm8",
+        "cm9",
+        "cm10",
+        "cm11",
+        "cm12",
+        "cm13",
+        "cm14",
+        "cm15"
+      ],
+      "group": "com",
+      "title": "共通記載要件"
+    }
+  },
+  "rules": [
+    {
+      "id": "ov1",
+      "label": "第1症例：F0（器質性精神障害）の症例を確保",
+      "ruleType": "auto",
+      "evaluator": "icdCategory",
+      "caseNum": 1,
+      "icdRange": "F0"
+    },
+    {
+      "id": "ov2",
+      "label": "第2症例：F1依存症の症例を確保",
+      "ruleType": "auto",
+      "evaluator": "icdCategory",
+      "caseNum": 2,
+      "icdRange": "F1"
+    },
+    {
+      "id": "ov3",
+      "label": "第3症例：F2の症例を確保",
+      "ruleType": "auto",
+      "evaluator": "icdCategory",
+      "caseNum": 3,
+      "icdRange": "F2"
+    },
+    {
+      "id": "ov4",
+      "label": "第4症例：F3の症例を確保",
+      "ruleType": "auto",
+      "evaluator": "icdCategory",
+      "caseNum": 4,
+      "icdRange": "F3"
+    },
+    {
+      "id": "ov5",
+      "label": "第5症例：F4-F9の症例を確保",
+      "ruleType": "auto",
+      "evaluator": "icdCategory",
+      "caseNum": 5,
+      "icdRange": "F4F9"
+    },
+    {
+      "id": "c1a",
+      "label": "ICD-10がF00-F09（老年期認知症除く）",
+      "ruleType": "auto",
+      "evaluator": "icdInRange",
+      "caseNum": 1,
+      "min": 0,
+      "max": 9,
+      "prefix": "F0"
+    },
+    {
+      "id": "c1b",
+      "label": "主評価入院形態が措置または医療保護",
+      "ruleType": "auto",
+      "evaluator": "admTypeValid",
+      "caseNum": 1
+    },
+    {
+      "id": "c1c",
+      "label": "身体的背景と精神症状の関連を記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 1,
+      "fields": [
+        "s4_other",
+        "s5_dx_basis"
+      ]
+    },
+    {
+      "id": "c1d",
+      "label": "器質性疾患との鑑別根拠を記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 1,
+      "fields": [
+        "s5_diff_dx"
+      ]
+    },
+    {
+      "id": "c1e",
+      "label": "（特例）3ヶ月以内転院の確認",
+      "ruleType": "manual",
+      "manualHint": "3ヶ月以内転院の特例該当時は事務取扱要領を確認し、必要に応じて別途説明を添付してください。"
+    },
+    {
+      "id": "c2a",
+      "label": "依存症候群（F1x.2以上）である",
+      "ruleType": "auto",
+      "evaluator": "icdDependency",
+      "caseNum": 2
+    },
+    {
+      "id": "c2b",
+      "label": "主評価入院形態が措置または医療保護",
+      "ruleType": "auto",
+      "evaluator": "admTypeValid",
+      "caseNum": 2
+    },
+    {
+      "id": "c2c",
+      "label": "依存症経過・離脱症状を記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 2,
+      "fields": [
+        "s3_admission",
+        "s3_course"
+      ]
+    },
+    {
+      "id": "c2d",
+      "label": "（特例）転院3ヶ月以内の確認",
+      "ruleType": "manual",
+      "manualHint": "転院から3ヶ月以内の特例該当時は事務取扱要領を確認し、必要に応じて別途説明を添付してください。"
+    },
+    {
+      "id": "c3a",
+      "label": "診断がF20-F29",
+      "ruleType": "auto",
+      "evaluator": "icdInRange",
+      "caseNum": 3,
+      "min": 20,
+      "max": 29,
+      "prefix": "F2"
+    },
+    {
+      "id": "c3b",
+      "label": "主評価入院形態が措置または医療保護",
+      "ruleType": "auto",
+      "evaluator": "admTypeValid",
+      "caseNum": 3
+    },
+    {
+      "id": "c3c",
+      "label": "陽性・陰性症状を体系的に記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 3,
+      "fields": [
+        "s4_thought",
+        "s4_perception"
+      ]
+    },
+    {
+      "id": "c3d",
+      "label": "F20診断基準への対応を記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 3,
+      "fields": [
+        "s5_dx_basis"
+      ]
+    },
+    {
+      "id": "c3e",
+      "label": "鑑別診断と除外根拠を記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 3,
+      "fields": [
+        "s5_diff_dx"
+      ]
+    },
+    {
+      "id": "c4a",
+      "label": "診断がF30-F39",
+      "ruleType": "auto",
+      "evaluator": "icdInRange",
+      "caseNum": 4,
+      "min": 30,
+      "max": 39,
+      "prefix": "F3"
+    },
+    {
+      "id": "c4b",
+      "label": "主評価入院形態が措置または医療保護",
+      "ruleType": "auto",
+      "evaluator": "admTypeValid",
+      "caseNum": 4
+    },
+    {
+      "id": "c4c",
+      "label": "自殺リスク評価を具体的に記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 4,
+      "fields": [
+        "s4_risk"
+      ]
+    },
+    {
+      "id": "c4d",
+      "label": "統合失調症・器質性との鑑別を記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 4,
+      "fields": [
+        "s5_diff_dx"
+      ]
+    },
+    {
+      "id": "c4e",
+      "label": "薬物療法の選択根拠と経過を記載",
+      "ruleType": "semi",
+      "evaluator": "fieldFilled",
+      "caseNum": 4,
+      "fields": [
+        "s7_pharma"
+      ]
+    },
+    {
+      "id": "c5a",
+      "label": "診断がF40-F98",
+      "ruleType": "auto",
+      "evaluator": "icdInRange",
+      "caseNum": 5,
+      "min": 40,
+      "max": 98,
+      "prefix": "F4F9"
+    },
+    {
+      "id": "c5b",
+      "label": "主評価入院形態が措置または医療保護",
+      "ruleType": "auto",
+      "evaluator": "admTypeValid",
+      "caseNum": 5
+    },
+    {
+      "id": "c5c",
+      "label": "18歳未満の場合の発達歴・連携記載",
+      "ruleType": "manual",
+      "manualHint": "18歳未満の場合、Step2 生活歴・Step4 精神症状に発達段階・養育環境・支援連携を追記してください。"
+    },
+    {
+      "id": "c5d",
+      "label": "F6の場合のAxis II的評価",
+      "ruleType": "manual",
+      "manualHint": "F6 パーソナリティ障害の場合、Axis II 的評価と ICD/DSM の対応を Step5 診断根拠に記載してください。"
+    },
+    {
+      "id": "adm1",
+      "label": "措置入院を主評価とする症例が1例以上",
+      "ruleType": "auto",
+      "evaluator": "admCount",
+      "admType": "措置入院",
+      "minCount": 1
+    },
+    {
+      "id": "adm2",
+      "label": "医療保護入院を主評価とする症例が1例以上",
+      "ruleType": "auto",
+      "evaluator": "admCount",
+      "admType": "医療保護入院",
+      "minCount": 1
+    },
+    {
+      "id": "adm3",
+      "label": "医療保護で入院時から担当・立会い1例以上",
+      "ruleType": "manual",
+      "manualHint": "5症例のうち1例は医療保護で入院時から担当・立会いが必要です。該当症例の Step1 入院形態・Step3 入院時状況を確認してください。"
+    },
+    {
+      "id": "adm4",
+      "label": "任意入院への形態変更後も治療した症例",
+      "ruleType": "manual",
+      "manualHint": "任意入院へ形態変更後も治療した症例が必要です。該当症例の入院後経過・Step5 法的根拠を確認してください。"
+    },
+    {
+      "id": "adm5",
+      "label": "退院後通院治療（1ヶ月以上）を行った症例",
+      "ruleType": "semi",
+      "evaluator": "anyFieldFilled",
+      "fields": [
+        "s7_aftercare"
+      ]
+    },
+    {
+      "id": "adm6",
+      "label": "行動制限を実施した症例が含まれる",
+      "ruleType": "auto",
+      "evaluator": "anyRestriction"
+    },
+    {
+      "id": "t1",
+      "label": "5症例すべてが申請日から7年以内",
+      "ruleType": "semi",
+      "evaluator": "withinYears",
+      "years": 7
+    },
+    {
+      "id": "t2",
+      "label": "申請前1年以内に診療開始した症例が1例以上",
+      "ruleType": "semi",
+      "evaluator": "withinYearsFromApp",
+      "years": 1,
+      "minCount": 1
+    },
+    {
+      "id": "t3",
+      "label": "申請1年前より前に診療開始した症例が2例以上",
+      "ruleType": "semi",
+      "evaluator": "beforeYearsFromApp",
+      "years": 1,
+      "minCount": 2
+    },
+    {
+      "id": "t4",
+      "label": "各症例で入院から退院まで継続担当",
+      "ruleType": "manual",
+      "manualHint": "各症例で入院から退院まで継続担当したか、表紙 ⑦-1 と本文の記載から確認してください。"
+    },
+    {
+      "id": "t5",
+      "label": "精神病床を有する医療機関での常時勤務下で担当",
+      "ruleType": "manual",
+      "manualHint": "精神病床を有する医療機関での常時勤務下で担当したかを確認してください。"
+    },
+    {
+      "id": "t6",
+      "label": "指導医が同じ医療機関の常時勤務指定医として指導",
+      "ruleType": "manual",
+      "manualHint": "指導医が同一医療機関の常時勤務指定医として指導したか。Step1 指導医欄と様式 ⑦-3 自筆署名を確認してください。"
+    },
+    {
+      "id": "cm1",
+      "label": "令和7年1月版様式3-1を使用",
+      "ruleType": "manual",
+      "manualHint": "提出は令和7年1月版様式3-1を使用してください（本アプリ出力は準拠下書きです）。"
+    },
+    {
+      "id": "cm2",
+      "label": "申請者氏名が自筆署名",
+      "ruleType": "manual",
+      "manualHint": "様式3-1 ① 申請者自筆署名はソフト入力不可です。印刷後に手書きしてください。"
+    },
+    {
+      "id": "cm3",
+      "label": "最終診断名とICD-10（F以下2桁）",
+      "ruleType": "auto",
+      "evaluator": "allCasesField",
+      "field": "s1_icd"
+    },
+    {
+      "id": "cm4",
+      "label": "主評価入院形態を措置/医療保護から選択",
+      "ruleType": "auto",
+      "evaluator": "allCasesAdmValid"
+    },
+    {
+      "id": "cm5",
+      "label": "患者イニシャルと生年月日",
+      "ruleType": "auto",
+      "evaluator": "allCasesFields",
+      "fields": [
+        "s1_initial",
+        "s1_dob"
+      ]
+    },
+    {
+      "id": "cm6",
+      "label": "入退院年月日が記載",
+      "ruleType": "auto",
+      "evaluator": "allCasesFields",
+      "fields": [
+        "s1_admit_date",
+        "s1_discharge_date"
+      ]
+    },
+    {
+      "id": "cm7",
+      "label": "指導医氏名・番号・期間・署名",
+      "ruleType": "semi",
+      "evaluator": "allCasesField",
+      "field": "s1_supervisor"
+    },
+    {
+      "id": "cm8",
+      "label": "行動制限の有無チェック",
+      "ruleType": "auto",
+      "evaluator": "allCasesRestrictionSet"
+    },
+    {
+      "id": "cm9",
+      "label": "法的手続チェックリスト記入",
+      "ruleType": "manual",
+      "manualHint": "様式3-1「関係法規に定める手続への対応」欄に✓を記入してください。Step6 の確認リストを参照。"
+    },
+    {
+      "id": "cm10",
+      "label": "退院後生活環境相談員の選任記載",
+      "ruleType": "semi",
+      "evaluator": "anyFieldFilled",
+      "fields": [
+        "s6_seisanin"
+      ]
+    },
+    {
+      "id": "cm11",
+      "label": "本文1200-2500字",
+      "ruleType": "auto",
+      "evaluator": "allCasesCharCount"
+    },
+    {
+      "id": "cm12",
+      "label": "入院時状況に法的要件に基づく必要性記載",
+      "ruleType": "semi",
+      "evaluator": "allCasesField",
+      "field": "s3_admission"
+    },
+    {
+      "id": "cm13",
+      "label": "行動制限詳細（実施時）",
+      "ruleType": "semi",
+      "evaluator": "restrictionDetailIfNeeded"
+    },
+    {
+      "id": "cm14",
+      "label": "本文中に関係条文の引用なし",
+      "ruleType": "manual",
+      "manualHint": "本文中に関係条文の逐条引用は不可です。要件は自分の言葉で記載してください。"
+    },
+    {
+      "id": "cm15",
+      "label": "5症例原本（自筆署名あり）提出準備",
+      "ruleType": "manual",
+      "manualHint": "5症例すべての原本（自筆署名付き）の提出準備ができているか確認してください。"
+    }
+  ]
+}
+</script>
+<!-- EMBED:checklist-rules END -->
+
+<script type="module" src="js/shitei-workspace/workspace-app.js"></script>
+</body>
+</html>
