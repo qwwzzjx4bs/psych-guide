@@ -1330,7 +1330,8 @@
               <li><a href="shiteii-guide.html">指定医制度ガイド</a> <span class="step-note">— 指定医とは何か・申請要件・更新の全体像</span></li>
               <li><a href="seishin-hoken-shitei-overview.html">精神保健福祉法の全体像</a> <span class="step-note">— 措置入院・医療保護入院の法的根拠を整理</span></li>
               <li><a href="shitei-checklist.html">申請要件チェックリスト</a> <span class="step-note">— 経験症例数・書類要件を漏れなく確認</span></li>
-              <li><a href="shitei-report-wizard.html">症例記録ウィザード</a> <span class="step-note">— 記載すべき項目をガイド付きで入力・確認</span></li>
+              <li><a href="shitei-report-workspace.html">4ペインワークスペース（推奨）</a> <span class="step-note">— ポータルツール参照しながら症例を作成・55項目チェック</span></li>
+              <li><a href="shitei-report-wizard.html">症例記録ウィザード（軽量版）</a> <span class="step-note">— シンプルな7ステップ入力</span></li>
               <li><a href="shitei-case-template.html">症例テンプレート</a> <span class="step-note">— 実際の申請書に沿ったサンプル構成を参照</span></li>
             </ol>
           </div>
@@ -1834,10 +1835,16 @@
           <p class="text-xs text-gray-500 leading-relaxed">措置入院・医療保護入院・任意入院・隔離・身体的拘束・疾患カテゴリの要件をインタラクティブに確認。進捗はブラウザに自動保存。</p>
           <div class="mt-3 text-xs link-amber font-medium">shitei-checklist.html →</div>
         </a>
+        <a id="card-shitei-workspace" href="shitei-report-workspace.html" class="card block border border-blue-200 rounded-xl p-4 border-blue bg-blue sm:col-span-2">
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-blue px-2 py-0.5 rounded-full">作成支援</span><span class="badge-new text-xs font-medium px-2 py-0.5 rounded-full">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-06-06 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">ケースレポート 4ペインワークスペース（推奨）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">ポータル登録ツールを参照しながら症例を作成する4ペインUI。7ステップ入力・55項目チェック・Undo/スナップショット・.shitei互換JSON出力。Tauri版への引き渡しに対応。</p>
+          <div class="mt-3 text-xs link-blue font-medium">shitei-report-workspace.html →</div>
+        </a>
         <a id="card-shitei-wizard" href="shitei-report-wizard.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber sm:col-span-2">
-          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">作成支援</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span></div>
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 レポート作成ウィザード</h3>
-          <p class="text-xs text-gray-500 leading-relaxed">7ステップの対話形式で症例レポートを作成。ICD-10ピッカー・入院形態別の記載ガイド付き。入力内容から整形テキストを自動生成し、コピー可能。進捗は localStorage に保存。</p>
+          <div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span class="text-xs font-medium tag-amber px-2 py-0.5 rounded-full">作成支援・軽量</span><span class="portal-auto-new badge-new text-xs font-medium px-2 py-0.5 rounded-full hidden">NEW</span></div><span class="text-xs text-gray-400 tabular-nums">2026-05-07 新規</span></div>
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">精神保健指定医 レポート作成ウィザード（軽量版）</h3>
+          <p class="text-xs text-gray-500 leading-relaxed">シンプルな7ステップ入力。ICD-10ピッカー・入院形態別ガイド付き。参照ツール統合が必要な場合は4ペインワークスペースを推奨。</p>
           <div class="mt-3 text-xs link-amber font-medium">shitei-report-wizard.html →</div>
         </a>
         <a id="card-shitei-case-template" href="shitei-case-template.html" class="card block border border-amber-100 rounded-xl p-4 border-amber bg-amber sm:col-span-2">
@@ -2092,7 +2099,7 @@
         'card-brexpiprazole',
         'card-vortioxetine'
       ],
-      'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool'],
+      'portal-concepts': ['card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii', 'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-workspace', 'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool'],
       'portal-study': ['card-terminology-srs', 'card-icd10-quiz', 'card-mood-suicide-learning', 'card-schiz-fe-learning', 'card-psychopath-scales-learning', 'card-psychotropics-interactions-learning', 'card-asd-schizophrenia-learning', 'card-eeg-learning', 'card-eeg-basics', 'card-eeg-waveforms', 'card-eeg-quiz', 'card-eeg-cases'],
       'portal-other': ['card-context', 'card-cursor', 'card-content-verification'],
       'portal-literature': ['card-literature-search']
@@ -2880,7 +2887,8 @@
       'card-shiteii':          ['🎓 資格取得', '📋 ガイド'],
       'card-shitei-overview':  ['🎓 資格取得', '📋 制度概要', '精神保健指定医'],
       'card-shitei-checklist': ['🎓 資格取得', '✅ チェックリスト', '精神保健指定医'],
-      'card-shitei-wizard':         ['🎓 資格取得', '✍ レポート作成', '精神保健指定医'],
+      'card-shitei-workspace':      ['🎓 資格取得', '✍ レポート作成', '精神保健指定医', '4ペイン'],
+      'card-shitei-wizard':         ['🎓 資格取得', '✍ レポート作成', '精神保健指定医', '軽量版'],
       'card-shitei-case-template': ['🎓 資格取得', '📋 症例選定', '精神保健指定医'],
       'card-seishin-hoken-ho-flow': ['🎓 資格取得', '⚖ 法律・制度', '精神保健指定医', '入院形態', '行動制限'],
       'card-context':               ['💡 AI活用'],
@@ -3130,8 +3138,12 @@
       'card-shitei-checklist': [
         { date: '2026-05-07', kind: '新規', text: '精神保健指定医申請チェックリストを新規作成（localStorage 進捗保存・6カテゴリ×記載要件）', href: 'shitei-checklist.html' },
       ],
+      'card-shitei-workspace': [
+        { date: '2026-06-06', kind: '新規', text: 'ケースレポート4ペインワークスペースを新規作成（ポータルツール参照・7ステップ入力・55項目チェック・Undo/スナップショット）', href: 'shitei-report-workspace.html' },
+      ],
       'card-shitei-wizard': [
         { date: '2026-05-07', kind: '新規', text: '精神保健指定医レポート作成ウィザードを新規作成（7ステップ・ICD-10ピッカー・テキスト自動生成）', href: 'shitei-report-wizard.html' },
+        { date: '2026-06-06', kind: '更新', text: '軽量版として位置づけを更新。主導線は4ペインワークスペースへ', href: 'shitei-report-wizard.html' },
       ],
       'card-shitei-case-template': [
         { date: '2026-05-07', kind: '新規', text: '精神保健指定医 症例5本選定テンプレを新規作成（申請日自動計算・入院形態/立ち会い/ICD整合チェック）', href: 'shitei-case-template.html' },

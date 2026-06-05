@@ -25,7 +25,8 @@ const SECTIONS = {
   ],
   'portal-concepts': [
     'card-schiz-history', 'card-cssrs-memo', 'card-csc-jp', 'card-terminology', 'card-shiteii',
-    'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool',
+    'card-shitei-overview', 'card-shitei-checklist', 'card-shitei-workspace',
+    'card-shitei-wizard', 'card-shitei-case-template', 'card-schiz-highschool',
   ],
   'portal-study': [
     'card-terminology-srs', 'card-icd10-quiz', 'card-mood-suicide-learning', 'card-schiz-fe-learning',
@@ -53,7 +54,7 @@ const CASE_REPORT_SECTIONS = new Set([
 ]);
 
 const TEACHING_EXCLUDE_IDS = new Set([
-  'card-shitei-wizard', 'card-shitei-checklist',
+  'card-shitei-workspace', 'card-shitei-wizard', 'card-shitei-checklist',
   'card-shitei-case-template', 'card-shitei-overview', 'card-shitei-app',
   'card-shiteii', 'card-seishin-hoken-ho-flow',
 ]);
