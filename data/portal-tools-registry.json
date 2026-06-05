@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-05T17:26:28.431Z",
+  "generatedAt": "2026-06-05T17:26:47.064Z",
   "tools": [
     {
       "id": "card-crcl-psych",
@@ -127,6 +127,15 @@
       "sectionLabel": "概念・資格",
       "caseReportRelevant": true,
       "teachingCaseRelevant": false
+    },
+    {
+      "id": "card-teaching-workspace",
+      "title": "多領域症例提示ワークスペース",
+      "href": "teaching-case-workspace.html",
+      "section": "portal-concepts",
+      "sectionLabel": "概念・資格",
+      "caseReportRelevant": true,
+      "teachingCaseRelevant": true
     },
     {
       "id": "card-schiz-highschool",
