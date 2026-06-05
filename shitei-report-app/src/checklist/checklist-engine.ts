@@ -1,0 +1,183 @@
+import rulesData from '../../checklist-rules.json';
+import { getCharCount, parseIcdNum, type CaseData } from '../domain/form-fields';
+import { icdMatchesCategory } from '../domain/case-categories';
+import type { ChecklistState, ShiteiDocument } from '../domain/schema';
+
+export type CheckStatus = 'ok' | 'warn' | 'fail' | 'manual';
+
+export interface CheckResult {
+  id: string;
+  label: string;
+  ruleType: string;
+  status: CheckStatus;
+  checked: boolean;
+  category: string;
+}
+
+interface Rule {
+  id: string;
+  label: string;
+  ruleType: string;
+  evaluator?: string;
+  caseNum?: number;
+  icdRange?: string;
+  min?: number;
+  max?: number;
+  prefix?: string;
+  admType?: string;
+  minCount?: number;
+  years?: number;
+  fields?: string[];
+  field?: string;
+}
+
+const RULES = rulesData.rules as Rule[];
+const CATEGORIES = rulesData.categories as Record<string, { ids: string[]; group: string; title: string }>;
+
+function getCase(doc: ShiteiDocument, n: number): CaseData {
+  return doc.cases[`case${n}`] || {};
+}
+
+function allCases(doc: ShiteiDocument): CaseData[] {
+  return [1, 2, 3, 4, 5].map((n) => getCase(doc, n));
+}
+
+function isFilled(v: unknown): boolean {
+  return String(v ?? '').trim().length > 0;
+}
+
+function admValid(data: CaseData): boolean {
+  const t = String(data.s1_adm_type || '');
+  return t === '措置入院' || t === '医療保護入院';
+}
+
+function evalRule(rule: Rule, doc: ShiteiDocument): CheckStatus {
+  const ev = rule.evaluator;
+  if (!ev) return 'manual';
+
+  switch (ev) {
+    case 'icdCategory': {
+      const data = getCase(doc, rule.caseNum!);
+      return icdMatchesCategory(rule.caseNum!, String(data.s1_icd)) ? 'ok' : 'fail';
+    }
+    case 'icdInRange': {
+      const data = getCase(doc, rule.caseNum!);
+      const n = parseIcdNum(String(data.s1_icd));
+      if (n === null) return 'fail';
+      if (rule.prefix === 'F4F9') return n >= 40 && n <= 98 ? 'ok' : 'fail';
+      return n >= (rule.min ?? 0) && n <= (rule.max ?? 99) ? 'ok' : 'fail';
+    }
+    case 'icdDependency': {
+      const data = getCase(doc, rule.caseNum!);
+      const icd = String(data.s1_icd || '');
+      return /^F1[0-9]\.[2-9]/i.test(icd) || /^F1[0-9]\.[2-9]/i.test(icd) ? 'ok' :
+        (parseIcdNum(icd) !== null && parseIcdNum(icd)! >= 10 && parseIcdNum(icd)! <= 19 && /\.[2-9]/.test(icd) ? 'ok' : 'fail');
+    }
+    case 'admTypeValid':
+      return admValid(getCase(doc, rule.caseNum!)) ? 'ok' : 'fail';
+    case 'fieldFilled': {
+      const data = getCase(doc, rule.caseNum!);
+      return (rule.fields || []).every((f) => isFilled(data[f])) ? 'ok' : 'warn';
+    }
+    case 'admCount': {
+      const count = allCases(doc).filter((c) => String(c.s1_adm_type) === rule.admType).length;
+      return count >= (rule.minCount ?? 1) ? 'ok' : 'fail';
+    }
+    case 'anyFieldFilled': {
+      const filled = allCases(doc).some((c) => (rule.fields || []).some((f) => isFilled(c[f])));
+      return filled ? 'ok' : 'warn';
+    }
+    case 'anyRestriction': {
+      const has = allCases(doc).some((c) => String(c.s1_restriction) === '有');
+      return has ? 'ok' : 'warn';
+    }
+    case 'withinYears':
+    case 'withinYearsFromApp':
+    case 'beforeYearsFromApp':
+      return 'manual';
+    case 'allCasesField': {
+      const ok = allCases(doc).every((c) => isFilled(c[rule.field!]));
+      return ok ? 'ok' : 'warn';
+    }
+    case 'allCasesFields': {
+      const ok = allCases(doc).every((c) => (rule.fields || []).every((f) => isFilled(c[f])));
+      return ok ? 'ok' : 'warn';
+    }
+    case 'allCasesAdmValid':
+      return allCases(doc).every(admValid) ? 'ok' : 'fail';
+    case 'allCasesRestrictionSet':
+      return allCases(doc).every((c) => String(c.s1_restriction) === '有' || String(c.s1_restriction) === '無') ? 'ok' : 'warn';
+    case 'allCasesCharCount': {
+      const bad = allCases(doc).filter((c) => {
+        const n = getCharCount(c);
+        return n > 0 && (n < 1200 || n > 2500);
+      });
+      const empty = allCases(doc).filter((c) => getCharCount(c) === 0);
+      if (empty.length > 0) return 'warn';
+      return bad.length === 0 ? 'ok' : 'fail';
+    }
+    case 'restrictionDetailIfNeeded': {
+      const need = allCases(doc).filter((c) => String(c.s1_restriction) === '有');
+      if (need.length === 0) return 'ok';
+      return need.every((c) => isFilled(c.s6_restriction_detail)) ? 'ok' : 'warn';
+    }
+    default:
+      return 'manual';
+  }
+}
+
+function findCategory(id: string): string {
+  for (const [cat, def] of Object.entries(CATEGORIES)) {
+    if (def.ids.includes(id)) return cat;
+  }
+  return 'common';
+}
+
+export function evaluateChecklist(doc: ShiteiDocument): CheckResult[] {
+  const { manualOverrides } = doc.checklist;
+  return RULES.map((rule) => {
+    const auto = evalRule(rule, doc);
+    const category = findCategory(rule.id);
+    let status = rule.ruleType === 'manual' ? 'manual' : auto;
+    let checked = status === 'ok';
+
+    if (rule.ruleType === 'manual' || status === 'manual') {
+      checked = Boolean(manualOverrides[rule.id]);
+      status = 'manual';
+    } else if (manualOverrides[rule.id] !== undefined) {
+      checked = manualOverrides[rule.id];
+    } else {
+      checked = status === 'ok';
+    }
+
+    return { id: rule.id, label: rule.label, ruleType: rule.ruleType, status, checked, category };
+  });
+}
+
+export function getCheckScores(results: CheckResult[]): {
+  total: { done: number; count: number; pct: number };
+  byCategory: Record<string, { done: number; count: number }>;
+} {
+  const byCategory: Record<string, { done: number; count: number }> = {};
+  let done = 0;
+  for (const r of results) {
+    if (!byCategory[r.category]) byCategory[r.category] = { done: 0, count: 0 };
+    byCategory[r.category].count++;
+    if (r.checked) {
+      done++;
+      byCategory[r.category].done++;
+    }
+  }
+  return {
+    total: { done, count: results.length, pct: results.length ? Math.round((done / results.length) * 100) : 0 },
+    byCategory,
+  };
+}
+
+export function toggleManualOverride(state: ChecklistState, id: string, value?: boolean): ChecklistState {
+  const next = { ...state, manualOverrides: { ...state.manualOverrides } };
+  next.manualOverrides[id] = value ?? !next.manualOverrides[id];
+  return next;
+}
+
+export { CATEGORIES, RULES };
